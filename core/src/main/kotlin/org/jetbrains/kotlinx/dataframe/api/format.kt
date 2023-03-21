@@ -19,17 +19,26 @@ import kotlin.reflect.KProperty
 
 // region DataFrame
 
+// region format
+
 public fun <T, C> DataFrame<T>.format(columns: ColumnsSelector<T, C>): FormatClause<T, C> = FormatClause(this, columns)
+
 public fun <T> DataFrame<T>.format(vararg columns: String): FormatClause<T, Any?> = format { columns.toColumns() }
+
 public fun <T, C> DataFrame<T>.format(vararg columns: ColumnReference<C>): FormatClause<T, C> = format { columns.toColumns() }
+
 public fun <T, C> DataFrame<T>.format(vararg columns: KProperty<C>): FormatClause<T, C> = format { columns.toColumns() }
+
+// endregion
 
 public fun <T, C> FormatClause<T, C>.perRowCol(formatter: RowColFormatter<T, C>): FormattedFrame<T> = formatImpl(formatter)
 
 public fun <T, C> FormatClause<T, C>.with(formatter: CellFormatter<C>): FormattedFrame<T> = formatImpl { row, col -> formatter(row[col]) }
+
 public fun <T, C> FormatClause<T, C>.where(filter: RowValueFilter<T, C>): FormatClause<T, C> = copy(filter = filter)
 
 public fun <T> DataFrame<T>.format(): FormatClause<T, Any?> = FormatClause(this)
+
 public fun <T> FormattedFrame<T>.format(): FormatClause<T, Any?> = FormatClause(df, null, formatter)
 
 // endregion

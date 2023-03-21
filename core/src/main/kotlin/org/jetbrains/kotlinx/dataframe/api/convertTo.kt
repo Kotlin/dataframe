@@ -95,7 +95,8 @@ public interface ConvertSchemaDsl<in T> {
  * All [fill] operations for missing columns are executed after successful conversion of matched columns, so converted values of matched columns can be safely used in [with] expression.
  * @param columns target columns in destination dataframe schema to be filled
  */
-public inline fun <T, reified C> ConvertSchemaDsl<T>.fill(noinline columns: ColumnsSelector<T, C>): ConvertToFill<T, C> = ConvertToFill(this, columns)
+public inline fun <T, reified C> ConvertSchemaDsl<T>.fill(noinline columns: ColumnsSelector<T, C>): ConvertToFill<T, C> =
+    ConvertToFill(this, columns)
 
 public fun <T, C> ConvertToFill<T, C>.with(expr: RowExpression<T, C>) {
     (dsl as ConvertSchemaDslInternal<T>).fill(columns as ColumnsSelector<*, C>, expr as RowExpression<*, C>)

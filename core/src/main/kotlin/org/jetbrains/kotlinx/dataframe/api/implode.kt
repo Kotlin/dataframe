@@ -8,6 +8,8 @@ import org.jetbrains.kotlinx.dataframe.impl.api.implodeImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import kotlin.reflect.KProperty
 
+// region DataFrame
+
 public fun <T> DataFrame<T>.implode(dropNA: Boolean = false): DataRow<T> =
     implode(dropNA) { all() }[0]
 
@@ -22,3 +24,5 @@ public fun <T, C> DataFrame<T>.implode(vararg columns: ColumnReference<C>, dropN
 
 public fun <T, C> DataFrame<T>.implode(vararg columns: KProperty<C>, dropNA: Boolean = false): DataFrame<T> =
     implode(dropNA) { columns.toColumns() }
+
+// endregion

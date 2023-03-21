@@ -70,29 +70,30 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun ColumnsContainer<*>.group(name: String): ColumnGroupReference = name.toColumnOf()
 
-    public operator fun String.rangeTo(endInclusive: String): ColumnSet<*> = toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
+    public operator fun String.rangeTo(endInclusive: String): ColumnSet<*> =
+        toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
-    public operator fun AnyColumnReference.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> = object : ColumnSet<Any?> {
-        override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<Any?>> {
-            val startPath = this@rangeTo.resolveSingle(context)!!.path
-            val endPath = endInclusive.resolveSingle(context)!!.path
-            val parentPath = startPath.parent()!!
-            require(parentPath == endPath.parent()) { "Start and end columns have different parent column paths" }
-            val parentCol = context.df.getColumnGroup(parentPath)
-            val startIndex = parentCol.getColumnIndex(startPath.name)
-            val endIndex = parentCol.getColumnIndex(endPath.name)
-            return (startIndex..endIndex).map {
-                parentCol.getColumn(it).let {
-                    it.addPath(parentPath + it.name)
+    public operator fun AnyColumnReference.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
+        object : ColumnSet<Any?> {
+            override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<Any?>> {
+                val startPath = this@rangeTo.resolveSingle(context)!!.path
+                val endPath = endInclusive.resolveSingle(context)!!.path
+                val parentPath = startPath.parent()!!
+                require(parentPath == endPath.parent()) { "Start and end columns have different parent column paths" }
+                val parentCol = context.df.getColumnGroup(parentPath)
+                val startIndex = parentCol.getColumnIndex(startPath.name)
+                val endIndex = parentCol.getColumnIndex(endPath.name)
+                return (startIndex..endIndex).map {
+                    parentCol.getColumn(it).let {
+                        it.addPath(parentPath + it.name)
+                    }
                 }
             }
         }
-    }
 
     public fun none(): ColumnSet<*> = ColumnsList<Any?>(emptyList())
 
     // region cols
-
     public fun ColumnSet<*>.cols(predicate: (AnyCol) -> Boolean = { true }): ColumnSet<Any?> = colsInternal(predicate)
 
     public fun <C> ColumnSet<*>.cols(firstCol: ColumnReference<C>, vararg otherCols: ColumnReference<C>): ColumnSet<C> =
@@ -112,10 +113,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         transform { it.flatMap { it.children().subList(range.start, range.endInclusive + 1) } }
 
     // region select
-
     public fun <C> ColumnSet<DataRow<C>>.select(vararg columns: String): ColumnSet<*> = select { columns.toColumns() }
 
-    public fun <C, R> ColumnSet<DataRow<C>>.select(vararg columns: KProperty<R>): ColumnSet<R> = select { columns.toColumns() }
+    public fun <C, R> ColumnSet<DataRow<C>>.select(vararg columns: KProperty<R>): ColumnSet<R> =
+        select { columns.toColumns() }
 
     public fun <C, R> ColumnSet<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> = createColumnSet {
         this@select.resolve(it).flatMap { group ->
@@ -145,7 +146,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region allDfs
 
-    public fun ColumnSet<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> = if (includeGroups) dfs { true } else dfs { !it.isColumnGroup() }
+    public fun ColumnSet<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> =
+        if (includeGroups) dfs { true } else dfs { !it.isColumnGroup() }
 
     public fun String.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> = toColumnAccessor().allDfs(includeGroups)
 
@@ -185,6 +187,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     }
 
     public fun SingleColumn<*>.allSince(colName: String): ColumnSet<Any?> = allSince(pathOf(colName))
+
     public fun SingleColumn<*>.allSince(column: AnyColumnReference): ColumnSet<Any?> = allSince(column.path())
 
     // endregion
@@ -204,6 +207,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     }
 
     public fun SingleColumn<*>.allBefore(colName: String): ColumnSet<Any?> = allBefore(pathOf(colName))
+
     public fun SingleColumn<*>.allBefore(column: AnyColumnReference): ColumnSet<Any?> = allBefore(column.path())
 
     // endregion
@@ -223,6 +227,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     }
 
     public fun SingleColumn<*>.allUntil(colName: String): ColumnSet<Any?> = allUntil(pathOf(colName))
+
     public fun SingleColumn<*>.allUntil(column: AnyColumnReference): ColumnSet<Any?> = allUntil(column.path())
 
     // endregion
@@ -242,19 +247,29 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun <C> col(property: KProperty<C>): ColumnAccessor<C> = property.toColumnAccessor()
 
-    public operator fun ColumnSet<*>.get(colName: String): ColumnSet<Any?> = transform { it.mapNotNull { it.getChild(colName) } }
+    public operator fun ColumnSet<*>.get(colName: String): ColumnSet<Any?> =
+        transform { it.mapNotNull { it.getChild(colName) } }
+
     public operator fun <C> ColumnSet<*>.get(column: ColumnReference<C>): ColumnSet<C> = cols(column)
 
     public fun SingleColumn<AnyRow>.take(n: Int): ColumnSet<*> = transformSingle { it.children().take(n) }
+
     public fun SingleColumn<AnyRow>.takeLast(n: Int): ColumnSet<*> = transformSingle { it.children().takeLast(n) }
+
     public fun SingleColumn<AnyRow>.drop(n: Int): ColumnSet<*> = transformSingle { it.children().drop(n) }
+
     public fun SingleColumn<AnyRow>.dropLast(n: Int = 1): ColumnSet<*> = transformSingle { it.children().dropLast(n) }
 
     public fun <C> ColumnSet<C>.drop(n: Int): ColumnSet<C> = transform { it.drop(n) }
+
     public fun <C> ColumnSet<C>.take(n: Int): ColumnSet<C> = transform { it.take(n) }
+
     public fun <C> ColumnSet<C>.dropLast(n: Int = 1): ColumnSet<C> = transform { it.dropLast(n) }
+
     public fun <C> ColumnSet<C>.takeLast(n: Int): ColumnSet<C> = transform { it.takeLast(n) }
+
     public fun <C> ColumnSet<C>.top(): ColumnSet<C> = transform { it.top() }
+
     public fun <C> ColumnSet<C>.takeWhile(predicate: Predicate<ColumnWithPath<C>>): ColumnSet<C> =
         transform { it.takeWhile(predicate) }
 
@@ -265,11 +280,15 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         transform { it.filter(predicate) }
 
     public fun ColumnSet<*>.nameContains(text: CharSequence): ColumnSet<Any?> = cols { it.name.contains(text) }
+
     public fun ColumnSet<*>.nameContains(regex: Regex): ColumnSet<Any?> = cols { it.name.contains(regex) }
+
     public fun ColumnSet<*>.startsWith(prefix: CharSequence): ColumnSet<Any?> = cols { it.name.startsWith(prefix) }
+
     public fun ColumnSet<*>.endsWith(suffix: CharSequence): ColumnSet<Any?> = cols { it.name.endsWith(suffix) }
 
     public fun <C> ColumnSet<C>.except(vararg other: ColumnSet<*>): ColumnSet<*> = except(other.toColumns())
+
     public fun <C> ColumnSet<C>.except(vararg other: String): ColumnSet<*> = except(other.toColumns())
 
     public fun <C> ColumnSet<C?>.withoutNulls(): ColumnSet<C> = transform { it.filter { !it.hasNulls } } as ColumnSet<C>
@@ -284,14 +303,21 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         this(this@ColumnsSelectionDsl, this@ColumnsSelectionDsl)
 
     public infix fun <C> ColumnReference<C>.into(newName: String): ColumnReference<C> = named(newName)
+
     public infix fun <C> ColumnReference<C>.into(column: ColumnAccessor<*>): ColumnReference<C> = into(column.name())
+
     public infix fun <C> ColumnReference<C>.into(column: KProperty<*>): ColumnReference<C> = named(column.columnName)
 
     public infix fun String.into(newName: String): ColumnReference<Any?> = toColumnAccessor().into(newName)
-    public infix fun String.into(column: ColumnAccessor<*>): ColumnReference<Any?> = toColumnAccessor().into(column.name())
-    public infix fun String.into(column: KProperty<*>): ColumnReference<Any?> = toColumnAccessor().into(column.columnName)
+
+    public infix fun String.into(column: ColumnAccessor<*>): ColumnReference<Any?> =
+        toColumnAccessor().into(column.name())
+
+    public infix fun String.into(column: KProperty<*>): ColumnReference<Any?> =
+        toColumnAccessor().into(column.columnName)
 
     public infix fun <C> ColumnReference<C>.named(newName: String): ColumnReference<C> = renamedReference(newName)
+
     public infix fun <C> ColumnReference<C>.named(name: KProperty<*>): ColumnReference<C> = named(name.columnName)
 
     public infix fun String.named(newName: String): ColumnReference<Any?> = toColumnAccessor().named(newName)
@@ -300,37 +326,45 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region String
     public infix fun String.and(other: String): ColumnSet<Any?> = toColumnAccessor() and other.toColumnAccessor()
+
     public infix fun <C> String.and(other: ColumnSet<C>): ColumnSet<Any?> = toColumnAccessor() and other
+
     public infix fun <C> String.and(other: KProperty<C>): ColumnSet<Any?> = toColumnAccessor() and other
+
     public infix fun <C> String.and(other: ColumnsSelector<T, C>): ColumnSet<Any?> = toColumnAccessor() and other()
 
     // endregion
 
     // region KProperty
     public infix fun <C> KProperty<C>.and(other: ColumnSet<C>): ColumnSet<C> = toColumnAccessor() and other
+
     public infix fun <C> KProperty<C>.and(other: String): ColumnSet<Any?> = toColumnAccessor() and other
+
     public infix fun <C> KProperty<C>.and(other: KProperty<C>): ColumnSet<C> =
         toColumnAccessor() and other.toColumnAccessor()
+
     public infix fun <C> KProperty<C>.and(other: ColumnsSelector<T, C>): ColumnSet<C> = toColumnAccessor() and other()
 
     // endregion
 
     // region ColumnSet
-
     public infix fun <C> ColumnSet<C>.and(other: KProperty<C>): ColumnSet<C> = this and other.toColumnAccessor()
-    public infix fun <C> ColumnSet<C>.and(other: String): ColumnSet<Any?> = this and other.toColumnAccessor()
-    public infix fun <C> ColumnSet<C>.and(other: ColumnSet<C>): ColumnSet<C> = ColumnsList(this, other)
-    public infix fun <C> ColumnSet<C>.and(other: ColumnsSelector<T, C>): ColumnSet<C> = this and other()
 
+    public infix fun <C> ColumnSet<C>.and(other: String): ColumnSet<Any?> = this and other.toColumnAccessor()
+
+    public infix fun <C> ColumnSet<C>.and(other: ColumnSet<C>): ColumnSet<C> = ColumnsList(this, other)
+
+    public infix fun <C> ColumnSet<C>.and(other: ColumnsSelector<T, C>): ColumnSet<C> = this and other()
     // endregion
 
     // region ColumnsSelector
-
     public infix fun <C> ColumnsSelector<T, C>.and(other: KProperty<C>): ColumnSet<C> = this() and other
-    public infix fun <C> ColumnsSelector<T, C>.and(other: String): ColumnSet<Any?> = this() and other
-    public infix fun <C> ColumnsSelector<T, C>.and(other: ColumnSet<C>): ColumnSet<C> = this() and other
-    public infix fun <C> ColumnsSelector<T, C>.and(other: ColumnsSelector<T, C>): ColumnSet<C> = this() and other
 
+    public infix fun <C> ColumnsSelector<T, C>.and(other: String): ColumnSet<Any?> = this() and other
+
+    public infix fun <C> ColumnsSelector<T, C>.and(other: ColumnSet<C>): ColumnSet<C> = this() and other
+
+    public infix fun <C> ColumnsSelector<T, C>.and(other: ColumnsSelector<T, C>): ColumnSet<C> = this() and other
     // endregion
 
     public fun <C> ColumnSet<C>.distinct(): ColumnSet<C> = DistinctColumnSet(this)

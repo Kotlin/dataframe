@@ -12,8 +12,18 @@ import kotlin.reflect.KProperty
 
 public fun AnyCol.inferType(): DataColumn<*> = guessColumnType(name, toList(), type, true)
 
+// region DataFrame
+
 public fun <T> DataFrame<T>.inferType(): DataFrame<T> = inferType { allDfs() }
-public fun <T> DataFrame<T>.inferType(columns: ColumnsSelector<T, *>): DataFrame<T> = replace(columns).with { it.inferType() }
+
+public fun <T> DataFrame<T>.inferType(columns: ColumnsSelector<T, *>): DataFrame<T> =
+    replace(columns).with { it.inferType() }
+
 public fun <T> DataFrame<T>.inferType(vararg columns: String): DataFrame<T> = inferType { columns.toColumns() }
-public fun <T> DataFrame<T>.inferType(vararg columns: ColumnReference<*>): DataFrame<T> = inferType { columns.toColumns() }
+
+public fun <T> DataFrame<T>.inferType(vararg columns: ColumnReference<*>): DataFrame<T> =
+    inferType { columns.toColumns() }
+
 public fun <T> DataFrame<T>.inferType(vararg columns: KProperty<*>): DataFrame<T> = inferType { columns.toColumns() }
+
+// endregion

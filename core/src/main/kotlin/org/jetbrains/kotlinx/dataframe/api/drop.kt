@@ -52,6 +52,7 @@ public fun <T> DataFrame<T>.drop(predicate: RowFilter<T>): DataFrame<T> = filter
 /**
  * Returns a DataFrame containing all rows except first rows that satisfy the given [predicate].
  */
-public fun <T> DataFrame<T>.dropWhile(predicate: RowFilter<T>): DataFrame<T> = firstOrNull { !predicate(it, it) }?.let { drop(it.index) } ?: this
+public fun <T> DataFrame<T>.dropWhile(predicate: RowFilter<T>): DataFrame<T> =
+    firstOrNull { !predicate(it, it) }?.let { drop(it.index) } ?: this
 
 // endregion
