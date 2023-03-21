@@ -33,8 +33,6 @@ public fun <T, C> DataFrame<T>.gather(vararg columns: KProperty<C>): Gather<T, C
 
 // endregion
 
-
-
 public fun <T, C, K, R> Gather<T, C, K, R>.where(filter: Predicate<C>): Gather<T, C, K, R> =
     copy(filter = this.filter and filter)
 
