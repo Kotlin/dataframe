@@ -707,8 +707,9 @@ class Access : TestBase() {
     }
 
     @Test
-    fun columnSelectors_kProperties() {
+    fun columnSelectors_kproperties() {
         // SampleStart
+        // by column name
         df.select { it[Person::name] }
         df.select { (Person::name)() }
         df.select { col(Person::name) }
