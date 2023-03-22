@@ -51,6 +51,18 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
 
     public operator fun <C> ColumnPath.invoke(): DataColumn<C> = getColumn(this).cast()
 
+    public operator fun <T> KProperty<T>.invoke(): DataColumn<T> = this@ColumnSelectionDsl[this]
+
+    public operator fun <T> KProperty<DataRow<T>>.invoke(): ColumnGroup<T> = this@ColumnSelectionDsl[this]
+
+    public operator fun <T> KProperty<DataFrame<T>>.invoke(): FrameColumn<T> = this@ColumnSelectionDsl[this]
+
+    public operator fun <T, R> KProperty<DataRow<T>>.get(column: KProperty<R>): DataColumn<R> = invoke()[column]
+
+    public operator fun <T, R> KProperty<DataRow<T>>.get(column: KProperty<DataRow<R>>): ColumnGroup<R> = invoke()[column]
+
+    public operator fun <T, R> KProperty<DataRow<T>>.get(column: KProperty<DataFrame<R>>): FrameColumn<R> = invoke()[column]
+
     public operator fun <C> String.invoke(): DataColumn<C> = getColumn(this).cast()
 
     public operator fun String.get(column: String): ColumnPath = pathOf(this, column)
@@ -71,6 +83,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun ColumnsContainer<*>.group(name: String): ColumnGroupReference = name.toColumnOf()
 
     public operator fun String.rangeTo(endInclusive: String): ColumnSet<*> = toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
+
+    public operator fun KProperty<*>.rangeTo(endInclusive: KProperty<*>): ColumnSet<*> = toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
     public operator fun AnyColumnReference.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> = object : ColumnSet<Any?> {
         override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<Any?>> {
@@ -105,17 +119,18 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
             transform { it.flatMap { col -> names.mapNotNull { col.getChild(it) } } }
         }
 
+    public fun <C> ColumnSet<*>.cols(firstCol: KProperty<C>, vararg otherCols: KProperty<C>): ColumnSet<C> =
+        (listOf(firstCol) + otherCols).let { names ->
+            transform { it.flatMap { col -> names.mapNotNull { col.getChild(it) } } }
+        }
+
     public fun ColumnSet<*>.cols(vararg indices: Int): ColumnSet<Any?> =
         transform { it.flatMap { it.children().let { children -> indices.map { children[it] } } } }
 
     public fun ColumnSet<*>.cols(range: IntRange): ColumnSet<Any?> =
-        transform { it.flatMap { it.children().subList(range.start, range.endInclusive + 1) } }
+        transform { it.flatMap { it.children().subList(range.first, range.last + 1) } }
 
     // region select
-
-    public fun <C> ColumnSet<DataRow<C>>.select(vararg columns: String): ColumnSet<*> = select { columns.toColumns() }
-
-    public fun <C, R> ColumnSet<DataRow<C>>.select(vararg columns: KProperty<R>): ColumnSet<R> = select { columns.toColumns() }
 
     public fun <C, R> ColumnSet<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> = createColumnSet {
         this@select.resolve(it).flatMap { group ->
@@ -124,6 +139,12 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
             }
         }
     }
+
+    public fun <C> ColumnSet<DataRow<C>>.select(vararg columns: String): ColumnSet<*> = select { columns.toColumns() }
+
+    public fun <C, R> ColumnSet<DataRow<C>>.select(vararg columns: ColumnReference<R>): ColumnSet<R> = select { columns.toColumns() }
+
+    public fun <C, R> ColumnSet<DataRow<C>>.select(vararg columns: KProperty<R>): ColumnSet<R> = select { columns.toColumns() }
 
     // endregion
 
@@ -135,6 +156,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun String.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> = toColumnAccessor().dfs(predicate)
 
+    public fun <C> KProperty<C>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> = toColumnAccessor().dfs(predicate)
+
     // endregion
 
     // region all
@@ -143,11 +166,15 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun String.all(): ColumnSet<*> = toColumnAccessor().transformSingle { it.children() }
 
+    public fun KProperty<*>.all(): ColumnSet<*> = toColumnAccessor().transformSingle { it.children() }
+
     // region allDfs
 
     public fun ColumnSet<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> = if (includeGroups) dfs { true } else dfs { !it.isColumnGroup() }
 
     public fun String.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> = toColumnAccessor().allDfs(includeGroups)
+
+    public fun KProperty<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> = toColumnAccessor().allDfs(includeGroups)
 
     // endregion
 
@@ -167,13 +194,24 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun SingleColumn<*>.allAfter(colName: String): ColumnSet<Any?> = allAfter(pathOf(colName))
     public fun SingleColumn<*>.allAfter(column: AnyColumnReference): ColumnSet<Any?> = allAfter(column.path())
+    public fun SingleColumn<*>.allAfter(column: KProperty<*>): ColumnSet<Any?> = allAfter(column.toColumnAccessor().path())
+
+    public fun String.allAfter(colPath: ColumnPath): ColumnSet<Any?> = toColumnAccessor().allAfter(colPath)
+    public fun String.allAfter(colName: String): ColumnSet<Any?> = toColumnAccessor().allAfter(colName)
+    public fun String.allAfter(column: AnyColumnReference): ColumnSet<Any?> = toColumnAccessor().allAfter(column)
+    public fun String.allAfter(column: KProperty<*>): ColumnSet<Any?> = toColumnAccessor().allAfter(column)
+
+    public fun KProperty<*>.allAfter(colPath: ColumnPath): ColumnSet<Any?> = toColumnAccessor().allAfter(colPath)
+    public fun KProperty<*>.allAfter(colName: String): ColumnSet<Any?> = toColumnAccessor().allAfter(colName)
+    public fun KProperty<*>.allAfter(column: AnyColumnReference): ColumnSet<Any?> = toColumnAccessor().allAfter(column)
+    public fun KProperty<*>.allAfter(column: KProperty<*>): ColumnSet<Any?> = toColumnAccessor().allAfter(column)
 
     // endregion
 
-    // region allSince
+    // region allFrom
 
     // including current
-    public fun SingleColumn<*>.allSince(colPath: ColumnPath): ColumnSet<Any?> {
+    public fun SingleColumn<*>.allFrom(colPath: ColumnPath): ColumnSet<Any?> {
         var take = false
         return children {
             if (take) true
@@ -184,8 +222,19 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         }
     }
 
-    public fun SingleColumn<*>.allSince(colName: String): ColumnSet<Any?> = allSince(pathOf(colName))
-    public fun SingleColumn<*>.allSince(column: AnyColumnReference): ColumnSet<Any?> = allSince(column.path())
+    public fun SingleColumn<*>.allFrom(colName: String): ColumnSet<Any?> = allFrom(pathOf(colName))
+    public fun SingleColumn<*>.allFrom(column: AnyColumnReference): ColumnSet<Any?> = allFrom(column.path())
+    public fun SingleColumn<*>.allFrom(column: KProperty<*>): ColumnSet<Any?> = allFrom(column.toColumnAccessor().path())
+
+    public fun String.allFrom(colPath: ColumnPath): ColumnSet<Any?> = toColumnAccessor().allFrom(colPath)
+    public fun String.allFrom(colName: String): ColumnSet<Any?> = toColumnAccessor().allFrom(colName)
+    public fun String.allFrom(column: AnyColumnReference): ColumnSet<Any?> = toColumnAccessor().allFrom(column)
+    public fun String.allFrom(column: KProperty<*>): ColumnSet<Any?> = toColumnAccessor().allFrom(column)
+
+    public fun KProperty<*>.allFrom(colPath: ColumnPath): ColumnSet<Any?> = toColumnAccessor().allFrom(colPath)
+    public fun KProperty<*>.allFrom(colName: String): ColumnSet<Any?> = toColumnAccessor().allFrom(colName)
+    public fun KProperty<*>.allFrom(column: AnyColumnReference): ColumnSet<Any?> = toColumnAccessor().allFrom(column)
+    public fun KProperty<*>.allFrom(column: KProperty<*>): ColumnSet<Any?> = toColumnAccessor().allFrom(column)
 
     // endregion
 
@@ -205,13 +254,24 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun SingleColumn<*>.allBefore(colName: String): ColumnSet<Any?> = allBefore(pathOf(colName))
     public fun SingleColumn<*>.allBefore(column: AnyColumnReference): ColumnSet<Any?> = allBefore(column.path())
+    public fun SingleColumn<*>.allBefore(column: KProperty<*>): ColumnSet<Any?> = allBefore(column.toColumnAccessor().path())
+
+    public fun String.allBefore(colPath: ColumnPath): ColumnSet<Any?> = toColumnAccessor().allBefore(colPath)
+    public fun String.allBefore(colName: String): ColumnSet<Any?> = toColumnAccessor().allBefore(colName)
+    public fun String.allBefore(column: AnyColumnReference): ColumnSet<Any?> = toColumnAccessor().allBefore(column)
+    public fun String.allBefore(column: KProperty<*>): ColumnSet<Any?> = toColumnAccessor().allBefore(column)
+
+    public fun KProperty<*>.allBefore(colPath: ColumnPath): ColumnSet<Any?> = toColumnAccessor().allBefore(colPath)
+    public fun KProperty<*>.allBefore(colName: String): ColumnSet<Any?> = toColumnAccessor().allBefore(colName)
+    public fun KProperty<*>.allBefore(column: AnyColumnReference): ColumnSet<Any?> = toColumnAccessor().allBefore(column)
+    public fun KProperty<*>.allBefore(column: KProperty<*>): ColumnSet<Any?> = toColumnAccessor().allBefore(column)
 
     // endregion
 
-    // region allUntil
+    // region allUpTo
 
     // including current
-    public fun SingleColumn<*>.allUntil(colPath: ColumnPath): ColumnSet<Any?> {
+    public fun SingleColumn<*>.allUpTo(colPath: ColumnPath): ColumnSet<Any?> {
         var take = true
         return children {
             if (!take) false
@@ -222,20 +282,45 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         }
     }
 
-    public fun SingleColumn<*>.allUntil(colName: String): ColumnSet<Any?> = allUntil(pathOf(colName))
-    public fun SingleColumn<*>.allUntil(column: AnyColumnReference): ColumnSet<Any?> = allUntil(column.path())
+    public fun SingleColumn<*>.allUpTo(colName: String): ColumnSet<Any?> = allUpTo(pathOf(colName))
+    public fun SingleColumn<*>.allUpTo(column: AnyColumnReference): ColumnSet<Any?> = allUpTo(column.path())
+    public fun SingleColumn<*>.allUpTo(column: KProperty<*>): ColumnSet<Any?> = allUpTo(column.toColumnAccessor().path())
+
+    public fun String.allUpTo(colPath: ColumnPath): ColumnSet<Any?> = toColumnAccessor().allUpTo(colPath)
+    public fun String.allUpTo(colName: String): ColumnSet<Any?> = toColumnAccessor().allUpTo(colName)
+    public fun String.allUpTo(column: AnyColumnReference): ColumnSet<Any?> = toColumnAccessor().allUpTo(column)
+    public fun String.allUpTo(column: KProperty<*>): ColumnSet<Any?> = toColumnAccessor().allUpTo(column)
+
+    public fun KProperty<*>.allUpTo(colPath: ColumnPath): ColumnSet<Any?> = toColumnAccessor().allUpTo(colPath)
+    public fun KProperty<*>.allUpTo(colName: String): ColumnSet<Any?> = toColumnAccessor().allUpTo(colName)
+    public fun KProperty<*>.allUpTo(column: AnyColumnReference): ColumnSet<Any?> = toColumnAccessor().allUpTo(column)
+    public fun KProperty<*>.allUpTo(column: KProperty<*>): ColumnSet<Any?> = toColumnAccessor().allUpTo(column)
 
     // endregion
 
     // endregion
+
+    // region groups
 
     public fun SingleColumn<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): ColumnSet<AnyRow> =
         children { it.isColumnGroup() && filter(it.asColumnGroup()) } as ColumnSet<AnyRow>
 
-    public fun <C> ColumnSet<C>.children(predicate: (ColumnWithPath<Any?>) -> Boolean = { true }): ColumnSet<Any?> =
+    public fun String.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): ColumnSet<AnyRow> =
+        toColumnAccessor().groups(filter)
+
+    public fun KProperty<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): ColumnSet<AnyRow> =
+        toColumnAccessor().groups(filter)
+
+    // endregion
+
+    // region children
+
+    public fun ColumnSet<*>.children(predicate: (ColumnWithPath<Any?>) -> Boolean = { true }): ColumnSet<Any?> =
         transform { it.flatMap { it.children().filter { predicate(it) } } }
 
     public fun ColumnGroupReference.children(): ColumnSet<Any?> = transformSingle { it.children() }
+
+    // endregion
 
     public operator fun <C> List<DataColumn<C>>.get(range: IntRange): ColumnSet<C> =
         ColumnsList(subList(range.first, range.last + 1))
@@ -244,6 +329,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public operator fun ColumnSet<*>.get(colName: String): ColumnSet<Any?> = transform { it.mapNotNull { it.getChild(colName) } }
     public operator fun <C> ColumnSet<*>.get(column: ColumnReference<C>): ColumnSet<C> = cols(column)
+    public operator fun <C> ColumnSet<*>.get(column: KProperty<C>): ColumnSet<C> = cols(column)
 
     public fun SingleColumn<AnyRow>.take(n: Int): ColumnSet<*> = transformSingle { it.children().take(n) }
     public fun SingleColumn<AnyRow>.takeLast(n: Int): ColumnSet<*> = transformSingle { it.children().takeLast(n) }
@@ -292,9 +378,18 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public infix fun String.into(column: KProperty<*>): ColumnReference<Any?> = toColumnAccessor().into(column.columnName)
 
     public infix fun <C> ColumnReference<C>.named(newName: String): ColumnReference<C> = renamedReference(newName)
-    public infix fun <C> ColumnReference<C>.named(name: KProperty<*>): ColumnReference<C> = named(name.columnName)
+    public infix fun <C> ColumnReference<C>.named(nameFrom: ColumnReference<*>): ColumnReference<C> = named(nameFrom.name)
+    public infix fun <C> ColumnReference<C>.named(nameFrom: KProperty<*>): ColumnReference<C> = named(nameFrom.columnName)
 
     public infix fun String.named(newName: String): ColumnReference<Any?> = toColumnAccessor().named(newName)
+    public infix fun String.named(nameFrom: ColumnReference<*>): ColumnReference<Any?> = toColumnAccessor().named(nameFrom.name)
+    public infix fun String.named(nameFrom: KProperty<*>): ColumnReference<Any?> = toColumnAccessor().named(nameFrom.columnName)
+
+    public infix fun <C> KProperty<C>.named(newName: String): ColumnReference<C> = toColumnAccessor().named(newName)
+
+    public infix fun <C> KProperty<C>.named(nameFrom: ColumnReference<*>): ColumnReference<C> = toColumnAccessor().named(nameFrom.name)
+
+    public infix fun <C> KProperty<C>.named(nameFrom: KProperty<*>): ColumnReference<C> = toColumnAccessor().named(nameFrom.columnName)
 
     // region and
 
@@ -334,6 +429,21 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     // endregion
 
     public fun <C> ColumnSet<C>.distinct(): ColumnSet<C> = DistinctColumnSet(this)
+
+    public fun <C> String.dfsOf(type: KType, predicate: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<*> =
+        toColumnAccessor().dfsOf(type, predicate)
+
+    public fun <C> KProperty<*>.dfsOf(type: KType, predicate: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<*> =
+        toColumnAccessor().dfsOf(type, predicate)
+
+    public fun String.colsOf(type: KType): ColumnSet<Any?> = toColumnAccessor().colsOf(type)
+    public fun KProperty<*>.colsOf(type: KType): ColumnSet<Any?> = toColumnAccessor().colsOf(type)
+
+    public fun <C> String.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean): ColumnSet<Any?> =
+        toColumnAccessor().colsOf(type, filter)
+
+    public fun <C> KProperty<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean): ColumnSet<Any?> =
+        toColumnAccessor().colsOf(type, filter)
 }
 
 public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(
@@ -344,7 +454,6 @@ public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(
 
 internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) -> Boolean): ColumnsSelector<T, C> =
     { this@filter(it, it).filter(predicate) }
-// internal fun Columns<*>.filter(predicate: (AnyCol) -> Boolean) = transform { it.filter { predicate(it.data) } }
 
 internal fun ColumnSet<*>.colsInternal(predicate: (AnyCol) -> Boolean) =
     transform { it.flatMap { it.children().filter { predicate(it.data) } } }
