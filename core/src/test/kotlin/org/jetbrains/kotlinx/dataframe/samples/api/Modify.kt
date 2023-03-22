@@ -1052,11 +1052,41 @@ class Modify : TestBase() {
     }
 
     @Test
-    fun flatten() {
+    fun flatten_properties() {
         // SampleStart
         // name.firstName -> firstName
         // name.lastName -> lastName
         df.flatten { name }
+        // SampleEnd
+    }
+
+    @Test
+    fun flatten_strings() {
+        // SampleStart
+        // name.firstName -> firstName
+        // name.lastName -> lastName
+        df.flatten("name")
+        // SampleEnd
+    }
+
+    @Test
+    fun flatten_accessors() {
+        // SampleStart
+        val name by columnGroup()
+        val firstName by name.column<String>()
+        val lastName by name.column<String>()
+        // name.firstName -> firstName
+        // name.lastName -> lastName
+        df.flatten(name)
+        // SampleEnd
+    }
+
+    @Test
+    fun flatten_KProperties() {
+        // SampleStart
+        // name.firstName -> firstName
+        // name.lastName -> lastName
+        df.flatten(df::name)
         // SampleEnd
     }
 
