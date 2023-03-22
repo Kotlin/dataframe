@@ -711,6 +711,7 @@ class Access : TestBase() {
         // SampleStart
         df.select { it[Person::name] }
         df.select { (Person::name)() }
+        df.select { col(Person::name) }
 
         // by column path
         df.select { it[Person::name][Name::firstName] }
@@ -723,7 +724,7 @@ class Access : TestBase() {
         df.select { Person::name[Name::firstName].map { it.lowercase() } }
 
         // column arithmetics
-        df.select { 2021 - Person::age }
+        df.select { 2021 - (Person::age)() }
 
         // two columns
         df.select { Person::name and Person::age }
