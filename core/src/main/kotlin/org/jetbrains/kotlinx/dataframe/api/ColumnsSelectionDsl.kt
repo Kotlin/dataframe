@@ -42,6 +42,18 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
 
     public operator fun <C> ColumnPath.invoke(): DataColumn<C> = getColumn(this).cast()
 
+    public operator fun <T> KProperty<T>.invoke(): DataColumn<T> = this@ColumnSelectionDsl[this]
+
+    public operator fun <T> KProperty<DataRow<T>>.invoke(): ColumnGroup<T> = this@ColumnSelectionDsl[this]
+
+    public operator fun <T> KProperty<DataFrame<T>>.invoke(): FrameColumn<T> = this@ColumnSelectionDsl[this]
+
+    public operator fun <T, R> KProperty<DataRow<T>>.get(column: KProperty<R>): DataColumn<R> = invoke()[column]
+
+    public operator fun <T, R> KProperty<DataRow<T>>.get(column: KProperty<DataRow<R>>): ColumnGroup<R> = invoke()[column]
+
+    public operator fun <T, R> KProperty<DataRow<T>>.get(column: KProperty<DataFrame<R>>): FrameColumn<R> = invoke()[column]
+
     public operator fun <C> String.invoke(): DataColumn<C> = getColumn(this).cast()
 
     public operator fun String.get(column: String): ColumnPath = pathOf(this, column)
