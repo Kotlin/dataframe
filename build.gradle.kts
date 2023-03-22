@@ -14,6 +14,8 @@ plugins {
     id("org.jetbrains.dokka") version libs.versions.dokka
     id("org.jetbrains.kotlinx.kover") version libs.versions.kover
     id("org.jmailen.kotlinter") version libs.versions.ktlint
+    id("nl.jolanrensen.docProcessor") version libs.versions.docProcessor apply false
+    id("xyz.ronella.simple-git") version libs.versions.simpleGit apply false
 }
 
 val jupyterApiTCRepo: String by project
