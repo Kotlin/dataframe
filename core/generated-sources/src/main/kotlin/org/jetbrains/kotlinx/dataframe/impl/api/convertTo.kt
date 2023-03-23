@@ -31,6 +31,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.exceptions.ExcessiveColumnsException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.schema.createEmptyColumn
 import org.jetbrains.kotlinx.dataframe.impl.schema.createEmptyDataFrame
@@ -265,8 +266,8 @@ internal fun AnyFrame.convertToImpl(
 
     dsl.fillers.forEach { filler ->
         val paths = result.getColumnPaths(filler.columns)
-        missingPaths.removeAll(paths)
-        result = result.update(paths).with {
+        missingPaths.removeAll(paths.toSet())
+        result = result.update { paths.toColumnSet() }.with {
             filler.expr(this, this)
         }
     }

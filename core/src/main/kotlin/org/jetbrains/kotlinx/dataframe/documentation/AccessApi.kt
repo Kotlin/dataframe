@@ -1,13 +1,16 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
+import org.jetbrains.kotlinx.dataframe.documentation.AccessApi.*
 import org.jetbrains.kotlinx.dataframe.documentation.samples.ApiLevels as ApiLevelsSample
 
 /**
- * By nature data frames are dynamic objects, column labels depend on the input source and also new columns could be added
+ * ## Access APIs
+ *
+ * By nature, data frames are dynamic objects, column labels depend on the input source and also new columns could be added
  * or deleted while wrangling. Kotlin, in contrast, is a statically typed language and all types are defined and verified
  * ahead of execution. That's why creating a flexible, handy, and, at the same time, safe API to a data frame is tricky.
  *
- * In `Kotlin DataFrame` we provide four different ways to access columns, and, while they are essentially different, they
+ * In `Kotlin DataFrame` we provide four different ways to access columns, and, while they're essentially different, they
  * look pretty similar in the data wrangling DSL. These include:
  *  - {@include [ExtensionPropertiesApiLink]}
  *  - {@include [KPropertiesApiLink]}
@@ -91,5 +94,5 @@ internal interface AccessApi {
     interface ExtensionPropertiesApiLink
 }
 
-/** [Access Api][AccessApi] */
+/** [Access API][AccessApi] */
 internal interface AccessApiLink

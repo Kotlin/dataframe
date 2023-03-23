@@ -1,9 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.api.Reorder
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -23,7 +23,7 @@ import kotlin.reflect.typeOf
 
 internal fun <T, C, V : Comparable<V>> Reorder<T, C>.reorderImpl(
     desc: Boolean,
-    expression: Selector<DataColumn<C>, V>
+    expression: ColumnExpression<C, V>
 ): DataFrame<T> {
     data class ColumnInfo(
         val treeNode: TreeNode<ColumnPosition>,

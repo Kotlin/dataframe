@@ -23,7 +23,8 @@ public inline fun <reified T> Iterable<T>.toDataFrame(): DataFrame<T> = toDataFr
     properties()
 }
 
-public inline fun <reified T> Iterable<T>.toDataFrame(noinline body: CreateDataFrameDsl<T>.() -> Unit): DataFrame<T> = createDataFrameImpl(T::class, body)
+public inline fun <reified T> Iterable<T>.toDataFrame(noinline body: CreateDataFrameDsl<T>.() -> Unit): DataFrame<T> =
+    createDataFrameImpl(T::class, body)
 
 public inline fun <reified T> Iterable<T>.toDataFrame(vararg props: KProperty<*>, maxDepth: Int = 0): DataFrame<T> =
     toDataFrame {
@@ -76,6 +77,7 @@ public fun <T> Iterable<Pair<ColumnPath, AnyBaseCol>>.toDataFrameFromPairs(): Da
         when (path.size) {
             0 -> {
             }
+
             1 -> {
                 val name = path[0]
                 val uniqueName = nameGenerator.addUnique(name)
@@ -85,6 +87,7 @@ public fun <T> Iterable<Pair<ColumnPath, AnyBaseCol>>.toDataFrameFromPairs(): Da
                 columns.add(col.rename(uniqueName))
                 columnIndices[uniqueName] = index
             }
+
             else -> {
                 val name = path[0]
                 val uniqueName = columnGroupName.getOrPut(name) {
@@ -195,7 +198,12 @@ public fun Map<String, Iterable<Any?>>.toDataFrame(): AnyFrame {
 
 @JvmName("toDataFrameColumnPathAnyNullable")
 public fun Map<ColumnPath, Iterable<Any?>>.toDataFrame(): AnyFrame {
-    return map { it.key to DataColumn.createWithTypeInference(it.key.last(), it.value.asList()) }.toDataFrameFromPairs<Unit>()
+    return map {
+        it.key to DataColumn.createWithTypeInference(
+            it.key.last(),
+            it.value.asList()
+        )
+    }.toDataFrameFromPairs<Unit>()
 }
 
 // endregion

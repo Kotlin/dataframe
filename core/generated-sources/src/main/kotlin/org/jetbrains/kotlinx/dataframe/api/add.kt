@@ -50,7 +50,8 @@ public fun <T> DataFrame<T>.add(vararg columns: AnyBaseCol): DataFrame<T> = addA
  * @throws [UnequalColumnSizesException] if columns in expected result have different sizes
  * @return new [DataFrame] with added columns
  */
-public fun <T> DataFrame<T>.addAll(columns: Iterable<AnyBaseCol>): DataFrame<T> = dataFrameOf(columns() + columns).cast()
+public fun <T> DataFrame<T>.addAll(columns: Iterable<AnyBaseCol>): DataFrame<T> =
+    dataFrameOf(columns() + columns).cast()
 
 /**
  * Creates new [DataFrame] with all columns from given [dataFrames] added to the end of original [DataFrame.columns] list.
@@ -75,7 +76,8 @@ public fun <T> DataFrame<T>.add(vararg dataFrames: AnyFrame): DataFrame<T> = add
  * @return new [DataFrame] with added columns
  */
 @JvmName("addAllFrames")
-public fun <T> DataFrame<T>.addAll(dataFrames: Iterable<AnyFrame>): DataFrame<T> = addAll(dataFrames.flatMap { it.columns() })
+public fun <T> DataFrame<T>.addAll(dataFrames: Iterable<AnyFrame>): DataFrame<T> =
+    addAll(dataFrames.flatMap { it.columns() })
 
 // endregion
 
@@ -96,7 +98,16 @@ public interface AddDataRow<out T> : DataRow<T> {
     public fun <C> AnyRow.newValue(): C
 }
 
-public typealias AddExpression<T, C> = Selector<AddDataRow<T>, C>
+/**
+ * [AddExpression] is used to express or select any instance of `R` using the given instance of [AddDataRow]`<T>` as
+ * `this` and `it`.
+ *
+ * Shorthand for:
+ * ```kotlin
+ * AddDataRow<T>.(it: AddDataRow<T>) -> R
+ * ```
+ */
+public typealias AddExpression<T, R> = Selector<AddDataRow<T>, R>
 
 /**
  * Creates new column using row [expression] and adds it to the end of [DataFrame]
@@ -166,11 +177,15 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
         return df.mapToColumn("", Infer.Nulls, expression)
     }
 
-    public inline infix fun <reified R> String.from(noinline expression: RowExpression<T, R>): Boolean = add(this, Infer.Nulls, expression)
+    public inline infix fun <reified R> String.from(noinline expression: RowExpression<T, R>): Boolean =
+        add(this, Infer.Nulls, expression)
 
     // TODO: use path instead of name
-    public inline infix fun <reified R> ColumnAccessor<R>.from(noinline expression: RowExpression<T, R>): Boolean = name().from(expression)
-    public inline infix fun <reified R> KProperty<R>.from(noinline expression: RowExpression<T, R>): Boolean = add(name, Infer.Nulls, expression)
+    public inline infix fun <reified R> ColumnAccessor<R>.from(noinline expression: RowExpression<T, R>): Boolean =
+        name().from(expression)
+
+    public inline infix fun <reified R> KProperty<R>.from(noinline expression: RowExpression<T, R>): Boolean =
+        add(name, Infer.Nulls, expression)
 
     public infix fun String.from(column: AnyColumnReference): Boolean = add(column.rename(this))
     public inline infix fun <reified R> ColumnAccessor<R>.from(column: ColumnReference<R>): Boolean = name() from column
