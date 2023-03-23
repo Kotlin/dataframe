@@ -189,7 +189,7 @@ internal fun <C> Array<out KProperty<C>>.toColumns(): ColumnSet<C> = map { it.to
 
 @PublishedApi
 internal fun <T> Array<out ColumnReference<T>>.toColumns(): ColumnSet<T> = asIterable().toColumnSet()
-internal fun Iterable<String>.toColumns(): ColumnSet<Any?> = map { it.toColumnAccessor() }.toColumnSet()
+internal fun Iterable<String>.toColumns() = map { it.toColumnAccessor() }.toColumnSet()
 
 // endregion
 

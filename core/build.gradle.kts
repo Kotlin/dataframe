@@ -1,6 +1,7 @@
 import nl.jolanrensen.docProcessor.defaultProcessors.*
 import nl.jolanrensen.docProcessor.gradle.creatingProcessDocTask
 import org.gradle.jvm.tasks.Jar
+import xyz.ronella.gradle.plugin.simple.git.task.GitTask
 
 @Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 plugins {
@@ -14,8 +15,9 @@ plugins {
     id("org.jetbrains.kotlinx.kover")
     id("org.jmailen.kotlinter")
     id("org.jetbrains.kotlinx.dataframe")
-//    id("com.github.jolanrensen.docProcessorGradlePlugin") version "v0.1.0"
-    id("nl.jolanrensen.docProcessor") version "0.1.1"
+    id("nl.jolanrensen.docProcessor")
+    id("xyz.ronella.simple-git")
+    idea
 }
 
 group = "org.jetbrains.kotlinx"
@@ -58,13 +60,21 @@ kotlin.sourceSets {
     }
 }
 
+val generatedSourcesFolderName = "generated-sources"
+val addGeneratedSourcesToGit by tasks.creating(GitTask::class) {
+    directory.set(file("."))
+    command.set("add")
+    args.set(listOf("-A", generatedSourcesFolderName))
+}
+
 // Backup the kotlin source files location
 val kotlinMainSources = kotlin.sourceSets.main.get().kotlin.sourceDirectories
 
+// Task to generate the processed documentation
 val processKDocsMain by creatingProcessDocTask(
-    sources = kotlinMainSources.filterNot { "build/generated" in it.path } // Exclude generated sources
+    sources = kotlinMainSources.filterNot { "build/generated" in it.path }, // Exclude generated sources
 ) {
-    target = file("generated-sources")
+    target = file(generatedSourcesFolderName)
     processors = listOf(
         INCLUDE_DOC_PROCESSOR,
         INCLUDE_FILE_DOC_PROCESSOR,
@@ -72,44 +82,40 @@ val processKDocsMain by creatingProcessDocTask(
         COMMENT_DOC_PROCESSOR,
         SAMPLE_DOC_PROCESSOR,
     )
-}
 
-// As a bonus, this will update dokka if you use that
-tasks.withType<org.jetbrains.dokka.gradle.AbstractDokkaLeafTask> {
-    dependsOn(processKDocsMain)
-    dokkaSourceSets {
-        all {
-            sourceRoot(processKDocsMain.target.get())
+    task {
+        doLast {
+            // ensure generated sources are added to git
+            addGeneratedSourcesToGit.executeCommand()
         }
     }
 }
 
+// Exclude the generated/processed sources from the IDE
+idea {
+    module {
+        excludeDirs.add(file(generatedSourcesFolderName))
+    }
+}
+
 // Modify all Jar tasks such that before running the Kotlin sources are set to
-// the target of processKdocIncludeMain and they are returned back to normal afterwards.
+// the target of processKdocMain and they are returned back to normal afterwards.
 tasks.withType<Jar> {
     dependsOn(processKDocsMain)
     outputs.upToDateWhen { false }
 
     doFirst {
-        kotlin {
-            sourceSets {
-                main {
-                    kotlin.setSrcDirs(
-                        processKDocsMain.targets +
-                            kotlinMainSources.filter { "build/generated" in it.path } // Include generated sources (which were excluded above)
-                    )
-                }
-            }
+        kotlin.sourceSets.main {
+            kotlin.setSrcDirs(
+                processKDocsMain.targets +
+                    kotlinMainSources.filter { "build/generated" in it.path } // Include generated sources (which were excluded above)
+            )
         }
     }
 
     doLast {
-        kotlin {
-            sourceSets {
-                main {
-                    kotlin.setSrcDirs(kotlinMainSources)
-                }
-            }
+        kotlin.sourceSets.main {
+            kotlin.setSrcDirs(kotlinMainSources)
         }
     }
 }
@@ -229,5 +235,15 @@ dataframes {
         visibility = org.jetbrains.dataframe.gradle.DataSchemaVisibility.IMPLICIT_PUBLIC
         data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
         name = "org.jetbrains.kotlinx.dataframe.samples.api.Repository"
+    }
+}
+
+// If we want to use Dokka, make sure to use the preprocessed sources
+tasks.withType<org.jetbrains.dokka.gradle.AbstractDokkaLeafTask> {
+    dependsOn(processKDocsMain)
+    dokkaSourceSets {
+        all {
+            sourceRoot(processKDocsMain.target.get())
+        }
     }
 }
