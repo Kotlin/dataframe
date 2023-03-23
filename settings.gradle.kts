@@ -28,21 +28,6 @@ pluginManagement {
     repositories {
         mavenLocal()
         gradlePluginPortal()
-        maven(url = "https://jitpack.io")
-    }
-
-    resolutionStrategy {
-        eachPlugin {
-            requested.apply {
-                val jitpackPlugins = listOf(
-                    "com.github.jolanrensen.docProcessorGradlePlugin",
-                )
-                if ("$id" in jitpackPlugins) {
-                    val (_, _, user, name) = "$id".split(".", limit = 4)
-                    useModule("com.github.$user:$name:$version")
-                }
-            }
-        }
     }
 }
 include("dataframe-excel")
