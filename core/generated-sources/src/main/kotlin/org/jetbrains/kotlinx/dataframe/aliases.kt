@@ -75,17 +75,6 @@ public typealias RowValueExpression<T, C, R> = DataRow<T>.(it: C) -> R
 public typealias RowColumnExpression<T, C, R> = (row: DataRow<T>, col: DataColumn<C>) -> R
 
 /**
- * [ColumnExpression] is used to express or select any instance of `R` using the given instance of [DataColumn]`<C>` as
- * `this` and `it`.
- *
- * Shorthand for:
- * ```kotlin
- * DataColumn<C>.(it: DataColumn<C>) -> R
- * ```
- */
-public typealias ColumnExpression<C, R> = Selector<DataColumn<C>, R>
-
-/**
  * [ColumnSelector] is used to express or select a single column, represented by [SingleColumn]`<C>`, using the
  * context of [ColumnsSelectionDsl]`<T>` as `this` and `it`.
  *
