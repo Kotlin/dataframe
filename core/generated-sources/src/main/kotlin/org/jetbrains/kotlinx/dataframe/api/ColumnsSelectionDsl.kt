@@ -11,36 +11,28 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
-import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
-import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
-import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
-import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
-import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.columns.renamedReference
+import org.jetbrains.kotlinx.dataframe.columns.*
+import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.columnName
-import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
-import org.jetbrains.kotlinx.dataframe.impl.columns.DistinctColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
-import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExcept
-import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
-import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
-import org.jetbrains.kotlinx.dataframe.impl.columns.getChildrenAt
-import org.jetbrains.kotlinx.dataframe.impl.columns.single
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
-import org.jetbrains.kotlinx.dataframe.impl.columns.top
-import org.jetbrains.kotlinx.dataframe.impl.columns.transform
-import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
+import org.jetbrains.kotlinx.dataframe.impl.columns.*
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.dfs
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
+/**
+ * Referring to a column in the selection DSL can be done in several ways corresponding to all
+ * [Access APIs][AccessApi]:
+ * TODO
+ */
+private interface CommonColumnSelectionExamples
+
+
+/** [Column Selection DSL][ColumnSelectionDsl] */
+internal interface ColumnSelectionDslLink
+
+/** TODO: Put examples and explanations here */
 public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
 
     public operator fun <C> ColumnReference<C>.invoke(): DataColumn<C> = get(this)
@@ -56,6 +48,10 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
     public operator fun String.get(column: String): ColumnPath = pathOf(this, column)
 }
 
+/** [Columns Selection DSL][ColumnsSelectionDsl] */
+internal interface ColumnsSelectionDslLink
+
+/** TODO: Put examples and explanations here */
 public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColumn<DataRow<T>> {
 
     public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C>): SingleColumn<C> =
@@ -70,24 +66,26 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun ColumnsContainer<*>.group(name: String): ColumnGroupReference = name.toColumnOf()
 
-    public operator fun String.rangeTo(endInclusive: String): ColumnSet<*> = toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
+    public operator fun String.rangeTo(endInclusive: String): ColumnSet<*> =
+        toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
-    public operator fun AnyColumnReference.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> = object : ColumnSet<Any?> {
-        override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<Any?>> {
-            val startPath = this@rangeTo.resolveSingle(context)!!.path
-            val endPath = endInclusive.resolveSingle(context)!!.path
-            val parentPath = startPath.parent()!!
-            require(parentPath == endPath.parent()) { "Start and end columns have different parent column paths" }
-            val parentCol = context.df.getColumnGroup(parentPath)
-            val startIndex = parentCol.getColumnIndex(startPath.name)
-            val endIndex = parentCol.getColumnIndex(endPath.name)
-            return (startIndex..endIndex).map {
-                parentCol.getColumn(it).let {
-                    it.addPath(parentPath + it.name)
+    public operator fun AnyColumnReference.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
+        object : ColumnSet<Any?> {
+            override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<Any?>> {
+                val startPath = this@rangeTo.resolveSingle(context)!!.path
+                val endPath = endInclusive.resolveSingle(context)!!.path
+                val parentPath = startPath.parent()!!
+                require(parentPath == endPath.parent()) { "Start and end columns have different parent column paths" }
+                val parentCol = context.df.getColumnGroup(parentPath)
+                val startIndex = parentCol.getColumnIndex(startPath.name)
+                val endIndex = parentCol.getColumnIndex(endPath.name)
+                return (startIndex..endIndex).map {
+                    parentCol.getColumn(it).let {
+                        it.addPath(parentPath + it.name)
+                    }
                 }
             }
         }
-    }
 
     public fun none(): ColumnSet<*> = ColumnsList<Any?>(emptyList())
 
@@ -115,7 +113,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun <C> ColumnSet<DataRow<C>>.select(vararg columns: String): ColumnSet<*> = select { columns.toColumns() }
 
-    public fun <C, R> ColumnSet<DataRow<C>>.select(vararg columns: KProperty<R>): ColumnSet<R> = select { columns.toColumns() }
+    public fun <C, R> ColumnSet<DataRow<C>>.select(vararg columns: KProperty<R>): ColumnSet<R> =
+        select { columns.toColumns() }
 
     public fun <C, R> ColumnSet<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> = createColumnSet {
         this@select.resolve(it).flatMap { group ->
@@ -145,7 +144,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region allDfs
 
-    public fun ColumnSet<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> = if (includeGroups) dfs { true } else dfs { !it.isColumnGroup() }
+    public fun ColumnSet<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> =
+        if (includeGroups) dfs { true } else dfs { !it.isColumnGroup() }
 
     public fun String.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> = toColumnAccessor().allDfs(includeGroups)
 
@@ -242,7 +242,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun <C> col(property: KProperty<C>): ColumnAccessor<C> = property.toColumnAccessor()
 
-    public operator fun ColumnSet<*>.get(colName: String): ColumnSet<Any?> = transform { it.mapNotNull { it.getChild(colName) } }
+    public operator fun ColumnSet<*>.get(colName: String): ColumnSet<Any?> =
+        transform { it.mapNotNull { it.getChild(colName) } }
+
     public operator fun <C> ColumnSet<*>.get(column: ColumnReference<C>): ColumnSet<C> = cols(column)
 
     public fun SingleColumn<AnyRow>.take(n: Int): ColumnSet<*> = transformSingle { it.children().take(n) }
@@ -288,8 +290,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public infix fun <C> ColumnReference<C>.into(column: KProperty<*>): ColumnReference<C> = named(column.columnName)
 
     public infix fun String.into(newName: String): ColumnReference<Any?> = toColumnAccessor().into(newName)
-    public infix fun String.into(column: ColumnAccessor<*>): ColumnReference<Any?> = toColumnAccessor().into(column.name())
-    public infix fun String.into(column: KProperty<*>): ColumnReference<Any?> = toColumnAccessor().into(column.columnName)
+    public infix fun String.into(column: ColumnAccessor<*>): ColumnReference<Any?> =
+        toColumnAccessor().into(column.name())
+
+    public infix fun String.into(column: KProperty<*>): ColumnReference<Any?> =
+        toColumnAccessor().into(column.columnName)
 
     public infix fun <C> ColumnReference<C>.named(newName: String): ColumnReference<C> = renamedReference(newName)
     public infix fun <C> ColumnReference<C>.named(name: KProperty<*>): ColumnReference<C> = named(name.columnName)
@@ -311,6 +316,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public infix fun <C> KProperty<C>.and(other: String): ColumnSet<Any?> = toColumnAccessor() and other
     public infix fun <C> KProperty<C>.and(other: KProperty<C>): ColumnSet<C> =
         toColumnAccessor() and other.toColumnAccessor()
+
     public infix fun <C> KProperty<C>.and(other: ColumnsSelector<T, C>): ColumnSet<C> = toColumnAccessor() and other()
 
     // endregion
@@ -339,7 +345,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(
     name: String = "",
     infer: Infer = Infer.Nulls,
-    noinline expression: AddExpression<T, R>
+    noinline expression: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(name, infer, expression)
 
 internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) -> Boolean): ColumnsSelector<T, C> =

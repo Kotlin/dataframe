@@ -25,7 +25,7 @@ internal interface SelectingColumnsLink
  * [DataFrame.select], [DataFrame.update], [DataFrame.gather], and [DataFrame.fillNulls])
  * can be done in the following ways:
  * - Select or express columns using the Column(s) Selection DSL.
- * (Any [Access Api][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+ * (Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
  *
  * This DSL comes in the form of either a [Column Selector][org.jetbrains.kotlinx.dataframe.ColumnSelector]- or [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
  * which operate in the [Column Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl] or the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
@@ -78,7 +78,7 @@ internal interface SelectingColumns {
     interface SetDefaultOperationArg
 
     /** Select or express columns using the Column(s) Selection DSL.
-     * (Any [Access Api][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * (Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
      *
      * This DSL comes in the form of either a [Column Selector][ColumnSelector]- or [Columns Selector][ColumnsSelector] lambda,
      * which operate in the [Column Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl] or the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
@@ -87,7 +87,7 @@ internal interface SelectingColumns {
     interface Dsl {
 
         /** Select or express columns using the Column(s) Selection DSL.
-         * (Any [Access Api][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+         * (Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
          *
          * This DSL comes in the form of either a [Column Selector][org.jetbrains.kotlinx.dataframe.ColumnSelector]- or [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
          * which operate in the [Column Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl] or the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
