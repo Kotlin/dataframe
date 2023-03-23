@@ -142,7 +142,7 @@ Return type of these overloads is a typed DataFrame. Its data schema defines col
 
 ```kotlin
 val names = listOf("Alice", "Bob", "Charlie")
-val df: DataFrame<OfSingleValueColumn<String>> = names.toDataFrame()
+val df: DataFrame<ValueProperty<String>> = names.toDataFrame()
 df.add("length") { value.length }
 ```
 

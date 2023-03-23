@@ -206,62 +206,62 @@ string.toDataFrame()
  */
 
 @JvmName("toDataFrameByte")
-public inline fun <reified B : Byte?> Iterable<B>.toDataFrame(): DataFrame<OfSingleValueColumn<B>> = toDataFrame {
-    OfSingleValueColumn<B>::value from { it }
+public inline fun <reified B : Byte?> Iterable<B>.toDataFrame(): DataFrame<ValueProperty<B>> = toDataFrame {
+    ValueProperty<B>::value from { it }
 }.cast()
 
 @JvmName("toDataFrameShort")
-public inline fun <reified S : Short?> Iterable<S>.toDataFrame(): DataFrame<OfSingleValueColumn<S>> = toDataFrame {
-    OfSingleValueColumn<S>::value from { it }
+public inline fun <reified S : Short?> Iterable<S>.toDataFrame(): DataFrame<ValueProperty<S>> = toDataFrame {
+    ValueProperty<S>::value from { it }
 }.cast()
 
 @JvmName("toDataFrameInt")
-public inline fun <reified I : Int?> Iterable<I>.toDataFrame(): DataFrame<OfSingleValueColumn<I>> = toDataFrame {
-    OfSingleValueColumn<I>::value from { it }
+public inline fun <reified I : Int?> Iterable<I>.toDataFrame(): DataFrame<ValueProperty<I>> = toDataFrame {
+    ValueProperty<I>::value from { it }
 }.cast()
 
 @JvmName("toDataFrameLong")
-public inline fun <reified L : Long?> Iterable<L>.toDataFrame(): DataFrame<OfSingleValueColumn<L>> = toDataFrame {
-    OfSingleValueColumn<L>::value from { it }
+public inline fun <reified L : Long?> Iterable<L>.toDataFrame(): DataFrame<ValueProperty<L>> = toDataFrame {
+    ValueProperty<L>::value from { it }
 }.cast()
 
 @JvmName("toDataFrameString")
-public inline fun <reified S : String?> Iterable<S>.toDataFrame(): DataFrame<OfSingleValueColumn<S>> = toDataFrame {
-    OfSingleValueColumn<S>::value from { it }
+public inline fun <reified S : String?> Iterable<S>.toDataFrame(): DataFrame<ValueProperty<S>> = toDataFrame {
+    ValueProperty<S>::value from { it }
 }.cast()
 
 @JvmName("toDataFrameChar")
-public inline fun <reified C : Char?> Iterable<C>.toDataFrame(): DataFrame<OfSingleValueColumn<C>> = toDataFrame {
-    OfSingleValueColumn<C>::value from { it }
+public inline fun <reified C : Char?> Iterable<C>.toDataFrame(): DataFrame<ValueProperty<C>> = toDataFrame {
+    ValueProperty<C>::value from { it }
 }.cast()
 
 @JvmName("toDataFrameBoolean")
-public inline fun <reified B : Boolean?> Iterable<B>.toDataFrame(): DataFrame<OfSingleValueColumn<B>> = toDataFrame {
-    OfSingleValueColumn<B>::value from { it }
+public inline fun <reified B : Boolean?> Iterable<B>.toDataFrame(): DataFrame<ValueProperty<B>> = toDataFrame {
+    ValueProperty<B>::value from { it }
 }.cast()
 
 @JvmName("toDataFrameUByte")
-public inline fun <reified U : UByte?> Iterable<U>.toDataFrame(): DataFrame<OfSingleValueColumn<U>> = toDataFrame {
-    OfSingleValueColumn<U>::value from { it }
+public inline fun <reified U : UByte?> Iterable<U>.toDataFrame(): DataFrame<ValueProperty<U>> = toDataFrame {
+    ValueProperty<U>::value from { it }
 }.cast()
 
 @JvmName("toDataFrameUShort")
-public inline fun <reified U : UShort?> Iterable<U>.toDataFrame(): DataFrame<OfSingleValueColumn<U>> = toDataFrame {
-    OfSingleValueColumn<U>::value from { it }
+public inline fun <reified U : UShort?> Iterable<U>.toDataFrame(): DataFrame<ValueProperty<U>> = toDataFrame {
+    ValueProperty<U>::value from { it }
 }.cast()
 
 @JvmName("toDataFrameUInt")
-public inline fun <reified U : UInt?> Iterable<U>.toDataFrame(): DataFrame<OfSingleValueColumn<U>> = toDataFrame {
-    OfSingleValueColumn<U>::value from { it }
+public inline fun <reified U : UInt?> Iterable<U>.toDataFrame(): DataFrame<ValueProperty<U>> = toDataFrame {
+    ValueProperty<U>::value from { it }
 }.cast()
 
 @JvmName("toDataFrameULong")
-public inline fun <reified U : ULong?> Iterable<U>.toDataFrame(): DataFrame<OfSingleValueColumn<U>> = toDataFrame {
-    OfSingleValueColumn<U>::value from { it }
+public inline fun <reified U : ULong?> Iterable<U>.toDataFrame(): DataFrame<ValueProperty<U>> = toDataFrame {
+    ValueProperty<U>::value from { it }
 }.cast()
 
 @DataSchema
-public interface OfSingleValueColumn<T> {
+public interface ValueProperty<T> {
     public val value: T
 }
 

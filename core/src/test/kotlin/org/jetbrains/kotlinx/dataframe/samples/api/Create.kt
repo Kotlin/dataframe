@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.Infer
-import org.jetbrains.kotlinx.dataframe.api.OfSingleValueColumn
+import org.jetbrains.kotlinx.dataframe.api.ValueProperty
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.columnGroup
@@ -321,7 +321,7 @@ class Create : TestBase() {
     fun readDataFrameFromValues() {
         // SampleStart
         val names = listOf("Alice", "Bob", "Charlie")
-        val df: DataFrame<OfSingleValueColumn<String>> = names.toDataFrame()
+        val df: DataFrame<ValueProperty<String>> = names.toDataFrame()
         df.add("length") { value.length }
         // SampleEnd
         df.value.toList() shouldBe names
