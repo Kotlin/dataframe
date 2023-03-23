@@ -216,8 +216,8 @@ class CreateDataFrameTests {
             val typeParameter = type.first()
             val func = """
             @JvmName("toDataFrame$type")
-            public inline fun <reified $typeParameter : $type?> Iterable<$typeParameter>.toDataFrame(): DataFrame<SingleColumn<$typeParameter>> = toDataFrame {
-                OfSingleValueColumn<$typeParameter>::value from { it }
+            public inline fun <reified $typeParameter : $type?> Iterable<$typeParameter>.toDataFrame(): DataFrame<ValueProperty<$typeParameter>> = toDataFrame {
+                ValueProperty<$typeParameter>::value from { it }
             }.cast()
             """.trimIndent()
             println(func)
