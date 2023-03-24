@@ -123,6 +123,9 @@ df.groupBy("name").pivot("city")
 ```
 
 </tab></tabs>
+
+<dataFrame src="pivotGroupBy.html"/>
+
 <!---END-->
 
 To group by all columns except pivoted use `groupByOther`:
@@ -132,6 +135,8 @@ To group by all columns except pivoted use `groupByOther`:
 ```kotlin
 df.pivot { city }.groupByOther()
 ```
+
+<dataFrame src="pivotGroupByOther.html"/>
 
 <!---END-->
 
@@ -186,6 +191,8 @@ df.pivot("city").groupBy { "name"["firstName"] }.aggregate {
 
 </tab></tabs>
 <!---END-->
+
+<dataFrame src="pivotAggregate.html"/>
 
 Shortcuts for common aggregation functions are also available:
 
@@ -268,6 +275,8 @@ df.pivot("city").aggregate(separate = true) {
 
 </tab></tabs>
 <!---END-->
+
+<dataFrame src="pivotSeparate.html"/>
 
 By default, any aggregation function will result in `null` value for those matrix cells, where intersection of column and row keys produced an empty data group.
 You can specify default value for any aggregation by `default` infix function. This value will replace all `null` results of aggregation function over non-empty data groups as well.
