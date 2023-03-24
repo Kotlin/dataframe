@@ -15,6 +15,7 @@
         <algolia-api-key>bce9ba6ce7419efe813d671244d3bf6a</algolia-api-key>
         <search-scopes-provider>https://www.jetbrains.com/search/json/</search-scopes-provider>
         <generate-sitemap-url-prefix>https://kotlin.github.io/dataframe/</generate-sitemap-url-prefix>
+        <analytics-head-script-file>resize-iframes.js</analytics-head-script-file>
     </variables>
     <build-profile instance="d"/>
 </buildprofiles>
