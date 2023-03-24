@@ -46,7 +46,6 @@ private interface DocumentationUrls {
 
         /** [See `dropNA` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropna) */
         interface DropNA
-
     }
 
     /** [See Access APIs on the documentation website.](https://kotlin.github.io/dataframe/apilevels.html) */

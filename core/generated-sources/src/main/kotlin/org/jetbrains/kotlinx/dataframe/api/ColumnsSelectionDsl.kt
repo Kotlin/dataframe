@@ -28,7 +28,6 @@ import kotlin.reflect.typeOf
  */
 private interface CommonColumnSelectionExamples
 
-
 /** [Column Selection DSL][ColumnSelectionDsl] */
 internal interface ColumnSelectionDslLink
 
