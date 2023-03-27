@@ -94,4 +94,4 @@ internal interface AccessApi {
 }
 
 /** [Access API][AccessApi] */
-public const val AccessApiLink: Int = 0
+internal interface AccessApiLink
