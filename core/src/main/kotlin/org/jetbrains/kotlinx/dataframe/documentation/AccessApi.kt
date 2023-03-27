@@ -11,10 +11,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.AccessApi.*
  *
  * In `Kotlin DataFrame` we provide four different ways to access columns, and, while they're essentially different, they
  * look pretty similar in the data wrangling DSL. These include:
- *  - {@include [ExtensionPropertiesApiLink]}
- *  - {@include [KPropertiesApiLink]}
- *  - {@include [ColumnAccessorsApiLink]}
- *  - {@include [StringApiLink]}
+ * @include [AnyApiLinks]
  *
  * For more information: {@include [DocumentationUrls.AccessApis]}
  *
@@ -22,12 +19,12 @@ import org.jetbrains.kotlinx.dataframe.documentation.AccessApi.*
  */
 internal interface AccessApi {
 
-    /** API:
+    /**
      * - {@include [ExtensionPropertiesApiLink]}
      * - {@include [KPropertiesApiLink]}
      * - {@include [ColumnAccessorsApiLink]}
      * - {@include [StringApiLink]}
-     * */
+     */
     interface AnyApiLinks
 
     /**

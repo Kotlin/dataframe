@@ -707,6 +707,41 @@ class Access : TestBase() {
     }
 
     @Test
+    fun columnSelectors_kproperties() {
+        // SampleStart
+        // by column name
+        df.select { it[Person::name] }
+        df.select { (Person::name)() }
+        df.select { col(Person::name) }
+
+        // by column path
+        df.select { it[Person::name][Name::firstName] }
+        df.select { Person::name[Name::firstName] }
+
+        // with a new name
+        df.select { Person::name named "Full Name" }
+
+        // converted
+        df.select { Person::name[Name::firstName].map { it.lowercase() } }
+
+        // column arithmetics
+        df.select { 2021 - (Person::age)() }
+
+        // two columns
+        df.select { Person::name and Person::age }
+
+        // range of columns
+        df.select { Person::name..Person::age }
+
+        // all children of ColumnGroup
+        df.select { Person::name.all() }
+
+        // dfs traversal of all children columns
+        df.select { Person::name.allDfs() }
+        // SampleEnd
+    }
+
+    @Test
     fun columnSelectors_strings() {
         // SampleStart
         // by column name

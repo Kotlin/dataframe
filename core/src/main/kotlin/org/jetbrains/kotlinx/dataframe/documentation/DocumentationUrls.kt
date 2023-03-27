@@ -63,4 +63,7 @@ private interface DocumentationUrls {
         /** [{@include [Text]}{@arg [NameArg] Extension Properties API}]({@include [Url]}/extensionpropertiesapi.html) */
         interface ExtensionPropertiesApi
     }
+
+    /** [{@include [Text]}{@arg [NameArg] Column Selectors}]({@include [Url]}/columnselectors.html) */
+    interface ColumnSelectors
 }

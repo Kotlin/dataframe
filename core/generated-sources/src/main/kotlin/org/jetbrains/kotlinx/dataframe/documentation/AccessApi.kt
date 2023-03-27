@@ -11,17 +11,17 @@ import org.jetbrains.kotlinx.dataframe.documentation.AccessApi.*
  *
  * In `Kotlin DataFrame` we provide four different ways to access columns, and, while they're essentially different, they
  * look pretty similar in the data wrangling DSL. These include:
- *  - [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi]
- *  - [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
- *  - [Column Accessors API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ColumnAccessorsApi]
- *  - [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]
+ * - [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi]
+ * - [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
+ * - [Column Accessors API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ColumnAccessorsApi]
+ * - [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]
  *
  * For more information: [See Access APIs on the documentation website.](https://kotlin.github.io/dataframe/apilevels.html)
  *
  */
 internal interface AccessApi {
 
-    /** API:
+    /**
      * - [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi]
      * - [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
      * - [Column Accessors API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ColumnAccessorsApi]
