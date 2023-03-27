@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApi.*
-import org.jetbrains.kotlinx.dataframe.documentation.samples.ApiLevels as ApiLevelsSample
 
 /**
  * ## Access APIs
@@ -39,7 +38,7 @@ internal interface AccessApi {
      * For more information: {@include [DocumentationUrls.AccessApis.StringApi]}
      *
      * For example:
-     * @sample [ApiLevelsSample.strings]
+     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.strings]
      */
     interface StringApi
 
@@ -54,7 +53,7 @@ internal interface AccessApi {
      * For more information: {@include [DocumentationUrls.AccessApis.ColumnAccessorsApi]}
      *
      * For example:
-     * @sample [ApiLevelsSample.accessors3]
+     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.accessors3]
      */
     interface ColumnAccessorsApi
 
@@ -71,7 +70,7 @@ internal interface AccessApi {
      * For more information: {@include [DocumentationUrls.AccessApis.KPropertiesApi]}
      *
      * For example:
-     * @sample [ApiLevelsSample.kproperties1]
+     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.kproperties1]
      */
     interface KPropertiesApi
 
@@ -86,7 +85,7 @@ internal interface AccessApi {
      * For more information: {@include [DocumentationUrls.AccessApis.ExtensionPropertiesApi]}
      *
      * For example:
-     * @sample [ApiLevelsSample.extensionProperties1]
+     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.extensionProperties1]
      */
     interface ExtensionPropertiesApi
 

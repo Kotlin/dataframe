@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApi.*
-import org.jetbrains.kotlinx.dataframe.documentation.samples.ApiLevels as ApiLevelsSample
 
 /**
  * ## Access APIs
@@ -123,9 +122,7 @@ internal interface AccessApi {
      *
      * For example:
      * ```kotlin
-     * fun extensionProperties1() {
-     *     val df = DataFrame.read("titanic.csv")
-     * }
+     * val df = DataFrame.read("titanic.csv")
      * ```
      */
     interface ExtensionPropertiesApi

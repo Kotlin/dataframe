@@ -1,12 +1,8 @@
-@file:Suppress("RemoveExplicitTypeArguments")
+package org.jetbrains.kotlinx.dataframe.samples.api
 
-package org.jetbrains.kotlinx.dataframe.documentation.samples
-
-import org.jetbrains.kotlinx.dataframe.ColumnsContainer
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.column
@@ -14,9 +10,13 @@ import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.toListOf
 import org.jetbrains.kotlinx.dataframe.io.read
+import org.junit.Ignore
+import org.junit.Test
 
-internal interface ApiLevels {
+@Ignore
+class ApiLevels {
 
+    @Test
     fun strings() {
         // SampleStart
         DataFrame.read("titanic.csv")
@@ -30,6 +30,7 @@ internal interface ApiLevels {
         // SampleEnd
     }
 
+    @Test
     fun accessors1() {
         // SampleStart
         val survived by column<Boolean>() // accessor for Boolean column with name 'survived'
@@ -40,13 +41,14 @@ internal interface ApiLevels {
         // SampleEnd
     }
 
+    @Test
     fun accessors2() {
-        // SampleStart
         val survived by column<Boolean>()
         val home by column<String>()
         val age by column<Int?>()
         val name by column<String>()
         val lastName by column<String>()
+        // SampleStart
 
         DataFrame.read("titanic.csv")
             .add(lastName) { name().split(",").last() }
@@ -55,6 +57,7 @@ internal interface ApiLevels {
         // SampleEnd
     }
 
+    @Test
     fun accessors3() {
         // SampleStart
         val survived by column<Boolean>()
@@ -70,6 +73,7 @@ internal interface ApiLevels {
         // SampleEnd
     }
 
+    @Test
     fun kproperties1() {
         // SampleStart
         data class Passenger(
@@ -91,6 +95,7 @@ internal interface ApiLevels {
         // SampleEnd
     }
 
+    @Test
     fun kproperties2() {
         // SampleStart
         data class Passenger(
@@ -105,7 +110,7 @@ internal interface ApiLevels {
         // SampleEnd
     }
 
-    //    @DataSchema
+    @DataSchema
     interface TitanicPassenger {
         val survived: Boolean
         val home: String
@@ -113,34 +118,20 @@ internal interface ApiLevels {
         val name: String
     }
 
+    @Test
     fun extensionProperties2() {
-        // SampleStart
         val df = DataFrame.read("titanic.csv").cast<TitanicPassenger>()
-
+        // SampleStart
         df.add("lastName") { name.split(",").last() }
             .dropNulls { age }
             .filter { survived && home.endsWith("NY") && age in 10..20 }
         // SampleEnd
     }
 
+    @Test
     fun extensionProperties1() {
+        // SampleStart
         val df = DataFrame.read("titanic.csv")
+        // SampleEnd
     }
 }
-
-internal val ColumnsContainer<ApiLevels.TitanicPassenger>.age: DataColumn<Int> @JvmName("TitanicPassenger_age") get() = this["age"] as DataColumn<Int>
-internal val DataRow<ApiLevels.TitanicPassenger>.age: Int @JvmName("TitanicPassenger_age") get() = this["age"] as Int
-internal val ColumnsContainer<ApiLevels.TitanicPassenger?>.age: DataColumn<Int?> @JvmName("NullableTitanicPassenger_age") get() = this["age"] as DataColumn<Int?>
-internal val DataRow<ApiLevels.TitanicPassenger?>.age: Int? @JvmName("NullableTitanicPassenger_age") get() = this["age"] as Int?
-internal val ColumnsContainer<ApiLevels.TitanicPassenger>.home: DataColumn<String> @JvmName("TitanicPassenger_home") get() = this["home"] as DataColumn<String>
-internal val DataRow<ApiLevels.TitanicPassenger>.home: String @JvmName("TitanicPassenger_home") get() = this["home"] as String
-internal val ColumnsContainer<ApiLevels.TitanicPassenger?>.home: DataColumn<String?> @JvmName("NullableTitanicPassenger_home") get() = this["home"] as DataColumn<String?>
-internal val DataRow<ApiLevels.TitanicPassenger?>.home: String? @JvmName("NullableTitanicPassenger_home") get() = this["home"] as String?
-internal val ColumnsContainer<ApiLevels.TitanicPassenger>.name: DataColumn<String> @JvmName("TitanicPassenger_name") get() = this["name"] as DataColumn<String>
-internal val DataRow<ApiLevels.TitanicPassenger>.name: String @JvmName("TitanicPassenger_name") get() = this["name"] as String
-internal val ColumnsContainer<ApiLevels.TitanicPassenger?>.name: DataColumn<String?> @JvmName("NullableTitanicPassenger_name") get() = this["name"] as DataColumn<String?>
-internal val DataRow<ApiLevels.TitanicPassenger?>.name: String? @JvmName("NullableTitanicPassenger_name") get() = this["name"] as String?
-internal val ColumnsContainer<ApiLevels.TitanicPassenger>.survived: DataColumn<Boolean> @JvmName("TitanicPassenger_survived") get() = this["survived"] as DataColumn<Boolean>
-internal val DataRow<ApiLevels.TitanicPassenger>.survived: Boolean @JvmName("TitanicPassenger_survived") get() = this["survived"] as Boolean
-internal val ColumnsContainer<ApiLevels.TitanicPassenger?>.survived: DataColumn<Boolean?> @JvmName("NullableTitanicPassenger_survived") get() = this["survived"] as DataColumn<Boolean?>
-internal val DataRow<ApiLevels.TitanicPassenger?>.survived: Boolean? @JvmName("NullableTitanicPassenger_survived") get() = this["survived"] as Boolean?
