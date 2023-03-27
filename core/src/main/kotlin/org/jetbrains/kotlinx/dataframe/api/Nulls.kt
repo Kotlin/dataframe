@@ -9,32 +9,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import kotlin.reflect.KProperty
 
-/**
- * ## `NaN`
- * [Floats][Float] or [Doubles][Double] can be represented as [Float.NaN] or [Double.NaN], respectively,
- * in cases where a mathematical operation is undefined, such as dividing by zero.
- *
- * You can also use [fillNaNs][fillNaNs] to replace `NaNs` in certain columns with a given value or expression
- * or [dropNaNs][dropNaNs] to drop rows with `NaNs` in them.
- *
- * @see NA
- */
-internal interface NaN
-
-/**
- * ## `NA`
- * `NA` in Dataframe can be seen as "[NaN] or `null`".
- *
- * [Floats][Float] or [Doubles][Double] can be represented as [Float.NaN] or [Double.NaN], respectively,
- * in cases where a mathematical operation is undefined, such as dividing by zero.
- *
- * You can also use [fillNA][fillNA] to replace `NAs` in certain columns with a given value or expression
- * or [dropNA][dropNA] to drop rows with `NAs` in them.
- *
- * @see NaN
- */
-internal interface NA
-
 // region fillNulls
 
 /**
@@ -60,7 +34,9 @@ private interface SetFillNullsOperationArg
  * @include [FillNulls] {@comment Description of the fillNulls operation.}
  * @include [LineBreak]
  * @include [Update.Columns] {@comment Description of what this function expects the user to do: select columns}
+ *
  * ## This Fill Nulls Overload
+ *
  */
 private interface CommonFillNullsFunctionDoc
 
@@ -97,7 +73,7 @@ public fun <T, C> DataFrame<T>.fillNulls(vararg columns: ColumnReference<C>): Up
     fillNulls { columns.toColumns() }
 
 /**
- * TODO this will be deprecated
+ * TODO this will be deprecated [PR #286](https://github.com/Kotlin/dataframe/pull/320)
  */
 public fun <T, C> DataFrame<T>.fillNulls(columns: Iterable<ColumnReference<C>>): Update<T, C?> =
     fillNulls { columns.toColumnSet() }
@@ -186,7 +162,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: ColumnReference<C>): Upd
     fillNaNs { columns.toColumns() }
 
 /**
- * TODO this will be deprecated
+ * TODO this will be deprecated [PR #286](https://github.com/Kotlin/dataframe/pull/320)
  */
 public fun <T, C> DataFrame<T>.fillNaNs(columns: Iterable<ColumnReference<C>>): Update<T, C> =
     fillNaNs { columns.toColumnSet() }
@@ -255,7 +231,7 @@ public fun <T, C> DataFrame<T>.fillNA(vararg columns: ColumnReference<C>): Updat
     fillNA { columns.toColumns() }
 
 /**
- * TODO this will be deprecated
+ * TODO this will be deprecated [PR #286](https://github.com/Kotlin/dataframe/pull/320)
  */
 public fun <T, C> DataFrame<T>.fillNA(columns: Iterable<ColumnReference<C>>): Update<T, C?> =
     fillNA { columns.toColumnSet() }
@@ -358,7 +334,7 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: AnyColumnReference, whereA
     dropNulls(whereAllNull) { columns.toColumns() }
 
 /**
- * TODO will be deprecated
+ * TODO this will be deprecated [PR #286](https://github.com/Kotlin/dataframe/pull/320)
  */
 public fun <T> DataFrame<T>.dropNulls(
     columns: Iterable<AnyColumnReference>,
@@ -452,7 +428,7 @@ public fun <T> DataFrame<T>.dropNA(vararg columns: AnyColumnReference, whereAllN
     dropNA(whereAllNA) { columns.toColumns() }
 
 /**
- * TODO will be deprecated
+ * TODO this will be deprecated [PR #286](https://github.com/Kotlin/dataframe/pull/320)
  */
 public fun <T> DataFrame<T>.dropNA(columns: Iterable<AnyColumnReference>, whereAllNA: Boolean = false): DataFrame<T> =
     dropNA(whereAllNA) { columns.toColumnSet() }
@@ -554,9 +530,12 @@ public fun <T> DataFrame<T>.dropNaNs(vararg columns: AnyColumnReference, whereAl
     dropNaNs(whereAllNaN) { columns.toColumns() }
 
 /**
- * TODO will be deprecated
+ * TODO this will be deprecated [PR #286](https://github.com/Kotlin/dataframe/pull/320)
  */
-public fun <T> DataFrame<T>.dropNaNs(columns: Iterable<AnyColumnReference>, whereAllNaN: Boolean = false): DataFrame<T> =
+public fun <T> DataFrame<T>.dropNaNs(
+    columns: Iterable<AnyColumnReference>,
+    whereAllNaN: Boolean = false,
+): DataFrame<T> =
     dropNaNs(whereAllNaN) { columns.toColumnSet() }
 
 /**

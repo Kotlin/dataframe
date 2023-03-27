@@ -20,11 +20,11 @@ import org.jetbrains.kotlinx.dataframe.RowValueExpression as DfRowValueExpressio
  * for instance in [update.with][Update.with], and [convert.notNull][Convert.notNull]
  * (using [RowValueExpression][DfRowValueExpression]).
  *
- * Note:
+ * NOTE:
  *
  * @include [AddDataRowNote]
  *
- * A Row Expression is similar to a {@include [RowConditionLink]} but that expects a [Boolean] as result.
+ * A {@include [RowExpressionLink]} is similar to a {@include [RowConditionLink]} but that expects a [Boolean] as result.
  */
 internal interface ExpressionsGivenRow {
 

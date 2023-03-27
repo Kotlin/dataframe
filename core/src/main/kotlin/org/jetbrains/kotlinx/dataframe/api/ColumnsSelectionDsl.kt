@@ -24,14 +24,14 @@ import kotlin.reflect.typeOf
 /**
  * Referring to a column in the selection DSL can be done in several ways corresponding to all
  * [Access APIs][AccessApi]:
- * TODO
+ * TODO: [Issue #286](https://github.com/Kotlin/dataframe/issues/286)
  */
 private interface CommonColumnSelectionExamples
 
 /** [Column Selection DSL][ColumnSelectionDsl] */
 internal interface ColumnSelectionDslLink
 
-/** TODO: Put examples and explanations here */
+/** TODO: [Issue #286](https://github.com/Kotlin/dataframe/issues/286) */
 public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
 
     public operator fun <C> ColumnReference<C>.invoke(): DataColumn<C> = get(this)
@@ -50,7 +50,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
 /** [Columns Selection DSL][ColumnsSelectionDsl] */
 internal interface ColumnsSelectionDslLink
 
-/** TODO: Put examples and explanations here */
+/** TODO: [Issue #286](https://github.com/Kotlin/dataframe/issues/286) */
 public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColumn<DataRow<T>> {
 
     public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C>): SingleColumn<C> =

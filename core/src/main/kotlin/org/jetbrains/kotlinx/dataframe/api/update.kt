@@ -127,7 +127,7 @@ public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Updat
     update { columns.toColumns() }
 
 /**
- * TODO this will be deprecated
+ * TODO this will be deprecated [PR #286](https://github.com/Kotlin/dataframe/pull/320)
  */
 public fun <T, C> DataFrame<T>.update(columns: Iterable<ColumnReference<C>>): Update<T, C> =
     update { columns.toColumnSet() }

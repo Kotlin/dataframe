@@ -16,7 +16,6 @@ application.mainClass.set("org.jetbrains.kotlinx.dataframe.examples.movies.Movie
 
 dependencies {
     implementation(project(":core"))
-    implementation(project(":dataframe-openapi"))
 }
 
 tasks.withType<KotlinCompile> {
