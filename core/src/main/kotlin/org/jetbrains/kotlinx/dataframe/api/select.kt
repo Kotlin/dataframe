@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.util.ITERABLE_COLUMNS_DEPRECATION_MESSAGE
 import kotlin.reflect.KProperty
 
 // region DataFrame
@@ -12,23 +13,32 @@ import kotlin.reflect.KProperty
 public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T> =
     get(columns).toDataFrame().cast()
 
-public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> =
-    select(columns.asIterable())
+public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> = select { columns.toColumnSet() }
 
-@JvmName("selectKPropertyIterable")
-public fun <T> DataFrame<T>.select(columns: Iterable<KProperty<*>>): DataFrame<T> =
-    select(columns.map { it.columnName })
+public fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> = select { columns.toColumnSet() }
 
-public fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> =
-    select(columns.asIterable())
+public fun <T> DataFrame<T>.select(vararg columns: AnyColumnReference): DataFrame<T> = select { columns.toColumnSet() }
 
+@Deprecated(
+    message = ITERABLE_COLUMNS_DEPRECATION_MESSAGE,
+    replaceWith = ReplaceWith(
+        "select { columns.toColumnSet() }",
+        "org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet"
+    ),
+    level = DeprecationLevel.ERROR
+)
 @JvmName("selectStringIterable")
 public fun <T> DataFrame<T>.select(columns: Iterable<String>): DataFrame<T> =
-    columns.map { get(it) }.toDataFrame().cast()
-
-public fun <T> DataFrame<T>.select(vararg columns: AnyColumnReference): DataFrame<T> =
     select { columns.toColumnSet() }
 
+@Deprecated(
+    message = ITERABLE_COLUMNS_DEPRECATION_MESSAGE,
+    replaceWith = ReplaceWith(
+        "select { columns.toColumnSet() }",
+        "org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet"
+    ),
+    level = DeprecationLevel.ERROR
+)
 @JvmName("selectAnyColumnReferenceIterable")
 public fun <T> DataFrame<T>.select(columns: Iterable<AnyColumnReference>): DataFrame<T> =
     select { columns.toColumnSet() }

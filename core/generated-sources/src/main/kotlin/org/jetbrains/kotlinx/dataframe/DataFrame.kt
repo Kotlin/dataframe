@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsImpl
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.impl.headPlusIterable
@@ -57,8 +58,8 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
     override operator fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> =
         getColumnsImpl(UnresolvedColumnsPolicy.Fail, columns)
 
-    public operator fun get(first: AnyColumnReference, vararg other: AnyColumnReference): DataFrame<T> = select(listOf(first) + other)
-    public operator fun get(first: String, vararg other: String): DataFrame<T> = select(listOf(first) + other)
+    public operator fun get(first: AnyColumnReference, vararg other: AnyColumnReference): DataFrame<T> = select { (listOf(first) + other).toColumnSet() }
+    public operator fun get(first: String, vararg other: String): DataFrame<T> = select { (listOf(first) + other).toColumnSet() }
     public operator fun get(columnRange: ClosedRange<String>): DataFrame<T> =
         select { columnRange.start..columnRange.endInclusive }
 
