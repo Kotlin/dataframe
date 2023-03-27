@@ -1,7 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
-import org.jetbrains.kotlinx.dataframe.*
+import org.jetbrains.kotlinx.dataframe.RowFilter
+import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows.RowConditionLink
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows.RowValueConditionLink
+import org.jetbrains.kotlinx.dataframe.index
 
 /**
  * ## Selecting Rows
@@ -14,7 +18,6 @@ import org.jetbrains.kotlinx.dataframe.api.*
  * (using [RowValueFilter]).
  *
  * A Row Condition is similar to a {@include [RowExpressionsLink]} but expects a [Boolean] as result.
- * {@comment TODO Is `where` present everywhere it should be?}
  */
 internal interface SelectingRows {
 

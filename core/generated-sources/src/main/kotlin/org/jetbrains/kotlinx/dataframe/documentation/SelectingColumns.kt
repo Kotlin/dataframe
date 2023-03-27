@@ -10,12 +10,6 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.*
 import kotlin.reflect.KProperty
 
-/** {@comment
- * In this file we provide documentation for high-level operations such as
- * the operation of selecting columns.
- * }
- */
-
 /** [Selecting Columns][SelectingColumns] */
 internal interface SelectingColumnsLink
 
