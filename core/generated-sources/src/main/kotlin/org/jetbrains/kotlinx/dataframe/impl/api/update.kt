@@ -2,12 +2,12 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataFrameExpression
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
-import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.api.AddDataRow
 import org.jetbrains.kotlinx.dataframe.api.Update
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
@@ -36,7 +36,7 @@ internal fun <T, C> Update<T, C>.updateImpl(expression: (AddDataRow<T>, DataColu
     if (df.isEmpty()) df
     else df.replace(columns).with { it.updateImpl(df, filter, expression) }
 
-internal fun <T, C> Update<T, C>.updateWithValuePerColumnImpl(selector: Selector<DataColumn<C>, C>) =
+internal fun <T, C> Update<T, C>.updateWithValuePerColumnImpl(selector: ColumnExpression<C, C>) =
     if (df.isEmpty()) df
     else {
         df.replace(columns).with {

@@ -69,10 +69,12 @@ val addGeneratedSourcesToGit by tasks.creating(GitTask::class) {
 
 // Backup the kotlin source files location
 val kotlinMainSources = kotlin.sourceSets.main.get().kotlin.sourceDirectories
+val kotlinTestSources = kotlin.sourceSets.test.get().kotlin.sourceDirectories
 
 // Task to generate the processed documentation
 val processKDocsMain by creatingProcessDocTask(
-    sources = kotlinMainSources.filterNot { "build/generated" in it.path }, // Exclude generated sources
+    sources = (kotlinMainSources + kotlinTestSources) // Include both test and main sources for cross-referencing
+        .filterNot { "build/generated" in it.path }, // Exclude generated sources
 ) {
     target = file(generatedSourcesFolderName)
     processors = listOf(
@@ -107,8 +109,9 @@ tasks.withType<Jar> {
     doFirst {
         kotlin.sourceSets.main {
             kotlin.setSrcDirs(
-                processKDocsMain.targets +
-                    kotlinMainSources.filter { "build/generated" in it.path } // Include generated sources (which were excluded above)
+                processKDocsMain.targets
+                    .filterNot { "src/test/kotlin" in it.path || "src/test/java" in it.path } // filter out test sources again
+                    .plus(kotlinMainSources.filter { "build/generated" in it.path }) // Include generated sources (which were excluded above)
             )
         }
     }
