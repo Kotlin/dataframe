@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.impl.DELIMITERS_REGEX
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
+import org.jetbrains.kotlinx.dataframe.util.ITERABLE_COLUMNS_DEPRECATION_MESSAGE
 import kotlin.reflect.KProperty
 
 // region DataFrame
@@ -25,6 +26,15 @@ public fun <T, C> DataFrame<T>.rename(vararg cols: ColumnReference<C>): RenameCl
 
 public fun <T, C> DataFrame<T>.rename(vararg cols: KProperty<C>): RenameClause<T, C> = rename { cols.toColumnSet() }
 public fun <T> DataFrame<T>.rename(vararg cols: String): RenameClause<T, Any?> = rename { cols.toColumnSet() }
+
+@Deprecated(
+    message = ITERABLE_COLUMNS_DEPRECATION_MESSAGE,
+    replaceWith = ReplaceWith(
+        "rename { cols.toColumnSet() }",
+        "org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet"
+    ),
+    level = DeprecationLevel.ERROR
+)
 public fun <T, C> DataFrame<T>.rename(cols: Iterable<ColumnReference<C>>): RenameClause<T, C> =
     rename { cols.toColumnSet() }
 

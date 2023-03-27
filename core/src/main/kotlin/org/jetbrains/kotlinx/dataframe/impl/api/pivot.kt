@@ -84,7 +84,7 @@ internal fun <T, R> aggregatePivot(
         pivotSequences.distinctBy { it.first().column.path }.count() > 1
     }
     pivotSequences.forEach { pivotColumns ->
-        aggregator.df.groupBy(pivotColumns.map { it.column }).forEach { (key, group) ->
+        aggregator.df.groupBy { pivotColumns.map { it.column }.toColumnSet() }.forEach { (key, group) ->
 
             val pathNames = mutableListOf<String>()
             key.values().forEachIndexed { i, v ->

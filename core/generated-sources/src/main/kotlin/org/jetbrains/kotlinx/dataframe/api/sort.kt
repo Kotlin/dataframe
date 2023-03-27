@@ -57,6 +57,14 @@ public fun <T, C> DataFrame<T>.sortBy(columns: SortColumnsSelector<T, C>): DataF
     UnresolvedColumnsPolicy.Fail, columns
 )
 
+@Deprecated(
+    message = ITERABLE_COLUMNS_DEPRECATION_MESSAGE,
+    replaceWith = ReplaceWith(
+        "sortBy { cols.toColumnSet() }",
+        "org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet"
+    ),
+    level = DeprecationLevel.ERROR
+)
 public fun <T> DataFrame<T>.sortBy(cols: Iterable<ColumnReference<Comparable<*>?>>): DataFrame<T> =
     sortBy { cols.toColumnSet() }
 

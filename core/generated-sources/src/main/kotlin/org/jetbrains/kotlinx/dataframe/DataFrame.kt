@@ -58,8 +58,12 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
     override operator fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> =
         getColumnsImpl(UnresolvedColumnsPolicy.Fail, columns)
 
-    public operator fun get(first: AnyColumnReference, vararg other: AnyColumnReference): DataFrame<T> = select { (listOf(first) + other).toColumnSet() }
-    public operator fun get(first: String, vararg other: String): DataFrame<T> = select { (listOf(first) + other).toColumnSet() }
+    public operator fun get(first: AnyColumnReference, vararg other: AnyColumnReference): DataFrame<T> =
+        select { (listOf(first) + other).toColumnSet() }
+
+    public operator fun get(first: String, vararg other: String): DataFrame<T> =
+        select { (listOf(first) + other).toColumnSet() }
+
     public operator fun get(columnRange: ClosedRange<String>): DataFrame<T> =
         select { columnRange.start..columnRange.endInclusive }
 
