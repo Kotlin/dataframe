@@ -5,15 +5,15 @@
     <variables>
         <web-root>https://kotlin.github.io/dataframe/</web-root>
         <download-page/>
-        <config-feedback-enabled>true</config-feedback-enabled>
-        <config-feedback-widget>true</config-feedback-widget>
-        <config-feedback-support>null</config-feedback-support>
-        <config-feedback-url>https://support.jetbrains.com</config-feedback-url>
-        <config-webmaster>webmaster@jetbrains.com</config-webmaster>
-        <config-algolia-id>OHIV241QET</config-algolia-id>
-        <config-algolia-index>prod_JETBRAINSCOM_HELP</config-algolia-index>
-        <config-algolia-api-key>17f5c6a6e439886860d760d9ce054fd8</config-algolia-api-key>
-        <config-search-scopes-provider>https://www.jetbrains.com/search/json/</config-search-scopes-provider>
+<!--        <feedback-enabled>true</feedback-enabled>-->
+        <feedback-widget>true</feedback-widget>
+        <feedback-support>null</feedback-support>
+        <feedback-url>https://support.jetbrains.com</feedback-url>
+        <webmaster>webmaster@jetbrains.com</webmaster>
+        <algolia-id>OHIV241QET</algolia-id>
+        <algolia-index>prod_JETBRAINSCOM_HELP</algolia-index>
+        <algolia-api-key>17f5c6a6e439886860d760d9ce054fd8</algolia-api-key>
+        <search-scopes-provider>https://www.jetbrains.com/search/json/</search-scopes-provider>
         <generate-sitemap-url-prefix>https://kotlin.github.io/dataframe/</generate-sitemap-url-prefix>
     </variables>
     <build-profile instance="d"/>
