@@ -27,5 +27,7 @@ internal data class PivotGroupByImpl<T>(
 
     override fun default(value: Any?) = copy(default = value)
 
-    override fun remainingColumnsSelector(): ColumnsSelector<*, *> = df.groups.firstOrNull()?.getPivotColumnPaths(columns).orEmpty().let { pivotPaths -> { all().except(pivotPaths.toColumnSet() and (df as GroupByImpl).keyColumnsInGroups.toColumnSet()) } }
+    override fun remainingColumnsSelector(): ColumnsSelector<*, *> =
+        df.groups.firstOrNull()?.getPivotColumnPaths(columns).orEmpty()
+            .let { pivotPaths -> { all().except(pivotPaths.toColumnSet() and (df as GroupByImpl).keyColumnsInGroups.toColumnSet()) } }
 }

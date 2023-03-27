@@ -35,11 +35,22 @@ private val supportedClasses = setOf(Double::class, Float::class, Int::class, Lo
 
 // region DataFrame
 
-public fun <T, C> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA, columns: ColumnsSelector<T, C>): DataFrame<T> =
+public fun <T, C> DataFrame<T>.cumSum(
+    skipNA: Boolean = defaultCumSumSkipNA,
+    columns: ColumnsSelector<T, C>,
+): DataFrame<T> =
     convert(columns).to { if (it.typeClass in supportedClasses) it.cast<Number?>().cumSum(skipNA) else it }
-public fun <T> DataFrame<T>.cumSum(vararg columns: String, skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> = cumSum(skipNA) { columns.toColumnSet() }
-public fun <T> DataFrame<T>.cumSum(vararg columns: AnyColumnReference, skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> = cumSum(skipNA) { columns.toColumnSet() }
-public fun <T> DataFrame<T>.cumSum(vararg columns: KProperty<*>, skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> = cumSum(skipNA) { columns.toColumnSet() }
+
+public fun <T> DataFrame<T>.cumSum(vararg columns: String, skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> =
+    cumSum(skipNA) { columns.toColumnSet() }
+
+public fun <T> DataFrame<T>.cumSum(
+    vararg columns: AnyColumnReference,
+    skipNA: Boolean = defaultCumSumSkipNA,
+): DataFrame<T> = cumSum(skipNA) { columns.toColumnSet() }
+
+public fun <T> DataFrame<T>.cumSum(vararg columns: KProperty<*>, skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> =
+    cumSum(skipNA) { columns.toColumnSet() }
 
 public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> = cumSum(skipNA) { allDfs() }
 
@@ -47,11 +58,26 @@ public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataF
 
 // region GroupBy
 
-public fun <T, G, C> GroupBy<T, G>.cumSum(skipNA: Boolean = defaultCumSumSkipNA, columns: ColumnsSelector<G, C>): GroupBy<T, G> =
+public fun <T, G, C> GroupBy<T, G>.cumSum(
+    skipNA: Boolean = defaultCumSumSkipNA,
+    columns: ColumnsSelector<G, C>,
+): GroupBy<T, G> =
     updateGroups { cumSum(skipNA, columns) }
-public fun <T, G> GroupBy<T, G>.cumSum(vararg columns: String, skipNA: Boolean = defaultCumSumSkipNA): GroupBy<T, G> = cumSum(skipNA) { columns.toColumnSet() }
-public fun <T, G> GroupBy<T, G>.cumSum(vararg columns: AnyColumnReference, skipNA: Boolean = defaultCumSumSkipNA): GroupBy<T, G> = cumSum(skipNA) { columns.toColumnSet() }
-public fun <T, G> GroupBy<T, G>.cumSum(vararg columns: KProperty<*>, skipNA: Boolean = defaultCumSumSkipNA): GroupBy<T, G> = cumSum(skipNA) { columns.toColumnSet() }
-public fun <T, G> GroupBy<T, G>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): GroupBy<T, G> = cumSum(skipNA) { allDfs() }
+
+public fun <T, G> GroupBy<T, G>.cumSum(vararg columns: String, skipNA: Boolean = defaultCumSumSkipNA): GroupBy<T, G> =
+    cumSum(skipNA) { columns.toColumnSet() }
+
+public fun <T, G> GroupBy<T, G>.cumSum(
+    vararg columns: AnyColumnReference,
+    skipNA: Boolean = defaultCumSumSkipNA,
+): GroupBy<T, G> = cumSum(skipNA) { columns.toColumnSet() }
+
+public fun <T, G> GroupBy<T, G>.cumSum(
+    vararg columns: KProperty<*>,
+    skipNA: Boolean = defaultCumSumSkipNA,
+): GroupBy<T, G> = cumSum(skipNA) { columns.toColumnSet() }
+
+public fun <T, G> GroupBy<T, G>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): GroupBy<T, G> =
+    cumSum(skipNA) { allDfs() }
 
 // endregion

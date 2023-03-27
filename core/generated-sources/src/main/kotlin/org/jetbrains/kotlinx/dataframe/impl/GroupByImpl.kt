@@ -48,7 +48,8 @@ internal class GroupByImpl<T, G>(
 
     override fun toString() = df.toString()
 
-    override fun remainingColumnsSelector(): ColumnsSelector<*, *> = keyColumnsInGroups.toColumnSet().let { groupCols -> { all().except(groupCols) } }
+    override fun remainingColumnsSelector(): ColumnsSelector<*, *> =
+        keyColumnsInGroups.toColumnSet().let { groupCols -> { all().except(groupCols) } }
 
     override fun <R> aggregate(body: AggregateGroupedBody<G, R>) = aggregateGroupBy(toDataFrame(), { groups }, removeColumns = true, body).cast<G>()
 

@@ -15,7 +15,7 @@ import kotlin.reflect.KProperty
 public data class Reorder<T, C>(
     internal val df: DataFrame<T>,
     internal val columns: ColumnsSelector<T, C>,
-    internal val inFrameColumns: Boolean
+    internal val inFrameColumns: Boolean,
 ) {
     public fun <R> cast(): Reorder<T, R> = this as Reorder<T, R>
 }

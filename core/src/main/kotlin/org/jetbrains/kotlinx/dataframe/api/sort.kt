@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
+import org.jetbrains.kotlinx.dataframe.util.ITERABLE_COLUMNS_DEPRECATION_MESSAGE
 import kotlin.reflect.KProperty
 
 public interface SortDsl<out T> : ColumnsSelectionDsl<T> {
@@ -85,6 +86,14 @@ public fun <T> DataFrame<T>.sortByDesc(vararg columns: String): DataFrame<T> = s
 public fun <T, C> DataFrame<T>.sortByDesc(vararg columns: ColumnReference<Comparable<C>?>): DataFrame<T> =
     sortByDesc { columns.toColumnSet() }
 
+@Deprecated(
+    message = ITERABLE_COLUMNS_DEPRECATION_MESSAGE,
+    replaceWith = ReplaceWith(
+        "sortByDesc { columns.toColumnSet() }",
+        "org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet"
+    ),
+    level = DeprecationLevel.ERROR
+)
 public fun <T, C> DataFrame<T>.sortByDesc(columns: Iterable<ColumnReference<Comparable<C>?>>): DataFrame<T> =
     sortByDesc { columns.toColumnSet() }
 

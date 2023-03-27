@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
+import org.jetbrains.kotlinx.dataframe.util.ITERABLE_COLUMNS_DEPRECATION_MESSAGE
 import kotlin.reflect.KProperty
 
 public interface SortDsl<out T> : ColumnsSelectionDsl<T> {
@@ -85,6 +86,14 @@ public fun <T> DataFrame<T>.sortByDesc(vararg columns: String): DataFrame<T> = s
 public fun <T, C> DataFrame<T>.sortByDesc(vararg columns: ColumnReference<Comparable<C>?>): DataFrame<T> =
     sortByDesc { columns.toColumnSet() }
 
+@Deprecated(
+    message = ITERABLE_COLUMNS_DEPRECATION_MESSAGE,
+    replaceWith = ReplaceWith(
+        "sortByDesc { columns.toColumnSet() }",
+        "org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet"
+    ),
+    level = DeprecationLevel.ERROR
+)
 public fun <T, C> DataFrame<T>.sortByDesc(columns: Iterable<ColumnReference<Comparable<C>?>>): DataFrame<T> =
     sortByDesc { columns.toColumnSet() }
 
@@ -93,13 +102,21 @@ public fun <T, C> DataFrame<T>.sortByDesc(columns: Iterable<ColumnReference<Comp
 // region GroupBy
 
 public fun <T, G> GroupBy<T, G>.sortBy(vararg cols: String): GroupBy<T, G> = sortBy { cols.toColumnSet() }
-public fun <T, G> GroupBy<T, G>.sortBy(vararg cols: ColumnReference<Comparable<*>?>): GroupBy<T, G> = sortBy { cols.toColumnSet() }
-public fun <T, G> GroupBy<T, G>.sortBy(vararg cols: KProperty<Comparable<*>?>): GroupBy<T, G> = sortBy { cols.toColumnSet() }
+public fun <T, G> GroupBy<T, G>.sortBy(vararg cols: ColumnReference<Comparable<*>?>): GroupBy<T, G> =
+    sortBy { cols.toColumnSet() }
+
+public fun <T, G> GroupBy<T, G>.sortBy(vararg cols: KProperty<Comparable<*>?>): GroupBy<T, G> =
+    sortBy { cols.toColumnSet() }
+
 public fun <T, G, C> GroupBy<T, G>.sortBy(selector: SortColumnsSelector<G, C>): GroupBy<T, G> = sortByImpl(selector)
 
 public fun <T, G> GroupBy<T, G>.sortByDesc(vararg cols: String): GroupBy<T, G> = sortByDesc { cols.toColumnSet() }
-public fun <T, G> GroupBy<T, G>.sortByDesc(vararg cols: ColumnReference<Comparable<*>?>): GroupBy<T, G> = sortByDesc { cols.toColumnSet() }
-public fun <T, G> GroupBy<T, G>.sortByDesc(vararg cols: KProperty<Comparable<*>?>): GroupBy<T, G> = sortByDesc { cols.toColumnSet() }
+public fun <T, G> GroupBy<T, G>.sortByDesc(vararg cols: ColumnReference<Comparable<*>?>): GroupBy<T, G> =
+    sortByDesc { cols.toColumnSet() }
+
+public fun <T, G> GroupBy<T, G>.sortByDesc(vararg cols: KProperty<Comparable<*>?>): GroupBy<T, G> =
+    sortByDesc { cols.toColumnSet() }
+
 public fun <T, G, C> GroupBy<T, G>.sortByDesc(selector: SortColumnsSelector<G, C>): GroupBy<T, G> {
     val set = selector.toColumnSet()
     return sortByImpl { set.desc() }
@@ -107,7 +124,7 @@ public fun <T, G, C> GroupBy<T, G>.sortByDesc(selector: SortColumnsSelector<G, C
 
 private fun <T, G, C> GroupBy<T, G>.createColumnFromGroupExpression(
     receiver: ColumnsSelectionDsl<T>,
-    expression: DataFrameExpression<G, C>
+    expression: DataFrameExpression<G, C>,
 ): DataColumn<C?> {
     return receiver.newColumnWithActualType("") { row ->
         val group = row[groups]

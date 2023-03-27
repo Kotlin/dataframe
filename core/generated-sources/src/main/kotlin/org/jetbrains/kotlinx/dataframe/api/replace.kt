@@ -11,17 +11,33 @@ import org.jetbrains.kotlinx.dataframe.impl.api.ColumnToInsert
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.util.ITERABLE_COLUMNS_DEPRECATION_MESSAGE
 import kotlin.reflect.KProperty
 
-public fun <T, C> DataFrame<T>.replace(columns: ColumnsSelector<T, C>): ReplaceClause<T, C> = ReplaceClause(this, columns)
+public fun <T, C> DataFrame<T>.replace(columns: ColumnsSelector<T, C>): ReplaceClause<T, C> =
+    ReplaceClause(this, columns)
+
 public fun <T> DataFrame<T>.replace(vararg columns: String): ReplaceClause<T, Any?> = replace { columns.toColumnSet() }
-public fun <T, C> DataFrame<T>.replace(vararg columns: ColumnReference<C>): ReplaceClause<T, C> = replace { columns.toColumnSet() }
-public fun <T, C> DataFrame<T>.replace(vararg columns: KProperty<C>): ReplaceClause<T, C> = replace { columns.toColumnSet() }
-public fun <T, C> DataFrame<T>.replace(columns: Iterable<ColumnReference<C>>): ReplaceClause<T, C> = replace { columns.toColumnSet() }
+public fun <T, C> DataFrame<T>.replace(vararg columns: ColumnReference<C>): ReplaceClause<T, C> =
+    replace { columns.toColumnSet() }
+
+public fun <T, C> DataFrame<T>.replace(vararg columns: KProperty<C>): ReplaceClause<T, C> =
+    replace { columns.toColumnSet() }
+
+@Deprecated(
+    message = ITERABLE_COLUMNS_DEPRECATION_MESSAGE,
+    replaceWith = ReplaceWith(
+        "replace { columns.toColumnSet() }",
+        "org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet"
+    ),
+    level = DeprecationLevel.ERROR
+)
+public fun <T, C> DataFrame<T>.replace(columns: Iterable<ColumnReference<C>>): ReplaceClause<T, C> =
+    replace { columns.toColumnSet() }
 
 public fun <T> DataFrame<T>.replaceAll(
     vararg valuePairs: Pair<Any?, Any?>,
-    columns: ColumnsSelector<T, *> = { allDfs() }
+    columns: ColumnsSelector<T, *> = { allDfs() },
 ): DataFrame<T> {
     val map = valuePairs.toMap()
     return update(columns).with { map[it] ?: it }

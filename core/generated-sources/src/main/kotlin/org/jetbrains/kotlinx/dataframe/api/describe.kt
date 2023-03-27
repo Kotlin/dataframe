@@ -40,9 +40,16 @@ public fun <T> DataColumn<T>.describe(): DataFrame<ColumnDescription> = describe
 // region DataFrame
 
 public fun <T> DataFrame<T>.describe(): DataFrame<ColumnDescription> = describe { allDfs() }
-public fun <T> DataFrame<T>.describe(columns: ColumnsSelector<T, *>): DataFrame<ColumnDescription> = describeImpl(getColumnsWithPaths(columns))
-public fun <T> DataFrame<T>.describe(vararg columns: String): DataFrame<ColumnDescription> = describe { columns.toColumnSet() }
-public fun <T, C : Number?> DataFrame<T>.describe(vararg columns: ColumnReference<C>): DataFrame<ColumnDescription> = describe { columns.toColumnSet() }
-public fun <T, C : Number?> DataFrame<T>.describe(vararg columns: KProperty<C>): DataFrame<ColumnDescription> = describe { columns.toColumnSet() }
+public fun <T> DataFrame<T>.describe(columns: ColumnsSelector<T, *>): DataFrame<ColumnDescription> =
+    describeImpl(getColumnsWithPaths(columns))
+
+public fun <T> DataFrame<T>.describe(vararg columns: String): DataFrame<ColumnDescription> =
+    describe { columns.toColumnSet() }
+
+public fun <T, C : Number?> DataFrame<T>.describe(vararg columns: ColumnReference<C>): DataFrame<ColumnDescription> =
+    describe { columns.toColumnSet() }
+
+public fun <T, C : Number?> DataFrame<T>.describe(vararg columns: KProperty<C>): DataFrame<ColumnDescription> =
+    describe { columns.toColumnSet() }
 
 // endregion

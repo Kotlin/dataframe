@@ -21,12 +21,18 @@ import kotlin.reflect.KProperty
 
 public fun <T, C> DataFrame<T>.format(columns: ColumnsSelector<T, C>): FormatClause<T, C> = FormatClause(this, columns)
 public fun <T> DataFrame<T>.format(vararg columns: String): FormatClause<T, Any?> = format { columns.toColumnSet() }
-public fun <T, C> DataFrame<T>.format(vararg columns: ColumnReference<C>): FormatClause<T, C> = format { columns.toColumnSet() }
-public fun <T, C> DataFrame<T>.format(vararg columns: KProperty<C>): FormatClause<T, C> = format { columns.toColumnSet() }
+public fun <T, C> DataFrame<T>.format(vararg columns: ColumnReference<C>): FormatClause<T, C> =
+    format { columns.toColumnSet() }
 
-public fun <T, C> FormatClause<T, C>.perRowCol(formatter: RowColFormatter<T, C>): FormattedFrame<T> = formatImpl(formatter)
+public fun <T, C> DataFrame<T>.format(vararg columns: KProperty<C>): FormatClause<T, C> =
+    format { columns.toColumnSet() }
 
-public fun <T, C> FormatClause<T, C>.with(formatter: CellFormatter<C>): FormattedFrame<T> = formatImpl { row, col -> formatter(row[col]) }
+public fun <T, C> FormatClause<T, C>.perRowCol(formatter: RowColFormatter<T, C>): FormattedFrame<T> =
+    formatImpl(formatter)
+
+public fun <T, C> FormatClause<T, C>.with(formatter: CellFormatter<C>): FormattedFrame<T> =
+    formatImpl { row, col -> formatter(row[col]) }
+
 public fun <T, C> FormatClause<T, C>.where(filter: RowValueFilter<T, C>): FormatClause<T, C> = copy(filter = filter)
 
 public fun <T> DataFrame<T>.format(): FormatClause<T, Any?> = FormatClause(this)

@@ -19,7 +19,7 @@ public fun <A, B> DataFrame<A>.join(
 public fun <A, B> DataFrame<A>.join(
     other: DataFrame<B>,
     vararg columns: String,
-    type: JoinType = JoinType.Inner
+    type: JoinType = JoinType.Inner,
 ): DataFrame<A> = join(other, type) { columns.toColumnSet() }
 
 public fun <A, B> DataFrame<A>.innerJoin(
@@ -29,7 +29,7 @@ public fun <A, B> DataFrame<A>.innerJoin(
 
 public fun <A, B> DataFrame<A>.innerJoin(
     other: DataFrame<B>,
-    vararg columns: String
+    vararg columns: String,
 ): DataFrame<A> = innerJoin(other) { columns.toColumnSet() }
 
 public fun <A, B> DataFrame<A>.leftJoin(
@@ -39,7 +39,7 @@ public fun <A, B> DataFrame<A>.leftJoin(
 
 public fun <A, B> DataFrame<A>.leftJoin(
     other: DataFrame<B>,
-    vararg columns: String
+    vararg columns: String,
 ): DataFrame<A> = leftJoin(other) { columns.toColumnSet() }
 
 public fun <A, B> DataFrame<A>.rightJoin(
@@ -49,7 +49,7 @@ public fun <A, B> DataFrame<A>.rightJoin(
 
 public fun <A, B> DataFrame<A>.rightJoin(
     other: DataFrame<B>,
-    vararg columns: String
+    vararg columns: String,
 ): DataFrame<A> = rightJoin(other) { columns.toColumnSet() }
 
 public fun <A, B> DataFrame<A>.fullJoin(
@@ -59,7 +59,7 @@ public fun <A, B> DataFrame<A>.fullJoin(
 
 public fun <A, B> DataFrame<A>.fullJoin(
     other: DataFrame<B>,
-    vararg columns: String
+    vararg columns: String,
 ): DataFrame<A> = fullJoin(other) { columns.toColumnSet() }
 
 public fun <A, B> DataFrame<A>.filterJoin(
@@ -69,7 +69,7 @@ public fun <A, B> DataFrame<A>.filterJoin(
 
 public fun <A, B> DataFrame<A>.filterJoin(
     other: DataFrame<B>,
-    vararg columns: String
+    vararg columns: String,
 ): DataFrame<A> = filterJoin(other) { columns.toColumnSet() }
 
 public fun <A, B> DataFrame<A>.excludeJoin(
@@ -79,7 +79,7 @@ public fun <A, B> DataFrame<A>.excludeJoin(
 
 public fun <A, B> DataFrame<A>.excludeJoin(
     other: DataFrame<B>,
-    vararg columns: String
+    vararg columns: String,
 ): DataFrame<A> = excludeJoin(other) { columns.toColumnSet() }
 
 public fun <T> Iterable<DataFrame<T>>.joinOrNull(

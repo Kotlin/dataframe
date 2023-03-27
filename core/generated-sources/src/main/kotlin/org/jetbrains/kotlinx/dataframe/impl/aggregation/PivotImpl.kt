@@ -17,5 +17,6 @@ internal data class PivotImpl<T>(
     fun toGroupedPivot(moveToTop: Boolean, columns: ColumnsSelector<T, *>): PivotGroupBy<T> =
         PivotGroupByImpl(df.groupBy(moveToTop, columns), this.columns, inward)
 
-    override fun remainingColumnsSelector(): ColumnsSelector<*, *> = columns.toColumnSet().let { pivotCols -> { all().except(pivotCols) } }
+    override fun remainingColumnsSelector(): ColumnsSelector<*, *> =
+        columns.toColumnSet().let { pivotCols -> { all().except(pivotCols) } }
 }

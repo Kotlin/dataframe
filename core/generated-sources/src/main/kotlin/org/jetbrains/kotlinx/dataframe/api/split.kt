@@ -40,7 +40,7 @@ public data class SplitWithTransform<T, C, R>(
     internal val inward: Boolean,
     internal val tartypeOf: KType,
     internal val default: R? = null,
-    internal val transform: DataRow<T>.(C) -> Iterable<R>
+    internal val transform: DataRow<T>.(C) -> Iterable<R>,
 )
 
 public typealias ColumnNamesGenerator<C> = ColumnWithPath<C>.(extraColumnIndex: Int) -> String

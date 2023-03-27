@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.documentation.*
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.util.ITERABLE_COLUMNS_DEPRECATION_MESSAGE
 import kotlin.reflect.KProperty
 
 // region fillNulls
@@ -160,9 +161,14 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: KProperty<C>): Update<T,
 public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: ColumnReference<C>): Update<T, C> =
     fillNaNs { columns.toColumnSet() }
 
-/**
- * TODO this will be deprecated [PR #286](https://github.com/Kotlin/dataframe/pull/320)
- */
+@Deprecated(
+    message = ITERABLE_COLUMNS_DEPRECATION_MESSAGE,
+    replaceWith = ReplaceWith(
+        "fillNaNs { columns.toColumnSet() }",
+        "org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet"
+    ),
+    level = DeprecationLevel.ERROR
+)
 public fun <T, C> DataFrame<T>.fillNaNs(columns: Iterable<ColumnReference<C>>): Update<T, C> =
     fillNaNs { columns.toColumnSet() }
 
@@ -229,9 +235,14 @@ public fun <T, C> DataFrame<T>.fillNA(vararg columns: KProperty<C>): Update<T, C
 public fun <T, C> DataFrame<T>.fillNA(vararg columns: ColumnReference<C>): Update<T, C?> =
     fillNA { columns.toColumnSet() }
 
-/**
- * TODO this will be deprecated [PR #286](https://github.com/Kotlin/dataframe/pull/320)
- */
+@Deprecated(
+    message = ITERABLE_COLUMNS_DEPRECATION_MESSAGE,
+    replaceWith = ReplaceWith(
+        "fillNA { columns.toColumnSet() }",
+        "org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet"
+    ),
+    level = DeprecationLevel.ERROR
+)
 public fun <T, C> DataFrame<T>.fillNA(columns: Iterable<ColumnReference<C>>): Update<T, C?> =
     fillNA { columns.toColumnSet() }
 

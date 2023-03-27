@@ -15,7 +15,8 @@ public fun <T, C> DataFrame<T>.flatten(columns: ColumnsSelector<T, C>): DataFram
 
 public fun <T> DataFrame<T>.flatten(vararg columns: String): DataFrame<T> = flattenImpl { columns.toColumnSet() }
 
-public fun <T, C> DataFrame<T>.flatten(vararg columns: KProperty<C>): DataFrame<T> = flattenImpl { columns.toColumnSet() }
+public fun <T, C> DataFrame<T>.flatten(vararg columns: KProperty<C>): DataFrame<T> =
+    flattenImpl { columns.toColumnSet() }
 
 public fun <T, C> DataFrame<T>.flatten(vararg columns: ColumnReference<C>): DataFrame<T> =
     flattenImpl { columns.toColumnSet() }

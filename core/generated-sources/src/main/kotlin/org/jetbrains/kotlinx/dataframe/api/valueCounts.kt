@@ -67,21 +67,23 @@ public fun <T> DataFrame<T>.valueCounts(
     sort: Boolean = true,
     ascending: Boolean = false,
     dropNA: Boolean = true,
-    resultColumn: String = defaultCountColumnName
+    resultColumn: String = defaultCountColumnName,
 ): DataFrame<T> = valueCounts(sort, ascending, dropNA, resultColumn) { columns.toColumnSet() }
+
 public fun <T> DataFrame<T>.valueCounts(
     vararg columns: AnyColumnReference,
     sort: Boolean = true,
     ascending: Boolean = false,
     dropNA: Boolean = true,
-    resultColumn: String = defaultCountColumnName
+    resultColumn: String = defaultCountColumnName,
 ): DataFrame<T> = valueCounts(sort, ascending, dropNA, resultColumn) { columns.toColumnSet() }
+
 public fun <T> DataFrame<T>.valueCounts(
     vararg columns: KProperty<*>,
     sort: Boolean = true,
     ascending: Boolean = false,
     dropNA: Boolean = true,
-    resultColumn: String = defaultCountColumnName
+    resultColumn: String = defaultCountColumnName,
 ): DataFrame<T> = valueCounts(sort, ascending, dropNA, resultColumn) { columns.toColumnSet() }
 
 // endregion
