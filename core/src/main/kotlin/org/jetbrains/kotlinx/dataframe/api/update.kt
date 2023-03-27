@@ -9,7 +9,6 @@ import org.jetbrains.kotlinx.dataframe.impl.api.asFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateWithValuePerColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import kotlin.reflect.KProperty
 
@@ -107,7 +106,7 @@ public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): Update<T,
  * @include [UpdateWithNote]
  * @include [Update.ColumnNamesParam]
  */
-public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = update { columns.toColumns() }
+public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = update { columns.toColumnSet() }
 
 /**
  * @include [CommonUpdateFunctionDoc]
@@ -115,7 +114,7 @@ public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = up
  * @include [UpdateWithNote]
  * @include [Update.KPropertiesParam]
  */
-public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C> = update { columns.toColumns() }
+public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C> = update { columns.toColumnSet() }
 
 /**
  * @include [CommonUpdateFunctionDoc]
@@ -124,7 +123,7 @@ public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C
  * @include [Update.ColumnAccessorsParam]
  */
 public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Update<T, C> =
-    update { columns.toColumns() }
+    update { columns.toColumnSet() }
 
 /**
  * TODO this will be deprecated [PR #286](https://github.com/Kotlin/dataframe/pull/320)

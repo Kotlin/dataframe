@@ -12,7 +12,6 @@ import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.aggregatePivot
 import org.jetbrains.kotlinx.dataframe.impl.api.getPivotColumnPaths
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 
 internal data class PivotGroupByImpl<T>(
     val df: GroupBy<*, T>,
@@ -28,5 +27,5 @@ internal data class PivotGroupByImpl<T>(
 
     override fun default(value: Any?) = copy(default = value)
 
-    override fun remainingColumnsSelector(): ColumnsSelector<*, *> = df.groups.firstOrNull()?.getPivotColumnPaths(columns).orEmpty().let { pivotPaths -> { all().except(pivotPaths.toColumnSet() and (df as GroupByImpl).keyColumnsInGroups.toColumns()) } }
+    override fun remainingColumnsSelector(): ColumnsSelector<*, *> = df.groups.firstOrNull()?.getPivotColumnPaths(columns).orEmpty().let { pivotPaths -> { all().except(pivotPaths.toColumnSet() and (df as GroupByImpl).keyColumnsInGroups.toColumnSet()) } }
 }

@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.documentation.*
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import kotlin.reflect.KProperty
 
 // region fillNulls
@@ -54,7 +53,7 @@ public fun <T, C> DataFrame<T>.fillNulls(columns: ColumnsSelector<T, C?>): Updat
  * @include [Update.ColumnNamesParam]
  */
 public fun <T> DataFrame<T>.fillNulls(vararg columns: String): Update<T, Any?> =
-    fillNulls { columns.toColumns() }
+    fillNulls { columns.toColumnSet() }
 
 /**
  * @include [CommonFillNullsFunctionDoc]
@@ -62,7 +61,7 @@ public fun <T> DataFrame<T>.fillNulls(vararg columns: String): Update<T, Any?> =
  * @include [Update.KPropertiesParam]
  */
 public fun <T, C> DataFrame<T>.fillNulls(vararg columns: KProperty<C>): Update<T, C?> =
-    fillNulls { columns.toColumns() }
+    fillNulls { columns.toColumnSet() }
 
 /**
  * @include [CommonFillNullsFunctionDoc]
@@ -70,7 +69,7 @@ public fun <T, C> DataFrame<T>.fillNulls(vararg columns: KProperty<C>): Update<T
  * @include [Update.ColumnAccessorsParam]
  */
 public fun <T, C> DataFrame<T>.fillNulls(vararg columns: ColumnReference<C>): Update<T, C?> =
-    fillNulls { columns.toColumns() }
+    fillNulls { columns.toColumnSet() }
 
 /**
  * TODO this will be deprecated [PR #286](https://github.com/Kotlin/dataframe/pull/320)
@@ -143,7 +142,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(columns: ColumnsSelector<T, C>): Update<
  * @include [Update.ColumnNamesParam]
  */
 public fun <T> DataFrame<T>.fillNaNs(vararg columns: String): Update<T, Any?> =
-    fillNaNs { columns.toColumns() }
+    fillNaNs { columns.toColumnSet() }
 
 /**
  * @include [CommonFillNaNsFunctionDoc]
@@ -151,7 +150,7 @@ public fun <T> DataFrame<T>.fillNaNs(vararg columns: String): Update<T, Any?> =
  * @include [Update.KPropertiesParam]
  */
 public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: KProperty<C>): Update<T, C> =
-    fillNaNs { columns.toColumns() }
+    fillNaNs { columns.toColumnSet() }
 
 /**
  * @include [CommonFillNaNsFunctionDoc]
@@ -159,7 +158,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: KProperty<C>): Update<T,
  * @include [Update.ColumnAccessorsParam]
  */
 public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: ColumnReference<C>): Update<T, C> =
-    fillNaNs { columns.toColumns() }
+    fillNaNs { columns.toColumnSet() }
 
 /**
  * TODO this will be deprecated [PR #286](https://github.com/Kotlin/dataframe/pull/320)
@@ -212,7 +211,7 @@ public fun <T, C> DataFrame<T>.fillNA(columns: ColumnsSelector<T, C?>): Update<T
  * @include [Update.ColumnNamesParam]
  */
 public fun <T> DataFrame<T>.fillNA(vararg columns: String): Update<T, Any?> =
-    fillNA { columns.toColumns() }
+    fillNA { columns.toColumnSet() }
 
 /**
  * @include [CommonFillNAFunctionDoc]
@@ -220,7 +219,7 @@ public fun <T> DataFrame<T>.fillNA(vararg columns: String): Update<T, Any?> =
  * @include [Update.KPropertiesParam]
  */
 public fun <T, C> DataFrame<T>.fillNA(vararg columns: KProperty<C>): Update<T, C?> =
-    fillNA { columns.toColumns() }
+    fillNA { columns.toColumnSet() }
 
 /**
  * @include [CommonFillNAFunctionDoc]
@@ -228,7 +227,7 @@ public fun <T, C> DataFrame<T>.fillNA(vararg columns: KProperty<C>): Update<T, C
  * @include [Update.ColumnAccessorsParam]
  */
 public fun <T, C> DataFrame<T>.fillNA(vararg columns: ColumnReference<C>): Update<T, C?> =
-    fillNA { columns.toColumns() }
+    fillNA { columns.toColumnSet() }
 
 /**
  * TODO this will be deprecated [PR #286](https://github.com/Kotlin/dataframe/pull/320)
@@ -311,7 +310,7 @@ public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false): DataFrame<
  * @include [DropKPropertiesParam]
  */
 public fun <T> DataFrame<T>.dropNulls(vararg columns: KProperty<*>, whereAllNull: Boolean = false): DataFrame<T> =
-    dropNulls(whereAllNull) { columns.toColumns() }
+    dropNulls(whereAllNull) { columns.toColumnSet() }
 
 /**
  * @include [CommonDropNullsFunctionDoc]
@@ -321,7 +320,7 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: KProperty<*>, whereAllNull
  * @include [DropColumnNamesParam]
  */
 public fun <T> DataFrame<T>.dropNulls(vararg columns: String, whereAllNull: Boolean = false): DataFrame<T> =
-    dropNulls(whereAllNull) { columns.toColumns() }
+    dropNulls(whereAllNull) { columns.toColumnSet() }
 
 /**
  * @include [CommonDropNullsFunctionDoc]
@@ -331,7 +330,7 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: String, whereAllNull: Bool
  * @include [DropColumnAccessorsParam]
  */
 public fun <T> DataFrame<T>.dropNulls(vararg columns: AnyColumnReference, whereAllNull: Boolean = false): DataFrame<T> =
-    dropNulls(whereAllNull) { columns.toColumns() }
+    dropNulls(whereAllNull) { columns.toColumnSet() }
 
 /**
  * TODO this will be deprecated [PR #286](https://github.com/Kotlin/dataframe/pull/320)
@@ -405,7 +404,7 @@ public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false, columns: Columns
  * @include [DropKPropertiesParam]
  */
 public fun <T> DataFrame<T>.dropNA(vararg columns: KProperty<*>, whereAllNA: Boolean = false): DataFrame<T> =
-    dropNA(whereAllNA) { columns.toColumns() }
+    dropNA(whereAllNA) { columns.toColumnSet() }
 
 /**
  * @include [CommonDropNAFunctionDoc]
@@ -415,7 +414,7 @@ public fun <T> DataFrame<T>.dropNA(vararg columns: KProperty<*>, whereAllNA: Boo
  * @include [DropColumnNamesParam]
  */
 public fun <T> DataFrame<T>.dropNA(vararg columns: String, whereAllNA: Boolean = false): DataFrame<T> =
-    dropNA(whereAllNA) { columns.toColumns() }
+    dropNA(whereAllNA) { columns.toColumnSet() }
 
 /**
  * @include [CommonDropNAFunctionDoc]
@@ -425,7 +424,7 @@ public fun <T> DataFrame<T>.dropNA(vararg columns: String, whereAllNA: Boolean =
  * @include [DropColumnAccessorsParam]
  */
 public fun <T> DataFrame<T>.dropNA(vararg columns: AnyColumnReference, whereAllNA: Boolean = false): DataFrame<T> =
-    dropNA(whereAllNA) { columns.toColumns() }
+    dropNA(whereAllNA) { columns.toColumnSet() }
 
 /**
  * TODO this will be deprecated [PR #286](https://github.com/Kotlin/dataframe/pull/320)
@@ -507,7 +506,7 @@ public fun <T> DataFrame<T>.dropNaNs(whereAllNaN: Boolean = false, columns: Colu
  * @include [DropKPropertiesParam]
  */
 public fun <T> DataFrame<T>.dropNaNs(vararg columns: KProperty<*>, whereAllNaN: Boolean = false): DataFrame<T> =
-    dropNaNs(whereAllNaN) { columns.toColumns() }
+    dropNaNs(whereAllNaN) { columns.toColumnSet() }
 
 /**
  * @include [CommonDropNaNsFunctionDoc]
@@ -517,7 +516,7 @@ public fun <T> DataFrame<T>.dropNaNs(vararg columns: KProperty<*>, whereAllNaN: 
  * @include [DropColumnNamesParam]
  */
 public fun <T> DataFrame<T>.dropNaNs(vararg columns: String, whereAllNaN: Boolean = false): DataFrame<T> =
-    dropNaNs(whereAllNaN) { columns.toColumns() }
+    dropNaNs(whereAllNaN) { columns.toColumnSet() }
 
 /**
  * @include [CommonDropNaNsFunctionDoc]
@@ -527,7 +526,7 @@ public fun <T> DataFrame<T>.dropNaNs(vararg columns: String, whereAllNaN: Boolea
  * @include [DropColumnAccessorsParam]
  */
 public fun <T> DataFrame<T>.dropNaNs(vararg columns: AnyColumnReference, whereAllNaN: Boolean = false): DataFrame<T> =
-    dropNaNs(whereAllNaN) { columns.toColumns() }
+    dropNaNs(whereAllNaN) { columns.toColumnSet() }
 
 /**
  * TODO this will be deprecated [PR #286](https://github.com/Kotlin/dataframe/pull/320)

@@ -8,7 +8,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.parseImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.tryParseImpl
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.typeClass
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -20,13 +20,13 @@ public fun <T> DataFrame<T>.parse(options: ParserOptions? = null, columns: Colum
     parseImpl(options, columns)
 
 public fun <T> DataFrame<T>.parse(vararg columns: String, options: ParserOptions? = null): DataFrame<T> =
-    parse(options) { columns.toColumns() }
+    parse(options) { columns.toColumnSet() }
 
 public fun <T, C> DataFrame<T>.parse(vararg columns: ColumnReference<C>, options: ParserOptions? = null): DataFrame<T> =
-    parse(options) { columns.toColumns() }
+    parse(options) { columns.toColumnSet() }
 
 public fun <T, C> DataFrame<T>.parse(vararg columns: KProperty<C>, options: ParserOptions? = null): DataFrame<T> =
-    parse(options) { columns.toColumns() }
+    parse(options) { columns.toColumnSet() }
 
 public interface GlobalParserOptions {
 

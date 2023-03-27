@@ -26,7 +26,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.ColumnToInsert
 import org.jetbrains.kotlinx.dataframe.impl.api.GroupedDataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.values
@@ -48,7 +48,7 @@ internal class GroupByImpl<T, G>(
 
     override fun toString() = df.toString()
 
-    override fun remainingColumnsSelector(): ColumnsSelector<*, *> = keyColumnsInGroups.toColumns().let { groupCols -> { all().except(groupCols) } }
+    override fun remainingColumnsSelector(): ColumnsSelector<*, *> = keyColumnsInGroups.toColumnSet().let { groupCols -> { all().except(groupCols) } }
 
     override fun <R> aggregate(body: AggregateGroupedBody<G, R>) = aggregateGroupBy(toDataFrame(), { groups }, removeColumns = true, body).cast<G>()
 

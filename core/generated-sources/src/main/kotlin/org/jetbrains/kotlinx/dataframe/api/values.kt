@@ -8,7 +8,7 @@ import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.columnValues
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.internal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.remainingColumnsSelector
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.valuesImpl
 import kotlin.reflect.KProperty
 
@@ -24,8 +24,8 @@ public fun <T> DataFrame<T>.valuesNotNull(byRow: Boolean = false): Sequence<Any>
 
 // region GroupBy
 
-public fun <T> Grouped<T>.values(vararg columns: AnyColumnReference, dropNA: Boolean = false, distinct: Boolean = false): DataFrame<T> = values(dropNA, distinct) { columns.toColumns() }
-public fun <T> Grouped<T>.values(vararg columns: String, dropNA: Boolean = false, distinct: Boolean = false): DataFrame<T> = values(dropNA, distinct) { columns.toColumns() }
+public fun <T> Grouped<T>.values(vararg columns: AnyColumnReference, dropNA: Boolean = false, distinct: Boolean = false): DataFrame<T> = values(dropNA, distinct) { columns.toColumnSet() }
+public fun <T> Grouped<T>.values(vararg columns: String, dropNA: Boolean = false, distinct: Boolean = false): DataFrame<T> = values(dropNA, distinct) { columns.toColumnSet() }
 public fun <T> Grouped<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
@@ -41,15 +41,15 @@ public fun <T, G> ReducedGroupBy<T, G>.values(): DataFrame<G> = values(groupBy.r
 
 public fun <T, G> ReducedGroupBy<T, G>.values(
     vararg columns: AnyColumnReference
-): DataFrame<G> = values { columns.toColumns() }
+): DataFrame<G> = values { columns.toColumnSet() }
 
 public fun <T, G> ReducedGroupBy<T, G>.values(
     vararg columns: String
-): DataFrame<G> = values { columns.toColumns() }
+): DataFrame<G> = values { columns.toColumnSet() }
 
 public fun <T, G> ReducedGroupBy<T, G>.values(
     vararg columns: KProperty<*>
-): DataFrame<G> = values { columns.toColumns() }
+): DataFrame<G> = values { columns.toColumnSet() }
 
 public fun <T, G> ReducedGroupBy<T, G>.values(
     columns: ColumnsForAggregateSelector<G, *>
@@ -70,19 +70,19 @@ public fun <T> Pivot<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
     separate: Boolean = false
-): DataRow<T> = values(dropNA, distinct, separate) { columns.toColumns() }
+): DataRow<T> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 public fun <T> Pivot<T>.values(
     vararg columns: String,
     dropNA: Boolean = false,
     distinct: Boolean = false,
     separate: Boolean = false
-): DataRow<T> = values(dropNA, distinct, separate) { columns.toColumns() }
+): DataRow<T> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 public fun <T> Pivot<T>.values(
     vararg columns: KProperty<*>,
     dropNA: Boolean = false,
     distinct: Boolean = false,
     separate: Boolean = false
-): DataRow<T> = values(dropNA, distinct, separate) { columns.toColumns() }
+): DataRow<T> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 
 public fun <T> Pivot<T>.values(dropNA: Boolean = false, distinct: Boolean = false, separate: Boolean = false): DataRow<T> = delegate { values(dropNA, distinct, separate) }
 
@@ -97,17 +97,17 @@ public fun <T> ReducedPivot<T>.values(
 public fun <T> ReducedPivot<T>.values(
     vararg columns: AnyColumnReference,
     separate: Boolean = false
-): DataRow<T> = values(separate) { columns.toColumns() }
+): DataRow<T> = values(separate) { columns.toColumnSet() }
 
 public fun <T> ReducedPivot<T>.values(
     vararg columns: String,
     separate: Boolean = false
-): DataRow<T> = values(separate) { columns.toColumns() }
+): DataRow<T> = values(separate) { columns.toColumnSet() }
 
 public fun <T> ReducedPivot<T>.values(
     vararg columns: KProperty<*>,
     separate: Boolean = false
-): DataRow<T> = values(separate) { columns.toColumns() }
+): DataRow<T> = values(separate) { columns.toColumnSet() }
 
 public fun <T> ReducedPivot<T>.values(
     separate: Boolean = false,
@@ -125,19 +125,19 @@ public fun <T> PivotGroupBy<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
     separate: Boolean = false
-): DataFrame<T> = values(dropNA, distinct, separate) { columns.toColumns() }
+): DataFrame<T> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 public fun <T> PivotGroupBy<T>.values(
     vararg columns: String,
     dropNA: Boolean = false,
     distinct: Boolean = false,
     separate: Boolean = false
-): DataFrame<T> = values(dropNA, distinct, separate) { columns.toColumns() }
+): DataFrame<T> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 public fun <T> PivotGroupBy<T>.values(
     vararg columns: KProperty<*>,
     dropNA: Boolean = false,
     distinct: Boolean = false,
     separate: Boolean = false
-): DataFrame<T> = values(dropNA, distinct, separate) { columns.toColumns() }
+): DataFrame<T> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 public fun <T> PivotGroupBy<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
@@ -157,17 +157,17 @@ public fun <T> ReducedPivotGroupBy<T>.values(
 public fun <T> ReducedPivotGroupBy<T>.values(
     vararg columns: AnyColumnReference,
     separate: Boolean = false
-): DataFrame<T> = values(separate) { columns.toColumns() }
+): DataFrame<T> = values(separate) { columns.toColumnSet() }
 
 public fun <T> ReducedPivotGroupBy<T>.values(
     vararg columns: String,
     separate: Boolean = false
-): DataFrame<T> = values(separate) { columns.toColumns() }
+): DataFrame<T> = values(separate) { columns.toColumnSet() }
 
 public fun <T> ReducedPivotGroupBy<T>.values(
     vararg columns: KProperty<*>,
     separate: Boolean = false
-): DataFrame<T> = values(separate) { columns.toColumns() }
+): DataFrame<T> = values(separate) { columns.toColumnSet() }
 
 public fun <T> ReducedPivotGroupBy<T>.values(
     separate: Boolean = false,

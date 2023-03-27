@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.api.joinImpl
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import kotlin.reflect.KProperty
 
 public fun <A, B> DataFrame<A>.join(
@@ -20,7 +20,7 @@ public fun <A, B> DataFrame<A>.join(
     other: DataFrame<B>,
     vararg columns: String,
     type: JoinType = JoinType.Inner
-): DataFrame<A> = join(other, type) { columns.toColumns() }
+): DataFrame<A> = join(other, type) { columns.toColumnSet() }
 
 public fun <A, B> DataFrame<A>.innerJoin(
     other: DataFrame<B>,
@@ -30,7 +30,7 @@ public fun <A, B> DataFrame<A>.innerJoin(
 public fun <A, B> DataFrame<A>.innerJoin(
     other: DataFrame<B>,
     vararg columns: String
-): DataFrame<A> = innerJoin(other) { columns.toColumns() }
+): DataFrame<A> = innerJoin(other) { columns.toColumnSet() }
 
 public fun <A, B> DataFrame<A>.leftJoin(
     other: DataFrame<B>,
@@ -40,7 +40,7 @@ public fun <A, B> DataFrame<A>.leftJoin(
 public fun <A, B> DataFrame<A>.leftJoin(
     other: DataFrame<B>,
     vararg columns: String
-): DataFrame<A> = leftJoin(other) { columns.toColumns() }
+): DataFrame<A> = leftJoin(other) { columns.toColumnSet() }
 
 public fun <A, B> DataFrame<A>.rightJoin(
     other: DataFrame<B>,
@@ -50,7 +50,7 @@ public fun <A, B> DataFrame<A>.rightJoin(
 public fun <A, B> DataFrame<A>.rightJoin(
     other: DataFrame<B>,
     vararg columns: String
-): DataFrame<A> = rightJoin(other) { columns.toColumns() }
+): DataFrame<A> = rightJoin(other) { columns.toColumnSet() }
 
 public fun <A, B> DataFrame<A>.fullJoin(
     other: DataFrame<B>,
@@ -60,7 +60,7 @@ public fun <A, B> DataFrame<A>.fullJoin(
 public fun <A, B> DataFrame<A>.fullJoin(
     other: DataFrame<B>,
     vararg columns: String
-): DataFrame<A> = fullJoin(other) { columns.toColumns() }
+): DataFrame<A> = fullJoin(other) { columns.toColumnSet() }
 
 public fun <A, B> DataFrame<A>.filterJoin(
     other: DataFrame<B>,
@@ -70,7 +70,7 @@ public fun <A, B> DataFrame<A>.filterJoin(
 public fun <A, B> DataFrame<A>.filterJoin(
     other: DataFrame<B>,
     vararg columns: String
-): DataFrame<A> = filterJoin(other) { columns.toColumns() }
+): DataFrame<A> = filterJoin(other) { columns.toColumnSet() }
 
 public fun <A, B> DataFrame<A>.excludeJoin(
     other: DataFrame<B>,
@@ -80,7 +80,7 @@ public fun <A, B> DataFrame<A>.excludeJoin(
 public fun <A, B> DataFrame<A>.excludeJoin(
     other: DataFrame<B>,
     vararg columns: String
-): DataFrame<A> = excludeJoin(other) { columns.toColumns() }
+): DataFrame<A> = excludeJoin(other) { columns.toColumnSet() }
 
 public fun <T> Iterable<DataFrame<T>>.joinOrNull(
     joinType: JoinType = JoinType.Inner,

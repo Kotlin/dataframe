@@ -11,7 +11,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.SingleAttribute
 import org.jetbrains.kotlinx.dataframe.impl.api.encode
 import org.jetbrains.kotlinx.dataframe.impl.api.formatImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.linearGradient
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.toHTML
 import org.jetbrains.kotlinx.jupyter.api.HtmlData
@@ -20,9 +20,9 @@ import kotlin.reflect.KProperty
 // region DataFrame
 
 public fun <T, C> DataFrame<T>.format(columns: ColumnsSelector<T, C>): FormatClause<T, C> = FormatClause(this, columns)
-public fun <T> DataFrame<T>.format(vararg columns: String): FormatClause<T, Any?> = format { columns.toColumns() }
-public fun <T, C> DataFrame<T>.format(vararg columns: ColumnReference<C>): FormatClause<T, C> = format { columns.toColumns() }
-public fun <T, C> DataFrame<T>.format(vararg columns: KProperty<C>): FormatClause<T, C> = format { columns.toColumns() }
+public fun <T> DataFrame<T>.format(vararg columns: String): FormatClause<T, Any?> = format { columns.toColumnSet() }
+public fun <T, C> DataFrame<T>.format(vararg columns: ColumnReference<C>): FormatClause<T, C> = format { columns.toColumnSet() }
+public fun <T, C> DataFrame<T>.format(vararg columns: KProperty<C>): FormatClause<T, C> = format { columns.toColumnSet() }
 
 public fun <T, C> FormatClause<T, C>.perRowCol(formatter: RowColFormatter<T, C>): FormattedFrame<T> = formatImpl(formatter)
 

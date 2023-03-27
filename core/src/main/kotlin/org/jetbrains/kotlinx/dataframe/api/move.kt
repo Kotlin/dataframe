@@ -10,39 +10,53 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.api.afterOrBefore
 import org.jetbrains.kotlinx.dataframe.impl.api.moveImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.moveTo
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.ncol
 import kotlin.reflect.KProperty
 
 public fun <T, C> DataFrame<T>.move(columns: ColumnsSelector<T, C>): MoveClause<T, C> = MoveClause(this, columns)
-public fun <T> DataFrame<T>.move(vararg cols: String): MoveClause<T, Any?> = move { cols.toColumns() }
-public fun <T, C> DataFrame<T>.move(vararg cols: ColumnReference<C>): MoveClause<T, C> = move { cols.toColumns() }
-public fun <T, C> DataFrame<T>.move(vararg cols: KProperty<C>): MoveClause<T, C> = move { cols.toColumns() }
+public fun <T> DataFrame<T>.move(vararg cols: String): MoveClause<T, Any?> = move { cols.toColumnSet() }
+public fun <T, C> DataFrame<T>.move(vararg cols: ColumnReference<C>): MoveClause<T, C> = move { cols.toColumnSet() }
+public fun <T, C> DataFrame<T>.move(vararg cols: KProperty<C>): MoveClause<T, C> = move { cols.toColumnSet() }
 
-public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).to(newColumnIndex)
-public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: String): DataFrame<T> = moveTo(newColumnIndex) { columns.toColumns() }
-public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: AnyColumnReference): DataFrame<T> = moveTo(newColumnIndex) { columns.toColumns() }
-public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: KProperty<*>): DataFrame<T> = moveTo(newColumnIndex) { columns.toColumns() }
+public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, columns: ColumnsSelector<T, *>): DataFrame<T> =
+    move(columns).to(newColumnIndex)
+
+public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: String): DataFrame<T> =
+    moveTo(newColumnIndex) { columns.toColumnSet() }
+
+public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: AnyColumnReference): DataFrame<T> =
+    moveTo(newColumnIndex) { columns.toColumnSet() }
+
+public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: KProperty<*>): DataFrame<T> =
+    moveTo(newColumnIndex) { columns.toColumnSet() }
 
 public fun <T> DataFrame<T>.moveToLeft(columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).toLeft()
-public fun <T> DataFrame<T>.moveToLeft(vararg columns: String): DataFrame<T> = moveToLeft { columns.toColumns() }
-public fun <T> DataFrame<T>.moveToLeft(vararg columns: AnyColumnReference): DataFrame<T> = moveToLeft { columns.toColumns() }
-public fun <T> DataFrame<T>.moveToLeft(vararg columns: KProperty<*>): DataFrame<T> = moveToLeft { columns.toColumns() }
+public fun <T> DataFrame<T>.moveToLeft(vararg columns: String): DataFrame<T> = moveToLeft { columns.toColumnSet() }
+public fun <T> DataFrame<T>.moveToLeft(vararg columns: AnyColumnReference): DataFrame<T> =
+    moveToLeft { columns.toColumnSet() }
+
+public fun <T> DataFrame<T>.moveToLeft(vararg columns: KProperty<*>): DataFrame<T> =
+    moveToLeft { columns.toColumnSet() }
 
 public fun <T> DataFrame<T>.moveToRight(columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).toRight()
-public fun <T> DataFrame<T>.moveToRight(vararg columns: String): DataFrame<T> = moveToRight { columns.toColumns() }
-public fun <T> DataFrame<T>.moveToRight(vararg columns: AnyColumnReference): DataFrame<T> = moveToRight { columns.toColumns() }
-public fun <T> DataFrame<T>.moveToRight(vararg columns: KProperty<*>): DataFrame<T> = moveToRight { columns.toColumns() }
+public fun <T> DataFrame<T>.moveToRight(vararg columns: String): DataFrame<T> = moveToRight { columns.toColumnSet() }
+public fun <T> DataFrame<T>.moveToRight(vararg columns: AnyColumnReference): DataFrame<T> =
+    moveToRight { columns.toColumnSet() }
 
-public fun <T, C> MoveClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> AnyColumnReference): DataFrame<T> = moveImpl(
-    under = false,
-    column
-)
+public fun <T> DataFrame<T>.moveToRight(vararg columns: KProperty<*>): DataFrame<T> =
+    moveToRight { columns.toColumnSet() }
+
+public fun <T, C> MoveClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> AnyColumnReference): DataFrame<T> =
+    moveImpl(
+        under = false,
+        column
+    )
 
 public fun <T, C> MoveClause<T, C>.into(column: String): DataFrame<T> = pathOf(column).let { path -> into { path } }
 
 public fun <T, C> MoveClause<T, C>.intoIndexed(
-    newPathExpression: ColumnsSelectionDsl<T>.(ColumnWithPath<C>, Int) -> AnyColumnReference
+    newPathExpression: ColumnsSelectionDsl<T>.(ColumnWithPath<C>, Int) -> AnyColumnReference,
 ): DataFrame<T> {
     var counter = 0
     return into { col ->

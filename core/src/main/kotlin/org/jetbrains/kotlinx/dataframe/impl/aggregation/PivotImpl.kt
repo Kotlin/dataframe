@@ -6,7 +6,7 @@ import org.jetbrains.kotlinx.dataframe.api.Pivot
 import org.jetbrains.kotlinx.dataframe.api.PivotColumnsSelector
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 import org.jetbrains.kotlinx.dataframe.api.groupBy
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 
 internal data class PivotImpl<T>(
     val df: DataFrame<T>,
@@ -17,5 +17,6 @@ internal data class PivotImpl<T>(
     fun toGroupedPivot(moveToTop: Boolean, columns: ColumnsSelector<T, *>): PivotGroupBy<T> =
         PivotGroupByImpl(df.groupBy(moveToTop, columns), this.columns, inward)
 
-    override fun remainingColumnsSelector(): ColumnsSelector<*, *> = columns.toColumns().let { pivotCols -> { all().except(pivotCols) } }
+    override fun remainingColumnsSelector(): ColumnsSelector<*, *> =
+        columns.toColumnSet().let { pivotCols -> { all().except(pivotCols) } }
 }

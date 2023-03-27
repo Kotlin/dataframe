@@ -17,8 +17,8 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.of
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.numberColumns
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnsOf
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnsSetOf
 import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.zero
 import org.jetbrains.kotlinx.dataframe.math.sum
@@ -51,14 +51,14 @@ public inline fun <reified T : Number> AnyRow.rowSumOf(): T = values().filterIsI
 public fun <T> DataFrame<T>.sum(): DataRow<T> = sumFor(numberColumns())
 
 public fun <T, C : Number> DataFrame<T>.sumFor(columns: ColumnsForAggregateSelector<T, C?>): DataRow<T> = Aggregators.sum.aggregateFor(this, columns)
-public fun <T> DataFrame<T>.sumFor(vararg columns: String): DataRow<T> = sumFor { columns.toColumnsOf() }
-public fun <T, C : Number> DataFrame<T>.sumFor(vararg columns: ColumnReference<C?>): DataRow<T> = sumFor { columns.toColumns() }
-public fun <T, C : Number> DataFrame<T>.sumFor(vararg columns: KProperty<C?>): DataRow<T> = sumFor { columns.toColumns() }
+public fun <T> DataFrame<T>.sumFor(vararg columns: String): DataRow<T> = sumFor { columns.toColumnsSetOf() }
+public fun <T, C : Number> DataFrame<T>.sumFor(vararg columns: ColumnReference<C?>): DataRow<T> = sumFor { columns.toColumnSet() }
+public fun <T, C : Number> DataFrame<T>.sumFor(vararg columns: KProperty<C?>): DataRow<T> = sumFor { columns.toColumnSet() }
 
 public inline fun <T, reified C : Number> DataFrame<T>.sum(noinline columns: ColumnsSelector<T, C?>): C = (Aggregators.sum.aggregateAll(this, columns) as C?) ?: C::class.zero()
-public inline fun <T, reified C : Number> DataFrame<T>.sum(vararg columns: ColumnReference<C?>): C = sum { columns.toColumns() }
-public fun <T> DataFrame<T>.sum(vararg columns: String): Number = sum { columns.toColumnsOf() }
-public inline fun <T, reified C : Number> DataFrame<T>.sum(vararg columns: KProperty<C?>): C = sum { columns.toColumns() }
+public inline fun <T, reified C : Number> DataFrame<T>.sum(vararg columns: ColumnReference<C?>): C = sum { columns.toColumnSet() }
+public fun <T> DataFrame<T>.sum(vararg columns: String): Number = sum { columns.toColumnsSetOf() }
+public inline fun <T, reified C : Number> DataFrame<T>.sum(vararg columns: KProperty<C?>): C = sum { columns.toColumnSet() }
 
 public inline fun <T, reified C : Number?> DataFrame<T>.sumOf(crossinline expression: RowExpression<T, C>): C = rows().sumOf(
     typeOf<C>()
@@ -72,14 +72,14 @@ public fun <T> Grouped<T>.sum(): DataFrame<T> = sumFor(numberColumns())
 
 public fun <T, C : Number> Grouped<T>.sumFor(columns: ColumnsForAggregateSelector<T, C?>): DataFrame<T> = Aggregators.sum.aggregateFor(this, columns)
 public fun <T> Grouped<T>.sumFor(vararg columns: String): DataFrame<T> = sumFor { columns.toNumberColumns() }
-public fun <T, C : Number> Grouped<T>.sumFor(vararg columns: ColumnReference<C?>): DataFrame<T> = sumFor { columns.toColumns() }
-public fun <T, C : Number> Grouped<T>.sumFor(vararg columns: KProperty<C?>): DataFrame<T> = sumFor { columns.toColumns() }
+public fun <T, C : Number> Grouped<T>.sumFor(vararg columns: ColumnReference<C?>): DataFrame<T> = sumFor { columns.toColumnSet() }
+public fun <T, C : Number> Grouped<T>.sumFor(vararg columns: KProperty<C?>): DataFrame<T> = sumFor { columns.toColumnSet() }
 
 public fun <T, C : Number> Grouped<T>.sum(name: String? = null, columns: ColumnsSelector<T, C?>): DataFrame<T> =
     Aggregators.sum.aggregateAll(this, name, columns)
 public fun <T> Grouped<T>.sum(vararg columns: String, name: String? = null): DataFrame<T> = sum(name) { columns.toNumberColumns() }
-public fun <T, C : Number> Grouped<T>.sum(vararg columns: ColumnReference<C?>, name: String? = null): DataFrame<T> = sum(name) { columns.toColumns() }
-public fun <T, C : Number> Grouped<T>.sum(vararg columns: KProperty<C?>, name: String? = null): DataFrame<T> = sum(name) { columns.toColumns() }
+public fun <T, C : Number> Grouped<T>.sum(vararg columns: ColumnReference<C?>, name: String? = null): DataFrame<T> = sum(name) { columns.toColumnSet() }
+public fun <T, C : Number> Grouped<T>.sum(vararg columns: KProperty<C?>, name: String? = null): DataFrame<T> = sum(name) { columns.toColumnSet() }
 
 public inline fun <T, reified R : Number> Grouped<T>.sumOf(
     resultName: String? = null,
@@ -101,14 +101,14 @@ public fun <T> Pivot<T>.sumFor(vararg columns: String, separate: Boolean = false
 public fun <T, C : Number> Pivot<T>.sumFor(
     vararg columns: ColumnReference<C?>,
     separate: Boolean = false
-): DataRow<T> = sumFor(separate) { columns.toColumns() }
-public fun <T, C : Number> Pivot<T>.sumFor(vararg columns: KProperty<C?>, separate: Boolean = false): DataRow<T> = sumFor(separate) { columns.toColumns() }
+): DataRow<T> = sumFor(separate) { columns.toColumnSet() }
+public fun <T, C : Number> Pivot<T>.sumFor(vararg columns: KProperty<C?>, separate: Boolean = false): DataRow<T> = sumFor(separate) { columns.toColumnSet() }
 
 public fun <T, C : Number> Pivot<T>.sum(columns: ColumnsSelector<T, C?>): DataRow<T> =
     delegate { sum(columns) }
 public fun <T> Pivot<T>.sum(vararg columns: String): DataRow<T> = sum { columns.toNumberColumns() }
-public fun <T, C : Number> Pivot<T>.sum(vararg columns: ColumnReference<C?>): DataRow<T> = sum { columns.toColumns() }
-public fun <T, C : Number> Pivot<T>.sum(vararg columns: KProperty<C?>): DataRow<T> = sum { columns.toColumns() }
+public fun <T, C : Number> Pivot<T>.sum(vararg columns: ColumnReference<C?>): DataRow<T> = sum { columns.toColumnSet() }
+public fun <T, C : Number> Pivot<T>.sum(vararg columns: KProperty<C?>): DataRow<T> = sum { columns.toColumnSet() }
 
 public inline fun <T, reified R : Number> Pivot<T>.sumOf(crossinline expression: RowExpression<T, R>): DataRow<T> =
     delegate { sumOf(expression) }
@@ -128,14 +128,14 @@ public fun <T> PivotGroupBy<T>.sumFor(vararg columns: String, separate: Boolean 
 public fun <T, C : Number> PivotGroupBy<T>.sumFor(
     vararg columns: ColumnReference<C?>,
     separate: Boolean = false
-): DataFrame<T> = sumFor(separate) { columns.toColumns() }
-public fun <T, C : Number> PivotGroupBy<T>.sumFor(vararg columns: KProperty<C?>, separate: Boolean = false): DataFrame<T> = sumFor(separate) { columns.toColumns() }
+): DataFrame<T> = sumFor(separate) { columns.toColumnSet() }
+public fun <T, C : Number> PivotGroupBy<T>.sumFor(vararg columns: KProperty<C?>, separate: Boolean = false): DataFrame<T> = sumFor(separate) { columns.toColumnSet() }
 
 public fun <T, C : Number> PivotGroupBy<T>.sum(columns: ColumnsSelector<T, C?>): DataFrame<T> =
     Aggregators.sum.aggregateAll(this, columns)
 public fun <T> PivotGroupBy<T>.sum(vararg columns: String): DataFrame<T> = sum { columns.toNumberColumns() }
-public fun <T, C : Number> PivotGroupBy<T>.sum(vararg columns: ColumnReference<C?>): DataFrame<T> = sum { columns.toColumns() }
-public fun <T, C : Number> PivotGroupBy<T>.sum(vararg columns: KProperty<C?>): DataFrame<T> = sum { columns.toColumns() }
+public fun <T, C : Number> PivotGroupBy<T>.sum(vararg columns: ColumnReference<C?>): DataFrame<T> = sum { columns.toColumnSet() }
+public fun <T, C : Number> PivotGroupBy<T>.sum(vararg columns: KProperty<C?>): DataFrame<T> = sum { columns.toColumnSet() }
 
 public inline fun <T, reified R : Number> PivotGroupBy<T>.sumOf(crossinline expression: RowExpression<T, R>): DataFrame<T> =
     Aggregators.sum.aggregateOf(this, expression)

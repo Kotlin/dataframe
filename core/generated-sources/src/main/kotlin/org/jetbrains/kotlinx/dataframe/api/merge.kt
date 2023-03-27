@@ -9,7 +9,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.withRowCellImpl
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -19,13 +19,13 @@ public fun <T, C> DataFrame<T>.merge(selector: ColumnsSelector<T, C>): Merge<T, 
     Merge(this, selector, false, { it }, typeOf<Any?>(), Infer.Type)
 
 public fun <T> DataFrame<T>.merge(vararg columns: String): Merge<T, Any?, List<Any?>> =
-    merge { columns.toColumns() }
+    merge { columns.toColumnSet() }
 
 public inline fun <T, reified C> DataFrame<T>.merge(vararg columns: ColumnReference<C>): Merge<T, C, List<C>> =
-    merge { columns.toColumns() }
+    merge { columns.toColumnSet() }
 
 public inline fun <T, reified C> DataFrame<T>.merge(vararg columns: KProperty<C>): Merge<T, C, List<C>> =
-    merge { columns.toColumns() }
+    merge { columns.toColumnSet() }
 
 public data class Merge<T, C, R>(
     @PublishedApi

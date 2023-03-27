@@ -14,7 +14,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.comparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfDelegated
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.indexOfMin
 import org.jetbrains.kotlinx.dataframe.impl.suggestIfNull
@@ -48,8 +48,8 @@ public fun <T> DataFrame<T>.min(): DataRow<T> = minFor(comparableColumns())
 
 public fun <T, C : Comparable<C>> DataFrame<T>.minFor(columns: ColumnsForAggregateSelector<T, C?>): DataRow<T> = Aggregators.min.aggregateFor(this, columns)
 public fun <T> DataFrame<T>.minFor(vararg columns: String): DataRow<T> = minFor { columns.toComparableColumns() }
-public fun <T, C : Comparable<C>> DataFrame<T>.minFor(vararg columns: ColumnReference<C?>): DataRow<T> = minFor { columns.toColumns() }
-public fun <T, C : Comparable<C>> DataFrame<T>.minFor(vararg columns: KProperty<C?>): DataRow<T> = minFor { columns.toColumns() }
+public fun <T, C : Comparable<C>> DataFrame<T>.minFor(vararg columns: ColumnReference<C?>): DataRow<T> = minFor { columns.toColumnSet() }
+public fun <T, C : Comparable<C>> DataFrame<T>.minFor(vararg columns: KProperty<C?>): DataRow<T> = minFor { columns.toColumnSet() }
 
 public fun <T, C : Comparable<C>> DataFrame<T>.min(columns: ColumnsSelector<T, C?>): C = minOrNull(columns).suggestIfNull("min")
 public fun <T> DataFrame<T>.min(vararg columns: String): Comparable<Any> = minOrNull(*columns).suggestIfNull("min")
@@ -58,8 +58,8 @@ public fun <T, C : Comparable<C>> DataFrame<T>.min(vararg columns: KProperty<C?>
 
 public fun <T, C : Comparable<C>> DataFrame<T>.minOrNull(columns: ColumnsSelector<T, C?>): C? = Aggregators.min.aggregateAll(this, columns) as C?
 public fun <T> DataFrame<T>.minOrNull(vararg columns: String): Comparable<Any?>? = minOrNull { columns.toComparableColumns() }
-public fun <T, C : Comparable<C>> DataFrame<T>.minOrNull(vararg columns: ColumnReference<C?>): C? = minOrNull { columns.toColumns() }
-public fun <T, C : Comparable<C>> DataFrame<T>.minOrNull(vararg columns: KProperty<C?>): C? = minOrNull { columns.toColumns() }
+public fun <T, C : Comparable<C>> DataFrame<T>.minOrNull(vararg columns: ColumnReference<C?>): C? = minOrNull { columns.toColumnSet() }
+public fun <T, C : Comparable<C>> DataFrame<T>.minOrNull(vararg columns: KProperty<C?>): C? = minOrNull { columns.toColumnSet() }
 
 public fun <T, C : Comparable<C>> DataFrame<T>.minOf(expression: RowExpression<T, C>): C = minOfOrNull(expression).suggestIfNull("minOf")
 public fun <T, C : Comparable<C>> DataFrame<T>.minOfOrNull(expression: RowExpression<T, C>): C? = rows().minOfOrNull { expression(it, it) }
@@ -82,8 +82,8 @@ public fun <T> Grouped<T>.min(): DataFrame<T> = minFor(comparableColumns())
 
 public fun <T, C : Comparable<C>> Grouped<T>.minFor(columns: ColumnsForAggregateSelector<T, C?>): DataFrame<T> = Aggregators.min.aggregateFor(this, columns)
 public fun <T> Grouped<T>.minFor(vararg columns: String): DataFrame<T> = minFor { columns.toComparableColumns() }
-public fun <T, C : Comparable<C>> Grouped<T>.minFor(vararg columns: ColumnReference<C?>): DataFrame<T> = minFor { columns.toColumns() }
-public fun <T, C : Comparable<C>> Grouped<T>.minFor(vararg columns: KProperty<C?>): DataFrame<T> = minFor { columns.toColumns() }
+public fun <T, C : Comparable<C>> Grouped<T>.minFor(vararg columns: ColumnReference<C?>): DataFrame<T> = minFor { columns.toColumnSet() }
+public fun <T, C : Comparable<C>> Grouped<T>.minFor(vararg columns: KProperty<C?>): DataFrame<T> = minFor { columns.toColumnSet() }
 
 public fun <T, C : Comparable<C>> Grouped<T>.min(
     name: String? = null,
@@ -91,8 +91,8 @@ public fun <T, C : Comparable<C>> Grouped<T>.min(
 ): DataFrame<T> =
     Aggregators.min.aggregateAll(this, name, columns)
 public fun <T> Grouped<T>.min(vararg columns: String, name: String? = null): DataFrame<T> = min(name) { columns.toComparableColumns() }
-public fun <T, C : Comparable<C>> Grouped<T>.min(vararg columns: ColumnReference<C?>, name: String? = null): DataFrame<T> = min(name) { columns.toColumns() }
-public fun <T, C : Comparable<C>> Grouped<T>.min(vararg columns: KProperty<C?>, name: String? = null): DataFrame<T> = min(name) { columns.toColumns() }
+public fun <T, C : Comparable<C>> Grouped<T>.min(vararg columns: ColumnReference<C?>, name: String? = null): DataFrame<T> = min(name) { columns.toColumnSet() }
+public fun <T, C : Comparable<C>> Grouped<T>.min(vararg columns: KProperty<C?>, name: String? = null): DataFrame<T> = min(name) { columns.toColumnSet() }
 
 public fun <T, C : Comparable<C>> Grouped<T>.minOf(name: String? = null, expression: RowExpression<T, C>): DataFrame<T> =
     Aggregators.min.aggregateOfDelegated(this, name) { minOfOrNull(expression) }
@@ -116,16 +116,16 @@ public fun <T> Pivot<T>.minFor(vararg columns: String, separate: Boolean = false
 public fun <T, R : Comparable<R>> Pivot<T>.minFor(
     vararg columns: ColumnReference<R?>,
     separate: Boolean = false
-): DataRow<T> = minFor(separate) { columns.toColumns() }
+): DataRow<T> = minFor(separate) { columns.toColumnSet() }
 public fun <T, R : Comparable<R>> Pivot<T>.minFor(
     vararg columns: KProperty<R?>,
     separate: Boolean = false
-): DataRow<T> = minFor(separate) { columns.toColumns() }
+): DataRow<T> = minFor(separate) { columns.toColumnSet() }
 
 public fun <T, R : Comparable<R>> Pivot<T>.min(columns: ColumnsSelector<T, R?>): DataRow<T> = delegate { min(columns) }
 public fun <T, R : Comparable<R>> Pivot<T>.min(vararg columns: String): DataRow<T> = min { columns.toComparableColumns() }
-public fun <T, R : Comparable<R>> Pivot<T>.min(vararg columns: ColumnReference<R?>): DataRow<T> = min { columns.toColumns() }
-public fun <T, R : Comparable<R>> Pivot<T>.min(vararg columns: KProperty<R?>): DataRow<T> = min { columns.toColumns() }
+public fun <T, R : Comparable<R>> Pivot<T>.min(vararg columns: ColumnReference<R?>): DataRow<T> = min { columns.toColumnSet() }
+public fun <T, R : Comparable<R>> Pivot<T>.min(vararg columns: KProperty<R?>): DataRow<T> = min { columns.toColumnSet() }
 
 public fun <T, R : Comparable<R>> Pivot<T>.minOf(rowExpression: RowExpression<T, R>): DataRow<T> = delegate { minOf(rowExpression) }
 
@@ -149,16 +149,16 @@ public fun <T> PivotGroupBy<T>.minFor(vararg columns: String, separate: Boolean 
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.minFor(
     vararg columns: ColumnReference<R?>,
     separate: Boolean = false
-): DataFrame<T> = minFor(separate) { columns.toColumns() }
+): DataFrame<T> = minFor(separate) { columns.toColumnSet() }
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.minFor(
     vararg columns: KProperty<R?>,
     separate: Boolean = false
-): DataFrame<T> = minFor(separate) { columns.toColumns() }
+): DataFrame<T> = minFor(separate) { columns.toColumnSet() }
 
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.min(columns: ColumnsSelector<T, R?>): DataFrame<T> = Aggregators.min.aggregateAll(this, columns)
 public fun <T> PivotGroupBy<T>.min(vararg columns: String): DataFrame<T> = min { columns.toComparableColumns() }
-public fun <T, R : Comparable<R>> PivotGroupBy<T>.min(vararg columns: ColumnReference<R?>): DataFrame<T> = min { columns.toColumns() }
-public fun <T, R : Comparable<R>> PivotGroupBy<T>.min(vararg columns: KProperty<R?>): DataFrame<T> = min { columns.toColumns() }
+public fun <T, R : Comparable<R>> PivotGroupBy<T>.min(vararg columns: ColumnReference<R?>): DataFrame<T> = min { columns.toColumnSet() }
+public fun <T, R : Comparable<R>> PivotGroupBy<T>.min(vararg columns: KProperty<R?>): DataFrame<T> = min { columns.toColumnSet() }
 
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.minOf(rowExpression: RowExpression<T, R>): DataFrame<T> = aggregate { minOf(rowExpression) }
 

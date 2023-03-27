@@ -5,7 +5,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.withNullability
@@ -68,20 +68,20 @@ public fun <T> DataFrame<T>.valueCounts(
     ascending: Boolean = false,
     dropNA: Boolean = true,
     resultColumn: String = defaultCountColumnName
-): DataFrame<T> = valueCounts(sort, ascending, dropNA, resultColumn) { columns.toColumns() }
+): DataFrame<T> = valueCounts(sort, ascending, dropNA, resultColumn) { columns.toColumnSet() }
 public fun <T> DataFrame<T>.valueCounts(
     vararg columns: AnyColumnReference,
     sort: Boolean = true,
     ascending: Boolean = false,
     dropNA: Boolean = true,
     resultColumn: String = defaultCountColumnName
-): DataFrame<T> = valueCounts(sort, ascending, dropNA, resultColumn) { columns.toColumns() }
+): DataFrame<T> = valueCounts(sort, ascending, dropNA, resultColumn) { columns.toColumnSet() }
 public fun <T> DataFrame<T>.valueCounts(
     vararg columns: KProperty<*>,
     sort: Boolean = true,
     ascending: Boolean = false,
     dropNA: Boolean = true,
     resultColumn: String = defaultCountColumnName
-): DataFrame<T> = valueCounts(sort, ascending, dropNA, resultColumn) { columns.toColumns() }
+): DataFrame<T> = valueCounts(sort, ascending, dropNA, resultColumn) { columns.toColumnSet() }
 
 // endregion

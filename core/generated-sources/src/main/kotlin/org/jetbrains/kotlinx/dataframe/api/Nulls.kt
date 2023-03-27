@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.documentation.*
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import kotlin.reflect.KProperty
 
 // region fillNulls
@@ -120,7 +119,7 @@ public fun <T, C> DataFrame<T>.fillNulls(columns: ColumnsSelector<T, C?>): Updat
  * @param columns The [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNames.WithExample] belonging to this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
 public fun <T> DataFrame<T>.fillNulls(vararg columns: String): Update<T, Any?> =
-    fillNulls { columns.toColumns() }
+    fillNulls { columns.toColumnSet() }
 
 /**
  * ## The Fill Nulls Operation
@@ -148,7 +147,7 @@ public fun <T> DataFrame<T>.fillNulls(vararg columns: String): Update<T, Any?> =
  * @param columns The [KProperties][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.KProperties.WithExample] corresponding to columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
 public fun <T, C> DataFrame<T>.fillNulls(vararg columns: KProperty<C>): Update<T, C?> =
-    fillNulls { columns.toColumns() }
+    fillNulls { columns.toColumnSet() }
 
 /**
  * ## The Fill Nulls Operation
@@ -178,7 +177,7 @@ public fun <T, C> DataFrame<T>.fillNulls(vararg columns: KProperty<C>): Update<T
  * @param columns The [Column references][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnAccessors.WithExample] of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
 public fun <T, C> DataFrame<T>.fillNulls(vararg columns: ColumnReference<C>): Update<T, C?> =
-    fillNulls { columns.toColumns() }
+    fillNulls { columns.toColumnSet() }
 
 /**
  * TODO this will be deprecated [PR #286](https://github.com/Kotlin/dataframe/pull/320)
@@ -313,7 +312,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(columns: ColumnsSelector<T, C>): Update<
  * @param columns The [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNames.WithExample] belonging to this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
 public fun <T> DataFrame<T>.fillNaNs(vararg columns: String): Update<T, Any?> =
-    fillNaNs { columns.toColumns() }
+    fillNaNs { columns.toColumnSet() }
 
 /**
  * ## The Fill NaNs Operation
@@ -339,7 +338,7 @@ public fun <T> DataFrame<T>.fillNaNs(vararg columns: String): Update<T, Any?> =
  * @param columns The [KProperties][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.KProperties.WithExample] corresponding to columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
 public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: KProperty<C>): Update<T, C> =
-    fillNaNs { columns.toColumns() }
+    fillNaNs { columns.toColumnSet() }
 
 /**
  * ## The Fill NaNs Operation
@@ -367,7 +366,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: KProperty<C>): Update<T,
  * @param columns The [Column references][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnAccessors.WithExample] of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
 public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: ColumnReference<C>): Update<T, C> =
-    fillNaNs { columns.toColumns() }
+    fillNaNs { columns.toColumnSet() }
 
 /**
  * TODO this will be deprecated [PR #286](https://github.com/Kotlin/dataframe/pull/320)
@@ -482,7 +481,7 @@ public fun <T, C> DataFrame<T>.fillNA(columns: ColumnsSelector<T, C?>): Update<T
  * @param columns The [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNames.WithExample] belonging to this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
 public fun <T> DataFrame<T>.fillNA(vararg columns: String): Update<T, Any?> =
-    fillNA { columns.toColumns() }
+    fillNA { columns.toColumnSet() }
 
 /**
  * ## The Fill NA Operation
@@ -508,7 +507,7 @@ public fun <T> DataFrame<T>.fillNA(vararg columns: String): Update<T, Any?> =
  * @param columns The [KProperties][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.KProperties.WithExample] corresponding to columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
 public fun <T, C> DataFrame<T>.fillNA(vararg columns: KProperty<C>): Update<T, C?> =
-    fillNA { columns.toColumns() }
+    fillNA { columns.toColumnSet() }
 
 /**
  * ## The Fill NA Operation
@@ -536,7 +535,7 @@ public fun <T, C> DataFrame<T>.fillNA(vararg columns: KProperty<C>): Update<T, C
  * @param columns The [Column references][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnAccessors.WithExample] of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
 public fun <T, C> DataFrame<T>.fillNA(vararg columns: ColumnReference<C>): Update<T, C?> =
-    fillNA { columns.toColumns() }
+    fillNA { columns.toColumnSet() }
 
 /**
  * TODO this will be deprecated [PR #286](https://github.com/Kotlin/dataframe/pull/320)
@@ -682,7 +681,7 @@ public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false): DataFrame<
  * @param columns The [KProperties][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.KProperties.WithExample] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
  */
 public fun <T> DataFrame<T>.dropNulls(vararg columns: KProperty<*>, whereAllNull: Boolean = false): DataFrame<T> =
-    dropNulls(whereAllNull) { columns.toColumns() }
+    dropNulls(whereAllNull) { columns.toColumnSet() }
 
 /**
  * ## The Drop Nulls Operation
@@ -709,7 +708,7 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: KProperty<*>, whereAllNull
  * @param columns The [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNames.WithExample] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
  */
 public fun <T> DataFrame<T>.dropNulls(vararg columns: String, whereAllNull: Boolean = false): DataFrame<T> =
-    dropNulls(whereAllNull) { columns.toColumns() }
+    dropNulls(whereAllNull) { columns.toColumnSet() }
 
 /**
  * ## The Drop Nulls Operation
@@ -741,7 +740,7 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: String, whereAllNull: Bool
  * ([Column Accessors API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ColumnAccessorsApi]). used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
  */
 public fun <T> DataFrame<T>.dropNulls(vararg columns: AnyColumnReference, whereAllNull: Boolean = false): DataFrame<T> =
-    dropNulls(whereAllNull) { columns.toColumns() }
+    dropNulls(whereAllNull) { columns.toColumnSet() }
 
 /**
  * TODO this will be deprecated [PR #286](https://github.com/Kotlin/dataframe/pull/320)
@@ -866,7 +865,7 @@ public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false, columns: Columns
  * @param columns The [KProperties][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.KProperties.WithExample] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
  */
 public fun <T> DataFrame<T>.dropNA(vararg columns: KProperty<*>, whereAllNA: Boolean = false): DataFrame<T> =
-    dropNA(whereAllNA) { columns.toColumns() }
+    dropNA(whereAllNA) { columns.toColumnSet() }
 
 /**
  * ## The Drop `NA` Operation
@@ -893,7 +892,7 @@ public fun <T> DataFrame<T>.dropNA(vararg columns: KProperty<*>, whereAllNA: Boo
  * @param columns The [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNames.WithExample] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
  */
 public fun <T> DataFrame<T>.dropNA(vararg columns: String, whereAllNA: Boolean = false): DataFrame<T> =
-    dropNA(whereAllNA) { columns.toColumns() }
+    dropNA(whereAllNA) { columns.toColumnSet() }
 
 /**
  * ## The Drop `NA` Operation
@@ -925,7 +924,7 @@ public fun <T> DataFrame<T>.dropNA(vararg columns: String, whereAllNA: Boolean =
  * ([Column Accessors API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ColumnAccessorsApi]). used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
  */
 public fun <T> DataFrame<T>.dropNA(vararg columns: AnyColumnReference, whereAllNA: Boolean = false): DataFrame<T> =
-    dropNA(whereAllNA) { columns.toColumns() }
+    dropNA(whereAllNA) { columns.toColumnSet() }
 
 /**
  * TODO this will be deprecated [PR #286](https://github.com/Kotlin/dataframe/pull/320)
@@ -1069,7 +1068,7 @@ public fun <T> DataFrame<T>.dropNaNs(whereAllNaN: Boolean = false, columns: Colu
  * @param columns The [KProperties][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.KProperties.WithExample] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
  */
 public fun <T> DataFrame<T>.dropNaNs(vararg columns: KProperty<*>, whereAllNaN: Boolean = false): DataFrame<T> =
-    dropNaNs(whereAllNaN) { columns.toColumns() }
+    dropNaNs(whereAllNaN) { columns.toColumnSet() }
 
 /**
  * ## The Drop `NaN` Operation
@@ -1096,7 +1095,7 @@ public fun <T> DataFrame<T>.dropNaNs(vararg columns: KProperty<*>, whereAllNaN: 
  * @param columns The [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNames.WithExample] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
  */
 public fun <T> DataFrame<T>.dropNaNs(vararg columns: String, whereAllNaN: Boolean = false): DataFrame<T> =
-    dropNaNs(whereAllNaN) { columns.toColumns() }
+    dropNaNs(whereAllNaN) { columns.toColumnSet() }
 
 /**
  * ## The Drop `NaN` Operation
@@ -1128,7 +1127,7 @@ public fun <T> DataFrame<T>.dropNaNs(vararg columns: String, whereAllNaN: Boolea
  * ([Column Accessors API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ColumnAccessorsApi]). used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
  */
 public fun <T> DataFrame<T>.dropNaNs(vararg columns: AnyColumnReference, whereAllNaN: Boolean = false): DataFrame<T> =
-    dropNaNs(whereAllNaN) { columns.toColumns() }
+    dropNaNs(whereAllNaN) { columns.toColumnSet() }
 
 /**
  * TODO this will be deprecated [PR #286](https://github.com/Kotlin/dataframe/pull/320)

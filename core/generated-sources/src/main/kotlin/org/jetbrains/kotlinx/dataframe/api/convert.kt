@@ -26,7 +26,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.toLocalDate
 import org.jetbrains.kotlinx.dataframe.impl.api.toLocalDateTime
 import org.jetbrains.kotlinx.dataframe.impl.api.toLocalTime
 import org.jetbrains.kotlinx.dataframe.impl.api.withRowCellImpl
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.io.toDataFrame
 import org.jetbrains.kotlinx.dataframe.path
@@ -42,11 +42,11 @@ public fun <T, C> DataFrame<T>.convert(columns: ColumnsSelector<T, C>): Convert<
     Convert(this, columns)
 
 public fun <T, C> DataFrame<T>.convert(vararg columns: KProperty<C>): Convert<T, C> =
-    convert { columns.toColumns() }
+    convert { columns.toColumnSet() }
 
-public fun <T> DataFrame<T>.convert(vararg columns: String): Convert<T, Any?> = convert { columns.toColumns() }
+public fun <T> DataFrame<T>.convert(vararg columns: String): Convert<T, Any?> = convert { columns.toColumnSet() }
 public fun <T, C> DataFrame<T>.convert(vararg columns: ColumnReference<C>): Convert<T, C> =
-    convert { columns.toColumns() }
+    convert { columns.toColumnSet() }
 
 public inline fun <T, C, reified R> DataFrame<T>.convert(
     firstCol: ColumnReference<C>,
