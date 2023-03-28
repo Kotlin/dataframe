@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.SortFlag
 import org.jetbrains.kotlinx.dataframe.impl.api.addFlag
 import org.jetbrains.kotlinx.dataframe.impl.api.sortByImpl
@@ -98,9 +99,9 @@ public fun <T, C> DataFrame<T>.sortByDesc(vararg columns: ColumnReference<Compar
     message = ITERABLE_COLUMNS_DEPRECATION_MESSAGE,
     replaceWith = ReplaceWith(
         "sortByDesc { columns.toColumnSet() }",
-        "org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet"
+        "org.jetbrains.kotlinx.dataframe.columns.toColumnSet",
     ),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
 )
 public fun <T, C> DataFrame<T>.sortByDesc(columns: Iterable<ColumnReference<Comparable<C>?>>): DataFrame<T> =
     sortByDesc { columns.toColumnSet() }

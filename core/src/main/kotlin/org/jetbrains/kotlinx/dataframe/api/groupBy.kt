@@ -9,10 +9,10 @@ import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.getPivotColumnPaths
 import org.jetbrains.kotlinx.dataframe.impl.api.groupByImpl
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.util.ITERABLE_COLUMNS_DEPRECATION_MESSAGE
 import kotlin.reflect.KProperty
 
@@ -25,9 +25,9 @@ public fun <T> DataFrame<T>.groupBy(moveToTop: Boolean = true, cols: ColumnsSele
     message = ITERABLE_COLUMNS_DEPRECATION_MESSAGE,
     replaceWith = ReplaceWith(
         "groupBy { cols.toColumnSet() }",
-        "org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet"
+        "org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet",
     ),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
 )
 public fun <T> DataFrame<T>.groupBy(cols: Iterable<AnyColumnReference>): GroupBy<T, T> = groupBy { cols.toColumnSet() }
 public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupBy<T, T> = groupBy { cols.toColumnSet() }
