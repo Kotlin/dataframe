@@ -10,9 +10,9 @@
         <feedback-support>null</feedback-support>
         <feedback-url>https://support.jetbrains.com</feedback-url>
         <webmaster>webmaster@jetbrains.com</webmaster>
-        <algolia-id>OHIV241QET</algolia-id>
-        <algolia-index>prod_JETBRAINSCOM_HELP</algolia-index>
-        <algolia-api-key>17f5c6a6e439886860d760d9ce054fd8</algolia-api-key>
+        <algolia-id>JWPLKSKZVF</algolia-id>
+        <algolia-index>prod_DATAFRAME_HELP</algolia-index>
+        <algolia-api-key>bce9ba6ce7419efe813d671244d3bf6a</algolia-api-key>
         <search-scopes-provider>https://www.jetbrains.com/search/json/</search-scopes-provider>
         <generate-sitemap-url-prefix>https://kotlin.github.io/dataframe/</generate-sitemap-url-prefix>
     </variables>
