@@ -4,7 +4,7 @@
 but marks [`DataFrame`](DataFrame.md) with a type that represents data schema that this [`DataFrame`](DataFrame.md) is supposed to have.
 This argument is used to generate [extension properties](extensionPropertiesApi.md) for typed data access.
 
-Another place where this argument has special role is [interop with data classes](collectionsInterop.md#interop-with-data-classes):
+Another place where this argument has a special role is in [interop with data classes](collectionsInterop.md#interop-with-data-classes):
 * `List<T>` -> `DataFrame<T>`: [toDataFrame](createDataFrame.md#todataframe)
 * `DataFrame<T>` -> `List<T>`: [toList](toList.md)
 
