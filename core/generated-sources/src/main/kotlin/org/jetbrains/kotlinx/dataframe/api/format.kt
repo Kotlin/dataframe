@@ -12,11 +12,11 @@ import org.jetbrains.kotlinx.dataframe.impl.api.SingleAttribute
 import org.jetbrains.kotlinx.dataframe.impl.api.encode
 import org.jetbrains.kotlinx.dataframe.impl.api.formatImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.linearGradient
+import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.toHTML
 import org.jetbrains.kotlinx.dataframe.io.toStandaloneHTML
 import kotlin.reflect.KProperty
-import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 
 // region DataFrame
 
