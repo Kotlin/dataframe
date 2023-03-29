@@ -15,8 +15,8 @@ import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.reorder
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.with
+import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.TreeNode
 import kotlin.reflect.typeOf
@@ -45,7 +45,7 @@ internal fun <T, C, V : Comparable<V>> Reorder<T, C>.reorderImpl(
         .forEach { (parentPath, names) ->
             val group = if (parentPath.isEmpty()) df else df.getColumnGroup(parentPath)
 
-            val removed = group.removeImpl(false) { names.toColumns() }
+            val removed = group.removeImpl(false) { names.toColumnSet() }
 
             val mapped = removed.removedColumns
                 .sortedBy { group.getColumnIndex(it.name) }
