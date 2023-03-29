@@ -1,16 +1,6 @@
 [//]: # (title: Rendering)
 
-// TODO
+This section describes APIs that you can use to render DataFrame types and configure display.
 
-## Jupyter Notebooks
-
-Rendering in Jupyter Notebooks can be configured using `dataFrameConfig.display` value.
-
-### Content limit length
-
-Content in each cell gets truncated to 40 characters by default. 
-This can be changed by setting `cellContentLimit` to a different value on the display configuration.
-
-```kotlin
-dataFrameConfig.display.cellContentLimit = 100
-```
+* [`toHTML`](toHTML.md) — operation for rendering DataFrame object to an HTML table
+* [`Jupyter Notebooks`](jupyterRendering.md) — configuration specific to notebook environments

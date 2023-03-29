@@ -169,7 +169,9 @@
             <toc-element topic="toMap.md"/>
         </toc-element>
         <toc-element topic="rendering.md">
+            <toc-element topic="toHTML.md"/>
             <toc-element topic="format.md"/>
+            <toc-element topic="jupyterRendering.md"/>
         </toc-element>
     </toc-element>
     <toc-element topic="gradleReference.md"/>
