@@ -30,7 +30,7 @@ internal interface ExpressionsGivenRowAndColumn {
          *
          * `df.`operation` { row, col ->`
          *
-         * `row.age / col.`[mean][org.jetbrains.kotlinx.dataframe.DataColumn.mean]`(skipNA = true)`
+         * `row.age / col.`[mean][DataColumn.mean]`(skipNA = true)`
          *
          * `}`
          *
