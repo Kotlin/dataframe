@@ -9,13 +9,12 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
+import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.splitDefault
 import org.jetbrains.kotlinx.dataframe.impl.api.splitImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.withRowCellImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.getListType
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -24,9 +23,9 @@ import kotlin.reflect.typeOf
 public fun <T, C> DataFrame<T>.split(columns: ColumnsSelector<T, C?>): Split<T, C> =
     Split(this, columns)
 
-public fun <T> DataFrame<T>.split(vararg columns: String): Split<T, Any> = split { columns.toColumns() }
-public fun <T, C> DataFrame<T>.split(vararg columns: ColumnReference<C?>): Split<T, C> = split { columns.toColumns() }
-public fun <T, C> DataFrame<T>.split(vararg columns: KProperty<C?>): Split<T, C> = split { columns.toColumns() }
+public fun <T> DataFrame<T>.split(vararg columns: String): Split<T, Any> = split { columns.toColumnSet() }
+public fun <T, C> DataFrame<T>.split(vararg columns: ColumnReference<C?>): Split<T, C> = split { columns.toColumnSet() }
+public fun <T, C> DataFrame<T>.split(vararg columns: KProperty<C?>): Split<T, C> = split { columns.toColumnSet() }
 
 public data class Split<T, C>(
     internal val df: DataFrame<T>,
@@ -41,7 +40,7 @@ public data class SplitWithTransform<T, C, R>(
     internal val inward: Boolean,
     internal val tartypeOf: KType,
     internal val default: R? = null,
-    internal val transform: DataRow<T>.(C) -> Iterable<R>
+    internal val transform: DataRow<T>.(C) -> Iterable<R>,
 )
 
 public typealias ColumnNamesGenerator<C> = ColumnWithPath<C>.(extraColumnIndex: Int) -> String

@@ -13,11 +13,12 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
+import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupByReceiverImpl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateInternalDsl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregatePivotDslImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolve
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 
 internal class AggregatedPivot<T>(
     private val df: DataFrame<T>,
@@ -54,7 +55,7 @@ internal class PivotChainColumnSet<C>(val first: ColumnSet<C>, val second: Colum
 internal fun <T, C> DataFrame<T>.getPivotSequences(
     columns: PivotColumnsSelector<T, C>,
 ): List<List<PivotChainElement>> {
-    return columns.toColumns().resolve(this, UnresolvedColumnsPolicy.Fail)
+    return columns.toColumnSet().resolve(this, UnresolvedColumnsPolicy.Fail)
         .map {
             when (val col = it) {
                 is PivotChain<*> -> col.columns as List<PivotChainElement>
@@ -84,7 +85,7 @@ internal fun <T, R> aggregatePivot(
         pivotSequences.distinctBy { it.first().column.path }.count() > 1
     }
     pivotSequences.forEach { pivotColumns ->
-        aggregator.df.groupBy(pivotColumns.map { it.column }).forEach { (key, group) ->
+        aggregator.df.groupBy { pivotColumns.map { it.column }.toColumnSet() }.forEach { (key, group) ->
 
             val pathNames = mutableListOf<String>()
             key.values().forEachIndexed { i, v ->

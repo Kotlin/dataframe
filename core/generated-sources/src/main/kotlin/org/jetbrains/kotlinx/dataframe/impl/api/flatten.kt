@@ -8,14 +8,14 @@ import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
+import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 
 internal fun <T, C> DataFrame<T>.flattenImpl(
     columns: ColumnsSelector<T, C>
 ): DataFrame<T> {
-    val rootColumns = getColumnsWithPaths { columns.toColumns().filter { it.isColumnGroup() }.top() }
+    val rootColumns = getColumnsWithPaths { columns.toColumnSet().filter { it.isColumnGroup() }.top() }
     val rootPrefixes = rootColumns.map { it.path }.toSet()
     val nameGenerators = rootPrefixes.map { it.dropLast() }.distinct().associate { path ->
         val usedNames = get(path).asColumnGroup().columns().filter { path + it.name() !in rootPrefixes }.map { it.name() }
