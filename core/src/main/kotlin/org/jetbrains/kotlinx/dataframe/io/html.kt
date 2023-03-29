@@ -211,7 +211,11 @@ public fun <T> DataFrame<T>.toHTML(
     return tableHtml + DataFrameHtmlData("", bodyFooter, "")
 }
 
-public data class DataFrameHtmlData(val style: String, val body: String, val script: String) {
+/**
+ * Container for HTML page data in form of String
+ * Can be used to compose rendered dataframe tables with additional HTML elements
+ */
+public data class DataFrameHtmlData(val style: String = "", val body: String = "", val script: String = "") {
     @Language("html")
     override fun toString(): String = """
         <html>
@@ -268,6 +272,10 @@ public data class DataFrameHtmlData(val style: String, val body: String, val scr
     }
 }
 
+/**
+ * @param rowsLimit null to disable rows limit
+ * @param cellContentLimit -1 to disable content trimming
+ */
 public data class DisplayConfiguration(
     var rowsLimit: Int? = 20,
     var nestedRowsLimit: Int? = 5,
