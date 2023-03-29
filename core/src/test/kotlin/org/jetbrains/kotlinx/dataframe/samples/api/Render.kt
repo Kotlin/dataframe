@@ -1,7 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
-import java.io.File
-import kotlin.io.path.Path
 import org.jetbrains.kotlinx.dataframe.api.reorderColumnsByName
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.sortByDesc
@@ -11,6 +9,8 @@ import org.jetbrains.kotlinx.dataframe.io.toHTML
 import org.jetbrains.kotlinx.dataframe.io.toStandaloneHTML
 import org.junit.Ignore
 import org.junit.Test
+import java.io.File
+import kotlin.io.path.Path
 
 class Render : TestBase() {
     @Test
