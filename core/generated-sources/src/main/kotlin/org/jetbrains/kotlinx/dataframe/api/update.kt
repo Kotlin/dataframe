@@ -4,11 +4,11 @@ import org.jetbrains.kotlinx.dataframe.*
 import org.jetbrains.kotlinx.dataframe.api.Update.Usage
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.*
 import org.jetbrains.kotlinx.dataframe.impl.api.asFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateWithValuePerColumnImpl
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.util.ITERABLE_COLUMNS_DEPRECATION_MESSAGE
 import kotlin.reflect.KProperty
@@ -220,9 +220,9 @@ public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Updat
     message = ITERABLE_COLUMNS_DEPRECATION_MESSAGE,
     replaceWith = ReplaceWith(
         "update { columns.toColumnSet() }",
-        "org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet"
+        "org.jetbrains.kotlinx.dataframe.columns.toColumnSet",
     ),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
 )
 public fun <T, C> DataFrame<T>.update(columns: Iterable<ColumnReference<C>>): Update<T, C> =
     update { columns.toColumnSet() }

@@ -8,6 +8,8 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.toColumnsSetOf
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
@@ -17,8 +19,6 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.of
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.numberColumns
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnsSetOf
 import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.zero
 import org.jetbrains.kotlinx.dataframe.math.sum
@@ -41,9 +41,8 @@ public inline fun <T, reified R : Number> DataColumn<T>.sumOf(crossinline expres
 
 // region DataRow
 
-public fun AnyRow.rowSum(): Number =
-    org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators.sum.aggregateMixed(values().filterIsInstance<Number>())
-        ?: 0
+public fun AnyRow.rowSum(): Number = Aggregators.sum.aggregateMixed(values().filterIsInstance<Number>())
+    ?: 0
 
 public inline fun <reified T : Number> AnyRow.rowSumOf(): T = values().filterIsInstance<T>().sum(typeOf<T>())
 
@@ -57,6 +56,7 @@ public fun <T, C : Number> DataFrame<T>.sumFor(columns: ColumnsForAggregateSelec
     Aggregators.sum.aggregateFor(this, columns)
 
 public fun <T> DataFrame<T>.sumFor(vararg columns: String): DataRow<T> = sumFor { columns.toColumnsSetOf() }
+
 public fun <T, C : Number> DataFrame<T>.sumFor(vararg columns: ColumnReference<C?>): DataRow<T> =
     sumFor { columns.toColumnSet() }
 
@@ -70,13 +70,12 @@ public inline fun <T, reified C : Number> DataFrame<T>.sum(vararg columns: Colum
     sum { columns.toColumnSet() }
 
 public fun <T> DataFrame<T>.sum(vararg columns: String): Number = sum { columns.toColumnsSetOf() }
+
 public inline fun <T, reified C : Number> DataFrame<T>.sum(vararg columns: KProperty<C?>): C =
     sum { columns.toColumnSet() }
 
 public inline fun <T, reified C : Number?> DataFrame<T>.sumOf(crossinline expression: RowExpression<T, C>): C =
-    rows().sumOf(
-        typeOf<C>()
-    ) { expression(it, it) }
+    rows().sumOf(typeOf<C>()) { expression(it, it) }
 
 // endregion
 
@@ -88,6 +87,7 @@ public fun <T, C : Number> Grouped<T>.sumFor(columns: ColumnsForAggregateSelecto
     Aggregators.sum.aggregateFor(this, columns)
 
 public fun <T> Grouped<T>.sumFor(vararg columns: String): DataFrame<T> = sumFor { columns.toNumberColumns() }
+
 public fun <T, C : Number> Grouped<T>.sumFor(vararg columns: ColumnReference<C?>): DataFrame<T> =
     sumFor { columns.toColumnSet() }
 
@@ -138,7 +138,9 @@ public fun <T, C : Number> Pivot<T>.sum(columns: ColumnsSelector<T, C?>): DataRo
     delegate { sum(columns) }
 
 public fun <T> Pivot<T>.sum(vararg columns: String): DataRow<T> = sum { columns.toNumberColumns() }
+
 public fun <T, C : Number> Pivot<T>.sum(vararg columns: ColumnReference<C?>): DataRow<T> = sum { columns.toColumnSet() }
+
 public fun <T, C : Number> Pivot<T>.sum(vararg columns: KProperty<C?>): DataRow<T> = sum { columns.toColumnSet() }
 
 public inline fun <T, reified R : Number> Pivot<T>.sumOf(crossinline expression: RowExpression<T, R>): DataRow<T> =
@@ -173,6 +175,7 @@ public fun <T, C : Number> PivotGroupBy<T>.sum(columns: ColumnsSelector<T, C?>):
     Aggregators.sum.aggregateAll(this, columns)
 
 public fun <T> PivotGroupBy<T>.sum(vararg columns: String): DataFrame<T> = sum { columns.toNumberColumns() }
+
 public fun <T, C : Number> PivotGroupBy<T>.sum(vararg columns: ColumnReference<C?>): DataFrame<T> =
     sum { columns.toColumnSet() }
 

@@ -9,11 +9,11 @@ import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateBody
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotGroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotImpl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotInAggregateImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.PivotChainColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import kotlin.reflect.KProperty
 
 public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {

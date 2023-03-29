@@ -6,8 +6,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.describeImpl
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 

@@ -6,8 +6,8 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
+import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.joinImpl
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import kotlin.reflect.KProperty
 
 public fun <A, B> DataFrame<A>.join(

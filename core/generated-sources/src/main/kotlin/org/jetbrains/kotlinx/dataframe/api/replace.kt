@@ -7,10 +7,10 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.ColumnToInsert
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.util.ITERABLE_COLUMNS_DEPRECATION_MESSAGE
 import kotlin.reflect.KProperty
 
@@ -28,9 +28,9 @@ public fun <T, C> DataFrame<T>.replace(vararg columns: KProperty<C>): ReplaceCla
     message = ITERABLE_COLUMNS_DEPRECATION_MESSAGE,
     replaceWith = ReplaceWith(
         "replace { columns.toColumnSet() }",
-        "org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet"
+        "org.jetbrains.kotlinx.dataframe.columns.toColumnSet",
     ),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
 )
 public fun <T, C> DataFrame<T>.replace(columns: Iterable<ColumnReference<C>>): ReplaceClause<T, C> =
     replace { columns.toColumnSet() }

@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.util.ITERABLE_COLUMNS_DEPRECATION_MESSAGE
 import kotlin.reflect.KProperty
@@ -28,9 +28,9 @@ public fun <T> DataFrame<T>.distinct(vararg columns: AnyColumnReference): DataFr
     message = ITERABLE_COLUMNS_DEPRECATION_MESSAGE,
     replaceWith = ReplaceWith(
         "distinct { columns.toColumnSet() }",
-        "org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet"
+        "org.jetbrains.kotlinx.dataframe.columns.toColumnSet",
     ),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
 )
 @JvmName("distinctT")
 public fun <T> DataFrame<T>.distinct(columns: Iterable<String>): DataFrame<T> = distinct { columns.toColumnSet() }
@@ -39,9 +39,9 @@ public fun <T> DataFrame<T>.distinct(columns: Iterable<String>): DataFrame<T> = 
     message = ITERABLE_COLUMNS_DEPRECATION_MESSAGE,
     replaceWith = ReplaceWith(
         "distinct { columns.toColumnSet() }",
-        "org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet"
+        "org.jetbrains.kotlinx.dataframe.columns.toColumnSet",
     ),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
 )
 public fun <T> DataFrame<T>.distinct(columns: Iterable<AnyColumnReference>): DataFrame<T> =
     distinct { columns.toColumnSet() }
@@ -58,9 +58,9 @@ public fun <T> DataFrame<T>.distinctBy(vararg columns: AnyColumnReference): Data
     message = ITERABLE_COLUMNS_DEPRECATION_MESSAGE,
     replaceWith = ReplaceWith(
         "distinctBy { columns.toColumnSet() }",
-        "org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet"
+        "org.jetbrains.kotlinx.dataframe.columns.toColumnSet",
     ),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
 )
 @JvmName("distinctByT")
 public fun <T> DataFrame<T>.distinctBy(columns: Iterable<String>): DataFrame<T> = distinctBy { columns.toColumnSet() }
@@ -69,9 +69,9 @@ public fun <T> DataFrame<T>.distinctBy(columns: Iterable<String>): DataFrame<T> 
     message = ITERABLE_COLUMNS_DEPRECATION_MESSAGE,
     replaceWith = ReplaceWith(
         "distinctBy { columns.toColumnSet() }",
-        "org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet"
+        "org.jetbrains.kotlinx.dataframe.columns.toColumnSet",
     ),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
 )
 public fun <T> DataFrame<T>.distinctBy(columns: Iterable<AnyColumnReference>): DataFrame<T> =
     distinctBy { columns.toColumnSet() }
