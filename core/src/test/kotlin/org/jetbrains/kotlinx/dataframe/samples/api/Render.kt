@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import java.io.File
+import kotlin.io.path.Path
 import org.jetbrains.kotlinx.dataframe.api.reorderColumnsByName
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.sortByDesc
@@ -18,6 +19,7 @@ class Render : TestBase() {
         // SampleStart
         df.toStandaloneHTML(DisplayConfiguration(rowsLimit = null)).openInBrowser()
         df.toStandaloneHTML(DisplayConfiguration(rowsLimit = null)).writeHTML(File("/path/to/file"))
+        df.toStandaloneHTML(DisplayConfiguration(rowsLimit = null)).writeHTML(Path("/path/to/file"))
         // SampleEnd
     }
 

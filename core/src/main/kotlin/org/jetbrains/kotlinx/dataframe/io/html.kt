@@ -26,8 +26,10 @@ import java.awt.Desktop
 import java.io.File
 import java.io.InputStreamReader
 import java.net.URL
+import java.nio.file.Path
 import java.util.LinkedList
 import java.util.Random
+import kotlin.io.path.writeText
 
 internal val tooltipLimit = 1000
 
@@ -241,6 +243,10 @@ public data class DataFrameHtmlData(val style: String = "", val body: String = "
         )
 
     public fun writeHTML(destination: File) {
+        destination.writeText(toString())
+    }
+
+    public fun writeHTML(destination: Path) {
         destination.writeText(toString())
     }
 
