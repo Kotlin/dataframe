@@ -17,10 +17,10 @@ import org.jetbrains.kotlinx.dataframe.impl.codeGen.CodeGenerationReadResult
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlCodeGenReader
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
+import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.SupportedCodeGenerationFormat
 import org.jetbrains.kotlinx.dataframe.io.supportedFormats
 import org.jetbrains.kotlinx.jupyter.api.HTML
-import org.jetbrains.kotlinx.jupyter.api.HtmlData
 import org.jetbrains.kotlinx.jupyter.api.JupyterClientType
 import org.jetbrains.kotlinx.jupyter.api.KotlinKernelHost
 import org.jetbrains.kotlinx.jupyter.api.Notebook
@@ -29,7 +29,6 @@ import org.jetbrains.kotlinx.jupyter.api.declare
 import org.jetbrains.kotlinx.jupyter.api.libraries.ColorScheme
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 import org.jetbrains.kotlinx.jupyter.api.libraries.resources
-import org.jetbrains.kotlinx.jupyter.api.renderHtmlAsIFrameIfNeeded
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.isSubtypeOf
@@ -95,7 +94,14 @@ internal class Integration(
                 applyRowsLimit = false
             )
 
-            render<HtmlData> { notebook.renderHtmlAsIFrameIfNeeded(it) }
+            render<DataFrameHtmlData> {
+                if (notebook.jupyterClientType == JupyterClientType.KOTLIN_NOTEBOOK) {
+                    (it.withTableDefinitions().toJupyterHtmlData()).toIFrame(notebook.currentColorScheme)
+                } else {
+                    it.toJupyterHtmlData().toSimpleHtml(notebook.currentColorScheme)
+                }
+            }
+
             render<AnyRow>(
                 { "DataRow: index = ${it.index()}, columnsCount = ${it.columnsCount()}" },
             )
