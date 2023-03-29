@@ -19,6 +19,7 @@ Following function produces HTML that includes JS and CSS definitions. It can be
 ```kotlin
 df.toStandaloneHTML(DisplayConfiguration(rowsLimit = null)).openInBrowser()
 df.toStandaloneHTML(DisplayConfiguration(rowsLimit = null)).writeHTML(File("/path/to/file"))
+df.toStandaloneHTML(DisplayConfiguration(rowsLimit = null)).writeHTML(Path("/path/to/file"))
 ```
 
 <!---END-->
