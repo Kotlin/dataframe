@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.toHTML
 import org.jetbrains.kotlinx.dataframe.io.toStandaloneHTML
 import kotlin.reflect.KProperty
+import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 
 // region DataFrame
 
