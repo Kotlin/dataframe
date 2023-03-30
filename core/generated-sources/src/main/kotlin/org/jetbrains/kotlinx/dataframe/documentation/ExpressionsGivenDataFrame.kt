@@ -22,7 +22,7 @@ internal interface ExpressionsGivenDataFrame {
          *
          * For example:
          *
-         * {@includeArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.OperationArg]}` { `[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { lastName } }`
+         * {@includeArg [OperationArg]}` { `[select][DataFrame.select]` { lastName } }`
          */
         interface WithExample
     }
