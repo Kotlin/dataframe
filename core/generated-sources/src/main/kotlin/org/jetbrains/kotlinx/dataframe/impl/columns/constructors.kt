@@ -22,14 +22,9 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.indices
-import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
 import org.jetbrains.kotlinx.dataframe.api.toColumnOf
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
-import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
-import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
-import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
+import org.jetbrains.kotlinx.dataframe.columns.*
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
@@ -38,7 +33,6 @@ import org.jetbrains.kotlinx.dataframe.impl.guessValueType
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.nrow
 import kotlin.reflect.KClass
-import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
@@ -155,9 +149,11 @@ internal fun <C> createColumnSet(resolver: (ColumnResolutionContext) -> List<Col
         override fun resolve(context: ColumnResolutionContext) = resolver(context)
     }
 
-// region toColumns
+// region toColumnSet
 
-internal fun <TD, T : DataFrame<TD>, C> Selector<T, ColumnSet<C>>.toColumns(
+// region DSL
+
+internal fun <TD, T : DataFrame<TD>, C> Selector<T, ColumnSet<C>>.toColumnSet(
     createReceiver: (ColumnResolutionContext) -> T,
 ): ColumnSet<C> =
     createColumnSet {
@@ -167,41 +163,32 @@ internal fun <TD, T : DataFrame<TD>, C> Selector<T, ColumnSet<C>>.toColumns(
     }
 
 @JvmName("toColumnSetForPivot")
-internal fun <T, C> PivotColumnsSelector<T, C>.toColumns(): ColumnSet<C> = toColumns {
+internal fun <T, C> PivotColumnsSelector<T, C>.toColumnSet(): ColumnSet<C> = toColumnSet {
     object : DataFrameReceiver<T>(it.df.cast(), it.unresolvedColumnsPolicy), PivotDsl<T> {}
 }
 
 @JvmName("toColumnSetForSort")
-internal fun <T, C> SortColumnsSelector<T, C>.toColumns(): ColumnSet<C> = toColumns {
+internal fun <T, C> SortColumnsSelector<T, C>.toColumnSet(): ColumnSet<C> = toColumnSet {
     object : DataFrameReceiver<T>(it.df.cast(), it.unresolvedColumnsPolicy), SortDsl<T> {}
 }
 
-internal fun <T, C> ColumnsSelector<T, C>.toColumns(): ColumnSet<C> = toColumns {
+internal fun <T, C> ColumnsSelector<T, C>.toColumnSet(): ColumnSet<C> = toColumnSet {
     object : DataFrameReceiver<T>(it.df.cast(), it.unresolvedColumnsPolicy), ColumnsSelectionDsl<T> {}
 }
 
-internal fun Array<out ColumnSet<*>>.toColumns(): ColumnSet<Any?> = ColumnsList(this.asList())
-internal fun Array<out String>.toColumns(): ColumnSet<Any?> = map { it.toColumnAccessor() }.toColumnSet()
-internal fun Array<out ColumnPath>.toColumns(): ColumnSet<Any?> = map { it.toColumnAccessor() }.toColumnSet()
-
-@PublishedApi
-internal fun <C> Array<out KProperty<C>>.toColumns(): ColumnSet<C> = map { it.toColumnAccessor() }.toColumnSet()
-
-@PublishedApi
-internal fun <T> Array<out ColumnReference<T>>.toColumns(): ColumnSet<T> = asIterable().toColumnSet()
-internal fun Iterable<String>.toColumns(): ColumnSet<Any?> = map { it.toColumnAccessor() }.toColumnSet()
+// endregion
 
 // endregion
 
-internal fun <C> Iterable<ColumnSet<C>>.toColumnSet(): ColumnSet<C> = ColumnsList(asList())
+// region toComparableColumns
 
-internal fun <C> Array<out String>.toColumnsOf(): ColumnSet<C> = toColumns() as ColumnSet<C>
-internal fun Array<out String>.toComparableColumns() = toColumnsOf<Comparable<Any?>>()
+internal fun Array<out String>.toComparableColumns() = toColumnsSetOf<Comparable<Any?>>()
+
 internal fun String.toComparableColumn() = toColumnOf<Comparable<Any?>>()
-internal fun Array<out String>.toNumberColumns() = toColumnsOf<Number>()
 
-@JvmName("toColumnSetC")
-internal fun <C> Iterable<ColumnReference<C>>.toColumnSet(): ColumnSet<C> = ColumnsList(toList())
+// endregion
+
+internal fun Array<out String>.toNumberColumns() = toColumnsSetOf<Number>()
 
 // endregion
 

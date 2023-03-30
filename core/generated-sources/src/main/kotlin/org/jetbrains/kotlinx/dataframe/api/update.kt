@@ -4,13 +4,13 @@ import org.jetbrains.kotlinx.dataframe.*
 import org.jetbrains.kotlinx.dataframe.api.Update.Usage
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.*
 import org.jetbrains.kotlinx.dataframe.impl.api.asFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateWithValuePerColumnImpl
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
+import org.jetbrains.kotlinx.dataframe.util.ITERABLE_COLUMNS_DEPRECATION_MESSAGE
 import kotlin.reflect.KProperty
 
 /**
@@ -155,7 +155,7 @@ public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): Update<T,
  * into `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`(...) { ... }`
  * @param columns The [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNames.WithExample] belonging to this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
-public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = update { columns.toColumns() }
+public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = update { columns.toColumnSet() }
 
 /**
  * ## The Update Operation
@@ -183,7 +183,7 @@ public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = up
  * into `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`(...) { ... }`
  * @param columns The [KProperties][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.KProperties.WithExample] corresponding to columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
-public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C> = update { columns.toColumns() }
+public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C> = update { columns.toColumnSet() }
 
 /**
  * ## The Update Operation
@@ -214,11 +214,16 @@ public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C
  * @param columns The [Column references][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnAccessors.WithExample] of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
 public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Update<T, C> =
-    update { columns.toColumns() }
+    update { columns.toColumnSet() }
 
-/**
- * TODO this will be deprecated [PR #286](https://github.com/Kotlin/dataframe/pull/320)
- */
+@Deprecated(
+    message = ITERABLE_COLUMNS_DEPRECATION_MESSAGE,
+    replaceWith = ReplaceWith(
+        "update { columns.toColumnSet() }",
+        "org.jetbrains.kotlinx.dataframe.columns.toColumnSet",
+    ),
+    level = DeprecationLevel.ERROR,
+)
 public fun <T, C> DataFrame<T>.update(columns: Iterable<ColumnReference<C>>): Update<T, C> =
     update { columns.toColumnSet() }
 

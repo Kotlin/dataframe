@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 import org.jetbrains.kotlinx.dataframe.impl.api.AggregatedPivot
 import org.jetbrains.kotlinx.dataframe.impl.api.aggregatePivot
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 
 internal data class PivotInAggregateImpl<T>(
     val aggregator: AggregateGroupedDsl<T>,
@@ -26,5 +26,5 @@ internal data class PivotInAggregateImpl<T>(
         return AggregatedPivot(aggregator.df, inward, childAggregator)
     }
 
-    override fun remainingColumnsSelector(): ColumnsSelector<*, *> = { all().except(columns.toColumns()) }
+    override fun remainingColumnsSelector(): ColumnsSelector<*, *> = { all().except(columns.toColumnSet()) }
 }
