@@ -41,6 +41,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.top
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.dfs
+import org.jetbrains.kotlinx.dataframe.documentation.*
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -638,6 +639,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         toColumnAccessor().colsOf(type, filter)
 }
 
+/**
+ * @include [ColumnExpression]
+ *
+ * TODO
+ */
 public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(
     name: String = "",
     infer: Infer = Infer.Nulls,
