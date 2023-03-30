@@ -12,7 +12,7 @@ Depending on your environment there can be different ways to use result of `toHT
 
 ### Working with result
 
-Following function produces HTML that includes JS and CSS definitions. It can be displayed in the browser and has parameters for customization.
+The following function produces HTML that includes JS and CSS definitions. It can be displayed in the browser and has parameters for customization.
 
 <!---FUN useRenderingResult-->
 
@@ -26,7 +26,7 @@ df.toStandaloneHTML(DisplayConfiguration(rowsLimit = null)).writeHTML(Path("/pat
 
 ### Composing multiple tables
 
-`toHTML` and `toStandaloneHTML` return composable `DataFrameHtmlData`. You can use it to include additional scripts, elements, styles on final page or just merge together multiple tables
+`toHTML` and `toStandaloneHTML` return composable `DataFrameHtmlData`. You can use it to include additional scripts, elements, styles on final page or just merge together multiple tables.
 
 <!---FUN composeTables-->
 
@@ -44,7 +44,7 @@ listOf(df1, df2, df3).fold(DataFrameHtmlData.tableDefinitions()) { acc, df -> ac
 
 ### Configuring display for individual output
 
-`toHTML` is useful if you want to configure display for single cell, not whole notebook as described in section for [Jupyter Notebooks](jupyterRendering.md)
+`toHTML` is useful if you want to configure how a single cell is displayed. To configure the display for the entire notebook, please refer to [Jupyter Notebooks](jupyterRendering.md) section.
 
 <!---FUN configureCellOutput-->
 

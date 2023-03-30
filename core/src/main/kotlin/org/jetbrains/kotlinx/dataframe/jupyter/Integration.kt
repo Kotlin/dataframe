@@ -95,8 +95,10 @@ internal class Integration(
             )
 
             render<DataFrameHtmlData> {
+                // Our integration declares script and css definition. But in Kotlin Notebook outputs are isolated in IFrames
+                // That's why we include them directly in the output
                 if (notebook.jupyterClientType == JupyterClientType.KOTLIN_NOTEBOOK) {
-                    (it.withTableDefinitions().toJupyterHtmlData()).toIFrame(notebook.currentColorScheme)
+                    it.withTableDefinitions().toJupyterHtmlData().toIFrame(notebook.currentColorScheme)
                 } else {
                     it.toJupyterHtmlData().toSimpleHtml(notebook.currentColorScheme)
                 }
