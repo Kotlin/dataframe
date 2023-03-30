@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.columns.*
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
 import org.jetbrains.kotlinx.dataframe.hasNulls
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.*
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.dfs
@@ -270,7 +271,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun ColumnSet<*>.startsWith(prefix: CharSequence): ColumnSet<Any?> = cols { it.name.startsWith(prefix) }
     public fun ColumnSet<*>.endsWith(suffix: CharSequence): ColumnSet<Any?> = cols { it.name.endsWith(suffix) }
 
-    public fun <C> ColumnSet<C>.except(vararg other: ColumnSet<*>): ColumnSet<*> = except(other.toColumnSet())
+    public fun <C> ColumnSet<C>.except(vararg other: ColumnSet<*>): ColumnSet<*> = except(other.toColumns())
     public fun <C> ColumnSet<C>.except(vararg other: String): ColumnSet<*> = except(other.toColumnSet())
 
     public fun <C> ColumnSet<C?>.withoutNulls(): ColumnSet<C> = transform { it.filter { !it.hasNulls } } as ColumnSet<C>
@@ -279,7 +280,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         createColumnSet { resolve(it).allColumnsExcept(other.resolve(it)) }
 
     public infix fun <C> ColumnSet<C>.except(selector: ColumnsSelector<T, *>): ColumnSet<C> =
-        except(selector.toColumnSet()) as ColumnSet<C>
+        except(selector.toColumns()) as ColumnSet<C>
 
     public operator fun <C> ColumnsSelector<T, C>.invoke(): ColumnSet<C> =
         this(this@ColumnsSelectionDsl, this@ColumnsSelectionDsl)
