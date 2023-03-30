@@ -8,6 +8,8 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.toColumnsSetOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.cast2
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
@@ -15,8 +17,6 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.of
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.numberColumns
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnsOf
 import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.suggestIfNull
 import org.jetbrains.kotlinx.dataframe.math.mean
@@ -48,20 +48,41 @@ public fun <T> DataFrame<T>.mean(skipNA: Boolean = skipNA_default): DataRow<T> =
 
 public fun <T, C : Number> DataFrame<T>.meanFor(
     skipNA: Boolean = skipNA_default,
-    columns: ColumnsForAggregateSelector<T, C?>
+    columns: ColumnsForAggregateSelector<T, C?>,
 ): DataRow<T> = Aggregators.mean(skipNA).aggregateFor(this, columns)
-public fun <T> DataFrame<T>.meanFor(vararg columns: String, skipNA: Boolean = skipNA_default): DataRow<T> = meanFor(skipNA) { columns.toNumberColumns() }
-public fun <T, C : Number> DataFrame<T>.meanFor(vararg columns: ColumnReference<C?>, skipNA: Boolean = skipNA_default): DataRow<T> = meanFor(skipNA) { columns.toColumns() }
-public fun <T, C : Number> DataFrame<T>.meanFor(vararg columns: KProperty<C?>, skipNA: Boolean = skipNA_default): DataRow<T> = meanFor(skipNA) { columns.toColumns() }
 
-public fun <T, C : Number> DataFrame<T>.mean(skipNA: Boolean = skipNA_default, columns: ColumnsSelector<T, C?>): Double = Aggregators.mean(skipNA).aggregateAll(this, columns) as Double? ?: Double.NaN
-public fun <T> DataFrame<T>.mean(vararg columns: String, skipNA: Boolean = skipNA_default): Double = mean(skipNA) { columns.toNumberColumns() }
-public fun <T, C : Number> DataFrame<T>.mean(vararg columns: ColumnReference<C?>, skipNA: Boolean = skipNA_default): Double = mean(skipNA) { columns.toColumns() }
-public fun <T, C : Number> DataFrame<T>.mean(vararg columns: KProperty<C?>, skipNA: Boolean = skipNA_default): Double = mean(skipNA) { columns.toColumns() }
+public fun <T> DataFrame<T>.meanFor(vararg columns: String, skipNA: Boolean = skipNA_default): DataRow<T> =
+    meanFor(skipNA) { columns.toNumberColumns() }
+
+public fun <T, C : Number> DataFrame<T>.meanFor(
+    vararg columns: ColumnReference<C?>,
+    skipNA: Boolean = skipNA_default,
+): DataRow<T> = meanFor(skipNA) { columns.toColumnSet() }
+
+public fun <T, C : Number> DataFrame<T>.meanFor(
+    vararg columns: KProperty<C?>,
+    skipNA: Boolean = skipNA_default,
+): DataRow<T> = meanFor(skipNA) { columns.toColumnSet() }
+
+public fun <T, C : Number> DataFrame<T>.mean(
+    skipNA: Boolean = skipNA_default,
+    columns: ColumnsSelector<T, C?>,
+): Double = Aggregators.mean(skipNA).aggregateAll(this, columns) as Double? ?: Double.NaN
+
+public fun <T> DataFrame<T>.mean(vararg columns: String, skipNA: Boolean = skipNA_default): Double =
+    mean(skipNA) { columns.toNumberColumns() }
+
+public fun <T, C : Number> DataFrame<T>.mean(
+    vararg columns: ColumnReference<C?>,
+    skipNA: Boolean = skipNA_default,
+): Double = mean(skipNA) { columns.toColumnSet() }
+
+public fun <T, C : Number> DataFrame<T>.mean(vararg columns: KProperty<C?>, skipNA: Boolean = skipNA_default): Double =
+    mean(skipNA) { columns.toColumnSet() }
 
 public inline fun <T, reified D : Number> DataFrame<T>.meanOf(
     skipNA: Boolean = skipNA_default,
-    noinline expression: RowExpression<T, D?>
+    noinline expression: RowExpression<T, D?>,
 ): Double = Aggregators.mean(skipNA).of(this, expression) ?: Double.NaN
 
 // endregion
@@ -72,31 +93,45 @@ public fun <T> Grouped<T>.mean(skipNA: Boolean = skipNA_default): DataFrame<T> =
 
 public fun <T, C : Number> Grouped<T>.meanFor(
     skipNA: Boolean = skipNA_default,
-    columns: ColumnsForAggregateSelector<T, C?>
+    columns: ColumnsForAggregateSelector<T, C?>,
 ): DataFrame<T> = Aggregators.mean(skipNA).aggregateFor(this, columns)
-public fun <T> Grouped<T>.meanFor(vararg columns: String, skipNA: Boolean = skipNA_default): DataFrame<T> = meanFor(skipNA) { columns.toNumberColumns() }
-public fun <T, C : Number> Grouped<T>.meanFor(vararg columns: ColumnReference<C?>, skipNA: Boolean = skipNA_default): DataFrame<T> = meanFor(skipNA) { columns.toColumns() }
-public fun <T, C : Number> Grouped<T>.meanFor(vararg columns: KProperty<C?>, skipNA: Boolean = skipNA_default): DataFrame<T> = meanFor(skipNA) { columns.toColumns() }
+
+public fun <T> Grouped<T>.meanFor(vararg columns: String, skipNA: Boolean = skipNA_default): DataFrame<T> =
+    meanFor(skipNA) { columns.toNumberColumns() }
+
+public fun <T, C : Number> Grouped<T>.meanFor(
+    vararg columns: ColumnReference<C?>,
+    skipNA: Boolean = skipNA_default,
+): DataFrame<T> = meanFor(skipNA) { columns.toColumnSet() }
+
+public fun <T, C : Number> Grouped<T>.meanFor(
+    vararg columns: KProperty<C?>,
+    skipNA: Boolean = skipNA_default,
+): DataFrame<T> = meanFor(skipNA) { columns.toColumnSet() }
 
 public fun <T, C : Number> Grouped<T>.mean(
     name: String? = null,
     skipNA: Boolean = skipNA_default,
-    columns: ColumnsSelector<T, C?>
+    columns: ColumnsSelector<T, C?>,
 ): DataFrame<T> = Aggregators.mean(skipNA).aggregateAll(this, name, columns)
 
-public fun <T> Grouped<T>.mean(vararg columns: String, name: String? = null, skipNA: Boolean = skipNA_default): DataFrame<T> = mean(name, skipNA) { columns.toNumberColumns() }
+public fun <T> Grouped<T>.mean(
+    vararg columns: String,
+    name: String? = null,
+    skipNA: Boolean = skipNA_default,
+): DataFrame<T> = mean(name, skipNA) { columns.toNumberColumns() }
 
 public fun <T, C : Number> Grouped<T>.mean(
     vararg columns: ColumnReference<C?>,
     name: String? = null,
-    skipNA: Boolean = skipNA_default
-): DataFrame<T> = mean(name, skipNA) { columns.toColumns() }
+    skipNA: Boolean = skipNA_default,
+): DataFrame<T> = mean(name, skipNA) { columns.toColumnSet() }
 
 public fun <T, C : Number> Grouped<T>.mean(
     vararg columns: KProperty<C?>,
     name: String? = null,
-    skipNA: Boolean = skipNA_default
-): DataFrame<T> = mean(name, skipNA) { columns.toColumns() }
+    skipNA: Boolean = skipNA_default,
+): DataFrame<T> = mean(name, skipNA) { columns.toColumnSet() }
 
 public inline fun <T, reified R : Number> Grouped<T>.meanOf(
     name: String? = null,
@@ -116,21 +151,24 @@ public fun <T, C : Number> Pivot<T>.meanFor(
     separate: Boolean = false,
     columns: ColumnsForAggregateSelector<T, C?>
 ): DataRow<T> = delegate { meanFor(skipNA, separate, columns) }
+
 public fun <T> Pivot<T>.meanFor(
     vararg columns: String,
     skipNA: Boolean = skipNA_default,
-    separate: Boolean = false
+    separate: Boolean = false,
 ): DataRow<T> = meanFor(skipNA, separate) { columns.toNumberColumns() }
+
 public fun <T, C : Number> Pivot<T>.meanFor(
     vararg columns: ColumnReference<C?>,
     skipNA: Boolean = skipNA_default,
-    separate: Boolean = false
-): DataRow<T> = meanFor(skipNA, separate) { columns.toColumns() }
+    separate: Boolean = false,
+): DataRow<T> = meanFor(skipNA, separate) { columns.toColumnSet() }
+
 public fun <T, C : Number> Pivot<T>.meanFor(
     vararg columns: KProperty<C?>,
     skipNA: Boolean = skipNA_default,
-    separate: Boolean = false
-): DataRow<T> = meanFor(skipNA, separate) { columns.toColumns() }
+    separate: Boolean = false,
+): DataRow<T> = meanFor(skipNA, separate) { columns.toColumnSet() }
 
 public fun <T, R : Number> Pivot<T>.mean(skipNA: Boolean = skipNA_default, columns: ColumnsSelector<T, R?>): DataRow<T> =
     delegate { mean(skipNA, columns) }
@@ -152,31 +190,47 @@ public fun <T, C : Number> PivotGroupBy<T>.meanFor(
     separate: Boolean = false,
     columns: ColumnsForAggregateSelector<T, C?>
 ): DataFrame<T> = Aggregators.mean(skipNA).aggregateFor(this, separate, columns)
+
 public fun <T> PivotGroupBy<T>.meanFor(
     vararg columns: String,
     separate: Boolean = false,
-    skipNA: Boolean = skipNA_default
+    skipNA: Boolean = skipNA_default,
 ): DataFrame<T> = meanFor(skipNA, separate) { columns.toNumberColumns() }
+
 public fun <T, C : Number> PivotGroupBy<T>.meanFor(
     vararg columns: ColumnReference<C?>,
     separate: Boolean = false,
     skipNA: Boolean = skipNA_default,
-): DataFrame<T> = meanFor(skipNA, separate) { columns.toColumns() }
+): DataFrame<T> = meanFor(skipNA, separate) { columns.toColumnSet() }
+
 public fun <T, C : Number> PivotGroupBy<T>.meanFor(
     vararg columns: KProperty<C?>,
     separate: Boolean = false,
     skipNA: Boolean = skipNA_default,
-): DataFrame<T> = meanFor(skipNA, separate) { columns.toColumns() }
+): DataFrame<T> = meanFor(skipNA, separate) { columns.toColumnSet() }
 
-public fun <T, R : Number> PivotGroupBy<T>.mean(skipNA: Boolean = skipNA_default, columns: ColumnsSelector<T, R?>): DataFrame<T> =
+public fun <T, R : Number> PivotGroupBy<T>.mean(
+    skipNA: Boolean = skipNA_default,
+    columns: ColumnsSelector<T, R?>,
+): DataFrame<T> =
     Aggregators.mean(skipNA).aggregateAll(this, columns)
-public fun <T> PivotGroupBy<T>.mean(vararg columns: String, skipNA: Boolean = skipNA_default): DataFrame<T> = mean(skipNA) { columns.toColumnsOf() }
-public fun <T, R : Number> PivotGroupBy<T>.mean(vararg columns: ColumnReference<R?>, skipNA: Boolean = skipNA_default): DataFrame<T> = mean(skipNA) { columns.toColumns() }
-public fun <T, R : Number> PivotGroupBy<T>.mean(vararg columns: KProperty<R?>, skipNA: Boolean = skipNA_default): DataFrame<T> = mean(skipNA) { columns.toColumns() }
+
+public fun <T> PivotGroupBy<T>.mean(vararg columns: String, skipNA: Boolean = skipNA_default): DataFrame<T> =
+    mean(skipNA) { columns.toColumnsSetOf() }
+
+public fun <T, R : Number> PivotGroupBy<T>.mean(
+    vararg columns: ColumnReference<R?>,
+    skipNA: Boolean = skipNA_default,
+): DataFrame<T> = mean(skipNA) { columns.toColumnSet() }
+
+public fun <T, R : Number> PivotGroupBy<T>.mean(
+    vararg columns: KProperty<R?>,
+    skipNA: Boolean = skipNA_default,
+): DataFrame<T> = mean(skipNA) { columns.toColumnSet() }
 
 public inline fun <T, reified R : Number> PivotGroupBy<T>.meanOf(
     skipNA: Boolean = skipNA_default,
-    crossinline expression: RowExpression<T, R?>
+    crossinline expression: RowExpression<T, R?>,
 ): DataFrame<T> =
     Aggregators.mean(skipNA).aggregateOf(this, expression)
 
