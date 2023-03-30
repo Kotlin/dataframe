@@ -6,8 +6,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.describeImpl
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
@@ -40,9 +40,16 @@ public fun <T> DataColumn<T>.describe(): DataFrame<ColumnDescription> = describe
 // region DataFrame
 
 public fun <T> DataFrame<T>.describe(): DataFrame<ColumnDescription> = describe { allDfs() }
-public fun <T> DataFrame<T>.describe(columns: ColumnsSelector<T, *>): DataFrame<ColumnDescription> = describeImpl(getColumnsWithPaths(columns))
-public fun <T> DataFrame<T>.describe(vararg columns: String): DataFrame<ColumnDescription> = describe { columns.toColumns() }
-public fun <T, C : Number?> DataFrame<T>.describe(vararg columns: ColumnReference<C>): DataFrame<ColumnDescription> = describe { columns.toColumns() }
-public fun <T, C : Number?> DataFrame<T>.describe(vararg columns: KProperty<C>): DataFrame<ColumnDescription> = describe { columns.toColumns() }
+public fun <T> DataFrame<T>.describe(columns: ColumnsSelector<T, *>): DataFrame<ColumnDescription> =
+    describeImpl(getColumnsWithPaths(columns))
+
+public fun <T> DataFrame<T>.describe(vararg columns: String): DataFrame<ColumnDescription> =
+    describe { columns.toColumnSet() }
+
+public fun <T, C : Number?> DataFrame<T>.describe(vararg columns: ColumnReference<C>): DataFrame<ColumnDescription> =
+    describe { columns.toColumnSet() }
+
+public fun <T, C : Number?> DataFrame<T>.describe(vararg columns: KProperty<C>): DataFrame<ColumnDescription> =
+    describe { columns.toColumnSet() }
 
 // endregion

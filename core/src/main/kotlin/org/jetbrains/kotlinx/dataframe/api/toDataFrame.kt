@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
@@ -14,6 +15,8 @@ import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import org.jetbrains.kotlinx.dataframe.index
+import org.jetbrains.kotlinx.dataframe.util.DF_READ_DEPRECATION_MESSAGE
+import org.jetbrains.kotlinx.dataframe.util.DF_READ_REPLACE_MESSAGE
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
@@ -31,16 +34,16 @@ public inline fun <reified T> Iterable<T>.toDataFrame(vararg props: KProperty<*>
         properties(roots = props, maxDepth = maxDepth)
     }
 
-@Deprecated("Replaced with `unfold` operation.", ReplaceWith("this.unfold(columns)"), DeprecationLevel.ERROR)
+@Deprecated(DF_READ_DEPRECATION_MESSAGE, ReplaceWith(DF_READ_REPLACE_MESSAGE), DeprecationLevel.ERROR)
 public fun <T> DataFrame<T>.read(columns: ColumnsSelector<T, *>): DataFrame<T> = unfold(columns)
 
-@Deprecated("Replaced with `unfold` operation.", ReplaceWith("this.unfold(*columns)"), DeprecationLevel.ERROR)
+@Deprecated(DF_READ_DEPRECATION_MESSAGE, ReplaceWith(DF_READ_REPLACE_MESSAGE), DeprecationLevel.ERROR)
 public fun <T> DataFrame<T>.read(vararg columns: String): DataFrame<T> = unfold(*columns)
 
-@Deprecated("Replaced with `unfold` operation.", ReplaceWith("this.unfold(*columns)"), DeprecationLevel.ERROR)
+@Deprecated(DF_READ_DEPRECATION_MESSAGE, ReplaceWith(DF_READ_REPLACE_MESSAGE), DeprecationLevel.ERROR)
 public fun <T> DataFrame<T>.read(vararg columns: KProperty<*>): DataFrame<T> = unfold(*columns)
 
-@Deprecated("Replaced with `unfold` operation.", ReplaceWith("this.unfold(*columns)"), DeprecationLevel.ERROR)
+@Deprecated(DF_READ_DEPRECATION_MESSAGE, ReplaceWith(DF_READ_REPLACE_MESSAGE), DeprecationLevel.ERROR)
 public fun <T> DataFrame<T>.read(vararg columns: AnyColumnReference): DataFrame<T> = unfold(*columns)
 
 @JvmName("toDataFrameT")
@@ -189,6 +192,83 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
 }
 
 // endregion
+
+// region toDataFrame overloads for built-in types
+
+/*
+Without overloads Iterable<String>.toDataFrame produces unexpected result
+
+
+```
+val string = listOf("aaa", "aa", null)
+string.toDataFrame()
+```
+=>
+  length
+0    3
+1    2
+2 null
+ */
+
+@JvmName("toDataFrameByte")
+public inline fun <reified B : Byte?> Iterable<B>.toDataFrame(): DataFrame<ValueProperty<B>> = toDataFrame {
+    ValueProperty<B>::value from { it }
+}.cast()
+
+@JvmName("toDataFrameShort")
+public inline fun <reified S : Short?> Iterable<S>.toDataFrame(): DataFrame<ValueProperty<S>> = toDataFrame {
+    ValueProperty<S>::value from { it }
+}.cast()
+
+@JvmName("toDataFrameInt")
+public inline fun <reified I : Int?> Iterable<I>.toDataFrame(): DataFrame<ValueProperty<I>> = toDataFrame {
+    ValueProperty<I>::value from { it }
+}.cast()
+
+@JvmName("toDataFrameLong")
+public inline fun <reified L : Long?> Iterable<L>.toDataFrame(): DataFrame<ValueProperty<L>> = toDataFrame {
+    ValueProperty<L>::value from { it }
+}.cast()
+
+@JvmName("toDataFrameString")
+public inline fun <reified S : String?> Iterable<S>.toDataFrame(): DataFrame<ValueProperty<S>> = toDataFrame {
+    ValueProperty<S>::value from { it }
+}.cast()
+
+@JvmName("toDataFrameChar")
+public inline fun <reified C : Char?> Iterable<C>.toDataFrame(): DataFrame<ValueProperty<C>> = toDataFrame {
+    ValueProperty<C>::value from { it }
+}.cast()
+
+@JvmName("toDataFrameBoolean")
+public inline fun <reified B : Boolean?> Iterable<B>.toDataFrame(): DataFrame<ValueProperty<B>> = toDataFrame {
+    ValueProperty<B>::value from { it }
+}.cast()
+
+@JvmName("toDataFrameUByte")
+public inline fun <reified U : UByte?> Iterable<U>.toDataFrame(): DataFrame<ValueProperty<U>> = toDataFrame {
+    ValueProperty<U>::value from { it }
+}.cast()
+
+@JvmName("toDataFrameUShort")
+public inline fun <reified U : UShort?> Iterable<U>.toDataFrame(): DataFrame<ValueProperty<U>> = toDataFrame {
+    ValueProperty<U>::value from { it }
+}.cast()
+
+@JvmName("toDataFrameUInt")
+public inline fun <reified U : UInt?> Iterable<U>.toDataFrame(): DataFrame<ValueProperty<U>> = toDataFrame {
+    ValueProperty<U>::value from { it }
+}.cast()
+
+@JvmName("toDataFrameULong")
+public inline fun <reified U : ULong?> Iterable<U>.toDataFrame(): DataFrame<ValueProperty<U>> = toDataFrame {
+    ValueProperty<U>::value from { it }
+}.cast()
+
+@DataSchema
+public interface ValueProperty<T> {
+    public val value: T
+}
 
 // region Create DataFrame from Map
 

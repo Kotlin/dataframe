@@ -1,7 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.Infer
+import org.jetbrains.kotlinx.dataframe.api.ValueProperty
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.columnGroup
@@ -18,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toColumnOf
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.value
 import org.jetbrains.kotlinx.dataframe.api.withValues
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.kind
@@ -312,6 +315,16 @@ class Create : TestBase() {
         df.rowsCount() shouldBe 3
         df["name"].type() shouldBe typeOf<String>()
         df["age"].type() shouldBe typeOf<Int>()
+    }
+
+    @Test
+    fun readDataFrameFromValues() {
+        // SampleStart
+        val names = listOf("Alice", "Bob", "Charlie")
+        val df: DataFrame<ValueProperty<String>> = names.toDataFrame()
+        df.add("length") { value.length }
+        // SampleEnd
+        df.value.toList() shouldBe names
     }
 
     @Test
