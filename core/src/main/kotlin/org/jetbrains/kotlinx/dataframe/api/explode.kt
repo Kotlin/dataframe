@@ -6,8 +6,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.explodeImpl
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import kotlin.reflect.KProperty
 
 private val defaultExplodeColumns: ColumnsSelector<*, *> = { dfs { it.isList() || it.isFrameColumn() } }
@@ -20,13 +20,13 @@ public fun <T> DataFrame<T>.explode(
 ): DataFrame<T> = explodeImpl(dropEmpty, selector)
 
 public fun <T> DataFrame<T>.explode(vararg columns: String, dropEmpty: Boolean = true): DataFrame<T> =
-    explode(dropEmpty) { columns.toColumns() }
+    explode(dropEmpty) { columns.toColumnSet() }
 
 public fun <T, C> DataFrame<T>.explode(vararg columns: ColumnReference<C>, dropEmpty: Boolean = true): DataFrame<T> =
-    explode(dropEmpty) { columns.toColumns() }
+    explode(dropEmpty) { columns.toColumnSet() }
 
 public fun <T, C> DataFrame<T>.explode(vararg columns: KProperty<C>, dropEmpty: Boolean = true): DataFrame<T> =
-    explode(dropEmpty) { columns.toColumns() }
+    explode(dropEmpty) { columns.toColumnSet() }
 
 // endregion
 
@@ -38,13 +38,13 @@ public fun <T> DataRow<T>.explode(
 ): DataFrame<T> = toDataFrame().explode(dropEmpty, selector)
 
 public fun <T> DataRow<T>.explode(vararg columns: String, dropEmpty: Boolean = true): DataFrame<T> =
-    explode(dropEmpty) { columns.toColumns() }
+    explode(dropEmpty) { columns.toColumnSet() }
 
 public fun <T, C> DataRow<T>.explode(vararg columns: ColumnReference<C>, dropEmpty: Boolean = true): DataFrame<T> =
-    explode(dropEmpty) { columns.toColumns() }
+    explode(dropEmpty) { columns.toColumnSet() }
 
 public fun <T, C> DataRow<T>.explode(vararg columns: KProperty<C>, dropEmpty: Boolean = true): DataFrame<T> =
-    explode(dropEmpty) { columns.toColumns() }
+    explode(dropEmpty) { columns.toColumnSet() }
 
 // endregion
 

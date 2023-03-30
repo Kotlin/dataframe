@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolve
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.nrow
 import java.math.BigDecimal
 import java.math.BigInteger
@@ -169,7 +169,7 @@ internal fun <T, C> DataFrame<T>.getColumnsImpl(
 internal fun <T, C> DataFrame<T>.getColumnsWithPaths(
     unresolvedColumnsPolicy: UnresolvedColumnsPolicy,
     selector: ColumnsSelector<T, C>,
-): List<ColumnWithPath<C>> = selector.toColumns().resolve(this, unresolvedColumnsPolicy)
+): List<ColumnWithPath<C>> = selector.toColumnSet().resolve(this, unresolvedColumnsPolicy)
 
 internal fun <T, C> DataFrame<T>.getColumnPaths(
     unresolvedColumnsPolicy: UnresolvedColumnsPolicy,
