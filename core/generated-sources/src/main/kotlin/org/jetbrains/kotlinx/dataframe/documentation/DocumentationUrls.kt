@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
-private interface DocumentationUrls {
+internal interface DocumentationUrls {
 
     interface NameArg
 
