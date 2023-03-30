@@ -10,7 +10,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.documentation.*
 import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -23,6 +22,8 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.renamedReference
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
@@ -68,7 +69,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * the [DataFrame].
      *
      * This is a shorthand for [get][ColumnsContainer.get]`(myColumn)`.
-     * @throws IllegalArgumentException if the column is not found.
+     * @throws [IllegalArgumentException] if the column is not found.
      */
     private interface CommonColumnReferenceInvokeDocs
 
@@ -90,7 +91,6 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      */
     public operator fun <T> ColumnReference<DataFrame<T>>.invoke(): FrameColumn<T> = get(this)
 
-
     /**
      * Retrieves the value of this [ColumnPath] from the [DataFrame].
      * This is a shorthand for [getColumn][ColumnsContainer.getColumn]`(myColumnPath)` and
@@ -100,7 +100,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * "myColumn"["myNestedColumn"]<NestedColumnType>()
      * ```
      *
-     * @throws IllegalArgumentException if the column is not found.
+     * @throws [IllegalArgumentException] if the column is not found.
      * @return The [DataColumn] this [ColumnPath] points to.
      */
     public operator fun <C> ColumnPath.invoke(): DataColumn<C> = getColumn(this).cast()
@@ -109,7 +109,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * Retrieves the value of this [KProperty Accessor][KProperty] from the [DataFrame].
      *
      * This is a shorthand for [get][ColumnsContainer.get]`(MyType::myColumn)`.
-     * @throws IllegalArgumentException if the column is not found.
+     * @throws [IllegalArgumentException] if the column is not found.
      */
     private interface CommonKPropertyInvokeDocs
 
@@ -134,10 +134,15 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
     /**
      * Retrieves the value of this [KProperty Accessor][KProperty] from the [DataFrame].
      *
-     * This is a shorthand for [get][ColumnsContainer.get]`(MyType::myColumn).`[get][ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
-     * and can instead be written as `MyType::myColumn[MyOtherType::myOtherColumn]`.
-     * {@comment TODO fix this example when https://github.com/Jolanrensen/docProcessorGradlePlugin/issues/17 is fixed.}
-     * @throws IllegalArgumentException if the column is not found.
+     * This is a shorthand for
+     *
+     * [get][ColumnsContainer.get]`(MyType::myColumn).`[get][ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
+     *
+     * and can instead be written as
+     *
+     * `MyType::myColumn`[`[`][ColumnsContainer.get]`MyOtherType::myOtherColumn`[`]`][ColumnsContainer.get].
+     *
+     * @throws [IllegalArgumentException] if the column is not found.
      */
     private interface CommonKPropertyGetDocs
 
@@ -583,12 +588,51 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> KProperty<*>.dfsOf(type: KType, predicate: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<*> =
         toColumnAccessor().dfsOf(type, predicate)
 
+    /**
+     * @include [CommonColsOfDocs]
+     * Get sub-columns of the column with this name by [type] without a filter.
+     * For example:
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+     *
+     * @include [CommonColsOfDocs.Return]
+     */
     public fun String.colsOf(type: KType): ColumnSet<Any?> = toColumnAccessor().colsOf(type)
-    public fun KProperty<*>.colsOf(type: KType): ColumnSet<Any?> = toColumnAccessor().colsOf(type)
 
+    /**
+     * @include [CommonColsOfDocs]
+     * Get sub-columns of the column with this name by [type] with a [filter].
+     * For example:
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
+     *
+     * @include [CommonColsOfDocs.FilterParam]
+     * @include [CommonColsOfDocs.ReturnFiltered]
+     */
     public fun <C> String.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean): ColumnSet<Any?> =
         toColumnAccessor().colsOf(type, filter)
 
+    /**
+     * @include [CommonColsOfDocs]
+     * Get sub-columns of the column this [KProperty Accessor][KProperty] points to by [type] without a filter.
+     * For example:
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+     *
+     * @include [CommonColsOfDocs.Return]
+     */
+    public fun KProperty<*>.colsOf(type: KType): ColumnSet<Any?> = toColumnAccessor().colsOf(type)
+
+    /**
+     * @include [CommonColsOfDocs]
+     * Get sub-columns of the column this [KProperty Accessor][KProperty] points to by [type] with a [filter].
+     * For example:
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
+     *
+     * @include [CommonColsOfDocs.FilterParam]
+     * @include [CommonColsOfDocs.ReturnFiltered]
+     */
     public fun <C> KProperty<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean): ColumnSet<Any?> =
         toColumnAccessor().colsOf(type, filter)
 }
@@ -596,7 +640,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(
     name: String = "",
     infer: Infer = Infer.Nulls,
-    noinline expression: AddExpression<T, R>
+    noinline expression: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(name, infer, expression)
 
 internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) -> Boolean): ColumnsSelector<T, C> =
@@ -612,19 +656,121 @@ public fun <C> ColumnSet<*>.dfsOf(type: KType, predicate: (ColumnWithPath<C>) ->
     dfsInternal { it.isSubtypeOf(type) && predicate(it.cast()) }
 
 public inline fun <reified C> ColumnSet<*>.dfsOf(noinline filter: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<C> =
-    dfsOf(
-        typeOf<C>(),
-        filter
-    ) as ColumnSet<C>
+    dfsOf(typeOf<C>(), filter) as ColumnSet<C>
 
+/**
+ * ## Cols Of
+ * Get columns by a given type and an optional filter.
+ *
+ * For example:
+ *
+ * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`<`[Int][Int]`>() }`
+ *
+ * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`<`[Int][Int]`> { it.`[size][DataColumn.size]` > 10 } }`
+ * {@include [LineBreak]}
+ * Alternatively, [colsOf] can also be called on existing columns:
+ *
+ * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][colsOf]`<`[Int][Int]`>() }`
+ *
+ * `df.`[select][DataFrame.select]` { "myColumnGroup"<Type>().`[colsOf][colsOf]`<`[Int][Int]`> { it.`[size][DataColumn.size]` > 10 } }`
+ *
+ * `df.`[select][DataFrame.select]` { (Type::myColumnGroup)().`[colsOf][colsOf]`<`[Double][Double]`>() }`
+ * {@include [LineBreak]}
+ * Finally, [colsOf] can also take a [KType] argument instead of a reified type.
+ * This is useful when the type is not known at compile time or when the API function cannot be inlined.
+ * (TODO: [Issue: #325, context receiver support](https://github.com/Kotlin/dataframe/issues/325))
+ *
+ * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+ *
+ * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
+ */
+internal interface ColsOf
+
+/**
+ * @include [ColsOf]
+ * ## This Cols Of Overload
+ */
+private interface CommonColsOfDocs {
+
+    /** @return A [ColumnSet] containing the columns of given type. */
+    interface Return
+
+    /** @return A [ColumnSet] containing the columns of given type that were included by [filter\]. */
+    interface ReturnFiltered
+
+    /** @param [filter\] a filter function that takes a column of type [C\] and returns `true` if the column should be included. */
+    interface FilterParam
+}
+
+/**
+ * @include [CommonColsOfDocs]
+ * Get (sub-)columns by [type] without a filter.
+ * For example:
+ *
+ * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+ *
+ * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+ *
+ * @include [CommonColsOfDocs.Return]
+ */
 public fun ColumnSet<*>.colsOf(type: KType): ColumnSet<Any?> = colsOf(type) { true }
 
+/**
+ * @include [CommonColsOfDocs]
+ * Get (sub-)columns by a given type without a filter.
+ * For example:
+ *
+ * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`<`[Int][Int]`>() }`
+ *
+ * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][colsOf]`<`[Int][Int]`>() }`
+ *
+ * @include [CommonColsOfDocs.Return]
+ */
 public inline fun <reified C> ColumnSet<*>.colsOf(): ColumnSet<C> = colsOf(typeOf<C>()) as ColumnSet<C>
 
+/**
+ * @include [CommonColsOfDocs]
+ * Get (sub-)columns by [type] with [filter].
+ * For example:
+ *
+ * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
+ *
+ * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
+ *
+ * @include [CommonColsOfDocs.FilterParam]
+ * @include [CommonColsOfDocs.ReturnFiltered]
+ */
 public fun <C> ColumnSet<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean): ColumnSet<C> =
     colsInternal { it.isSubtypeOf(type) && filter(it.cast()) } as ColumnSet<C>
 
+/**
+ * @include [CommonColsOfDocs]
+ * Get (sub-)columns by a given type with filter.
+ * For example:
+ *
+ * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`<`[Int][Int]`> { it.`[size][DataColumn.size]` > 10 } }`
+ *
+ * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][colsOf]`<`[Int][Int]`> { it.`[size][DataColumn.size]` > 10 } }`
+ *
+ * @include [CommonColsOfDocs.FilterParam]
+ * @include [CommonColsOfDocs.ReturnFiltered]
+ */
 public inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<C> =
-    colsOf(
-        typeOf<C>(), filter
-    )
+    colsOf(typeOf<C>(), filter)
+
+/* TODO: [Issue: #325, context receiver support](https://github.com/Kotlin/dataframe/issues/325)
+context(ColumnsSelectionDsl)
+public inline fun <reified C> KProperty<*>.colsOf(noinline filter: (DataColumn<C>) -> Boolean): ColumnSet<Any?> =
+    colsOf(typeOf<C>(), filter)
+
+context(ColumnsSelectionDsl)
+public inline fun <reified C> KProperty<*>.colsOf(): ColumnSet<Any?> =
+    colsOf(typeOf<C>())
+
+context(ColumnsSelectionDsl)
+public inline fun <reified C> String.colsOf(noinline filter: (DataColumn<C>) -> Boolean): ColumnSet<Any?> =
+    colsOf(typeOf<C>(), filter)
+
+context(ColumnsSelectionDsl)
+public inline fun <reified C> String.colsOf(): ColumnSet<Any?> =
+    colsOf(typeOf<C>()) */
