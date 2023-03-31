@@ -25,4 +25,5 @@ Imploded [`ColumnGroup`](DataColumn.md#columngroup) will convert into [`FrameCol
 df.implode { name and age and weight and isHappy }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.implode.html"/>
 <!---END-->

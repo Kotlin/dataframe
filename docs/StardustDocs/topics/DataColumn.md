@@ -62,6 +62,7 @@ df.add("year of birth") { 2021 - age }
 df.filter { age > 30 }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.columnAccessorsUsage.html"/>
 <!---END-->
 
 [Column accessors](DataColumn.md#column-accessors) are created by [property delegate](https://kotlinlang.org/docs/delegated-properties.html) `column`. Column [`type`](DataColumn.md#properties) should be passed as type argument, column [`name`](DataColumn.md#properties) will be taken from the variable name.
@@ -72,6 +73,7 @@ df.filter { age > 30 }
 val name by column<String>()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createColumnAccessor.html"/>
 <!---END-->
 
 To assign column name explicitly, pass it as an argument.
@@ -82,6 +84,7 @@ To assign column name explicitly, pass it as an argument.
 val accessor by column<String>("complex column name")
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createColumnAccessorRenamed.html"/>
 <!---END-->
 
 You can also create column accessors for [ColumnGroups](DataColumn.md#columngroup) and [FrameColumns](DataColumn.md#framecolumn)
@@ -93,6 +96,7 @@ val columns by columnGroup()
 val frames by frameColumn()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createGroupOrFrameColumnAccessor.html"/>
 <!---END-->
 
 To reference nested columns inside [ColumnGroups](DataColumn.md#columngroup), invoke `column<T>()` on accessor to parent [`ColumnGroup`](#columngroup):
@@ -104,6 +108,7 @@ val name by columnGroup()
 val firstName by name.column<String>()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDeepColumnAccessor.html"/>
 <!---END-->
 
 You can also create virtual accessor that doesn't point to a real column but computes some expression on every data access:
@@ -141,6 +146,7 @@ df[fullName]
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.columnAccessorComputed.html"/>
 <!---END-->
 
 If expression depends only on one column, you can also use `map`:
@@ -154,6 +160,7 @@ val year by age.map { 2021 - it }
 df.filter { year > 2000 }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.columnAccessorMap.html"/>
 <!---END-->
 
 To convert [`ColumnAccessor`](columnAccessorsApi.md) into [`DataColumn`](DataColumn.md) add values using `withValues` function:
@@ -166,5 +173,6 @@ val ageCol1 = age.withValues(15, 20)
 val ageCol2 = age.withValues(1..10)
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.columnAccessorToColumn.html"/>
 <!---END-->
 

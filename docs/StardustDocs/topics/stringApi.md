@@ -17,6 +17,7 @@ DataFrame.read("titanic.csv")
     }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.strings.html"/>
 <!---END-->
 
 <warning>

@@ -20,6 +20,7 @@ df.replace { colsOf<String?>() }.with { it.lowercase() }
 df.replace { age }.with { 2021 - age named "year" }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.replace.html"/>
 <!---END-->
 
 <tip>
@@ -45,6 +46,7 @@ val interestingRepos = dataFrameOf("name", "url", "contributors")(
 )
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertToFrameColumnAPI.html"/>
 <!---END-->
 
 We can use `replace` and `with` to read a [`DataFrame`](DataFrame.md) for every row in `contributors`,
@@ -67,4 +69,5 @@ val df = interestingRepos
 df.asGroupBy("contributors").max("contributions")
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.customUnfoldRead.html"/>
 <!---END-->

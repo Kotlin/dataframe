@@ -36,4 +36,5 @@ df.remove("name", "weight")
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.remove.html"/>
 <!---END-->

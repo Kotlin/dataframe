@@ -26,4 +26,5 @@ df.weight.cumSum()
 df.groupBy { city }.cumSum { weight }.concat()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.cumSum.html"/>
 <!---END-->

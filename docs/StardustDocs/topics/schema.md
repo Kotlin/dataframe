@@ -12,6 +12,7 @@ Returns [`DataFrameSchema`](schemas.md) object with [`DataFrame`](DataFrame.md) 
 df.schema()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.schema.html"/>
 <!---END-->
 
 Output:
@@ -34,6 +35,7 @@ isHappy: Boolean
 df.groupBy { city }.schema()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.schemaGroupBy.html"/>
 <!---END-->
 
 Output:

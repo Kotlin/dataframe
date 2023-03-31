@@ -31,4 +31,5 @@ data class Person(val fullName: FullName, val age: Int)
 val persons = df.toListOf<Person>() // [Person(fullName = FullName(name = "John", lastName = "Doe"), age = 21)]
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Collections.listInterop5.html"/>
 <!---END-->
