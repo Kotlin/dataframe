@@ -11,6 +11,7 @@ The rows in the resulting [`DataFrame`](DataFrame.md) are in the same order as t
 df.distinct()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.distinct.html"/>
 <!---END-->
 
 If columns are specified, resulting [`DataFrame`](DataFrame.md) will have only given columns with distinct values.
@@ -46,6 +47,7 @@ df.select("age", "name").distinct()
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.distinctColumns.html"/>
 <!---END-->
 
 ## distinctBy
@@ -85,4 +87,5 @@ df.groupBy("age", "name").mapToRows { group.first() }
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.distinctBy.html"/>
 <!---END-->

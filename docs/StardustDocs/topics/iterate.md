@@ -59,6 +59,7 @@ df.rows().forEach {
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.forRows.html"/>
 <!---END-->
 
 Iterate over columns:
@@ -71,6 +72,7 @@ df.columns().forEach {
 }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.forColumn.html"/>
 <!---END-->
 
 Iterate over cells:
@@ -89,4 +91,5 @@ df.values(byRows = true).forEach {
 }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.forCells.html"/>
 <!---END-->

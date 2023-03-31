@@ -20,6 +20,7 @@ class RepositoryInfo(val data: Any)
 fun downloadRepositoryInfo(url: String) = RepositoryInfo("fancy response from the API")
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertToColumnGroupUseCase.html"/>
 <!---END-->
 
 Consider you have an existing [`DataFrame`](DataFrame.md) with some URLs, arguments for an API call. 
@@ -36,6 +37,7 @@ val initialData = interestingRepos
     .add("response") { downloadRepositoryInfo("url"<String>()) }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertToColumnGroupData.html"/>
 <!---END-->
 
 Using unfold you can convert `response` to a [`ColumnGroup`](DataColumn.md#columngroup) and use rich [modify](modify.md) capabilities.
@@ -46,6 +48,7 @@ Using unfold you can convert `response` to a [`ColumnGroup`](DataColumn.md#colum
 val df = initialData.unfold("response")
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertToColumnGroup.html"/>
 <!---END-->
 
 <!---FUN convertToColumnGroupBenefits-->
@@ -55,4 +58,5 @@ df.move { response.data }.toTop()
 df.rename { response.data }.into("description")
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertToColumnGroupBenefits.html"/>
 <!---END-->

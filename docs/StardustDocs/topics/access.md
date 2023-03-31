@@ -13,6 +13,7 @@ df.rows() // Iterable<DataRow>
 df.values() // Sequence<Any?>
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.getRowsColumns.html"/>
 <!---END-->
 
 **Learn how to:**

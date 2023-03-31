@@ -28,6 +28,7 @@ df.update { weight }.at(1..4).notNull { it / 2 }
 df.update { name.lastName and age }.at(1, 3, 4).withNull()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.update.html"/>
 <!---END-->
 
 Update with constant value:
@@ -38,6 +39,7 @@ Update with constant value:
 df.update { city }.where { name.firstName == "Alice" }.withValue("Paris")
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.updateWithConst.html"/>
 <!---END-->
 
 Update with value depending on row:
@@ -48,6 +50,7 @@ Update with value depending on row:
 df.update { city }.with { name.firstName + " from " + it }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.updateWith.html"/>
 <!---END-->
 
 Update with value depending on column:
@@ -58,6 +61,7 @@ Update with value depending on column:
 df.update { colsOf<Number?>() }.perCol { mean(skipNA = true) }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.updatePerColumn.html"/>
 <!---END-->
 
 Update with value depending on row and column:
@@ -68,6 +72,7 @@ Update with value depending on row and column:
 df.update { colsOf<String?>() }.perRowCol { row, col -> col.name() + ": " + row.index() }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.updatePerRowCol.html"/>
 <!---END-->
 
 Update [ColumnGroup](DataColumn.md#columngroup) as [DataFrame](DataFrame.md):
@@ -78,4 +83,5 @@ Update [ColumnGroup](DataColumn.md#columngroup) as [DataFrame](DataFrame.md):
 df.update { name }.asFrame { select { lastName } }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.updateAsFrame.html"/>
 <!---END-->

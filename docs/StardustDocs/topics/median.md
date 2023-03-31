@@ -15,6 +15,7 @@ df.medianFor { age and weight } // median of values per `age` and `weight` separ
 df.medianOf { (weight ?: 0) / age } // median of expression evaluated for every row
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.medianModes.html"/>
 <!---END-->
 
 <!---FUN medianAggregations-->
@@ -27,6 +28,7 @@ df.pivot { city }.median()
 df.pivot { city }.groupBy { name.lastName }.median()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.medianAggregations.html"/>
 <!---END-->
 
 See [statistics](summaryStatistics.md#groupby-statistics) for details on complex data aggregations.

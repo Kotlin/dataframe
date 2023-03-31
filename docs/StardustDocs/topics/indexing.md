@@ -30,4 +30,5 @@ df[1]["age"]
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.getCell.html"/>
 <!---END-->
