@@ -812,6 +812,14 @@ class Access : TestBase() {
         df.select { drop(2) }
         df.select { dropLast(2) }
 
+        // find the first column satisfying the condition
+        df.select { first { it.name().startsWith("year") } }
+
+        // find the last column inside a column group satisfying the condition
+        df.select {
+            group("name").last { it.name().endsWith("Name") }
+        }
+
         // depth-first-search traversal of all columns, excluding ColumnGroups from result
         df.select { allDfs() }
 
