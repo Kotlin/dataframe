@@ -19,7 +19,7 @@ internal interface ColumnExpression {
      * ## Column Expression
      * Create a temporary new column by defining an expression to fill up each row.
      *
-     * See {@include [ColumnExpressionLink]} for more information.
+     * See [Column Expression][org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression] for more information.
      */
     interface CommonDocs
 }

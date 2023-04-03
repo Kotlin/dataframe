@@ -187,7 +187,13 @@ public enum class Infer {
     /**
      * Infer [DataColumn.type] and [DataColumn.hasNulls] from actual [DataColumn.values] using optionally provided base type as an upper bound.
      */
-    Type
+    Type;
+
+    /**
+     * @param [infer\] [An enum][Infer] that indicates how [DataColumn.type] should be calculated.
+     * Either [None], [Nulls], or [Type].
+     */
+    internal interface Param
 }
 
 /**

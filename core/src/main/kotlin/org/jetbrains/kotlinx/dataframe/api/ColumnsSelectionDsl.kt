@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -23,6 +24,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.renamedReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
+import org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.hasNulls
@@ -41,7 +43,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.top
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.dfs
-import org.jetbrains.kotlinx.dataframe.documentation.*
+import org.jetbrains.kotlinx.dataframe.io.read
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -196,8 +198,97 @@ internal interface ColumnsSelectionDslLink
 /** @include [CommonColumnSelectionDocs] */
 public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColumn<DataRow<T>> {
 
-    public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C>): SingleColumn<C> =
-        transform { listOf(it.first(condition)) }.single()
+    /**
+     * ## First
+     * Returns the first column in this [ColumnSet] that adheres to the given [condition\].
+     *
+     * For example:
+     *
+     * {@includeArg [Examples]}
+     *
+     * @param [condition\] The [ColumnFilter] condition that the column must adhere to.
+     * @return A [SingleColumn] containing the first column that adheres to the given [condition\].
+     * @see [last\]
+     */
+    private interface CommonFirstDocs {
+
+        /** Examples key */
+        interface Examples
+    }
+
+    /**
+     * @include [CommonFirstDocs]
+     * @arg [CommonFirstDocs.Examples]
+     * `df.`[select][select]` { `[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * `df.`[select][select]` { myColumnGroup.`[first][first]`() }`
+     */
+    public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C> = { true }): SingleColumn<C> =
+        children { condition(it.cast()) }[0].cast()
+
+    /**
+     * @include [CommonFirstDocs]
+     * @arg [CommonFirstDocs.Examples]
+     * `df.`[select][select]` { "myColumnGroup".`[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     */
+    public fun String.first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+        toColumnAccessor().first(condition)
+
+    /**
+     * @include [CommonFirstDocs]
+     * @arg [CommonFirstDocs.Examples]
+     * `df.`[select][select]` { Type::myColumnGroup.`[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     */
+    public fun <C> KProperty<C>.first(condition: ColumnFilter<C>): SingleColumn<*> =
+        toColumnAccessor().first(condition)
+
+
+    /**
+     * ## Last
+     * Returns the last column in this [ColumnSet] that adheres to the given [condition\].
+     *
+     * For example:
+     *
+     * {@includeArg [Examples]}
+     *
+     * @param [condition\] The [ColumnFilter] condition that the column must adhere to.
+     * @return A [SingleColumn] containing the last column that adheres to the given [condition\].
+     * @see [first\]
+     */
+    private interface CommonLastDocs {
+
+        /** Examples key */
+        interface Examples
+    }
+
+    /**
+     * @include [CommonLastDocs]
+     * @arg [CommonLastDocs.Examples]
+     * `df.`[select][select]` { `[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * `df.`[select][select]` { myColumnGroup.`[first][last]`() }`
+     */
+    public fun <C> ColumnSet<C>.last(condition: ColumnFilter<C> = { true }): SingleColumn<C> =
+        children { condition(it.cast()) }
+            .transform { listOf(it.last()) }
+            .single()
+            .cast()
+
+    /**
+     * @include [CommonLastDocs]
+     * @arg [CommonLastDocs.Examples]
+     * `df.`[select][select]` { "myColumnGroup".`[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     */
+    public fun String.last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+        toColumnAccessor().last(condition)
+
+    /**
+     * @include [CommonLastDocs]
+     * @arg [CommonLastDocs.Examples]
+     * `df.`[select][select]` { Type::myColumnGroup.`[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     */
+    public fun <C> KProperty<C>.last(condition: ColumnFilter<C>): SingleColumn<*> =
+        toColumnAccessor().last(condition)
 
     public fun <C> ColumnSet<C>.single(condition: ColumnFilter<C>): SingleColumn<C> =
         transform { listOf(it.single(condition)) }.single()
@@ -592,57 +683,47 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonColsOfDocs]
-     * Get sub-columns of the column with this name by [type] without a filter.
+     * Get sub-columns of the column with this name by [type] with a [filter].
      * For example:
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
      *
-     * @include [CommonColsOfDocs.Return]
-     */
-    public fun String.colsOf(type: KType): ColumnSet<Any?> = toColumnAccessor().colsOf(type)
-
-    /**
-     * @include [CommonColsOfDocs]
-     * Get sub-columns of the column with this name by [type] with a [filter].
-     * For example:
-     *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
      *
      * @include [CommonColsOfDocs.FilterParam]
-     * @include [CommonColsOfDocs.ReturnFiltered]
+     * @include [CommonColsOfDocs.Return]
      */
-    public fun <C> String.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean): ColumnSet<Any?> =
+    public fun <C> String.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<Any?> =
         toColumnAccessor().colsOf(type, filter)
 
     /**
      * @include [CommonColsOfDocs]
-     * Get sub-columns of the column this [KProperty Accessor][KProperty] points to by [type] without a filter.
+     * Get sub-columns of the column this [KProperty Accessor][KProperty] points to by [type] with or without [filter].
      * For example:
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
      *
-     * @include [CommonColsOfDocs.Return]
-     */
-    public fun KProperty<*>.colsOf(type: KType): ColumnSet<Any?> = toColumnAccessor().colsOf(type)
-
-    /**
-     * @include [CommonColsOfDocs]
-     * Get sub-columns of the column this [KProperty Accessor][KProperty] points to by [type] with a [filter].
-     * For example:
-     *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
      *
      * @include [CommonColsOfDocs.FilterParam]
-     * @include [CommonColsOfDocs.ReturnFiltered]
+     * @include [CommonColsOfDocs.Return]
      */
-    public fun <C> KProperty<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean): ColumnSet<Any?> =
+    public fun <C> KProperty<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<Any?> =
         toColumnAccessor().colsOf(type, filter)
 }
 
 /**
- * @include [ColumnExpression]
+ * @include [ColumnExpression.CommonDocs]
  *
- * TODO
+ * For example:
+ *
+ * `df.`[groupBy][DataFrame.groupBy]` { `[expr][expr]` { firstName.`[length][String.length]` + lastName.`[length][String.length]` } `[named][named]` "nameLength" }`
+ *
+ * `df.`[sortBy][DataFrame.sortBy]` { `[expr][expr]` { name.`[length][String.length]` }.`[desc][SortDsl.desc]`() }`
+ *
+ * @param [name] The name the temporary column. Will be empty by default.
+ * @include [Infer.Param] By default: [Nulls][Infer.Nulls].
+ * @param [expression] An [AddExpression] to define what each new row of the temporary column should contain.
  */
 public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(
     name: String = "",
@@ -699,85 +780,54 @@ internal interface ColsOf
  */
 private interface CommonColsOfDocs {
 
-    /** @return A [ColumnSet] containing the columns of given type. */
+    /** @return A [ColumnSet] containing the columns of given type that were included by [filter\]. */
     interface Return
 
-    /** @return A [ColumnSet] containing the columns of given type that were included by [filter\]. */
-    interface ReturnFiltered
-
-    /** @param [filter\] a filter function that takes a column of type [C\] and returns `true` if the column should be included. */
+    /** @param [filter\] an optional filter function that takes a column of type [C\] and returns `true` if the column should be included. */
     interface FilterParam
 }
 
 /**
  * @include [CommonColsOfDocs]
- * Get (sub-)columns by [type] without a filter.
+ * Get (sub-)columns by [type] with or without [filter].
  * For example:
  *
  * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
  *
- * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
- *
- * @include [CommonColsOfDocs.Return]
- */
-public fun ColumnSet<*>.colsOf(type: KType): ColumnSet<Any?> = colsOf(type) { true }
-
-/**
- * @include [CommonColsOfDocs]
- * Get (sub-)columns by a given type without a filter.
- * For example:
- *
- * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`<`[Int][Int]`>() }`
- *
- * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][colsOf]`<`[Int][Int]`>() }`
- *
- * @include [CommonColsOfDocs.Return]
- */
-public inline fun <reified C> ColumnSet<*>.colsOf(): ColumnSet<C> = colsOf(typeOf<C>()) as ColumnSet<C>
-
-/**
- * @include [CommonColsOfDocs]
- * Get (sub-)columns by [type] with [filter].
- * For example:
- *
- * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
- *
  * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
  *
+ * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+ *
  * @include [CommonColsOfDocs.FilterParam]
- * @include [CommonColsOfDocs.ReturnFiltered]
+ * @include [CommonColsOfDocs.Return]
  */
-public fun <C> ColumnSet<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean): ColumnSet<C> =
+public fun <C> ColumnSet<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<C> =
     colsInternal { it.isSubtypeOf(type) && filter(it.cast()) } as ColumnSet<C>
 
 /**
  * @include [CommonColsOfDocs]
- * Get (sub-)columns by a given type with filter.
+ * Get (sub-)columns by a given type with or without [filter].
  * For example:
  *
- * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`<`[Int][Int]`> { it.`[size][DataColumn.size]` > 10 } }`
+ * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`<`[Int][Int]`>() }`
  *
  * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][colsOf]`<`[Int][Int]`> { it.`[size][DataColumn.size]` > 10 } }`
  *
+ * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][colsOf]`<`[Int][Int]`>() }`
+ *
  * @include [CommonColsOfDocs.FilterParam]
- * @include [CommonColsOfDocs.ReturnFiltered]
+ * @include [CommonColsOfDocs.Return]
  */
 public inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<C> =
     colsOf(typeOf<C>(), filter)
 
 /* TODO: [Issue: #325, context receiver support](https://github.com/Kotlin/dataframe/issues/325)
 context(ColumnsSelectionDsl)
-public inline fun <reified C> KProperty<*>.colsOf(noinline filter: (DataColumn<C>) -> Boolean): ColumnSet<Any?> =
+public inline fun <reified C> KProperty<*>.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<Any?> =
     colsOf(typeOf<C>(), filter)
 
 context(ColumnsSelectionDsl)
-public inline fun <reified C> KProperty<*>.colsOf(): ColumnSet<Any?> =
-    colsOf(typeOf<C>())
-
-context(ColumnsSelectionDsl)
-public inline fun <reified C> String.colsOf(noinline filter: (DataColumn<C>) -> Boolean): ColumnSet<Any?> =
+public inline fun <reified C> String.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<Any?> =
     colsOf(typeOf<C>(), filter)
 
-context(ColumnsSelectionDsl)
-public inline fun <reified C> String.colsOf(): ColumnSet<Any?> =
-    colsOf(typeOf<C>()) */
+ */

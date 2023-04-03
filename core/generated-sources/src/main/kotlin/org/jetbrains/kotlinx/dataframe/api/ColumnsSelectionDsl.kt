@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -23,6 +24,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.renamedReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
+import org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.hasNulls
@@ -41,6 +43,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.top
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.dfs
+import org.jetbrains.kotlinx.dataframe.io.read
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -254,8 +257,139 @@ internal interface ColumnsSelectionDslLink
  * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html) */
 public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColumn<DataRow<T>> {
 
-    public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C>): SingleColumn<C> =
-        transform { listOf(it.first(condition)) }.single()
+    /**
+     * ## First
+     * Returns the first column in this [ColumnSet] that adheres to the given [condition\].
+     *
+     * For example:
+     *
+     * {@includeArg [Examples]}
+     *
+     * @param [condition\] The [ColumnFilter] condition that the column must adhere to.
+     * @return A [SingleColumn] containing the first column that adheres to the given [condition\].
+     * @see [last\]
+     */
+    private interface CommonFirstDocs {
+
+        /** Examples key */
+        interface Examples
+    }
+
+    /**
+     * ## First
+     * Returns the first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that adheres to the given [condition].
+     *
+     * For example:
+     *
+     * `df.`[select][select]` { `[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * `df.`[select][select]` { myColumnGroup.`[first][first]`() }`
+     *
+     * @param [condition] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column that adheres to the given [condition].
+     * @see [last]
+     */
+    public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C> = { true }): SingleColumn<C> =
+        children { condition(it.cast()) }[0].cast()
+
+    /**
+     * ## First
+     * Returns the first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that adheres to the given [condition].
+     *
+     * For example:
+     *
+     * `df.`[select][select]` { "myColumnGroup".`[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * @param [condition] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column that adheres to the given [condition].
+     * @see [last]
+     */
+    public fun String.first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+        toColumnAccessor().first(condition)
+
+    /**
+     * ## First
+     * Returns the first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that adheres to the given [condition].
+     *
+     * For example:
+     *
+     * `df.`[select][select]` { Type::myColumnGroup.`[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * @param [condition] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column that adheres to the given [condition].
+     * @see [last]
+     */
+    public fun <C> KProperty<C>.first(condition: ColumnFilter<C>): SingleColumn<*> =
+        toColumnAccessor().first(condition)
+
+
+    /**
+     * ## Last
+     * Returns the last column in this [ColumnSet] that adheres to the given [condition\].
+     *
+     * For example:
+     *
+     * {@includeArg [Examples]}
+     *
+     * @param [condition\] The [ColumnFilter] condition that the column must adhere to.
+     * @return A [SingleColumn] containing the last column that adheres to the given [condition\].
+     * @see [first\]
+     */
+    private interface CommonLastDocs {
+
+        /** Examples key */
+        interface Examples
+    }
+
+    /**
+     * ## Last
+     * Returns the last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that adheres to the given [condition].
+     *
+     * For example:
+     *
+     * `df.`[select][select]` { `[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * `df.`[select][select]` { myColumnGroup.`[first][last]`() }`
+     *
+     * @param [condition] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column that adheres to the given [condition].
+     * @see [first]
+     */
+    public fun <C> ColumnSet<C>.last(condition: ColumnFilter<C> = { true }): SingleColumn<C> =
+        children { condition(it.cast()) }
+            .transform { listOf(it.last()) }
+            .single()
+            .cast()
+
+    /**
+     * ## Last
+     * Returns the last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that adheres to the given [condition].
+     *
+     * For example:
+     *
+     * `df.`[select][select]` { "myColumnGroup".`[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * @param [condition] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column that adheres to the given [condition].
+     * @see [first]
+     */
+    public fun String.last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+        toColumnAccessor().last(condition)
+
+    /**
+     * ## Last
+     * Returns the last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that adheres to the given [condition].
+     *
+     * For example:
+     *
+     * `df.`[select][select]` { Type::myColumnGroup.`[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * @param [condition] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column that adheres to the given [condition].
+     * @see [first]
+     */
+    public fun <C> KProperty<C>.last(condition: ColumnFilter<C>): SingleColumn<*> =
+        toColumnAccessor().last(condition)
 
     public fun <C> ColumnSet<C>.single(condition: ColumnFilter<C>): SingleColumn<C> =
         transform { listOf(it.single(condition)) }.single()
@@ -674,50 +808,17 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[Int][Int]`> -> it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
      * ## This Cols Of Overload
-     * Get sub-columns of the column with this name by [type] without a filter.
+     * Get sub-columns of the column with this name by [type] with a [filter].
      * For example:
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
      *
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type.
-     */
-    public fun String.colsOf(type: KType): ColumnSet<Any?> = toColumnAccessor().colsOf(type)
-
-    /**
-     * ## Cols Of
-     * Get columns by a given type and an optional filter.
-     *
-     * For example:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
-     * ## ‎
-     * Alternatively, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also be called on existing columns:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { (Type::myColumnGroup)().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Double][Double]`>() }`
-     * ## ‎
-     * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also take a [KType] argument instead of a reified type.
-     * This is useful when the type is not known at compile time or when the API function cannot be inlined.
-     * (TODO: [Issue: #325, context receiver support](https://github.com/Kotlin/dataframe/issues/325))
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[Int][Int]`> -> it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
-     * ## This Cols Of Overload
-     * Get sub-columns of the column with this name by [type] with a [filter].
-     * For example:
-     *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
      *
-     * @param [filter] a filter function that takes a column of type [C] and returns `true` if the column should be included.
+     * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
      */
-    public fun <C> String.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean): ColumnSet<Any?> =
+    public fun <C> String.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<Any?> =
         toColumnAccessor().colsOf(type, filter)
 
     /**
@@ -746,53 +847,37 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[Int][Int]`> -> it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
      * ## This Cols Of Overload
-     * Get sub-columns of the column this [KProperty Accessor][KProperty] points to by [type] without a filter.
+     * Get sub-columns of the column this [KProperty Accessor][KProperty] points to by [type] with or without [filter].
      * For example:
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
      *
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type.
-     */
-    public fun KProperty<*>.colsOf(type: KType): ColumnSet<Any?> = toColumnAccessor().colsOf(type)
-
-    /**
-     * ## Cols Of
-     * Get columns by a given type and an optional filter.
-     *
-     * For example:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
-     * ## ‎
-     * Alternatively, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also be called on existing columns:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { (Type::myColumnGroup)().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Double][Double]`>() }`
-     * ## ‎
-     * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also take a [KType] argument instead of a reified type.
-     * This is useful when the type is not known at compile time or when the API function cannot be inlined.
-     * (TODO: [Issue: #325, context receiver support](https://github.com/Kotlin/dataframe/issues/325))
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[Int][Int]`> -> it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
-     * ## This Cols Of Overload
-     * Get sub-columns of the column this [KProperty Accessor][KProperty] points to by [type] with a [filter].
-     * For example:
-     *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
      *
-     * @param [filter] a filter function that takes a column of type [C] and returns `true` if the column should be included.
+     * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
      */
-    public fun <C> KProperty<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean): ColumnSet<Any?> =
+    public fun <C> KProperty<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<Any?> =
         toColumnAccessor().colsOf(type, filter)
 }
 
+/**
+ * ## Column Expression
+ * Create a temporary new column by defining an expression to fill up each row.
+ *
+ * See [Column Expression][org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression] for more information.
+ *
+ * For example:
+ *
+ * `df.`[groupBy][DataFrame.groupBy]` { `[expr][expr]` { firstName.`[length][String.length]` + lastName.`[length][String.length]` } `[named][named]` "nameLength" }`
+ *
+ * `df.`[sortBy][DataFrame.sortBy]` { `[expr][expr]` { name.`[length][String.length]` }.`[desc][SortDsl.desc]`() }`
+ *
+ * @param [name] The name the temporary column. Will be empty by default.
+ * @param [infer] [An enum][org.jetbrains.kotlinx.dataframe.api.Infer.Infer] that indicates how [DataColumn.type][org.jetbrains.kotlinx.dataframe.DataColumn.type] should be calculated.
+ * Either [None][org.jetbrains.kotlinx.dataframe.api.Infer.None], [Nulls][org.jetbrains.kotlinx.dataframe.api.Infer.Nulls], or [Type][org.jetbrains.kotlinx.dataframe.api.Infer.Type]. By default: [Nulls][Infer.Nulls].
+ * @param [expression] An [AddExpression] to define what each new row of the temporary column should contain.
+ */
 public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(
     name: String = "",
     infer: Infer = Infer.Nulls,
@@ -871,13 +956,10 @@ internal interface ColsOf
  */
 private interface CommonColsOfDocs {
 
-    /** @return A [ColumnSet] containing the columns of given type. */
+    /** @return A [ColumnSet] containing the columns of given type that were included by [filter\]. */
     interface Return
 
-    /** @return A [ColumnSet] containing the columns of given type that were included by [filter\]. */
-    interface ReturnFiltered
-
-    /** @param [filter\] a filter function that takes a column of type [C\] and returns `true` if the column should be included. */
+    /** @param [filter\] an optional filter function that takes a column of type [C\] and returns `true` if the column should be included. */
     interface FilterParam
 }
 
@@ -907,91 +989,19 @@ private interface CommonColsOfDocs {
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[Int][Int]`> -> it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
  * ## This Cols Of Overload
- * Get (sub-)columns by [type] without a filter.
+ * Get (sub-)columns by [type] with or without [filter].
  * For example:
  *
  * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
  *
- * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
- *
- * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type.
- */
-public fun ColumnSet<*>.colsOf(type: KType): ColumnSet<Any?> = colsOf(type) { true }
-
-/**
- * ## Cols Of
- * Get columns by a given type and an optional filter.
- *
- * For example:
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
- * ## ‎
- * Alternatively, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also be called on existing columns:
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { (Type::myColumnGroup)().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Double][Double]`>() }`
- * ## ‎
- * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also take a [KType] argument instead of a reified type.
- * This is useful when the type is not known at compile time or when the API function cannot be inlined.
- * (TODO: [Issue: #325, context receiver support](https://github.com/Kotlin/dataframe/issues/325))
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[Int][Int]`> -> it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
- * ## This Cols Of Overload
- * Get (sub-)columns by a given type without a filter.
- * For example:
- *
- * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`<`[Int][Int]`>() }`
- *
- * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][colsOf]`<`[Int][Int]`>() }`
- *
- * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type.
- */
-public inline fun <reified C> ColumnSet<*>.colsOf(): ColumnSet<C> = colsOf(typeOf<C>()) as ColumnSet<C>
-
-/**
- * ## Cols Of
- * Get columns by a given type and an optional filter.
- *
- * For example:
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
- * ## ‎
- * Alternatively, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also be called on existing columns:
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { (Type::myColumnGroup)().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Double][Double]`>() }`
- * ## ‎
- * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also take a [KType] argument instead of a reified type.
- * This is useful when the type is not known at compile time or when the API function cannot be inlined.
- * (TODO: [Issue: #325, context receiver support](https://github.com/Kotlin/dataframe/issues/325))
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[Int][Int]`> -> it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
- * ## This Cols Of Overload
- * Get (sub-)columns by [type] with [filter].
- * For example:
- *
- * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
- *
  * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
  *
- * @param [filter] a filter function that takes a column of type [C] and returns `true` if the column should be included.
+ * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+ *
+ * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
  * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
  */
-public fun <C> ColumnSet<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean): ColumnSet<C> =
+public fun <C> ColumnSet<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<C> =
     colsInternal { it.isSubtypeOf(type) && filter(it.cast()) } as ColumnSet<C>
 
 /**
@@ -1020,14 +1030,16 @@ public fun <C> ColumnSet<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boole
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[Int][Int]`> -> it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
  * ## This Cols Of Overload
- * Get (sub-)columns by a given type with filter.
+ * Get (sub-)columns by a given type with or without [filter].
  * For example:
  *
- * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`<`[Int][Int]`> { it.`[size][DataColumn.size]` > 10 } }`
+ * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`<`[Int][Int]`>() }`
  *
  * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][colsOf]`<`[Int][Int]`> { it.`[size][DataColumn.size]` > 10 } }`
  *
- * @param [filter] a filter function that takes a column of type [C] and returns `true` if the column should be included.
+ * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][colsOf]`<`[Int][Int]`>() }`
+ *
+ * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
  * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
  */
 public inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<C> =
@@ -1035,17 +1047,11 @@ public inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: (DataColumn<C
 
 /* TODO: [Issue: #325, context receiver support](https://github.com/Kotlin/dataframe/issues/325)
 context(ColumnsSelectionDsl)
-public inline fun <reified C> KProperty<*>.colsOf(noinline filter: (DataColumn<C>) -> Boolean): ColumnSet<Any?> =
+public inline fun <reified C> KProperty<*>.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<Any?> =
     colsOf(typeOf<C>(), filter)
 
 context(ColumnsSelectionDsl)
-public inline fun <reified C> KProperty<*>.colsOf(): ColumnSet<Any?> =
-    colsOf(typeOf<C>())
-
-context(ColumnsSelectionDsl)
-public inline fun <reified C> String.colsOf(noinline filter: (DataColumn<C>) -> Boolean): ColumnSet<Any?> =
+public inline fun <reified C> String.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<Any?> =
     colsOf(typeOf<C>(), filter)
 
-context(ColumnsSelectionDsl)
-public inline fun <reified C> String.colsOf(): ColumnSet<Any?> =
-    colsOf(typeOf<C>()) */
+ */
