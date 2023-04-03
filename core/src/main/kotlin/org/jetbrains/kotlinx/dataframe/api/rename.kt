@@ -42,13 +42,13 @@ public data class RenameClause<T, C>(val df: DataFrame<T>, val columns: ColumnsS
 
 public fun <T> DataFrame<T>.renameToCamelCase(): DataFrame<T> {
     return rename {
-        dfs { it.isColumnGroup() && it.name() matches DELIMITED_STRING_REGEX }
+        cols { it.isColumnGroup() && it.name() matches DELIMITED_STRING_REGEX }.recursively()
     }.toCamelCase()
         .rename {
-            dfs { !it.isColumnGroup() && it.name() matches DELIMITED_STRING_REGEX }
+            cols { !it.isColumnGroup() && it.name() matches DELIMITED_STRING_REGEX }.recursively()
         }.toCamelCase()
         .update {
-            dfsOf<AnyFrame>()
+            colsOf<AnyFrame>().recursively()
         }.with { it.renameToCamelCase() }
 }
 

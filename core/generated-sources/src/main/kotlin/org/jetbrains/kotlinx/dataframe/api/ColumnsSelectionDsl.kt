@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnFilter
@@ -90,22 +89,26 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region cols
 
-    public fun ColumnSet<*>.cols(predicate: (AnyCol) -> Boolean = { true }): ColumnSet<Any?> = colsInternal(predicate)
+    public fun ColumnSet<*>.cols(predicate: ColumnFilter<*> = { true }): ColumnSetWithQuery<Any?, Any?> =
+        colsInternal(predicate)
 
-    public fun <C> ColumnSet<*>.cols(firstCol: ColumnReference<C>, vararg otherCols: ColumnReference<C>): ColumnSet<C> =
+    public fun <C> ColumnSet<*>.cols(
+        firstCol: ColumnReference<C>,
+        vararg otherCols: ColumnReference<C>,
+    ): ColumnSetWithQuery<Any?, C> =
         (listOf(firstCol) + otherCols).let { refs ->
             transform { it.flatMap { col -> refs.mapNotNull { col.getChild(it) } } }
         }
 
-    public fun ColumnSet<*>.cols(firstCol: String, vararg otherCols: String): ColumnSet<Any?> =
+    public fun ColumnSet<*>.cols(firstCol: String, vararg otherCols: String): ColumnSetWithQuery<Any?, Any?> =
         (listOf(firstCol) + otherCols).let { names ->
             transform { it.flatMap { col -> names.mapNotNull { col.getChild(it) } } }
         }
 
-    public fun ColumnSet<*>.cols(vararg indices: Int): ColumnSet<Any?> =
+    public fun ColumnSet<*>.cols(vararg indices: Int): ColumnSetWithQuery<Any?, Any?> =
         transform { it.flatMap { it.children().let { children -> indices.map { children[it] } } } }
 
-    public fun ColumnSet<*>.cols(range: IntRange): ColumnSet<Any?> =
+    public fun ColumnSet<*>.cols(range: IntRange): ColumnSetWithQuery<Any?, Any?> =
         transform { it.flatMap { it.children().subList(range.start, range.endInclusive + 1) } }
 
     // region select
@@ -129,23 +132,27 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region dfs
 
-    public fun <C> ColumnSet<C>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<Any?> = dfsInternal(predicate)
+    @Deprecated("", ReplaceWith("this.cols(predicate).recursively()"), DeprecationLevel.WARNING)
+    public fun <C> ColumnSet<C>.dfs(predicate: ColumnFilter<*>): ColumnSet<Any?> = dfsInternal(predicate)
 
+    @Deprecated("", ReplaceWith("this.cols(predicate).recursively()"), DeprecationLevel.WARNING)
     public fun String.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> = toColumnAccessor().dfs(predicate)
 
     // endregion
 
     // region all
 
-    public fun SingleColumn<*>.all(): ColumnSet<*> = transformSingle { it.children() }
+    public fun SingleColumn<*>.all(): ColumnSetWithQuery<Any?, Any?> = transformSingle { it.children() }
 
-    public fun String.all(): ColumnSet<*> = toColumnAccessor().transformSingle { it.children() }
+    public fun String.all(): ColumnSetWithQuery<Any?, Any?> = toColumnAccessor().transformSingle { it.children() }
 
     // region allDfs
 
+    @Deprecated("", ReplaceWith("this.all().recursively(includeGroups)"), DeprecationLevel.WARNING)
     public fun ColumnSet<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> =
         if (includeGroups) dfs { true } else dfs { !it.isColumnGroup() }
 
+    @Deprecated("", ReplaceWith("this.all().recursively(includeGroups)"), DeprecationLevel.WARNING)
     public fun String.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> = toColumnAccessor().allDfs(includeGroups)
 
     // endregion
@@ -153,7 +160,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     // region allAfter
 
     // excluding current
-    public fun SingleColumn<*>.allAfter(colPath: ColumnPath): ColumnSet<Any?> {
+    public fun SingleColumn<*>.allAfter(colPath: ColumnPath): ColumnSetWithQuery<Any?, Any?> {
         var take = false
         return children {
             if (take) true
@@ -164,15 +171,15 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         }
     }
 
-    public fun SingleColumn<*>.allAfter(colName: String): ColumnSet<Any?> = allAfter(pathOf(colName))
-    public fun SingleColumn<*>.allAfter(column: AnyColumnReference): ColumnSet<Any?> = allAfter(column.path())
+    public fun SingleColumn<*>.allAfter(colName: String): ColumnSetWithQuery<Any?, Any?> = allAfter(pathOf(colName))
+    public fun SingleColumn<*>.allAfter(column: AnyColumnReference): ColumnSetWithQuery<Any?, Any?> = allAfter(column.path())
 
     // endregion
 
     // region allSince
 
     // including current
-    public fun SingleColumn<*>.allSince(colPath: ColumnPath): ColumnSet<Any?> {
+    public fun SingleColumn<*>.allSince(colPath: ColumnPath): ColumnSetWithQuery<Any?, Any?> {
         var take = false
         return children {
             if (take) true
@@ -183,15 +190,15 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         }
     }
 
-    public fun SingleColumn<*>.allSince(colName: String): ColumnSet<Any?> = allSince(pathOf(colName))
-    public fun SingleColumn<*>.allSince(column: AnyColumnReference): ColumnSet<Any?> = allSince(column.path())
+    public fun SingleColumn<*>.allSince(colName: String): ColumnSetWithQuery<Any?, Any?> = allSince(pathOf(colName))
+    public fun SingleColumn<*>.allSince(column: AnyColumnReference): ColumnSetWithQuery<Any?, Any?> = allSince(column.path())
 
     // endregion
 
     // region allBefore
 
     // excluding current
-    public fun SingleColumn<*>.allBefore(colPath: ColumnPath): ColumnSet<Any?> {
+    public fun SingleColumn<*>.allBefore(colPath: ColumnPath): ColumnSetWithQuery<Any?, Any?> {
         var take = true
         return children {
             if (!take) false
@@ -202,15 +209,15 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         }
     }
 
-    public fun SingleColumn<*>.allBefore(colName: String): ColumnSet<Any?> = allBefore(pathOf(colName))
-    public fun SingleColumn<*>.allBefore(column: AnyColumnReference): ColumnSet<Any?> = allBefore(column.path())
+    public fun SingleColumn<*>.allBefore(colName: String): ColumnSetWithQuery<Any?, Any?> = allBefore(pathOf(colName))
+    public fun SingleColumn<*>.allBefore(column: AnyColumnReference): ColumnSetWithQuery<Any?, Any?> = allBefore(column.path())
 
     // endregion
 
     // region allUntil
 
     // including current
-    public fun SingleColumn<*>.allUntil(colPath: ColumnPath): ColumnSet<Any?> {
+    public fun SingleColumn<*>.allUntil(colPath: ColumnPath): ColumnSetWithQuery<Any?, Any?> {
         var take = true
         return children {
             if (!take) false
@@ -221,20 +228,20 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         }
     }
 
-    public fun SingleColumn<*>.allUntil(colName: String): ColumnSet<Any?> = allUntil(pathOf(colName))
-    public fun SingleColumn<*>.allUntil(column: AnyColumnReference): ColumnSet<Any?> = allUntil(column.path())
+    public fun SingleColumn<*>.allUntil(colName: String): ColumnSetWithQuery<Any?, Any?> = allUntil(pathOf(colName))
+    public fun SingleColumn<*>.allUntil(column: AnyColumnReference): ColumnSetWithQuery<Any?, Any?> = allUntil(column.path())
 
     // endregion
 
     // endregion
 
-    public fun SingleColumn<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): ColumnSet<AnyRow> =
-        children { it.isColumnGroup() && filter(it.asColumnGroup()) } as ColumnSet<AnyRow>
+    public fun SingleColumn<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): ColumnSetWithQuery<Any?, AnyRow> =
+        children { it.isColumnGroup() && filter(it.asColumnGroup()) } as ColumnSetWithQuery<Any?, AnyRow>
 
-    public fun <C> ColumnSet<C>.children(predicate: (ColumnWithPath<Any?>) -> Boolean = { true }): ColumnSet<Any?> =
+    public fun <C> ColumnSet<C>.children(predicate: (ColumnWithPath<Any?>) -> Boolean = { true }): ColumnSetWithQuery<C, Any?> =
         transform { it.flatMap { it.children().filter { predicate(it) } } }
 
-    public fun ColumnGroupReference.children(): ColumnSet<Any?> = transformSingle { it.children() }
+    public fun ColumnGroupReference.children(): ColumnSetWithQuery<DataRow<*>, Any?> = transformSingle { it.children() }
 
     public operator fun <C> List<DataColumn<C>>.get(range: IntRange): ColumnSet<C> =
         ColumnsList(subList(range.first, range.last + 1))
@@ -347,31 +354,51 @@ public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(
     noinline expression: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(name, infer, expression)
 
-internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) -> Boolean): ColumnsSelector<T, C> =
-    { this@filter(it, it).filter(predicate) }
+internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) -> Boolean): ColumnsSelector<T, C> = {
+    this@filter(it, it).filter(predicate)
+}
 // internal fun Columns<*>.filter(predicate: (AnyCol) -> Boolean) = transform { it.filter { predicate(it.data) } }
 
-internal fun ColumnSet<*>.colsInternal(predicate: (AnyCol) -> Boolean) =
-    transform { it.flatMap { it.children().filter { predicate(it.data) } } }
+internal fun ColumnSet<*>.colsInternal(predicate: ColumnFilter<*>) =
+    transform {
+        it.flatMap {
+            it.children().filter { predicate(it) }
+        }
+    }
 
-internal fun ColumnSet<*>.dfsInternal(predicate: (ColumnWithPath<*>) -> Boolean) =
-    transform { it.filter { it.isColumnGroup() }.flatMap { it.children().dfs().filter(predicate) } }
+@Deprecated("Replaced with recursively()")
+internal fun ColumnSet<*>.dfsInternal(predicate: ColumnFilter<*>) =
+    transform {
+        it.filter { it.isColumnGroup() }
+            .flatMap {
+                it.children().dfs().filter(predicate)
+            }
+    }
 
+public fun <A, B> ColumnSetWithQuery<A, B>.recursively(includeGroups: Boolean = true): ColumnSet<B> =
+    originalColumnSet.transform {
+        converter(it.dfs() as List<ColumnWithPath<A>>)
+            .let { if (includeGroups) it else it.filterNot { it.isColumnGroup() } }
+    }
+
+@Deprecated("Use recursively() instead", ReplaceWith("this.colsOf(type, predicate).recursively()"))
 public fun <C> ColumnSet<*>.dfsOf(type: KType, predicate: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<*> =
     dfsInternal { it.isSubtypeOf(type) && predicate(it.cast()) }
 
+@Deprecated("Use recursively() instead", ReplaceWith("this.colsOf<C>(filter).recursively()"))
 public inline fun <reified C> ColumnSet<*>.dfsOf(noinline filter: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<C> =
     dfsOf(
         typeOf<C>(),
         filter
     ) as ColumnSet<C>
 
-public fun ColumnSet<*>.colsOf(type: KType): ColumnSet<Any?> = colsOf(type) { true }
+public fun ColumnSet<*>.colsOf(type: KType): ColumnSetWithQuery<*, Any?> = colsOf(type) { true }
 
-public inline fun <reified C> ColumnSet<*>.colsOf(): ColumnSet<C> = colsOf(typeOf<C>()) as ColumnSet<C>
+public inline fun <reified C> ColumnSet<*>.colsOf(): ColumnSetWithQuery<*, C> =
+    colsOf(typeOf<C>()) as ColumnSetWithQuery<*, C>
 
-public fun <C> ColumnSet<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean): ColumnSet<C> =
-    colsInternal { it.isSubtypeOf(type) && filter(it.cast()) } as ColumnSet<C>
+public fun <C> ColumnSet<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean): ColumnSetWithQuery<*, C> =
+    colsInternal { it.isSubtypeOf(type) && filter(it.cast()) } as ColumnSetWithQuery<*, C>
 
 public inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<C> =
     colsOf(

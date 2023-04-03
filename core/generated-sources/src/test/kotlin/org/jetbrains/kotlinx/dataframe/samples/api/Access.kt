@@ -628,7 +628,7 @@ class Access : TestBase() {
     fun columnSelectorsUsages() {
         // SampleStart
         df.select { age and name }
-        df.fillNaNs { dfsOf<Double>() }.withZero()
+        df.fillNaNs { colsOf<Double>().recursively() }.withZero()
         df.remove { cols { it.hasNulls() } }
         df.update { city }.notNull { it.lowercase() }
         df.gather { colsOf<Number>() }.into("key", "value")
@@ -665,7 +665,7 @@ class Access : TestBase() {
         df.select { name.all() }
 
         // dfs traversal of all children columns
-        df.select { name.allDfs() }
+        df.select { name.all().recursively(includeGroups = false) }
 
         // SampleEnd
     }
@@ -702,7 +702,7 @@ class Access : TestBase() {
         df.select { name.all() }
 
         // dfs traversal of all children columns
-        df.select { name.allDfs() }
+        df.select { name.all().recursively(includeGroups = false) }
         // SampleEnd
     }
 
@@ -778,16 +778,16 @@ class Access : TestBase() {
         df.select { dropLast(2) }
 
         // dfs traversal of all columns, excluding ColumnGroups from result
-        df.select { allDfs() }
+        df.select { all().recursively(includeGroups = false) }
 
         // dfs traversal of all columns, including ColumnGroups in result
-        df.select { allDfs(includeGroups = true) }
+        df.select { all().recursively(includeGroups = true) }
 
         // dfs traversal with condition
-        df.select { dfs { it.name().contains(":") } }
+        df.select { cols { it.name().contains(":") }.recursively() }
 
         // dfs traversal of columns of given type
-        df.select { dfsOf<String>() }
+        df.select { colsOf<String>().recursively() }
 
         // all columns except given column set
         df.select { except { colsOf<String>() } }
@@ -801,18 +801,18 @@ class Access : TestBase() {
     fun columnSelectorsModifySet() {
         // SampleStart
         // first/last n columns in column set
-        df.select { allDfs().take(3) }
-        df.select { allDfs().takeLast(3) }
+        df.select { all().recursively(includeGroups = false).take(3) }
+        df.select { all().recursively(includeGroups = false).takeLast(3) }
 
         // all except first/last n columns in column set
-        df.select { allDfs().drop(3) }
-        df.select { allDfs().dropLast(3) }
+        df.select { all().recursively(includeGroups = false).drop(3) }
+        df.select { all().recursively(includeGroups = false).dropLast(3) }
 
         // filter column set by condition
-        df.select { allDfs().filter { it.name().startsWith("year") } }
+        df.select { all().recursively(includeGroups = false).filter { it.name().startsWith("year") } }
 
         // exclude columns from column set
-        df.select { allDfs().except { age } }
+        df.select { all().recursively(includeGroups = false).except { age } }
 
         // keep only unique columns
         df.select { (colsOf<Int>() and age).distinct() }

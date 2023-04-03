@@ -39,7 +39,7 @@ public fun <T> DataColumn<T>.describe(): DataFrame<ColumnDescription> = describe
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.describe(): DataFrame<ColumnDescription> = describe { allDfs() }
+public fun <T> DataFrame<T>.describe(): DataFrame<ColumnDescription> = describe { all().recursively(false) }
 public fun <T> DataFrame<T>.describe(columns: ColumnsSelector<T, *>): DataFrame<ColumnDescription> =
     describeImpl(getColumnsWithPaths(columns))
 

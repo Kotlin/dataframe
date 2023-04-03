@@ -2,24 +2,7 @@ package org.jetbrains.kotlinx.dataframe.examples.titanic.ml
 
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.by
-import org.jetbrains.kotlinx.dataframe.api.column
-import org.jetbrains.kotlinx.dataframe.api.convert
-import org.jetbrains.kotlinx.dataframe.api.dfsOf
-import org.jetbrains.kotlinx.dataframe.api.fillNulls
-import org.jetbrains.kotlinx.dataframe.api.getColumn
-import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.api.mean
-import org.jetbrains.kotlinx.dataframe.api.merge
-import org.jetbrains.kotlinx.dataframe.api.perCol
-import org.jetbrains.kotlinx.dataframe.api.pivotMatches
-import org.jetbrains.kotlinx.dataframe.api.remove
-import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.api.shuffle
-import org.jetbrains.kotlinx.dataframe.api.toFloat
-import org.jetbrains.kotlinx.dataframe.api.toFloatArray
-import org.jetbrains.kotlinx.dataframe.api.toTypedArray
-import org.jetbrains.kotlinx.dataframe.api.withValue
+import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dl.api.core.Sequential
 import org.jetbrains.kotlinx.dl.api.core.activation.Activations
 import org.jetbrains.kotlinx.dl.api.core.initializer.HeNormal
@@ -100,8 +83,8 @@ private fun <T> OnHeapDataset.Companion.create(
 
     fun extractX(): Array<FloatArray> =
         dataframe.remove(yColumn)
-            .convert { allDfs() }.toFloat()
-            .merge { dfsOf<Float>() }.by { it.toFloatArray() }.into(x)
+            .convert { all().recursively(false) }.toFloat()
+            .merge { colsOf<Float>().recursively() }.by { it.toFloatArray() }.into(x)
             .getColumn(x).toTypedArray()
 
     fun extractY(): FloatArray = dataframe[yColumn].toFloatArray()

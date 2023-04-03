@@ -1,13 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
-import org.jetbrains.kotlinx.dataframe.ColumnsSelector
-import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.*
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.math.cumSum
 import org.jetbrains.kotlinx.dataframe.math.defaultCumSumSkipNA
-import org.jetbrains.kotlinx.dataframe.typeClass
 import java.math.BigDecimal
 import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
@@ -52,7 +48,9 @@ public fun <T> DataFrame<T>.cumSum(
 public fun <T> DataFrame<T>.cumSum(vararg columns: KProperty<*>, skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> =
     cumSum(skipNA) { columns.toColumnSet() }
 
-public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> = cumSum(skipNA) { allDfs() }
+public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> = cumSum(skipNA) {
+    all().recursively(false)
+}
 
 // endregion
 
@@ -78,6 +76,6 @@ public fun <T, G> GroupBy<T, G>.cumSum(
 ): GroupBy<T, G> = cumSum(skipNA) { columns.toColumnSet() }
 
 public fun <T, G> GroupBy<T, G>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): GroupBy<T, G> =
-    cumSum(skipNA) { allDfs() }
+    cumSum(skipNA) { all().recursively(false) }
 
 // endregion

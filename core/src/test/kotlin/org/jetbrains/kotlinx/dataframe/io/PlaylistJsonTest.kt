@@ -4,19 +4,7 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.asGroupBy
-import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.concat
-import org.jetbrains.kotlinx.dataframe.api.convert
-import org.jetbrains.kotlinx.dataframe.api.getColumnGroupOrNull
-import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.api.map
-import org.jetbrains.kotlinx.dataframe.api.minBy
-import org.jetbrains.kotlinx.dataframe.api.move
-import org.jetbrains.kotlinx.dataframe.api.name
-import org.jetbrains.kotlinx.dataframe.api.remove
-import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.api.with
+import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.junit.Test
@@ -136,7 +124,7 @@ class PlaylistJsonTest {
 
     @Test
     fun `deep batch update all`() {
-        val updated = item.convert { dfs { it.name() == "url" } }.with { (it as? String)?.let { IMG(it) } }
+        val updated = item.convert { cols { it.name() == "url" }.recursively() }.with { (it as? String)?.let { IMG(it) } }
         updated.snippet.thumbnails.default.url.type() shouldBe typeOf<IMG>()
         updated.snippet.thumbnails.maxres.url.type() shouldBe typeOf<IMG?>()
         updated.snippet.thumbnails.standard.url.type() shouldBe typeOf<IMG?>()

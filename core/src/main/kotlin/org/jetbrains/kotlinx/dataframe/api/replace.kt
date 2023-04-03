@@ -1,11 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyBaseCol
-import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.ColumnsContainer
-import org.jetbrains.kotlinx.dataframe.ColumnsSelector
-import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.*
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.ColumnToInsert
@@ -37,7 +32,7 @@ public fun <T, C> DataFrame<T>.replace(columns: Iterable<ColumnReference<C>>): R
 
 public fun <T> DataFrame<T>.replaceAll(
     vararg valuePairs: Pair<Any?, Any?>,
-    columns: ColumnsSelector<T, *> = { allDfs() },
+    columns: ColumnsSelector<T, *> = { all().recursively(false) },
 ): DataFrame<T> {
     val map = valuePairs.toMap()
     return update(columns).with { map[it] ?: it }

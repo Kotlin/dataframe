@@ -3,56 +3,7 @@ package org.jetbrains.kotlinx.dataframe.testSets.person
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.Infer
-import org.jetbrains.kotlinx.dataframe.api.add
-import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
-import org.jetbrains.kotlinx.dataframe.api.associate
-import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.column
-import org.jetbrains.kotlinx.dataframe.api.columnNames
-import org.jetbrains.kotlinx.dataframe.api.columnOf
-import org.jetbrains.kotlinx.dataframe.api.columnsCount
-import org.jetbrains.kotlinx.dataframe.api.convert
-import org.jetbrains.kotlinx.dataframe.api.count
-import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.drop
-import org.jetbrains.kotlinx.dataframe.api.dropNulls
-import org.jetbrains.kotlinx.dataframe.api.explodeLists
-import org.jetbrains.kotlinx.dataframe.api.expr
-import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.api.first
-import org.jetbrains.kotlinx.dataframe.api.frames
-import org.jetbrains.kotlinx.dataframe.api.gather
-import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
-import org.jetbrains.kotlinx.dataframe.api.getColumns
-import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
-import org.jetbrains.kotlinx.dataframe.api.group
-import org.jetbrains.kotlinx.dataframe.api.groupBy
-import org.jetbrains.kotlinx.dataframe.api.groupByOther
-import org.jetbrains.kotlinx.dataframe.api.implode
-import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.api.isList
-import org.jetbrains.kotlinx.dataframe.api.join
-import org.jetbrains.kotlinx.dataframe.api.last
-import org.jetbrains.kotlinx.dataframe.api.map
-import org.jetbrains.kotlinx.dataframe.api.mapKeys
-import org.jetbrains.kotlinx.dataframe.api.mapValues
-import org.jetbrains.kotlinx.dataframe.api.matches
-import org.jetbrains.kotlinx.dataframe.api.named
-import org.jetbrains.kotlinx.dataframe.api.notNull
-import org.jetbrains.kotlinx.dataframe.api.pivot
-import org.jetbrains.kotlinx.dataframe.api.print
-import org.jetbrains.kotlinx.dataframe.api.remove
-import org.jetbrains.kotlinx.dataframe.api.replace
-import org.jetbrains.kotlinx.dataframe.api.rows
-import org.jetbrains.kotlinx.dataframe.api.sortBy
-import org.jetbrains.kotlinx.dataframe.api.sumOf
-import org.jetbrains.kotlinx.dataframe.api.toInt
-import org.jetbrains.kotlinx.dataframe.api.ungroup
-import org.jetbrains.kotlinx.dataframe.api.update
-import org.jetbrains.kotlinx.dataframe.api.values
-import org.jetbrains.kotlinx.dataframe.api.where
-import org.jetbrains.kotlinx.dataframe.api.with
+import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
@@ -229,7 +180,7 @@ class PivotTests {
             group.columnNames() shouldBe if (it.name() == "Bob") keys - "city" else keys
         }
 
-        val leafColumns = pivoted.getColumnsWithPaths { all().drop(1).allDfs() }
+        val leafColumns = pivoted.getColumnsWithPaths { all().drop(1).cols().recursively(false) }
         leafColumns.size shouldBe typed.name.countDistinct() * typed.key.countDistinct() - 1
         leafColumns.forEach { it.path.size shouldBe 2 }
 
@@ -284,7 +235,7 @@ class PivotTests {
 //        nullGroup.columnTypes() shouldBe listOf(typeOf<Comparable<*>?>(), typeOf<KClass<Any>?>())
         nullGroup.columnTypes() shouldBe listOf(nothingType(true), nothingType(true))
 
-        val cols = pivotedDf.getColumnsWithPaths { all().allDfs() }
+        val cols = pivotedDf.getColumnsWithPaths { all().cols().recursively(false) }
         cols.size shouldBe 2 * typed.name.countDistinct() * typed.key.countDistinct() - 2
 
         cols.forEach {

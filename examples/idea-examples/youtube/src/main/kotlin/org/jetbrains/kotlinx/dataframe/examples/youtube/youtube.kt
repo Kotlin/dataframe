@@ -53,7 +53,7 @@ fun main() {
         .select { id.videoId into videoId and snippet }
         .distinct()
         .parse()
-        .convert { dfsOf<URL>() }.with {
+        .convert { colsOf<URL>().recursively() }.with {
             IMG(it, maxHeight = 150)
         }.add("video") {
             val id = videoId()

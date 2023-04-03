@@ -9,27 +9,12 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.pathOf
-import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
-import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
-import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
-import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
-import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
-import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
-import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.columns.*
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.asNullable
 import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingDataColumn
-import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
-import org.jetbrains.kotlinx.dataframe.impl.columns.tree.TreeNode
-import org.jetbrains.kotlinx.dataframe.impl.columns.tree.collectTree
-import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getOrPut
-import org.jetbrains.kotlinx.dataframe.impl.columns.tree.put
-import org.jetbrains.kotlinx.dataframe.impl.columns.tree.topDfs
+import org.jetbrains.kotlinx.dataframe.impl.columns.tree.*
 import org.jetbrains.kotlinx.dataframe.impl.equalsByElement
 import org.jetbrains.kotlinx.dataframe.impl.rollingHash
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -93,14 +78,24 @@ internal fun <T> DataColumn<T>.assertIsComparable(): DataColumn<T> {
     return this
 }
 
-internal fun <A, B> SingleColumn<A>.transformSingle(converter: (ColumnWithPath<A>) -> List<ColumnWithPath<B>>): ColumnSet<B> =
-    object : ColumnSet<B> {
+internal fun <A, B> SingleColumn<A>.transformSingle(converter: (ColumnWithPath<A>) -> List<ColumnWithPath<B>>) =
+    object : ColumnSetWithQuery<A, B> {
+
+        override val originalColumnSet: ColumnSet<A> = this@transformSingle
+
+        override val converter: (List<ColumnWithPath<A>>) -> List<ColumnWithPath<B>> = { it.flatMap(converter) }
+
         override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<B>> =
             this@transformSingle.resolveSingle(context)?.let { converter(it) } ?: emptyList()
     }
 
-internal fun <A, B> ColumnSet<A>.transform(converter: (List<ColumnWithPath<A>>) -> List<ColumnWithPath<B>>): ColumnSet<B> =
-    object : ColumnSet<B> {
+internal fun <A, B> ColumnSet<A>.transform(converter: (List<ColumnWithPath<A>>) -> List<ColumnWithPath<B>>) =
+    object : ColumnSetWithQuery<A, B> {
+
+        override val originalColumnSet: ColumnSet<A> = this@transform
+
+        override val converter: (List<ColumnWithPath<A>>) -> List<ColumnWithPath<B>> = converter
+
         override fun resolve(context: ColumnResolutionContext) = converter(this@transform.resolve(context))
     }
 

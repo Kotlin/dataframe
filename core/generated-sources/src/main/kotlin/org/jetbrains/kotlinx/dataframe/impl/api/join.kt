@@ -1,31 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
-import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.ColumnMatch
-import org.jetbrains.kotlinx.dataframe.api.JoinColumnsSelector
-import org.jetbrains.kotlinx.dataframe.api.JoinDsl
-import org.jetbrains.kotlinx.dataframe.api.JoinType
-import org.jetbrains.kotlinx.dataframe.api.allowLeftNulls
-import org.jetbrains.kotlinx.dataframe.api.allowRightNulls
-import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
-import org.jetbrains.kotlinx.dataframe.api.indices
-import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
-import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
-import org.jetbrains.kotlinx.dataframe.api.toDataFrameFromPairs
-import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
-import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
-import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
-import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.*
+import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.columns.*
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
-import org.jetbrains.kotlinx.dataframe.indices
-import org.jetbrains.kotlinx.dataframe.kind
-import org.jetbrains.kotlinx.dataframe.nrow
-import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.full.withNullability
 
 internal fun <A, B> defaultJoinColumns(left: DataFrame<A>, right: DataFrame<B>): JoinColumnsSelector<A, B> =
@@ -74,8 +53,8 @@ internal fun <A, B> DataFrame<A>.joinImpl(
         val leftCol = leftJoinColumns[i]
         val rightCol = rightJoinColumns[i]
         if (leftCol.isColumnGroup() && rightCol.isColumnGroup()) {
-            val leftColumns = getColumnsWithPaths { leftCol.allDfs() }
-            val rightColumns = other.getColumnsWithPaths { rightCol.allDfs() }
+            val leftColumns = getColumnsWithPaths { leftCol.all().recursively(false) }
+            val rightColumns = other.getColumnsWithPaths { rightCol.all().recursively(false) }
 
             val leftPrefixLength = leftCol.path.size
             val rightPrefixLength = rightCol.path.size
@@ -147,12 +126,12 @@ internal fun <A, B> DataFrame<A>.joinImpl(
         outputRowsCount += rightUnmatchedCount
     }
 
-    val leftColumns = getColumnsWithPaths { allDfs() }
+    val leftColumns = getColumnsWithPaths { all().recursively(false) }
 
     val rightJoinColumnPaths = allRightJoinColumns.map { it.path to it.data }.toMap()
 
     val newRightColumns =
-        if (addNewColumns) other.getColumnsWithPaths { dfs { !it.isColumnGroup() && !rightJoinColumnPaths.contains(it.path) } } else emptyList()
+        if (addNewColumns) other.getColumnsWithPaths { cols { !it.isColumnGroup() && !rightJoinColumnPaths.contains(it.path) }.recursively() } else emptyList()
 
     // for every column index from the left dataframe store matching column from the right dataframe
     val leftToRightColumns = leftColumns.map { rightJoinColumnPaths[pathMapping[it.path()]] }

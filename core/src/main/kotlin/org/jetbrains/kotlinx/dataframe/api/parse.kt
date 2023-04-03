@@ -1,17 +1,13 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.ColumnsSelector
-import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.*
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.parseImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.tryParseImpl
-import org.jetbrains.kotlinx.dataframe.typeClass
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.Locale
 import kotlin.reflect.KProperty
 
 public val DataFrame.Companion.parser: GlobalParserOptions get() = Parsers
@@ -55,7 +51,9 @@ public data class ParserOptions(
 
 public fun DataColumn<String?>.tryParse(options: ParserOptions? = null): DataColumn<*> = tryParseImpl(options)
 
-public fun <T> DataFrame<T>.parse(options: ParserOptions? = null): DataFrame<T> = parse(options) { allDfs() }
+public fun <T> DataFrame<T>.parse(options: ParserOptions? = null): DataFrame<T> = parse(options) {
+    all().recursively(false)
+}
 
 public fun DataColumn<String?>.parse(options: ParserOptions? = null): DataColumn<*> =
     tryParse(options).also { if (it.typeClass == String::class) error("Can't guess column type") }

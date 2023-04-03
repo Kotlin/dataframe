@@ -1,35 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.impl
 
-import org.jetbrains.kotlinx.dataframe.ColumnSelector
-import org.jetbrains.kotlinx.dataframe.ColumnsSelector
-import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.Selector
+import org.jetbrains.kotlinx.dataframe.*
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.aggregation.NamedValue
-import org.jetbrains.kotlinx.dataframe.api.GroupBy
-import org.jetbrains.kotlinx.dataframe.api.GroupedRowFilter
-import org.jetbrains.kotlinx.dataframe.api.asGroupBy
-import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.concat
-import org.jetbrains.kotlinx.dataframe.api.convert
-import org.jetbrains.kotlinx.dataframe.api.getColumn
-import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
-import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.api.minus
-import org.jetbrains.kotlinx.dataframe.api.pathOf
-import org.jetbrains.kotlinx.dataframe.api.rename
+import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.AggregatableInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupByReceiverImpl
-import org.jetbrains.kotlinx.dataframe.impl.api.AggregatedPivot
-import org.jetbrains.kotlinx.dataframe.impl.api.ColumnToInsert
-import org.jetbrains.kotlinx.dataframe.impl.api.GroupedDataRowImpl
-import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
-import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.*
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.ncol
-import org.jetbrains.kotlinx.dataframe.nrow
-import org.jetbrains.kotlinx.dataframe.values
 
 internal class GroupByImpl<T, G>(
     val df: DataFrame<T>,
@@ -95,7 +74,7 @@ internal fun <T, G, R> aggregateGroupBy(
 
     if (!removeColumns) removedNode.data.wasRemoved = false
 
-    val columnsToInsert = groupedFrame.getColumnsWithPaths { allDfs() }.map {
+    val columnsToInsert = groupedFrame.getColumnsWithPaths { all().recursively(false) }.map {
         ColumnToInsert(insertPath + it.path, it, removedNode)
     }
     val src = if (removeColumns) removed.df else df

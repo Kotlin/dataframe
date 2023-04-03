@@ -12,165 +12,16 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.ExcessiveColumns
-import org.jetbrains.kotlinx.dataframe.api.GroupBy
-import org.jetbrains.kotlinx.dataframe.api.ParserOptions
-import org.jetbrains.kotlinx.dataframe.api.add
-import org.jetbrains.kotlinx.dataframe.api.addAll
-import org.jetbrains.kotlinx.dataframe.api.addId
-import org.jetbrains.kotlinx.dataframe.api.all
-import org.jetbrains.kotlinx.dataframe.api.allNulls
-import org.jetbrains.kotlinx.dataframe.api.append
-import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
-import org.jetbrains.kotlinx.dataframe.api.asDataFrame
-import org.jetbrains.kotlinx.dataframe.api.asGroupBy
-import org.jetbrains.kotlinx.dataframe.api.asIterable
-import org.jetbrains.kotlinx.dataframe.api.at
-import org.jetbrains.kotlinx.dataframe.api.between
-import org.jetbrains.kotlinx.dataframe.api.by
-import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.chunked
-import org.jetbrains.kotlinx.dataframe.api.colsOf
-import org.jetbrains.kotlinx.dataframe.api.column
-import org.jetbrains.kotlinx.dataframe.api.columnGroup
-import org.jetbrains.kotlinx.dataframe.api.columnOf
-import org.jetbrains.kotlinx.dataframe.api.concat
-import org.jetbrains.kotlinx.dataframe.api.convert
-import org.jetbrains.kotlinx.dataframe.api.convertTo
-import org.jetbrains.kotlinx.dataframe.api.corr
-import org.jetbrains.kotlinx.dataframe.api.count
-import org.jetbrains.kotlinx.dataframe.api.countDistinct
-import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.default
-import org.jetbrains.kotlinx.dataframe.api.describe
-import org.jetbrains.kotlinx.dataframe.api.dfsOf
-import org.jetbrains.kotlinx.dataframe.api.digitize
-import org.jetbrains.kotlinx.dataframe.api.distinct
-import org.jetbrains.kotlinx.dataframe.api.distinctBy
-import org.jetbrains.kotlinx.dataframe.api.div
-import org.jetbrains.kotlinx.dataframe.api.drop
-import org.jetbrains.kotlinx.dataframe.api.dropLast
-import org.jetbrains.kotlinx.dataframe.api.dropNA
-import org.jetbrains.kotlinx.dataframe.api.dropNulls
-import org.jetbrains.kotlinx.dataframe.api.dropWhile
-import org.jetbrains.kotlinx.dataframe.api.explode
-import org.jetbrains.kotlinx.dataframe.api.expr
-import org.jetbrains.kotlinx.dataframe.api.fill
-import org.jetbrains.kotlinx.dataframe.api.fillNulls
-import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.api.first
-import org.jetbrains.kotlinx.dataframe.api.forEach
-import org.jetbrains.kotlinx.dataframe.api.forEachIndexed
-import org.jetbrains.kotlinx.dataframe.api.frameColumn
-import org.jetbrains.kotlinx.dataframe.api.gather
-import org.jetbrains.kotlinx.dataframe.api.getColumn
-import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
-import org.jetbrains.kotlinx.dataframe.api.getColumns
-import org.jetbrains.kotlinx.dataframe.api.getFrameColumn
-import org.jetbrains.kotlinx.dataframe.api.getValue
-import org.jetbrains.kotlinx.dataframe.api.group
-import org.jetbrains.kotlinx.dataframe.api.groupBy
-import org.jetbrains.kotlinx.dataframe.api.implode
-import org.jetbrains.kotlinx.dataframe.api.indices
-import org.jetbrains.kotlinx.dataframe.api.inplace
-import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.api.intoColumns
-import org.jetbrains.kotlinx.dataframe.api.intoList
-import org.jetbrains.kotlinx.dataframe.api.intoRows
-import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
-import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
-import org.jetbrains.kotlinx.dataframe.api.isNA
-import org.jetbrains.kotlinx.dataframe.api.isNumber
-import org.jetbrains.kotlinx.dataframe.api.keysInto
-import org.jetbrains.kotlinx.dataframe.api.last
-import org.jetbrains.kotlinx.dataframe.api.leftJoin
-import org.jetbrains.kotlinx.dataframe.api.lowercase
-import org.jetbrains.kotlinx.dataframe.api.map
-import org.jetbrains.kotlinx.dataframe.api.mapToFrame
-import org.jetbrains.kotlinx.dataframe.api.match
-import org.jetbrains.kotlinx.dataframe.api.matches
-import org.jetbrains.kotlinx.dataframe.api.max
-import org.jetbrains.kotlinx.dataframe.api.maxBy
-import org.jetbrains.kotlinx.dataframe.api.mean
-import org.jetbrains.kotlinx.dataframe.api.meanFor
-import org.jetbrains.kotlinx.dataframe.api.meanOf
-import org.jetbrains.kotlinx.dataframe.api.median
-import org.jetbrains.kotlinx.dataframe.api.merge
-import org.jetbrains.kotlinx.dataframe.api.min
-import org.jetbrains.kotlinx.dataframe.api.minBy
-import org.jetbrains.kotlinx.dataframe.api.minOf
-import org.jetbrains.kotlinx.dataframe.api.minus
-import org.jetbrains.kotlinx.dataframe.api.move
-import org.jetbrains.kotlinx.dataframe.api.moveTo
-import org.jetbrains.kotlinx.dataframe.api.moveToLeft
-import org.jetbrains.kotlinx.dataframe.api.moveToRight
+import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.api.name
-import org.jetbrains.kotlinx.dataframe.api.named
-import org.jetbrains.kotlinx.dataframe.api.notNull
-import org.jetbrains.kotlinx.dataframe.api.nullable
-import org.jetbrains.kotlinx.dataframe.api.parse
-import org.jetbrains.kotlinx.dataframe.api.pathOf
-import org.jetbrains.kotlinx.dataframe.api.pivot
-import org.jetbrains.kotlinx.dataframe.api.print
-import org.jetbrains.kotlinx.dataframe.api.remove
-import org.jetbrains.kotlinx.dataframe.api.rename
-import org.jetbrains.kotlinx.dataframe.api.reorderColumnsByName
-import org.jetbrains.kotlinx.dataframe.api.replace
-import org.jetbrains.kotlinx.dataframe.api.rows
-import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.api.single
-import org.jetbrains.kotlinx.dataframe.api.sortBy
-import org.jetbrains.kotlinx.dataframe.api.sortByCount
-import org.jetbrains.kotlinx.dataframe.api.sortByDesc
-import org.jetbrains.kotlinx.dataframe.api.sortByKey
-import org.jetbrains.kotlinx.dataframe.api.sortWith
-import org.jetbrains.kotlinx.dataframe.api.split
-import org.jetbrains.kotlinx.dataframe.api.sum
-import org.jetbrains.kotlinx.dataframe.api.sumOf
-import org.jetbrains.kotlinx.dataframe.api.take
-import org.jetbrains.kotlinx.dataframe.api.takeLast
-import org.jetbrains.kotlinx.dataframe.api.takeWhile
-import org.jetbrains.kotlinx.dataframe.api.times
-import org.jetbrains.kotlinx.dataframe.api.to
-import org.jetbrains.kotlinx.dataframe.api.toColumn
-import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
-import org.jetbrains.kotlinx.dataframe.api.toColumnOf
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.api.toDouble
-import org.jetbrains.kotlinx.dataframe.api.toInt
-import org.jetbrains.kotlinx.dataframe.api.toList
-import org.jetbrains.kotlinx.dataframe.api.toListOf
-import org.jetbrains.kotlinx.dataframe.api.toMap
-import org.jetbrains.kotlinx.dataframe.api.toRight
-import org.jetbrains.kotlinx.dataframe.api.toStr
-import org.jetbrains.kotlinx.dataframe.api.toValueColumn
-import org.jetbrains.kotlinx.dataframe.api.transpose
-import org.jetbrains.kotlinx.dataframe.api.under
-import org.jetbrains.kotlinx.dataframe.api.ungroup
-import org.jetbrains.kotlinx.dataframe.api.update
-import org.jetbrains.kotlinx.dataframe.api.value
-import org.jetbrains.kotlinx.dataframe.api.values
-import org.jetbrains.kotlinx.dataframe.api.valuesNotNull
-import org.jetbrains.kotlinx.dataframe.api.where
-import org.jetbrains.kotlinx.dataframe.api.with
-import org.jetbrains.kotlinx.dataframe.api.withNull
-import org.jetbrains.kotlinx.dataframe.api.withValue
-import org.jetbrains.kotlinx.dataframe.api.withValues
-import org.jetbrains.kotlinx.dataframe.api.withZero
-import org.jetbrains.kotlinx.dataframe.api.xs
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.exceptions.ExcessiveColumnsException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.hasNulls
-import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
+import org.jetbrains.kotlinx.dataframe.impl.*
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToImpl
-import org.jetbrains.kotlinx.dataframe.impl.between
 import org.jetbrains.kotlinx.dataframe.impl.columns.isMissingColumn
-import org.jetbrains.kotlinx.dataframe.impl.emptyPath
-import org.jetbrains.kotlinx.dataframe.impl.getColumnsImpl
-import org.jetbrains.kotlinx.dataframe.impl.nothingType
-import org.jetbrains.kotlinx.dataframe.impl.trackColumnAccess
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.io.renderValueForStdout
 import org.jetbrains.kotlinx.dataframe.kind
@@ -911,7 +762,7 @@ class DataFrameTests : BaseTest() {
         df["e"].kind() shouldBe ColumnKind.Group
         df.getColumnGroup("d").columnNames() shouldBe listOf("f")
         df.getColumnGroup("e").getColumnGroup("g").columnNames() shouldBe listOf("h")
-        val cols = df.getColumns { allDfs() }
+        val cols = df.getColumns { all().recursively(false) }
         cols.size shouldBe 5
         cols.forEach {
             it.toList() shouldBe expected
@@ -1165,7 +1016,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `gather bool`() {
         val pivoted = typed.pivot { city }.groupBy { name }.matches()
-        val res = pivoted.gather { dfsOf<Boolean>() }.where { it }.keysInto("city")
+        val res = pivoted.gather { colsOf<Boolean>().recursively() }.where { it }.keysInto("city")
         val sorted = res.sortBy { name and city }
         sorted shouldBe typed.select { name and city.map { it.toString() } }.distinct().sortBy { name and city }
     }
@@ -1395,7 +1246,7 @@ class DataFrameTests : BaseTest() {
             ).toDataFrame().cast<Person>()
             res shouldBe typed
         }
-        typed.group { cols { it != name } }.into { it.type.jvmErasure.simpleName!! }.check()
+        typed.group { cols { it.data != name } }.into { it.type.jvmErasure.simpleName!! }.check()
         typed.group { age and city and weight }.into { it.type.jvmErasure.simpleName!! }.check()
     }
 
