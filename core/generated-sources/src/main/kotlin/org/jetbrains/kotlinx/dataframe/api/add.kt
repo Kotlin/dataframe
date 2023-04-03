@@ -84,7 +84,8 @@ public fun <T> DataFrame<T>.addAll(dataFrames: Iterable<AnyFrame>): DataFrame<T>
 // region Create and add a single column
 
 /**
- * Receiver that is used in [add] and [update] operations to access new (added or updated) column value in preceding row.
+ * Receiver that is used by the [AddExpression] (for instance in the [add] and [update] operations)
+ * to access new (added or updated) column value in preceding row.
  */
 public interface AddDataRow<out T> : DataRow<T> {
 
