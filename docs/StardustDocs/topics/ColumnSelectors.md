@@ -51,7 +51,7 @@ df.select { name..age }
 // all children of ColumnGroup
 df.select { name.all() }
 
-// dfs traversal of all children columns
+// depth-first-search traversal of all children columns
 df.select { name.allDfs() }
 ```
 
@@ -84,7 +84,7 @@ df.select { "name".."age" }
 // all children of ColumnGroup
 df.select { "name".all() }
 
-// dfs traversal of all children columns
+// depth-first-search traversal of all children columns
 df.select { "name".allDfs() }
 ```
 
@@ -120,7 +120,7 @@ df.select { name..age }
 // all children of ColumnGroup
 df.select { name.all() }
 
-// dfs traversal of all children columns
+// depth-first-search traversal of all children columns
 df.select { name.allDfs() }
 ```
 
@@ -155,7 +155,7 @@ df.select { Person::name..Person::age }
 // all children of ColumnGroup
 df.select { Person::name.all() }
 
-// dfs traversal of all children columns
+// depth-first-search traversal of all children columns
 df.select { Person::name.allDfs() }
 ```
 
@@ -206,16 +206,16 @@ df.select { takeLast(2) }
 df.select { drop(2) }
 df.select { dropLast(2) }
 
-// dfs traversal of all columns, excluding ColumnGroups from result
+// depth-first-search traversal of all columns, excluding ColumnGroups from result
 df.select { allDfs() }
 
-// dfs traversal of all columns, including ColumnGroups in result
+// depth-first-search traversal of all columns, including ColumnGroups in result
 df.select { allDfs(includeGroups = true) }
 
-// dfs traversal with condition
+// depth-first-search traversal with condition
 df.select { dfs { it.name().contains(":") } }
 
-// dfs traversal of columns of given type
+// depth-first-search traversal of columns of given type
 df.select { dfsOf<String>() }
 
 // all columns except given column set
