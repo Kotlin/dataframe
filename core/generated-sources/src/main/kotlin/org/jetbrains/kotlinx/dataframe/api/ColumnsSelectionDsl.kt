@@ -259,13 +259,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * ## First
-     * Returns the first column in this [ColumnSet] that adheres to the given [condition\].
+     * Returns the first column in this [ColumnSet] or [ColumnGroup] that adheres to the given [condition\].
      *
      * For example:
      *
      * {@includeArg [Examples]}
      *
-     * @param [condition\] The [ColumnFilter] condition that the column must adhere to.
+     * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn] containing the first column that adheres to the given [condition\].
      * @see [last\]
      */
@@ -277,61 +277,95 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * ## First
-     * Returns the first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that adheres to the given [condition].
+     * Returns the first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
+     *
+     * For example:
+     *
+     * `df.`[select][select]` { `[colsOf][colsOf]`<`[String][String]`>().`[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * `df.`[select][select]` { `[colsOf][colsOf]`<`[Int][Int]`>().`[first][first]`() }`
+     *
+     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column that adheres to the given [condition].
+     * @see [last]
+     */
+    public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C> = { true }): SingleColumn<C> =
+        transform { listOf(it.first(condition)) }.single()
+
+    /**
+     * ## First
+     * Returns the first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
      *
      * For example:
      *
      * `df.`[select][select]` { `[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
-     * `df.`[select][select]` { myColumnGroup.`[first][first]`() }`
+     * `df.`[select][select]` { `[first][first]`() }`
      *
-     * @param [condition] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column that adheres to the given [condition].
      * @see [last]
      */
-    public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C> = { true }): SingleColumn<C> =
-        children { condition(it.cast()) }[0].cast()
+    public fun first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+        all().first(condition)
 
     /**
      * ## First
-     * Returns the first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that adheres to the given [condition].
+     * Returns the first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
+     *
+     * For example:
+     *
+     * `df.`[select][select]` { myColumnGroup.`[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * `df.`[select][select]` { myColumnGroup.`[first][first]`() }`
+     *
+     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column that adheres to the given [condition].
+     * @see [last]
+     */
+    public fun ColumnGroupReference.first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+        all().first(condition)
+
+    /**
+     * ## First
+     * Returns the first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
      *
      * For example:
      *
      * `df.`[select][select]` { "myColumnGroup".`[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
-     * @param [condition] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column that adheres to the given [condition].
      * @see [last]
      */
     public fun String.first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
-        toColumnAccessor().first(condition)
+        getColumnGroup(this).first(condition)
 
     /**
      * ## First
-     * Returns the first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that adheres to the given [condition].
+     * Returns the first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
      *
      * For example:
      *
      * `df.`[select][select]` { Type::myColumnGroup.`[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
-     * @param [condition] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column that adheres to the given [condition].
      * @see [last]
      */
-    public fun <C> KProperty<C>.first(condition: ColumnFilter<C>): SingleColumn<*> =
-        toColumnAccessor().first(condition)
+    public fun KProperty<*>.first(condition: ColumnFilter<*>): SingleColumn<*> =
+        getColumnGroup(this).first(condition)
 
 
     /**
      * ## Last
-     * Returns the last column in this [ColumnSet] that adheres to the given [condition\].
+     * Returns the last column in this [ColumnSet] or [ColumnGroup] that adheres to the given [condition\].
      *
      * For example:
      *
      * {@includeArg [Examples]}
      *
-     * @param [condition\] The [ColumnFilter] condition that the column must adhere to.
+     * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn] containing the last column that adheres to the given [condition\].
      * @see [first\]
      */
@@ -343,53 +377,84 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * ## Last
-     * Returns the last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that adheres to the given [condition].
+     * Returns the last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
+     *
+     * For example:
+     *
+     * `df.`[select][select]` { `[colsOf][colsOf]`<`[String][String]`>().`[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * `df.`[select][select]` { `[colsOf][colsOf]`<`[Int][Int]`>().`[first][last]`() }`
+     *
+     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column that adheres to the given [condition].
+     * @see [first]
+     */
+    public fun <C> ColumnSet<C>.last(condition: ColumnFilter<C> = { true }): SingleColumn<C> =
+        transform { listOf(it.last(condition)) }.single()
+
+    /**
+     * ## Last
+     * Returns the last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
      *
      * For example:
      *
      * `df.`[select][select]` { `[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
-     * `df.`[select][select]` { myColumnGroup.`[first][last]`() }`
+     * `df.`[select][select]` { `[first][last]`() }`
      *
-     * @param [condition] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column that adheres to the given [condition].
      * @see [first]
      */
-    public fun <C> ColumnSet<C>.last(condition: ColumnFilter<C> = { true }): SingleColumn<C> =
-        children { condition(it.cast()) }
-            .transform { listOf(it.last()) }
-            .single()
-            .cast()
+    public fun last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+        all().last(condition)
 
     /**
      * ## Last
-     * Returns the last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that adheres to the given [condition].
+     * Returns the last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
+     *
+     * For example:
+     *
+     * `df.`[select][select]` { myColumnGroup.`[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * `df.`[select][select]` { myColumnGroup.`[last][last]`() }`
+     *
+     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column that adheres to the given [condition].
+     * @see [first]
+     */
+    public fun ColumnGroupReference.last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+        all().last(condition)
+
+    /**
+     * ## Last
+     * Returns the last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
      *
      * For example:
      *
      * `df.`[select][select]` { "myColumnGroup".`[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
-     * @param [condition] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column that adheres to the given [condition].
      * @see [first]
      */
     public fun String.last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
-        toColumnAccessor().last(condition)
+        getColumnGroup(this).last(condition)
 
     /**
      * ## Last
-     * Returns the last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that adheres to the given [condition].
+     * Returns the last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
      *
      * For example:
      *
      * `df.`[select][select]` { Type::myColumnGroup.`[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
-     * @param [condition] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column that adheres to the given [condition].
      * @see [first]
      */
-    public fun <C> KProperty<C>.last(condition: ColumnFilter<C>): SingleColumn<*> =
-        toColumnAccessor().last(condition)
+    public fun KProperty<*>.last(condition: ColumnFilter<*>): SingleColumn<*> =
+        getColumnGroup(this).last(condition)
 
     public fun <C> ColumnSet<C>.single(condition: ColumnFilter<C>): SingleColumn<C> =
         transform { listOf(it.single(condition)) }.single()
