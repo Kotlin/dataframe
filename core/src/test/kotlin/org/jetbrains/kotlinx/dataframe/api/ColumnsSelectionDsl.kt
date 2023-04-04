@@ -110,5 +110,4 @@ class ColumnsSelectionDslTests : TestBase() {
             }
         } shouldBe df.select { name.firstName }
     }
-
 }

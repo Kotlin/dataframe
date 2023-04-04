@@ -300,24 +300,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][select]` { `[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
-     * `df.`[select][select]` { `[first][first]`() }`
-     *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column that adheres to the given [condition].
-     * @throws [NoSuchElementException] if no column adheres to the given [condition].
-     * @see [last]
-     */
-    public fun first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
-        all().first(condition)
-
-    /**
-     * ## First
-     * Returns the first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
-     *
-     * For example:
-     *
-     * `df.`[select][select]` { myColumnGroup.`[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     *
      * `df.`[select][select]` { myColumnGroup.`[first][first]`() }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
@@ -325,7 +307,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [last]
      */
-    public fun ColumnGroupReference.first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun SingleColumn<AnyRow>.first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         all().first(condition)
 
     /**
@@ -406,24 +388,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][select]` { `[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
-     * `df.`[select][select]` { `[first][last]`() }`
-     *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column that adheres to the given [condition].
-     * @throws [NoSuchElementException] if no column adheres to the given [condition].
-     * @see [first]
-     */
-    public fun last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
-        all().last(condition)
-
-    /**
-     * ## Last
-     * Returns the last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
-     *
-     * For example:
-     *
-     * `df.`[select][select]` { myColumnGroup.`[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     *
      * `df.`[select][select]` { myColumnGroup.`[last][last]`() }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
@@ -431,7 +395,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [first]
      */
-    public fun ColumnGroupReference.last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun SingleColumn<AnyRow>.last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         all().last(condition)
 
     /**
@@ -512,24 +476,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][select]` { `[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
-     * `df.`[select][select]` { `[single][single]`() }`
-     *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column that adheres to the given [condition].
-     * @throws [NoSuchElementException] if no column adheres to the given [condition].
-     * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
-     */
-    public fun single(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
-        all().single(condition)
-
-    /**
-     * ## Single
-     * Returns the single column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
-     *
-     * For example:
-     *
-     * `df.`[select][select]` { myColumnGroup.`[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     *
      * `df.`[select][select]` { myColumnGroup.`[single][single]`() }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
@@ -537,7 +483,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
      */
-    public fun ColumnGroupReference.single(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun SingleColumn<AnyRow>.single(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         all().single(condition)
 
     /**
@@ -572,18 +518,184 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun KProperty<*>.single(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         getColumnGroup(this).single(condition)
 
+    /** TODO */
     public fun SingleColumn<AnyRow>.col(index: Int): SingleColumn<Any?> = getChildrenAt(index).singleImpl()
 
+    /** TODO */
     public operator fun <C> ColumnSet<C>.get(index: Int): SingleColumn<C> = getAt(index)
 
+    /** TODO */
     public fun ColumnsContainer<*>.group(name: String): ColumnGroupReference = name.toColumnOf()
 
+    /**
+     * ## Subset of Columns
+     * Returns a [ColumnSet] containing all columns from [this\] to [endInclusive\].
+     *
+     * For example:
+     *
+     * `df.`[select][DataFrame.select]` { `{@includeArg [Example]}` }`
+     *
+     * @param [endInclusive\] The last column in the subset.
+     * @receiver The first column in the subset.
+     * @return A [ColumnSet] containing all columns from [this\] to [endInclusive\].
+     * @throws [IllegalArgumentException\] if the columns have different parents.
+     */
+    private interface CommonSubsetOfColumnsDocs {
+
+        /** Examples key */
+        interface Example
+    }
+
+    /**
+     * ## Subset of Columns
+     * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
+     *
+     * For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `"fromColumn".."toColumn"` }`
+     *
+     * @param [endInclusive] The last column in the subset.
+     * @receiver The first column in the subset.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
+     * @throws [IllegalArgumentException] if the columns have different parents.
+     *
+     */
     public operator fun String.rangeTo(endInclusive: String): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
+    /**
+     * ## Subset of Columns
+     * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
+     *
+     * For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `"fromColumn"..Type::toColumn` }`
+     *
+     * @param [endInclusive] The last column in the subset.
+     * @receiver The first column in the subset.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
+     * @throws [IllegalArgumentException] if the columns have different parents.
+     *
+     */
+    public operator fun String.rangeTo(endInclusive: KProperty<*>): ColumnSet<*> =
+        toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
+
+    /**
+     * ## Subset of Columns
+     * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
+     *
+     * For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `"fromColumn"..toColumn` }`
+     *
+     * @param [endInclusive] The last column in the subset.
+     * @receiver The first column in the subset.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
+     * @throws [IllegalArgumentException] if the columns have different parents.
+     *
+     */
+    public operator fun String.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
+        toColumnAccessor().rangeTo(endInclusive)
+
+    /**
+     * ## Subset of Columns
+     * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
+     *
+     * For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `Type::fromColumn.."toColumn"` }`
+     *
+     * @param [endInclusive] The last column in the subset.
+     * @receiver The first column in the subset.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
+     * @throws [IllegalArgumentException] if the columns have different parents.
+     *
+     */
+    public operator fun KProperty<*>.rangeTo(endInclusive: String): ColumnSet<*> =
+        toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
+
+    /**
+     * ## Subset of Columns
+     * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
+     *
+     * For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `Type::fromColumn..Type::toColumn` }`
+     *
+     * @param [endInclusive] The last column in the subset.
+     * @receiver The first column in the subset.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
+     * @throws [IllegalArgumentException] if the columns have different parents.
+     *
+     */
     public operator fun KProperty<*>.rangeTo(endInclusive: KProperty<*>): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
+    /**
+     * ## Subset of Columns
+     * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
+     *
+     * For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `Type::fromColumn..toColumn` }`
+     *
+     * @param [endInclusive] The last column in the subset.
+     * @receiver The first column in the subset.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
+     * @throws [IllegalArgumentException] if the columns have different parents.
+     *
+     */
+    public operator fun KProperty<*>.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
+        toColumnAccessor().rangeTo(endInclusive)
+
+    /**
+     * ## Subset of Columns
+     * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
+     *
+     * For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `fromColumn.."toColumn"` }`
+     *
+     * @param [endInclusive] The last column in the subset.
+     * @receiver The first column in the subset.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
+     * @throws [IllegalArgumentException] if the columns have different parents.
+     *
+     */
+    public operator fun AnyColumnReference.rangeTo(endInclusive: String): ColumnSet<*> =
+        rangeTo(endInclusive.toColumnAccessor())
+
+    /**
+     * ## Subset of Columns
+     * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
+     *
+     * For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `fromColumn..Type::toColumn` }`
+     *
+     * @param [endInclusive] The last column in the subset.
+     * @receiver The first column in the subset.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
+     * @throws [IllegalArgumentException] if the columns have different parents.
+     *
+     */
+    public operator fun AnyColumnReference.rangeTo(endInclusive: KProperty<*>): ColumnSet<*> =
+        rangeTo(endInclusive.toColumnAccessor())
+
+    /**
+     * ## Subset of Columns
+     * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
+     *
+     * For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `fromColumn..toColumn` }`
+     *
+     * @param [endInclusive] The last column in the subset.
+     * @receiver The first column in the subset.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
+     * @throws [IllegalArgumentException] if the columns have different parents.
+     *
+     */
     public operator fun AnyColumnReference.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
         object : ColumnSet<Any?> {
             override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<Any?>> {
