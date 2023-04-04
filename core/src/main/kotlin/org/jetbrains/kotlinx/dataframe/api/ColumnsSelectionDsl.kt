@@ -230,19 +230,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @arg [CommonFirstDocs.Examples]
      * `df.`[select][select]` { `[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
-     * `df.`[select][select]` { `[first][first]`() }`
-     */
-    public fun first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
-        all().first(condition)
-
-    /**
-     * @include [CommonFirstDocs]
-     * @arg [CommonFirstDocs.Examples]
-     * `df.`[select][select]` { myColumnGroup.`[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     *
      * `df.`[select][select]` { myColumnGroup.`[first][first]`() }`
      */
-    public fun ColumnGroupReference.first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun SingleColumn<AnyRow>.first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         all().first(condition)
 
     /**
@@ -296,19 +286,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @arg [CommonLastDocs.Examples]
      * `df.`[select][select]` { `[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
-     * `df.`[select][select]` { `[first][last]`() }`
-     */
-    public fun last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
-        all().last(condition)
-
-    /**
-     * @include [CommonLastDocs]
-     * @arg [CommonLastDocs.Examples]
-     * `df.`[select][select]` { myColumnGroup.`[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     *
      * `df.`[select][select]` { myColumnGroup.`[last][last]`() }`
      */
-    public fun ColumnGroupReference.last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun SingleColumn<AnyRow>.last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         all().last(condition)
 
     /**
@@ -362,19 +342,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @arg [CommonSingleDocs.Examples]
      * `df.`[select][select]` { `[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
-     * `df.`[select][select]` { `[single][single]`() }`
-     */
-    public fun single(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
-        all().single(condition)
-
-    /**
-     * @include [CommonSingleDocs]
-     * @arg [CommonSingleDocs.Examples]
-     * `df.`[select][select]` { myColumnGroup.`[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     *
      * `df.`[select][select]` { myColumnGroup.`[single][single]`() }`
      */
-    public fun ColumnGroupReference.single(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun SingleColumn<AnyRow>.single(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         all().single(condition)
 
     /**
@@ -393,18 +363,94 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun KProperty<*>.single(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         getColumnGroup(this).single(condition)
 
+    /** TODO */
     public fun SingleColumn<AnyRow>.col(index: Int): SingleColumn<Any?> = getChildrenAt(index).singleImpl()
 
+    /** TODO */
     public operator fun <C> ColumnSet<C>.get(index: Int): SingleColumn<C> = getAt(index)
 
+    /** TODO */
     public fun ColumnsContainer<*>.group(name: String): ColumnGroupReference = name.toColumnOf()
 
+    /**
+     * ## Subset of Columns
+     * Returns a [ColumnSet] containing all columns from [this\] to [endInclusive\].
+     *
+     * For example:
+     *
+     * `df.`[select][DataFrame.select]` { `{@includeArg [Example]}` }`
+     *
+     * @param [endInclusive\] The last column in the subset.
+     * @receiver The first column in the subset.
+     * @return A [ColumnSet] containing all columns from [this\] to [endInclusive\].
+     * @throws [IllegalArgumentException\] if the columns have different parents.
+     */
+    private interface CommonSubsetOfColumnsDocs {
+
+        /** Examples key */
+        interface Example
+    }
+
+    /**
+     * @include [CommonSubsetOfColumnsDocs]
+     * {@arg [CommonSubsetOfColumnsDocs.Example] "fromColumn".."toColumn"}
+     */
     public operator fun String.rangeTo(endInclusive: String): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
+    /**
+     * @include [CommonSubsetOfColumnsDocs]
+     * {@arg [CommonSubsetOfColumnsDocs.Example] "fromColumn"..Type::toColumn}
+     */
+    public operator fun String.rangeTo(endInclusive: KProperty<*>): ColumnSet<*> =
+        toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
+
+    /**
+     * @include [CommonSubsetOfColumnsDocs]
+     * {@arg [CommonSubsetOfColumnsDocs.Example] "fromColumn"..toColumn}
+     */
+    public operator fun String.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
+        toColumnAccessor().rangeTo(endInclusive)
+
+    /**
+     * @include [CommonSubsetOfColumnsDocs]
+     * {@arg [CommonSubsetOfColumnsDocs.Example] Type::fromColumn.."toColumn"}
+     */
+    public operator fun KProperty<*>.rangeTo(endInclusive: String): ColumnSet<*> =
+        toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
+
+    /**
+     * @include [CommonSubsetOfColumnsDocs]
+     * {@arg [CommonSubsetOfColumnsDocs.Example] Type::fromColumn..Type::toColumn}
+     */
     public operator fun KProperty<*>.rangeTo(endInclusive: KProperty<*>): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
+    /**
+     * @include [CommonSubsetOfColumnsDocs]
+     * {@arg [CommonSubsetOfColumnsDocs.Example] Type::fromColumn..toColumn}
+     */
+    public operator fun KProperty<*>.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
+        toColumnAccessor().rangeTo(endInclusive)
+
+    /**
+     * @include [CommonSubsetOfColumnsDocs]
+     * {@arg [CommonSubsetOfColumnsDocs.Example] fromColumn.."toColumn"}
+     */
+    public operator fun AnyColumnReference.rangeTo(endInclusive: String): ColumnSet<*> =
+        rangeTo(endInclusive.toColumnAccessor())
+
+    /**
+     * @include [CommonSubsetOfColumnsDocs]
+     * {@arg [CommonSubsetOfColumnsDocs.Example] fromColumn..Type::toColumn}
+     */
+    public operator fun AnyColumnReference.rangeTo(endInclusive: KProperty<*>): ColumnSet<*> =
+        rangeTo(endInclusive.toColumnAccessor())
+
+    /**
+     * @include [CommonSubsetOfColumnsDocs]
+     * {@arg [CommonSubsetOfColumnsDocs.Example] fromColumn..toColumn}
+     */
     public operator fun AnyColumnReference.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
         object : ColumnSet<Any?> {
             override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<Any?>> {
