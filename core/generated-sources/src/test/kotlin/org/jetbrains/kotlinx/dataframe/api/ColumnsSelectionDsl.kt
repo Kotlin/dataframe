@@ -1,11 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.impl.columns.singleImpl
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.jetbrains.kotlinx.dataframe.samples.api.age
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
 import org.jetbrains.kotlinx.dataframe.samples.api.isHappy
-import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.junit.Test
 
@@ -60,6 +60,28 @@ class ColumnsSelectionDslTests : TestBase() {
             }
         } shouldBe df.select {
             name.colsOf<String>().last {
+                it.any { it == "Alice" }
+            }
+        }
+    }
+
+    @Test
+    fun single() {
+        val singleDf = df.select { take(1) }
+        singleDf.select { all().single() } shouldBe singleDf.select { single() }
+
+        singleDf.select { all().single() } shouldBe singleDf.select { name }
+
+        singleDf.select { single() } shouldBe singleDf.select { name }
+
+        df.select { single { it.name().startsWith("a") } } shouldBe df.select { age }
+
+        df.select {
+            name.single {
+                it.any { it == "Alice" }
+            }
+        } shouldBe df.select {
+            name.colsOf<String>().single {
                 it.any { it == "Alice" }
             }
         }

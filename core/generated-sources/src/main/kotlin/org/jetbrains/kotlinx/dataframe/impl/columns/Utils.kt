@@ -104,9 +104,9 @@ internal fun <A, B> ColumnSet<A>.transform(converter: (List<ColumnWithPath<A>>) 
         override fun resolve(context: ColumnResolutionContext) = converter(this@transform.resolve(context))
     }
 
-internal fun <T> ColumnSet<T>.single() = object : SingleColumn<T> {
+internal fun <T> ColumnSet<T>.singleImpl() = object : SingleColumn<T> {
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? {
-        return this@single.resolve(context).singleOrNull()
+        return this@singleImpl.resolve(context).singleOrNull()
     }
 }
 

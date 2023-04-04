@@ -11,7 +11,6 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
-import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -38,12 +37,11 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
 import org.jetbrains.kotlinx.dataframe.impl.columns.getChildrenAt
-import org.jetbrains.kotlinx.dataframe.impl.columns.single
+import org.jetbrains.kotlinx.dataframe.impl.columns.singleImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.top
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.dfs
-import org.jetbrains.kotlinx.dataframe.io.read
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -267,6 +265,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn] containing the first column that adheres to the given [condition\].
+     * @throws [NoSuchElementException\] if no column adheres to the given [condition\].
      * @see [last\]
      */
     private interface CommonFirstDocs {
@@ -287,10 +286,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column that adheres to the given [condition].
+     * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [last]
      */
     public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C> = { true }): SingleColumn<C> =
-        transform { listOf(it.first(condition)) }.single()
+        transform { listOf(it.first(condition)) }.singleImpl()
 
     /**
      * ## First
@@ -304,6 +304,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column that adheres to the given [condition].
+     * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [last]
      */
     public fun first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
@@ -321,6 +322,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column that adheres to the given [condition].
+     * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [last]
      */
     public fun ColumnGroupReference.first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
@@ -336,6 +338,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column that adheres to the given [condition].
+     * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [last]
      */
     public fun String.first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
@@ -351,9 +354,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column that adheres to the given [condition].
+     * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [last]
      */
-    public fun KProperty<*>.first(condition: ColumnFilter<*>): SingleColumn<*> =
+    public fun KProperty<*>.first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         getColumnGroup(this).first(condition)
 
 
@@ -367,6 +371,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn] containing the last column that adheres to the given [condition\].
+     * @throws [NoSuchElementException\] if no column adheres to the given [condition\].
      * @see [first\]
      */
     private interface CommonLastDocs {
@@ -387,10 +392,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column that adheres to the given [condition].
+     * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [first]
      */
     public fun <C> ColumnSet<C>.last(condition: ColumnFilter<C> = { true }): SingleColumn<C> =
-        transform { listOf(it.last(condition)) }.single()
+        transform { listOf(it.last(condition)) }.singleImpl()
 
     /**
      * ## Last
@@ -404,6 +410,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column that adheres to the given [condition].
+     * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [first]
      */
     public fun last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
@@ -421,6 +428,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column that adheres to the given [condition].
+     * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [first]
      */
     public fun ColumnGroupReference.last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
@@ -436,6 +444,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column that adheres to the given [condition].
+     * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [first]
      */
     public fun String.last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
@@ -451,15 +460,119 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column that adheres to the given [condition].
+     * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [first]
      */
-    public fun KProperty<*>.last(condition: ColumnFilter<*>): SingleColumn<*> =
+    public fun KProperty<*>.last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         getColumnGroup(this).last(condition)
 
-    public fun <C> ColumnSet<C>.single(condition: ColumnFilter<C>): SingleColumn<C> =
-        transform { listOf(it.single(condition)) }.single()
 
-    public fun SingleColumn<AnyRow>.col(index: Int): SingleColumn<Any?> = getChildrenAt(index).single()
+    /**
+     * ## Single
+     * Returns the single column in this [ColumnSet] or [ColumnGroup] that adheres to the given [condition\].
+     *
+     * For example:
+     *
+     * {@includeArg [Examples]}
+     *
+     * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
+     * @return A [SingleColumn] containing the single column that adheres to the given [condition\].
+     * @throws [NoSuchElementException\] if no column adheres to the given [condition\].
+     * @throws [IllegalArgumentException\] if more than one column adheres to the given [condition\].
+     */
+    private interface CommonSingleDocs {
+
+        /** Examples key */
+        interface Examples
+    }
+
+    /**
+     * ## Single
+     * Returns the single column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
+     *
+     * For example:
+     *
+     * `df.`[select][select]` { `[colsOf][colsOf]`<`[String][String]`>().`[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * `df.`[select][select]` { `[colsOf][colsOf]`<`[Int][Int]`>().`[single][single]`() }`
+     *
+     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column that adheres to the given [condition].
+     * @throws [NoSuchElementException] if no column adheres to the given [condition].
+     * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
+     */
+    public fun <C> ColumnSet<C>.single(condition: ColumnFilter<C> = { true }): SingleColumn<C> =
+        transform { listOf(it.single(condition)) }.singleImpl()
+
+    /**
+     * ## Single
+     * Returns the single column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
+     *
+     * For example:
+     *
+     * `df.`[select][select]` { `[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * `df.`[select][select]` { `[single][single]`() }`
+     *
+     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column that adheres to the given [condition].
+     * @throws [NoSuchElementException] if no column adheres to the given [condition].
+     * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
+     */
+    public fun single(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+        all().single(condition)
+
+    /**
+     * ## Single
+     * Returns the single column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
+     *
+     * For example:
+     *
+     * `df.`[select][select]` { myColumnGroup.`[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * `df.`[select][select]` { myColumnGroup.`[single][single]`() }`
+     *
+     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column that adheres to the given [condition].
+     * @throws [NoSuchElementException] if no column adheres to the given [condition].
+     * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
+     */
+    public fun ColumnGroupReference.single(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+        all().single(condition)
+
+    /**
+     * ## Single
+     * Returns the single column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
+     *
+     * For example:
+     *
+     * `df.`[select][select]` { "myColumnGroup".`[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column that adheres to the given [condition].
+     * @throws [NoSuchElementException] if no column adheres to the given [condition].
+     * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
+     */
+    public fun String.single(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+        getColumnGroup(this).single(condition)
+
+    /**
+     * ## Single
+     * Returns the single column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
+     *
+     * For example:
+     *
+     * `df.`[select][select]` { Type::myColumnGroup.`[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column that adheres to the given [condition].
+     * @throws [NoSuchElementException] if no column adheres to the given [condition].
+     * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
+     */
+    public fun KProperty<*>.single(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+        getColumnGroup(this).single(condition)
+
+    public fun SingleColumn<AnyRow>.col(index: Int): SingleColumn<Any?> = getChildrenAt(index).singleImpl()
 
     public operator fun <C> ColumnSet<C>.get(index: Int): SingleColumn<C> = getAt(index)
 
