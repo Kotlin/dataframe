@@ -95,20 +95,20 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnSet<*>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
-    ): ColumnSetWithQuery<Any?, C> =
+    ): ColumnSet<C> =
         (listOf(firstCol) + otherCols).let { refs ->
             transform { it.flatMap { col -> refs.mapNotNull { col.getChild(it) } } }
         }
 
-    public fun ColumnSet<*>.cols(firstCol: String, vararg otherCols: String): ColumnSetWithQuery<Any?, Any?> =
+    public fun ColumnSet<*>.cols(firstCol: String, vararg otherCols: String): ColumnSet<Any?> =
         (listOf(firstCol) + otherCols).let { names ->
             transform { it.flatMap { col -> names.mapNotNull { col.getChild(it) } } }
         }
 
-    public fun ColumnSet<*>.cols(vararg indices: Int): ColumnSetWithQuery<Any?, Any?> =
+    public fun ColumnSet<*>.cols(vararg indices: Int): ColumnSet<Any?> =
         transform { it.flatMap { it.children().let { children -> indices.map { children[it] } } } }
 
-    public fun ColumnSet<*>.cols(range: IntRange): ColumnSetWithQuery<Any?, Any?> =
+    public fun ColumnSet<*>.cols(range: IntRange): ColumnSet<Any?> =
         transform { it.flatMap { it.children().subList(range.start, range.endInclusive + 1) } }
 
     // region select
