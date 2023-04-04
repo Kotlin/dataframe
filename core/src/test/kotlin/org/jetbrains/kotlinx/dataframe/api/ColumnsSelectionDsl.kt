@@ -63,6 +63,18 @@ class ColumnsSelectionDslTests : TestBase() {
                 it.any { it == "Alice" }
             }
         }
+
+        df.select {
+            "name".last {
+                it.any { it == "Alice" }
+            }
+        } shouldBe df.select { name.firstName }
+
+        df.select {
+            Person::name.last {
+                it.any { it == "Alice" }
+            }
+        } shouldBe df.select { name.firstName }
     }
 
     @Test
@@ -85,6 +97,18 @@ class ColumnsSelectionDslTests : TestBase() {
                 it.any { it == "Alice" }
             }
         }
+
+        df.select {
+            "name".single {
+                it.any { it == "Alice" }
+            }
+        } shouldBe df.select { name.firstName }
+
+        df.select {
+            Person::name.single {
+                it.any { it == "Alice" }
+            }
+        } shouldBe df.select { name.firstName }
     }
 
 }

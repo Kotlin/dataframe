@@ -214,6 +214,11 @@ df.select {
     group("name").last { it.name().endsWith("Name") }
 }
 
+// find the single column inside a column group satisfying the condition
+df.select {
+    Person::name.single { it.name().startsWith("first") }
+}
+
 // depth-first-search traversal of all columns, excluding ColumnGroups from result
 df.select { allDfs() }
 
