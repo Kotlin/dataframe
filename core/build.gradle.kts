@@ -33,11 +33,14 @@ repositories {
     maven(jupyterApiTCRepo)
 }
 
+val testWithOutputs by configurations.creating {
+    extendsFrom(configurations.kotlinCompilerPluginClasspathTest.get())
+}
+
 dependencies {
     api(libs.kotlin.reflect)
     implementation(libs.kotlin.stdlib)
-//    kotlinCompilerPluginClasspath()
-    kotlinCompilerPluginClasspathTest("org.example:create-plugin-all:0.9.0-dev")
+    testWithOutputs(project(":plugins:expressions-converter"))
     implementation(libs.kotlin.stdlib.jdk8)
 
     api(libs.commonsCsv)
@@ -62,6 +65,19 @@ kotlin.sourceSets {
     test {
         kotlin.srcDir("build/generated/ksp/test/kotlin/")
     }
+}
+
+tasks.register<Test>("generateOutputsForDocumentation") {
+    description = "Runs tests with a transformer compiler plugin"
+    group = "documentation"
+    testClassesDirs = sourceSets.test.get().output.classesDirs
+    classpath = sourceSets.test.get().runtimeClasspath + testWithOutputs
+}
+
+tasks.register<JavaExec>("copySamplesOutputs") {
+    mainClass.set("org.jetbrains.kotlinx.dataframe.explainer.PluginCallbackKt")
+
+    classpath = sourceSets.test.get().runtimeClasspath
 }
 
 val generatedSourcesFolderName = "generated-sources"
@@ -142,6 +158,10 @@ korro {
     samples = fileTree(project.projectDir) {
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
+    }
+
+    outputs = fileTree(project.projectDir) {
+        include("outputs/")
     }
 
     groupSamples {
