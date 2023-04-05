@@ -171,7 +171,7 @@ df.split { name }.by { it.values() }.intoRows()
 ```kotlin
 df.split { "name"["firstName"]<String>() }.by { it.chars().toList() }.intoRows()
 
-df.split { group("name") }.by { it.values() }.intoRows()
+df.split { colGroup("name") }.by { it.values() }.intoRows()
 ```
 
 </tab></tabs>

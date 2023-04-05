@@ -527,7 +527,7 @@ class Modify : TestBase() {
         // SampleStart
         df.split { "name"["firstName"]<String>() }.by { it.chars().toList() }.intoRows()
 
-        df.split { group("name") }.by { it.values() }.intoRows()
+        df.split { colGroup("name") }.by { it.values() }.intoRows()
         // SampleEnd
     }
 

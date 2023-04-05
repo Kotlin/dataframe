@@ -211,7 +211,7 @@ df.select { first { it.name().startsWith("year") } }
 
 // find the last column inside a column group satisfying the condition
 df.select {
-    group("name").last { it.name().endsWith("Name") }
+    colGroup("name").last { it.name().endsWith("Name") }
 }
 
 // find the single column inside a column group satisfying the condition

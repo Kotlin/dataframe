@@ -369,16 +369,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     /** TODO */
     public operator fun <C> ColumnSet<C>.get(index: Int): SingleColumn<C> = getAt(index)
 
-    /** TODO */
-    public fun ColumnsContainer<*>.group(name: String): ColumnGroupReference = name.toColumnOf()
-
     /**
      * ## Subset of Columns
      * Returns a [ColumnSet] containing all columns from [this\] to [endInclusive\].
      *
      * For example:
      *
-     * `df.`[select][DataFrame.select]` { `{@includeArg [Example]}` }`
+     * `df.`[select][DataFrame.select]` { `{@includeArg [CommonSubsetOfColumnsDocs.Example]}` }`
      *
      * @param [endInclusive\] The last column in the subset.
      * @receiver The first column in the subset.
@@ -469,7 +466,344 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
             }
         }
 
+    /**
+     * ## None
+     * Returns an empty [ColumnSet], essentially selecting no columns at all.
+     *
+     * For example:
+     *
+     * `df.`[groupBy][DataFrame.groupBy]` { `[none][none]`() }`
+     *
+     * @return An empty [ColumnSet].
+     */
     public fun none(): ColumnSet<*> = ColumnsList<Any?>(emptyList())
+
+    // region colGroupFrame
+    // region col
+
+    /**
+     * ## Column Accessor
+     *
+     * Returns a [ColumnAccessor] for a column with the given argument.
+     * This is a shorthand for [column] and can be both typed and untyped.
+     * The function can also be called on [ColumnGroupReferences][ColumnGroupReference] to create
+     * an accessor for a column inside a [ColumnGroup].
+     *
+     * For example:
+     *
+     * `df.`[select][select]` { `[col][col]`({@includeArg [CommonColDocs.Arg]}) }`
+     *
+     * `df.`[select][select]` { myColGroup.`[col][col]`({@includeArg [CommonColDocs.Arg]}) }`
+     *
+     * @return A [ColumnAccessor] for the column with the given argument.
+     * @see [column\]
+     * @see [colGroup\]
+     * @see [frameCol\]
+     */
+    private interface CommonColDocs {
+
+        /** Example argument */
+        interface Arg
+    }
+
+    /**
+     * @include [CommonColDocs] {@arg [CommonColDocs.Arg] "columnName"}
+     * @param [name] The name of the column.
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colUnTyped")
+    public fun col(name: String): ColumnAccessor<*> = column<Any?>(name)
+
+    /**
+     * @include [CommonColDocs] {@arg [CommonColDocs.Arg] "columnName"}
+     * @param [name] The name of the column.
+     * @param [C] The type of the column.
+     */
+    public fun <C> col(name: String): ColumnAccessor<C> = column(name)
+
+    /**
+     * @include [CommonColDocs] {@arg [CommonColDocs.Arg] "columnGroup"["columnName"]}
+     * @param [path] The [ColumnPath] pointing to the column.
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colUnTyped")
+    public fun col(path: ColumnPath): ColumnAccessor<*> = column<Any?>(path)
+
+    /**
+     * @include [CommonColDocs] {@arg [CommonColDocs.Arg] "columnGroup"["columnName"]}
+     * @param [path] The [ColumnPath] pointing to the column.
+     * @param [C] The type of the column.
+     */
+    public fun <C> col(path: ColumnPath): ColumnAccessor<C> = column(path)
+
+    /**
+     * @include [CommonColDocs] {@arg [CommonColDocs.Arg] Type::columnName}
+     * @param [property] The [KProperty] pointing to the column.
+     */
+    public fun <C> col(property: KProperty<C>): ColumnAccessor<C> = column(property)
+
+    /**
+     * @include [CommonColDocs] {@arg [CommonColDocs.Arg] "columnName"}
+     * @param [name] The name of the column.
+     * @receiver The [ColumnGroupReference] to get the column from.
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colUnTyped")
+    public fun ColumnGroupReference.col(name: String): ColumnAccessor<*> = column<Any?>(name)
+
+    /**
+     * @include [CommonColDocs] {@arg [CommonColDocs.Arg] "columnName"}
+     * @param [name] The name of the column.
+     * @receiver The [ColumnGroupReference] to get the column from.
+     * @param [C] The type of the column.
+     */
+    public fun <C> ColumnGroupReference.col(name: String): ColumnAccessor<C> = column(name)
+
+    /**
+     * @include [CommonColDocs] {@arg [CommonColDocs.Arg] "columnGroup"["columnName"]}
+     * @param [path] The [ColumnPath] pointing to the column.
+     * @receiver The [ColumnGroupReference] to get the column from.
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colUnTyped")
+    public fun ColumnGroupReference.col(path: ColumnPath): ColumnAccessor<*> = column<Any?>(path)
+
+    /**
+     * @include [CommonColDocs] {@arg [CommonColDocs.Arg] "columnGroup"["columnName"]}
+     * @param [path] The [ColumnPath] pointing to the column.
+     * @receiver The [ColumnGroupReference] to get the column from.
+     * @param [C] The type of the column.
+     */
+    public fun <C> ColumnGroupReference.col(path: ColumnPath): ColumnAccessor<C> = column(path)
+
+    /**
+     * @include [CommonColDocs] {@arg [CommonColDocs.Arg] Type::columnName}
+     * @param [property] The [KProperty] pointing to the column.
+     * @receiver The [ColumnGroupReference] to get the column from.
+     */
+    public fun <C> ColumnGroupReference.col(property: KProperty<C>): ColumnAccessor<C> = column(property)
+
+    // endregion
+    // region colGroup
+
+    /**
+     * ## Column Group Accessor
+     * Returns a [ColumnAccessor] for a column group with the given argument.
+     * This is a shorthand for [columnGroup] and can be both typed and untyped.
+     * The function can also be called on [ColumnGroupReferences][ColumnGroupReference] to create
+     * an accessor for a column group inside a [ColumnGroup].
+     *
+     * For example:
+     *
+     * `df.`[select][select]` { `[colGroup][colGroup]`({@includeArg [CommonColGroupDocs.Arg]}) }`
+     *
+     * `df.`[select][select]` { myColGroup.`[colGroup][colGroup]`({@includeArg [CommonColGroupDocs.Arg]}) }`
+     *
+     * @return A [ColumnAccessor] for the column group with the given argument.
+     * @see [columnGroup\]
+     * @see [col\]
+     * @see [frameCol\]
+     */
+    private interface CommonColGroupDocs {
+
+        /** Example argument */
+        interface Arg
+    }
+
+    @Deprecated("Use colGroup() instead.", ReplaceWith("this.colGroup(name)"))
+    public fun ColumnsContainer<*>.group(name: String): ColumnGroupReference = name.toColumnOf()
+
+    /**
+     * @include [CommonColGroupDocs] {@arg [CommonColGroupDocs.Arg] "columnGroupName"}
+     * @param [name] The name of the column group.
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("groupUnTyped")
+    public fun colGroup(name: String): ColumnAccessor<DataRow<*>> = columnGroup<Any?>(name)
+
+    /**
+     * @include [CommonColGroupDocs] {@arg [CommonColGroupDocs.Arg] "columnGroupName"}
+     * @param [name] The name of the column group.
+     * @param [C] The type of the column group.
+     */
+    public fun <C> colGroup(name: String): ColumnAccessor<DataRow<C>> = columnGroup<C>(name)
+
+    /**
+     * @include [CommonColGroupDocs] {@arg [CommonColGroupDocs.Arg] "columnGroup"["columnGroupName"]}
+     * @param [path] The [ColumnPath] pointing to the column group.
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("groupUnTyped")
+    public fun colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = columnGroup<Any?>(path)
+
+    /**
+     * @include [CommonColGroupDocs] {@arg [CommonColGroupDocs.Arg] "columnGroup"["columnGroupName"]}
+     * @param [path] The [ColumnPath] pointing to the column group.
+     * @param [C] The type of the column group.
+     */
+    public fun <C> colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> = columnGroup<C>(path)
+
+    /**
+     * @include [CommonColGroupDocs] {@arg [CommonColGroupDocs.Arg] Type::columnGroupName}
+     * @param [property] The [KProperty] pointing to the column group.
+     */
+    public fun <C> colGroup(property: KProperty<C>): ColumnAccessor<DataRow<C>> = columnGroup(property)
+
+    /**
+     * @include [CommonColGroupDocs] {@arg [CommonColGroupDocs.Arg] "columnGroupName"}
+     * @param [name] The name of the column group.
+     * @receiver The [ColumnGroupReference] to get the column group from.
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("groupUnTyped")
+    public fun ColumnGroupReference.colGroup(name: String): ColumnAccessor<DataRow<*>> = columnGroup<Any?>(name)
+
+    /**
+     * @include [CommonColGroupDocs] {@arg [CommonColGroupDocs.Arg] "columnGroupName"}
+     * @param [name] The name of the column group.
+     * @receiver The [ColumnGroupReference] to get the column group from.
+     * @param [C] The type of the column group.
+     */
+    public fun <C> ColumnGroupReference.colGroup(name: String): ColumnAccessor<DataRow<C>> = columnGroup<C>(name)
+
+    /**
+     * @include [CommonColGroupDocs] {@arg [CommonColGroupDocs.Arg] "columnGroup"["columnGroupName"]}
+     * @param [path] The [ColumnPath] pointing to the column group.
+     * @receiver The [ColumnGroupReference] to get the column group from.
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("groupUnTyped")
+    public fun ColumnGroupReference.colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = columnGroup<Any?>(path)
+
+    /**
+     * @include [CommonColGroupDocs] {@arg [CommonColGroupDocs.Arg] "columnGroup"["columnGroupName"]}
+     * @param [path] The [ColumnPath] pointing to the column group.
+     * @receiver The [ColumnGroupReference] to get the column group from.
+     * @param [C] The type of the column group.
+     */
+    public fun <C> ColumnGroupReference.colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> = columnGroup<C>(path)
+
+    /**
+     * @include [CommonColGroupDocs] {@arg [CommonColGroupDocs.Arg] Type::columnGroupName}
+     * @param [property] The [KProperty] pointing to the column group.
+     * @receiver The [ColumnGroupReference] to get the column group from.
+     */
+    public fun <C> ColumnGroupReference.colGroup(property: KProperty<C>): ColumnAccessor<DataRow<C>> = columnGroup(property)
+    
+    // endregion
+    // region frameCol
+
+    /**
+     * ## Frame Column Accessor
+     * Returns a [ColumnAccessor] for a frame column with the given argument.
+     * This is a shorthand for [frameColumn] and can be both typed and untyped.
+     * The function can also be called on [ColumnGroupReferences][ColumnGroupReference] to create
+     * an accessor for a frame column inside a [ColumnGroup].
+     *
+     * For example:
+     *
+     * `df.`[select][select]` { `[frameCol][frameCol]`({@includeArg [CommonFrameColDocs.Arg]}) }`
+     *
+     * `df.`[select][select]` { myColGroup.`[frameCol][frameCol]`({@includeArg [CommonFrameColDocs.Arg]}) }`
+     *
+     * @return A [ColumnAccessor] for the frame column with the given argument.
+     * @see [frameColumn\]
+     * @see [colGroup\]
+     * @see [col\]
+     */
+    private interface CommonFrameColDocs {
+
+        /** Example argument */
+        interface Arg
+    }
+
+    /**
+     * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] "columnName"}
+     * @param [name] The name of the frame column.
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("frameUnTyped")
+    public fun frameCol(name: String): ColumnAccessor<DataFrame<*>> = frameColumn<Any?>(name)
+
+    /**
+     * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] "columnName"}
+     * @param [name] The name of the frame column.
+     * @param [C] The type of the frame column.
+     */
+    public fun <C> frameCol(name: String): ColumnAccessor<DataFrame<C>> = frameColumn<C>(name)
+
+    /**
+     * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] "columnGroup"["columnName"]}
+     * @param [path] The [ColumnPath] pointing to the frame column.
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("frameUnTyped")
+    public fun frameCol(path: ColumnPath): ColumnAccessor<DataFrame<*>> = frameColumn<Any?>(path)
+
+    /**
+     * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] "columnGroup"["columnName"]}
+     * @param [path] The [ColumnPath] pointing to the frame column.
+     * @param [C] The type of the frame column.
+     */
+    public fun <C> frameCol(path: ColumnPath): ColumnAccessor<DataFrame<C>> = frameColumn<C>(path)
+
+    /**
+     * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] Type::columnName}
+     * @param [property] The [KProperty] pointing to the frame column.
+     */
+    public fun <C> frameCol(property: KProperty<C>): ColumnAccessor<DataFrame<C>> = frameColumn(property)
+
+    /**
+     * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] "columnName"}
+     * @param [name] The name of the frame column.
+     * @receiver The [ColumnGroupReference] to get the frame column from.
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("frameUnTyped")
+    public fun ColumnGroupReference.frameCol(name: String): ColumnAccessor<DataFrame<*>> = frameColumn<Any?>(name)
+
+    /**
+     * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] "columnName"}
+     * @param [name] The name of the frame column.
+     * @receiver The [ColumnGroupReference] to get the frame column from.
+     * @param [C] The type of the frame column.
+     */
+    public fun <C> ColumnGroupReference.frameCol(name: String): ColumnAccessor<DataFrame<C>> = frameColumn<C>(name)
+
+    /**
+     * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] "columnGroup"["columnName"]}
+     * @param [path] The [ColumnPath] pointing to the frame column.
+     * @receiver The [ColumnGroupReference] to get the frame column from.
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("frameUnTyped")
+    public fun ColumnGroupReference.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<*>> = frameColumn<Any?>(path)
+
+    /**
+     * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] "columnGroup"["columnName"]}
+     * @param [path] The [ColumnPath] pointing to the frame column.
+     * @receiver The [ColumnGroupReference] to get the frame column from.
+     * @param [C] The type of the frame column.
+     */
+    public fun <C> ColumnGroupReference.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<C>> = frameColumn<C>(path)
+
+    /**
+     * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] Type::columnName}
+     * @param [property] The [KProperty] pointing to the frame column.
+     * @receiver The [ColumnGroupReference] to get the frame column from.
+     */
+    public fun <C> ColumnGroupReference.frameCol(property: KProperty<C>): ColumnAccessor<DataFrame<C>> = frameColumn(property)
+    
+    // endregion
+
+    // TODO treat same as first/single etc.
+    public operator fun ColumnSet<*>.get(colName: String): ColumnSet<Any?> =
+        transform { it.mapNotNull { it.getChild(colName) } }
+
+    public operator fun <C> ColumnSet<*>.get(column: ColumnReference<C>): ColumnSet<C> = cols(column)
+    public operator fun <C> ColumnSet<*>.get(column: KProperty<C>): ColumnSet<C> = cols(column)
+
+    // endregion
 
     // region cols
 
@@ -496,6 +830,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun ColumnSet<*>.cols(range: IntRange): ColumnSet<Any?> =
         transform { it.flatMap { it.children().subList(range.first, range.last + 1) } }
 
+    // endregion
+
     // region select
 
     public fun <C, R> ColumnSet<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> = createColumnSet {
@@ -513,8 +849,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun <C, R> ColumnSet<DataRow<C>>.select(vararg columns: KProperty<R>): ColumnSet<R> =
         select { columns.toColumnSet() }
-
-    // endregion
 
     // endregion
 
@@ -701,14 +1035,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public operator fun <C> List<DataColumn<C>>.get(range: IntRange): ColumnSet<C> =
         ColumnsList(subList(range.first, range.last + 1))
-
-    public fun <C> col(property: KProperty<C>): ColumnAccessor<C> = property.toColumnAccessor()
-
-    public operator fun ColumnSet<*>.get(colName: String): ColumnSet<Any?> =
-        transform { it.mapNotNull { it.getChild(colName) } }
-
-    public operator fun <C> ColumnSet<*>.get(column: ColumnReference<C>): ColumnSet<C> = cols(column)
-    public operator fun <C> ColumnSet<*>.get(column: KProperty<C>): ColumnSet<C> = cols(column)
 
     public fun SingleColumn<AnyRow>.take(n: Int): ColumnSet<*> = transformSingle { it.children().take(n) }
     public fun SingleColumn<AnyRow>.takeLast(n: Int): ColumnSet<*> = transformSingle { it.children().takeLast(n) }
