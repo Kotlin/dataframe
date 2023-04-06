@@ -1,4 +1,4 @@
-import org.jetbrains.dataframe.gradle.DataSchemaVisibility
+import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 @Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 plugins {
@@ -12,6 +12,7 @@ plugins {
 
 repositories {
     mavenCentral()
+    mavenLocal() // for local development
 }
 
 dependencies {
@@ -66,7 +67,15 @@ korro {
     }
 }
 
-tasks.withType<org.jmailen.gradle.kotlinter.tasks.LintTask> {
+tasks.lintKotlinMain {
+    dependsOn("kspKotlin")
+}
+
+tasks.lintKotlinTest {
+    dependsOn("kspTestKotlin")
+}
+
+tasks.withType<LintTask> {
     exclude("**/*keywords*/**")
     exclude {
         it.name.endsWith(".Generated.kt")

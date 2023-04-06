@@ -36,8 +36,8 @@ dependencies {
     api(project(":core"))
     api(project(":dataframe-arrow"))
     api(project(":dataframe-excel"))
+    api(project(":dataframe-openapi"))
 }
-
 
 allprojects {
     tasks.withType<KotlinCompile> {
