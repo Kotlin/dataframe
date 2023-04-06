@@ -232,6 +232,30 @@ internal fun KType.isSubtypeWithNullabilityOf(type: KType) =
     this.isSubtypeOf(type) && (!this.isMarkedNullable || type.isMarkedNullable)
 
 @PublishedApi
+internal fun headPlusArray(head: Byte, cols: ByteArray): ByteArray = byteArrayOf(head) + cols
+
+@PublishedApi
+internal fun headPlusArray(head: Short, cols: ShortArray): ShortArray = shortArrayOf(head) + cols
+
+@PublishedApi
+internal fun headPlusArray(head: Int, cols: IntArray): IntArray = intArrayOf(head) + cols
+
+@PublishedApi
+internal fun headPlusArray(head: Long, cols: LongArray): LongArray = longArrayOf(head) + cols
+
+@PublishedApi
+internal fun headPlusArray(head: Float, cols: FloatArray): FloatArray = floatArrayOf(head) + cols
+
+@PublishedApi
+internal fun headPlusArray(head: Double, cols: DoubleArray): DoubleArray = doubleArrayOf(head) + cols
+
+@PublishedApi
+internal fun headPlusArray(head: Boolean, cols: BooleanArray): BooleanArray = booleanArrayOf(head) + cols
+
+@PublishedApi
+internal fun headPlusArray(head: Char, cols: CharArray): CharArray = charArrayOf(head) + cols
+
+@PublishedApi
 internal inline fun <reified C> headPlusArray(head: C, cols: Array<out C>): Array<C> =
     (listOf(head) + cols.toList()).toTypedArray()
 

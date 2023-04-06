@@ -42,6 +42,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.top
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.dfs
+import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -673,7 +674,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("groupUnTyped")
-    public fun ColumnGroupReference.colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = columnGroup<Any?>(path)
+    public fun ColumnGroupReference.colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> =
+        columnGroup<Any?>(path)
 
     /**
      * @include [CommonColGroupDocs] {@arg [CommonColGroupDocs.Arg] "columnGroup"["columnGroupName"]}
@@ -681,15 +683,17 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @receiver The [ColumnGroupReference] to get the column group from.
      * @param [C] The type of the column group.
      */
-    public fun <C> ColumnGroupReference.colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> = columnGroup<C>(path)
+    public fun <C> ColumnGroupReference.colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> =
+        columnGroup<C>(path)
 
     /**
      * @include [CommonColGroupDocs] {@arg [CommonColGroupDocs.Arg] Type::columnGroupName}
      * @param [property] The [KProperty] pointing to the column group.
      * @receiver The [ColumnGroupReference] to get the column group from.
      */
-    public fun <C> ColumnGroupReference.colGroup(property: KProperty<C>): ColumnAccessor<DataRow<C>> = columnGroup(property)
-    
+    public fun <C> ColumnGroupReference.colGroup(property: KProperty<C>): ColumnAccessor<DataRow<C>> =
+        columnGroup(property)
+
     // endregion
     // region frameCol
 
@@ -777,7 +781,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameUnTyped")
-    public fun ColumnGroupReference.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<*>> = frameColumn<Any?>(path)
+    public fun ColumnGroupReference.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<*>> =
+        frameColumn<Any?>(path)
 
     /**
      * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] "columnGroup"["columnName"]}
@@ -785,50 +790,354 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @receiver The [ColumnGroupReference] to get the frame column from.
      * @param [C] The type of the frame column.
      */
-    public fun <C> ColumnGroupReference.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<C>> = frameColumn<C>(path)
+    public fun <C> ColumnGroupReference.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<C>> =
+        frameColumn<C>(path)
 
     /**
      * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] Type::columnName}
      * @param [property] The [KProperty] pointing to the frame column.
      * @receiver The [ColumnGroupReference] to get the frame column from.
      */
-    public fun <C> ColumnGroupReference.frameCol(property: KProperty<C>): ColumnAccessor<DataFrame<C>> = frameColumn(property)
-    
+    public fun <C> ColumnGroupReference.frameCol(property: KProperty<C>): ColumnAccessor<DataFrame<C>> =
+        frameColumn(property)
+
     // endregion
-
-    // TODO treat same as first/single etc.
-    public operator fun ColumnSet<*>.get(colName: String): ColumnSet<Any?> =
-        transform { it.mapNotNull { it.getChild(colName) } }
-
-    public operator fun <C> ColumnSet<*>.get(column: ColumnReference<C>): ColumnSet<C> = cols(column)
-    public operator fun <C> ColumnSet<*>.get(column: KProperty<C>): ColumnSet<C> = cols(column)
-
     // endregion
 
     // region cols
 
-    public fun ColumnSet<*>.cols(predicate: (AnyCol) -> Boolean = { true }): ColumnSet<Any?> = colsInternal(predicate)
+    // TODO treat same as first/single etc.
 
-    public fun <C> ColumnSet<*>.cols(firstCol: ColumnReference<C>, vararg otherCols: ColumnReference<C>): ColumnSet<C> =
-        (listOf(firstCol) + otherCols).let { refs ->
-            transform { it.flatMap { col -> refs.mapNotNull { col.getChild(it) } } }
+    // region predicate
+
+    public fun <C> ColumnSet<C>.cols(
+        predicate: ColumnFilter<C> = { true },
+    ): ColumnSet<C> = colsInternal(predicate as ColumnFilter<*>).cast()
+
+    public operator fun <C> ColumnSet<C>.get(
+        predicate: ColumnFilter<C> = { true },
+    ): ColumnSet<C> = cols(predicate)
+
+    public fun SingleColumn<AnyRow>.cols(
+        predicate: ColumnFilter<*> = { true },
+    ): ColumnSet<*> = all().cols(predicate)
+
+    /**
+     * {@comment this function is shadowed by [ColumnsContainer.get]}
+     */
+    public operator fun SingleColumn<AnyRow>.get(
+        predicate: ColumnFilter<*> = { true },
+    ): ColumnSet<Any?> = cols(predicate)
+
+    public fun String.cols(
+        predicate: ColumnFilter<*> = { true },
+    ): ColumnSet<*> = getColumnGroup(this).cols(predicate)
+
+    public operator fun String.get(
+        predicate: ColumnFilter<*> = { true },
+    ): ColumnSet<Any?> = cols(predicate)
+
+    public fun ColumnPath.cols(
+        predicate: ColumnFilter<*> = { true },
+    ): ColumnSet<*> = getColumnGroup(this).cols(predicate)
+
+    public operator fun ColumnPath.get(
+        predicate: ColumnFilter<*> = { true },
+    ): ColumnSet<Any?> = cols(predicate)
+
+    public fun KProperty<*>.cols(
+        predicate: ColumnFilter<*> = { true },
+    ): ColumnSet<*> = getColumnGroup(this).cols(predicate)
+
+    public operator fun KProperty<*>.get(
+        predicate: ColumnFilter<*> = { true },
+    ): ColumnSet<Any?> = cols(predicate)
+
+    // endregion
+
+    // region references
+    public fun <C> ColumnSet<C>.cols(
+        firstCol: ColumnReference<C>,
+        vararg otherCols: ColumnReference<C>,
+    ): ColumnSet<C> = object : ColumnSet<C> {
+
+        override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> =
+            this@cols.resolve(context)
+                .let(::dataFrameOf)
+                .asColumnGroup()
+                .cols(firstCol, *otherCols)
+                .resolve(context)
+    }
+
+    public operator fun <C> ColumnSet<C>.get(
+        firstCol: ColumnReference<C>,
+        vararg otherCols: ColumnReference<C>,
+    ): ColumnSet<C> = cols(firstCol, *otherCols)
+
+    public fun <C> SingleColumn<AnyRow>.cols(
+        firstCol: ColumnReference<C>,
+        vararg otherCols: ColumnReference<C>,
+    ): ColumnSet<C> = headPlusArray(firstCol, otherCols).let { refs ->
+        transform {
+            it.flatMap { col -> refs.mapNotNull { col.getChild(it) } }
         }
+    }
 
-    public fun ColumnSet<*>.cols(firstCol: String, vararg otherCols: String): ColumnSet<Any?> =
-        (listOf(firstCol) + otherCols).let { names ->
-            transform { it.flatMap { col -> names.mapNotNull { col.getChild(it) } } }
-        }
+    /**
+     * {@comment this function is shadowed by [DataFrame.get] for accessors}
+     */
+    public operator fun <C> SingleColumn<AnyRow>.get(
+        firstCol: ColumnReference<C>,
+        vararg otherCols: ColumnReference<C>,
+    ): ColumnSet<C> = cols(firstCol, *otherCols)
 
-    public fun <C> ColumnSet<*>.cols(firstCol: KProperty<C>, vararg otherCols: KProperty<C>): ColumnSet<C> =
-        (listOf(firstCol) + otherCols).let { names ->
-            transform { it.flatMap { col -> names.mapNotNull { col.getChild(it) } } }
-        }
+    public fun <C> String.cols(
+        firstCol: ColumnReference<C>,
+        vararg otherCols: ColumnReference<C>,
+    ): ColumnSet<C> = getColumnGroup(this).cols(firstCol, *otherCols)
 
-    public fun ColumnSet<*>.cols(vararg indices: Int): ColumnSet<Any?> =
+    public operator fun <C> String.get(
+        firstCol: ColumnReference<C>,
+        vararg otherCols: ColumnReference<C>,
+    ): ColumnSet<C> = cols(firstCol, *otherCols)
+
+    public fun <C> ColumnPath.cols(
+        firstCol: ColumnReference<C>,
+        vararg otherCols: ColumnReference<C>,
+    ): ColumnSet<C> = getColumnGroup(this).cols(firstCol, *otherCols)
+
+    public operator fun <C> ColumnPath.get(
+        firstCol: ColumnReference<C>,
+        vararg otherCols: ColumnReference<C>,
+    ): ColumnSet<C> = cols(firstCol, *otherCols)
+
+    public fun <C> KProperty<*>.cols(
+        firstCol: ColumnReference<C>,
+        vararg otherCols: ColumnReference<C>,
+    ): ColumnSet<C> = getColumnGroup(this).cols(firstCol, *otherCols)
+
+    public operator fun <C> KProperty<*>.get(
+        firstCol: ColumnReference<C>,
+        vararg otherCols: ColumnReference<C>,
+    ): ColumnSet<C> = cols(firstCol, *otherCols)
+
+    // endregion
+
+    // region names
+
+    public fun <C> ColumnSet<C>.cols(
+        firstCol: String,
+        vararg otherCols: String,
+    ): ColumnSet<C> = object : ColumnSet<C> {
+
+        @Suppress("UNCHECKED_CAST")
+        override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> =
+            this@cols.resolve(context)
+                .let(::dataFrameOf)
+                .asColumnGroup()
+                .cols(firstCol, *otherCols)
+                .resolve(context) as List<ColumnWithPath<C>>
+    }
+
+    /**
+     * {@comment this function is shadowed by [DataFrame.get] for accessors}
+     */
+    public operator fun ColumnSet<*>.get(
+        firstCol: String,
+        vararg otherCols: String,
+    ): ColumnSet<Any?> = cols(firstCol, *otherCols)
+
+    public fun SingleColumn<AnyRow>.cols(
+        firstCol: String,
+        vararg otherCols: String,
+    ): ColumnSet<*> = headPlusArray(firstCol, otherCols).let { names ->
+        transform { it.flatMap { col -> names.mapNotNull { col.getChild(it) } } }
+    }
+
+    public operator fun SingleColumn<AnyRow>.get(
+        firstCol: String,
+        vararg otherCols: String,
+    ): ColumnSet<*> = cols(firstCol, *otherCols)
+
+    public fun String.cols(
+        firstCol: String,
+        vararg otherCols: String,
+    ): ColumnSet<*> = getColumnGroup(this).cols(firstCol, *otherCols)
+
+    public operator fun String.get(
+        firstCol: String,
+        vararg otherCols: String,
+    ): ColumnSet<*> = cols(firstCol, *otherCols)
+
+    public fun ColumnPath.cols(
+        firstCol: String,
+        vararg otherCols: String,
+    ): ColumnSet<*> = getColumnGroup(this).cols(firstCol, *otherCols)
+
+    public operator fun ColumnPath.get(
+        firstCol: String,
+        vararg otherCols: String,
+    ): ColumnSet<*> = cols(firstCol, *otherCols)
+
+    public fun KProperty<*>.cols(
+        firstCol: String,
+        vararg otherCols: String,
+    ): ColumnSet<*> = getColumnGroup(this).cols(firstCol, *otherCols)
+
+    public operator fun KProperty<*>.get(
+        firstCol: String,
+        vararg otherCols: String,
+    ): ColumnSet<*> = cols(firstCol, *otherCols)
+
+    // endregion
+
+    // region columnPaths
+
+    public fun <C> ColumnSet<C>.cols(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<C> = object : ColumnSet<C> {
+
+        @Suppress("UNCHECKED_CAST")
+        override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> =
+            this@cols.resolve(context)
+                .let(::dataFrameOf)
+                .asColumnGroup()
+                .cols(firstCol, *otherCols)
+                .resolve(context) as List<ColumnWithPath<C>>
+    }
+
+    public operator fun <C> ColumnSet<C>.get(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<C> = cols(firstCol, *otherCols)
+
+    public fun SingleColumn<AnyRow>.cols(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = headPlusArray(firstCol, otherCols).let { paths ->
+        transform { it.flatMap { col -> paths.mapNotNull { col.getChild(it) } } }
+    }
+
+    /**
+     * {@comment this function is shadowed by [DataFrame.get] for accessors}
+     */
+    public operator fun SingleColumn<AnyRow>.get(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = cols(firstCol, *otherCols)
+
+    public fun String.cols(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = getColumnGroup(this).cols(firstCol, *otherCols)
+
+    public operator fun String.get(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = cols(firstCol, *otherCols)
+
+    public fun ColumnPath.cols(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = getColumnGroup(this).cols(firstCol, *otherCols)
+
+    public operator fun ColumnPath.get(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = cols(firstCol, *otherCols)
+
+    public fun KProperty<*>.cols(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = getColumnGroup(this).cols(firstCol, *otherCols)
+
+    public operator fun KProperty<*>.get(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = cols(firstCol, *otherCols)
+
+    // endregion
+
+    // region properties
+
+    public fun <C> ColumnSet<C>.cols(
+        firstCol: KProperty<C>,
+        vararg otherCols: KProperty<C>,
+    ): ColumnSet<C> = object : ColumnSet<C> {
+
+        override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> =
+            this@cols.resolve(context)
+                .let(::dataFrameOf)
+                .asColumnGroup()
+                .cols(firstCol, *otherCols)
+                .resolve(context)
+    }
+
+    public operator fun <C> ColumnSet<C>.get(
+        firstCol: KProperty<C>,
+        vararg otherCols: KProperty<C>,
+    ): ColumnSet<C> = cols(firstCol, *otherCols)
+
+    public fun <C> SingleColumn<AnyRow>.cols(
+        firstCol: KProperty<C>,
+        vararg otherCols: KProperty<C>,
+    ): ColumnSet<C> = headPlusArray(firstCol, otherCols).let { props ->
+        transform { it.flatMap { col -> props.mapNotNull { col.getChild(it) } } }
+    }
+
+    public operator fun <C> SingleColumn<AnyRow>.get(
+        firstCol: KProperty<C>,
+        vararg otherCols: KProperty<C>,
+    ): ColumnSet<C> = cols(firstCol, *otherCols)
+
+    public fun <C> String.cols(
+        firstCol: KProperty<C>,
+        vararg otherCols: KProperty<C>,
+    ): ColumnSet<C> = getColumnGroup(this).cols(firstCol, *otherCols)
+
+    public operator fun <C> String.get(
+        firstCol: KProperty<C>,
+        vararg otherCols: KProperty<C>,
+    ): ColumnSet<C> = cols(firstCol, *otherCols)
+
+    public fun <C> ColumnPath.cols(
+        firstCol: KProperty<C>,
+        vararg otherCols: KProperty<C>,
+    ): ColumnSet<C> = getColumnGroup(this).cols(firstCol, *otherCols)
+
+    public operator fun <C> ColumnPath.get(
+        firstCol: KProperty<C>,
+        vararg otherCols: KProperty<C>,
+    ): ColumnSet<C> = cols(firstCol, *otherCols)
+
+    public fun <C> KProperty<*>.cols(
+        firstCol: KProperty<C>,
+        vararg otherCols: KProperty<C>,
+    ): ColumnSet<C> = getColumnGroup(this).cols(firstCol, *otherCols)
+
+    public operator fun <C> KProperty<*>.get(
+        firstCol: KProperty<C>,
+        vararg otherCols: KProperty<C>,
+    ): ColumnSet<C> = cols(firstCol, *otherCols)
+
+    // endregion
+
+    // region indices
+
+    public fun ColumnSet<*>.cols(
+        firstIndex: Int,
+        vararg otherIndices: Int,
+    ): ColumnSet<Any?> = headPlusArray(firstIndex, otherIndices).let { indices ->
         transform { it.flatMap { it.children().let { children -> indices.map { children[it] } } } }
+    }
 
     public fun ColumnSet<*>.cols(range: IntRange): ColumnSet<Any?> =
         transform { it.flatMap { it.children().subList(range.first, range.last + 1) } }
+
+    // TODO
+
+    // endregion
 
     // endregion
 
@@ -969,7 +1278,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun String.allBefore(column: AnyColumnReference): ColumnSet<Any?> = toColumnAccessor().allBefore(column)
     public fun String.allBefore(column: KProperty<*>): ColumnSet<Any?> = toColumnAccessor().allBefore(column)
 
-    public fun KProperty<*>.allBefore(colPath: ColumnPath): ColumnSet<Any?> = toColumnAccessor().allBefore(colPath)
+    public fun KProperty<*>.allBefore(colPath: ColumnPath): ColumnSet<Any?> =
+        toColumnAccessor().allBefore(colPath)
+
     public fun KProperty<*>.allBefore(colName: String): ColumnSet<Any?> = toColumnAccessor().allBefore(colName)
     public fun KProperty<*>.allBefore(column: AnyColumnReference): ColumnSet<Any?> =
         toColumnAccessor().allBefore(column)
@@ -1206,8 +1517,8 @@ public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(
 internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) -> Boolean): ColumnsSelector<T, C> =
     { this@filter(it, it).filter(predicate) }
 
-internal fun ColumnSet<*>.colsInternal(predicate: (AnyCol) -> Boolean) =
-    transform { it.flatMap { it.children().filter { predicate(it.data) } } }
+internal fun ColumnSet<*>.colsInternal(predicate: ColumnFilter<*>) =
+    transform { it.flatMap { it.children().filter { predicate(it) } } }
 
 internal fun ColumnSet<*>.dfsInternal(predicate: (ColumnWithPath<*>) -> Boolean) =
     transform { it.filter { it.isColumnGroup() }.flatMap { it.children().dfs().filter(predicate) } }
