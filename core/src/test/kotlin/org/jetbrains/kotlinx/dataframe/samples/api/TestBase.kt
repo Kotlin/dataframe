@@ -7,8 +7,21 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.explainer.PluginCallback
+import org.junit.After
+import org.junit.Before
 
 public open class TestBase {
+
+    @Before
+    fun start() {
+        PluginCallback.start()
+    }
+
+    @After
+    fun save() {
+        PluginCallback.save()
+    }
 
     val df = dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(
         "Alice", "Cooper", 15, "London", 54, true,
