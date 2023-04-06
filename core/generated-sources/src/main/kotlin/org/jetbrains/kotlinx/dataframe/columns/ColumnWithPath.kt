@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.addParentPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.depth
+import kotlin.reflect.KProperty
 
 public interface ColumnWithPath<out T> : DataColumn<T> {
 
@@ -17,6 +18,8 @@ public interface ColumnWithPath<out T> : DataColumn<T> {
     public fun <C> getChild(accessor: ColumnReference<C>): ColumnWithPath<C>? = asColumnGroup().getColumnOrNull(accessor)?.addPath(path + accessor.path())
     public fun getChild(name: String): ColumnWithPath<Any?>? = asColumnGroup().getColumnOrNull(name)?.addParentPath(path)
     public fun getChild(index: Int): ColumnWithPath<Any?>? = asColumnGroup().getColumnOrNull(index)?.addParentPath(path)
+    public fun <C> getChild(accessor: KProperty<C>): ColumnWithPath<C>? = asColumnGroup().getColumnOrNull(accessor)?.addParentPath(path)
+
     public fun children(): List<ColumnWithPath<Any?>> = if (isColumnGroup()) data.asColumnGroup().columns().map { it.addParentPath(path) } else emptyList()
 
     override fun path(): ColumnPath = path

@@ -37,6 +37,7 @@ public interface ColumnsContainer<out T> {
     public fun getColumnOrNull(name: String): AnyCol?
     public fun getColumnOrNull(index: Int): AnyCol?
     public fun <R> getColumnOrNull(column: ColumnReference<R>): DataColumn<R>?
+    public fun <R> getColumnOrNull(column: KProperty<R>): DataColumn<R>?
     public fun getColumnOrNull(path: ColumnPath): AnyCol?
     public fun <R> getColumnOrNull(column: ColumnSelector<T, R>): DataColumn<R>?
 

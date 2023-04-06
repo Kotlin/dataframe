@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.name
+import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
@@ -24,6 +25,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.AggregatableInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupByReceiverImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
 import org.jetbrains.kotlinx.dataframe.io.renderToString
+import kotlin.reflect.KProperty
 
 private const val unnamedColumnPrefix = "untitled"
 
@@ -116,6 +118,7 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) : DataFr
     ).singleOrNull()
 
     override fun <R> getColumnOrNull(column: ColumnReference<R>): DataColumn<R>? = column.resolveSingle(this, UnresolvedColumnsPolicy.Skip)?.data
+    override fun <R> getColumnOrNull(column: KProperty<R>): DataColumn<R>? = getColumnOrNull(column.toColumnAccessor())
 
     override fun getColumnOrNull(path: ColumnPath): AnyCol? =
         when (path.size) {

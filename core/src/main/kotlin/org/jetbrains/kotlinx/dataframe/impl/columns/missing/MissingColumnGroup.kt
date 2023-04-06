@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
+import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
 internal class MissingColumnGroup<T>(val path: ColumnPath, val host: ColumnsContainer<*>) : MissingDataColumn<DataRow<T>>(), DataColumnGroup<T> {
@@ -48,6 +49,8 @@ internal class MissingColumnGroup<T>(val path: ColumnPath, val host: ColumnsCont
     override fun <R> aggregate(body: AggregateGroupedBody<T, R>) = throw UnsupportedOperationException()
 
     override fun <R> getColumnOrNull(column: ColumnReference<R>) = MissingColumnGroup<Any>(path + column.name(), host).asDataColumn().cast<R>()
+
+    override fun <R> getColumnOrNull(column: KProperty<R>) = MissingColumnGroup<Any>(path + column.name, host).asDataColumn().cast<R>()
 
     override fun getColumnOrNull(path: ColumnPath) = MissingColumnGroup<Any?>(this.path + path, host)
 
