@@ -18,11 +18,8 @@ class ColumnsSelectionDslTests : TestBase() {
     @Test
     fun first() {
         df.select { all().first() } shouldBe df.select { first() }
-
         df.select { all().first() } shouldBe df.select { name }
-
         df.select { first() } shouldBe df.select { name }
-
         df.select { first { it.name().startsWith("a") } } shouldBe df.select { age }
 
         df.select {
@@ -51,13 +48,9 @@ class ColumnsSelectionDslTests : TestBase() {
     @Test
     fun last() {
         df.select { all().last() } shouldBe df.select { last() }
-
         df.select { all().last() } shouldBe df.select { isHappy }
-
         df.select { last() } shouldBe df.select { isHappy }
-
         df.select { last { it.name().startsWith("a") } } shouldBe df.select { age }
-
         df.select {
             name.last {
                 it.any { it == "Alice" }
@@ -85,11 +78,8 @@ class ColumnsSelectionDslTests : TestBase() {
     fun single() {
         val singleDf = df.select { take(1) }
         singleDf.select { all().single() } shouldBe singleDf.select { single() }
-
         singleDf.select { all().single() } shouldBe singleDf.select { name }
-
         singleDf.select { single() } shouldBe singleDf.select { name }
-
         df.select { single { it.name().startsWith("a") } } shouldBe df.select { age }
 
         df.select {
@@ -205,4 +195,214 @@ class ColumnsSelectionDslTests : TestBase() {
         dfWithFrames.select { colGroup("name").frameCol<Person>(pathOf("frameCol")) } shouldBe dfWithFrames.select { name[frameCol] }
         dfWithFrames.select { colGroup("name").frameCol(PersonWithFrame::frameCol) } shouldBe dfWithFrames.select { name[frameCol] }
     }
+
+    @Test
+    fun `cols and get with predicate`() {
+        df.select { all().cols() } shouldBe df.select { cols() }
+        df.select { all().cols { "e" in it.name() } } shouldBe df.select {
+            cols {
+                "e" in it.name()
+            }
+        }
+        df.select { all()[{ "e" in it.name() }] } shouldBe df.select {
+//            this[{ "e" in it.name() }]
+            cols { "e" in it.name() }
+        }
+
+        df.select {
+            name.cols {
+                "Name" in it.name()
+            }
+        } shouldBe df.select {
+            name.colsOf<String>().cols {
+                "Name" in it.name()
+            }
+        }
+
+        df.select {
+//            name[{ "Name" in it.name() }]
+            name.cols { "Name" in it.name() }
+        } shouldBe df.select {
+            name.colsOf<String>()[{ "Name" in it.name() }]
+        }
+
+        df.select {
+            "name".cols { "Name" in it.name() }
+        } shouldBe df.select {
+            Person::name.cols { "Name" in it.name() }
+        }
+
+        df.select {
+            "name"[{ "Name" in it.name() }]
+        } shouldBe df.select {
+            Person::name[{ "Name" in it.name() }]
+        }
+
+        df.select {
+            pathOf("name").cols { "Name" in it.name() }
+        } shouldBe df.select {
+            pathOf("name")[{ "Name" in it.name() }]
+        }
+    }
+
+    @Test
+    fun `cols and get with column references`() {
+        df.select { all().cols(name, age) } shouldBe df.select { cols(name, age) }
+        df.select { all()[name, age] } shouldBe df.select { this[name, age] }
+
+        val firstName by column<String>()
+        val lastName by column<String>()
+        df.select {
+            name.cols(firstName, lastName)
+        } shouldBe df.select {
+            name.colsOf<String>().cols(firstName, lastName)
+        }
+
+        df.select {
+            name.cols(name.firstName, name.lastName)
+        } shouldBe df.select {
+            name.colsOf<String>().cols(name.firstName, name.lastName)
+        }.also { it.print() }
+
+        df.select {
+//            name[name.firstName, name.lastName]
+            name.cols(name.firstName, name.lastName)
+        } shouldBe df.select {
+            name.colsOf<String>()[name.firstName, name.lastName]
+        }
+
+        df.select {
+            "name".cols(name.firstName, name.lastName)
+        } shouldBe df.select {
+            Person::name.cols(name.firstName, name.lastName)
+        }
+
+        df.select {
+            "name"[name.firstName, name.lastName]
+        } shouldBe df.select {
+            Person::name[name.firstName, name.lastName]
+        }
+
+        df.select {
+            pathOf("name").cols(name.firstName, name.lastName)
+        } shouldBe df.select {
+            pathOf("name")[name.firstName, name.lastName]
+        }
+    }
+
+    @Test
+    fun `cols and get with column names`() {
+        df.select { all().cols("name", "age") } shouldBe df.select { cols("name", "age") }
+        df.select { all()["name", "age"] } shouldBe df.select { this["name", "age"] }
+
+        df.select {
+            name.cols("firstName", "lastName")
+        } shouldBe df.select {
+            name.colsOf<String>().cols("firstName", "lastName")
+        }
+
+        df.select {
+//            name["firstName", "lastName"]
+            name.cols("firstName", "lastName")
+        } shouldBe df.select {
+            name.colsOf<String>()["firstName", "lastName"]
+        }
+
+        df.select {
+            "name".cols("firstName", "lastName")
+        } shouldBe df.select {
+            Person::name.cols("firstName", "lastName")
+        }
+
+        df.select {
+            "name"["firstName", "lastName"]
+        } shouldBe df.select {
+            Person::name["firstName", "lastName"]
+        }
+
+        df.select {
+            pathOf("name").cols("firstName", "lastName")
+        } shouldBe df.select {
+            pathOf("name")["firstName", "lastName"]
+        }
+    }
+
+    @Test
+    fun `cols and get with column paths`() {
+        df.select { all().cols(pathOf("name"), pathOf("age")) } shouldBe df.select {
+            cols(
+                pathOf("name"),
+                pathOf("age")
+            )
+        }
+        df.select { all()[pathOf("name"), pathOf("age")] } shouldBe df.select { this[pathOf("name"), pathOf("age")] }
+
+        df.select {
+            name.cols(pathOf("firstName"), pathOf("lastName"))
+        } shouldBe df.select {
+            name.colsOf<String>().cols(pathOf("firstName"), pathOf("lastName"))
+        }
+
+        df.select {
+//            name[pathOf("firstName"), pathOf("lastName")]
+            name.cols(pathOf("firstName"), pathOf("lastName"))
+        } shouldBe df.select {
+            name.colsOf<String>()[pathOf("firstName"), pathOf("lastName")]
+        }
+
+        df.select {
+            "name".cols(pathOf("firstName"), pathOf("lastName"))
+        } shouldBe df.select {
+            Person::name.cols(pathOf("firstName"), pathOf("lastName"))
+        }
+
+        df.select {
+            "name"[pathOf("firstName"), pathOf("lastName")]
+        } shouldBe df.select {
+            Person::name[pathOf("firstName"), pathOf("lastName")]
+        }
+
+        df.select {
+            pathOf("name").cols(pathOf("firstName"), pathOf("lastName"))
+        } shouldBe df.select {
+            pathOf("name")[pathOf("firstName"), pathOf("lastName")]
+        }
+    }
+
+    @Test
+    fun `cols and get with KProperties`() {
+        df.select { all().cols(Person::name, Person::age) } shouldBe df.select { cols(Person::name, Person::age) }
+        df.select { all()[Person::name, Person::age] } shouldBe df.select { this[Person::name, Person::age] }
+
+        df.select {
+            name.cols(Name::firstName, Name::lastName)
+        } shouldBe df.select {
+            name.colsOf<String>().cols(Name::firstName, Name::lastName)
+        }
+
+        df.select {
+            name[Name::firstName, Name::lastName]
+        } shouldBe df.select {
+            name.colsOf<String>()[Name::firstName, Name::lastName]
+        }
+
+        df.select {
+            "name".cols(Name::firstName, Name::lastName)
+        } shouldBe df.select {
+            Person::name.cols(Name::firstName, Name::lastName)
+        }
+
+        df.select {
+            "name"[Name::firstName, Name::lastName]
+        } shouldBe df.select {
+            Person::name[Name::firstName, Name::lastName]
+        }
+
+        df.select {
+            pathOf("name").cols(Name::firstName, Name::lastName)
+        } shouldBe df.select {
+            pathOf("name")[Name::firstName, Name::lastName]
+        }
+    }
 }
+
