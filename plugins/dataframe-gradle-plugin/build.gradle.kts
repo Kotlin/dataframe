@@ -25,7 +25,7 @@ dependencies {
     implementation(libs.ksp.gradle)
     implementation(libs.ksp.api)
 
-    testImplementation("junit:junit:4.12")
+    testImplementation("junit:junit:4.13.1")
     testImplementation("io.kotest:kotest-assertions-core:4.6.0")
     testImplementation("com.android.tools.build:gradle-api:7.3.1")
     testImplementation("com.android.tools.build:gradle:7.3.1")

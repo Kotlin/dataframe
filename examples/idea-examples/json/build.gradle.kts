@@ -8,15 +8,15 @@ plugins {
 }
 
 repositories {
-    mavenLocal()
+    mavenLocal() // in case of local dataframe development
     mavenCentral()
 }
 
 kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotlin/")
 
 dependencies {
-    implementation(project(":core"))
-    implementation(project(":dataframe-openapi"))
+    // implementation("org.jetbrains.kotlinx:dataframe:X.Y.Z")
+    implementation(project(":"))
 }
 
 tasks.withType<KotlinCompile> {
