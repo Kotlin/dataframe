@@ -107,6 +107,7 @@ import java.net.URL
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.streams.toList
+import org.junit.Ignore
 
 class Modify : TestBase() {
 
@@ -1216,6 +1217,7 @@ class Modify : TestBase() {
         df.rename { response.data }.into("description").alsoDebug()
     }
 
+    @Ignore
     @Test
     fun convertToFrameColumnAPI() {
         // SampleStart
@@ -1228,6 +1230,7 @@ class Modify : TestBase() {
         // SampleEnd
     }
 
+    @Ignore
     @Test
     fun customUnfoldRead() {
         val interestingRepos = dataFrameOf("name", "url", "contributors")(

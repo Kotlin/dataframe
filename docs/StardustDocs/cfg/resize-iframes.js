@@ -10,12 +10,12 @@
         for (let i = 0; i < iframes.length; i++) {
             resize_iframe_out(iframes[i])
             let observer = new MutationObserver(function (mutations) {
-            if (mutations[0].addedNodes.length || mutations[0].removedNodes.length) {
-            resize_iframe_out(iframes[i])
-            }
+            // if (mutations[0].addedNodes.length || mutations[0].removedNodes.length) {
+                resize_iframe_out(iframes[i])
+            // }
         });
 
-            observer.observe(iframes[i].contentDocument.documentElement, {childList: true, subtree: true});
+            observer.observe(iframes[i].contentDocument.documentElement, {childList: true, subtree: true, characterData: true, attributes: true});
         }
     }
 </script>

@@ -1,4 +1,5 @@
 import com.google.devtools.ksp.gradle.KspTaskJvm
+import com.google.devtools.ksp.gradle.KspTask
 import nl.jolanrensen.docProcessor.defaultProcessors.*
 import nl.jolanrensen.docProcessor.gradle.creatingProcessDocTask
 import org.gradle.jvm.tasks.Jar
@@ -33,14 +34,64 @@ repositories {
     maven(jupyterApiTCRepo)
 }
 
-val testWithOutputs by configurations.creating {
-    extendsFrom(configurations.kotlinCompilerPluginClasspathTest.get())
+//val testWithOutputs by configurations.creating {
+//    extendsFrom(configurations.kotlinCompilerPluginClasspathTest.get())
+//}
+
+kotlin.sourceSets {
+    main {
+        kotlin.srcDir("build/generated/ksp/main/kotlin/")
+    }
+    test {
+        kotlin.srcDir("build/generated/ksp/test/kotlin/")
+    }
 }
+
+sourceSets {
+    create("myTest") {
+        kotlin.srcDir("src/test/kotlin")
+    }
+}
+
+val myTestImplementation by configurations.getting {
+    extendsFrom(configurations.testImplementation.get())
+}
+
+val myKotlinCompileTask = tasks.named<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>("compileMyTestKotlin") {
+    friendPaths.from(sourceSets["main"].output.classesDirs)
+    source(sourceSets["test"].kotlin)
+    destinationDirectory.set(file("$buildDir/classes/testWithOutputs/kotlin"))
+}
+
+tasks.withType<KspTask> {
+    // "test" classpath is re-used, so repeated generation should be disabled
+    if (name == "kspMyTestKotlin") {
+        dependsOn("kspTestKotlin")
+        enabled = false
+    }
+}
+
+val customTest = tasks.register<Test>("customTest") {
+    group = "Verification"
+    description = "Runs the custom tests."
+
+    dependsOn(myKotlinCompileTask)
+
+    filter {
+        includeTestsMatching("org.jetbrains.kotlinx.dataframe.samples.api.*")
+    }
+
+    testClassesDirs = fileTree("$buildDir/classes/testWithOutputs/kotlin")
+    classpath = files("$buildDir/classes/testWithOutputs/kotlin") + configurations["myTestRuntimeClasspath"] + sourceSets["main"].runtimeClasspath
+}
+
+//val kotlinCompilerPluginClasspathTest by configurations.getting
+val kotlinCompilerPluginClasspathMyTest by configurations.getting
 
 dependencies {
     api(libs.kotlin.reflect)
     implementation(libs.kotlin.stdlib)
-    testWithOutputs(project(":plugins:expressions-converter"))
+    kotlinCompilerPluginClasspathMyTest(project(":plugins:expressions-converter"))
     implementation(libs.kotlin.stdlib.jdk8)
 
     api(libs.commonsCsv)
@@ -58,25 +109,10 @@ dependencies {
     testImplementation(libs.jsoup)
 }
 
-kotlin.sourceSets {
-    main {
-        kotlin.srcDir("build/generated/ksp/main/kotlin/")
-    }
-    test {
-        kotlin.srcDir("build/generated/ksp/test/kotlin/")
-    }
-}
-
-tasks.register<Test>("generateOutputsForDocumentation") {
-    description = "Runs tests with a transformer compiler plugin"
+val copySamplesOutputs = tasks.register<JavaExec>("copySamplesOutputs") {
     group = "documentation"
-    testClassesDirs = sourceSets.test.get().output.classesDirs
-    classpath = sourceSets.test.get().runtimeClasspath + testWithOutputs
-}
-
-tasks.register<JavaExec>("copySamplesOutputs") {
     mainClass.set("org.jetbrains.kotlinx.dataframe.explainer.PluginCallbackKt")
-
+    dependsOn(customTest)
     classpath = sourceSets.test.get().runtimeClasspath
 }
 

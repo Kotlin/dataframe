@@ -63,13 +63,9 @@ fun main() {
             it.nameWithoutExtension.startsWith("org.jetbrains")
         }
         // org.ClassName.functionName_properties
-        // <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addDfs.input.html"/>
+        // <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addDfs.html"/>
         .groupBy {
-            var s = it.nameWithoutExtension.substringBefore("_")
-            if (it.nameWithoutExtension.contains("_")) {
-                s += ".${it.nameWithoutExtension.substringAfterLast(".")}"
-            }
-            s
+            it.nameWithoutExtension.substringBefore("_")
         }
         .mapValues { (name, files) ->
             val target = File("../docs/StardustDocs/snippets")
@@ -149,7 +145,10 @@ object PluginCallback {
                 }
             }
 
-            htmlData.writeHTML(File("build/dataframes/$name.html"))
+            val destination = File("build/dataframes").also {
+                it.mkdirs()
+            }
+            htmlData.writeHTML(File(destination, "$name.html"))
         }
     }
 
