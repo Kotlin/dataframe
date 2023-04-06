@@ -1510,9 +1510,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     // endregion
 
     // region cols
+
     // TODO treat same as first/single etc.
 
     // region predicate
+
     public fun <C> ColumnSet<C>.cols(
         predicate: ColumnFilter<C> = { true },
     ): ColumnSet<C> = colsInternal(predicate as ColumnFilter<*>).cast()
@@ -1760,7 +1762,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         vararg otherCols: ColumnPath,
     ): ColumnSet<*> = cols(firstCol, *otherCols)
 
-    // endRegion
+    // endregion
 
     // region properties
 
@@ -1828,15 +1830,108 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region indices
 
-    public fun ColumnSet<*>.cols(
+    public fun <C> ColumnSet<C>.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
-    ): ColumnSet<Any?> = headPlusArray(firstIndex, otherIndices).let { indices ->
+    ): ColumnSet<C> = object : ColumnSet<C> {
+
+        @Suppress("UNCHECKED_CAST")
+        override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> =
+            this@cols.resolve(context)
+                .let(::dataFrameOf)
+                .asColumnGroup()
+                .cols(firstIndex, *otherIndices)
+                .resolve(context) as List<ColumnWithPath<C>>
+    }
+
+    public operator fun <C> ColumnSet<C>.get(
+        firstIndex: Int,
+        vararg otherIndices: Int,
+    ): ColumnSet<C> = cols(firstIndex, *otherIndices)
+
+    public fun SingleColumn<AnyRow>.cols(
+        firstIndex: Int,
+        vararg otherIndices: Int,
+    ): ColumnSet<*> = headPlusArray(firstIndex, otherIndices).let { indices ->
         transform { it.flatMap { it.children().let { children -> indices.map { children[it] } } } }
     }
 
-    public fun ColumnSet<*>.cols(range: IntRange): ColumnSet<Any?> =
+    /**
+     *
+     */
+    public operator fun SingleColumn<AnyRow>.get(
+        firstIndex: Int,
+        vararg otherIndices: Int,
+    ): ColumnSet<*> = cols(firstIndex, *otherIndices)
+
+    public fun String.cols(
+        firstIndex: Int,
+        vararg otherIndices: Int,
+    ): ColumnSet<*> = getColumnGroup(this).cols(firstIndex, *otherIndices)
+
+    public operator fun String.get(
+        firstIndex: Int,
+        vararg otherIndices: Int,
+    ): ColumnSet<*> = cols(firstIndex, *otherIndices)
+
+    public fun ColumnPath.cols(
+        firstIndex: Int,
+        vararg otherIndices: Int,
+    ): ColumnSet<*> = getColumnGroup(this).cols(firstIndex, *otherIndices)
+
+    public operator fun ColumnPath.get(
+        firstIndex: Int,
+        vararg otherIndices: Int,
+    ): ColumnSet<*> = cols(firstIndex, *otherIndices)
+
+    public fun KProperty<*>.cols(
+        firstIndex: Int,
+        vararg otherIndices: Int,
+    ): ColumnSet<*> = getColumnGroup(this).cols(firstIndex, *otherIndices)
+
+    public operator fun KProperty<*>.get(
+        firstIndex: Int,
+        vararg otherIndices: Int,
+    ): ColumnSet<*> = cols(firstIndex, *otherIndices)
+
+    // endregion
+
+    // region ranges
+
+    public fun <C> ColumnSet<C>.cols(range: IntRange): ColumnSet<C> =
+        object : ColumnSet<C> {
+
+            @Suppress("UNCHECKED_CAST")
+            override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> =
+                this@cols.resolve(context)
+                    .let(::dataFrameOf)
+                    .asColumnGroup()
+                    .cols(range)
+                    .resolve(context) as List<ColumnWithPath<C>>
+        }
+
+    public operator fun <C> ColumnSet<C>.get(range: IntRange): ColumnSet<C> = cols(range)
+
+
+    public fun SingleColumn<AnyRow>.cols(range: IntRange): ColumnSet<*> =
         transform { it.flatMap { it.children().subList(range.first, range.last + 1) } }
+
+    /**
+     *
+     */
+    public operator fun SingleColumn<AnyRow>.get(range: IntRange): ColumnSet<*> = cols(range)
+
+    public fun String.cols(range: IntRange): ColumnSet<*> = getColumnGroup(this).cols(range)
+
+    public operator fun String.get(range: IntRange): ColumnSet<*> = cols(range)
+
+    public fun ColumnPath.cols(range: IntRange): ColumnSet<*> = getColumnGroup(this).cols(range)
+
+    public operator fun ColumnPath.get(range: IntRange): ColumnSet<*> = cols(range)
+
+    public fun KProperty<*>.cols(range: IntRange): ColumnSet<*> = getColumnGroup(this).cols(range)
+
+    public operator fun KProperty<*>.get(range: IntRange): ColumnSet<*> = cols(range)
 
     // endregion
 

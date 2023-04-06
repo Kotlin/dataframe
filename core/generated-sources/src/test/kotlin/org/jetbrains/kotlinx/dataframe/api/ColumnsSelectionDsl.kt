@@ -329,6 +329,22 @@ class ColumnsSelectionDslTests : TestBase() {
 
     @Test
     fun `cols and get with column paths`() {
+        listOf(
+            df.select {
+                all().cols(pathOf("name", "firstName"))
+            },
+            df.select {
+                cols(pathOf("name", "firstName"))
+            },
+            df.select {
+                pathOf("name", "firstName")
+            }
+        ).reduce { acc, dataFrame ->
+            acc shouldBe dataFrame
+            dataFrame
+        }
+
+
         df.select { all().cols(pathOf("name"), pathOf("age")) } shouldBe df.select {
             cols(
                 pathOf("name"),
@@ -402,6 +418,80 @@ class ColumnsSelectionDslTests : TestBase() {
             pathOf("name").cols(Name::firstName, Name::lastName)
         } shouldBe df.select {
             pathOf("name")[Name::firstName, Name::lastName]
+        }
+    }
+
+    @Test
+    fun `cols and get with indices`() {
+        df.select { all().cols(0, 1) } shouldBe df.select { cols(0, 1) }
+        df.select { all()[0, 1] } shouldBe df.select { this[0, 1] }
+
+        df.select {
+            name.cols(0, 1)
+        } shouldBe df.select {
+            name.colsOf<String>().cols(0, 1)
+        }
+
+        df.select {
+//            name[0, 1]
+            name.cols(0, 1)
+        } shouldBe df.select {
+            name.colsOf<String>()[0, 1]
+        }
+
+        df.select {
+            "name".cols(0, 1)
+        } shouldBe df.select {
+            Person::name.cols(0, 1)
+        }
+
+        df.select {
+            "name"[0, 1]
+        } shouldBe df.select {
+            Person::name[0, 1]
+        }
+
+        df.select {
+            pathOf("name").cols(0, 1)
+        } shouldBe df.select {
+            pathOf("name")[0, 1]
+        }
+    }
+
+    @Test
+    fun `cols and get with range`() {
+        df.select { all().cols(0..1) } shouldBe df.select { cols(0..1) }
+        df.select { all()[0..1] } shouldBe df.select { this[0..1] }
+
+        df.select {
+            name.cols(0..1)
+        } shouldBe df.select {
+            name.colsOf<String>().cols(0..1)
+        }
+
+        df.select {
+//            name[0..1]
+            name.cols(0..1)
+        } shouldBe df.select {
+            name.colsOf<String>()[0..1]
+        }
+
+        df.select {
+            "name".cols(0..1)
+        } shouldBe df.select {
+            Person::name.cols(0..1)
+        }
+
+        df.select {
+            "name"[0..1]
+        } shouldBe df.select {
+            Person::name[0..1]
+        }
+
+        df.select {
+            pathOf("name").cols(0..1)
+        } shouldBe df.select {
+            pathOf("name")[0..1]
         }
     }
 }
