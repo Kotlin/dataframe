@@ -1899,9 +1899,9 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `select all after`() {
         typed.select { allAfter(age) } shouldBe typed.select { city and weight }
-        typed.select { allSince(age) } shouldBe typed.select { age and city and weight }
+        typed.select { allFrom(age) } shouldBe typed.select { age and city and weight }
         typed.select { allBefore(age) } shouldBe typed.select { name }
-        typed.select { allUntil(age) } shouldBe typed.select { name and age }
+        typed.select { allUpTo(age) } shouldBe typed.select { name and age }
     }
 
     @Test
