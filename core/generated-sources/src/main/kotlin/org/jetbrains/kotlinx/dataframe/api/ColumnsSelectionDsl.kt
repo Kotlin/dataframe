@@ -1676,7 +1676,12 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.cols(
         predicate: ColumnFilter<C> = { true },
-    ): ColumnSet<C> = colsInternal(predicate as ColumnFilter<*>).cast()
+    ): ColumnSet<C> = transformWithContext {
+        dataFrameOf(it)
+            .asColumnGroup()
+            .cols(predicate as ColumnFilter<*>)
+            .resolve(this)
+    } as ColumnSet<C>
 
     /** ## Cols
      * Creates a sub-[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] from a parent [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
@@ -1785,7 +1790,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      */
     public fun SingleColumn<AnyRow>.cols(
         predicate: ColumnFilter<*> = { true },
-    ): ColumnSet<*> = all().cols(predicate)
+    ): ColumnSet<*> = colsInternal(predicate)
 
     /**
      * ## Cols
