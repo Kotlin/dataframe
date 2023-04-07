@@ -11,9 +11,11 @@ import org.junit.Ignore
 import org.junit.Test
 import java.io.File
 import kotlin.io.path.Path
+import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 
 class Render : TestBase() {
     @Test
+    @TransformDataFrameExpressions
     @Ignore
     fun useRenderingResult() {
         // SampleStart
@@ -24,6 +26,7 @@ class Render : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun composeTables() {
         // SampleStart
         val df1 = df.reorderColumnsByName()
@@ -35,6 +38,7 @@ class Render : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun configureCellOutput() {
         // SampleStart
         df.toHTML(DisplayConfiguration(cellContentLimit = -1))

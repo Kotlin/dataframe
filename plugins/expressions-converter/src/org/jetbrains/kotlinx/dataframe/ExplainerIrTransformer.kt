@@ -83,10 +83,14 @@ class ExplainerIrTransformer(val pluginContext: IrPluginContext) : FileLoweringP
     }
 
     override fun visitFunction(declaration: IrFunction, data: ContainingDeclarations): IrStatement {
-        if (declaration.annotations.any { it.type.classFqName?.shortName()?.identifierOrNullIfSpecial?.equals("Disable") == true }) {
-            return declaration
+        val annotated = declaration.annotations.any {
+            it.type.classFqName?.shortName()?.identifierOrNullIfSpecial?.equals("TransformDataFrameExpressions") == true
         }
-        return super.visitFunction(declaration, data.copy(function = declaration))
+        return if (annotated) {
+            super.visitFunction(declaration, data.copy(function = declaration))
+        } else {
+            declaration
+        }
     }
 
     override fun visitElement(element: IrElement, data: ContainingDeclarations): IrElement {
@@ -202,14 +206,14 @@ class ExplainerIrTransformer(val pluginContext: IrPluginContext) : FileLoweringP
                         val pluginAction =
                             pluginContext.referenceClass(FqName("org.jetbrains.kotlinx.dataframe.explainer.PluginCallback"))!!
                         dispatchReceiver = IrGetObjectValueImpl(-1, -1, pluginAction.defaultType, pluginAction)
-                        val value = try {
+                        val source = try {
                             source.substring(it.startOffset, it.endOffset)
                         } catch (e: Exception) {
                             throw Exception("$it ${ownerName.asString()} $source", e)
                         }
                         val expressionId = expressionId(expression)
                         val receiverId = receiver?.let { expressionId(it) }
-                        putValueArgument(0, IrConstImpl.string(-1, -1, pluginContext.irBuiltIns.stringType, value))
+                        putValueArgument(0, IrConstImpl.string(-1, -1, pluginContext.irBuiltIns.stringType, source))
                         putValueArgument(1, IrConstImpl.string(-1, -1, pluginContext.irBuiltIns.stringType, ownerName.asStringStripSpecialMarkers()))
                         putValueArgument(2, IrGetValueImpl(-1, -1, itSymbol))
                         putValueArgument(3, IrConstImpl.string(-1, -1, pluginContext.irBuiltIns.stringType, expressionId))

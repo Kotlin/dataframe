@@ -107,11 +107,13 @@ import java.net.URL
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.streams.toList
+import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.junit.Ignore
 
 class Modify : TestBase() {
 
     @Test
+    @TransformDataFrameExpressions
     fun update() {
         // SampleStart
         df.update { age }.with { it * 2 }
@@ -122,6 +124,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun updateWith() {
         // SampleStart
         df.update { city }.with { name.firstName + " from " + it }
@@ -129,6 +132,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun updateWithConst() {
         // SampleStart
         df.update { city }.where { name.firstName == "Alice" }.withValue("Paris")
@@ -136,6 +140,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun updateAsFrame() {
         val res =
             // SampleStart
@@ -145,6 +150,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun updatePerColumn() {
         val updated =
             // SampleStart
@@ -159,6 +165,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun updatePerRowCol() {
         val updated =
             // SampleStart
@@ -167,6 +174,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun convert() {
         // SampleStart
         df.convert { age }.with { it.toDouble() }
@@ -175,6 +183,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun convertTo() {
         // SampleStart
         df.convert { age }.to<Double>()
@@ -189,6 +198,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun convertToEnum() {
         // SampleStart
         dataFrameOf("direction")("NORTH", "WEST")
@@ -197,6 +207,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun parseAll() {
         // SampleStart
         df.parse()
@@ -204,6 +215,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun parseSome() {
         // SampleStart
         df.parse { age and weight }
@@ -211,6 +223,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun parseWithOptions() {
         // SampleStart
         df.parse(options = ParserOptions(locale = Locale.CHINA, dateTimeFormatter = DateTimeFormatter.ISO_WEEK_DATE))
@@ -218,6 +231,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun globalParserOptions() {
         // SampleStart
         DataFrame.parser.locale = Locale.FRANCE
@@ -227,6 +241,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun replace() {
         // SampleStart
         df.replace { name }.with { name.firstName }
@@ -236,6 +251,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun shuffle() {
         // SampleStart
         df.shuffle()
@@ -243,6 +259,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun reverse() {
         // SampleStart
         df.reverse()
@@ -250,6 +267,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun fillNulls() {
         // SampleStart
         df.fillNulls { colsOf<Int?>() }.with { -1 }
@@ -259,6 +277,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun fillNaNs() {
         // SampleStart
         df.fillNaNs { colsOf<Double>() }.withZero()
@@ -266,6 +285,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun fillNA() {
         // SampleStart
         df.fillNA { weight }.withValue(-1)
@@ -273,6 +293,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun move() {
         // SampleStart
         df.move { age }.toLeft()
@@ -305,6 +326,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun sortBy_properties() {
         // SampleStart
         df.sortBy { age }
@@ -314,6 +336,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun sortBy_accessors() {
         // SampleStart
         val age by column<Int>()
@@ -328,6 +351,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun sortBy_strings() {
         // SampleStart
         df.sortBy("age")
@@ -337,6 +361,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun sortByDesc_properties() {
         // SampleStart
         df.sortByDesc { age and weight }
@@ -344,6 +369,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun sortByDesc_accessors() {
         // SampleStart
         val age by column<Int>()
@@ -354,6 +380,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun sortByDesc_strings() {
         // SampleStart
         df.sortByDesc("age", "weight")
@@ -361,6 +388,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun sortWith() {
         // SampleStart
         df.sortWith { row1, row2 ->
@@ -374,6 +402,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun reorder_properties() {
         // SampleStart
         df.reorder { age..isHappy }.byName()
@@ -381,6 +410,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun reorder_accessors() {
         // SampleStart
         val age by column<Int>()
@@ -391,12 +421,14 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun reorder_strings() {
         // SampleStart
         df.reorder { "age".."isHappy" }.byName()
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun reorderSome() {
         // SampleStart
         val df = dataFrameOf("c", "d", "a", "b")(
@@ -410,6 +442,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun reorderInGroup() {
         // SampleStart
         df.reorder { name }.byName(desc = true) // [name.lastName, name.firstName]
@@ -418,6 +451,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun splitInplace_properties() {
         // SampleStart
         df.split { name.firstName }.by { it.chars().toList() }.inplace()
@@ -425,6 +459,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun splitInplace_accessors() {
         // SampleStart
         val name by columnGroup()
@@ -435,6 +470,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun splitInplace_strings() {
         // SampleStart
         df.split { "name"["firstName"]<String>() }.by { it.chars().toList() }.inplace()
@@ -442,6 +478,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun split_properties() {
         // SampleStart
         df.split { name }.by { it.values() }.into("nameParts")
@@ -451,6 +488,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun split_accessors() {
         // SampleStart
         val name by columnGroup()
@@ -463,6 +501,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun split_strings() {
         // SampleStart
         df.split { name }.by { it.values() }.into("nameParts")
@@ -472,6 +511,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun splitRegex() {
         val merged = df.merge { name.lastName and name.firstName }.by { it[0] + " (" + it[1] + ")" }.into("name")
         val name by column<String>()
@@ -483,6 +523,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun splitFrameColumn() {
         // SampleStart
         val df1 = dataFrameOf("a", "b", "c")(
@@ -503,6 +544,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun splitIntoRows_properties() {
         // SampleStart
         df.split { name.firstName }.by { it.chars().toList() }.intoRows()
@@ -512,6 +554,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun splitIntoRows_accessors() {
         // SampleStart
         val name by columnGroup()
@@ -524,6 +567,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun splitIntoRows_strings() {
         // SampleStart
         df.split { "name"["firstName"]<String>() }.by { it.chars().toList() }.intoRows()
@@ -533,6 +577,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun merge() {
         // SampleStart
         // Merge two columns into one column "fullName"
@@ -541,6 +586,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun mergeIntoList() {
         // SampleStart
         // Merge data from two columns into List<String>
@@ -549,6 +595,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun mergeSameWith() {
         // SampleStart
         df.merge { name.firstName and name.lastName }
@@ -558,6 +605,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun mergeDifferentWith() {
         // SampleStart
         df.merge { name.firstName and age and isHappy }
@@ -567,6 +615,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun mergeDefault() {
         // SampleStart
         df.merge { colsOf<Number>() }.into("data")
@@ -574,6 +623,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun explode_accessors() {
         // SampleStart
         val a by columnOf(1, 2)
@@ -586,6 +636,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun explode_strings() {
         // SampleStart
         val df = dataFrameOf("a", "b")(
@@ -598,6 +649,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun explodeSeveral() {
         // SampleStart
         val a by columnOf(listOf(1, 2), listOf(3, 4, 5))
@@ -609,6 +661,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun explodeColumnList() {
         // SampleStart
         val col by columnOf(listOf(1, 2), listOf(3, 4))
@@ -618,6 +671,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun explodeColumnFrames() {
         // SampleStart
         val col by columnOf(
@@ -630,6 +684,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun implode() {
         // SampleStart
         df.implode { name and age and weight and isHappy }
@@ -637,6 +692,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun gatherNames() {
         val pivoted = df.dropNulls { city }.pivotCounts(inward = false) { city }
         // SampleStart
@@ -646,6 +702,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun gather() {
         val pivoted = df.dropNulls { city }.pivotCounts(inward = false) { city }
         // SampleStart
@@ -654,6 +711,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun gatherWithMapping() {
         val pivoted = df.dropNulls { city }.pivotCounts(inward = false) { city }
         // SampleStart
@@ -667,6 +725,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun insert_properties() {
         // SampleStart
         df.insert("year of birth") { 2021 - age }.after { age }
@@ -674,6 +733,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun insert_accessors() {
         // SampleStart
         val year = column<Int>("year of birth")
@@ -684,6 +744,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun insert_strings() {
         // SampleStart
         df.insert("year of birth") { 2021 - "age"<Int>() }.after("age")
@@ -691,6 +752,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun insertColumn() {
         // SampleStart
         val score by columnOf(4, 5, 3, 5, 4, 5, 3)
@@ -699,6 +761,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun concatDfs() {
         val df1 = df
         val df2 = df
@@ -708,6 +771,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun concatColumns() {
         // SampleStart
         val a by columnOf(1, 2)
@@ -718,6 +782,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun concatColumnsIterable() {
         // SampleStart
         val a by columnOf(1, 2)
@@ -728,6 +793,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun concatIterable() {
         val df1 = df
         val df2 = df
@@ -737,6 +803,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun concatRows() {
         // SampleStart
         val rows = listOf(df[2], df[4], df[5])
@@ -745,6 +812,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun concatFrameColumn() {
         // SampleStart
         val x = dataFrameOf("a", "b")(
@@ -761,6 +829,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun concatGroupBy() {
         // SampleStart
         df.groupBy { name }.concat()
@@ -768,6 +837,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun add_properties() {
         // SampleStart
         df.add("year of birth") { 2021 - age }
@@ -775,6 +845,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun add_accessors() {
         // SampleStart
         val age by column<Int>()
@@ -787,6 +858,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun add_strings() {
         // SampleStart
         df.add("year of birth") { 2021 - "age"<Int>() }
@@ -794,6 +866,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun addRecurrent() {
         // SampleStart
         df.add("fibonacci") {
@@ -804,6 +877,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun addExisting() {
         // SampleStart
         val score by columnOf(4, 3, 5, 2, 1, 3, 5)
@@ -814,6 +888,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun addDfs() {
         val df1 = df.select { name named "name2" }
         val df2 = df.select { age named "age2" }
@@ -826,6 +901,7 @@ class Modify : TestBase() {
     private fun queryCityInfo(city: String?): CityInfo { return CityInfo(city, city?.length ?: 0, "35.5 32.2") }
 
     @Test
+    @TransformDataFrameExpressions
     fun addCalculatedApi() {
         // SampleStart
         class CityInfo(val city: String?, val population: Int, val location: String)
@@ -836,6 +912,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun addCalculated_properties() {
         // SampleStart
         val personWithCityInfo = df.add {
@@ -850,6 +927,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun addCalculated_accessors() {
         // SampleStart
         val city by column<String?>()
@@ -865,6 +943,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun addCalculated_strings() {
         // SampleStart
         val personWithCityInfo = df.add {
@@ -879,6 +958,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun addMany_properties() {
         // SampleStart
         df.add {
@@ -893,6 +973,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun addMany_accessors() {
         // SampleStart
         val yob = column<Int>("year of birth")
@@ -917,6 +998,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun addMany_strings() {
         // SampleStart
         df.add {
@@ -931,6 +1013,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun remove_properties() {
         // SampleStart
         df.remove { name and weight }
@@ -938,6 +1021,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun remove_accessors() {
         // SampleStart
         val name by columnGroup()
@@ -948,6 +1032,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun remove_strings() {
         // SampleStart
         df.remove("name", "weight")
@@ -955,6 +1040,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun map() {
         // SampleStart
         df.map { 2021 - it.age }
@@ -962,6 +1048,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun mapToColumn_properties() {
         // SampleStart
         df.mapToColumn("year of birth") { 2021 - age }
@@ -969,6 +1056,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun mapToColumn_accessors() {
         // SampleStart
         val age by column<Int>()
@@ -979,6 +1067,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun mapToColumn_strings() {
         // SampleStart
         df.mapToColumn("year of birth") { 2021 - "age"<Int>() }
@@ -986,6 +1075,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun mapMany_properties() {
         // SampleStart
         df.mapToFrame {
@@ -999,6 +1089,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun mapMany_accessors() {
         // SampleStart
         val yob = column<Int>("year of birth")
@@ -1022,6 +1113,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun mapMany_strings() {
         // SampleStart
         df.mapToFrame {
@@ -1035,6 +1127,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun group() {
         // SampleStart
         df.group { age and city }.into("info")
@@ -1044,6 +1137,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun ungroup() {
         // SampleStart
         // name.firstName -> firstName
@@ -1053,6 +1147,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun flatten_properties() {
         // SampleStart
         // name.firstName -> firstName
@@ -1062,6 +1157,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun flatten_strings() {
         // SampleStart
         // name.firstName -> firstName
@@ -1071,6 +1167,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun flatten_accessors() {
         // SampleStart
         val name by columnGroup()
@@ -1083,6 +1180,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun flatten_KProperties() {
         // SampleStart
         // name.firstName -> firstName
@@ -1092,6 +1190,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun flattenAll() {
         // SampleStart
         df.flatten()
@@ -1099,6 +1198,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun multiCallOperations() {
         // SampleStart
         df.update { age }.where { city == "Paris" }.with { it - 5 }
@@ -1125,6 +1225,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun customConverters() {
         // SampleStart
         val df = dataFrameOf("a", "b")(1, "2")
@@ -1137,6 +1238,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun convertToColumnGroupUseCase() {
         // SampleStart
         class RepositoryInfo(val data: Any)
@@ -1146,6 +1248,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun convertToColumnGroupData() {
         class RepositoryInfo(val data: Any)
 
@@ -1163,6 +1266,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun convertToColumnGroup() {
         class RepositoryInfo(val data: Any)
 
@@ -1193,6 +1297,7 @@ class Modify : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun convertToColumnGroupBenefits() {
         class RepositoryInfo(val data: Any)
 
@@ -1219,6 +1324,7 @@ class Modify : TestBase() {
 
     @Ignore
     @Test
+    @TransformDataFrameExpressions
     fun convertToFrameColumnAPI() {
         // SampleStart
         fun testResource(resourcePath: String): URL = UtilTests::class.java.classLoader.getResource(resourcePath)!!
@@ -1232,6 +1338,7 @@ class Modify : TestBase() {
 
     @Ignore
     @Test
+    @TransformDataFrameExpressions
     fun customUnfoldRead() {
         val interestingRepos = dataFrameOf("name", "url", "contributors")(
             "dataframe", "/dataframe", testResource("dataframeContributors.json"),

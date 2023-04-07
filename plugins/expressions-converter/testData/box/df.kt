@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.explainer
 import org.jetbrains.kotlinx.dataframe.*
 import org.jetbrains.kotlinx.dataframe.api.*
 
+@TransformDataFrameExpressions
 fun callChain(df: DataFrame<*>) {
     val df1 = df
         .filter { "age"<Int>() > 20 }
@@ -30,6 +31,7 @@ class Wrapper {
 
     val typed: DataFrame<Person> = df.cast()
 
+    @TransformDataFrameExpressions
     fun ff() {
         val name by column<String>()
         val aggregated = typed.groupBy { name() }.aggregate {
@@ -40,8 +42,8 @@ class Wrapper {
 
 
 object PluginCallback {
-    var action: (String, String, Any, String, String?, String? String?, Int) -> Unit = @Disable { _, _, _, _, _, _, _, _  -> Unit }
-    @Disable
+    var action: (String, String, Any, String, String?, String? String?, Int) -> Unit = { _, _, _, _, _, _, _, _  -> Unit }
+
     fun doAction(string: String, name: String, df: Any, id: String, receiverId: String?, containingClassFqName: String?, containingFunName: String?, statemenIndex: Int) {
         action(string, name, df, id, receiverId, containingClassFqName, containingFunName, statemenIndex)
     }
@@ -62,9 +64,8 @@ object PluginCallback {
 //        .also { PluginCallback.action(""".groupBy("something").sum()""", it) }
 //}
 
-annotation class Disable
+annotation class TransformDataFrameExpressions
 
-@Disable
 fun box(): String {
     val age by columnOf(10, 21, 30, 1)
     val value by columnOf("a", "b", "c", "c")
