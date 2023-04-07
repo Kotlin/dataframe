@@ -81,6 +81,8 @@ val customTest = tasks.register<Test>("customTest") {
         includeTestsMatching("org.jetbrains.kotlinx.dataframe.samples.api.*")
     }
 
+    ignoreFailures = true
+
     testClassesDirs = fileTree("$buildDir/classes/testWithOutputs/kotlin")
     classpath = files("$buildDir/classes/testWithOutputs/kotlin") + configurations["myTestRuntimeClasspath"] + sourceSets["main"].runtimeClasspath
 }

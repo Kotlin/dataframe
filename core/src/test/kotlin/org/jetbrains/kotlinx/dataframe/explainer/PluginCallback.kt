@@ -81,81 +81,119 @@ object PluginCallback {
 
     var i = 0
     val names = mutableMapOf<String, List<String>>()
-    val expressionsByStatement = mutableMapOf<Int, List<ExpressionResult>>()
+    val expressionsByStatement = mutableMapOf<Int, List<Expression>>()
 
-    data class ExpressionResult(val containingClassFqName: String?, val containingFunName: String?, val df: Any)
+    data class Expression(val source: String, val containingClassFqName: String?, val containingFunName: String?, val df: Any)
 
     fun start() {
         expressionsByStatement.clear()
     }
 
     fun save() {
-        expressionsByStatement.toMap().forEach { (index, expressions) ->
-            val input = expressions.first()
-            val others = expressions.drop(1)
-            val name = "${input.containingClassFqName}.${input.containingFunName}"
+        var output = DataFrameHtmlData.tableDefinitions() + DataFrameHtmlData(style = """
+            body {
+                font-family: "JetBrains Mono",SFMono-Regular,Consolas,"Liberation Mono",Menlo,Courier,monospace;
+                color: #19191C;
+            }
+            details details {
+                margin-left: 20px; 
+            }
+            
+            summary {
+                padding: 6px;
+            }
+        """.trimIndent())
 
-//            convertToHTML(input.df)
-//                .withTableDefinitions()
-//                .writeHTML(File("build/dataframes/${name}.input.html"))
-//
-//            val data = others.fold(DataFrameHtmlData.tableDefinitions()) { acc, expressionResult ->
-//                acc + convertToHTML(expressionResult.df)
-//            }
+        // make copy to avoid concurrent modification exception
+        val statements = expressionsByStatement.toMap()
+        when (statements.size) {
+            0 -> TODO()
+            1 -> {
+                output += expressionOutputs(statements.values.single(), open = false)
+            }
+            else -> {
+                statements.forEach { (index, expressions) ->
+                    var details: DataFrameHtmlData = expressionOutputs(expressions, open = true)
 
-            var htmlData = DataFrameHtmlData.tableDefinitions()
-            for ((i, expression) in expressions.withIndex()) {
-                when (i) {
-                    0 -> {
-                        val table = convertToHTML(expression.df)
-                        val description = table.copy(
-                            body = """
-                                <details>
-                                <summary>Input: ${convertToDescription(expression.df)}</summary>
-                                 ${table.body}
-                                </details>
-                            """.trimIndent()
-                        )
-                        htmlData += description
-                    }
-                    expressions.lastIndex -> {
-                        val table = convertToHTML(expression.df)
-                        val description = table.copy(
-                            body = """
-                                <details>
-                                <summary>Output: ${convertToDescription(expression.df)}</summary>
-                                 ${table.body}
-                                </details>
-                            """.trimIndent()
-                        )
-                        htmlData += description
-                    }
-                    else -> {
-                        val table = convertToHTML(expression.df)
-                        val description = table.copy(
-                            body = """
-                                <details>
-                                <summary>Step $i: ${convertToDescription(expression.df)}</summary>
-                                 ${table.body}
-                                </details>
-                            """.trimIndent()
-                        )
-                        htmlData += description
-                    }
+                    details = details.copy(
+                        body =
+                        """
+                        <details>
+                        <summary>${expressions.joinToString(".") { it.source }}</summary>
+                        ${details.body}
+                        </details>
+                        <br>
+                    """.trimIndent()
+                    )
+
+                    output += details
                 }
             }
-
-            val destination = File("build/dataframes").also {
-                it.mkdirs()
-            }
-            htmlData.writeHTML(File(destination, "$name.html"))
         }
+        val input = expressionsByStatement.values.first().first()
+        val name = "${input.containingClassFqName}.${input.containingFunName}"
+        val destination = File("build/dataframes").also {
+            it.mkdirs()
+        }
+        output.writeHTML(File(destination, "$name.html"))
+    }
+
+    private fun expressionOutputs(
+        expressions: List<Expression>,
+        open: Boolean,
+    ): DataFrameHtmlData {
+        val attribute = if (open) " open" else ""
+        var data = DataFrameHtmlData()
+        if (expressions.size < 2) error("")
+        for ((i, expression) in expressions.withIndex()) {
+            when (i) {
+                0 -> {
+                    val table = convertToHTML(expression.df)
+                    val description = table.copy(
+                        body = """
+                                    <details$attribute>
+                                    <summary>Input ${convertToDescription(expression.df)}</summary>
+                                     ${table.body}
+                                    </details>
+                                """.trimIndent()
+                    )
+                    data += description
+                }
+
+                expressions.lastIndex -> {
+                    val table = convertToHTML(expression.df)
+                    val description = table.copy(
+                        body = """
+                                    <details$attribute>
+                                    <summary>Output ${convertToDescription(expression.df)}</summary>
+                                     ${table.body}
+                                    </details>
+                                """.trimIndent()
+                    )
+                    data += description
+                }
+
+                else -> {
+                    val table = convertToHTML(expression.df)
+                    val description = table.copy(
+                        body = """
+                                    <details>
+                                    <summary>Step $i: ${convertToDescription(expression.df)}</summary>
+                                     ${table.body}
+                                    </details>
+                                """.trimIndent()
+                    )
+                    data += description
+                }
+            }
+        }
+        return data
     }
 
     var action: (String, String, Any, String, String?, String?, String?, Int) -> Unit =
-        { string, name, df, id, receiverId, containingClassFqName, containingFunName, statementIndex ->
+        { source, name, df, id, receiverId, containingClassFqName, containingFunName, statementIndex ->
             expressionsByStatement.compute(statementIndex) { _, list ->
-                val element = ExpressionResult(containingClassFqName, containingFunName, df)
+                val element = Expression(source, containingClassFqName, containingFunName, df)
                 list?.plus(element) ?: listOf(element)
             }
             //        strings.add(string)
@@ -166,7 +204,7 @@ object PluginCallback {
             // names.compute(path) {  }
             //        dfs.add(path)
             if (df is AnyFrame) {
-                println(string)
+                println(source)
                 df.print()
                 println(id)
                 println(receiverId)
@@ -176,7 +214,7 @@ object PluginCallback {
             File("build/out").let {
                 val json = JsonObject(
                     mapOf(
-                        "string" to string,
+                        "string" to source,
                         "name" to name,
                         "path" to path,
                         "id" to id,
