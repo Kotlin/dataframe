@@ -359,7 +359,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun KProperty<*>.first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         colGroup(this).first(condition)
 
-
     /**
      * ## Last
      * Returns the last column in this [ColumnSet] or [ColumnGroup] that adheres to the given [condition\].
@@ -462,7 +461,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      */
     public fun KProperty<*>.last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         colGroup(this).last(condition)
-
 
     /**
      * ## Single
@@ -2001,7 +1999,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public operator fun ColumnPath.get(
         predicate: ColumnFilter<*> = { true },
     ): ColumnSet<Any?> = cols(predicate)
-
 
     /**
      * ## Cols
