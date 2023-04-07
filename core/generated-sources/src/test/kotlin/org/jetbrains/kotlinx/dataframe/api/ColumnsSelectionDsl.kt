@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.impl.columns.asValueColumn
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
@@ -364,7 +363,6 @@ class ColumnsSelectionDslTests : TestBase() {
             dataFrame
         }
 
-
         df.select { all().cols(pathOf("name"), pathOf("age")) } shouldBe df.select {
             cols(
                 pathOf("name"),
@@ -515,4 +513,3 @@ class ColumnsSelectionDslTests : TestBase() {
         }
     }
 }
-
