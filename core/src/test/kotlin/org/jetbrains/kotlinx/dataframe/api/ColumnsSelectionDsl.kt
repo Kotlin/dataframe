@@ -222,9 +222,7 @@ class ColumnsSelectionDslTests : TestBase() {
     fun `cols and get with predicate`() {
         df.select { all().cols() } shouldBe df.select { cols() }
         df.select { all().cols { "e" in it.name() } } shouldBe df.select {
-            cols {
-                "e" in it.name()
-            }
+            cols { "e" in it.name() }
         }
         df.select { all()[{ "e" in it.name() }] } shouldBe df.select {
 //            this[{ "e" in it.name() }]
