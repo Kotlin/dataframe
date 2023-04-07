@@ -1,15 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.rendering.html
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.io.initHtml
-import org.jetbrains.kotlinx.dataframe.io.toHTML
-import java.awt.Desktop
-import java.io.File
+import org.jetbrains.kotlinx.dataframe.io.toStandaloneHTML
 
 fun AnyFrame.browse() {
-    val file = File("temp.html") // File.createTempFile("df_rendering", ".html")
-    file.writeText(toHTML(extraHtml = initHtml()).toString())
-    val uri = file.toURI()
-    val desktop = Desktop.getDesktop()
-    desktop.browse(uri)
+    toStandaloneHTML().openInBrowser()
 }

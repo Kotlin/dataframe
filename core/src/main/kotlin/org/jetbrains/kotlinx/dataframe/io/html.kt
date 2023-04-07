@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
@@ -21,11 +22,14 @@ import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.size
-import org.jetbrains.kotlinx.jupyter.api.HtmlData
+import java.awt.Desktop
+import java.io.File
 import java.io.InputStreamReader
 import java.net.URL
+import java.nio.file.Path
 import java.util.LinkedList
 import java.util.Random
+import kotlin.io.path.writeText
 
 internal val tooltipLimit = 1000
 
@@ -116,7 +120,7 @@ internal fun nextTableId() = sessionId + (tableInSessionId++)
 internal fun AnyFrame.toHtmlData(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
     cellRenderer: CellRenderer,
-): HtmlData {
+): DataFrameHtmlData {
     val scripts = mutableListOf<String>()
     val queue = LinkedList<Pair<AnyFrame, Int>>()
 
@@ -165,30 +169,31 @@ internal fun AnyFrame.toHtmlData(
     }
     val body = getResourceText("/table.html", "ID" to rootId)
     val script = scripts.joinToString("\n") + "\n" + getResourceText("/renderTable.js", "___ID___" to rootId)
-    return HtmlData("", body, script)
+    return DataFrameHtmlData("", body, script)
 }
 
-internal fun HtmlData.print() = println(this)
+internal fun DataFrameHtmlData.print() = println(this)
 
-internal fun initHtml(
-    includeJs: Boolean = true,
-    includeCss: Boolean = true,
-    useDarkColorScheme: Boolean = false,
-): HtmlData =
-    HtmlData(
-        style = if (includeCss) getResources("/table.css") else "",
-        script = if (includeJs) getResourceText("/init.js") else "",
-        body = "",
-    )
+@Deprecated("Clarify difference with .toHTML()", ReplaceWith("this.toStandaloneHTML().toString()", "org.jetbrains.kotlinx.dataframe.io.toStandaloneHTML"))
+public fun <T> DataFrame<T>.html(): String = toStandaloneHTML().toString()
 
-public fun <T> DataFrame<T>.html(): String = toHTML(extraHtml = initHtml()).toString()
-
-public fun <T> DataFrame<T>.toHTML(
+/**
+ * @return DataFrameHtmlData with table script and css definitions. Can be saved as an *.html file and displayed in the browser
+ */
+public fun <T> DataFrame<T>.toStandaloneHTML(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
-    extraHtml: HtmlData? = null,
     cellRenderer: CellRenderer = org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer,
     getFooter: (DataFrame<T>) -> String = { "DataFrame [${it.size}]" },
-): HtmlData {
+): DataFrameHtmlData = toHTML(configuration, cellRenderer, getFooter).withTableDefinitions()
+
+/**
+ * @return DataFrameHtmlData without additional definitions. Can be rendered in Jupyter kernel environments
+ */
+public fun <T> DataFrame<T>.toHTML(
+    configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
+    cellRenderer: CellRenderer = org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer,
+    getFooter: (DataFrame<T>) -> String = { "DataFrame [${it.size}]" },
+): DataFrameHtmlData {
     val limit = configuration.rowsLimit ?: Int.MAX_VALUE
 
     val footer = getFooter(this)
@@ -204,11 +209,79 @@ public fun <T> DataFrame<T>.toHTML(
     }
 
     val tableHtml = toHtmlData(configuration, cellRenderer)
-    val html = tableHtml + HtmlData("", bodyFooter, "")
 
-    return if (extraHtml != null) extraHtml + html else html
+    return tableHtml + DataFrameHtmlData("", bodyFooter, "")
 }
 
+/**
+ * Container for HTML page data in form of String
+ * Can be used to compose rendered dataframe tables with additional HTML elements
+ */
+public data class DataFrameHtmlData(val style: String = "", val body: String = "", val script: String = "") {
+    @Language("html")
+    override fun toString(): String = """
+        <html>
+        <head>
+            <style type="text/css">
+                $style
+            </style>
+        </head>
+        <body>
+            $body
+        </body>
+        <script>
+            $script
+        </script>
+        </html>
+    """.trimIndent()
+
+    public operator fun plus(other: DataFrameHtmlData): DataFrameHtmlData =
+        DataFrameHtmlData(
+            style + "\n" + other.style,
+            body + "\n" + other.body,
+            script + "\n" + other.script,
+        )
+
+    public fun writeHTML(destination: File) {
+        destination.writeText(toString())
+    }
+
+    public fun writeHTML(destination: Path) {
+        destination.writeText(toString())
+    }
+
+    public fun openInBrowser() {
+        val file = File.createTempFile("df_rendering", ".html")
+        writeHTML(file)
+        val uri = file.toURI()
+        val desktop = Desktop.getDesktop()
+        desktop.browse(uri)
+    }
+
+    public fun withTableDefinitions(): DataFrameHtmlData = tableDefinitions() + this
+
+    public companion object {
+        /**
+         * @return CSS and JS required to render DataFrame tables
+         * Can be used as a starting point to create page with multiple tables
+         * @see DataFrame.toHTML
+         * @see DataFrameHtmlData.plus
+         */
+        public fun tableDefinitions(
+            includeJs: Boolean = true,
+            includeCss: Boolean = true,
+        ): DataFrameHtmlData = DataFrameHtmlData(
+            style = if (includeCss) getResources("/table.css") else "",
+            script = if (includeJs) getResourceText("/init.js") else "",
+            body = "",
+        )
+    }
+}
+
+/**
+ * @param rowsLimit null to disable rows limit
+ * @param cellContentLimit -1 to disable content trimming
+ */
 public data class DisplayConfiguration(
     var rowsLimit: Int? = 20,
     var nestedRowsLimit: Int? = 5,
@@ -452,7 +525,7 @@ internal class DataFrameFormatter(
                 "</a>"
             )
 
-            is HtmlData -> RenderedContent.text(value.body)
+            is DataFrameHtmlData -> RenderedContent.text(value.body)
             else -> renderer.content(value, configuration)
         }
         if (result != null && result.textLength > configuration.cellContentLimit) return null

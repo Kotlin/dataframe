@@ -12,9 +12,10 @@ import org.jetbrains.kotlinx.dataframe.impl.api.SingleAttribute
 import org.jetbrains.kotlinx.dataframe.impl.api.encode
 import org.jetbrains.kotlinx.dataframe.impl.api.formatImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.linearGradient
+import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.toHTML
-import org.jetbrains.kotlinx.jupyter.api.HtmlData
+import org.jetbrains.kotlinx.dataframe.io.toStandaloneHTML
 import kotlin.reflect.KProperty
 
 // region DataFrame
@@ -98,7 +99,19 @@ public class FormattedFrame<T>(
     internal val df: DataFrame<T>,
     internal val formatter: RowColFormatter<T, *>? = null,
 ) {
-    public fun toHTML(configuration: DisplayConfiguration): HtmlData = df.toHTML(getDisplayConfiguration(configuration))
+    /**
+     * @return DataFrameHtmlData without additional definitions. Can be rendered in Jupyter kernel environments
+     */
+    public fun toHTML(configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT): DataFrameHtmlData {
+        return df.toHTML(getDisplayConfiguration(configuration))
+    }
+
+    /**
+     * @return DataFrameHtmlData with table script and css definitions. Can be saved as an *.html file and displayed in the browser
+     */
+    public fun toStandaloneHTML(configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT): DataFrameHtmlData {
+        return df.toStandaloneHTML(getDisplayConfiguration(configuration))
+    }
 
     public fun getDisplayConfiguration(configuration: DisplayConfiguration): DisplayConfiguration {
         return configuration.copy(cellFormatter = formatter as RowColFormatter<*, *>?)

@@ -4,10 +4,10 @@ import com.beust.klaxon.json
 import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.io.*
-import org.jetbrains.kotlinx.dataframe.io.initHtml
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.jupyter.api.*
+import org.jetbrains.kotlinx.jupyter.api.HtmlData
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 
 /** Starting from this version, dataframe integration will respond with additional data for rendering in Kotlin Notebooks plugin. */
@@ -35,15 +35,15 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
         df.nrow
     }
 
-    val html = df.toHTML(
-        reifiedDisplayConfiguration,
-        extraHtml = initHtml(
+    val html = (
+        DataFrameHtmlData.tableDefinitions(
             includeJs = reifiedDisplayConfiguration.isolatedOutputs,
-            includeCss = true,
-            useDarkColorScheme = reifiedDisplayConfiguration.useDarkColorScheme
-        ),
-        contextRenderer
-    ) { footer }
+            includeCss = true
+        ) + df.toHTML(
+            reifiedDisplayConfiguration,
+            contextRenderer
+        ) { footer }
+        ).toJupyterHtmlData()
 
     if (notebook.kernelVersion >= KotlinKernelVersion.from(MIN_KERNEL_VERSION_FOR_NEW_TABLES_UI)!!) {
         val jsonEncodedDf = json {
@@ -72,3 +72,5 @@ internal fun Notebook.renderAsIFrameAsNeeded(data: HtmlData, jsonEncodedDf: Stri
         "application/kotlindataframe+json" to jsonEncodedDf
     ).also { it.isolatedHtml = false }
 }
+
+internal fun DataFrameHtmlData.toJupyterHtmlData() = HtmlData(style, body, script)
