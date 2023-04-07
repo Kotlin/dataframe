@@ -838,7 +838,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * Aside from calling [cols] directly, you can also use the [get] operator in most cases.
      *
      * #### For example:
-     * TODO
+     * TODO: [Issue #286](https://github.com/Kotlin/dataframe/issues/286)
      *
      * #### Examples for this overload:
      *
