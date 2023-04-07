@@ -41,6 +41,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.singleImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.top
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
+import org.jetbrains.kotlinx.dataframe.impl.columns.transformWithContext
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.dfs
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import kotlin.reflect.KProperty
@@ -57,7 +58,7 @@ import kotlin.reflect.typeOf
 private interface CommonColumnSelectionDocs
 
 /**
- * TODO
+ * {@comment TODO}
  */
 private interface CommonColumnSelectionExamples
 
@@ -242,7 +243,15 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][select]` { "myColumnGroup".`[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun String.first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
-        getColumnGroup(this).first(condition)
+        colGroup(this).first(condition)
+
+    /**
+     * @include [CommonFirstDocs]
+     * @arg [CommonFirstDocs.Examples]
+     * `df.`[select][select]` { "pathTo"["myColumnGroup"].`[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     */
+    public fun ColumnPath.first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+        colGroup(this).first(condition)
 
     /**
      * @include [CommonFirstDocs]
@@ -250,7 +259,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][select]` { Type::myColumnGroup.`[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun KProperty<*>.first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
-        getColumnGroup(this).first(condition)
+        colGroup(this).first(condition)
 
 
     /**
@@ -298,7 +307,15 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][select]` { "myColumnGroup".`[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun String.last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
-        getColumnGroup(this).last(condition)
+        colGroup(this).last(condition)
+
+    /**
+     * @include [CommonLastDocs]
+     * @arg [CommonLastDocs.Examples]
+     * `df.`[select][select]` { "pathTo"["myColumnGroup"].`[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     */
+    public fun ColumnPath.last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+        colGroup(this).last(condition)
 
     /**
      * @include [CommonLastDocs]
@@ -306,7 +323,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][select]` { Type::myColumnGroup.`[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun KProperty<*>.last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
-        getColumnGroup(this).last(condition)
+        colGroup(this).last(condition)
 
 
     /**
@@ -354,7 +371,15 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][select]` { "myColumnGroup".`[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun String.single(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
-        getColumnGroup(this).single(condition)
+        colGroup(this).single(condition)
+
+    /**
+     * @include [CommonSingleDocs]
+     * @arg [CommonSingleDocs.Examples]
+     * `df.`[select][select]` { "pathTo"["myColumnGroup"].`[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     */
+    public fun ColumnPath.single(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+        colGroup(this).single(condition)
 
     /**
      * @include [CommonSingleDocs]
@@ -362,12 +387,12 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][select]` { Type::myColumnGroup.`[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun KProperty<*>.single(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
-        getColumnGroup(this).single(condition)
+        colGroup(this).single(condition)
 
-    /** TODO */
+    /** {@comment TODO} */
     public fun SingleColumn<AnyRow>.col(index: Int): SingleColumn<Any?> = getChildrenAt(index).singleImpl()
 
-    /** TODO */
+    /** {@comment TODO} */
     public operator fun <C> ColumnSet<C>.get(index: Int): SingleColumn<C> = getAt(index)
 
     /**
@@ -808,8 +833,22 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // TODO treat same as first/single etc.
 
+    /**
+     * ## Cols
+     * Create a column set using either a [ColumnFilter] or any of the other [APIs][AccessApi] (+ [ColumnPath])
+     * that can point to a column.
+     * Aside from calling [cols] directly, you can also use the [get] operator.
+     *
+     */
+    private interface CommonColsDocs {
+
+        /** Example argument */
+        interface Arg
+    }
+
     // region predicate
 
+    @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.cols(
         predicate: ColumnFilter<C> = { true },
     ): ColumnSet<C> = colsInternal(predicate as ColumnFilter<*>).cast()
@@ -823,7 +862,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     ): ColumnSet<*> = all().cols(predicate)
 
     /**
-     * {@comment this function is shadowed by [ColumnsContainer.get]}
+     * {@comment this function is shadowed by [DataFrame.get]}
      */
     public operator fun SingleColumn<AnyRow>.get(
         predicate: ColumnFilter<*> = { true },
@@ -831,7 +870,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun String.cols(
         predicate: ColumnFilter<*> = { true },
-    ): ColumnSet<*> = getColumnGroup(this).cols(predicate)
+    ): ColumnSet<*> = colGroup(this).cols(predicate)
 
     public operator fun String.get(
         predicate: ColumnFilter<*> = { true },
@@ -839,7 +878,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun ColumnPath.cols(
         predicate: ColumnFilter<*> = { true },
-    ): ColumnSet<*> = getColumnGroup(this).cols(predicate)
+    ): ColumnSet<*> = colGroup(this).cols(predicate)
 
     public operator fun ColumnPath.get(
         predicate: ColumnFilter<*> = { true },
@@ -847,7 +886,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun KProperty<*>.cols(
         predicate: ColumnFilter<*> = { true },
-    ): ColumnSet<*> = getColumnGroup(this).cols(predicate)
+    ): ColumnSet<*> = colGroup(this).cols(predicate)
 
     public operator fun KProperty<*>.get(
         predicate: ColumnFilter<*> = { true },
@@ -859,14 +898,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnSet<C>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
-    ): ColumnSet<C> = object : ColumnSet<C> {
-
-        override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> =
-            this@cols.resolve(context)
-                .let(::dataFrameOf)
-                .asColumnGroup()
-                .cols(firstCol, *otherCols)
-                .resolve(context)
+    ): ColumnSet<C> = transformWithContext {
+        dataFrameOf(it)
+            .asColumnGroup()
+            .cols(firstCol, *otherCols)
+            .resolve(this)
     }
 
     public operator fun <C> ColumnSet<C>.get(
@@ -894,7 +930,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> String.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
-    ): ColumnSet<C> = getColumnGroup(this).cols(firstCol, *otherCols)
+    ): ColumnSet<C> = colGroup(this).cols(firstCol, *otherCols)
 
     public operator fun <C> String.get(
         firstCol: ColumnReference<C>,
@@ -904,7 +940,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnPath.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
-    ): ColumnSet<C> = getColumnGroup(this).cols(firstCol, *otherCols)
+    ): ColumnSet<C> = colGroup(this).cols(firstCol, *otherCols)
 
     public operator fun <C> ColumnPath.get(
         firstCol: ColumnReference<C>,
@@ -914,7 +950,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> KProperty<*>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
-    ): ColumnSet<C> = getColumnGroup(this).cols(firstCol, *otherCols)
+    ): ColumnSet<C> = colGroup(this).cols(firstCol, *otherCols)
 
     public operator fun <C> KProperty<*>.get(
         firstCol: ColumnReference<C>,
@@ -925,18 +961,15 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region names
 
+    @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.cols(
         firstCol: String,
         vararg otherCols: String,
-    ): ColumnSet<C> = object : ColumnSet<C> {
-
-        @Suppress("UNCHECKED_CAST")
-        override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> =
-            this@cols.resolve(context)
-                .let(::dataFrameOf)
-                .asColumnGroup()
-                .cols(firstCol, *otherCols)
-                .resolve(context) as List<ColumnWithPath<C>>
+    ): ColumnSet<C> = transformWithContext {
+        dataFrameOf(it)
+            .asColumnGroup()
+            .cols(firstCol, *otherCols)
+            .resolve(this) as List<ColumnWithPath<C>>
     }
 
     /**
@@ -954,6 +987,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         transform { it.flatMap { col -> names.mapNotNull { col.getChild(it) } } }
     }
 
+    /**
+     * {@comment this function is shadowed by [DataFrame.get] for accessors}
+     */
     public operator fun SingleColumn<AnyRow>.get(
         firstCol: String,
         vararg otherCols: String,
@@ -962,7 +998,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun String.cols(
         firstCol: String,
         vararg otherCols: String,
-    ): ColumnSet<*> = getColumnGroup(this).cols(firstCol, *otherCols)
+    ): ColumnSet<*> = colGroup(this).cols(firstCol, *otherCols)
 
     public operator fun String.get(
         firstCol: String,
@@ -972,7 +1008,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun ColumnPath.cols(
         firstCol: String,
         vararg otherCols: String,
-    ): ColumnSet<*> = getColumnGroup(this).cols(firstCol, *otherCols)
+    ): ColumnSet<*> = colGroup(this).cols(firstCol, *otherCols)
 
     public operator fun ColumnPath.get(
         firstCol: String,
@@ -982,7 +1018,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun KProperty<*>.cols(
         firstCol: String,
         vararg otherCols: String,
-    ): ColumnSet<*> = getColumnGroup(this).cols(firstCol, *otherCols)
+    ): ColumnSet<*> = colGroup(this).cols(firstCol, *otherCols)
 
     public operator fun KProperty<*>.get(
         firstCol: String,
@@ -993,18 +1029,15 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region columnPaths
 
+    @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.cols(
         firstCol: ColumnPath,
         vararg otherCols: ColumnPath,
-    ): ColumnSet<C> = object : ColumnSet<C> {
-
-        @Suppress("UNCHECKED_CAST")
-        override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> =
-            this@cols.resolve(context)
-                .let(::dataFrameOf)
-                .asColumnGroup()
-                .cols(firstCol, *otherCols)
-                .resolve(context) as List<ColumnWithPath<C>>
+    ): ColumnSet<C> = transformWithContext {
+        dataFrameOf(it)
+            .asColumnGroup()
+            .cols(firstCol, *otherCols)
+            .resolve(this) as List<ColumnWithPath<C>>
     }
 
     public operator fun <C> ColumnSet<C>.get(
@@ -1030,7 +1063,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun String.cols(
         firstCol: ColumnPath,
         vararg otherCols: ColumnPath,
-    ): ColumnSet<*> = getColumnGroup(this).cols(firstCol, *otherCols)
+    ): ColumnSet<*> = colGroup(this).cols(firstCol, *otherCols)
 
     public operator fun String.get(
         firstCol: ColumnPath,
@@ -1040,7 +1073,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun ColumnPath.cols(
         firstCol: ColumnPath,
         vararg otherCols: ColumnPath,
-    ): ColumnSet<*> = getColumnGroup(this).cols(firstCol, *otherCols)
+    ): ColumnSet<*> = colGroup(this).cols(firstCol, *otherCols)
 
     public operator fun ColumnPath.get(
         firstCol: ColumnPath,
@@ -1050,7 +1083,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun KProperty<*>.cols(
         firstCol: ColumnPath,
         vararg otherCols: ColumnPath,
-    ): ColumnSet<*> = getColumnGroup(this).cols(firstCol, *otherCols)
+    ): ColumnSet<*> = colGroup(this).cols(firstCol, *otherCols)
 
     public operator fun KProperty<*>.get(
         firstCol: ColumnPath,
@@ -1064,14 +1097,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnSet<C>.cols(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
-    ): ColumnSet<C> = object : ColumnSet<C> {
-
-        override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> =
-            this@cols.resolve(context)
-                .let(::dataFrameOf)
-                .asColumnGroup()
-                .cols(firstCol, *otherCols)
-                .resolve(context)
+    ): ColumnSet<C> = transformWithContext {
+        dataFrameOf(it)
+            .asColumnGroup()
+            .cols(firstCol, *otherCols)
+            .resolve(this)
     }
 
     public operator fun <C> ColumnSet<C>.get(
@@ -1094,7 +1124,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> String.cols(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
-    ): ColumnSet<C> = getColumnGroup(this).cols(firstCol, *otherCols)
+    ): ColumnSet<C> = colGroup(this).cols(firstCol, *otherCols)
 
     public operator fun <C> String.get(
         firstCol: KProperty<C>,
@@ -1104,7 +1134,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnPath.cols(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
-    ): ColumnSet<C> = getColumnGroup(this).cols(firstCol, *otherCols)
+    ): ColumnSet<C> = colGroup(this).cols(firstCol, *otherCols)
 
     public operator fun <C> ColumnPath.get(
         firstCol: KProperty<C>,
@@ -1114,7 +1144,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> KProperty<*>.cols(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
-    ): ColumnSet<C> = getColumnGroup(this).cols(firstCol, *otherCols)
+    ): ColumnSet<C> = colGroup(this).cols(firstCol, *otherCols)
 
     public operator fun <C> KProperty<*>.get(
         firstCol: KProperty<C>,
@@ -1125,18 +1155,15 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region indices
 
+    @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
-    ): ColumnSet<C> = object : ColumnSet<C> {
-
-        @Suppress("UNCHECKED_CAST")
-        override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> =
-            this@cols.resolve(context)
-                .let(::dataFrameOf)
-                .asColumnGroup()
-                .cols(firstIndex, *otherIndices)
-                .resolve(context) as List<ColumnWithPath<C>>
+    ): ColumnSet<C> = transformWithContext {
+        dataFrameOf(it)
+            .asColumnGroup()
+            .cols(firstIndex, *otherIndices)
+            .resolve(this) as List<ColumnWithPath<C>>
     }
 
     public operator fun <C> ColumnSet<C>.get(
@@ -1162,7 +1189,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun String.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
-    ): ColumnSet<*> = getColumnGroup(this).cols(firstIndex, *otherIndices)
+    ): ColumnSet<*> = colGroup(this).cols(firstIndex, *otherIndices)
 
     public operator fun String.get(
         firstIndex: Int,
@@ -1172,7 +1199,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun ColumnPath.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
-    ): ColumnSet<*> = getColumnGroup(this).cols(firstIndex, *otherIndices)
+    ): ColumnSet<*> = colGroup(this).cols(firstIndex, *otherIndices)
 
     public operator fun ColumnPath.get(
         firstIndex: Int,
@@ -1182,7 +1209,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun KProperty<*>.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
-    ): ColumnSet<*> = getColumnGroup(this).cols(firstIndex, *otherIndices)
+    ): ColumnSet<*> = colGroup(this).cols(firstIndex, *otherIndices)
 
     public operator fun KProperty<*>.get(
         firstIndex: Int,
@@ -1193,20 +1220,16 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region ranges
 
+    @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.cols(range: IntRange): ColumnSet<C> =
-        object : ColumnSet<C> {
-
-            @Suppress("UNCHECKED_CAST")
-            override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> =
-                this@cols.resolve(context)
-                    .let(::dataFrameOf)
-                    .asColumnGroup()
-                    .cols(range)
-                    .resolve(context) as List<ColumnWithPath<C>>
+        transformWithContext {
+            dataFrameOf(it)
+                .asColumnGroup()
+                .cols(range)
+                .resolve(this) as List<ColumnWithPath<C>>
         }
 
     public operator fun <C> ColumnSet<C>.get(range: IntRange): ColumnSet<C> = cols(range)
-
 
     public fun SingleColumn<AnyRow>.cols(range: IntRange): ColumnSet<*> =
         transform { it.flatMap { it.children().subList(range.first, range.last + 1) } }
@@ -1216,15 +1239,15 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      */
     public operator fun SingleColumn<AnyRow>.get(range: IntRange): ColumnSet<*> = cols(range)
 
-    public fun String.cols(range: IntRange): ColumnSet<*> = getColumnGroup(this).cols(range)
+    public fun String.cols(range: IntRange): ColumnSet<*> = colGroup(this).cols(range)
 
     public operator fun String.get(range: IntRange): ColumnSet<*> = cols(range)
 
-    public fun ColumnPath.cols(range: IntRange): ColumnSet<*> = getColumnGroup(this).cols(range)
+    public fun ColumnPath.cols(range: IntRange): ColumnSet<*> = colGroup(this).cols(range)
 
     public operator fun ColumnPath.get(range: IntRange): ColumnSet<*> = cols(range)
 
-    public fun KProperty<*>.cols(range: IntRange): ColumnSet<*> = getColumnGroup(this).cols(range)
+    public fun KProperty<*>.cols(range: IntRange): ColumnSet<*> = colGroup(this).cols(range)
 
     public operator fun KProperty<*>.get(range: IntRange): ColumnSet<*> = cols(range)
 

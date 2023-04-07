@@ -60,7 +60,7 @@ public interface ColumnsContainer<out T> {
     public operator fun <R> get(column: KProperty<DataRow<R>>): ColumnGroup<R> = get(column.columnName).asColumnGroup().cast()
     public operator fun <R> get(column: KProperty<DataFrame<R>>): FrameColumn<R> = get(column.columnName).asAnyFrameColumn().castFrameColumn()
 
-    public operator fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>>
+    public fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>>
     public operator fun <C> get(column: ColumnSelector<T, C>): DataColumn<C> = get(column as ColumnsSelector<T, C>).single()
 
     // endregion

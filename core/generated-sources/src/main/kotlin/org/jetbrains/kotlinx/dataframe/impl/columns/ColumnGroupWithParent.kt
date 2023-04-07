@@ -41,7 +41,9 @@ internal class ColumnGroupWithParent<T>(override val parent: ColumnGroupReferenc
     override fun getColumnOrNull(index: Int) = super.getColumnOrNull(index)?.addParent(this)
     override fun getColumnOrNull(name: String) = super.getColumnOrNull(name)?.addParent(this)
     override fun <R> getColumnOrNull(column: ColumnReference<R>) = super.getColumnOrNull(column)?.addParent(this)
-    override fun getColumnOrNull(path: ColumnPath) = path.fold(this as AnyCol?) { col, name -> col?.asColumnGroup()?.getColumnOrNull(name) }
+    override fun getColumnOrNull(path: ColumnPath) = path.fold(this as AnyCol?) { col, name ->
+        col?.asColumnGroup()?.getColumnOrNull(name)
+    }
     override fun <R> getColumnOrNull(column: ColumnSelector<T, R>) = getColumnOrNull(getColumnWithPath(column).path)?.cast<R>()
 
     override operator fun get(columnName: String): AnyCol = getColumn(columnName)

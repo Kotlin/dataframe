@@ -104,6 +104,11 @@ internal fun <A, B> ColumnSet<A>.transform(converter: (List<ColumnWithPath<A>>) 
         override fun resolve(context: ColumnResolutionContext) = converter(this@transform.resolve(context))
     }
 
+internal fun <A, B> ColumnSet<A>.transformWithContext(converter: ColumnResolutionContext.(List<ColumnWithPath<A>>) -> List<ColumnWithPath<B>>): ColumnSet<B> =
+    object : ColumnSet<B> {
+        override fun resolve(context: ColumnResolutionContext) = converter(context, this@transformWithContext.resolve(context))
+    }
+
 internal fun <T> ColumnSet<T>.singleImpl() = object : SingleColumn<T> {
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? {
         return this@singleImpl.resolve(context).singleOrNull()

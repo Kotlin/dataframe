@@ -43,6 +43,12 @@ class ColumnsSelectionDslTests : TestBase() {
                 it.any { it == "Alice" }
             }
         } shouldBe df.select { name.firstName }
+
+        df.select {
+            pathOf("name").first {
+                it.any { it == "Alice" }
+            }
+        } shouldBe df.select { name.firstName }
     }
 
     @Test
@@ -69,6 +75,12 @@ class ColumnsSelectionDslTests : TestBase() {
 
         df.select {
             Person::name.last {
+                it.any { it == "Alice" }
+            }
+        } shouldBe df.select { name.firstName }
+
+        df.select {
+            pathOf("name").last {
                 it.any { it == "Alice" }
             }
         } shouldBe df.select { name.firstName }
@@ -100,6 +112,12 @@ class ColumnsSelectionDslTests : TestBase() {
 
         df.select {
             Person::name.single {
+                it.any { it == "Alice" }
+            }
+        } shouldBe df.select { name.firstName }
+
+        df.select {
+            pathOf("name").single {
                 it.any { it == "Alice" }
             }
         } shouldBe df.select { name.firstName }
@@ -145,8 +163,6 @@ class ColumnsSelectionDslTests : TestBase() {
                 .asColumnGroup(firstNames)
         }
 
-        dfGroup.print(columnTypes = true, title = true)
-
         dfGroup.select { colGroup("name") } shouldBe dfGroup.select { name }
         dfGroup.select { colGroup<String>("name") } shouldBe dfGroup.select { name }
         dfGroup.select { colGroup(pathOf("name")) } shouldBe dfGroup.select { name }
@@ -158,6 +174,12 @@ class ColumnsSelectionDslTests : TestBase() {
         dfGroup.select { colGroup("name").colGroup(pathOf("firstNames")) } shouldBe dfGroup.select { name[firstNames] }
         dfGroup.select { colGroup("name").colGroup<String>(pathOf("firstNames")) } shouldBe dfGroup.select { name[firstNames] }
         dfGroup.select { colGroup("name").colGroup(MyName::firstNames) } shouldBe dfGroup.select { name[firstNames] }
+
+        dfGroup.select {
+            "name"["firstNames"]["firstName", "secondName"]
+        } shouldBe dfGroup.select {
+            name[firstNames]["firstName"] and name[firstNames]["secondName"]
+        }
     }
 
     @DataSchema
