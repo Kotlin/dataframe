@@ -27,10 +27,12 @@ import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
 import kotlin.reflect.typeOf
+import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 
 class Create : TestBase() {
 
     @Test
+    @TransformDataFrameExpressions
     fun createValueByColumnOf() {
         // SampleStart
         // Create ValueColumn with name 'student' and two elements of type String
@@ -39,6 +41,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun createValueByToColumn() {
         // SampleStart
         listOf("Alice", "Bob").toColumn("name")
@@ -46,6 +49,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun columnAccessorsUsage() {
         // SampleStart
         val age by column<Int>()
@@ -71,6 +75,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun columnAccessorToColumn() {
         // SampleStart
         val age by column<Int>()
@@ -82,6 +87,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun columnAccessorMap() {
         // SampleStart
         val age by column<Int>()
@@ -92,6 +98,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun columnAccessorComputed_properties() {
         // SampleStart
         val fullName by column(df) { name.firstName + " " + name.lastName }
@@ -101,6 +108,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun columnAccessorComputed_accessors() {
         // SampleStart
         val name by columnGroup()
@@ -114,6 +122,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun columnAccessorComputed_strings() {
         // SampleStart
 
@@ -124,6 +133,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun createValueColumnInferred() {
         // SampleStart
         val values: List<Any?> = listOf(1, 2.5)
@@ -135,6 +145,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun createValueColumnOfType() {
         // SampleStart
         val values: List<Any?> = listOf(1, 2.5)
@@ -144,6 +155,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun createColumnRenamed() {
         // SampleStart
         val column = columnOf("Alice", "Bob") named "student"
@@ -151,6 +163,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun createColumnGroup() {
         // SampleStart
         val firstName by columnOf("Alice", "Bob")
@@ -162,6 +175,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun createFrameColumn() {
         // SampleStart
         val df1 = dataFrameOf("name", "age")("Alice", 20, "Bob", 25)
@@ -173,6 +187,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun createColumnAccessor() {
         // SampleStart
         val name by column<String>()
@@ -180,6 +195,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun createColumnAccessorRenamed() {
         // SampleStart
         val accessor by column<String>("complex column name")
@@ -188,6 +204,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun createDeepColumnAccessor() {
         // SampleStart
         val name by columnGroup()
@@ -196,6 +213,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun createGroupOrFrameColumnAccessor() {
         // SampleStart
         val columns by columnGroup()
@@ -204,6 +222,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun createEmptyDataFrame() {
         // SampleStart
         val df = emptyDataFrame<Any>()
@@ -213,6 +232,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun createDataFrameOf() {
         // SampleStart
         // DataFrame with 2 columns and 3 rows
@@ -225,6 +245,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun createDataFrameOfPairs() {
         // SampleStart
         // DataFrame with 2 columns and 3 rows
@@ -236,6 +257,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun createDataFrameWithFill() {
         // SampleStart
         // Multiplication table
@@ -244,6 +266,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun createDataFrameFillConstant() {
         // SampleStart
         val names = listOf("first", "second", "third")
@@ -254,6 +277,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun createDataFrameWithRandom() {
         // SampleStart
         // 5 columns filled with 7 random double values:
@@ -269,6 +293,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun createDataFrameFromColumns() {
         // SampleStart
 
@@ -281,6 +306,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun createDataFrameFromMap() {
         // SampleStart
         val map = mapOf("name" to listOf("Alice", "Bob", "Charlie"), "age" to listOf(15, 20, 22))
@@ -291,6 +317,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun createDataFrameFromIterable() {
         // SampleStart
         val name by columnOf("Alice", "Bob", "Charlie")
@@ -301,6 +328,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun createDataFrameFromNamesAndValues() {
         // SampleStart
         val names = listOf("name", "age")
@@ -318,6 +346,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun readDataFrameFromValues() {
         // SampleStart
         val names = listOf("Alice", "Bob", "Charlie")
@@ -328,6 +357,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun readDataFrameFromObject() {
         // SampleStart
         data class Person(val name: String, val age: Int)
@@ -343,6 +373,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun readDataFrameFromDeepObject() {
         // SampleStart
         data class Name(val firstName: String, val lastName: String)
@@ -364,6 +395,7 @@ class Create : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun readDataFrameFromDeepObjectWithExclude() {
         data class Name(val firstName: String, val lastName: String)
         data class Score(val subject: String, val value: Int)

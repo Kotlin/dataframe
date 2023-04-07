@@ -54,6 +54,8 @@ private fun convertToDescription(dataframeLike: Any): String {
     }
 }
 
+annotation class Disable
+
 annotation class TransformDataFrameExpressions
 
 fun main() {
@@ -153,7 +155,7 @@ object PluginCallback {
     }
 
     var action: (String, String, Any, String, String?, String?, String?, Int) -> Unit =
-        { string, name, df, id, receiverId, containingClassFqName, containingFunName, statementIndex ->
+        @Disable { string, name, df, id, receiverId, containingClassFqName, containingFunName, statementIndex ->
             expressionsByStatement.compute(statementIndex) { _, list ->
                 val element = ExpressionResult(containingClassFqName, containingFunName, df)
                 list?.plus(element) ?: listOf(element)
@@ -195,6 +197,7 @@ object PluginCallback {
             //        convertToHTML(df).writeHTML(File("build/dataframes/$path"))
         }
 
+    @Disable
     fun doAction(
         string: String,
         name: String,

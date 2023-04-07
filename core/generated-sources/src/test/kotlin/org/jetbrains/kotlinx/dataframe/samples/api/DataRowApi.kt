@@ -11,11 +11,13 @@ import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withValue
+import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.junit.Test
 
 class DataRowApi : TestBase() {
 
     @Test
+    @TransformDataFrameExpressions
     fun expressions() {
         // SampleStart
         // Row expression computes values for a new column
@@ -30,6 +32,7 @@ class DataRowApi : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun conditions() {
         // SampleStart
         // Row condition is used to filter rows by index

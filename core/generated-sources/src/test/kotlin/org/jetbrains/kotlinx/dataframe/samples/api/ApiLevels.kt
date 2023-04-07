@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.toListOf
+import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.jetbrains.kotlinx.dataframe.io.read
 import org.junit.Ignore
 import org.junit.Test
@@ -17,6 +18,7 @@ import org.junit.Test
 class ApiLevels {
 
     @Test
+    @TransformDataFrameExpressions
     fun strings() {
         // SampleStart
         DataFrame.read("titanic.csv")
@@ -31,6 +33,7 @@ class ApiLevels {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun accessors1() {
         // SampleStart
         val survived by column<Boolean>() // accessor for Boolean column with name 'survived'
@@ -42,6 +45,7 @@ class ApiLevels {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun accessors2() {
         val survived by column<Boolean>()
         val home by column<String>()
@@ -58,6 +62,7 @@ class ApiLevels {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun accessors3() {
         // SampleStart
         val survived by column<Boolean>()
@@ -74,6 +79,7 @@ class ApiLevels {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun kproperties1() {
         // SampleStart
         data class Passenger(
@@ -96,6 +102,7 @@ class ApiLevels {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun kproperties2() {
         // SampleStart
         data class Passenger(
@@ -119,6 +126,7 @@ class ApiLevels {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun extensionProperties2() {
         val df = DataFrame.read("titanic.csv").cast<TitanicPassenger>()
         // SampleStart
@@ -129,6 +137,7 @@ class ApiLevels {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun extensionProperties1() {
         // SampleStart
         val df = DataFrame.read("titanic.csv")
