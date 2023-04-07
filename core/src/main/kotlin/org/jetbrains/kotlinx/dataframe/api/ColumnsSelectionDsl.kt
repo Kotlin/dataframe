@@ -893,7 +893,12 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.cols(
         predicate: ColumnFilter<C> = { true },
-    ): ColumnSet<C> = colsInternal(predicate as ColumnFilter<*>).cast()
+    ): ColumnSet<C> = transformWithContext {
+        dataFrameOf(it)
+            .asColumnGroup()
+            .cols(predicate as ColumnFilter<*>)
+            .resolve(this)
+    } as ColumnSet<C>
 
     /** @include [ColumnSetColsPredicateDocs] */
     public operator fun <C> ColumnSet<C>.get(
@@ -928,7 +933,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     /** @include [SingleColumnAnyRowColsPredicateDocs] */
     public fun SingleColumn<AnyRow>.cols(
         predicate: ColumnFilter<*> = { true },
-    ): ColumnSet<*> = all().cols(predicate)
+    ): ColumnSet<*> = colsInternal(predicate)
 
     /**
      * @include [SingleColumnAnyRowColsPredicateDocs]
