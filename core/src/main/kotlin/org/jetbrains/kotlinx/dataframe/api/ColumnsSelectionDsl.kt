@@ -1869,10 +1869,14 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnSet<C>.filter(predicate: Predicate<ColumnWithPath<C>>): ColumnSet<C> =
         transform { it.filter(predicate) }
 
-    public fun ColumnSet<*>.nameContains(text: CharSequence): ColumnSet<Any?> = cols { it.name.contains(text) }
-    public fun ColumnSet<*>.nameContains(regex: Regex): ColumnSet<Any?> = cols { it.name.contains(regex) }
-    public fun ColumnSet<*>.startsWith(prefix: CharSequence): ColumnSet<Any?> = cols { it.name.startsWith(prefix) }
-    public fun ColumnSet<*>.endsWith(suffix: CharSequence): ColumnSet<Any?> = cols { it.name.endsWith(suffix) }
+    public fun SingleColumn<AnyRow>.nameContains(text: CharSequence): ColumnSet<*> = cols { it.name.contains(text) }
+    public fun <C> ColumnSet<C>.nameContains(text: CharSequence): ColumnSet<C> = cols { it.name.contains(text) }
+    public fun SingleColumn<AnyRow>.nameContains(regex: Regex): ColumnSet<*> = cols { it.name.contains(regex) }
+    public fun <C> ColumnSet<C>.nameContains(regex: Regex): ColumnSet<C> = cols { it.name.contains(regex) }
+    public fun SingleColumn<AnyRow>.startsWith(prefix: CharSequence): ColumnSet<*> = cols { it.name.startsWith(prefix) }
+    public fun <C> ColumnSet<C>.startsWith(prefix: CharSequence): ColumnSet<C> = cols { it.name.startsWith(prefix) }
+    public fun SingleColumn<AnyRow>.endsWith(suffix: CharSequence): ColumnSet<*> = cols { it.name.endsWith(suffix) }
+    public fun <C> ColumnSet<C>.endsWith(suffix: CharSequence): ColumnSet<C> = cols { it.name.endsWith(suffix) }
 
     public fun <C> ColumnSet<C>.except(vararg other: ColumnSet<*>): ColumnSet<*> = except(other.toColumnSet())
     public fun <C> ColumnSet<C>.except(vararg other: String): ColumnSet<*> = except(other.toColumnSet())
