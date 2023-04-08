@@ -22,30 +22,30 @@ class ColumnsSelectionDslTests : TestBase() {
         df.select { first { it.name().startsWith("a") } } shouldBe df.select { age }
 
         df.select {
-            name.first {
-                it.any { it == "Alice" }
+            name.first { col ->
+                col.any { it == "Alice" }
             }
         } shouldBe df.select {
-            name.colsOf<String>().first {
-                it.any { it == "Alice" }
+            name.colsOf<String>().first { col ->
+                col.any { it == "Alice" }
             }
         }
 
         df.select {
-            "name".first {
-                it.any { it == "Alice" }
+            "name".first { col ->
+                col.any { it == "Alice" }
             }
         } shouldBe df.select { name.firstName }
 
         df.select {
-            Person::name.first {
-                it.any { it == "Alice" }
+            Person::name.first { col ->
+                col.any { it == "Alice" }
             }
         } shouldBe df.select { name.firstName }
 
         df.select {
-            pathOf("name").first {
-                it.any { it == "Alice" }
+            pathOf("name").first { col ->
+                col.any { it == "Alice" }
             }
         } shouldBe df.select { name.firstName }
     }
@@ -57,30 +57,30 @@ class ColumnsSelectionDslTests : TestBase() {
         df.select { last() } shouldBe df.select { isHappy }
         df.select { last { it.name().startsWith("a") } } shouldBe df.select { age }
         df.select {
-            name.last {
-                it.any { it == "Alice" }
+            name.last { col ->
+                col.any { it == "Alice" }
             }
         } shouldBe df.select {
-            name.colsOf<String>().last {
-                it.any { it == "Alice" }
+            name.colsOf<String>().last { col ->
+                col.any { it == "Alice" }
             }
         }
 
         df.select {
-            "name".last {
-                it.any { it == "Alice" }
+            "name".last { col ->
+                col.any { it == "Alice" }
             }
         } shouldBe df.select { name.firstName }
 
         df.select {
-            Person::name.last {
-                it.any { it == "Alice" }
+            Person::name.last { col ->
+                col.any { it == "Alice" }
             }
         } shouldBe df.select { name.firstName }
 
         df.select {
-            pathOf("name").last {
-                it.any { it == "Alice" }
+            pathOf("name").last { col ->
+                col.any { it == "Alice" }
             }
         } shouldBe df.select { name.firstName }
     }
@@ -94,30 +94,30 @@ class ColumnsSelectionDslTests : TestBase() {
         df.select { single { it.name().startsWith("a") } } shouldBe df.select { age }
 
         df.select {
-            name.single {
-                it.any { it == "Alice" }
+            name.single { col ->
+                col.any { it == "Alice" }
             }
         } shouldBe df.select {
-            name.colsOf<String>().single {
-                it.any { it == "Alice" }
+            name.colsOf<String>().single { col ->
+                col.any { it == "Alice" }
             }
         }
 
         df.select {
-            "name".single {
-                it.any { it == "Alice" }
+            "name".single { col ->
+                col.any { it == "Alice" }
             }
         } shouldBe df.select { name.firstName }
 
         df.select {
-            Person::name.single {
-                it.any { it == "Alice" }
+            Person::name.single { col ->
+                col.any { it == "Alice" }
             }
         } shouldBe df.select { name.firstName }
 
         df.select {
-            pathOf("name").single {
-                it.any { it == "Alice" }
+            pathOf("name").single { col ->
+                col.any { it == "Alice" }
             }
         } shouldBe df.select { name.firstName }
     }

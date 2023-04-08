@@ -127,7 +127,7 @@ public fun <T> frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<T>> = col
 @JvmName("frameColumnDataFrameKProperty")
 public fun <T> frameColumn(property: KProperty<DataFrame<T>>): ColumnAccessor<DataFrame<T>> = column(property)
 
-public fun <T> frameColumn(property: KProperty<T>): ColumnAccessor<DataFrame<T>> = column(property.name)
+public fun <T> frameColumn(property: KProperty<List<T>>): ColumnAccessor<DataFrame<T>> = column(property.name)
 
 public fun ColumnGroupReference.frameColumn(): ColumnDelegate<AnyFrame> = ColumnDelegate(this)
 
@@ -151,7 +151,7 @@ public fun <T> ColumnGroupReference.frameColumn(path: ColumnPath): ColumnAccesso
 public fun <T> ColumnGroupReference.frameColumn(property: KProperty<DataFrame<T>>): ColumnAccessor<DataFrame<T>> =
     ColumnAccessorImpl(this.path() + property.name)
 
-public fun <T> ColumnGroupReference.frameColumn(property: KProperty<T>): ColumnAccessor<DataFrame<T>> =
+public fun <T> ColumnGroupReference.frameColumn(property: KProperty<List<T>>): ColumnAccessor<DataFrame<T>> =
     ColumnAccessorImpl(this.path() + property.name)
 
 // endregion
