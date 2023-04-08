@@ -630,6 +630,7 @@ class Access : TestBase() {
         df.select { age and name }
         df.fillNaNs { dfsOf<Double>() }.withZero()
         df.remove { cols { it.hasNulls() } }
+        df.group { cols { it.data != name } }.into { "nameless" }
         df.update { city }.notNull { it.lowercase() }
         df.gather { colsOf<Number>() }.into("key", "value")
         df.move { name.firstName and name.lastName }.after { city }
@@ -790,6 +791,7 @@ class Access : TestBase() {
 
     @Test
     fun columnSelectorsMisc() {
+        val df = df.add { "year" from { 0 } }
         // SampleStart
         // by condition
         df.select { cols { it.name().startsWith("year") } }
@@ -813,7 +815,7 @@ class Access : TestBase() {
         df.select { dropLast(2) }
 
         // find the first column satisfying the condition
-        df.select { first { it.name().startsWith("year") } }
+        df.select { first { it.name.startsWith("year") } }
 
         // find the last column inside a column group satisfying the condition
         df.select {
