@@ -163,9 +163,9 @@ class ColumnsSelectionDslTests : TestBase() {
         }
 
         dfGroup.select { colGroup("name") } shouldBe dfGroup.select { name }
-        dfGroup.select { colGroup<String>("name") } shouldBe dfGroup.select { name }
+        dfGroup.select { colGroup<Name>("name") } shouldBe dfGroup.select { name }
         dfGroup.select { colGroup(pathOf("name")) } shouldBe dfGroup.select { name }
-        dfGroup.select { colGroup<String>(pathOf("name")) } shouldBe dfGroup.select { name }
+        dfGroup.select { colGroup<Name>(pathOf("name")) } shouldBe dfGroup.select { name }
         dfGroup.select { colGroup(Person::name) } shouldBe dfGroup.select { name }
 
         dfGroup.select { colGroup("name").colGroup("firstNames") } shouldBe dfGroup.select { name[firstNames] }
