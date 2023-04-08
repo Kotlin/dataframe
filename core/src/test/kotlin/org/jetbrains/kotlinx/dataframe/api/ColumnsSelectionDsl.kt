@@ -260,6 +260,12 @@ class ColumnsSelectionDslTests : TestBase() {
         df.select {
             pathOf("name").cols { "Name" in it.name() }
         } shouldBe df.select {
+            "name"[{ "Name" in it.name() }]
+        }
+
+        df.select {
+            pathOf("name").cols { "Name" in it.name() }
+        } shouldBe df.select {
             pathOf("name")[{ "Name" in it.name() }]
         }
     }
@@ -357,7 +363,10 @@ class ColumnsSelectionDslTests : TestBase() {
             },
             df.select {
                 pathOf("name", "firstName")
-            }
+            },
+            df.select {
+                name.firstName
+            },
         ).reduce { acc, dataFrame ->
             acc shouldBe dataFrame
             dataFrame
