@@ -4213,7 +4213,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * ## ‎
      * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also take a [KType] argument instead of a reified type.
      * This is useful when the type is not known at compile time or when the API function cannot be inlined.
-     * (TODO: [Issue: #325, context receiver support](https://github.com/Kotlin/dataframe/issues/325))
+     *
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
      *
@@ -4252,7 +4252,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * ## ‎
      * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also take a [KType] argument instead of a reified type.
      * This is useful when the type is not known at compile time or when the API function cannot be inlined.
-     * (TODO: [Issue: #325, context receiver support](https://github.com/Kotlin/dataframe/issues/325))
+     *
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
      *
@@ -4330,7 +4330,7 @@ public inline fun <reified C> ColumnSet<*>.dfsOf(noinline filter: (ColumnWithPat
  * ## ‎
  * Finally, [colsOf] can also take a [KType] argument instead of a reified type.
  * This is useful when the type is not known at compile time or when the API function cannot be inlined.
- * (TODO: [Issue: #325, context receiver support](https://github.com/Kotlin/dataframe/issues/325))
+ *
  *
  * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
  *
@@ -4358,7 +4358,7 @@ internal interface ColsOf
  * ## ‎
  * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also take a [KType] argument instead of a reified type.
  * This is useful when the type is not known at compile time or when the API function cannot be inlined.
- * (TODO: [Issue: #325, context receiver support](https://github.com/Kotlin/dataframe/issues/325))
+ *
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
  *
@@ -4394,7 +4394,7 @@ private interface CommonColsOfDocs {
  * ## ‎
  * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also take a [KType] argument instead of a reified type.
  * This is useful when the type is not known at compile time or when the API function cannot be inlined.
- * (TODO: [Issue: #325, context receiver support](https://github.com/Kotlin/dataframe/issues/325))
+ *
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
  *
@@ -4435,7 +4435,7 @@ public fun <C> ColumnSet<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boole
  * ## ‎
  * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also take a [KType] argument instead of a reified type.
  * This is useful when the type is not known at compile time or when the API function cannot be inlined.
- * (TODO: [Issue: #325, context receiver support](https://github.com/Kotlin/dataframe/issues/325))
+ *
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
  *
