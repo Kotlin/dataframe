@@ -388,7 +388,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * ## Subset of Columns
-     * Returns a [ColumnSet] containing all columns from [this\] to [endInclusive\].
+     * Creates a [ColumnSet] containing all columns from [this\] to [endInclusive\].
      *
      * #### For example:
      *
@@ -485,7 +485,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * ## None
-     * Returns an empty [ColumnSet], essentially selecting no columns at all.
+     * Creates an empty [ColumnSet], essentially selecting no columns at all.
      *
      * #### For example:
      *
@@ -501,7 +501,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     /**
      * ## Column Accessor
      *
-     * Returns a [ColumnAccessor] for a column with the given argument.
+     * Creates a [ColumnAccessor] for a column with the given argument.
      * This is a shorthand for [column] and can be both typed and untyped.
      * The function can also be called on [ColumnGroupReferences][ColumnGroupReference] to create
      * an accessor for a column inside a [ColumnGroup].
@@ -611,7 +611,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * ## Column Group Accessor
-     * Returns a [ColumnAccessor] for a column group with the given argument.
+     * Creates a [ColumnAccessor] for a column group with the given argument.
      * This is a shorthand for [columnGroup] and can be both typed and untyped.
      * The function can also be called on [ColumnGroupReferences][ColumnGroupReference] to create
      * an accessor for a column group inside a [ColumnGroup].
@@ -656,7 +656,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @param [path] The [ColumnPath] pointing to the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("groupUnTyped")
+    @JvmName("colGroupUnTyped")
     public fun colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = columnGroup<Any?>(path)
 
     /**
@@ -670,6 +670,14 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @include [CommonColGroupDocs] {@arg [CommonColGroupDocs.Arg] Type::columnGroupName}
      * @param [property] The [KProperty] pointing to the column group.
      */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colGroupKPropertyDataRow")
+    public fun <C> colGroup(property: KProperty<DataRow<C>>): ColumnAccessor<DataRow<C>> = columnGroup(property)
+
+    /**
+     * @include [CommonColGroupDocs] {@arg [CommonColGroupDocs.Arg] Type::columnGroupName}
+     * @param [property] The [KProperty] pointing to the column group.
+     */
     public fun <C> colGroup(property: KProperty<C>): ColumnAccessor<DataRow<C>> = columnGroup(property)
 
     /**
@@ -678,7 +686,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @receiver The [ColumnGroupReference] to get the column group from.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("groupUnTyped")
+    @JvmName("colGroupUnTyped")
     public fun ColumnGroupReference.colGroup(name: String): ColumnAccessor<DataRow<*>> = columnGroup<Any?>(name)
 
     /**
@@ -695,7 +703,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @receiver The [ColumnGroupReference] to get the column group from.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("groupUnTyped")
+    @JvmName("colGroupUnTyped")
     public fun ColumnGroupReference.colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> =
         columnGroup<Any?>(path)
 
@@ -713,6 +721,16 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @param [property] The [KProperty] pointing to the column group.
      * @receiver The [ColumnGroupReference] to get the column group from.
      */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colGroupKPropertyDataRow")
+    public fun <C> ColumnGroupReference.colGroup(property: KProperty<DataRow<C>>): ColumnAccessor<DataRow<C>> =
+        columnGroup(property)
+
+    /**
+     * @include [CommonColGroupDocs] {@arg [CommonColGroupDocs.Arg] Type::columnGroupName}
+     * @param [property] The [KProperty] pointing to the column group.
+     * @receiver The [ColumnGroupReference] to get the column group from.
+     */
     public fun <C> ColumnGroupReference.colGroup(property: KProperty<C>): ColumnAccessor<DataRow<C>> =
         columnGroup(property)
 
@@ -721,7 +739,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * ## Frame Column Accessor
-     * Returns a [ColumnAccessor] for a frame column with the given argument.
+     * Creates a [ColumnAccessor] for a frame column with the given argument.
      * This is a shorthand for [frameColumn] and can be both typed and untyped.
      * The function can also be called on [ColumnGroupReferences][ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup].
@@ -776,7 +794,15 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] Type::columnName}
      * @param [property] The [KProperty] pointing to the frame column.
      */
-    public fun <C> frameCol(property: KProperty<C>): ColumnAccessor<DataFrame<C>> = frameColumn(property)
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("frameColKPropertyDataFrame")
+    public fun <C> frameCol(property: KProperty<DataFrame<C>>): ColumnAccessor<DataFrame<C>> = frameColumn(property)
+
+    /**
+     * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] Type::columnName}
+     * @param [property] The [KProperty] pointing to the frame column.
+     */
+    public fun <C> frameCol(property: KProperty<List<C>>): ColumnAccessor<DataFrame<C>> = frameColumn(property)
 
     /**
      * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] "columnName"}
@@ -819,7 +845,17 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @param [property] The [KProperty] pointing to the frame column.
      * @receiver The [ColumnGroupReference] to get the frame column from.
      */
-    public fun <C> ColumnGroupReference.frameCol(property: KProperty<C>): ColumnAccessor<DataFrame<C>> =
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("frameColKPropertyDataFrame")
+    public fun <C> ColumnGroupReference.frameCol(property: KProperty<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
+        frameColumn(property)
+
+    /**
+     * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] Type::columnName}
+     * @param [property] The [KProperty] pointing to the frame column.
+     * @receiver The [ColumnGroupReference] to get the frame column from.
+     */
+    public fun <C> ColumnGroupReference.frameCol(property: KProperty<List<C>>): ColumnAccessor<DataFrame<C>> =
         frameColumn(property)
 
     // endregion
