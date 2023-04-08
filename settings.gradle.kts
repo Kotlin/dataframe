@@ -1,7 +1,6 @@
 @file:Suppress("UnstableApiUsage")
 
 rootProject.name = "dataframe"
-enableFeaturePreview("VERSION_CATALOGS")
 
 includeBuild("generator")
 include("plugins:dataframe-gradle-plugin")
@@ -9,6 +8,8 @@ include("plugins:symbol-processor")
 include("tests")
 include("dataframe-arrow")
 include("dataframe-openapi")
+include("dataframe-excel")
+include("core")
 
 include("examples:idea-examples:titanic")
 include("examples:idea-examples:movies")
@@ -30,5 +31,4 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-include("dataframe-excel")
-include("core")
+
