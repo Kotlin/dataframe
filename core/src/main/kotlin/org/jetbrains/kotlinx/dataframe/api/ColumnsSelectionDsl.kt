@@ -506,21 +506,27 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * The function can also be called on [ColumnGroupReferences][ColumnGroupReference] to create
      * an accessor for a column inside a [ColumnGroup].
      *
+     * {@includeArg [CommonColDocs.Note]}
+     *
      * #### For example:
      *
      * `df.`[select][select]` { `[col][col]`({@includeArg [CommonColDocs.Arg]}) }`
      *
-     * `df.`[select][select]` { myColGroup.`[col][col]`({@includeArg [CommonColDocs.Arg]}) }`
+     * `df.`[select][select]` { myColGroup.`[col][col]`<SomeType>({@includeArg [CommonColDocs.Arg]}) }`
      *
      * @return A [ColumnAccessor] for the column with the given argument.
      * @see [column\]
      * @see [colGroup\]
      * @see [frameCol\]
+     * {@arg [CommonColDocs.Note]}
      */
     private interface CommonColDocs {
 
         /** Example argument */
         interface Arg
+
+        /** Optional note */
+        interface Note
     }
 
     /**
@@ -540,6 +546,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonColDocs] {@arg [CommonColDocs.Arg] "columnGroup"["columnName"]}
+     * {@arg [CommonColDocs.Note] NOTE: For column paths, this is an identity function and can be removed.}
      * @param [path] The [ColumnPath] pointing to the column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -620,7 +627,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][select]` { `[colGroup][colGroup]`({@includeArg [CommonColGroupDocs.Arg]}) }`
      *
-     * `df.`[select][select]` { myColGroup.`[colGroup][colGroup]`({@includeArg [CommonColGroupDocs.Arg]}) }`
+     * `df.`[select][select]` { myColGroup.`[colGroup][colGroup]`<SomeType>({@includeArg [CommonColGroupDocs.Arg]}) }`
      *
      * @return A [ColumnAccessor] for the column group with the given argument.
      * @see [columnGroup\]
@@ -747,7 +754,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * #### For example:
      * `df.`[select][select]` { `[frameCol][frameCol]`({@includeArg [CommonFrameColDocs.Arg]}) }`
      *
-     * `df.`[select][select]` { myColGroup.`[frameCol][frameCol]`({@includeArg [CommonFrameColDocs.Arg]}) }`
+     * `df.`[select][select]` { myColGroup.`[frameCol][frameCol]`<SomeType>({@includeArg [CommonFrameColDocs.Arg]}) }`
      *
      * @return A [ColumnAccessor] for the frame column with the given argument.
      * @see [frameColumn\]
