@@ -630,6 +630,7 @@ class Access : TestBase() {
         df.select { age and name }
         df.fillNaNs { dfsOf<Double>() }.withZero()
         df.remove { cols { it.hasNulls() } }
+        df.group { cols { it.data != name } }.into { "nameless" }
         df.update { city }.notNull { it.lowercase() }
         df.gather { colsOf<Number>() }.into("key", "value")
         df.move { name.firstName and name.lastName }.after { city }
@@ -664,7 +665,7 @@ class Access : TestBase() {
         // all children of ColumnGroup
         df.select { name.all() }
 
-        // dfs traversal of all children columns
+        // depth-first-search traversal of all children columns
         df.select { name.allDfs() }
 
         // SampleEnd
@@ -701,7 +702,7 @@ class Access : TestBase() {
         // all children of ColumnGroup
         df.select { name.all() }
 
-        // dfs traversal of all children columns
+        // depth-first-search traversal of all children columns
         df.select { name.allDfs() }
         // SampleEnd
     }
@@ -736,7 +737,7 @@ class Access : TestBase() {
         // all children of ColumnGroup
         df.select { Person::name.all() }
 
-        // dfs traversal of all children columns
+        // depth-first-search traversal of all children columns
         df.select { Person::name.allDfs() }
         // SampleEnd
     }
@@ -769,7 +770,7 @@ class Access : TestBase() {
         // all children of ColumnGroup
         df.select { "name".all() }
 
-        // dfs traversal of all children columns
+        // depth-first-search traversal of all children columns
         df.select { "name".allDfs() }
         // SampleEnd
     }
@@ -790,6 +791,7 @@ class Access : TestBase() {
 
     @Test
     fun columnSelectorsMisc() {
+        val df = df.add { "year" from { 0 } }
         // SampleStart
         // by condition
         df.select { cols { it.name().startsWith("year") } }
@@ -812,16 +814,29 @@ class Access : TestBase() {
         df.select { drop(2) }
         df.select { dropLast(2) }
 
-        // dfs traversal of all columns, excluding ColumnGroups from result
+        // find the first column satisfying the condition
+        df.select { first { it.name.startsWith("year") } }
+
+        // find the last column inside a column group satisfying the condition
+        df.select {
+            colGroup("name").last { it.name().endsWith("Name") }
+        }
+
+        // find the single column inside a column group satisfying the condition
+        df.select {
+            Person::name.single { it.name().startsWith("first") }
+        }
+
+        // depth-first-search traversal of all columns, excluding ColumnGroups from result
         df.select { allDfs() }
 
-        // dfs traversal of all columns, including ColumnGroups in result
+        // depth-first-search traversal of all columns, including ColumnGroups in result
         df.select { allDfs(includeGroups = true) }
 
-        // dfs traversal with condition
+        // depth-first-search traversal with condition
         df.select { dfs { it.name().contains(":") } }
 
-        // dfs traversal of columns of given type
+        // depth-first-search traversal of columns of given type
         df.select { dfsOf<String>() }
 
         // all columns except given column set

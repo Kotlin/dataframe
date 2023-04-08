@@ -37,9 +37,11 @@ import kotlin.reflect.typeOf
 public fun <T> column(): ColumnDelegate<T> = ColumnDelegate()
 public fun <T> column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(name)
 public fun <T> column(path: ColumnPath): ColumnAccessor<T> = ColumnAccessorImpl(path)
+public fun <T> column(property: KProperty<T>): ColumnAccessor<T> = ColumnAccessorImpl(property.name)
 public fun <T> ColumnGroupReference.column(): ColumnDelegate<T> = ColumnDelegate(this)
 public fun <T> ColumnGroupReference.column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(path() + name)
 public fun <T> ColumnGroupReference.column(path: ColumnPath): ColumnAccessor<T> = ColumnAccessorImpl(this.path() + path)
+public fun <T> ColumnGroupReference.column(property: KProperty<T>): ColumnAccessor<T> = ColumnAccessorImpl(this.path() + property.name)
 
 public inline fun <reified T> column(
     name: String = "",
@@ -73,6 +75,11 @@ public fun columnGroup(path: ColumnPath): ColumnAccessor<AnyRow> = column(path)
 @JvmName("columnGroupTyped")
 public fun <T> columnGroup(path: ColumnPath): ColumnAccessor<DataRow<T>> = column(path)
 
+@JvmName("columnGroupDataRowKProperty")
+public fun <T> columnGroup(property: KProperty<DataRow<T>>): ColumnAccessor<DataRow<T>> = column(property)
+
+public fun <T> columnGroup(property: KProperty<T>): ColumnAccessor<DataRow<T>> = column(property.name)
+
 public fun ColumnGroupReference.columnGroup(): ColumnDelegate<AnyRow> = ColumnDelegate(this)
 
 @JvmName("columnGroupTyped")
@@ -90,6 +97,13 @@ public fun ColumnGroupReference.columnGroup(path: ColumnPath): ColumnAccessor<An
 @JvmName("columnGroupTyped")
 public fun <T> ColumnGroupReference.columnGroup(path: ColumnPath): ColumnAccessor<DataRow<T>> =
     ColumnAccessorImpl(this.path() + path)
+
+@JvmName("columnGroupDataRowKProperty")
+public fun <T> ColumnGroupReference.columnGroup(property: KProperty<DataRow<T>>): ColumnAccessor<DataRow<T>> =
+    ColumnAccessorImpl(this.path() + property.name)
+
+public fun <T> ColumnGroupReference.columnGroup(property: KProperty<T>): ColumnAccessor<DataRow<T>> =
+    ColumnAccessorImpl(this.path() + property.name)
 
 // endregion
 
@@ -110,6 +124,11 @@ public fun frameColumn(path: ColumnPath): ColumnAccessor<AnyFrame> = column(path
 @JvmName("frameColumnTyped")
 public fun <T> frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<T>> = column(path)
 
+@JvmName("frameColumnDataFrameKProperty")
+public fun <T> frameColumn(property: KProperty<DataFrame<T>>): ColumnAccessor<DataFrame<T>> = column(property)
+
+public fun <T> frameColumn(property: KProperty<List<T>>): ColumnAccessor<DataFrame<T>> = column(property.name)
+
 public fun ColumnGroupReference.frameColumn(): ColumnDelegate<AnyFrame> = ColumnDelegate(this)
 
 @JvmName("frameColumnTyped")
@@ -127,6 +146,13 @@ public fun ColumnGroupReference.frameColumn(path: ColumnPath): ColumnAccessor<An
 @JvmName("frameColumnTyped")
 public fun <T> ColumnGroupReference.frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<T>> =
     ColumnAccessorImpl(this.path() + path)
+
+@JvmName("frameColumnDataFrameKProperty")
+public fun <T> ColumnGroupReference.frameColumn(property: KProperty<DataFrame<T>>): ColumnAccessor<DataFrame<T>> =
+    ColumnAccessorImpl(this.path() + property.name)
+
+public fun <T> ColumnGroupReference.frameColumn(property: KProperty<List<T>>): ColumnAccessor<DataFrame<T>> =
+    ColumnAccessorImpl(this.path() + property.name)
 
 // endregion
 
