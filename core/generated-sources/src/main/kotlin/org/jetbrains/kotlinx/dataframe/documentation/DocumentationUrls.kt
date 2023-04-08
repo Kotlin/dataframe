@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
-private interface DocumentationUrls {
+internal interface DocumentationUrls {
 
     interface NameArg
 
@@ -63,4 +63,7 @@ private interface DocumentationUrls {
         /** [See Extension Properties API on the documentation website.](https://kotlin.github.io/dataframe/extensionpropertiesapi.html) */
         interface ExtensionPropertiesApi
     }
+
+    /** [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html) */
+    interface ColumnSelectors
 }
