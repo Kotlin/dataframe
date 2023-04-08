@@ -1395,7 +1395,7 @@ class DataFrameTests : BaseTest() {
             ).toDataFrame().cast<Person>()
             res shouldBe typed
         }
-        typed.group { cols { it != name } }.into { it.type.jvmErasure.simpleName!! }.check()
+        typed.group { cols { it.data != name } }.into { it.type.jvmErasure.simpleName!! }.check()
         typed.group { age and city and weight }.into { it.type.jvmErasure.simpleName!! }.check()
     }
 
