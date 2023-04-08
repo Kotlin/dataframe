@@ -1,6 +1,8 @@
+import com.google.devtools.ksp.gradle.KspTaskJvm
 import nl.jolanrensen.docProcessor.defaultProcessors.*
 import nl.jolanrensen.docProcessor.gradle.creatingProcessDocTask
 import org.gradle.jvm.tasks.Jar
+import org.jmailen.gradle.kotlinter.tasks.LintTask
 import xyz.ronella.gradle.plugin.simple.git.task.GitTask
 
 @Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
@@ -176,7 +178,21 @@ kotlinter {
     )
 }
 
-tasks.withType<org.jmailen.gradle.kotlinter.tasks.LintTask> {
+tasks.withType<KspTaskJvm> {
+    dependsOn(tasks.generateKeywordsSrc)
+}
+
+tasks.lintKotlinMain {
+    dependsOn(tasks.generateKeywordsSrc)
+    dependsOn("kspKotlin")
+}
+
+tasks.lintKotlinTest {
+    dependsOn(tasks.generateKeywordsSrc)
+    dependsOn("kspTestKotlin")
+}
+
+tasks.withType<LintTask> {
     exclude("**/*keywords*/**")
     exclude {
         it.name.endsWith(".Generated.kt")

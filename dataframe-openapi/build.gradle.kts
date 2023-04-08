@@ -22,7 +22,7 @@ dependencies {
 
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlinpoet)
-    implementation(libs.swagger)
+    api(libs.swagger)
 
     testApi(project(":core"))
     testImplementation(libs.junit)
