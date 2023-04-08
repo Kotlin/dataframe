@@ -6,12 +6,14 @@ plugins {
 
 repositories {
     mavenCentral()
+    mavenLocal() // in case of local dataframe development
 }
 
 application.mainClass.set("org.jetbrains.kotlinx.dataframe.examples.titanic.ml.TitanicKt")
 
 dependencies {
-    implementation(project(":core"))
+    // implementation("org.jetbrains.kotlinx:dataframe:X.Y.Z")
+    implementation(project(":"))
     implementation("org.jetbrains.kotlinx:kotlin-deeplearning-api:0.5.1")
     implementation("org.jetbrains.kotlinx:kotlin-deeplearning-impl:0.5.1")
     implementation("org.jetbrains.kotlinx:kotlin-deeplearning-tensorflow:0.5.1")
