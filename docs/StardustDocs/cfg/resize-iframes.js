@@ -16,7 +16,7 @@
                 mutations.forEach((mutation) => {
                     if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
                         const theme = htmlElement.classList.contains('theme-light') ? 'light' : 'dark';
-                        console.log(theme)
+                        // console.log(theme)
                         updateIframeThemes(theme);
                     }
                 });
@@ -65,11 +65,11 @@
         }
 
         function observeIFrame(el) {
-            console.log("el.contentWindow: " + el.contentWindow)
-            console.log("el.contentWindow.document: " + el.contentWindow.document)
-            console.log("el.contentWindow.document.body: " + el.contentWindow.document.body)
-            console.log("el.contentWindow.performance: " + el.contentWindow.performance)
-            console.log("el.contentWindow.performance.timing.loadEventEnd: " + el.contentWindow.performance.timing.loadEventEnd)
+            // console.log("el.contentWindow: " + el.contentWindow)
+            // console.log("el.contentWindow.document: " + el.contentWindow.document)
+            // console.log("el.contentWindow.document.body: " + el.contentWindow.document.body)
+            // console.log("el.contentWindow.performance: " + el.contentWindow.performance)
+            // console.log("el.contentWindow.performance.timing.loadEventEnd: " + el.contentWindow.performance.timing.loadEventEnd)
 
             if (el.contentWindow && el.contentWindow.performance && el.contentWindow.performance.timing.loadEventEnd === 0) {
                 console.log("ready path")
@@ -99,13 +99,13 @@
 
                         function traverse(node) {
                             if (node.tagName === 'IFRAME') {
-    observeIFrame(node);
-                        }
+                                observeIFrame(node);
+                            }
 
-                        for (let i = 0; i < node.children.length; i++) {
-                            traverse(node.children[i]);
+                            for (let i = 0; i < node.children.length; i++) {
+                                traverse(node.children[i]);
+                            }
                         }
-                    }
 
                         traverse(addedNode);
                     }
