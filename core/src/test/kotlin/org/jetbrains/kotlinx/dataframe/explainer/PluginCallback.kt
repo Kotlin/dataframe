@@ -30,6 +30,8 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.escapeHTML
+import org.jetbrains.kotlinx.dataframe.io.sessionId
+import org.jetbrains.kotlinx.dataframe.io.tableInSessionId
 import org.jetbrains.kotlinx.dataframe.io.toHTML
 
 private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
@@ -118,6 +120,8 @@ object PluginCallback {
     }
 
     fun save() {
+        sessionId = 0
+        tableInSessionId = 0
         var output = DataFrameHtmlData.tableDefinitions() + DataFrameHtmlData(style = """
             body {
                 font-family: "JetBrains Mono",SFMono-Regular,Consolas,"Liberation Mono",Menlo,Courier,monospace;
