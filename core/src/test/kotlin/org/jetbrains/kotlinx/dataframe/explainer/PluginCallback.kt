@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.api.print
 import java.io.File
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.Convert
@@ -62,6 +63,7 @@ private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
         is GroupBy<*, *> -> dataframeLike.toDataFrame().toHTML()
         is AnyFrame -> dataframeLike.toHTML()
         is AnyCol -> dataframeLike.toDataFrame().toHTML()
+        is DataRow<*> -> dataframeLike.toDataFrame().toHTML()
         else -> throw IllegalArgumentException("Unsupported type: ${dataframeLike::class}")
     }
 }
@@ -80,6 +82,7 @@ private fun convertToDescription(dataframeLike: Any): String {
         is Convert<*, *> -> "Convert"
         is FormattedFrame<*> -> "FormattedFrame"
         is GroupBy<*, *> -> "GroupBy"
+        is DataRow<*> -> "DataRow"
         else -> "TODO"
     }.escapeHTML()
 }
