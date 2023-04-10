@@ -177,56 +177,52 @@ summary {
 
 
 
-
-
             </style>
         </head>
         <body>
             
 
                         <details>
-                        <summary>df.groupBy { city }.mean("mean age") { age }</summary>
+                        <summary>df.groupBy { city }.mean(&#34;mean age&#34;) { age }</summary>
                         
-                                    <details open>
+                                    <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
-                                     <table class="dataframe" id="df_-503315366"></table>
+                                     <table class="dataframe" id="df_1140851804"></table>
 
 <p class="dataframe_description"></p>
                                     </details>
                                     <details>
-                                    <summary>Step 1: TODO</summary>
-                                     <p>class org.jetbrains.kotlinx.dataframe.impl.GroupByImpl</p>
-<table class="dataframe" id="df_-503315365"></table>
+                                    <summary>Step 1: GroupBy</summary>
+                                     <table class="dataframe" id="df_1140851805"></table>
 
 <p class="dataframe_description"></p>
                                     </details>
-                                    <details open>
+                                    <details>
                                     <summary>Output DataFrame: rowsCount = 6, columnsCount = 2</summary>
-                                     <table class="dataframe" id="df_-503315358"></table>
+                                     <table class="dataframe" id="df_1140851812"></table>
 
 <p class="dataframe_description"></p>
                                     </details>
                         </details>
                         <br>
                         <details>
-                        <summary>df.groupBy { city }.meanOf("custom") { age / 2 }</summary>
+                        <summary>df.groupBy { city }.meanOf(&#34;custom&#34;) { age / 2 }</summary>
                         
-                                    <details open>
+                                    <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
-                                     <table class="dataframe" id="df_-503315357"></table>
+                                     <table class="dataframe" id="df_1140851813"></table>
 
 <p class="dataframe_description"></p>
                                     </details>
                                     <details>
-                                    <summary>Step 1: TODO</summary>
-                                     <p>class org.jetbrains.kotlinx.dataframe.impl.GroupByImpl</p>
-<table class="dataframe" id="df_-503315356"></table>
+                                    <summary>Step 1: GroupBy</summary>
+                                     <table class="dataframe" id="df_1140851814"></table>
 
 <p class="dataframe_description"></p>
                                     </details>
-                                    <details open>
+                                    <details>
                                     <summary>Output DataFrame: rowsCount = 6, columnsCount = 2</summary>
-                                     <table class="dataframe" id="df_-503315349"></table>
+                                     <table class="dataframe" id="df_1140851821"></table>
 
 <p class="dataframe_description"></p>
                                     </details>
@@ -518,17 +514,16 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 { name: "<span title=\"city: String?\">city</span>", children: [], rightAlign: false, values: ["London","Dubai","Moscow","Milan","Tokyo","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>","Moscow"] }, 
 { name: "<span title=\"weight: Int?\">weight</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">54</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">87</span></span>","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">68</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">55</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">90</span></span>"] }, 
 { name: "<span title=\"isHappy: Boolean\">isHappy</span>", children: [], rightAlign: false, values: ["true","true","false","true","true","false","true"] }, 
-], id: -503315366, rootId: -503315366, totalRows: 7 } ) });
+], id: 1140851804, rootId: 1140851804, totalRows: 7 } ) });
 /*-->*/
 
-call_DataFrame(function() { DataFrame.renderTable(-503315366) });
-
+call_DataFrame(function() { DataFrame.renderTable(1140851804) });
 
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"city: String?\">city</span>", children: [], rightAlign: false, values: ["London","Dubai","Moscow","Milan","Tokyo","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>"] }, 
-{ name: "<span title=\"group: DataFrame\">group</span>", children: [], rightAlign: false, values: [{ frameId: -503315364, value: "<b>DataFrame 1 x 5</b>" },{ frameId: -503315363, value: "<b>DataFrame 1 x 5</b>" },{ frameId: -503315362, value: "<b>DataFrame 2 x 5</b>" },{ frameId: -503315361, value: "<b>DataFrame 1 x 5</b>" },{ frameId: -503315360, value: "<b>DataFrame 1 x 5</b>" },{ frameId: -503315359, value: "<b>DataFrame 1 x 5</b>" }] }, 
-], id: -503315365, rootId: -503315365, totalRows: 6 } ) });
+{ name: "<span title=\"group: DataFrame\">group</span>", children: [], rightAlign: false, values: [{ frameId: 1140851806, value: "<b>DataFrame 1 x 5</b>" },{ frameId: 1140851807, value: "<b>DataFrame 1 x 5</b>" },{ frameId: 1140851808, value: "<b>DataFrame 2 x 5</b>" },{ frameId: 1140851809, value: "<b>DataFrame 1 x 5</b>" },{ frameId: 1140851810, value: "<b>DataFrame 1 x 5</b>" },{ frameId: 1140851811, value: "<b>DataFrame 1 x 5</b>" }] }, 
+], id: 1140851805, rootId: 1140851805, totalRows: 6 } ) });
 /*-->*/
 
 /*<!--*/
@@ -539,7 +534,7 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 { name: "<span title=\"city: String\">city</span>", children: [], rightAlign: false, values: ["London"] }, 
 { name: "<span title=\"weight: Int\">weight</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">54</span></span>"] }, 
 { name: "<span title=\"isHappy: Boolean\">isHappy</span>", children: [], rightAlign: false, values: ["true"] }, 
-], id: -503315364, rootId: -503315365, totalRows: 1 } ) });
+], id: 1140851806, rootId: 1140851805, totalRows: 1 } ) });
 /*-->*/
 
 /*<!--*/
@@ -550,7 +545,7 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 { name: "<span title=\"city: String\">city</span>", children: [], rightAlign: false, values: ["Dubai"] }, 
 { name: "<span title=\"weight: Int\">weight</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">87</span></span>"] }, 
 { name: "<span title=\"isHappy: Boolean\">isHappy</span>", children: [], rightAlign: false, values: ["true"] }, 
-], id: -503315363, rootId: -503315365, totalRows: 1 } ) });
+], id: 1140851807, rootId: 1140851805, totalRows: 1 } ) });
 /*-->*/
 
 /*<!--*/
@@ -561,7 +556,7 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 { name: "<span title=\"city: String\">city</span>", children: [], rightAlign: false, values: ["Moscow","Moscow"] }, 
 { name: "<span title=\"weight: Int?\">weight</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">90</span></span>"] }, 
 { name: "<span title=\"isHappy: Boolean\">isHappy</span>", children: [], rightAlign: false, values: ["false","true"] }, 
-], id: -503315362, rootId: -503315365, totalRows: 2 } ) });
+], id: 1140851808, rootId: 1140851805, totalRows: 2 } ) });
 /*-->*/
 
 /*<!--*/
@@ -572,7 +567,7 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 { name: "<span title=\"city: String\">city</span>", children: [], rightAlign: false, values: ["Milan"] }, 
 { name: "<span title=\"weight: Int?\">weight</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>"] }, 
 { name: "<span title=\"isHappy: Boolean\">isHappy</span>", children: [], rightAlign: false, values: ["true"] }, 
-], id: -503315361, rootId: -503315365, totalRows: 1 } ) });
+], id: 1140851809, rootId: 1140851805, totalRows: 1 } ) });
 /*-->*/
 
 /*<!--*/
@@ -583,7 +578,7 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 { name: "<span title=\"city: String\">city</span>", children: [], rightAlign: false, values: ["Tokyo"] }, 
 { name: "<span title=\"weight: Int\">weight</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">68</span></span>"] }, 
 { name: "<span title=\"isHappy: Boolean\">isHappy</span>", children: [], rightAlign: false, values: ["true"] }, 
-], id: -503315360, rootId: -503315365, totalRows: 1 } ) });
+], id: 1140851810, rootId: 1140851805, totalRows: 1 } ) });
 /*-->*/
 
 /*<!--*/
@@ -594,19 +589,19 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 { name: "<span title=\"city: String?\">city</span>", children: [], rightAlign: false, values: ["<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>"] }, 
 { name: "<span title=\"weight: Int\">weight</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">55</span></span>"] }, 
 { name: "<span title=\"isHappy: Boolean\">isHappy</span>", children: [], rightAlign: false, values: ["false"] }, 
-], id: -503315359, rootId: -503315365, totalRows: 1 } ) });
+], id: 1140851811, rootId: 1140851805, totalRows: 1 } ) });
 /*-->*/
 
-call_DataFrame(function() { DataFrame.renderTable(-503315365) });
+call_DataFrame(function() { DataFrame.renderTable(1140851805) });
 
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"city: String?\">city</span>", children: [], rightAlign: false, values: ["London","Dubai","Moscow","Milan","Tokyo","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>"] }, 
 { name: "<span title=\"mean age: Double\">mean age</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">15.0</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">45.0</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">25.0</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">40.0</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">30.0</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">20.0</span></span>"] }, 
-], id: -503315358, rootId: -503315358, totalRows: 6 } ) });
+], id: 1140851812, rootId: 1140851812, totalRows: 6 } ) });
 /*-->*/
 
-call_DataFrame(function() { DataFrame.renderTable(-503315358) });
+call_DataFrame(function() { DataFrame.renderTable(1140851812) });
 
 
 
@@ -618,17 +613,16 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 { name: "<span title=\"city: String?\">city</span>", children: [], rightAlign: false, values: ["London","Dubai","Moscow","Milan","Tokyo","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>","Moscow"] }, 
 { name: "<span title=\"weight: Int?\">weight</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">54</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">87</span></span>","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">68</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">55</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">90</span></span>"] }, 
 { name: "<span title=\"isHappy: Boolean\">isHappy</span>", children: [], rightAlign: false, values: ["true","true","false","true","true","false","true"] }, 
-], id: -503315357, rootId: -503315357, totalRows: 7 } ) });
+], id: 1140851813, rootId: 1140851813, totalRows: 7 } ) });
 /*-->*/
 
-call_DataFrame(function() { DataFrame.renderTable(-503315357) });
-
+call_DataFrame(function() { DataFrame.renderTable(1140851813) });
 
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"city: String?\">city</span>", children: [], rightAlign: false, values: ["London","Dubai","Moscow","Milan","Tokyo","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>"] }, 
-{ name: "<span title=\"group: DataFrame\">group</span>", children: [], rightAlign: false, values: [{ frameId: -503315355, value: "<b>DataFrame 1 x 5</b>" },{ frameId: -503315354, value: "<b>DataFrame 1 x 5</b>" },{ frameId: -503315353, value: "<b>DataFrame 2 x 5</b>" },{ frameId: -503315352, value: "<b>DataFrame 1 x 5</b>" },{ frameId: -503315351, value: "<b>DataFrame 1 x 5</b>" },{ frameId: -503315350, value: "<b>DataFrame 1 x 5</b>" }] }, 
-], id: -503315356, rootId: -503315356, totalRows: 6 } ) });
+{ name: "<span title=\"group: DataFrame\">group</span>", children: [], rightAlign: false, values: [{ frameId: 1140851815, value: "<b>DataFrame 1 x 5</b>" },{ frameId: 1140851816, value: "<b>DataFrame 1 x 5</b>" },{ frameId: 1140851817, value: "<b>DataFrame 2 x 5</b>" },{ frameId: 1140851818, value: "<b>DataFrame 1 x 5</b>" },{ frameId: 1140851819, value: "<b>DataFrame 1 x 5</b>" },{ frameId: 1140851820, value: "<b>DataFrame 1 x 5</b>" }] }, 
+], id: 1140851814, rootId: 1140851814, totalRows: 6 } ) });
 /*-->*/
 
 /*<!--*/
@@ -639,7 +633,7 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 { name: "<span title=\"city: String\">city</span>", children: [], rightAlign: false, values: ["London"] }, 
 { name: "<span title=\"weight: Int\">weight</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">54</span></span>"] }, 
 { name: "<span title=\"isHappy: Boolean\">isHappy</span>", children: [], rightAlign: false, values: ["true"] }, 
-], id: -503315355, rootId: -503315356, totalRows: 1 } ) });
+], id: 1140851815, rootId: 1140851814, totalRows: 1 } ) });
 /*-->*/
 
 /*<!--*/
@@ -650,7 +644,7 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 { name: "<span title=\"city: String\">city</span>", children: [], rightAlign: false, values: ["Dubai"] }, 
 { name: "<span title=\"weight: Int\">weight</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">87</span></span>"] }, 
 { name: "<span title=\"isHappy: Boolean\">isHappy</span>", children: [], rightAlign: false, values: ["true"] }, 
-], id: -503315354, rootId: -503315356, totalRows: 1 } ) });
+], id: 1140851816, rootId: 1140851814, totalRows: 1 } ) });
 /*-->*/
 
 /*<!--*/
@@ -661,7 +655,7 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 { name: "<span title=\"city: String\">city</span>", children: [], rightAlign: false, values: ["Moscow","Moscow"] }, 
 { name: "<span title=\"weight: Int?\">weight</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">90</span></span>"] }, 
 { name: "<span title=\"isHappy: Boolean\">isHappy</span>", children: [], rightAlign: false, values: ["false","true"] }, 
-], id: -503315353, rootId: -503315356, totalRows: 2 } ) });
+], id: 1140851817, rootId: 1140851814, totalRows: 2 } ) });
 /*-->*/
 
 /*<!--*/
@@ -672,7 +666,7 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 { name: "<span title=\"city: String\">city</span>", children: [], rightAlign: false, values: ["Milan"] }, 
 { name: "<span title=\"weight: Int?\">weight</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>"] }, 
 { name: "<span title=\"isHappy: Boolean\">isHappy</span>", children: [], rightAlign: false, values: ["true"] }, 
-], id: -503315352, rootId: -503315356, totalRows: 1 } ) });
+], id: 1140851818, rootId: 1140851814, totalRows: 1 } ) });
 /*-->*/
 
 /*<!--*/
@@ -683,7 +677,7 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 { name: "<span title=\"city: String\">city</span>", children: [], rightAlign: false, values: ["Tokyo"] }, 
 { name: "<span title=\"weight: Int\">weight</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">68</span></span>"] }, 
 { name: "<span title=\"isHappy: Boolean\">isHappy</span>", children: [], rightAlign: false, values: ["true"] }, 
-], id: -503315351, rootId: -503315356, totalRows: 1 } ) });
+], id: 1140851819, rootId: 1140851814, totalRows: 1 } ) });
 /*-->*/
 
 /*<!--*/
@@ -694,19 +688,19 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 { name: "<span title=\"city: String?\">city</span>", children: [], rightAlign: false, values: ["<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>"] }, 
 { name: "<span title=\"weight: Int\">weight</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">55</span></span>"] }, 
 { name: "<span title=\"isHappy: Boolean\">isHappy</span>", children: [], rightAlign: false, values: ["false"] }, 
-], id: -503315350, rootId: -503315356, totalRows: 1 } ) });
+], id: 1140851820, rootId: 1140851814, totalRows: 1 } ) });
 /*-->*/
 
-call_DataFrame(function() { DataFrame.renderTable(-503315356) });
+call_DataFrame(function() { DataFrame.renderTable(1140851814) });
 
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"city: String?\">city</span>", children: [], rightAlign: false, values: ["London","Dubai","Moscow","Milan","Tokyo","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>"] }, 
 { name: "<span title=\"custom: Double\">custom</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">7.0</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">22.0</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">12.5</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">20.0</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">15.0</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">10.0</span></span>"] }, 
-], id: -503315349, rootId: -503315349, totalRows: 6 } ) });
+], id: 1140851821, rootId: 1140851821, totalRows: 6 } ) });
 /*-->*/
 
-call_DataFrame(function() { DataFrame.renderTable(-503315349) });
+call_DataFrame(function() { DataFrame.renderTable(1140851821) });
 
 
         </script>
