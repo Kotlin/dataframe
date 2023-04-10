@@ -126,6 +126,7 @@ class ExplainerIrTransformer(val pluginContext: IrPluginContext) : FileLoweringP
         FqName("org.jetbrains.kotlinx.dataframe.api.FormattedFrame"),
         FqName("org.jetbrains.kotlinx.dataframe.api.GroupBy"),
         FqName("org.jetbrains.kotlinx.dataframe.DataFrame"),
+        FqName("org.jetbrains.kotlinx.dataframe.DataRow")
 //        FqName("org.jetbrains.kotlinx.dataframe.DataColumn"),
     )
 
