@@ -142,9 +142,16 @@ class ExplainerIrTransformer(val pluginContext: IrPluginContext) : FileLoweringP
         if (expression.startOffset < 0) return expression
         if (expression.type.classFqName in dataFrameLike) {
             if (expression.symbol.owner.name == Name.identifier("component1")) return expression
-            val receiver = expression.extensionReceiver
-            val transformedExtensionReceiver = expression.extensionReceiver?.transform(this, data)
-            expression.extensionReceiver = transformedExtensionReceiver
+            var receiver = expression.extensionReceiver
+            if (receiver != null) {
+                val transformedExtensionReceiver = expression.extensionReceiver?.transform(this, data)
+                expression.extensionReceiver = transformedExtensionReceiver
+            } else {
+                receiver = expression.dispatchReceiver
+                val transformedExtensionReceiver = expression.dispatchReceiver?.transform(this, data)
+                expression.dispatchReceiver = transformedExtensionReceiver
+            }
+
             return transformDataFrameExpression(expression, expression.symbol.owner.name, receiver = receiver, data)
         }
         expression.transformChildren(this, data)

@@ -9,15 +9,9 @@ package org {
             package org.jetbrains.kotlinx.dataframe {
 
                 package org.jetbrains.kotlinx.dataframe.explainer {
-                    @org.jetbrains.kotlinx.dataframe.explainer.Disable public fun box(): kotlin.String
-                    public fun callChain(/*0*/ df: org.jetbrains.kotlinx.dataframe.DataFrame<*>): kotlin.Unit
-
-                    public final annotation class Disable : kotlin.Annotation {
-                        public constructor Disable()
-                        public open override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
-                        public open override /*1*/ /*fake_override*/ fun hashCode(): kotlin.Int
-                        public open override /*1*/ /*fake_override*/ fun toString(): kotlin.String
-                    }
+                    @org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions public fun aggregateDf(): kotlin.Unit
+                    public fun box(): kotlin.String
+                    @org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions public fun callChain(/*0*/ df: org.jetbrains.kotlinx.dataframe.DataFrame<*>): kotlin.Unit
 
                     public interface Person {
                         public open override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
@@ -28,7 +22,14 @@ package org {
                     public object PluginCallback {
                         private constructor PluginCallback()
                         public final var action: (kotlin.String, kotlin.String, kotlin.Any, kotlin.String, kotlin.String?, kotlin.String?, kotlin.String?, kotlin.Int) -> kotlin.Unit
-                        @org.jetbrains.kotlinx.dataframe.explainer.Disable public final fun doAction(/*0*/ string: kotlin.String, /*1*/ name: kotlin.String, /*2*/ df: kotlin.Any, /*3*/ id: kotlin.String, /*4*/ receiverId: kotlin.String?, /*5*/ containingClassFqName: kotlin.String?, /*6*/ containingFunName: kotlin.String?, /*7*/ statemenIndex: kotlin.Int): kotlin.Unit
+                        public final fun doAction(/*0*/ string: kotlin.String, /*1*/ name: kotlin.String, /*2*/ df: kotlin.Any, /*3*/ id: kotlin.String, /*4*/ receiverId: kotlin.String?, /*5*/ containingClassFqName: kotlin.String?, /*6*/ containingFunName: kotlin.String?, /*7*/ statemenIndex: kotlin.Int): kotlin.Unit
+                        public open override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
+                        public open override /*1*/ /*fake_override*/ fun hashCode(): kotlin.Int
+                        public open override /*1*/ /*fake_override*/ fun toString(): kotlin.String
+                    }
+
+                    public final annotation class TransformDataFrameExpressions : kotlin.Annotation {
+                        public constructor TransformDataFrameExpressions()
                         public open override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
                         public open override /*1*/ /*fake_override*/ fun hashCode(): kotlin.Int
                         public open override /*1*/ /*fake_override*/ fun toString(): kotlin.String
@@ -39,7 +40,7 @@ package org {
                         public final val df: org.jetbrains.kotlinx.dataframe.AnyFrame /* = org.jetbrains.kotlinx.dataframe.DataFrame<*> */
                         public final val typed: org.jetbrains.kotlinx.dataframe.DataFrame<org.jetbrains.kotlinx.dataframe.explainer.Person>
                         public open override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
-                        public final fun ff(): kotlin.Unit
+                        @org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions public final fun ff(): kotlin.Unit
                         public open override /*1*/ /*fake_override*/ fun hashCode(): kotlin.Int
                         public open override /*1*/ /*fake_override*/ fun toString(): kotlin.String
                     }
