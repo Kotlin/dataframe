@@ -160,7 +160,7 @@ class DataSchemaGenerator(
             }
 
             is CodeGenerationReadResult.Error -> {
-                logger.warn("Error while reading types-only from data at ${importStatement.dataSource.pathRepresentation}: ${codeGenResult.reason}")
+//                logger.warn("Error while reading types-only from data at ${importStatement.dataSource.pathRepresentation}: ${codeGenResult.reason}")
             }
         }
 
