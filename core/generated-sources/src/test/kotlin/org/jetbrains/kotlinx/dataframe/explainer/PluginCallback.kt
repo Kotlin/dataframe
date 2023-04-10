@@ -6,6 +6,8 @@ import org.jetbrains.kotlinx.dataframe.api.print
 import java.io.File
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.RowValueFilter
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.Convert
 import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
 import org.jetbrains.kotlinx.dataframe.api.Gather
@@ -17,12 +19,17 @@ import org.jetbrains.kotlinx.dataframe.api.ReducedPivot
 import org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy
 import org.jetbrains.kotlinx.dataframe.api.SplitWithTransform
 import org.jetbrains.kotlinx.dataframe.api.Update
+import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.frames
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.values
+import org.jetbrains.kotlinx.dataframe.api.where
+import org.jetbrains.kotlinx.dataframe.api.with
+import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
+import org.jetbrains.kotlinx.dataframe.io.escapeHTML
 import org.jetbrains.kotlinx.dataframe.io.toHTML
 
 private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
@@ -30,17 +37,27 @@ private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
     fun FormattedFrame<*>.toHTML1() = toHTML(DisplayConfiguration())
 
     return when (dataframeLike) {
-        is Pivot<*> -> DataFrameHtmlData(body = "<p>${dataframeLike::class}</p>") + dataframeLike.frames().toDataFrame().toHTML()
-        is ReducedPivot<*> -> DataFrameHtmlData(body = "<p>${dataframeLike::class}</p>") + dataframeLike.values().toDataFrame().toHTML()
-        is PivotGroupBy<*> -> DataFrameHtmlData(body = "<p>${dataframeLike::class}</p>") + dataframeLike.frames().toHTML()
-        is ReducedPivotGroupBy<*> -> DataFrameHtmlData(body = "<p>${dataframeLike::class}</p>") + dataframeLike.values().toHTML()
+        is Pivot<*> -> dataframeLike.frames().toDataFrame().toHTML()
+        is ReducedPivot<*> -> dataframeLike.values().toDataFrame().toHTML()
+        is PivotGroupBy<*> -> dataframeLike.frames().toHTML()
+        is ReducedPivotGroupBy<*> -> dataframeLike.values().toHTML()
         is SplitWithTransform<*, *, *> -> DataFrameHtmlData(body = "<p>${dataframeLike::class}</p>")
-        is Merge<*, *, *> -> DataFrameHtmlData(body = "<p>${dataframeLike::class}</p>") + dataframeLike.into("merged").toHTML()
-        is Gather<*, *, *, *> -> DataFrameHtmlData(body = "<p>${dataframeLike::class}</p>") + dataframeLike.into("key", "value").toHTML()
-        is Update<*, *> -> DataFrameHtmlData(body = "<p>${dataframeLike::class}</p>")
+        is Merge<*, *, *> -> dataframeLike.into("merged").toHTML()
+        is Gather<*, *, *, *> -> dataframeLike.into("key", "value").toHTML()
+//        is Update<*, *> -> DataFrameHtmlData(body = "<p>${dataframeLike::class}</p>")
+        is Update<*, *> -> dataframeLike.df.let {
+            var it = it.format(dataframeLike.columns as ColumnsSelectionDsl<Any?>.(it: ColumnsSelectionDsl<Any?>) -> ColumnSet<*>)
+            if (dataframeLike.filter != null) {
+                it = it.where(dataframeLike.filter as RowValueFilter<Any?, Any?>)
+            }
+            it.with {
+                background(rgb(152,251,152))
+            }
+        }
+            .toHTML1()
         is Convert<*, *> -> DataFrameHtmlData(body = "<p>${dataframeLike::class}</p>")
         is FormattedFrame<*> -> dataframeLike.toHTML1()
-        is GroupBy<*, *> -> DataFrameHtmlData(body = "<p>${dataframeLike::class}</p>") + dataframeLike.toDataFrame().toHTML()
+        is GroupBy<*, *> -> dataframeLike.toDataFrame().toHTML()
         is AnyFrame -> dataframeLike.toHTML()
         is AnyCol -> dataframeLike.toDataFrame().toHTML()
         else -> throw IllegalArgumentException("Unsupported type: ${dataframeLike::class}")
@@ -50,11 +67,20 @@ private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
 private fun convertToDescription(dataframeLike: Any): String {
     return when (dataframeLike) {
         is AnyFrame -> dataframeLike.let { "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}" }
+        is Pivot<*> -> "Pivot"
+        is ReducedPivot<*> -> "ReducedPivot"
+        is PivotGroupBy<*> -> "PivotGroupBy"
+        is ReducedPivotGroupBy<*> -> "ReducedPivotGroupBy"
+        is SplitWithTransform<*, *, *> -> "SplitWithTransform"
+        is Merge<*, *, *> -> "Merge"
+        is Gather<*, *, *, *> -> "Gather"
+        is Update<*, *> -> "Update"
+        is Convert<*, *> -> "Convert"
+        is FormattedFrame<*> -> "FormattedFrame"
+        is GroupBy<*, *> -> "GroupBy"
         else -> "TODO"
-    }
+    }.escapeHTML()
 }
-
-annotation class Disable
 
 annotation class TransformDataFrameExpressions
 
@@ -83,81 +109,120 @@ object PluginCallback {
 
     var i = 0
     val names = mutableMapOf<String, List<String>>()
-    val expressionsByStatement = mutableMapOf<Int, List<ExpressionResult>>()
+    val expressionsByStatement = mutableMapOf<Int, List<Expression>>()
 
-    data class ExpressionResult(val containingClassFqName: String?, val containingFunName: String?, val df: Any)
+    data class Expression(val source: String, val containingClassFqName: String?, val containingFunName: String?, val df: Any)
 
     fun start() {
         expressionsByStatement.clear()
     }
 
     fun save() {
-        expressionsByStatement.toMap().forEach { (index, expressions) ->
-            val input = expressions.first()
-            val others = expressions.drop(1)
-            val name = "${input.containingClassFqName}.${input.containingFunName}"
+        var output = DataFrameHtmlData.tableDefinitions() + DataFrameHtmlData(style = """
+            body {
+                font-family: "JetBrains Mono",SFMono-Regular,Consolas,"Liberation Mono",Menlo,Courier,monospace;
+                color: #19191C;
+            }
+            details details {
+                margin-left: 20px; 
+            }
+            
+            summary {
+                padding: 6px;
+            }
+        """.trimIndent())
 
-//            convertToHTML(input.df)
-//                .withTableDefinitions()
-//                .writeHTML(File("build/dataframes/${name}.input.html"))
-//
-//            val data = others.fold(DataFrameHtmlData.tableDefinitions()) { acc, expressionResult ->
-//                acc + convertToHTML(expressionResult.df)
-//            }
+        // make copy to avoid concurrent modification exception
+        val statements = expressionsByStatement.toMap()
+        when (statements.size) {
+            0 -> TODO("wtf")
+            1 -> {
+                output += expressionOutputs(statements.values.single(), open = false)
+            }
+            else -> {
+                statements.forEach { (index, expressions) ->
+                    var details: DataFrameHtmlData = expressionOutputs(expressions, open = true)
 
-            var htmlData = DataFrameHtmlData.tableDefinitions()
-            for ((i, expression) in expressions.withIndex()) {
-                when (i) {
-                    0 -> {
-                        val table = convertToHTML(expression.df)
-                        val description = table.copy(
-                            body = """
-                                <details>
-                                <summary>Input: ${convertToDescription(expression.df)}</summary>
-                                 ${table.body}
-                                </details>
-                            """.trimIndent()
-                        )
-                        htmlData += description
-                    }
-                    expressions.lastIndex -> {
-                        val table = convertToHTML(expression.df)
-                        val description = table.copy(
-                            body = """
-                                <details>
-                                <summary>Output: ${convertToDescription(expression.df)}</summary>
-                                 ${table.body}
-                                </details>
-                            """.trimIndent()
-                        )
-                        htmlData += description
-                    }
-                    else -> {
-                        val table = convertToHTML(expression.df)
-                        val description = table.copy(
-                            body = """
-                                <details>
-                                <summary>Step $i: ${convertToDescription(expression.df)}</summary>
-                                 ${table.body}
-                                </details>
-                            """.trimIndent()
-                        )
-                        htmlData += description
-                    }
+                    details = details.copy(
+                        body =
+                        """
+                        <details>
+                        <summary>${expressions.joinToString(".") { it.source }.escapeHTML()}</summary>
+                        ${details.body}
+                        </details>
+                        <br>
+                    """.trimIndent()
+                    )
+
+                    output += details
                 }
             }
-
-            val destination = File("build/dataframes").also {
-                it.mkdirs()
-            }
-            htmlData.writeHTML(File(destination, "$name.html"))
         }
+        val input = expressionsByStatement.values.first().first()
+        val name = "${input.containingClassFqName}.${input.containingFunName}"
+        val destination = File("build/dataframes").also {
+            it.mkdirs()
+        }
+        output.writeHTML(File(destination, "$name.html"))
+    }
+
+    private fun expressionOutputs(
+        expressions: List<Expression>,
+        open: Boolean,
+    ): DataFrameHtmlData {
+//        val attribute = if (open) " open" else ""
+        val attribute = ""
+        var data = DataFrameHtmlData()
+        if (expressions.size < 2) error("Sample without output or input (i.e. function returns some value)")
+        for ((i, expression) in expressions.withIndex()) {
+            when (i) {
+                0 -> {
+                    val table = convertToHTML(expression.df)
+                    val description = table.copy(
+                        body = """
+                                    <details$attribute>
+                                    <summary>Input ${convertToDescription(expression.df)}</summary>
+                                     ${table.body}
+                                    </details>
+                                """.trimIndent()
+                    )
+                    data += description
+                }
+
+                expressions.lastIndex -> {
+                    val table = convertToHTML(expression.df)
+                    val description = table.copy(
+                        body = """
+                                    <details$attribute>
+                                    <summary>Output ${convertToDescription(expression.df)}</summary>
+                                     ${table.body}
+                                    </details>
+                                """.trimIndent()
+                    )
+                    data += description
+                }
+
+                else -> {
+                    val table = convertToHTML(expression.df)
+                    val description = table.copy(
+                        body = """
+                                    <details>
+                                    <summary>Step $i: ${convertToDescription(expression.df)}</summary>
+                                     ${table.body}
+                                    </details>
+                                """.trimIndent()
+                    )
+                    data += description
+                }
+            }
+        }
+        return data
     }
 
     var action: (String, String, Any, String, String?, String?, String?, Int) -> Unit =
-        @Disable { string, name, df, id, receiverId, containingClassFqName, containingFunName, statementIndex ->
+        { source, name, df, id, receiverId, containingClassFqName, containingFunName, statementIndex ->
             expressionsByStatement.compute(statementIndex) { _, list ->
-                val element = ExpressionResult(containingClassFqName, containingFunName, df)
+                val element = Expression(source, containingClassFqName, containingFunName, df)
                 list?.plus(element) ?: listOf(element)
             }
             //        strings.add(string)
@@ -168,8 +233,8 @@ object PluginCallback {
             // names.compute(path) {  }
             //        dfs.add(path)
             if (df is AnyFrame) {
-                println(string)
-                df.print()
+                println(source)
+//                df.print()
                 println(id)
                 println(receiverId)
             } else {
@@ -178,7 +243,7 @@ object PluginCallback {
             File("build/out").let {
                 val json = JsonObject(
                     mapOf(
-                        "string" to string,
+                        "string" to source,
                         "name" to name,
                         "path" to path,
                         "id" to id,
@@ -197,7 +262,6 @@ object PluginCallback {
             //        convertToHTML(df).writeHTML(File("build/dataframes/$path"))
         }
 
-    @Disable
     fun doAction(
         string: String,
         name: String,
