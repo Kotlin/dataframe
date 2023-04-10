@@ -156,9 +156,11 @@ object PluginCallback {
                         body =
                         """
                         <details>
-                        <summary>${expressions.joinToString(".") { it.source }.escapeHTML()/*.also { 
-                            if (it.length > 60) TODO("expression is too long. better to split sample in multiple snippets")
-                        }*/}</summary>
+                        <summary>${expressions.joinToString(".") { it.source }
+                            .also {
+                                if (it.length > 85) TODO("expression is too long. better to split sample in multiple snippets")
+                            }
+                            .escapeHTML()}</summary>
                         ${details.body}
                         </details>
                         <br>
