@@ -1,6 +1,35 @@
 <script>
     window.onload = function () {
+        function updateIframeThemes(theme) {
+            const iframes = document.getElementsByTagName('iframe');
+
+            for (let i = 0; i < iframes.length; i++) {
+                const iframeDocument = iframes[i].contentWindow.document;
+                iframeDocument.documentElement.setAttribute('theme', theme);
+            }
+        }
+
+        function observeHtmlClassChanges() {
+            const htmlElement = document.documentElement;
+
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                        const theme = htmlElement.classList.contains('theme-light') ? 'light' : 'dark';
+                        console.log(theme)
+                        updateIframeThemes(theme);
+                    }
+                });
+            });
+
+            observer.observe(htmlElement, { attributes: true });
+        }
+
         function resize_iframe_out(el) {
+            const htmlElement = document.documentElement;
+            const theme = htmlElement.classList.contains('theme-light') ? 'light' : 'dark';
+            el.contentWindow.document.documentElement.setAttribute('theme', theme);
+
             let h = el.contentWindow.document.body.scrollHeight;
             el.height = h === 0 ? 0 : h + 41;
         }
@@ -8,8 +37,26 @@
         function doObserveIFrame(el) {
             resize_iframe_out(el)
             let observer = new MutationObserver(function (mutations) {
-                // if (mutations[0].addedNodes.length || mutations[0].removedNodes.length) {
-                resize_iframe_out(el)
+                var resize = false
+                for (let mutation of mutations) {
+                    // skip attribute changes except open to avoid loop
+                    // (callback sees change in iframe, triggers resize, sees change...)
+                    if (mutation.type === 'attributes') {
+                        if (mutation.attributeName === 'open') {
+                            resize_iframe_out(el)
+                            resized = true
+                        }
+                    } else {
+
+                        resize = true
+                    }
+                }
+                if (resize) {
+                    resize_iframe_out(el)
+                }
+
+    // if (mutations[0].addedNodes.length || mutations[0].removedNodes.length) {
+
                 // }
             });
 
@@ -67,5 +114,10 @@
         });
 
         bodyObserver.observe(document.documentElement || document.body, {childList: true, subtree: true, attributes: true});
+        observeHtmlClassChanges()
+        // initialize theme
+        const htmlElement = document.documentElement;
+        const theme = htmlElement.classList.contains('theme-light') ? 'light' : 'dark';
+        updateIframeThemes(theme);
     }
 </script>
