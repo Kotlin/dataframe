@@ -181,7 +181,7 @@ summary {
             
 
                         <details>
-                        <summary>df.distinctBy(&#34;age&#34;, &#34;name&#34;)</summary>
+                        <summary>df.distinctBy { age and name }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
@@ -198,7 +198,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.groupBy(&#34;age&#34;, &#34;name&#34;).mapToRows { group.first() }</summary>
+                        <summary>df.groupBy { age and name }.mapToRows { group.first() }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>

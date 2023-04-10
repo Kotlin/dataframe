@@ -219,7 +219,7 @@ summary {
             
 
                         <details>
-                        <summary>df.select { it[&#34;name&#34;] }</summary>
+                        <summary>df.select { it.name }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
@@ -236,7 +236,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { it[&#34;name&#34;][&#34;firstName&#34;] }</summary>
+                        <summary>df.select { name }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
@@ -253,7 +253,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { &#34;name&#34;[&#34;firstName&#34;] }</summary>
+                        <summary>df.select { name.firstName }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
@@ -270,7 +270,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { &#34;name&#34; named &#34;Full Name&#34; }</summary>
+                        <summary>df.select { name named &#34;Full Name&#34; }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
@@ -287,7 +287,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { &#34;name&#34;[&#34;firstName&#34;]&#60;String&#62;().map { it.uppercase() } }</summary>
+                        <summary>df.select { name.firstName.map { it.lowercase() } }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
@@ -304,7 +304,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { 2021 - &#34;age&#34;&#60;Int&#62;() }</summary>
+                        <summary>df.select { 2021 - age }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
@@ -321,7 +321,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { &#34;name&#34; and &#34;age&#34; }</summary>
+                        <summary>df.select { name and age }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
@@ -338,7 +338,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { &#34;name&#34;..&#34;age&#34; }</summary>
+                        <summary>df.select { name..age }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
@@ -355,7 +355,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { &#34;name&#34;.all() }</summary>
+                        <summary>df.select { name.all() }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
@@ -372,7 +372,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { &#34;name&#34;.allDfs() }</summary>
+                        <summary>df.select { name.allDfs() }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
@@ -707,6 +707,8 @@ call_DataFrame(function() { DataFrame.renderTable(2) });
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
+{ name: "<span title=\"lastName: String\">lastName</span>", children: [], rightAlign: false, values: ["Cooper","Dylan","Daniels","Chaplin","Marley","Wolf","Byrd"] }, 
+{ name: "<span title=\"name: DataRow\">name</span>", children: [0, 1], rightAlign: false, values: ["<span class=\"formatted\" title=\"firstName: Alice\nlastName: Cooper\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Alice<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Cooper<span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"firstName: Bob\nlastName: Dylan\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Bob<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Dylan<span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"firstName: Charlie\nlastName: Daniels\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Charlie<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Dan<span class=\"structural\">...</span><span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"firstName: Charlie\nlastName: Chaplin\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Charlie<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Cha<span class=\"structural\">...</span><span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"firstName: Bob\nlastName: Marley\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Bob<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Marley<span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"firstName: Alice\nlastName: Wolf\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Alice<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Wolf<span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"firstName: Charlie\nlastName: Byrd\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Charlie<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Byrd<span class=\"structural\"> }</span></span>"] }, 
 ], id: 3, rootId: 3, totalRows: 7 } ) });
 /*-->*/
 
@@ -777,7 +779,7 @@ call_DataFrame(function() { DataFrame.renderTable(8) });
 
 
 /*<!--*/
-call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["ALICE","BOB","CHARLIE","CHARLIE","BOB","ALICE","CHARLIE"] }, 
+call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["alice","bob","charlie","charlie","bob","alice","charlie"] }, 
 ], id: 9, rootId: 9, totalRows: 7 } ) });
 /*-->*/
 

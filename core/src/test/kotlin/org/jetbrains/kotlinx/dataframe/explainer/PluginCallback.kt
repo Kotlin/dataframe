@@ -102,7 +102,9 @@ fun main() {
         }
         .mapValues { (name, files) ->
             val target = File("../docs/StardustDocs/snippets")
-            val original = files.first()
+            val original = files
+                .firstOrNull { it.nameWithoutExtension.contains("properties") }
+                ?: files.first()
             original.copyTo(File(target, "$name.html"), overwrite = true)
         }
 }
@@ -154,7 +156,9 @@ object PluginCallback {
                         body =
                         """
                         <details>
-                        <summary>${expressions.joinToString(".") { it.source }.escapeHTML()}</summary>
+                        <summary>${expressions.joinToString(".") { it.source }.escapeHTML()/*.also { 
+                            if (it.length > 60) TODO("expression is too long. better to split sample in multiple snippets")
+                        }*/}</summary>
                         ${details.body}
                         </details>
                         <br>

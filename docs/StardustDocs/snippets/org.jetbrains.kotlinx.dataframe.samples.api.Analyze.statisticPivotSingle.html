@@ -187,7 +187,7 @@ summary {
             
 
                         <details>
-                        <summary>df.groupBy(&#34;city&#34;).pivot { &#34;name&#34;[&#34;lastName&#34;] }.mean(&#34;age&#34;)</summary>
+                        <summary>df.groupBy { city }.pivot { name.lastName }.mean { age }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
@@ -216,7 +216,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.groupBy(&#34;city&#34;).pivot { &#34;name&#34;[&#34;lastName&#34;] }.meanOf { &#34;age&#34;&#60;Int&#62;() / 2.0 }</summary>
+                        <summary>df.groupBy { city }.pivot { name.lastName }.meanOf { age / 2.0 }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>

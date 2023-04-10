@@ -232,7 +232,7 @@ summary {
             
 
                         <details>
-                        <summary>df.groupBy(&#34;city&#34;).max()</summary>
+                        <summary>df.groupBy { city }.max()</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
@@ -255,7 +255,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.groupBy(&#34;city&#34;).mean()</summary>
+                        <summary>df.groupBy { city }.mean()</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
@@ -278,7 +278,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.groupBy(&#34;city&#34;).max(&#34;age&#34;)</summary>
+                        <summary>df.groupBy { city }.max { age }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
@@ -301,7 +301,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.groupBy(&#34;city&#34;).sum(&#34;weight&#34;, name = &#34;total weight&#34;)</summary>
+                        <summary>df.groupBy { city }.sum(&#34;total weight&#34;) { weight }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
@@ -324,7 +324,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.groupBy(&#34;city&#34;).count()</summary>
+                        <summary>df.groupBy { city }.count()</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
@@ -347,9 +347,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.groupBy(&#34;city&#34;).max {
-            &#34;name&#34;[&#34;firstName&#34;]&#60;String&#62;().length() and &#34;name&#34;[&#34;lastName&#34;]&#60;String&#62;().length()
-        }</summary>
+                        <summary>df.groupBy { city }.max { name.firstName.length() and name.lastName.length() }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
@@ -372,7 +370,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.groupBy(&#34;city&#34;).medianFor(&#34;age&#34;, &#34;weight&#34;)</summary>
+                        <summary>df.groupBy { city }.medianFor { age and weight }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
@@ -395,7 +393,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.groupBy(&#34;city&#34;).minFor { (&#34;age&#34;&#60;Int&#62;() into &#34;min age&#34;) and (&#34;weight&#34;&#60;Int?&#62;() into &#34;min weight&#34;) }</summary>
+                        <summary>df.groupBy { city }.minFor { (age into &#34;min age&#34;) and (weight into &#34;min weight&#34;) }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
@@ -418,9 +416,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.groupBy(&#34;city&#34;).meanOf(&#34;mean ratio&#34;) {
-            &#34;weight&#34;&#60;Int?&#62;()?.div(&#34;age&#34;&#60;Int&#62;())
-        }</summary>
+                        <summary>df.groupBy { city }.meanOf(&#34;mean ratio&#34;) { weight?.div(age) }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>

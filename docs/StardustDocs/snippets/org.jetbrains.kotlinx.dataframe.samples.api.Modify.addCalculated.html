@@ -180,7 +180,7 @@ summary {
 
                         <details>
                         <summary>df.add {
-            val cityInfo = city().map { queryCityInfo(it) }
+            val cityInfo = city.map { queryCityInfo(it) }
             &#34;cityInfo&#34; {
                 cityInfo.map { it.location } into CityInfo::location
                 cityInfo.map { it.population } into &#34;population&#34;
