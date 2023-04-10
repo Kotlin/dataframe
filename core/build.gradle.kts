@@ -77,6 +77,12 @@ val customTest = tasks.register<Test>("customTest") {
 
     dependsOn(myKotlinCompileTask)
 
+    doFirst {
+        delete {
+            delete(fileTree(File(buildDir, "dataframes")))
+        }
+    }
+
     filter {
         includeTestsMatching("org.jetbrains.kotlinx.dataframe.samples.api.*")
     }
@@ -114,6 +120,13 @@ dependencies {
 val copySamplesOutputs = tasks.register<JavaExec>("copySamplesOutputs") {
     group = "documentation"
     mainClass.set("org.jetbrains.kotlinx.dataframe.explainer.PluginCallbackKt")
+
+    doFirst {
+        delete {
+            delete(fileTree(File(projectDir, "../docs/StardustDocs/snippets")))
+        }
+    }
+
     dependsOn(customTest)
     classpath = sourceSets.test.get().runtimeClasspath
 }
