@@ -28,7 +28,7 @@ interface Person {
 }
 ```
 
-#### Execute kspKotlin task to generate type-safe accessors for schemas:
+#### Execute assemble task to generate type-safe accessors for schemas:
 
 <!---FUN useProperties-->
 
@@ -37,7 +37,7 @@ val df = dataFrameOf("name", "age")(
     "Alice", 15,
     "Bob", 20
 ).cast<Person>()
-// age only available after executing `build` or `kspKotlin`!
+// age only available after executing `assemble` or `kspKotlin`!
 val teens = df.filter { age in 10..19 }
 teens.print()
 ```
@@ -46,7 +46,7 @@ teens.print()
 
 ### Schema inference
 
-Specify schema with preferred method and execute the `build` task.
+Specify schema with preferred method and execute the `assemble` task.
 
 <tabs>
 <tab title="Method 1. Annotation processing">
@@ -70,6 +70,7 @@ the same package as file containing the annotation.
 )
 
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+import org.jetbrains.kotlinx.dataframe.api.*
 ```
 
 See KDocs for `@ImportDataSchema` in IDE
@@ -98,7 +99,7 @@ See [reference](gradleReference.md) and [examples](gradleReference.md#examples) 
 </tab>
 </tabs>
 
-After `build`, the following code should compile and run:
+After `assemble`, the following code should compile and run:
 
 <!---FUN useInferredSchema-->
 

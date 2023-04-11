@@ -67,6 +67,14 @@ korro {
     }
 }
 
+tasks.formatKotlinMain {
+    dependsOn("kspKotlin")
+}
+
+tasks.formatKotlinTest {
+    dependsOn("kspTestKotlin")
+}
+
 tasks.lintKotlinMain {
     dependsOn("kspKotlin")
 }

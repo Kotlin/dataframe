@@ -182,6 +182,16 @@ tasks.withType<KspTaskJvm> {
     dependsOn(tasks.generateKeywordsSrc)
 }
 
+tasks.formatKotlinMain {
+    dependsOn(tasks.generateKeywordsSrc)
+    dependsOn("kspKotlin")
+}
+
+tasks.formatKotlinTest {
+    dependsOn(tasks.generateKeywordsSrc)
+    dependsOn("kspTestKotlin")
+}
+
 tasks.lintKotlinMain {
     dependsOn(tasks.generateKeywordsSrc)
     dependsOn("kspKotlin")
