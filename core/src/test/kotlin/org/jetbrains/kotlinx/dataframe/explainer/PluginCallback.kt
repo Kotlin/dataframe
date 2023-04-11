@@ -54,7 +54,7 @@ private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
                 it = it.where(dataframeLike.filter as RowValueFilter<Any?, Any?>)
             }
             it.with {
-                background(rgb(152,251,152))
+                background(rgb(152, 251, 152))
             }
         }
             .toHTML1()
@@ -118,7 +118,12 @@ object PluginCallback {
     val names = mutableMapOf<String, List<String>>()
     val expressionsByStatement = mutableMapOf<Int, List<Expression>>()
 
-    data class Expression(val source: String, val containingClassFqName: String?, val containingFunName: String?, val df: Any)
+    data class Expression(
+        val source: String,
+        val containingClassFqName: String?,
+        val containingFunName: String?,
+        val df: Any
+    )
 
     fun start() {
         expressionsByStatement.clear()
@@ -127,29 +132,31 @@ object PluginCallback {
     fun save() {
         sessionId = 0
         tableInSessionId = 0
-        var output = DataFrameHtmlData.tableDefinitions() + DataFrameHtmlData(style = """
-            body {
-                font-family: "JetBrains Mono",SFMono-Regular,Consolas,"Liberation Mono",Menlo,Courier,monospace;
-            }       
-            
-            :root {
-                color: #19191C;
-                background-color: #fff;
-            }
-            
-            :root[theme="dark"] {
-                background-color: #19191C;
-                color: #FFFFFFCC
-            }
-            
-            details details {
-                margin-left: 20px; 
-            }
-            
-            summary {
-                padding: 6px;
-            }
-        """.trimIndent())
+        var output = DataFrameHtmlData.tableDefinitions() + DataFrameHtmlData(
+            style = """
+                body {
+                    font-family: "JetBrains Mono",SFMono-Regular,Consolas,"Liberation Mono",Menlo,Courier,monospace;
+                }       
+                
+                :root {
+                    color: #19191C;
+                    background-color: #fff;
+                }
+                
+                :root[theme="dark"] {
+                    background-color: #19191C;
+                    color: #FFFFFFCC
+                }
+                
+                details details {
+                    margin-left: 20px; 
+                }
+                
+                summary {
+                    padding: 6px;
+                }
+            """.trimIndent()
+        )
 
         // make copy to avoid concurrent modification exception
         val statements = expressionsByStatement.toMap()
@@ -174,7 +181,7 @@ object PluginCallback {
                         ${details.body}
                         </details>
                         <br>
-                    """.trimIndent()
+                        """.trimIndent()
                     )
 
                     output += details
@@ -207,7 +214,7 @@ object PluginCallback {
                                     <summary>Input ${convertToDescription(expression.df)}</summary>
                                      ${table.body}
                                     </details>
-                                """.trimIndent()
+                        """.trimIndent()
                     )
                     data += description
                 }
@@ -220,7 +227,7 @@ object PluginCallback {
                                     <summary>Output ${convertToDescription(expression.df)}</summary>
                                      ${table.body}
                                     </details>
-                                """.trimIndent()
+                        """.trimIndent()
                     )
                     data += description
                 }
@@ -233,7 +240,7 @@ object PluginCallback {
                                     <summary>Step $i: ${convertToDescription(expression.df)}</summary>
                                      ${table.body}
                                     </details>
-                                """.trimIndent()
+                        """.trimIndent()
                     )
                     data += description
                 }
