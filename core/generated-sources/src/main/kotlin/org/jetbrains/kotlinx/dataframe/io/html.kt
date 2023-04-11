@@ -334,19 +334,12 @@ internal fun String.escapeHTML(): String {
     val str = this
     return buildString {
         for (c in str) {
-            when {
-                c.code > 127 || c == '\'' || c == '\\' -> {
-                    append("&#")
-                    append(c.code)
-                    append(';')
-                }
-                c == '<' -> append("&lt;")
-                c == '>' -> append("&gt;")
-                c == '"' -> append("&quot;")
-                c == '&' -> append("&amp;")
-                else -> {
-                    append(c)
-                }
+            if (c.code > 127 || c == '"' || c == '\'' || c == '<' || c == '>' || c == '&' || c == '\\') {
+                append("&#")
+                append(c.code)
+                append(';')
+            } else {
+                append(c)
             }
         }
     }
