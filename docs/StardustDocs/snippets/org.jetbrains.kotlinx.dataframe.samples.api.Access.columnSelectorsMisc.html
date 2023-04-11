@@ -274,7 +274,7 @@ summary {
             
 
                         <details>
-                        <summary>df.add { &#34;year&#34; from { 0 } }</summary>
+                        <summary>df.add { &quot;year&quot; from { 0 } }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
@@ -291,7 +291,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { cols { it.name().startsWith(&#34;year&#34;) } }</summary>
+                        <summary>df.select { cols { it.name().startsWith(&quot;year&quot;) } }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
@@ -308,7 +308,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { startsWith(&#34;year&#34;) }</summary>
+                        <summary>df.select { startsWith(&quot;year&quot;) }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
@@ -325,7 +325,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { colsOf&#60;String&#62;() }</summary>
+                        <summary>df.select { colsOf&lt;String&gt;() }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
@@ -342,7 +342,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { colsOf&#60;String?&#62; { it.countDistinct() &#62; 5 } }</summary>
+                        <summary>df.select { colsOf&lt;String?&gt; { it.countDistinct() &gt; 5 } }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
@@ -444,7 +444,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { first { it.name.startsWith(&#34;year&#34;) } }</summary>
+                        <summary>df.select { first { it.name.startsWith(&quot;year&quot;) } }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
@@ -462,7 +462,7 @@ summary {
                         <br>
                         <details>
                         <summary>df.select {
-            colGroup(&#34;name&#34;).last { it.name().endsWith(&#34;Name&#34;) }
+            colGroup(&quot;name&quot;).last { it.name().endsWith(&quot;Name&quot;) }
         }</summary>
                         
                                     <details>
@@ -481,7 +481,7 @@ summary {
                         <br>
                         <details>
                         <summary>df.select {
-            Person::name.single { it.name().startsWith(&#34;first&#34;) }
+            Person::name.single { it.name().startsWith(&quot;first&quot;) }
         }</summary>
                         
                                     <details>
@@ -533,7 +533,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { dfs { it.name().contains(&#34;:&#34;) } }</summary>
+                        <summary>df.select { dfs { it.name().contains(&quot;:&quot;) } }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
@@ -550,7 +550,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { dfsOf&#60;String&#62;() }</summary>
+                        <summary>df.select { dfsOf&lt;String&gt;() }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
@@ -567,7 +567,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { except { colsOf&#60;String&#62;() } }</summary>
+                        <summary>df.select { except { colsOf&lt;String&gt;() } }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
