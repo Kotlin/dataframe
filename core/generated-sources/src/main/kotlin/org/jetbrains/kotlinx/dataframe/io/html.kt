@@ -114,7 +114,7 @@ internal fun tableJs(columns: List<ColumnDataForJs>, id: Int, rootId: Int, nrow:
 }
 
 internal var tableInSessionId = 0
-internal val sessionId = (Random().nextInt() % 128) shl 24
+internal var sessionId = (Random().nextInt() % 128) shl 24
 internal fun nextTableId() = sessionId + (tableInSessionId++)
 
 internal fun AnyFrame.toHtmlData(

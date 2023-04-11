@@ -976,6 +976,13 @@ class Analyze : TestBase() {
     fun pivotAggregate_properties() {
         // SampleStart
         df.pivot { city }.aggregate { minBy { age }.name }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun pivotAggregate1_properties() {
+        // SampleStart
         df.pivot { city }.groupBy { name.firstName }.aggregate {
             meanFor { age and weight } into "means"
             stdFor { age and weight } into "stds"
@@ -995,6 +1002,18 @@ class Analyze : TestBase() {
         val weight by column<Int?>()
 
         df.pivot { city }.aggregate { minBy(age).name }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun pivotAggregate1_accessors() {
+        // SampleStart
+        val city by column<String?>()
+        val name by columnGroup()
+        val firstName by name.column<String>()
+        val age by column<Int>()
+        val weight by column<Int?>()
 
         df.pivot { city }.groupBy { firstName }.aggregate {
             meanFor { age and weight } into "means"
@@ -1009,7 +1028,13 @@ class Analyze : TestBase() {
     fun pivotAggregate_strings() {
         // SampleStart
         df.pivot("city").aggregate { minBy("age")["name"] }
+        // SampleEnd
+    }
 
+    @Test
+    @TransformDataFrameExpressions
+    fun pivotAggregate1_strings() {
+        // SampleStart
         df.pivot("city").groupBy { "name"["firstName"] }.aggregate {
             meanFor("age", "weight") into "means"
             stdFor("age", "weight") into "stds"
@@ -1095,11 +1120,18 @@ class Analyze : TestBase() {
     fun pivotDefault_properties() {
         // SampleStart
         df.pivot { city }.groupBy { name }.aggregate { min { age } default 0 }
+        df.pivot { city }.groupBy { name }.default(0).min()
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun pivotDefault1_properties() {
+        // SampleStart
         df.pivot { city }.groupBy { name }.aggregate {
             median { age } into "median age" default 0
             minOrNull { weight } into "min weight" default 100
         }
-        df.pivot { city }.groupBy { name }.default(0).min()
         // SampleEnd
     }
 
@@ -1113,11 +1145,23 @@ class Analyze : TestBase() {
         val name by columnGroup()
 
         df.pivot { city }.groupBy { name }.aggregate { min { age } default 0 }
+        df.pivot { city }.groupBy { name }.default(0).min()
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun pivotDefault1_accessors() {
+        // SampleStart
+        val city by column<String?>()
+        val age by column<Int>()
+        val weight by column<Int?>()
+        val name by columnGroup()
+
         df.pivot { city }.groupBy { name }.aggregate {
             median { age } into "median age" default 0
             minOrNull { weight } into "min weight" default 100
         }
-        df.pivot { city }.groupBy { name }.default(0).min()
         // SampleEnd
     }
 
@@ -1126,11 +1170,18 @@ class Analyze : TestBase() {
     fun pivotDefault_strings() {
         // SampleStart
         df.pivot("city").groupBy("name").aggregate { min("age") default 0 }
+        df.pivot("city").groupBy("name").default(0).min()
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun pivotDefault1_strings() {
+        // SampleStart
         df.pivot("city").groupBy("name").aggregate {
             median("age") into "median age" default 0
             minOrNull("weight") into "min weight" default 100
         }
-        df.pivot("city").groupBy("name").default(0).min()
         // SampleEnd
     }
 
