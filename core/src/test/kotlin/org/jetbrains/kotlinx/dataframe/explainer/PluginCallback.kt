@@ -4,6 +4,7 @@ import com.beust.klaxon.JsonObject
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.api.print
 import java.io.File
+import java.util.concurrent.atomic.AtomicInteger
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -30,7 +31,6 @@ import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
-import org.jetbrains.kotlinx.dataframe.io.escapeHTML
 import org.jetbrains.kotlinx.dataframe.io.sessionId
 import org.jetbrains.kotlinx.dataframe.io.tableInSessionId
 import org.jetbrains.kotlinx.dataframe.io.toHTML
@@ -114,7 +114,7 @@ object PluginCallback {
 //    val names = mutableListOf<String>()
 //    val dfs = mutableListOf<String>()
 
-    var i = 0
+    var i = AtomicInteger(0)
     val names = mutableMapOf<String, List<String>>()
     val expressionsByStatement = mutableMapOf<Int, List<Expression>>()
 
@@ -130,6 +130,7 @@ object PluginCallback {
     }
 
     fun save() {
+        if (i.get() == 0) return
         sessionId = 0
         tableInSessionId = 0
         var output = DataFrameHtmlData.tableDefinitions() + DataFrameHtmlData(
@@ -251,6 +252,7 @@ object PluginCallback {
 
     var action: (String, String, Any, String, String?, String?, String?, Int) -> Unit =
         { source, name, df, id, receiverId, containingClassFqName, containingFunName, statementIndex ->
+            i.incrementAndGet()
             expressionsByStatement.compute(statementIndex) { _, list ->
                 val element = Expression(source, containingClassFqName, containingFunName, df)
                 list?.plus(element) ?: listOf(element)
@@ -303,5 +305,27 @@ object PluginCallback {
         statementIndex: Int
     ) {
         action(string, name, df, id, receiverId, containingClassFqName, containingFunName, statementIndex)
+    }
+}
+
+internal fun String.escapeHTML(): String {
+    val str = this
+    return buildString {
+        for (c in str) {
+            when {
+                c.code > 127 || c == '\'' || c == '\\' -> {
+                    append("&#")
+                    append(c.code)
+                    append(';')
+                }
+                c == '<' -> append("&lt;")
+                c == '>' -> append("&gt;")
+                c == '"' -> append("&quot;")
+                c == '&' -> append("&amp;")
+                else -> {
+                    append(c)
+                }
+            }
+        }
     }
 }

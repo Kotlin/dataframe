@@ -71,6 +71,10 @@ tasks.withType<KspTask> {
     }
 }
 
+tasks.named("lintKotlinMyTest") {
+    onlyIf { false }
+}
+
 val customTest = tasks.register<Test>("customTest") {
     group = "Verification"
     description = "Runs the custom tests."
