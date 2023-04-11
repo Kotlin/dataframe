@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.api.print
 import java.io.File
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.Convert
@@ -30,6 +31,8 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.escapeHTML
+import org.jetbrains.kotlinx.dataframe.io.sessionId
+import org.jetbrains.kotlinx.dataframe.io.tableInSessionId
 import org.jetbrains.kotlinx.dataframe.io.toHTML
 
 private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
@@ -60,6 +63,7 @@ private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
         is GroupBy<*, *> -> dataframeLike.toDataFrame().toHTML()
         is AnyFrame -> dataframeLike.toHTML()
         is AnyCol -> dataframeLike.toDataFrame().toHTML()
+        is DataRow<*> -> dataframeLike.toDataFrame().toHTML()
         else -> throw IllegalArgumentException("Unsupported type: ${dataframeLike::class}")
     }
 }
@@ -78,6 +82,7 @@ private fun convertToDescription(dataframeLike: Any): String {
         is Convert<*, *> -> "Convert"
         is FormattedFrame<*> -> "FormattedFrame"
         is GroupBy<*, *> -> "GroupBy"
+        is DataRow<*> -> "DataRow"
         else -> "TODO"
     }.escapeHTML()
 }
@@ -97,7 +102,9 @@ fun main() {
         }
         .mapValues { (name, files) ->
             val target = File("../docs/StardustDocs/snippets")
-            val original = files.first()
+            val original = files
+                .firstOrNull { it.nameWithoutExtension.contains("properties") }
+                ?: files.first()
             original.copyTo(File(target, "$name.html"), overwrite = true)
         }
 }
@@ -118,11 +125,23 @@ object PluginCallback {
     }
 
     fun save() {
+        sessionId = 0
+        tableInSessionId = 0
         var output = DataFrameHtmlData.tableDefinitions() + DataFrameHtmlData(style = """
             body {
                 font-family: "JetBrains Mono",SFMono-Regular,Consolas,"Liberation Mono",Menlo,Courier,monospace;
+            }       
+            
+            :root {
                 color: #19191C;
+                background-color: #fff;
             }
+            
+            :root[theme="dark"] {
+                background-color: #19191C;
+                color: #FFFFFFCC
+            }
+            
             details details {
                 margin-left: 20px; 
             }
@@ -147,7 +166,11 @@ object PluginCallback {
                         body =
                         """
                         <details>
-                        <summary>${expressions.joinToString(".") { it.source }.escapeHTML()}</summary>
+                        <summary>${expressions.joinToString(".") { it.source }
+                            .also {
+                                if (it.length > 88) TODO("expression is too long. better to split sample in multiple snippets")
+                            }
+                            .escapeHTML()}</summary>
                         ${details.body}
                         </details>
                         <br>
