@@ -670,8 +670,8 @@ class Modify : TestBase() {
         // SampleEnd
     }
 
+    //    @TransformDataFrameExpressions
     @Test
-//    @TransformDataFrameExpressions
     fun explodeColumnFrames() {
         // SampleStart
         val col by columnOf(
