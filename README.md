@@ -34,6 +34,7 @@ plugins {
 repositories {
     mavenCentral()
 }
+
 dependencies {
     implementation("org.jetbrains.kotlinx:dataframe:0.10.0")
 }
@@ -124,10 +125,10 @@ clean
         recentDelays.maxOrNull { delay1 and delay2 } into "major delay"
 
         // separate lists of recent delays for `delay1`, `delay2` and `delay3`
-        recentDelays.implode(dropNulls = true) into "recent delays"
+        recentDelays.implode(dropNA = true) into "recent delays"
 
         // total delay per destination
-        pivot { destination }.sum { recentDelays.intCols() } into "total delays to"
+        pivot { destination }.sum { recentDelays.colsOf<Int?>() } into "total delays to"
     }
 ```
 
