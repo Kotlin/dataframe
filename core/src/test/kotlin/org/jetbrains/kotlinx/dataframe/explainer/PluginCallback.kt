@@ -333,9 +333,12 @@ internal fun String.escapeHTML(): String {
                     append(c.code)
                     append(';')
                 }
-                c == '<' -> append("&lt;")
-                c == '>' -> append("&gt;")
+//                c == '<' -> append("&lt;")
+//                c == '>' -> append("&gt;")
                 c == '"' -> append("&quot;")
+                c == '<' -> append("&amp;lt;")
+                c == '>' -> append("&amp;gt;")
+//                c == '"' -> append("&amp;quot;")
                 c == '&' -> append("&amp;")
                 else -> {
                     append(c)
