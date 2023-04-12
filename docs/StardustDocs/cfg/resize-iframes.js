@@ -72,10 +72,10 @@
             // console.log("el.contentWindow.performance.timing.loadEventEnd: " + el.contentWindow.performance.timing.loadEventEnd)
 
             if (el.contentWindow && el.contentWindow.performance && el.contentWindow.performance.timing.loadEventEnd === 0) {
-                console.log("ready path")
+                // console.log("ready path")
                 el.addEventListener('load', () => doObserveIFrame(el), true)
             } else {
-                console.log("not ready path")
+                // console.log("not ready path")
                 doObserveIFrame(el)
             }
         }
@@ -90,9 +90,9 @@
             mutations.forEach(function (mutation) {
                 for (let i = 0; i < mutation.addedNodes.length; i++) {
                     let addedNode = mutation.addedNodes[i];
-                    console.log(addedNode.tagName)
+                    // console.log(addedNode.tagName)
                     if (addedNode.tagName === 'IFRAME') {
-                        console.log("IFRAME loaded")
+                        // console.log("IFRAME loaded")
                         observeIFrame(addedNode);
                     } else if (addedNode.tagName === 'SECTION') {
                         let iframes = [];
