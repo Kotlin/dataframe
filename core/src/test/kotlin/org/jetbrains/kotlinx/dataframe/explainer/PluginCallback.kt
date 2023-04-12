@@ -1,11 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.explainer
 
 import com.beust.klaxon.JsonObject
-import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.api.print
 import java.io.File
 import java.util.concurrent.atomic.AtomicInteger
 import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
@@ -19,11 +18,13 @@ import org.jetbrains.kotlinx.dataframe.api.Pivot
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 import org.jetbrains.kotlinx.dataframe.api.ReducedPivot
 import org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy
+import org.jetbrains.kotlinx.dataframe.api.Split
 import org.jetbrains.kotlinx.dataframe.api.SplitWithTransform
 import org.jetbrains.kotlinx.dataframe.api.Update
 import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.frames
 import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.api.where
@@ -44,7 +45,7 @@ private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
         is ReducedPivot<*> -> dataframeLike.values().toDataFrame().toHTML()
         is PivotGroupBy<*> -> dataframeLike.frames().toHTML()
         is ReducedPivotGroupBy<*> -> dataframeLike.values().toHTML()
-        is SplitWithTransform<*, *, *> -> DataFrameHtmlData(body = "<p>${dataframeLike::class}</p>")
+        is SplitWithTransform<*, *, *> -> dataframeLike.into().toHTML()
         is Merge<*, *, *> -> dataframeLike.into("merged").toHTML()
         is Gather<*, *, *, *> -> dataframeLike.into("key", "value").toHTML()
 //        is Update<*, *> -> DataFrameHtmlData(body = "<p>${dataframeLike::class}</p>")
@@ -64,6 +65,13 @@ private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
         is AnyFrame -> dataframeLike.toHTML()
         is AnyCol -> dataframeLike.toDataFrame().toHTML()
         is DataRow<*> -> dataframeLike.toDataFrame().toHTML()
+        is Split<*, *> -> dataframeLike.toDataFrame().toHTML()
+//        is MoveClause<*, *>-> null
+//        is RenameClause<*, *> -> null
+//        is ReplaceClause<*, *> -> null
+//        is GroupClause<*, *> -> null
+//        is InsertClause<*> -> null
+//        is FormatClause<*, *> -> null
         else -> throw IllegalArgumentException("Unsupported type: ${dataframeLike::class}")
     }
 }
@@ -76,6 +84,13 @@ private fun convertToDescription(dataframeLike: Any): String {
         is PivotGroupBy<*> -> "PivotGroupBy"
         is ReducedPivotGroupBy<*> -> "ReducedPivotGroupBy"
         is SplitWithTransform<*, *, *> -> "SplitWithTransform"
+        is Split<*, *> -> "Split"
+//        is MoveClause<*, *> -> "Move"
+//        is RenameClause<*, *> -> "Rename"
+//        is ReplaceClause<*, *> -> "Replace"
+//        is GroupClause<*, *> -> "Group"
+//        is InsertClause<*> -> "Insert"
+//        is FormatClause<*, *> -> "Format"
         is Merge<*, *, *> -> "Merge"
         is Gather<*, *, *, *> -> "Gather"
         is Update<*, *> -> "Update"
@@ -176,7 +191,7 @@ object PluginCallback {
                         <details>
                         <summary>${expressions.joinToString(".") { it.source }
                             .also {
-                                if (it.length > 88) TODO("expression is too long. better to split sample in multiple snippets")
+                                if (it.length > 95) TODO("expression is too long ${it.length}. better to split sample in multiple snippets")
                             }
                             .escapeHTML()}</summary>
                         ${details.body}
