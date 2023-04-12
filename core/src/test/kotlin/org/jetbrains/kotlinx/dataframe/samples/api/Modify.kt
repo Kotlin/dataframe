@@ -1198,7 +1198,7 @@ class Modify : TestBase() {
     }
 
     @Test
-    @TransformDataFrameExpressions
+    // @TransformDataFrameExpressions
     fun multiCallOperations() {
         // SampleStart
         df.update { age }.where { city == "Paris" }.with { it - 5 }
