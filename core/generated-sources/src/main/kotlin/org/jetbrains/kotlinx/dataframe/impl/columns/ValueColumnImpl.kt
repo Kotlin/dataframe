@@ -2,9 +2,9 @@ package org.jetbrains.kotlinx.dataframe.impl.columns
 
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
-import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
-import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.columns.*
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
@@ -13,9 +13,8 @@ internal open class ValueColumnImpl<T>(
     name: String,
     type: KType,
     val defaultValue: T? = null,
-    distinct: Lazy<Set<T>>? = null
-) :
-    DataColumnImpl<T>(values, name, type, distinct), ValueColumn<T> {
+    distinct: Lazy<Set<T>>? = null,
+) : DataColumnImpl<T>(values, name, type, distinct), ValueColumn<T> {
 
     override fun distinct() = ValueColumnImpl(toSet().toList(), name, type, defaultValue, distinct)
 
@@ -40,7 +39,8 @@ internal open class ValueColumnImpl<T>(
         return createWithValues(newValues, nullable)
     }
 
-    override fun get(columnName: String) = throw UnsupportedOperationException("Can not get nested column '$columnName' from ValueColumn '$name'")
+    override fun get(columnName: String) =
+        throw UnsupportedOperationException("Can not get nested column '$columnName' from ValueColumn '$name'")
 
     override operator fun get(range: IntRange): ValueColumn<T> = super<DataColumnImpl>.get(range) as ValueColumn<T>
 
@@ -50,12 +50,28 @@ internal open class ValueColumnImpl<T>(
 }
 
 internal class ResolvingValueColumn<T>(
-    override val source: ValueColumn<T>
+    override val source: ValueColumn<T>,
 ) : ValueColumn<T> by source, ForceResolvedColumn<T> {
 
     override fun resolve(context: ColumnResolutionContext) = super<ValueColumn>.resolve(context)
+    override fun resolveAfterTransform(
+        context: ColumnResolutionContext,
+        transform: (List<ColumnWithPath<T>>) -> List<ColumnWithPath<T>>,
+    ): List<ColumnWithPath<T>> = super<ValueColumn>.resolveAfterTransform(context, transform)
 
-    override fun resolveSingle(context: ColumnResolutionContext) = context.df.getColumn<T>(source.name(), context.unresolvedColumnsPolicy)?.addPath()
+    override fun resolveSingle(context: ColumnResolutionContext) =
+        context.df.getColumn<T>(source.name(), context.unresolvedColumnsPolicy)?.addPath()
+
+    override fun resolveSingleAfter(
+        context: ColumnResolutionContext,
+        conversion: (List<ColumnWithPath<T>>) -> List<ColumnWithPath<T>>,
+    ): ColumnWithPath<T>? = context.df
+        .asColumnGroup()
+        .transform { conversion(it as List<ColumnWithPath<T>>) }
+        .resolve(context)
+        .toDataFrame()
+        .getColumn<T>(source.name(), context.unresolvedColumnsPolicy)
+        ?.addPath()
 
     override fun getValue(row: AnyRow) = super<ValueColumn>.getValue(row)
 

@@ -50,6 +50,13 @@ internal class PivotChainColumnSet<C>(val first: ColumnSet<C>, val second: Colum
         }
         return result
     }
+
+    override fun resolveAfterTransform(
+        context: ColumnResolutionContext,
+        transform: (List<ColumnWithPath<C>>) -> List<ColumnWithPath<C>>,
+    ): List<ColumnWithPath<C>> {
+        throw UnsupportedOperationException("Not implemented")
+    }
 }
 
 internal fun <T, C> DataFrame<T>.getPivotSequences(

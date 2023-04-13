@@ -11,13 +11,17 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
  * @param C common type of resolved columns
  */
 public interface ColumnSet<out C> {
-
     public fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>>
+
+    public fun resolveAfterTransform(
+        context: ColumnResolutionContext,
+        transform: (List<ColumnWithPath<C>>) -> List<ColumnWithPath<@UnsafeVariance C>>,
+    ): List<ColumnWithPath<C>>
 }
 
-public class ColumnResolutionContext internal constructor (
+public class ColumnResolutionContext internal constructor(
     internal val df: DataFrame<*>,
-    internal val unresolvedColumnsPolicy: UnresolvedColumnsPolicy
+    internal val unresolvedColumnsPolicy: UnresolvedColumnsPolicy,
 ) {
 
     public val allowMissingColumns: Boolean = unresolvedColumnsPolicy != UnresolvedColumnsPolicy.Fail

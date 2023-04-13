@@ -1,15 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.columns
 
-import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.*
+import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.name
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.RenamedColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.getColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import kotlin.reflect.KProperty
 
 /**
@@ -20,7 +19,8 @@ import kotlin.reflect.KProperty
  */
 public interface ColumnReference<out C> : SingleColumn<C> {
 
-    public operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnReference<C> = renamedReference(property.columnName)
+    public operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnReference<C> =
+        renamedReference(property.columnName)
 
     public fun name(): String
 
@@ -32,13 +32,28 @@ public interface ColumnReference<out C> : SingleColumn<C> {
 
     public fun getValueOrNull(row: AnyRow): C? = resolveFor(row.df())?.get(row.index())
 
-    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? {
-        return context.df.getColumn<C>(path(), context.unresolvedColumnsPolicy)?.addPath(path())
-    }
+    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? =
+        context.df
+            .getColumn<C>(path(), context.unresolvedColumnsPolicy)
+            ?.addPath(path())
+
+    override fun resolveSingleAfter(
+        context: ColumnResolutionContext,
+        conversion: (List<ColumnWithPath<C>>) -> List<ColumnWithPath<@UnsafeVariance C>>,
+    ): ColumnWithPath<C>? =
+        context.df
+            .asColumnGroup()
+            .transform { conversion(it as List<ColumnWithPath<C>>) }
+            .resolve(context)
+            .toDataFrame()
+            .getColumn<C>(path(), context.unresolvedColumnsPolicy)
+            ?.addPath(path())
 }
 
-internal fun <C> ColumnReference<C>.renamedReference(newName: String): ColumnReference<C> = RenamedColumnReference(this, newName)
+internal fun <C> ColumnReference<C>.renamedReference(newName: String): ColumnReference<C> =
+    RenamedColumnReference(this, newName)
 
 internal fun ColumnReference<*>.shortPath() = ColumnPath(name)
 
-internal fun <C> ColumnReference<C>.resolveFor(df: AnyFrame): ColumnWithPath<C>? = resolveSingle(ColumnResolutionContext(df, UnresolvedColumnsPolicy.Skip))
+internal fun <C> ColumnReference<C>.resolveFor(df: AnyFrame): ColumnWithPath<C>? =
+    resolveSingle(ColumnResolutionContext(df, UnresolvedColumnsPolicy.Skip))

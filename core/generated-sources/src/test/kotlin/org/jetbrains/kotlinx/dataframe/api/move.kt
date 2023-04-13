@@ -2,7 +2,13 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.alsoDebug
+import org.jetbrains.kotlinx.dataframe.columns.allRecursively
+import org.jetbrains.kotlinx.dataframe.columns.rec
+import org.jetbrains.kotlinx.dataframe.columns.recursively
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.columns.transform
+import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.junit.Test
 
 class MoveTests {
@@ -28,13 +34,16 @@ class MoveTests {
 
     @Test
     fun `select all dfs`() {
-        val selected = grouped.getColumnsWithPaths { all().allDfs() }.map { it.path.joinToString(".") }
+        val selected = grouped
+            .getColumnsWithPaths { all().all().recursively(false) }
+            .map { it.path.joinToString(".") }
         selected shouldBe listOf("a.b", "a.c.d", "b.c", "b.d", "e.f")
     }
 
     @Test
     fun batchUngrouping() {
-        val ungrouped = grouped.move { dfs { it.depth() > 0 && !it.isColumnGroup() } }.into { pathOf(it.path.joinToString(".")) }
+        val ungrouped = grouped.move { cols { it.depth() > 0 && !it.isColumnGroup() }.rec() }
+            .into { pathOf(it.path.joinToString(".")) }
         ungrouped.columnNames() shouldBe listOf("q", "a.b", "a.c.d", "b.c", "b.d", "w", "e.f", "r")
     }
 

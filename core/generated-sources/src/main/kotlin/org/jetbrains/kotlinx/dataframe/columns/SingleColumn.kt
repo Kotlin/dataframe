@@ -9,7 +9,19 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
  */
 public interface SingleColumn<out C> : ColumnSet<C> {
 
-    override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> = resolveSingle(context)?.let { listOf(it) } ?: emptyList()
+    override fun resolve(
+        context: ColumnResolutionContext,
+    ): List<ColumnWithPath<C>> = resolveSingle(context)?.let { listOf(it) } ?: emptyList()
+
+    override fun resolveAfterTransform(
+        context: ColumnResolutionContext,
+        transform: (List<ColumnWithPath<C>>) -> List<ColumnWithPath<@UnsafeVariance C>>,
+    ): List<ColumnWithPath<C>> = resolveSingleAfter(context, transform)?.let { listOf(it) } ?: emptyList()
 
     public fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>?
+
+    public fun resolveSingleAfter(
+        context: ColumnResolutionContext,
+        conversion: (List<ColumnWithPath<C>>) -> List<ColumnWithPath<@UnsafeVariance C>>,
+    ): ColumnWithPath<C>?
 }
