@@ -2,11 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
-import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
-import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.*
 import org.jetbrains.kotlinx.dataframe.impl.api.joinImpl
 import kotlin.reflect.KProperty
 
@@ -110,6 +106,13 @@ public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
 public class ColumnMatch<C>(public val left: ColumnReference<C>, public val right: ColumnReference<C>) : ColumnSet<C> {
 
     override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> {
+        throw UnsupportedOperationException()
+    }
+
+    override fun resolveAfterTransform(
+        context: ColumnResolutionContext,
+        transform: (List<ColumnWithPath<C>>) -> List<ColumnWithPath<C>>,
+    ): List<ColumnWithPath<C>> {
         throw UnsupportedOperationException()
     }
 }

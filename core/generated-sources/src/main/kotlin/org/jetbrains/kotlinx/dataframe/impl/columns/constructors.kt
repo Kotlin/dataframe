@@ -147,6 +147,13 @@ internal fun <T> createColumn(values: Iterable<T>, suggestedType: KType, guessTy
 internal fun <C> createColumnSet(resolver: (ColumnResolutionContext) -> List<ColumnWithPath<C>>): ColumnSet<C> =
     object : ColumnSet<C> {
         override fun resolve(context: ColumnResolutionContext) = resolver(context)
+
+        override fun resolveAfterTransform(
+            context: ColumnResolutionContext,
+            transform: (List<ColumnWithPath<C>>) -> List<ColumnWithPath<C>>,
+        ): List<ColumnWithPath<C>> {
+            throw UnsupportedOperationException("Not implemented")
+        }
     }
 
 // region toColumnSet
@@ -155,12 +162,11 @@ internal fun <C> createColumnSet(resolver: (ColumnResolutionContext) -> List<Col
 
 internal fun <TD, T : DataFrame<TD>, C> Selector<T, ColumnSet<C>>.toColumnSet(
     createReceiver: (ColumnResolutionContext) -> T,
-): ColumnSet<C> =
-    createColumnSet {
-        val receiver = createReceiver(it)
-        val columnSet = this(receiver, receiver)
-        columnSet.resolve(receiver, it.unresolvedColumnsPolicy)
-    }
+): ColumnSet<C> = createColumnSet {
+    val receiver = createReceiver(it)
+    val columnSet = this(receiver, receiver)
+    columnSet.resolve(receiver, it.unresolvedColumnsPolicy)
+}
 
 @JvmName("toColumnSetForPivot")
 internal fun <T, C> PivotColumnsSelector<T, C>.toColumnSet(): ColumnSet<C> = toColumnSet {

@@ -10,37 +10,14 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
-import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
-import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
-import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
-import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
-import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.columns.renamedReference
-import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.*
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
 import org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.columnName
-import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
-import org.jetbrains.kotlinx.dataframe.impl.columns.DistinctColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
-import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExcept
-import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
-import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
-import org.jetbrains.kotlinx.dataframe.impl.columns.getChildrenAt
-import org.jetbrains.kotlinx.dataframe.impl.columns.singleImpl
-import org.jetbrains.kotlinx.dataframe.impl.columns.top
-import org.jetbrains.kotlinx.dataframe.impl.columns.transform
-import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
-import org.jetbrains.kotlinx.dataframe.impl.columns.transformWithContext
+import org.jetbrains.kotlinx.dataframe.impl.columns.*
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.dfs
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import kotlin.reflect.KProperty
@@ -467,8 +444,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      */
     public operator fun AnyColumnReference.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
         object : ColumnSet<Any?> {
-            override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<Any?>> {
-                val startPath = this@rangeTo.resolveSingle(context)!!.path
+
+            private fun process(col: AnyColumnReference, context: ColumnResolutionContext): List<ColumnWithPath<Any?>> {
+                val startPath = col.resolveSingle(context)!!.path
                 val endPath = endInclusive.resolveSingle(context)!!.path
                 val parentPath = startPath.parent()!!
                 require(parentPath == endPath.parent()) { "Start and end columns have different parent column paths" }
@@ -481,6 +459,15 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
                     }
                 }
             }
+
+            override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<Any?>> =
+                process(this@rangeTo, context)
+
+            override fun resolveAfterTransform(
+                context: ColumnResolutionContext,
+                transform: (List<ColumnWithPath<Any?>>) -> List<ColumnWithPath<Any?>>,
+            ): List<ColumnWithPath<Any?>> =
+                process(this@rangeTo.transform(transform) as AnyColumnReference, context)
         }
 
     /**
@@ -1593,16 +1580,32 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region dfs
 
+    @Deprecated(
+        message = "dfs is deprecated, use recursively instead.",
+        replaceWith = ReplaceWith("this.cols(predicate).recursively()"),
+        level = DeprecationLevel.WARNING,
+    )
     public fun <C> ColumnSet<C>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<Any?> = dfsInternal(predicate)
 
+    @Deprecated(
+        message = "dfs is deprecated, use recursively instead.",
+        replaceWith = ReplaceWith("this.cols(predicate).recursively()"),
+        level = DeprecationLevel.WARNING,
+    )
     public fun String.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> = toColumnAccessor().dfs(predicate)
 
+    @Deprecated(
+        message = "dfs is deprecated, use recursively instead.",
+        replaceWith = ReplaceWith("this.cols(predicate).recursively()"),
+        level = DeprecationLevel.WARNING,
+    )
     public fun <C> KProperty<C>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         toColumnAccessor().dfs(predicate)
 
     // endregion
 
     // region all
+    public fun ColumnSet<*>.all(): ColumnSet<*> = wrap()
 
     public fun SingleColumn<*>.all(): ColumnSet<*> = transformSingle { it.children() }
 
@@ -1612,13 +1615,61 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region allDfs
 
+    @Deprecated(
+        message = "allDfs is deprecated, use recursively instead.",
+        replaceWith = ReplaceWith("this.all().recursively(includeGroups)"),
+        level = DeprecationLevel.WARNING,
+    )
     public fun ColumnSet<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> =
         if (includeGroups) dfs { true } else dfs { !it.isColumnGroup() }
 
+    @Deprecated(
+        message = "allDfs is deprecated, use recursively instead.",
+        replaceWith = ReplaceWith("this.all().recursively(includeGroups)"),
+        level = DeprecationLevel.WARNING,
+    )
     public fun String.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> = toColumnAccessor().allDfs(includeGroups)
 
+    @Deprecated(
+        message = "allDfs is deprecated, use recursively instead.",
+        replaceWith = ReplaceWith("this.all().recursively(includeGroups)"),
+        level = DeprecationLevel.WARNING,
+    )
     public fun KProperty<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> =
         toColumnAccessor().allDfs(includeGroups)
+
+    public fun <C> ColumnSet<C>.recursively(includeGroups: Boolean = true): ColumnSet<C> = object : ColumnSet<C> {
+
+        private fun flatten(list: List<ColumnWithPath<C>>): List<ColumnWithPath<C>> =
+            list
+                .filter { it.isColumnGroup() } // TODO should I include this from dfs?
+                .flatMap {
+                    it.children()
+                        .dfs()
+                        .filter { includeGroups || !it.isColumnGroup() } as List<ColumnWithPath<C>>
+                }
+
+        override fun resolve(
+            context: ColumnResolutionContext,
+        ): List<ColumnWithPath<C>> = this@recursively
+            .resolveAfterTransform(context = context, transform = ::flatten)
+
+        override fun resolveAfterTransform(
+            context: ColumnResolutionContext,
+            transform: (List<ColumnWithPath<C>>) -> List<ColumnWithPath<C>>,
+        ): List<ColumnWithPath<C>> = this@recursively
+            .transform(transform)
+            .resolveAfterTransform(context = context, transform = ::flatten)
+    }
+
+    public fun <C> ColumnSet<C>.rec(includeGroups: Boolean = true): ColumnSet<C> = recursively(includeGroups)
+
+    public fun <C> ColumnSet<C>.allRecursively(includeGroups: Boolean = true): ColumnSet<C> =
+        wrap().recursively(includeGroups = includeGroups)
+
+    public fun <C> ColumnSet<C>.allRec(includeGroups: Boolean = true): ColumnSet<C> =
+        allRecursively(includeGroups = includeGroups)
+
 
     // endregion
 
@@ -1808,7 +1859,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnSet<C>.except(vararg other: ColumnSet<*>): ColumnSet<*> = except(other.toColumnSet())
     public fun <C> ColumnSet<C>.except(vararg other: String): ColumnSet<*> = except(other.toColumnSet())
 
-    public fun <C> ColumnSet<C?>.withoutNulls(): ColumnSet<C> = transform { it.filter { !it.hasNulls } } as ColumnSet<C>
+    public fun <C> ColumnSet<C?>.withoutNulls(): ColumnSet<C> =
+        transform { it.filter { !it.hasNulls() } } as ColumnSet<C>
 
     public infix fun <C> ColumnSet<C>.except(other: ColumnSet<*>): ColumnSet<*> =
         createColumnSet { resolve(it).allColumnsExcept(other.resolve(it)) }
@@ -1954,12 +2006,30 @@ internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) 
 internal fun ColumnSet<*>.colsInternal(predicate: ColumnFilter<*>) =
     transform { it.flatMap { it.children().filter { predicate(it) } } }
 
+@Deprecated("Replaced with recursively()")
 internal fun ColumnSet<*>.dfsInternal(predicate: (ColumnWithPath<*>) -> Boolean) =
     transform { it.filter { it.isColumnGroup() }.flatMap { it.children().dfs().filter(predicate) } }
 
+@Deprecated(
+    message = "Use recursively() instead",
+    replaceWith = ReplaceWith(
+        "this.colsOf(type, predicate).recursively()",
+        "org.jetbrains.kotlinx.dataframe.columns.recursively",
+        "org.jetbrains.kotlinx.dataframe.columns.recursively",
+        "org.jetbrains.kotlinx.dataframe.api.colsOf",
+    ),
+)
 public fun <C> ColumnSet<*>.dfsOf(type: KType, predicate: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<*> =
     dfsInternal { it.isSubtypeOf(type) && predicate(it.cast()) }
 
+@Deprecated(
+    message = "Use recursively() instead",
+    replaceWith = ReplaceWith(
+        "this.colsOf<C>(filter).recursively()",
+        "org.jetbrains.kotlinx.dataframe.columns.recursively",
+        "org.jetbrains.kotlinx.dataframe.api.colsOf",
+    ),
+)
 public inline fun <reified C> ColumnSet<*>.dfsOf(noinline filter: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<C> =
     dfsOf(typeOf<C>(), filter) as ColumnSet<C>
 
