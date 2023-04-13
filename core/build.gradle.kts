@@ -87,6 +87,8 @@ val customTest = tasks.register<Test>("customTest") {
         }
     }
 
+    environment("DATAFRAME_SAVE_OUTPUTS", "")
+
     filter {
         includeTestsMatching("org.jetbrains.kotlinx.dataframe.samples.api.*")
     }
@@ -252,7 +254,7 @@ kotlinter {
         "filename",
         "comment-spacing",
         "curly-spacing",
-        "import-ordering"
+        "experimental:annotation-spacing"
     )
 }
 

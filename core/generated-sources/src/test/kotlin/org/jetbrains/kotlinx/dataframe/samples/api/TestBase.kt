@@ -13,14 +13,22 @@ import org.junit.Before
 
 public open class TestBase {
 
+    companion object {
+        internal const val OUTPUTS = "DATAFRAME_SAVE_OUTPUTS"
+    }
+
     @Before
     fun start() {
-        PluginCallback.start()
+        if (System.getenv(OUTPUTS) != null) {
+            PluginCallback.start()
+        }
     }
 
     @After
     fun save() {
-        PluginCallback.save()
+        if (System.getenv(OUTPUTS) != null) {
+            PluginCallback.save()
+        }
     }
 
     val df = dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(

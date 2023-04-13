@@ -97,18 +97,18 @@ import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withNull
 import org.jetbrains.kotlinx.dataframe.api.withValue
 import org.jetbrains.kotlinx.dataframe.api.withZero
+import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.jetbrains.kotlinx.dataframe.impl.api.mapNotNullValues
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 import org.jetbrains.kotlinx.dataframe.testResource
 import org.jetbrains.kotlinx.dataframe.types.UtilTests
+import org.junit.Ignore
 import org.junit.Test
 import java.net.URL
 import java.time.format.DateTimeFormatter
-import java.util.Locale
+import java.util.*
 import kotlin.streams.toList
-import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
-import org.junit.Ignore
 
 class Modify : TestBase() {
 
@@ -1198,7 +1198,7 @@ class Modify : TestBase() {
     }
 
     @Test
-    @TransformDataFrameExpressions
+    // @TransformDataFrameExpressions
     fun multiCallOperations() {
         // SampleStart
         df.update { age }.where { city == "Paris" }.with { it - 5 }
