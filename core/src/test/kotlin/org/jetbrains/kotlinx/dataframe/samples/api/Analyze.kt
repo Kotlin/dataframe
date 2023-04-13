@@ -51,9 +51,9 @@ import org.jetbrains.kotlinx.dataframe.api.sumFor
 import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.api.valueCounts
 import org.jetbrains.kotlinx.dataframe.api.values
+import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.junit.Test
 import kotlin.math.ln
-import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 
 class Analyze : TestBase() {
 

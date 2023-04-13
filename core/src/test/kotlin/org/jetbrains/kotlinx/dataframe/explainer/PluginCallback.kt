@@ -1,8 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.explainer
 
 import com.beust.klaxon.JsonObject
-import java.io.File
-import java.util.concurrent.atomic.AtomicInteger
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -35,6 +33,7 @@ import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.sessionId
 import org.jetbrains.kotlinx.dataframe.io.tableInSessionId
 import org.jetbrains.kotlinx.dataframe.io.toHTML
+import java.io.File
 
 private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
     fun DataFrame<*>.toHTML() = toHTML(DisplayConfiguration(), getFooter = { "" })
@@ -125,11 +124,6 @@ fun main() {
 }
 
 object PluginCallback {
-//    val strings = mutableListOf<String>()
-//    val names = mutableListOf<String>()
-//    val dfs = mutableListOf<String>()
-
-    var i = AtomicInteger(0)
     val names = mutableMapOf<String, List<String>>()
     val expressionsByStatement = mutableMapOf<Int, List<Expression>>()
 
@@ -145,7 +139,6 @@ object PluginCallback {
     }
 
     fun save() {
-        if (i.get() == 0) return
         sessionId = 0
         tableInSessionId = 0
         var output = DataFrameHtmlData.tableDefinitions() + DataFrameHtmlData(
@@ -267,7 +260,6 @@ object PluginCallback {
 
     var action: (String, String, Any, String, String?, String?, String?, Int) -> Unit =
         { source, name, df, id, receiverId, containingClassFqName, containingFunName, statementIndex ->
-            i.incrementAndGet()
             expressionsByStatement.compute(statementIndex) { _, list ->
                 val element = Expression(source, containingClassFqName, containingFunName, df)
                 list?.plus(element) ?: listOf(element)

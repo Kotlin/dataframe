@@ -1,11 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.explainer
 
 import com.beust.klaxon.JsonObject
-import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.api.print
-import java.io.File
-import java.util.concurrent.atomic.AtomicInteger
 import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
@@ -19,11 +16,13 @@ import org.jetbrains.kotlinx.dataframe.api.Pivot
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 import org.jetbrains.kotlinx.dataframe.api.ReducedPivot
 import org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy
+import org.jetbrains.kotlinx.dataframe.api.Split
 import org.jetbrains.kotlinx.dataframe.api.SplitWithTransform
 import org.jetbrains.kotlinx.dataframe.api.Update
 import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.frames
 import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.api.where
@@ -34,6 +33,7 @@ import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.sessionId
 import org.jetbrains.kotlinx.dataframe.io.tableInSessionId
 import org.jetbrains.kotlinx.dataframe.io.toHTML
+import java.io.File
 
 private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
     fun DataFrame<*>.toHTML() = toHTML(DisplayConfiguration(), getFooter = { "" })
@@ -44,7 +44,7 @@ private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
         is ReducedPivot<*> -> dataframeLike.values().toDataFrame().toHTML()
         is PivotGroupBy<*> -> dataframeLike.frames().toHTML()
         is ReducedPivotGroupBy<*> -> dataframeLike.values().toHTML()
-        is SplitWithTransform<*, *, *> -> DataFrameHtmlData(body = "<p>${dataframeLike::class}</p>")
+        is SplitWithTransform<*, *, *> -> dataframeLike.into().toHTML()
         is Merge<*, *, *> -> dataframeLike.into("merged").toHTML()
         is Gather<*, *, *, *> -> dataframeLike.into("key", "value").toHTML()
 //        is Update<*, *> -> DataFrameHtmlData(body = "<p>${dataframeLike::class}</p>")
@@ -64,6 +64,13 @@ private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
         is AnyFrame -> dataframeLike.toHTML()
         is AnyCol -> dataframeLike.toDataFrame().toHTML()
         is DataRow<*> -> dataframeLike.toDataFrame().toHTML()
+        is Split<*, *> -> dataframeLike.toDataFrame().toHTML()
+//        is MoveClause<*, *>-> null
+//        is RenameClause<*, *> -> null
+//        is ReplaceClause<*, *> -> null
+//        is GroupClause<*, *> -> null
+//        is InsertClause<*> -> null
+//        is FormatClause<*, *> -> null
         else -> throw IllegalArgumentException("Unsupported type: ${dataframeLike::class}")
     }
 }
@@ -76,6 +83,13 @@ private fun convertToDescription(dataframeLike: Any): String {
         is PivotGroupBy<*> -> "PivotGroupBy"
         is ReducedPivotGroupBy<*> -> "ReducedPivotGroupBy"
         is SplitWithTransform<*, *, *> -> "SplitWithTransform"
+        is Split<*, *> -> "Split"
+//        is MoveClause<*, *> -> "Move"
+//        is RenameClause<*, *> -> "Rename"
+//        is ReplaceClause<*, *> -> "Replace"
+//        is GroupClause<*, *> -> "Group"
+//        is InsertClause<*> -> "Insert"
+//        is FormatClause<*, *> -> "Format"
         is Merge<*, *, *> -> "Merge"
         is Gather<*, *, *, *> -> "Gather"
         is Update<*, *> -> "Update"
@@ -110,11 +124,7 @@ fun main() {
 }
 
 object PluginCallback {
-//    val strings = mutableListOf<String>()
-//    val names = mutableListOf<String>()
-//    val dfs = mutableListOf<String>()
-
-    var i = AtomicInteger(0)
+//    var i = AtomicInteger(0)
     val names = mutableMapOf<String, List<String>>()
     val expressionsByStatement = mutableMapOf<Int, List<Expression>>()
 
@@ -130,7 +140,7 @@ object PluginCallback {
     }
 
     fun save() {
-        if (i.get() == 0) return
+//        if (i.get() == 0) return
         sessionId = 0
         tableInSessionId = 0
         var output = DataFrameHtmlData.tableDefinitions() + DataFrameHtmlData(
@@ -176,7 +186,7 @@ object PluginCallback {
                         <details>
                         <summary>${expressions.joinToString(".") { it.source }
                             .also {
-                                if (it.length > 88) TODO("expression is too long. better to split sample in multiple snippets")
+                                if (it.length > 95) TODO("expression is too long ${it.length}. better to split sample in multiple snippets")
                             }
                             .escapeHTML()}</summary>
                         ${details.body}
@@ -252,7 +262,7 @@ object PluginCallback {
 
     var action: (String, String, Any, String, String?, String?, String?, Int) -> Unit =
         { source, name, df, id, receiverId, containingClassFqName, containingFunName, statementIndex ->
-            i.incrementAndGet()
+//            i.incrementAndGet()
             expressionsByStatement.compute(statementIndex) { _, list ->
                 val element = Expression(source, containingClassFqName, containingFunName, df)
                 list?.plus(element) ?: listOf(element)
@@ -318,9 +328,12 @@ internal fun String.escapeHTML(): String {
                     append(c.code)
                     append(';')
                 }
-                c == '<' -> append("&lt;")
-                c == '>' -> append("&gt;")
+//                c == '<' -> append("&lt;")
+//                c == '>' -> append("&gt;")
                 c == '"' -> append("&quot;")
+                c == '<' -> append("&amp;lt;")
+                c == '>' -> append("&amp;gt;")
+//                c == '"' -> append("&amp;quot;")
                 c == '&' -> append("&amp;")
                 else -> {
                     append(c)
