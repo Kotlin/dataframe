@@ -48,10 +48,6 @@ korro {
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
     }
 
-    outputs = fileTree(project.projectDir) {
-        include("outputs/")
-    }
-
     groupSamples {
 
         beforeSample.set("<tab title=\"NAME\">\n")
