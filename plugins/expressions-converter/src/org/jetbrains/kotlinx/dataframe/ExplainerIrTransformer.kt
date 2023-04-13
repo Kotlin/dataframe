@@ -151,6 +151,8 @@ class ExplainerIrTransformer(val pluginContext: IrPluginContext) : FileLoweringP
         if (expression.type.classFqName in dataFrameLike) {
             if (expression.symbol.owner.name == Name.identifier("component1")) return expression
             var receiver = expression.extensionReceiver
+            // expression.extensionReceiver = extension callables,
+            // expression.dispatchReceiver = member callables such as "GroupBy.aggregate"
             if (receiver != null) {
                 val transformedExtensionReceiver = expression.extensionReceiver?.transform(this, data)
                 expression.extensionReceiver = transformedExtensionReceiver
@@ -162,7 +164,6 @@ class ExplainerIrTransformer(val pluginContext: IrPluginContext) : FileLoweringP
 
             return transformDataFrameExpression(expression, expression.symbol.owner.name, receiver = receiver, data)
         }
-        expression.transformChildren(this, data)
         return super.visitExpression(expression, data)
     }
 
