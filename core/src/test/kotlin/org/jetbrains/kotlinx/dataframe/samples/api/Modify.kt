@@ -33,6 +33,7 @@ import org.jetbrains.kotlinx.dataframe.api.fillNulls
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.flatten
 import org.jetbrains.kotlinx.dataframe.api.gather
+import org.jetbrains.kotlinx.dataframe.api.getRows
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.gt
@@ -97,8 +98,10 @@ import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withNull
 import org.jetbrains.kotlinx.dataframe.api.withValue
 import org.jetbrains.kotlinx.dataframe.api.withZero
+import org.jetbrains.kotlinx.dataframe.explainer.PluginCallback
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.jetbrains.kotlinx.dataframe.impl.api.mapNotNullValues
+import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 import org.jetbrains.kotlinx.dataframe.testResource
@@ -251,11 +254,25 @@ class Modify : TestBase() {
     }
 
     @Test
-    @TransformDataFrameExpressions
     fun shuffle() {
         // SampleStart
         df.shuffle()
         // SampleEnd
+
+        PluginCallback.expressionsByStatement[0] = listOf(
+            PluginCallback.Expression(
+                source = "df",
+                containingClassFqName = "org.jetbrains.kotlinx.dataframe.samples.api.Modify",
+                containingFunName = "shuffle",
+                df = df
+            ),
+            PluginCallback.Expression(
+                source = "shuffle()",
+                containingClassFqName = "org.jetbrains.kotlinx.dataframe.samples.api.Modify",
+                containingFunName = "shuffle",
+                df = df.getRows(df.indices.shuffled(Random(123)))
+            )
+        )
     }
 
     @Test
@@ -898,13 +915,17 @@ class Modify : TestBase() {
     }
 
     private class CityInfo(val city: String?, val population: Int, val location: String)
-    private fun queryCityInfo(city: String?): CityInfo { return CityInfo(city, city?.length ?: 0, "35.5 32.2") }
+
+    private fun queryCityInfo(city: String?): CityInfo {
+        return CityInfo(city, city?.length ?: 0, "35.5 32.2")
+    }
 
     @Test
     @TransformDataFrameExpressions
     fun addCalculatedApi() {
         // SampleStart
         class CityInfo(val city: String?, val population: Int, val location: String)
+
         fun queryCityInfo(city: String?): CityInfo {
             return CityInfo(city, city?.length ?: 0, "35.5 32.2")
         }

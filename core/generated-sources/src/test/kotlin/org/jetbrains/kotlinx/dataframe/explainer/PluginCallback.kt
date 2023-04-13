@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.explainer
 
-import com.beust.klaxon.JsonObject
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -22,7 +21,6 @@ import org.jetbrains.kotlinx.dataframe.api.Update
 import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.frames
 import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.api.where
@@ -34,6 +32,165 @@ import org.jetbrains.kotlinx.dataframe.io.sessionId
 import org.jetbrains.kotlinx.dataframe.io.tableInSessionId
 import org.jetbrains.kotlinx.dataframe.io.toHTML
 import java.io.File
+
+annotation class TransformDataFrameExpressions
+
+object PluginCallback {
+    val names = mutableMapOf<String, List<String>>()
+    val expressionsByStatement = mutableMapOf<Int, List<Expression>>()
+
+    data class Expression(
+        val source: String,
+        val containingClassFqName: String?,
+        val containingFunName: String?,
+        val df: Any
+    )
+
+    fun start() {
+        expressionsByStatement.clear()
+    }
+
+    fun save() {
+        // ensure stable table ids across test invocation
+        sessionId = 0
+        tableInSessionId = 0
+        var output = DataFrameHtmlData.tableDefinitions() + DataFrameHtmlData(
+            // copy writerside stlyles
+            style = """
+                body {
+                    font-family: "JetBrains Mono",SFMono-Regular,Consolas,"Liberation Mono",Menlo,Courier,monospace;
+                }       
+                
+                :root {
+                    color: #19191C;
+                    background-color: #fff;
+                }
+                
+                :root[theme="dark"] {
+                    background-color: #19191C;
+                    color: #FFFFFFCC
+                }
+                
+                details details {
+                    margin-left: 20px; 
+                }
+                
+                summary {
+                    padding: 6px;
+                }
+            """.trimIndent()
+        )
+
+        // make copy to avoid concurrent modification exception
+        val statements = expressionsByStatement.toMap()
+        when (statements.size) {
+            0 -> TODO("function doesn't have any dataframe expression")
+            1 -> {
+                output += statementOutput(statements.values.single())
+            }
+            else -> {
+                statements.forEach { (index, expressions) ->
+                    var details: DataFrameHtmlData = statementOutput(expressions)
+
+                    details = details.copy(
+                        body =
+                        """
+                        <details>
+                        <summary>${expressions.joinToString(".") { it.source }
+                            .also {
+                                if (it.length > 95) TODO("expression is too long ${it.length}. better to split sample in multiple snippets")
+                            }
+                            .escapeHtmlForIFrame()}</summary>
+                        ${details.body}
+                        </details>
+                        <br>
+                        """.trimIndent()
+                    )
+
+                    output += details
+                }
+            }
+        }
+        val input = expressionsByStatement.values.first().first()
+        val name = "${input.containingClassFqName}.${input.containingFunName}"
+        val destination = File("build/dataframes").also {
+            it.mkdirs()
+        }
+        output.writeHTML(File(destination, "$name.html"))
+    }
+
+    private fun statementOutput(
+        expressions: List<Expression>,
+    ): DataFrameHtmlData {
+        var data = DataFrameHtmlData()
+        if (expressions.size < 2) error("Sample without output or input (i.e. function returns some value)")
+        for ((i, expression) in expressions.withIndex()) {
+            when (i) {
+                0 -> {
+                    val table = convertToHTML(expression.df)
+                    val description = table.copy(
+                        body = """
+                                    <details>
+                                    <summary>Input ${convertToDescription(expression.df)}</summary>
+                                     ${table.body}
+                                    </details>
+                        """.trimIndent()
+                    )
+                    data += description
+                }
+
+                expressions.lastIndex -> {
+                    val table = convertToHTML(expression.df)
+                    val description = table.copy(
+                        body = """
+                                    <details>
+                                    <summary>Output ${convertToDescription(expression.df)}</summary>
+                                     ${table.body}
+                                    </details>
+                        """.trimIndent()
+                    )
+                    data += description
+                }
+
+                else -> {
+                    val table = convertToHTML(expression.df)
+                    val description = table.copy(
+                        body = """
+                                    <details>
+                                    <summary>Step $i: ${convertToDescription(expression.df)}</summary>
+                                     ${table.body}
+                                    </details>
+                        """.trimIndent()
+                    )
+                    data += description
+                }
+            }
+        }
+        return data
+    }
+
+    var action: (String, String, Any, String, String?, String?, String?, Int) -> Unit =
+        { source, name, df, id, receiverId, containingClassFqName, containingFunName, statementIndex ->
+            expressionsByStatement.compute(statementIndex) { _, list ->
+                val element = Expression(source, containingClassFqName, containingFunName, df)
+                list?.plus(element) ?: listOf(element)
+            }
+        }
+
+    @Suppress("unused")
+    fun doAction(
+        string: String,
+        name: String,
+        df: Any,
+        id: String,
+        receiverId: String?,
+        containingClassFqName: String?,
+        containingFunName: String?,
+        statementIndex: Int
+    ) {
+        action(string, name, df, id, receiverId, containingClassFqName, containingFunName, statementIndex)
+    }
+}
 
 private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
     fun DataFrame<*>.toHTML() = toHTML(DisplayConfiguration(), getFooter = { "" })
@@ -96,204 +253,8 @@ private fun convertToDescription(dataframeLike: Any): String {
         is FormattedFrame<*> -> "FormattedFrame"
         is GroupBy<*, *> -> "GroupBy"
         is DataRow<*> -> "DataRow"
-        else -> "TODO"
+        else -> throw IllegalArgumentException("Unsupported type: ${dataframeLike::class}")
     }.escapeHtmlForIFrame()
-}
-
-annotation class TransformDataFrameExpressions
-
-object PluginCallback {
-    val names = mutableMapOf<String, List<String>>()
-    val expressionsByStatement = mutableMapOf<Int, List<Expression>>()
-
-    data class Expression(
-        val source: String,
-        val containingClassFqName: String?,
-        val containingFunName: String?,
-        val df: Any
-    )
-
-    fun start() {
-        expressionsByStatement.clear()
-    }
-
-    fun save() {
-        // ensure stable table ids across test invocation
-        sessionId = 0
-        tableInSessionId = 0
-        var output = DataFrameHtmlData.tableDefinitions() + DataFrameHtmlData(
-            style = """
-                body {
-                    font-family: "JetBrains Mono",SFMono-Regular,Consolas,"Liberation Mono",Menlo,Courier,monospace;
-                }       
-                
-                :root {
-                    color: #19191C;
-                    background-color: #fff;
-                }
-                
-                :root[theme="dark"] {
-                    background-color: #19191C;
-                    color: #FFFFFFCC
-                }
-                
-                details details {
-                    margin-left: 20px; 
-                }
-                
-                summary {
-                    padding: 6px;
-                }
-            """.trimIndent()
-        )
-
-        // make copy to avoid concurrent modification exception
-        val statements = expressionsByStatement.toMap()
-        when (statements.size) {
-            0 -> TODO("wtf")
-            1 -> {
-                output += expressionOutputs(statements.values.single(), open = false)
-            }
-            else -> {
-                statements.forEach { (index, expressions) ->
-                    var details: DataFrameHtmlData = expressionOutputs(expressions, open = true)
-
-                    details = details.copy(
-                        body =
-                        """
-                        <details>
-                        <summary>${expressions.joinToString(".") { it.source }
-                            .also {
-                                if (it.length > 95) TODO("expression is too long ${it.length}. better to split sample in multiple snippets")
-                            }
-                            .escapeHtmlForIFrame()}</summary>
-                        ${details.body}
-                        </details>
-                        <br>
-                        """.trimIndent()
-                    )
-
-                    output += details
-                }
-            }
-        }
-        val input = expressionsByStatement.values.first().first()
-        val name = "${input.containingClassFqName}.${input.containingFunName}"
-        val destination = File("build/dataframes").also {
-            it.mkdirs()
-        }
-        output.writeHTML(File(destination, "$name.html"))
-    }
-
-    private fun expressionOutputs(
-        expressions: List<Expression>,
-        open: Boolean,
-    ): DataFrameHtmlData {
-//        val attribute = if (open) " open" else ""
-        val attribute = ""
-        var data = DataFrameHtmlData()
-        if (expressions.size < 2) error("Sample without output or input (i.e. function returns some value)")
-        for ((i, expression) in expressions.withIndex()) {
-            when (i) {
-                0 -> {
-                    val table = convertToHTML(expression.df)
-                    val description = table.copy(
-                        body = """
-                                    <details$attribute>
-                                    <summary>Input ${convertToDescription(expression.df)}</summary>
-                                     ${table.body}
-                                    </details>
-                        """.trimIndent()
-                    )
-                    data += description
-                }
-
-                expressions.lastIndex -> {
-                    val table = convertToHTML(expression.df)
-                    val description = table.copy(
-                        body = """
-                                    <details$attribute>
-                                    <summary>Output ${convertToDescription(expression.df)}</summary>
-                                     ${table.body}
-                                    </details>
-                        """.trimIndent()
-                    )
-                    data += description
-                }
-
-                else -> {
-                    val table = convertToHTML(expression.df)
-                    val description = table.copy(
-                        body = """
-                                    <details>
-                                    <summary>Step $i: ${convertToDescription(expression.df)}</summary>
-                                     ${table.body}
-                                    </details>
-                        """.trimIndent()
-                    )
-                    data += description
-                }
-            }
-        }
-        return data
-    }
-
-    var action: (String, String, Any, String, String?, String?, String?, Int) -> Unit =
-        { source, name, df, id, receiverId, containingClassFqName, containingFunName, statementIndex ->
-            expressionsByStatement.compute(statementIndex) { _, list ->
-                val element = Expression(source, containingClassFqName, containingFunName, df)
-                list?.plus(element) ?: listOf(element)
-            }
-            //        strings.add(string)
-            //        names.add(name)
-            // Can be called with the same name multiple times, need to aggregate samples by function name somehow?
-            // save schema
-            val path = "$containingClassFqName.$containingFunName.html"
-            // names.compute(path) {  }
-            //        dfs.add(path)
-            if (df is AnyFrame) {
-                println(source)
-//                df.print()
-                println(id)
-                println(receiverId)
-            } else {
-                println(df::class)
-            }
-            File("build/out").let {
-                val json = JsonObject(
-                    mapOf(
-                        "string" to source,
-                        "name" to name,
-                        "path" to path,
-                        "id" to id,
-                        "receiverId" to receiverId,
-                    )
-                ).toJsonString()
-                it.appendText(json)
-                it.appendText(",\n")
-            }
-            println(path)
-            if (df is AnyFrame) {
-                df.print()
-            } else {
-                println(df::class)
-            }
-            //        convertToHTML(df).writeHTML(File("build/dataframes/$path"))
-        }
-
-    @Suppress("unused")
-    fun doAction(
-        string: String,
-        name: String,
-        df: Any,
-        id: String,
-        receiverId: String?,
-        containingClassFqName: String?,
-        containingFunName: String?,
-        statementIndex: Int
-    ) {
-        action(string, name, df, id, receiverId, containingClassFqName, containingFunName, statementIndex)
-    }
 }
 
 internal fun String.escapeHtmlForIFrame(): String {
