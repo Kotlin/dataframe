@@ -14,14 +14,12 @@ import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrField
 import org.jetbrains.kotlin.ir.declarations.IrFile
 import org.jetbrains.kotlin.ir.declarations.IrFunction
-import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.declarations.impl.IrFunctionImpl
 import org.jetbrains.kotlin.ir.declarations.impl.IrValueParameterImpl
 import org.jetbrains.kotlin.ir.declarations.path
 import org.jetbrains.kotlin.ir.expressions.IrBlockBody
 import org.jetbrains.kotlin.ir.expressions.IrBody
 import org.jetbrains.kotlin.ir.expressions.IrCall
-import org.jetbrains.kotlin.ir.expressions.IrConstKind
 import org.jetbrains.kotlin.ir.expressions.IrDeclarationReference
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrExpressionBody
@@ -35,7 +33,6 @@ import org.jetbrains.kotlin.ir.expressions.impl.IrGetValueImpl
 import org.jetbrains.kotlin.ir.symbols.impl.IrSimpleFunctionSymbolImpl
 import org.jetbrains.kotlin.ir.symbols.impl.IrValueParameterSymbolImpl
 import org.jetbrains.kotlin.ir.types.classFqName
-import org.jetbrains.kotlin.ir.types.classOrNull
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.makeNullable
 import org.jetbrains.kotlin.ir.types.typeWith
@@ -268,42 +265,5 @@ class ExplainerIrTransformer(val pluginContext: IrPluginContext) : FileLoweringP
         val line = file.fileEntry.getLineNumber(expression.startOffset)
         val column = file.fileEntry.getColumnNumber(expression.startOffset)
         return "${file.path}:${line + 1}:${column + 1}"
-    }
-
-    @OptIn(FirIncompatiblePluginAPI::class)
-    private fun transformPrint(expression: IrCall): IrCallImpl {
-        val message = when (val arg = expression.getValueArgument(0)) {
-            is IrGetValue -> {
-                val irVariable = arg.symbol.owner as? IrVariable
-                if (irVariable != null) {
-                    irVariable.initializer?.let {
-                        source.substring(it.startOffset, it.endOffset)
-                    }
-                } else null
-            }
-
-            else -> null
-        }
-        val to = pluginContext.referenceFunctions(FqName("kotlin.to")).single()
-        val toCall = IrCallImpl(
-            -1,
-            -1,
-            to.owner.returnType.classOrNull?.typeWith(
-                pluginContext.irBuiltIns.stringType,
-                expression.getValueArgument(0)!!.type
-            )!!,
-            to,
-            0,
-            1
-        ).apply {
-            extensionReceiver = IrConstImpl(-1, -1, pluginContext.irBuiltIns.stringType, IrConstKind.String, message!!)
-            putValueArgument(0, expression.getValueArgument(0)!!)
-        }
-        val printM =
-            pluginContext.referenceFunctions(FqName("org.jetbrains.kotlinx.dataframe.explainer.printM")).single()
-        val printMCall = IrCallImpl(-1, -1, printM.owner.returnType, printM, 0, 1).apply {
-            putValueArgument(0, toCall)
-        }
-        return printMCall
     }
 }

@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.explainer
 
-import com.beust.klaxon.JsonObject
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -22,7 +21,6 @@ import org.jetbrains.kotlinx.dataframe.api.Update
 import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.frames
 import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.api.where
@@ -88,11 +86,11 @@ object PluginCallback {
         when (statements.size) {
             0 -> TODO("function doesn't have any dataframe expression")
             1 -> {
-                output += statementOutput(statements.values.single(), open = false)
+                output += statementOutput(statements.values.single())
             }
             else -> {
                 statements.forEach { (index, expressions) ->
-                    var details: DataFrameHtmlData = statementOutput(expressions, open = true)
+                    var details: DataFrameHtmlData = statementOutput(expressions)
 
                     details = details.copy(
                         body =
@@ -123,10 +121,7 @@ object PluginCallback {
 
     private fun statementOutput(
         expressions: List<Expression>,
-        open: Boolean,
     ): DataFrameHtmlData {
-//        val attribute = if (open) " open" else ""
-        val attribute = ""
         var data = DataFrameHtmlData()
         if (expressions.size < 2) error("Sample without output or input (i.e. function returns some value)")
         for ((i, expression) in expressions.withIndex()) {
@@ -135,7 +130,7 @@ object PluginCallback {
                     val table = convertToHTML(expression.df)
                     val description = table.copy(
                         body = """
-                                    <details$attribute>
+                                    <details>
                                     <summary>Input ${convertToDescription(expression.df)}</summary>
                                      ${table.body}
                                     </details>
@@ -148,7 +143,7 @@ object PluginCallback {
                     val table = convertToHTML(expression.df)
                     val description = table.copy(
                         body = """
-                                    <details$attribute>
+                                    <details>
                                     <summary>Output ${convertToDescription(expression.df)}</summary>
                                      ${table.body}
                                     </details>
@@ -180,41 +175,6 @@ object PluginCallback {
                 val element = Expression(source, containingClassFqName, containingFunName, df)
                 list?.plus(element) ?: listOf(element)
             }
-            //        strings.add(string)
-            //        names.add(name)
-            // Can be called with the same name multiple times, need to aggregate samples by function name somehow?
-            // save schema
-            val path = "$containingClassFqName.$containingFunName.html"
-            // names.compute(path) {  }
-            //        dfs.add(path)
-            if (df is AnyFrame) {
-                println(source)
-//                df.print()
-                println(id)
-                println(receiverId)
-            } else {
-                println(df::class)
-            }
-            File("build/out").let {
-                val json = JsonObject(
-                    mapOf(
-                        "string" to source,
-                        "name" to name,
-                        "path" to path,
-                        "id" to id,
-                        "receiverId" to receiverId,
-                    )
-                ).toJsonString()
-                it.appendText(json)
-                it.appendText(",\n")
-            }
-            println(path)
-            if (df is AnyFrame) {
-                df.print()
-            } else {
-                println(df::class)
-            }
-            //        convertToHTML(df).writeHTML(File("build/dataframes/$path"))
         }
 
     @Suppress("unused")
