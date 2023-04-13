@@ -9,11 +9,6 @@ fun callChain(df: DataFrame<*>) {
         .filter { "age"<Int>() > 20 }
         .groupBy("value")
         .sum()
-
-    val df2 = df
-        .filter { "age"<Int>() > 20 }
-        .groupBy("value")
-        .sum()
 }
 
 interface Person
@@ -61,6 +56,21 @@ fun aggregateDf() {
     }
 }
 
+@TransformDataFrameExpressions
+fun move() {
+    val df = dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(
+        "Alice", "Cooper", 15, "London", 54, true,
+        "Bob", "Dylan", 45, "Dubai", 87, true,
+        "Charlie", "Daniels", 20, "Moscow", null, false,
+        "Charlie", "Chaplin", 40, "Milan", null, true,
+        "Bob", "Marley", 30, "Tokyo", 68, true,
+        "Alice", "Wolf", 20, null, 55, false,
+        "Charlie", "Byrd", 30, "Moscow", 90, true
+    ).group("firstName", "lastName").into("name")
+
+    df.move("age", "weight").into { pathOf("info", it.name()) }
+}
+
 object PluginCallback {
     var action: (String, String, Any, String, String?, String? String?, Int) -> Unit = { _, _, _, _, _, _, _, _  -> Unit }
 
@@ -90,10 +100,12 @@ fun box(): String {
     val age by columnOf(10, 21, 30, 1)
     val value by columnOf("a", "b", "c", "c")
     val df = dataFrameOf(age, value)
-    PluginCallback.action = { str, _, df, id, receiverId, containingClassFqName, containingFunName, statementIndex ->
+    val expressions = mutableListOf<String>()
+    PluginCallback.action = { source, _, df, id, receiverId, containingClassFqName, containingFunName, statementIndex ->
         println("== Call ==")
+        expressions += source
         if (df is AnyFrame) {
-            println(str)
+            println(source)
             df.print()
             println(id)
             println(receiverId)
@@ -105,12 +117,26 @@ fun box(): String {
         }
         println("== End ==")
     }
+
     println("CallChain")
     callChain(df)
+    println("expressions = ${expressions}")
+    expressions.clear()
+
     println("ff")
     Wrapper().ff()
+    println("expressions = ${expressions}")
+    expressions.clear()
 //    callChainTransformed(df)
+
     println("aggregateDf")
     aggregateDf()
+    println("expressions = ${expressions}")
+    expressions.clear()
+
+    println("move")
+    move()
+    println("expressions = ${expressions}")
+    expressions.clear()
     return "OK"
 }

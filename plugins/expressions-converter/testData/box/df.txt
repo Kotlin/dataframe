@@ -12,6 +12,7 @@ package org {
                     @org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions public fun aggregateDf(): kotlin.Unit
                     public fun box(): kotlin.String
                     @org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions public fun callChain(/*0*/ df: org.jetbrains.kotlinx.dataframe.DataFrame<*>): kotlin.Unit
+                    @org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions public fun move(): kotlin.Unit
 
                     public interface Person {
                         public open override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
