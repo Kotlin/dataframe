@@ -34,10 +34,6 @@ repositories {
     maven(jupyterApiTCRepo)
 }
 
-//val testWithOutputs by configurations.creating {
-//    extendsFrom(configurations.kotlinCompilerPluginClasspathTest.get())
-//}
-
 kotlin.sourceSets {
     main {
         kotlin.srcDir("build/generated/ksp/main/kotlin/")
@@ -51,6 +47,29 @@ sourceSets {
     create("myTest") {
         kotlin.srcDir("src/test/kotlin")
     }
+}
+
+dependencies {
+    val kotlinCompilerPluginClasspathMyTest by configurations.getting
+
+    api(libs.kotlin.reflect)
+    implementation(libs.kotlin.stdlib)
+    kotlinCompilerPluginClasspathMyTest(project(":plugins:expressions-converter"))
+    implementation(libs.kotlin.stdlib.jdk8)
+
+    api(libs.commonsCsv)
+    implementation(libs.klaxon)
+    implementation(libs.fuel)
+
+    api(libs.kotlin.datetimeJvm)
+    implementation(libs.kotlinpoet)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.kotestAssertions) {
+        exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
+    }
+    testImplementation(libs.kotlin.scriptingJvm)
+    testImplementation(libs.jsoup)
 }
 
 val myTestImplementation by configurations.getting {
@@ -99,33 +118,9 @@ val customTest = tasks.register<Test>("customTest") {
     classpath = files("$buildDir/classes/testWithOutputs/kotlin") + configurations["myTestRuntimeClasspath"] + sourceSets["main"].runtimeClasspath
 }
 
-//val kotlinCompilerPluginClasspathTest by configurations.getting
-val kotlinCompilerPluginClasspathMyTest by configurations.getting
-
-dependencies {
-    api(libs.kotlin.reflect)
-    implementation(libs.kotlin.stdlib)
-    kotlinCompilerPluginClasspathMyTest(project(":plugins:expressions-converter"))
-    implementation(libs.kotlin.stdlib.jdk8)
-
-    api(libs.commonsCsv)
-    implementation(libs.klaxon)
-    implementation(libs.fuel)
-
-    api(libs.kotlin.datetimeJvm)
-    implementation(libs.kotlinpoet)
-
-    testImplementation(libs.junit)
-    testImplementation(libs.kotestAssertions) {
-        exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
-    }
-    testImplementation(libs.kotlin.scriptingJvm)
-    testImplementation(libs.jsoup)
-}
-
 val copySamplesOutputs = tasks.register<JavaExec>("copySamplesOutputs") {
     group = "documentation"
-    mainClass.set("org.jetbrains.kotlinx.dataframe.explainer.PluginCallbackKt")
+    mainClass.set("org.jetbrains.kotlinx.dataframe.explainer.SampleAggregatorKt")
 
     doFirst {
         delete {

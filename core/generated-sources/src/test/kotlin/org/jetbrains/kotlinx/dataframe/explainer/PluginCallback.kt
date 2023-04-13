@@ -47,7 +47,6 @@ private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
         is SplitWithTransform<*, *, *> -> dataframeLike.into().toHTML()
         is Merge<*, *, *> -> dataframeLike.into("merged").toHTML()
         is Gather<*, *, *, *> -> dataframeLike.into("key", "value").toHTML()
-//        is Update<*, *> -> DataFrameHtmlData(body = "<p>${dataframeLike::class}</p>")
         is Update<*, *> -> dataframeLike.df.let {
             var it = it.format(dataframeLike.columns as ColumnsSelectionDsl<Any?>.(it: ColumnsSelectionDsl<Any?>) -> ColumnSet<*>)
             if (dataframeLike.filter != null) {
@@ -98,33 +97,12 @@ private fun convertToDescription(dataframeLike: Any): String {
         is GroupBy<*, *> -> "GroupBy"
         is DataRow<*> -> "DataRow"
         else -> "TODO"
-    }.escapeHTML()
+    }.escapeHtmlForIFrame()
 }
 
 annotation class TransformDataFrameExpressions
 
-fun main() {
-    File("build/dataframes")
-        .walkTopDown()
-        .filter {
-            it.nameWithoutExtension.startsWith("org.jetbrains")
-        }
-        // org.ClassName.functionName_properties
-        // <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addDfs.html"/>
-        .groupBy {
-            it.nameWithoutExtension.substringBefore("_")
-        }
-        .mapValues { (name, files) ->
-            val target = File("../docs/StardustDocs/snippets")
-            val original = files
-                .firstOrNull { it.nameWithoutExtension.contains("properties") }
-                ?: files.first()
-            original.copyTo(File(target, "$name.html"), overwrite = true)
-        }
-}
-
 object PluginCallback {
-//    var i = AtomicInteger(0)
     val names = mutableMapOf<String, List<String>>()
     val expressionsByStatement = mutableMapOf<Int, List<Expression>>()
 
@@ -140,7 +118,7 @@ object PluginCallback {
     }
 
     fun save() {
-//        if (i.get() == 0) return
+        // ensure stable table ids across test invocation
         sessionId = 0
         tableInSessionId = 0
         var output = DataFrameHtmlData.tableDefinitions() + DataFrameHtmlData(
@@ -188,7 +166,7 @@ object PluginCallback {
                             .also {
                                 if (it.length > 95) TODO("expression is too long ${it.length}. better to split sample in multiple snippets")
                             }
-                            .escapeHTML()}</summary>
+                            .escapeHtmlForIFrame()}</summary>
                         ${details.body}
                         </details>
                         <br>
@@ -262,7 +240,6 @@ object PluginCallback {
 
     var action: (String, String, Any, String, String?, String?, String?, Int) -> Unit =
         { source, name, df, id, receiverId, containingClassFqName, containingFunName, statementIndex ->
-//            i.incrementAndGet()
             expressionsByStatement.compute(statementIndex) { _, list ->
                 val element = Expression(source, containingClassFqName, containingFunName, df)
                 list?.plus(element) ?: listOf(element)
@@ -304,6 +281,7 @@ object PluginCallback {
             //        convertToHTML(df).writeHTML(File("build/dataframes/$path"))
         }
 
+    @Suppress("unused")
     fun doAction(
         string: String,
         name: String,
@@ -318,7 +296,7 @@ object PluginCallback {
     }
 }
 
-internal fun String.escapeHTML(): String {
+internal fun String.escapeHtmlForIFrame(): String {
     val str = this
     return buildString {
         for (c in str) {
@@ -328,12 +306,9 @@ internal fun String.escapeHTML(): String {
                     append(c.code)
                     append(';')
                 }
-//                c == '<' -> append("&lt;")
-//                c == '>' -> append("&gt;")
                 c == '"' -> append("&quot;")
                 c == '<' -> append("&amp;lt;")
                 c == '>' -> append("&amp;gt;")
-//                c == '"' -> append("&amp;quot;")
                 c == '&' -> append("&amp;")
                 else -> {
                     append(c)

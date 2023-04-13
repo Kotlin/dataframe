@@ -35,93 +35,7 @@ import org.jetbrains.kotlinx.dataframe.io.tableInSessionId
 import org.jetbrains.kotlinx.dataframe.io.toHTML
 import java.io.File
 
-private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
-    fun DataFrame<*>.toHTML() = toHTML(DisplayConfiguration(), getFooter = { "" })
-    fun FormattedFrame<*>.toHTML1() = toHTML(DisplayConfiguration())
-
-    return when (dataframeLike) {
-        is Pivot<*> -> dataframeLike.frames().toDataFrame().toHTML()
-        is ReducedPivot<*> -> dataframeLike.values().toDataFrame().toHTML()
-        is PivotGroupBy<*> -> dataframeLike.frames().toHTML()
-        is ReducedPivotGroupBy<*> -> dataframeLike.values().toHTML()
-        is SplitWithTransform<*, *, *> -> dataframeLike.into().toHTML()
-        is Merge<*, *, *> -> dataframeLike.into("merged").toHTML()
-        is Gather<*, *, *, *> -> dataframeLike.into("key", "value").toHTML()
-//        is Update<*, *> -> DataFrameHtmlData(body = "<p>${dataframeLike::class}</p>")
-        is Update<*, *> -> dataframeLike.df.let {
-            var it = it.format(dataframeLike.columns as ColumnsSelectionDsl<Any?>.(it: ColumnsSelectionDsl<Any?>) -> ColumnSet<*>)
-            if (dataframeLike.filter != null) {
-                it = it.where(dataframeLike.filter as RowValueFilter<Any?, Any?>)
-            }
-            it.with {
-                background(rgb(152, 251, 152))
-            }
-        }
-            .toHTML1()
-        is Convert<*, *> -> DataFrameHtmlData(body = "<p>${dataframeLike::class}</p>")
-        is FormattedFrame<*> -> dataframeLike.toHTML1()
-        is GroupBy<*, *> -> dataframeLike.toDataFrame().toHTML()
-        is AnyFrame -> dataframeLike.toHTML()
-        is AnyCol -> dataframeLike.toDataFrame().toHTML()
-        is DataRow<*> -> dataframeLike.toDataFrame().toHTML()
-        is Split<*, *> -> dataframeLike.toDataFrame().toHTML()
-//        is MoveClause<*, *>-> null
-//        is RenameClause<*, *> -> null
-//        is ReplaceClause<*, *> -> null
-//        is GroupClause<*, *> -> null
-//        is InsertClause<*> -> null
-//        is FormatClause<*, *> -> null
-        else -> throw IllegalArgumentException("Unsupported type: ${dataframeLike::class}")
-    }
-}
-
-private fun convertToDescription(dataframeLike: Any): String {
-    return when (dataframeLike) {
-        is AnyFrame -> dataframeLike.let { "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}" }
-        is Pivot<*> -> "Pivot"
-        is ReducedPivot<*> -> "ReducedPivot"
-        is PivotGroupBy<*> -> "PivotGroupBy"
-        is ReducedPivotGroupBy<*> -> "ReducedPivotGroupBy"
-        is SplitWithTransform<*, *, *> -> "SplitWithTransform"
-        is Split<*, *> -> "Split"
-//        is MoveClause<*, *> -> "Move"
-//        is RenameClause<*, *> -> "Rename"
-//        is ReplaceClause<*, *> -> "Replace"
-//        is GroupClause<*, *> -> "Group"
-//        is InsertClause<*> -> "Insert"
-//        is FormatClause<*, *> -> "Format"
-        is Merge<*, *, *> -> "Merge"
-        is Gather<*, *, *, *> -> "Gather"
-        is Update<*, *> -> "Update"
-        is Convert<*, *> -> "Convert"
-        is FormattedFrame<*> -> "FormattedFrame"
-        is GroupBy<*, *> -> "GroupBy"
-        is DataRow<*> -> "DataRow"
-        else -> "TODO"
-    }.escapeHTML()
-}
-
 annotation class TransformDataFrameExpressions
-
-fun main() {
-    File("build/dataframes")
-        .walkTopDown()
-        .filter {
-            it.nameWithoutExtension.startsWith("org.jetbrains")
-        }
-        // org.ClassName.functionName_properties
-        // <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addDfs.html"/>
-        .groupBy {
-            it.nameWithoutExtension.substringBefore("_")
-        }
-        .mapValues { (name, files) ->
-            val target = File("../docs/StardustDocs/snippets")
-            val original = files
-                .firstOrNull { it.nameWithoutExtension.contains("properties") }
-                ?: files.first()
-            original.copyTo(File(target, "$name.html"), overwrite = true)
-        }
-}
 
 object PluginCallback {
     val names = mutableMapOf<String, List<String>>()
@@ -139,9 +53,11 @@ object PluginCallback {
     }
 
     fun save() {
+        // ensure stable table ids across test invocation
         sessionId = 0
         tableInSessionId = 0
         var output = DataFrameHtmlData.tableDefinitions() + DataFrameHtmlData(
+            // copy writerside stlyles
             style = """
                 body {
                     font-family: "JetBrains Mono",SFMono-Regular,Consolas,"Liberation Mono",Menlo,Courier,monospace;
@@ -170,13 +86,13 @@ object PluginCallback {
         // make copy to avoid concurrent modification exception
         val statements = expressionsByStatement.toMap()
         when (statements.size) {
-            0 -> TODO("wtf")
+            0 -> TODO("function doesn't have any dataframe expression")
             1 -> {
-                output += expressionOutputs(statements.values.single(), open = false)
+                output += statementOutput(statements.values.single(), open = false)
             }
             else -> {
                 statements.forEach { (index, expressions) ->
-                    var details: DataFrameHtmlData = expressionOutputs(expressions, open = true)
+                    var details: DataFrameHtmlData = statementOutput(expressions, open = true)
 
                     details = details.copy(
                         body =
@@ -186,7 +102,7 @@ object PluginCallback {
                             .also {
                                 if (it.length > 95) TODO("expression is too long ${it.length}. better to split sample in multiple snippets")
                             }
-                            .escapeHTML()}</summary>
+                            .escapeHtmlForIFrame()}</summary>
                         ${details.body}
                         </details>
                         <br>
@@ -205,7 +121,7 @@ object PluginCallback {
         output.writeHTML(File(destination, "$name.html"))
     }
 
-    private fun expressionOutputs(
+    private fun statementOutput(
         expressions: List<Expression>,
         open: Boolean,
     ): DataFrameHtmlData {
@@ -301,6 +217,7 @@ object PluginCallback {
             //        convertToHTML(df).writeHTML(File("build/dataframes/$path"))
         }
 
+    @Suppress("unused")
     fun doAction(
         string: String,
         name: String,
@@ -315,7 +232,72 @@ object PluginCallback {
     }
 }
 
-internal fun String.escapeHTML(): String {
+private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
+    fun DataFrame<*>.toHTML() = toHTML(DisplayConfiguration(), getFooter = { "" })
+    fun FormattedFrame<*>.toHTML1() = toHTML(DisplayConfiguration())
+
+    return when (dataframeLike) {
+        is Pivot<*> -> dataframeLike.frames().toDataFrame().toHTML()
+        is ReducedPivot<*> -> dataframeLike.values().toDataFrame().toHTML()
+        is PivotGroupBy<*> -> dataframeLike.frames().toHTML()
+        is ReducedPivotGroupBy<*> -> dataframeLike.values().toHTML()
+        is SplitWithTransform<*, *, *> -> dataframeLike.into().toHTML()
+        is Merge<*, *, *> -> dataframeLike.into("merged").toHTML()
+        is Gather<*, *, *, *> -> dataframeLike.into("key", "value").toHTML()
+        is Update<*, *> -> dataframeLike.df.let {
+            var it = it.format(dataframeLike.columns as ColumnsSelectionDsl<Any?>.(it: ColumnsSelectionDsl<Any?>) -> ColumnSet<*>)
+            if (dataframeLike.filter != null) {
+                it = it.where(dataframeLike.filter as RowValueFilter<Any?, Any?>)
+            }
+            it.with {
+                background(rgb(152, 251, 152))
+            }
+        }
+            .toHTML1()
+        is Convert<*, *> -> DataFrameHtmlData(body = "<p>${dataframeLike::class}</p>")
+        is FormattedFrame<*> -> dataframeLike.toHTML1()
+        is GroupBy<*, *> -> dataframeLike.toDataFrame().toHTML()
+        is AnyFrame -> dataframeLike.toHTML()
+        is AnyCol -> dataframeLike.toDataFrame().toHTML()
+        is DataRow<*> -> dataframeLike.toDataFrame().toHTML()
+        is Split<*, *> -> dataframeLike.toDataFrame().toHTML()
+//        is MoveClause<*, *>-> null
+//        is RenameClause<*, *> -> null
+//        is ReplaceClause<*, *> -> null
+//        is GroupClause<*, *> -> null
+//        is InsertClause<*> -> null
+//        is FormatClause<*, *> -> null
+        else -> throw IllegalArgumentException("Unsupported type: ${dataframeLike::class}")
+    }
+}
+
+private fun convertToDescription(dataframeLike: Any): String {
+    return when (dataframeLike) {
+        is AnyFrame -> dataframeLike.let { "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}" }
+        is Pivot<*> -> "Pivot"
+        is ReducedPivot<*> -> "ReducedPivot"
+        is PivotGroupBy<*> -> "PivotGroupBy"
+        is ReducedPivotGroupBy<*> -> "ReducedPivotGroupBy"
+        is SplitWithTransform<*, *, *> -> "SplitWithTransform"
+        is Split<*, *> -> "Split"
+//        is MoveClause<*, *> -> "Move"
+//        is RenameClause<*, *> -> "Rename"
+//        is ReplaceClause<*, *> -> "Replace"
+//        is GroupClause<*, *> -> "Group"
+//        is InsertClause<*> -> "Insert"
+//        is FormatClause<*, *> -> "Format"
+        is Merge<*, *, *> -> "Merge"
+        is Gather<*, *, *, *> -> "Gather"
+        is Update<*, *> -> "Update"
+        is Convert<*, *> -> "Convert"
+        is FormattedFrame<*> -> "FormattedFrame"
+        is GroupBy<*, *> -> "GroupBy"
+        is DataRow<*> -> "DataRow"
+        else -> throw IllegalArgumentException("Unsupported type: ${dataframeLike::class}")
+    }.escapeHtmlForIFrame()
+}
+
+internal fun String.escapeHtmlForIFrame(): String {
     val str = this
     return buildString {
         for (c in str) {
@@ -325,12 +307,9 @@ internal fun String.escapeHTML(): String {
                     append(c.code)
                     append(';')
                 }
-//                c == '<' -> append("&lt;")
-//                c == '>' -> append("&gt;")
                 c == '"' -> append("&quot;")
                 c == '<' -> append("&amp;lt;")
                 c == '>' -> append("&amp;gt;")
-//                c == '"' -> append("&amp;quot;")
                 c == '&' -> append("&amp;")
                 else -> {
                     append(c)
