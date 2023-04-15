@@ -2,6 +2,7 @@ package org.jetbrains.dataframe.gradle
 
 import com.beust.klaxon.KlaxonException
 import io.kotest.assertions.asClue
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.assertions.throwables.shouldThrowAny
 import io.kotest.matchers.shouldBe
@@ -13,6 +14,8 @@ import java.io.FileNotFoundException
 import java.io.IOException
 import java.net.URL
 import java.nio.file.Files
+import java.nio.file.Paths
+import kotlin.io.path.absolutePathString
 
 class DataFrameReadTest {
 
@@ -75,10 +78,12 @@ class DataFrameReadTest {
             }
         }
     }
-    
+
     @Test
     fun `data accessible and readable`() {
-        val df = DataFrame.read(File("../../data/jetbrains_repositories.csv"))
+        shouldNotThrowAny {
+            DataFrame.read(Paths.get("../../data/jetbrains repositories.csv").absolutePathString())
+        }
     }
 
     @Test
