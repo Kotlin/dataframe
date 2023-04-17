@@ -1640,13 +1640,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun <C> ColumnSet<C>.recursively(includeGroups: Boolean = true): ColumnSet<C> = object : ColumnSet<C> {
 
-        private fun flatten(list: List<ColumnWithPath<C>>): List<ColumnWithPath<C>> =
+        private fun flatten(list: List<ColumnWithPath<*>>): List<ColumnWithPath<*>> =
             list
                 .filter { it.isColumnGroup() } // TODO should I include this from dfs?
                 .flatMap {
                     it.children()
                         .dfs()
-                        .filter { includeGroups || !it.isColumnGroup() } as List<ColumnWithPath<C>>
+                        .filter { includeGroups || !it.isColumnGroup() }
                 }
 
         override fun resolve(
@@ -1656,9 +1656,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
         override fun resolveAfterTransform(
             context: ColumnResolutionContext,
-            transform: (List<ColumnWithPath<C>>) -> List<ColumnWithPath<C>>,
+            transform: (List<ColumnWithPath<*>>) -> List<ColumnWithPath<*>>,
         ): List<ColumnWithPath<C>> = this@recursively
-            .transform(transform)
+            .transform { transform(it) as List<ColumnWithPath<C>> }
             .resolveAfterTransform(context = context, transform = ::flatten)
     }
 

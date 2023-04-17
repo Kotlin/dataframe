@@ -39,11 +39,11 @@ public interface ColumnReference<out C> : SingleColumn<C> {
 
     override fun resolveSingleAfter(
         context: ColumnResolutionContext,
-        conversion: (List<ColumnWithPath<C>>) -> List<ColumnWithPath<@UnsafeVariance C>>,
+        transform: (List<ColumnWithPath<*>>) -> List<ColumnWithPath<*>>,
     ): ColumnWithPath<C>? =
         context.df
             .asColumnGroup()
-            .transform { conversion(it as List<ColumnWithPath<C>>) }
+            .transform { transform(it as List<ColumnWithPath<C>>) }
             .resolve(context)
             .toDataFrame()
             .getColumn<C>(path(), context.unresolvedColumnsPolicy)

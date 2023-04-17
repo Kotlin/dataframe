@@ -31,9 +31,9 @@ internal class ConfiguredAggregateColumn<C> private constructor(
 
     override fun resolveAfterTransform(
         context: ColumnResolutionContext,
-        transform: (List<ColumnWithPath<C>>) -> List<ColumnWithPath<C>>,
+        transform: (List<ColumnWithPath<*>>) -> List<ColumnWithPath<*>>,
     ): List<ColumnWithPath<C>> =
-        resolve(context, columns.transform(transform))
+        resolve(context, columns.transform(transform) as ColumnSet<C>)
 
     companion object {
 
