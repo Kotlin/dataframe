@@ -734,9 +734,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
             override fun resolveAfterTransform(
                 context: ColumnResolutionContext,
-                transform: (List<ColumnWithPath<Any?>>) -> List<ColumnWithPath<Any?>>,
+                transform: (ColumnSet<*>) -> ColumnSet<*>,
             ): List<ColumnWithPath<Any?>> =
-                process(this@rangeTo.transform(transform) as AnyColumnReference, context)
+                process(transform(this@rangeTo) as AnyColumnReference, context)
         }
 
     /**
@@ -3972,7 +3972,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun <C> ColumnSet<C>.recursively(includeGroups: Boolean = true): ColumnSet<C> = object : ColumnSet<C> {
 
-        private fun flatten(list: List<ColumnWithPath<*>>): List<ColumnWithPath<*>> =
+        private fun flatten(columnSet: ColumnSet<*>): ColumnSet<*> = columnSet.transform { list ->
             list
                 .filter { it.isColumnGroup() } // TODO should I include this from dfs?
                 .flatMap {
@@ -3980,6 +3980,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
                         .dfs()
                         .filter { includeGroups || !it.isColumnGroup() }
                 }
+        }
 
         override fun resolve(
             context: ColumnResolutionContext,
@@ -3988,10 +3989,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
         override fun resolveAfterTransform(
             context: ColumnResolutionContext,
-            transform: (List<ColumnWithPath<*>>) -> List<ColumnWithPath<*>>,
-        ): List<ColumnWithPath<C>> = this@recursively
-            .transform { transform(it) as List<ColumnWithPath<C>> }
-            .resolveAfterTransform(context = context, transform = ::flatten)
+            transform: (ColumnSet<*>) -> ColumnSet<*>,
+        ): List<ColumnWithPath<C>> =
+            transform(this@recursively).cast<C>()
+                .resolveAfterTransform(context = context, transform = ::flatten)
     }
 
     public fun <C> ColumnSet<C>.rec(includeGroups: Boolean = true): ColumnSet<C> = recursively(includeGroups)

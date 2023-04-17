@@ -10,6 +10,6 @@ internal class DistinctColumnSet<T>(val src: ColumnSet<T>) : ColumnSet<T> {
 
     override fun resolveAfterTransform(
         context: ColumnResolutionContext,
-        transform: (List<ColumnWithPath<*>>) -> List<ColumnWithPath<*>>,
+        transform: (ColumnSet<*>) -> ColumnSet<*>,
     ): List<ColumnWithPath<T>> = src.resolveAfterTransform(context, transform).distinctBy { it.path }
 }

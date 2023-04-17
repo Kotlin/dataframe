@@ -26,7 +26,7 @@ public interface ColumnSet<out C> {
      */
     public fun resolveAfterTransform(
         context: ColumnResolutionContext,
-        transform: (List<ColumnWithPath<*>>) -> List<ColumnWithPath<*>>,
+        transform: (ColumnSet<*>) -> ColumnSet<*>,
     ): List<ColumnWithPath<C>>
 }
 

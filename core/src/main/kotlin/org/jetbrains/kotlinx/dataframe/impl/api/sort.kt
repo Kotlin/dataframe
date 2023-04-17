@@ -112,9 +112,9 @@ internal class ColumnsWithSortFlag<C>(val column: ColumnSet<C>, val flag: SortFl
 
     override fun resolveAfterTransform(
         context: ColumnResolutionContext,
-        transform: (List<ColumnWithPath<*>>) -> List<ColumnWithPath<*>>,
+        transform: (ColumnSet<*>) -> ColumnSet<*>,
     ): List<ColumnWithPath<C>> = column
-        .transform { transform(it) as List<ColumnWithPath<C>> }
+        .let { transform(it) as ColumnSet<C> }
         .resolve(context)
         .map { it.addFlag(flag) }
 }

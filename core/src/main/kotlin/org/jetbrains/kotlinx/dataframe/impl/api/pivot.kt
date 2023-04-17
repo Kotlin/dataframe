@@ -53,7 +53,7 @@ internal class PivotChainColumnSet<C>(val first: ColumnSet<C>, val second: Colum
 
     override fun resolveAfterTransform(
         context: ColumnResolutionContext,
-        transform: (List<ColumnWithPath<*>>) -> List<ColumnWithPath<*>>,
+        transform: (ColumnSet<*>) -> ColumnSet<*>,
     ): List<ColumnWithPath<C>> {
         throw UnsupportedOperationException("Not implemented")
     }

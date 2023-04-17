@@ -15,13 +15,13 @@ public interface SingleColumn<out C> : ColumnSet<C> {
 
     override fun resolveAfterTransform(
         context: ColumnResolutionContext,
-        transform: (List<ColumnWithPath<*>>) -> List<ColumnWithPath<*>>,
+        transform: (ColumnSet<*>) -> ColumnSet<*>,
     ): List<ColumnWithPath<C>> = resolveSingleAfter(context, transform)?.let { listOf(it) } ?: emptyList()
 
     public fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>?
 
     public fun resolveSingleAfter(
         context: ColumnResolutionContext,
-        transform: (List<ColumnWithPath<*>>) -> List<ColumnWithPath<*>>,
+        transform: (ColumnSet<*>) -> ColumnSet<*>,
     ): ColumnWithPath<C>?
 }
