@@ -3,13 +3,7 @@ package org.jetbrains.kotlinx.dataframe.columns
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
-import org.jetbrains.kotlinx.dataframe.api.toColumnGroup
-import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
-import org.jetbrains.kotlinx.dataframe.impl.columns.transform
-import org.jetbrains.kotlinx.dataframe.impl.columns.tree.dfs
-import org.jetbrains.kotlinx.dataframe.impl.columns.wrap
-import org.jetbrains.kotlinx.dataframe.impl.emptyPath
+import org.jetbrains.kotlinx.dataframe.impl.columns.*
 
 /**
  * Entity that can be resolved into a list of [columns][DataColumn].
@@ -18,11 +12,21 @@ import org.jetbrains.kotlinx.dataframe.impl.emptyPath
  * @param C common type of resolved columns
  */
 public interface ColumnSet<out C> {
+
+    /**
+     * Resolves this [ColumnSet] as a [List]<[ColumnWithPath]<[C]>>.
+     * In many cases this function [transforms][ColumnSet.transform] a parent [ColumnSet] to reach
+     * the current [ColumnSet] result.
+     */
     public fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>>
 
+    /**
+     * Resolves this [ColumnSet] as a [List]<[ColumnWithPath]<[C]>> after applying [transform] to the parent
+     * [ColumnSet]. This essentially injects a call right before the current in the [ColumnSet.resolve] chain.
+     */
     public fun resolveAfterTransform(
         context: ColumnResolutionContext,
-        transform: (List<ColumnWithPath<C>>) -> List<ColumnWithPath<@UnsafeVariance C>>,
+        transform: (List<ColumnWithPath<*>>) -> List<ColumnWithPath<*>>,
     ): List<ColumnWithPath<C>>
 }
 
@@ -35,35 +39,3 @@ public class ColumnResolutionContext internal constructor(
 }
 
 internal enum class UnresolvedColumnsPolicy { Fail, Skip, Create }
-
-public fun <C> ColumnSet<C>.recursively(includeGroups: Boolean = true): ColumnSet<C> = object : ColumnSet<C> {
-
-    private fun flatten(list: List<ColumnWithPath<C>>): List<ColumnWithPath<C>> =
-        list
-            .filter { it.isColumnGroup() } // TODO should I include this from dfs?
-            .flatMap {
-                it.children()
-                    .dfs()
-                    .filter { includeGroups || !it.isColumnGroup() } as List<ColumnWithPath<C>>
-            }
-
-    override fun resolve(
-        context: ColumnResolutionContext,
-    ): List<ColumnWithPath<C>> = this@recursively
-        .resolveAfterTransform(context = context, transform = ::flatten)
-
-    override fun resolveAfterTransform(
-        context: ColumnResolutionContext,
-        transform: (List<ColumnWithPath<C>>) -> List<ColumnWithPath<C>>,
-    ): List<ColumnWithPath<C>> = this@recursively
-        .transform(transform)
-        .resolveAfterTransform(context = context, transform = ::flatten)
-}
-
-public fun <C> ColumnSet<C>.rec(includeGroups: Boolean = true): ColumnSet<C> = recursively(includeGroups)
-
-public fun <C> ColumnSet<C>.allRecursively(includeGroups: Boolean = true): ColumnSet<C> =
-    wrap().recursively(includeGroups = includeGroups)
-
-public fun <C> ColumnSet<C>.allRec(includeGroups: Boolean = true): ColumnSet<C> =
-    allRecursively(includeGroups = includeGroups)

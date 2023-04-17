@@ -2,13 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.alsoDebug
-import org.jetbrains.kotlinx.dataframe.columns.allRecursively
-import org.jetbrains.kotlinx.dataframe.columns.rec
-import org.jetbrains.kotlinx.dataframe.columns.recursively
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.columns.transform
-import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.junit.Test
 
 class MoveTests {
@@ -35,7 +29,7 @@ class MoveTests {
     @Test
     fun `select all dfs`() {
         val selected = grouped
-            .getColumnsWithPaths { all().all().recursively(false) }
+            .getColumnsWithPaths { all().allRecursively(false) }
             .map { it.path.joinToString(".") }
         selected shouldBe listOf("a.b", "a.c.d", "b.c", "b.d", "e.f")
     }

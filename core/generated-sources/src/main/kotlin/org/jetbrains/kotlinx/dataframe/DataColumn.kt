@@ -109,9 +109,9 @@ public interface DataColumn<out T> : BaseColumn<T> {
 
     override fun resolveSingleAfter(
         context: ColumnResolutionContext,
-        conversion: (List<ColumnWithPath<T>>) -> List<ColumnWithPath<@UnsafeVariance T>>,
+        transform: (List<ColumnWithPath<*>>) -> List<ColumnWithPath<*>>,
     ): ColumnWithPath<T>? = this
-        .transform(conversion)
+        .transform(transform)
         .let { it as DataColumn<T> }
         .addPath()
 

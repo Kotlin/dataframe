@@ -8,7 +8,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnGroupWithPathImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingDataColumn
-import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 
 private fun <T> DataFrame<T>.unbox(): DataFrame<T> = when (this) {
     is ColumnGroupWithParent -> source.unbox()
@@ -57,7 +56,7 @@ internal open class DataFrameReceiver<T>(
 
     override fun resolveSingleAfter(
         context: ColumnResolutionContext,
-        conversion: (List<ColumnWithPath<DataRow<T>>>) -> List<ColumnWithPath<DataRow<T>>>,
+        transform: (List<ColumnWithPath<*>>) -> List<ColumnWithPath<*>>,
     ): ColumnWithPath<DataRow<T>>? =
         DataColumn.createColumnGroup(
             name = "",
@@ -65,7 +64,7 @@ internal open class DataFrameReceiver<T>(
                 .columns()
                 .map { it.addPath(emptyPath()) }
                 .let { it as List<ColumnWithPath<DataRow<T>>> }
-                .let(conversion)
+                .let(transform)
                 .toDataFrame {
 
                 } as DataFrame<T>,

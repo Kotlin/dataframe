@@ -3949,7 +3949,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     @Deprecated(
         message = "allDfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.allRecursively(includeGroups)"),
+        replaceWith = ReplaceWith("this.all().recursively(includeGroups)"),
         level = DeprecationLevel.WARNING,
     )
     public fun ColumnSet<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> =
@@ -3957,18 +3957,51 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     @Deprecated(
         message = "allDfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.allRecursively(includeGroups)"),
+        replaceWith = ReplaceWith("this.all().recursively(includeGroups)"),
         level = DeprecationLevel.WARNING,
     )
     public fun String.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> = toColumnAccessor().allDfs(includeGroups)
 
     @Deprecated(
         message = "allDfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.allRecursively(includeGroups)"),
+        replaceWith = ReplaceWith("this.all().recursively(includeGroups)"),
         level = DeprecationLevel.WARNING,
     )
     public fun KProperty<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> =
         toColumnAccessor().allDfs(includeGroups)
+
+    public fun <C> ColumnSet<C>.recursively(includeGroups: Boolean = true): ColumnSet<C> = object : ColumnSet<C> {
+
+        private fun flatten(list: List<ColumnWithPath<*>>): List<ColumnWithPath<*>> =
+            list
+                .filter { it.isColumnGroup() } // TODO should I include this from dfs?
+                .flatMap {
+                    it.children()
+                        .dfs()
+                        .filter { includeGroups || !it.isColumnGroup() }
+                }
+
+        override fun resolve(
+            context: ColumnResolutionContext,
+        ): List<ColumnWithPath<C>> = this@recursively
+            .resolveAfterTransform(context = context, transform = ::flatten)
+
+        override fun resolveAfterTransform(
+            context: ColumnResolutionContext,
+            transform: (List<ColumnWithPath<*>>) -> List<ColumnWithPath<*>>,
+        ): List<ColumnWithPath<C>> = this@recursively
+            .transform { transform(it) as List<ColumnWithPath<C>> }
+            .resolveAfterTransform(context = context, transform = ::flatten)
+    }
+
+    public fun <C> ColumnSet<C>.rec(includeGroups: Boolean = true): ColumnSet<C> = recursively(includeGroups)
+
+    public fun <C> ColumnSet<C>.allRecursively(includeGroups: Boolean = true): ColumnSet<C> =
+        wrap().recursively(includeGroups = includeGroups)
+
+    public fun <C> ColumnSet<C>.allRec(includeGroups: Boolean = true): ColumnSet<C> =
+        allRecursively(includeGroups = includeGroups)
+
 
     // endregion
 
