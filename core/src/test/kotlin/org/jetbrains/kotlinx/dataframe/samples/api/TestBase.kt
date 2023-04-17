@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
+import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
@@ -36,4 +37,11 @@ public open class TestBase {
     }
 
     infix fun <T, U : T> T.willBe(expected: U?) = shouldBe(expected)
+
+    fun <T> Iterable<T>.shouldAllBeEqual(): Iterable<T> {
+        this should {
+            it.reduce { a, b -> a shouldBe b; b }
+        }
+        return this
+    }
 }

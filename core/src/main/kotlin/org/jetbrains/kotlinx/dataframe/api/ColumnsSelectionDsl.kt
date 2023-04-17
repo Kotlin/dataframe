@@ -210,7 +210,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][select]` { myColumnGroup.`[first][first]`() }`
      */
-    public fun SingleColumn<AnyRow>.first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun SingleColumn<*>.first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         all().first(condition)
 
     /**
@@ -273,7 +273,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][select]` { myColumnGroup.`[last][last]`() }`
      */
-    public fun SingleColumn<AnyRow>.last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun SingleColumn<*>.last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         all().last(condition)
 
     /**
@@ -336,7 +336,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][select]` { myColumnGroup.`[single][single]`() }`
      */
-    public fun SingleColumn<AnyRow>.single(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun SingleColumn<*>.single(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         all().single(condition)
 
     /**
@@ -595,7 +595,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnGroupReference.col(property: KProperty<C>): ColumnAccessor<C> = column(property)
 
     /** {@comment TODO} */
-    public fun SingleColumn<AnyRow>.col(index: Int): SingleColumn<Any?> = getChildrenAt(index).singleImpl()
+    public fun SingleColumn<*>.col(index: Int): SingleColumn<Any?> = getChildrenAt(index).singleImpl()
 
     /** {@comment TODO} */
     public operator fun <C> ColumnSet<C>.get(index: Int): SingleColumn<C> = getAt(index)
@@ -966,7 +966,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     private interface SingleColumnAnyRowColsPredicateDocs
 
     /** @include [SingleColumnAnyRowColsPredicateDocs] */
-    public fun SingleColumn<AnyRow>.cols(
+    public fun SingleColumn<*>.cols(
         predicate: ColumnFilter<*> = { true },
     ): ColumnSet<*> = colsInternal(predicate)
 
@@ -974,7 +974,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @include [SingleColumnAnyRowColsPredicateDocs]
      * {@comment this function is shadowed by [DataFrame.get]}
      */
-    public operator fun SingleColumn<AnyRow>.get(
+    public operator fun SingleColumn<*>.get(
         predicate: ColumnFilter<*> = { true },
     ): ColumnSet<Any?> = cols(predicate)
 
@@ -1106,7 +1106,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     private interface SingleColumnColsVarargColumnReferenceDocs
 
     /** @include [SingleColumnColsVarargColumnReferenceDocs] */
-    public fun <C> SingleColumn<AnyRow>.cols(
+    public fun <C> SingleColumn<*>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
     ): ColumnSet<C> = headPlusArray(firstCol, otherCols).let { refs ->
@@ -1119,7 +1119,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @include [SingleColumnColsVarargColumnReferenceDocs]
      * {@comment this function is shadowed by [DataFrame.get] for accessors}
      */
-    public operator fun <C> SingleColumn<AnyRow>.get(
+    public operator fun <C> SingleColumn<*>.get(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
     ): ColumnSet<C> = cols(firstCol, *otherCols)
@@ -1247,7 +1247,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     private interface SingleColumnColsVarargStringDocs
 
     /** @include [SingleColumnColsVarargStringDocs] */
-    public fun SingleColumn<AnyRow>.cols(
+    public fun SingleColumn<*>.cols(
         firstCol: String,
         vararg otherCols: String,
     ): ColumnSet<*> = headPlusArray(firstCol, otherCols).let { names ->
@@ -1258,7 +1258,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @include [SingleColumnColsVarargStringDocs]
      * {@comment this function is shadowed by [DataFrame.get] for accessors}
      */
-    public operator fun SingleColumn<AnyRow>.get(
+    public operator fun SingleColumn<*>.get(
         firstCol: String,
         vararg otherCols: String,
     ): ColumnSet<*> = cols(firstCol, *otherCols)
@@ -1375,7 +1375,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     private interface SingleColumnColsVarargKPropertyDocs
 
     /** @include [SingleColumnColsVarargKPropertyDocs] */
-    public fun <C> SingleColumn<AnyRow>.cols(
+    public fun <C> SingleColumn<*>.cols(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
     ): ColumnSet<C> = headPlusArray(firstCol, otherCols).let { props ->
@@ -1383,7 +1383,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     }
 
     /** @include [SingleColumnColsVarargKPropertyDocs] */
-    public operator fun <C> SingleColumn<AnyRow>.get(
+    public operator fun <C> SingleColumn<*>.get(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
     ): ColumnSet<C> = cols(firstCol, *otherCols)
@@ -1474,7 +1474,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         vararg otherIndices: Int,
     ): ColumnSet<C> = cols(firstIndex, *otherIndices)
 
-    public fun SingleColumn<AnyRow>.cols(
+    public fun SingleColumn<*>.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
     ): ColumnSet<*> = headPlusArray(firstIndex, otherIndices).let { indices ->
@@ -1484,7 +1484,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     /**
      * {@comment this function is shadowed by [ColumnGroup.get] for accessors}
      */
-    public operator fun SingleColumn<AnyRow>.get(
+    public operator fun SingleColumn<*>.get(
         firstIndex: Int,
         vararg otherIndices: Int,
     ): ColumnSet<*> = cols(firstIndex, *otherIndices)
@@ -1534,13 +1534,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public operator fun <C> ColumnSet<C>.get(range: IntRange): ColumnSet<C> = cols(range)
 
-    public fun SingleColumn<AnyRow>.cols(range: IntRange): ColumnSet<*> =
+    public fun SingleColumn<*>.cols(range: IntRange): ColumnSet<*> =
         transform { it.flatMap { it.children().subList(range.first, range.last + 1) } }
 
     /**
      * {@comment this function is shadowed by [ColumnGroup.get] for accessors}
      */
-    public operator fun SingleColumn<AnyRow>.get(range: IntRange): ColumnSet<*> = cols(range)
+    public operator fun SingleColumn<*>.get(range: IntRange): ColumnSet<*> = cols(range)
 
     public fun String.cols(range: IntRange): ColumnSet<*> = colGroup(this).cols(range)
 
@@ -1582,21 +1582,21 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     @Deprecated(
         message = "dfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.cols(predicate).recursively()"),
+        replaceWith = ReplaceWith("this.cols(predicate).recursively(includeTopLevel = false)"),
         level = DeprecationLevel.WARNING,
     )
     public fun <C> ColumnSet<C>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<Any?> = dfsInternal(predicate)
 
     @Deprecated(
         message = "dfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.cols(predicate).recursively()"),
+        replaceWith = ReplaceWith("this.cols(predicate).recursively(includeTopLevel = false)"),
         level = DeprecationLevel.WARNING,
     )
     public fun String.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> = toColumnAccessor().dfs(predicate)
 
     @Deprecated(
         message = "dfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.cols(predicate).recursively()"),
+        replaceWith = ReplaceWith("this.cols(predicate).recursively(includeTopLevel = false)"),
         level = DeprecationLevel.WARNING,
     )
     public fun <C> KProperty<C>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
@@ -1617,7 +1617,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     @Deprecated(
         message = "allDfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.all().recursively(includeGroups)"),
+        replaceWith = ReplaceWith("this.all().recursively(includeGroups = includeGroups, includeTopLevel = false)"),
         level = DeprecationLevel.WARNING,
     )
     public fun ColumnSet<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> =
@@ -1625,24 +1625,43 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     @Deprecated(
         message = "allDfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.all().recursively(includeGroups)"),
+        replaceWith = ReplaceWith("this.all().recursively(includeGroups = includeGroups, includeTopLevel = false)"),
         level = DeprecationLevel.WARNING,
     )
     public fun String.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> = toColumnAccessor().allDfs(includeGroups)
 
     @Deprecated(
         message = "allDfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.all().recursively(includeGroups)"),
+        replaceWith = ReplaceWith("this.all().recursively(includeGroups = includeGroups, includeTopLevel = false)"),
         level = DeprecationLevel.WARNING,
     )
     public fun KProperty<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> =
         toColumnAccessor().allDfs(includeGroups)
 
-    public fun <C> ColumnSet<C>.recursively(includeGroups: Boolean = true): ColumnSet<C> = object : ColumnSet<C> {
+    /**
+     * Modifies the previous call to run not only on the current column set, but also on all of its children.
+     *
+     * For example:
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnSet.colsOf]`<`[String][String]`>() }`
+     *
+     * returns all columns of type [String] in the top-level, as expected. However, what if you want ALL
+     * columns of type [String] even if they are inside a nested column group? Then you can use [recursively]:
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnSet.colsOf]`<`[String][String]`>().`[recursively][ColumnSet.recursively]`() }`
+     *
+     * This will return all columns of type [String] in lower levels (unless [includeTopLevel]` == true`).
+     *
+     * TODO
+     */
+    public fun <C> ColumnSet<C>.recursively(
+        includeGroups: Boolean = true,
+        includeTopLevel: Boolean = true,
+    ): ColumnSet<C> = object : ColumnSet<C> {
 
         private fun flatten(columnSet: ColumnSet<*>): ColumnSet<*> = columnSet.transform { list ->
             list
-                .filter { it.isColumnGroup() } // TODO should I include this from dfs?
+                .filter { includeTopLevel || it.isColumnGroup() } // TODO should I include this from dfs?
                 .flatMap {
                     it.children()
                         .dfs()
@@ -1652,8 +1671,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
         override fun resolve(
             context: ColumnResolutionContext,
-        ): List<ColumnWithPath<C>> = this@recursively
-            .resolveAfterTransform(context = context, transform = ::flatten)
+        ): List<ColumnWithPath<C>> =
+            this@recursively
+                .resolveAfterTransform(context = context, transform = ::flatten)
 
         override fun resolveAfterTransform(
             context: ColumnResolutionContext,
@@ -1663,13 +1683,22 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
                 .resolveAfterTransform(context = context, transform = ::flatten)
     }
 
-    public fun <C> ColumnSet<C>.rec(includeGroups: Boolean = true): ColumnSet<C> = recursively(includeGroups)
+    public fun <C> ColumnSet<C>.rec(
+        includeGroups: Boolean = true,
+        includeTopLevel: Boolean = true,
+    ): ColumnSet<C> = recursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
-    public fun <C> ColumnSet<C>.allRecursively(includeGroups: Boolean = true): ColumnSet<C> =
-        wrap().recursively(includeGroups = includeGroups)
+    public fun <C> ColumnSet<C>.allRecursively(
+        includeGroups: Boolean = true,
+        includeTopLevel: Boolean = true,
+    ): ColumnSet<C> =
+        wrap().recursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
-    public fun <C> ColumnSet<C>.allRec(includeGroups: Boolean = true): ColumnSet<C> =
-        allRecursively(includeGroups = includeGroups)
+    public fun <C> ColumnSet<C>.allRec(
+        includeGroups: Boolean = true,
+        includeTopLevel: Boolean = true,
+    ): ColumnSet<C> =
+        allRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
 
     // endregion
@@ -1829,10 +1858,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public operator fun <C> List<DataColumn<C>>.get(range: IntRange): ColumnSet<C> =
         ColumnsList(subList(range.first, range.last + 1))
 
-    public fun SingleColumn<AnyRow>.take(n: Int): ColumnSet<*> = transformSingle { it.children().take(n) }
-    public fun SingleColumn<AnyRow>.takeLast(n: Int): ColumnSet<*> = transformSingle { it.children().takeLast(n) }
-    public fun SingleColumn<AnyRow>.drop(n: Int): ColumnSet<*> = transformSingle { it.children().drop(n) }
-    public fun SingleColumn<AnyRow>.dropLast(n: Int = 1): ColumnSet<*> = transformSingle { it.children().dropLast(n) }
+    public fun SingleColumn<*>.take(n: Int): ColumnSet<*> = transformSingle { it.children().take(n) }
+    public fun SingleColumn<*>.takeLast(n: Int): ColumnSet<*> = transformSingle { it.children().takeLast(n) }
+    public fun SingleColumn<*>.drop(n: Int): ColumnSet<*> = transformSingle { it.children().drop(n) }
+    public fun SingleColumn<*>.dropLast(n: Int = 1): ColumnSet<*> = transformSingle { it.children().dropLast(n) }
 
     public fun <C> ColumnSet<C>.drop(n: Int): ColumnSet<C> = transform { it.drop(n) }
     public fun <C> ColumnSet<C>.take(n: Int): ColumnSet<C> = transform { it.take(n) }
@@ -1848,13 +1877,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnSet<C>.filter(predicate: Predicate<ColumnWithPath<C>>): ColumnSet<C> =
         transform { it.filter(predicate) }
 
-    public fun SingleColumn<AnyRow>.nameContains(text: CharSequence): ColumnSet<*> = cols { it.name.contains(text) }
+    public fun SingleColumn<*>.nameContains(text: CharSequence): ColumnSet<*> = cols { it.name.contains(text) }
     public fun <C> ColumnSet<C>.nameContains(text: CharSequence): ColumnSet<C> = cols { it.name.contains(text) }
-    public fun SingleColumn<AnyRow>.nameContains(regex: Regex): ColumnSet<*> = cols { it.name.contains(regex) }
+    public fun SingleColumn<*>.nameContains(regex: Regex): ColumnSet<*> = cols { it.name.contains(regex) }
     public fun <C> ColumnSet<C>.nameContains(regex: Regex): ColumnSet<C> = cols { it.name.contains(regex) }
-    public fun SingleColumn<AnyRow>.startsWith(prefix: CharSequence): ColumnSet<*> = cols { it.name.startsWith(prefix) }
+    public fun SingleColumn<*>.startsWith(prefix: CharSequence): ColumnSet<*> = cols { it.name.startsWith(prefix) }
     public fun <C> ColumnSet<C>.startsWith(prefix: CharSequence): ColumnSet<C> = cols { it.name.startsWith(prefix) }
-    public fun SingleColumn<AnyRow>.endsWith(suffix: CharSequence): ColumnSet<*> = cols { it.name.endsWith(suffix) }
+    public fun SingleColumn<*>.endsWith(suffix: CharSequence): ColumnSet<*> = cols { it.name.endsWith(suffix) }
     public fun <C> ColumnSet<C>.endsWith(suffix: CharSequence): ColumnSet<C> = cols { it.name.endsWith(suffix) }
 
     public fun <C> ColumnSet<C>.except(vararg other: ColumnSet<*>): ColumnSet<*> = except(other.toColumnSet())
@@ -1945,9 +1974,25 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun <C> ColumnSet<C>.distinct(): ColumnSet<C> = DistinctColumnSet(this)
 
+    @Deprecated(
+        message = "Use recursively() instead",
+        replaceWith = ReplaceWith(
+            "this.colsOf(type, predicate).recursively(includeTopLevel = false)",
+            "org.jetbrains.kotlinx.dataframe.columns.recursively",
+            "org.jetbrains.kotlinx.dataframe.api.colsOf",
+        ),
+    )
     public fun <C> String.dfsOf(type: KType, predicate: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<*> =
         toColumnAccessor().dfsOf(type, predicate)
 
+    @Deprecated(
+        message = "Use recursively() instead",
+        replaceWith = ReplaceWith(
+            "this.colsOf(type, predicate).recursively(includeTopLevel = false)",
+            "org.jetbrains.kotlinx.dataframe.columns.recursively",
+            "org.jetbrains.kotlinx.dataframe.api.colsOf",
+        ),
+    )
     public fun <C> KProperty<*>.dfsOf(type: KType, predicate: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<*> =
         toColumnAccessor().dfsOf(type, predicate)
 
@@ -2014,8 +2059,7 @@ internal fun ColumnSet<*>.dfsInternal(predicate: (ColumnWithPath<*>) -> Boolean)
 @Deprecated(
     message = "Use recursively() instead",
     replaceWith = ReplaceWith(
-        "this.colsOf(type, predicate).recursively()",
-        "org.jetbrains.kotlinx.dataframe.columns.recursively",
+        "this.colsOf(type, predicate).recursively(includeTopLevel = false)",
         "org.jetbrains.kotlinx.dataframe.columns.recursively",
         "org.jetbrains.kotlinx.dataframe.api.colsOf",
     ),
@@ -2026,7 +2070,7 @@ public fun <C> ColumnSet<*>.dfsOf(type: KType, predicate: (ColumnWithPath<C>) ->
 @Deprecated(
     message = "Use recursively() instead",
     replaceWith = ReplaceWith(
-        "this.colsOf<C>(filter).recursively()",
+        "this.colsOf<C>(filter).recursively(includeTopLevel = false)",
         "org.jetbrains.kotlinx.dataframe.columns.recursively",
         "org.jetbrains.kotlinx.dataframe.api.colsOf",
     ),
