@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.columns
 
 import org.jetbrains.kotlinx.dataframe.*
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.columnName
@@ -39,11 +40,9 @@ public interface ColumnReference<out C> : SingleColumn<C> {
 
     override fun resolveSingleAfter(
         context: ColumnResolutionContext,
-        transform: (List<ColumnWithPath<*>>) -> List<ColumnWithPath<*>>,
+        transform: (ColumnSet<*>) -> ColumnSet<*>,
     ): ColumnWithPath<C>? =
-        context.df
-            .asColumnGroup()
-            .transform { transform(it as List<ColumnWithPath<C>>) }
+        transform(context.df.asColumnGroup()).cast<C>()
             .resolve(context)
             .toDataFrame()
             .getColumn<C>(path(), context.unresolvedColumnsPolicy)

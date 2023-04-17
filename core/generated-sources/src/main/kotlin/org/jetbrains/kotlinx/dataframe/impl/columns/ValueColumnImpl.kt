@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.impl.columns
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.*
 import kotlin.reflect.KType
@@ -56,7 +57,7 @@ internal class ResolvingValueColumn<T>(
     override fun resolve(context: ColumnResolutionContext) = super<ValueColumn>.resolve(context)
     override fun resolveAfterTransform(
         context: ColumnResolutionContext,
-        transform: (List<ColumnWithPath<*>>) -> List<ColumnWithPath<*>>,
+        transform: (ColumnSet<*>) -> ColumnSet<*>,
     ): List<ColumnWithPath<T>> = super<ValueColumn>.resolveAfterTransform(context, transform)
 
     override fun resolveSingle(context: ColumnResolutionContext) =
@@ -64,14 +65,13 @@ internal class ResolvingValueColumn<T>(
 
     override fun resolveSingleAfter(
         context: ColumnResolutionContext,
-        transform: (List<ColumnWithPath<*>>) -> List<ColumnWithPath<*>>,
-    ): ColumnWithPath<T>? = context.df
-        .asColumnGroup()
-        .transform { transform(it as List<ColumnWithPath<T>>) }
-        .resolve(context)
-        .toDataFrame()
-        .getColumn<T>(source.name(), context.unresolvedColumnsPolicy)
-        ?.addPath()
+        transform: (ColumnSet<*>) -> ColumnSet<*>,
+    ): ColumnWithPath<T>? =
+        transform(context.df.asColumnGroup()).cast<T>()
+            .resolve(context)
+            .toDataFrame()
+            .getColumn<T>(source.name(), context.unresolvedColumnsPolicy)
+            ?.addPath()
 
     override fun getValue(row: AnyRow) = super<ValueColumn>.getValue(row)
 

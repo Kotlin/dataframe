@@ -12,7 +12,7 @@ internal class ColumnsList<C>(val columns: List<ColumnSet<C>>) : ColumnSet<C> {
 
     override fun resolveAfterTransform(
         context: ColumnResolutionContext,
-        transform: (List<ColumnWithPath<*>>) -> List<ColumnWithPath<*>>,
+        transform: (ColumnSet<*>) -> ColumnSet<*>,
     ): List<ColumnWithPath<C>> =
         columns.flatMap { it.resolveAfterTransform(context, transform) }
 }

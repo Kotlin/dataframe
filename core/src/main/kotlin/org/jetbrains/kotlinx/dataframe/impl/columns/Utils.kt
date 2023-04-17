@@ -88,23 +88,23 @@ internal fun <A, B> SingleColumn<A>.transformSingle(
 
     override fun resolveAfterTransform(
         context: ColumnResolutionContext,
-        transform: (List<ColumnWithPath<*>>) -> List<ColumnWithPath<*>>,
-    ): List<ColumnWithPath<B>> = this@transformSingle
-        .transform { transform(it as List<ColumnWithPath<B>>) }
-        .resolve(context)
-        .let {
-            // temp names and paths are introduced to avoid clashes
-            val tempColGroup = it.map {
-                val newName = it.path.joinToString(".")
-                it named newName
-            }.toColumnGroup("__TEMP__")
-                .addPath()
+        transform: (ColumnSet<*>) -> ColumnSet<*>,
+    ): List<ColumnWithPath<B>> =
+        transform(this@transformSingle).cast<B>()
+            .resolve(context)
+            .let {
+                // temp names and paths are introduced to avoid clashes
+                val tempColGroup = it.map {
+                    val newName = it.path.joinToString(".")
+                    it named newName
+                }.toColumnGroup("__TEMP__")
+                    .addPath()
 
-            converter(tempColGroup as ColumnWithPath<A>)
-                .map {
-                    it.addPath(it.path.filterNot { it == "__TEMP__" }.toPath())
-                }
-        }
+                converter(tempColGroup as ColumnWithPath<A>)
+                    .map {
+                        it.addPath(it.path.filterNot { it == "__TEMP__" }.toPath())
+                    }
+            }
 
 }
 
@@ -115,10 +115,9 @@ internal fun <A> ColumnSet<A>.wrap(): ColumnSet<A> = object : ColumnSet<A> {
 
     override fun resolveAfterTransform(
         context: ColumnResolutionContext,
-        transform: (List<ColumnWithPath<*>>) -> List<ColumnWithPath<*>>,
+        transform: (ColumnSet<*>) -> ColumnSet<*>,
     ): List<ColumnWithPath<A>> =
-        this@wrap
-            .transform { transform(it) as List<ColumnWithPath<A>> }
+        transform(this@wrap).cast<A>()
             .resolve(context)
 }
 
@@ -132,12 +131,11 @@ internal fun <A, B> ColumnSet<A>.transform(
 
     override fun resolveAfterTransform(
         context: ColumnResolutionContext,
-        transform: (List<ColumnWithPath<*>>) -> List<ColumnWithPath<*>>,
+        transform: (ColumnSet<*>) -> ColumnSet<*>,
     ): List<ColumnWithPath<B>> =
-        this@transform
-            .transform { transform(it as List<ColumnWithPath<B>>) }
+        transform(this@transform).cast<A>()
             .resolve(context)
-            .let { converter(it as List<ColumnWithPath<A>>) }
+            .let { converter(it) }
 }
 
 internal fun <A, B> ColumnSet<A>.transformWithContext(
@@ -150,12 +148,11 @@ internal fun <A, B> ColumnSet<A>.transformWithContext(
 
     override fun resolveAfterTransform(
         context: ColumnResolutionContext,
-        transform: (List<ColumnWithPath<*>>) -> List<ColumnWithPath<*>>,
+        transform: (ColumnSet<*>) -> ColumnSet<*>,
     ): List<ColumnWithPath<B>> =
-        this@transformWithContext
-            .transform { transform(it as List<ColumnWithPath<B>>) }
+        transform(this@transformWithContext).cast<A>()
             .resolve(context)
-            .let { converter(context, it as List<ColumnWithPath<A>>) }
+            .let { converter(context, it) }
 }
 
 internal fun <T> ColumnSet<T>.singleImpl() = object : SingleColumn<T> {
@@ -164,11 +161,11 @@ internal fun <T> ColumnSet<T>.singleImpl() = object : SingleColumn<T> {
 
     override fun resolveSingleAfter(
         context: ColumnResolutionContext,
-        transform: (List<ColumnWithPath<*>>) -> List<ColumnWithPath<*>>,
-    ): ColumnWithPath<T>? = this@singleImpl
-        .transform { transform(it) as List<ColumnWithPath<T>> }
-        .resolve(context)
-        .singleOrNull()
+        transform: (ColumnSet<*>) -> ColumnSet<*>,
+    ): ColumnWithPath<T>? =
+        transform(this@singleImpl).cast<T>()
+            .resolve(context)
+            .singleOrNull()
 }
 
 internal fun <T> ColumnSet<T>.getAt(index: Int) = object : SingleColumn<T> {
@@ -179,11 +176,11 @@ internal fun <T> ColumnSet<T>.getAt(index: Int) = object : SingleColumn<T> {
 
     override fun resolveSingleAfter(
         context: ColumnResolutionContext,
-        transform: (List<ColumnWithPath<*>>) -> List<ColumnWithPath<*>>,
-    ): ColumnWithPath<T>? = this@getAt
-        .transform { transform(it) as List<ColumnWithPath<T>> }
-        .resolve(context)
-        .getOrNull(index)
+        transform: (ColumnSet<*>) -> ColumnSet<*>,
+    ): ColumnWithPath<T>? =
+        transform(this@getAt).cast<T>()
+            .resolve(context)
+            .getOrNull(index)
 }
 
 internal fun <T> ColumnSet<T>.getChildrenAt(index: Int): ColumnSet<Any?> =

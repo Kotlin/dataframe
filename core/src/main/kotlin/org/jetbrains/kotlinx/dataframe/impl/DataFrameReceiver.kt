@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.columns.*
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnGroupWithParent
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnGroupWithPathImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
+import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingDataColumn
 
@@ -56,18 +57,14 @@ internal open class DataFrameReceiver<T>(
 
     override fun resolveSingleAfter(
         context: ColumnResolutionContext,
-        transform: (List<ColumnWithPath<*>>) -> List<ColumnWithPath<*>>,
+        transform: (ColumnSet<*>) -> ColumnSet<*>,
     ): ColumnWithPath<DataRow<T>>? =
         DataColumn.createColumnGroup(
             name = "",
-            df = df
-                .columns()
-                .map { it.addPath(emptyPath()) }
-                .let { it as List<ColumnWithPath<DataRow<T>>> }
-                .let(transform)
-                .toDataFrame {
-
-                } as DataFrame<T>,
+            df = createColumnSet { df.columns().map { it.addPath() } }
+                .let(transform).cast<T>()
+                .resolve(context)
+                .toDataFrame() as DataFrame<T>,
         ).addPath(emptyPath())
 
     override fun columns() =
