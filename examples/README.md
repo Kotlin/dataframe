@@ -24,7 +24,7 @@ ___
 Explore TV shows and movies from Netflix with the powerful Kotlin Dataframe API and beautiful
 visualizations from [lets-plot](https://github.com/JetBrains/lets-plot-kotlin).
 ___
-* github ([notebook](notebooks/github/github.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/wGlYql3ObFCloN0YpWR1Xw)) &ndash;
+* github ([notebook](notebooks/github/github.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/P9n6jYL4mmY1gx3phz5TsX)) &ndash;
 This notebook shows the hierarchical dataframes look like and how to work with them.
 ___
 * titanic ([notebook](notebooks/titanic/Titanic.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/B5YeMMONSAR78FgKQ9yJyW)) &ndash;
