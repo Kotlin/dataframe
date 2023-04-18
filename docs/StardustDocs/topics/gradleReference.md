@@ -6,7 +6,7 @@ In the best scenario, your schema could be defined as simple as this:
 dataframes {
     // output: build/generated/dataframe/main/kotlin/org/example/dataframe/JetbrainsRepositories.Generated.kt
     schema {
-        data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
+        data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains%20repositories.csv"
     }
 }
 ```
@@ -29,7 +29,7 @@ is derived from the directory structure with child directory `dataframe`. The na
 ```kotlin
 schema {
     // output: build/generated/dataframe/main/kotlin/org/example/dataframe/MyName.Generated.kt
-    data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
+    data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains%20repositories.csv"
     name = "MyName"
 }
 ```
@@ -81,7 +81,7 @@ But if you need generated files in other directory, set `src`:
 dataframes {
     // output: schemas/org/example/test/OtherName.Generated.kt
     schema {
-        data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
+        data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains%20repositories.csv"
         name = "org.example.test.OtherName"
         src = file("schemas")
     }
