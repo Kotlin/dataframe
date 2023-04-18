@@ -57,17 +57,17 @@ internal class ResolvingValueColumn<T>(
     override fun resolve(context: ColumnResolutionContext) = super<ValueColumn>.resolve(context)
     override fun resolveAfterTransform(
         context: ColumnResolutionContext,
-        transform: (ColumnSet<*>) -> ColumnSet<*>,
-    ): List<ColumnWithPath<T>> = super<ValueColumn>.resolveAfterTransform(context, transform)
+        transformer: ColumnSetTransformer,
+    ): List<ColumnWithPath<T>> = super<ValueColumn>.resolveAfterTransform(context, transformer)
 
     override fun resolveSingle(context: ColumnResolutionContext) =
         context.df.getColumn<T>(source.name(), context.unresolvedColumnsPolicy)?.addPath()
 
-    override fun resolveSingleAfter(
+    override fun resolveSingleAfterTransform(
         context: ColumnResolutionContext,
-        transform: (ColumnSet<*>) -> ColumnSet<*>,
+        transformer: ColumnSetTransformer,
     ): ColumnWithPath<T>? =
-        transform(context.df.asColumnGroup()).cast<T>()
+        transformer.transformRemainingSingle(context.df.asColumnGroup()).cast<T>()
             .resolve(context)
             .toDataFrame()
             .getColumn<T>(source.name(), context.unresolvedColumnsPolicy)

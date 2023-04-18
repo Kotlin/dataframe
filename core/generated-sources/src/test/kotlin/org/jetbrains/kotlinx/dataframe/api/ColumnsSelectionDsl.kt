@@ -3,12 +3,11 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.impl.columns.asValueColumn
 import org.jetbrains.kotlinx.dataframe.samples.api.*
 import org.junit.Test
 import kotlin.reflect.typeOf
 
-class ColumnsSelectionDslTests : TestBase() {
+open class ColumnsSelectionDslTests : TestBase() {
 
     @Test
     fun first() {
@@ -127,31 +126,8 @@ class ColumnsSelectionDslTests : TestBase() {
         ).shouldAllBeEqual()
     }
 
-    @DataSchema
-    interface FirstNames {
-        val firstName: String
-        val secondName: String?
-        val thirdName: String?
-    }
-
-    @DataSchema
-    interface MyName : Name {
-        val firstNames: FirstNames
-    }
-
     @Test
     fun colGroup() {
-        val firstNames by columnGroup<FirstNames>()
-        val dfGroup = df.convert { name.firstName }.to {
-            val firstName by it
-            val secondName by it.map<_, String?> { null }.asValueColumn()
-            val thirdName by it.map<_, String?> { null }.asValueColumn()
-
-            dataFrameOf(firstName, secondName, thirdName)
-                .cast<FirstNames>(verify = true)
-                .asColumnGroup(firstNames)
-        }
-
         listOf(
             dfGroup.select { name },
 
@@ -165,7 +141,7 @@ class ColumnsSelectionDslTests : TestBase() {
         ).shouldAllBeEqual()
 
         listOf(
-            dfGroup.select { name[firstNames] },
+            dfGroup.select { name.firstNames },
 
             dfGroup.select { colGroup("name").colGroup("firstNames") },
             dfGroup.select { colGroup("name").colGroup<FirstNames>("firstNames") },
@@ -173,13 +149,13 @@ class ColumnsSelectionDslTests : TestBase() {
             dfGroup.select { colGroup("name").colGroup(pathOf("firstNames")) },
             dfGroup.select { colGroup("name").colGroup<FirstNames>(pathOf("firstNames")) },
 
-            dfGroup.select { colGroup("name").colGroup(MyName::firstNames) },
+            dfGroup.select { colGroup("name").colGroup(Name2::firstNames) },
         ).shouldAllBeEqual()
 
         dfGroup.select {
             "name"["firstNames"]["firstName", "secondName"]
         } shouldBe dfGroup.select {
-            name[firstNames]["firstName"] and name[firstNames]["secondName"]
+            name.firstNames["firstName"] and name.firstNames["secondName"]
         }
     }
 
@@ -357,6 +333,7 @@ class ColumnsSelectionDslTests : TestBase() {
 
             df.select { cols(pathOf("name", "firstName")) },
             df.select { this[pathOf("name", "firstName")] },
+            df.select { it[pathOf("name", "firstName")] },
 
             df.select { all().cols(pathOf("name", "firstName")) },
             df.select { all()[pathOf("name", "firstName")] },
@@ -405,6 +382,7 @@ class ColumnsSelectionDslTests : TestBase() {
 
             df.select { cols(Person::name, Person::age) },
             df.select { this[Person::name, Person::age] },
+            df.select { it[Person::name, Person::age] },
 
             df.select { all().cols(Person::name, Person::age) },
             df.select { all()[Person::name, Person::age] },
@@ -440,6 +418,7 @@ class ColumnsSelectionDslTests : TestBase() {
 
             df.select { cols(0, 1) },
             df.select { this[0, 1] },
+            df.select { it[0, 1] },
 
             df.select { all().cols(0, 1) },
             df.select { all()[0, 1] },
@@ -475,6 +454,7 @@ class ColumnsSelectionDslTests : TestBase() {
 
             df.select { cols(0..1) },
             df.select { this[0..1] },
+            df.select { it[0..1] },
 
             df.select { all().cols(0..1) },
             df.select { all()[0..1] },

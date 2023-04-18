@@ -4,10 +4,8 @@ import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.group
-import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.impl.columns.asValueColumn
 
 public open class TestBase {
 
@@ -20,6 +18,16 @@ public open class TestBase {
         "Alice", "Wolf", 20, null, 55, false,
         "Charlie", "Byrd", 30, "Moscow", 90, true
     ).group("firstName", "lastName").into("name").cast<Person>()
+
+    val dfGroup = df.convert { name.firstName }.to {
+        val firstName by it
+        val secondName by it.map<_, String?> { null }.asValueColumn()
+        val thirdName by it.map<_, String?> { null }.asValueColumn()
+
+        dataFrameOf(firstName, secondName, thirdName)
+            .cast<FirstNames>(verify = true)
+            .asColumnGroup("firstNames")
+    }.cast<Person2>(verify = true)
 
     @DataSchema
     interface Name {
@@ -35,6 +43,29 @@ public open class TestBase {
         val weight: Int?
         val isHappy: Boolean
     }
+
+    @DataSchema
+    interface FirstNames {
+        val firstName: String
+        val secondName: String?
+        val thirdName: String?
+    }
+
+    @DataSchema
+    interface Name2 {
+        val firstNames: DataRow<FirstNames>
+        val lastName: String
+    }
+
+    @DataSchema
+    interface Person2 {
+        val age: Int
+        val city: String?
+        val name: DataRow<Name2>
+        val weight: Int?
+        val isHappy: Boolean
+    }
+
 
     infix fun <T, U : T> T.willBe(expected: U?) = shouldBe(expected)
 

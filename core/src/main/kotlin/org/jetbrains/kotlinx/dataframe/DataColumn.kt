@@ -107,11 +107,11 @@ public interface DataColumn<out T> : BaseColumn<T> {
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? = this.addPath()
 
-    override fun resolveSingleAfter(
+    override fun resolveSingleAfterTransform(
         context: ColumnResolutionContext,
-        transform: (ColumnSet<*>) -> ColumnSet<*>,
+        transformer: ColumnSetTransformer,
     ): ColumnWithPath<T>? =
-        transform(this).cast<T>()
+        transformer.transformRemainingSingle(this).cast<T>()
             .let { it as DataColumn<T> }
             .addPath()
 

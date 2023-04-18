@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation
 
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.columns.*
-import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 
 internal class ConfiguredAggregateColumn<C> private constructor(
     val columns: ColumnSet<C>,
@@ -32,9 +31,9 @@ internal class ConfiguredAggregateColumn<C> private constructor(
 
     override fun resolveAfterTransform(
         context: ColumnResolutionContext,
-        transform: (ColumnSet<*>) -> ColumnSet<*>,
+        transformer: ColumnSetTransformer,
     ): List<ColumnWithPath<C>> =
-        resolve(context, transform(columns).cast<C>())
+        resolve(context, transformer.transform(columns).cast<C>())
 
     companion object {
 
