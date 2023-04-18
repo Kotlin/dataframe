@@ -34,6 +34,8 @@ public interface ColumnSetTransformer {
 
     public fun transformRemainingSingle(singleColumn: SingleColumn<*>): SingleColumn<*>
 
+    public fun transformSingle(singleColumn: SingleColumn<*>): ColumnSet<*>
+
     public fun transform(columnSet: ColumnSet<*>): ColumnSet<*>
 }
 

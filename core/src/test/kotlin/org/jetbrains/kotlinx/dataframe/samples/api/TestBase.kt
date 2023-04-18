@@ -26,7 +26,7 @@ public open class TestBase {
 
         dataFrameOf(firstName, secondName, thirdName)
             .cast<FirstNames>(verify = true)
-            .asColumnGroup("firstNames")
+            .asColumnGroup("firstName")
     }.cast<Person2>(verify = true)
 
     @DataSchema
@@ -53,7 +53,7 @@ public open class TestBase {
 
     @DataSchema
     interface Name2 {
-        val firstNames: DataRow<FirstNames>
+        val firstName: DataRow<FirstNames>
         val lastName: String
     }
 
