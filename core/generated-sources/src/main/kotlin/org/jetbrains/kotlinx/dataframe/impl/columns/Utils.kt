@@ -10,7 +10,6 @@ import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.columns.*
 import org.jetbrains.kotlinx.dataframe.columns.values
-import org.jetbrains.kotlinx.dataframe.impl.*
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.asNullable
 import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingDataColumn
@@ -134,15 +133,18 @@ internal fun <C> ColumnSet<C>.recursivelyImpl(
 
     val flattenTransformer = object : ColumnSetTransformer {
 
-        private fun flattenColumnWithPaths(list: List<ColumnWithPath<*>>): List<ColumnWithPath<*>> =
-            if (includeTopLevel) {
-                list.dfs()
+        private fun flattenColumnWithPaths(list: List<ColumnWithPath<*>>): List<ColumnWithPath<*>> {
+            val cols = if (list.singleOrNull()?.isColumnGroup() == true) list.single().children() else list
+            return if (includeTopLevel) {
+                cols.dfs()
             } else {
-                list
+                cols
                     .filter { it.isColumnGroup() }
                     .flatMap { it.children().dfs() }
             }.filter { includeGroups || !it.isColumnGroup() }
+        }
 
+        // TODO remove/clean
         override fun transformRemainingSingle(singleColumn: SingleColumn<*>): SingleColumn<*> =
             singleColumn.transformRemainingSingle {
                 if (!it.isColumnGroup()) return@transformRemainingSingle it
@@ -152,6 +154,14 @@ internal fun <C> ColumnSet<C>.recursivelyImpl(
 
                 DataColumn.createColumnGroup(it.name, res.toDataFrame()).addPath(it.path())
             }
+
+        // TODO remove/clean
+        override fun transformSingle(singleColumn: SingleColumn<*>): ColumnSet<*> = singleColumn.transformSingle {
+            if (!it.isColumnGroup()) return@transformSingle listOf(it)
+
+            val list = it.asColumnGroup().getColumnsWithPaths { all() }
+            flattenColumnWithPaths(list)
+        }
 
         override fun transform(columnSet: ColumnSet<*>): ColumnSet<*> = columnSet.transform(::flattenColumnWithPaths)
     }

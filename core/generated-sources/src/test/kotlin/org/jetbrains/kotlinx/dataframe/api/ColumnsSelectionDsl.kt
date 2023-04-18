@@ -141,21 +141,21 @@ open class ColumnsSelectionDslTests : TestBase() {
         ).shouldAllBeEqual()
 
         listOf(
-            dfGroup.select { name.firstNames },
+            dfGroup.select { name.firstName },
 
-            dfGroup.select { colGroup("name").colGroup("firstNames") },
-            dfGroup.select { colGroup("name").colGroup<FirstNames>("firstNames") },
+            dfGroup.select { colGroup("name").colGroup("firstName") },
+            dfGroup.select { colGroup("name").colGroup<FirstNames>("firstName") },
 
-            dfGroup.select { colGroup("name").colGroup(pathOf("firstNames")) },
-            dfGroup.select { colGroup("name").colGroup<FirstNames>(pathOf("firstNames")) },
+            dfGroup.select { colGroup("name").colGroup(pathOf("firstName")) },
+            dfGroup.select { colGroup("name").colGroup<FirstNames>(pathOf("firstName")) },
 
-            dfGroup.select { colGroup("name").colGroup(Name2::firstNames) },
+            dfGroup.select { colGroup("name").colGroup(Name2::firstName) },
         ).shouldAllBeEqual()
 
         dfGroup.select {
-            "name"["firstNames"]["firstName", "secondName"]
+            "name"["firstName"]["firstName", "secondName"]
         } shouldBe dfGroup.select {
-            name.firstNames["firstName"] and name.firstNames["secondName"]
+            name.firstName["firstName"] and name.firstName["secondName"]
         }
     }
 

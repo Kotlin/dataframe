@@ -2,13 +2,33 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.alsoDebug
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.junit.Test
 
 class Recursively : TestBase() {
-    private val recursivelyGoal = dfGroup.select { dfs { true } }.reorderColumnsBy { name }.alsoDebug() // correct
-    private val recursivelyNoGroups = dfGroup.select { allDfs(false) }.reorderColumnsBy { name }.alsoDebug() // correct
-    private val recursivelyString = dfGroup.select { dfsOf<String?>() }.reorderColumnsBy { name }.alsoDebug()
+
+    fun List<ColumnWithPath<*>>.print() {
+        forEach {
+            if (it.isValueColumn()) println("${it.name}: ${it.type()}")
+            else it.print()
+        }
+        println()
+    }
+
+    infix fun List<ColumnWithPath<*>>.shouldBe(other: List<ColumnWithPath<*>>) {
+        this.map { it.name to it.path } shouldBe other.map { it.name to it.path }
+    }
+
+    private val recursivelyGoal = dfGroup.getColumnsWithPaths { dfs { true } }
+        .sortedBy { it.name }
+        .also { it.print() }
+    private val recursivelyNoGroups = dfGroup.getColumnsWithPaths { allDfs(false) }
+        .sortedBy { it.name }
+        .also { it.print() }
+    private val recursivelyString = dfGroup.getColumnsWithPaths { dfsOf<String?>() }
+        .sortedBy { it.name }
+        .also { it.print() }
 
     @Test
     fun `recursively all`() {
@@ -30,43 +50,43 @@ class Recursively : TestBase() {
 
     @Test
     fun recursively() {
-        dfGroup.select { recursively() }.reorderColumnsBy { name } shouldBe recursivelyGoal
-        dfGroup.select { rec(includeGroups = false) }.reorderColumnsBy { name } shouldBe recursivelyNoGroups
+        dfGroup.getColumnsWithPaths { recursively() }.sortedBy { it.name } shouldBe recursivelyGoal
+        dfGroup.getColumnsWithPaths { rec(includeGroups = false) }.sortedBy { it.name } shouldBe recursivelyNoGroups
     }
 
     @Test
     fun `all recursively`() {
-        dfGroup.select { all().recursively() }.reorderColumnsBy { name } shouldBe recursivelyGoal
-        dfGroup.select { all().rec(includeGroups = false) }.reorderColumnsBy { name } shouldBe recursivelyNoGroups
+        dfGroup.getColumnsWithPaths { all().recursively() }.sortedBy { it.name } shouldBe recursivelyGoal
+        dfGroup.getColumnsWithPaths { all().rec(includeGroups = false) }.sortedBy { it.name } shouldBe recursivelyNoGroups
     }
 
     @Test
     fun `cols recursively`() {
-        dfGroup.select { cols().recursively() }.reorderColumnsBy { name } shouldBe recursivelyGoal
-        dfGroup.select { cols().rec(includeGroups = false) }.reorderColumnsBy { name } shouldBe recursivelyNoGroups
+        dfGroup.getColumnsWithPaths { cols().recursively() }.sortedBy { it.name } shouldBe recursivelyGoal
+        dfGroup.getColumnsWithPaths { cols().rec(includeGroups = false) }.sortedBy { it.name } shouldBe recursivelyNoGroups
     }
 
     @Test
     fun `colsOf recursively`() {
-        dfGroup.select { colsOf<String?>().recursively() }.reorderColumnsBy { name } shouldBe recursivelyString
-        dfGroup.select { colsOf<String?>().rec(includeGroups = false) }.reorderColumnsBy { name } shouldBe recursivelyString
+        dfGroup.getColumnsWithPaths { colsOf<String?>().recursively() }.sortedBy { it.name } shouldBe recursivelyString
+        dfGroup.getColumnsWithPaths { colsOf<String?>().rec(includeGroups = false) }.sortedBy { it.name } shouldBe recursivelyString
     }
 
     @Test
     fun `allRecursively`() {
-        dfGroup.select { allRecursively() }.reorderColumnsBy { name } shouldBe recursivelyGoal
-        dfGroup.select { allRec(includeGroups = false) }.reorderColumnsBy { name } shouldBe recursivelyNoGroups
+        dfGroup.getColumnsWithPaths { allRecursively() }.sortedBy { it.name } shouldBe recursivelyGoal
+        dfGroup.getColumnsWithPaths { allRec(includeGroups = false) }.sortedBy { it.name } shouldBe recursivelyNoGroups
     }
 
     @Test
     fun `all allRecursively`() {
-        dfGroup.select { all().allRecursively() }.reorderColumnsBy { name } shouldBe recursivelyGoal
-        dfGroup.select { all().allRec(includeGroups = false) }.reorderColumnsBy { name } shouldBe recursivelyNoGroups
+        dfGroup.getColumnsWithPaths { all().allRecursively() }.sortedBy { it.name } shouldBe recursivelyGoal
+        dfGroup.getColumnsWithPaths { all().allRec(includeGroups = false) }.sortedBy { it.name } shouldBe recursivelyNoGroups
     }
 
     @Test
     fun `cols allRecursively`() {
-        dfGroup.select { cols().allRecursively() }.reorderColumnsBy { name } shouldBe recursivelyGoal
-        dfGroup.select { cols().allRec(includeGroups = false) }.reorderColumnsBy { name } shouldBe recursivelyNoGroups
+        dfGroup.getColumnsWithPaths { cols().allRecursively() }.sortedBy { it.name } shouldBe recursivelyGoal
+        dfGroup.getColumnsWithPaths { cols().allRec(includeGroups = false) }.sortedBy { it.name } shouldBe recursivelyNoGroups
     }
 }

@@ -4430,16 +4430,13 @@ internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) 
  * match the given [predicate].
  */
 internal fun ColumnSet<*>.colsInternal(predicate: ColumnFilter<*>): ColumnSet<*> =
-    when (this) {
-        is SingleColumn<*> -> transformSingle {
-            it.children().filter { predicate(it) }
-        }
-
-        else -> transform {
-            it.filter { predicate(it) }
-        }
+    transform {
+        if (this is SingleColumn<*> && it.singleOrNull()?.isColumnGroup() == true) {
+            it.single().children()
+        } else {
+            it
+        }.filter(predicate)
     }
-
 
 @Deprecated("Replaced with recursively()")
 internal fun ColumnSet<*>.dfsInternal(predicate: (ColumnWithPath<*>) -> Boolean) =
