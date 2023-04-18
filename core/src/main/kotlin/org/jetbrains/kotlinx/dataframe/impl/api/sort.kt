@@ -9,12 +9,9 @@ import org.jetbrains.kotlinx.dataframe.api.castFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.getFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.with
-import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
-import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
-import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
+import org.jetbrains.kotlinx.dataframe.columns.*
+import org.jetbrains.kotlinx.dataframe.columns.ColumnSetTransformer
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
-import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
-import org.jetbrains.kotlinx.dataframe.impl.columns.*
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.assertIsComparable
 import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingColumnGroup
@@ -112,9 +109,9 @@ internal class ColumnsWithSortFlag<C>(val column: ColumnSet<C>, val flag: SortFl
 
     override fun resolveAfterTransform(
         context: ColumnResolutionContext,
-        transform: (ColumnSet<*>) -> ColumnSet<*>,
+        transformer: ColumnSetTransformer,
     ): List<ColumnWithPath<C>> = column
-        .let { transform(it) as ColumnSet<C> }
+        .let { transformer.transform(it) as ColumnSet<C> }
         .resolve(context)
         .map { it.addFlag(flag) }
 }

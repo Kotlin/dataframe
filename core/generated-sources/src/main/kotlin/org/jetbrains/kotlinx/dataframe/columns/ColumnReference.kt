@@ -9,7 +9,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.RenamedColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.getColumn
-import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import kotlin.reflect.KProperty
 
 /**
@@ -38,11 +37,11 @@ public interface ColumnReference<out C> : SingleColumn<C> {
             .getColumn<C>(path(), context.unresolvedColumnsPolicy)
             ?.addPath(path())
 
-    override fun resolveSingleAfter(
+    override fun resolveSingleAfterTransform(
         context: ColumnResolutionContext,
-        transform: (ColumnSet<*>) -> ColumnSet<*>,
+        transformer: ColumnSetTransformer,
     ): ColumnWithPath<C>? =
-        transform(context.df.asColumnGroup()).cast<C>()
+        transformer.transformRemainingSingle(context.df.asColumnGroup()).cast<C>()
             .resolve(context)
             .toDataFrame()
             .getColumn<C>(path(), context.unresolvedColumnsPolicy)

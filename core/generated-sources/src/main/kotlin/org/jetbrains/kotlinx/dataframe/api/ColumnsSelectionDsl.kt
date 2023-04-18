@@ -9,7 +9,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.columns.*
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
 import org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression
@@ -734,9 +733,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
             override fun resolveAfterTransform(
                 context: ColumnResolutionContext,
-                transform: (ColumnSet<*>) -> ColumnSet<*>,
+                transformer: ColumnSetTransformer,
             ): List<ColumnWithPath<Any?>> =
-                process(transform(this@rangeTo) as AnyColumnReference, context)
+                process(transformer.transformRemainingSingle(this@rangeTo) as AnyColumnReference, context)
         }
 
     /**
@@ -1819,12 +1818,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.cols(
         predicate: ColumnFilter<C> = { true },
-    ): ColumnSet<C> = transformWithContext {
-        dataFrameOf(it)
-            .asColumnGroup()
-            .cols(predicate as ColumnFilter<*>)
-            .resolve(this)
-    } as ColumnSet<C>
+    ): ColumnSet<C> = colsInternal(predicate as ColumnFilter<*>) as ColumnSet<C>
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from a parent [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], -[ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or -[DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
@@ -3939,17 +3933,17 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     // region all
     public fun ColumnSet<*>.all(): ColumnSet<*> = wrap()
 
-    public fun SingleColumn<*>.all(): ColumnSet<*> = transformSingle { it.children() }
+    public fun SingleColumn<*>.all(): ColumnSet<*> = transformSingle { it.children() }.wrap()
 
-    public fun String.all(): ColumnSet<*> = toColumnAccessor().transformSingle { it.children() }
+    public fun String.all(): ColumnSet<*> = toColumnAccessor().all()
 
-    public fun KProperty<*>.all(): ColumnSet<*> = toColumnAccessor().transformSingle { it.children() }
+    public fun KProperty<*>.all(): ColumnSet<*> = toColumnAccessor().all()
 
     // region allDfs
 
     @Deprecated(
         message = "allDfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.all().recursively(includeGroups = includeGroups, includeTopLevel = false)"),
+        replaceWith = ReplaceWith("this.allRecursively(includeGroups = includeGroups, includeTopLevel = false)"),
         level = DeprecationLevel.WARNING,
     )
     public fun ColumnSet<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> =
@@ -3957,14 +3951,14 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     @Deprecated(
         message = "allDfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.all().recursively(includeGroups = includeGroups, includeTopLevel = false)"),
+        replaceWith = ReplaceWith("this.allRecursively(includeGroups = includeGroups, includeTopLevel = false)"),
         level = DeprecationLevel.WARNING,
     )
     public fun String.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> = toColumnAccessor().allDfs(includeGroups)
 
     @Deprecated(
         message = "allDfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.all().recursively(includeGroups = includeGroups, includeTopLevel = false)"),
+        replaceWith = ReplaceWith("this.allRecursively(includeGroups = includeGroups, includeTopLevel = false)"),
         level = DeprecationLevel.WARNING,
     )
     public fun KProperty<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> =
@@ -3978,9 +3972,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][DataFrame.select]` { `[colsOf][ColumnSet.colsOf]`<`[String][String]`>() }`
      *
      * returns all columns of type [String] in the top-level, as expected. However, what if you want ALL
-     * columns of type [String] even if they are inside a nested column group? Then you can use [recursively]:
+     * columns of type [String] even if they are inside a nested column group? Then you can use [recursivelyImpl]:
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnSet.colsOf]`<`[String][String]`>().`[recursively][ColumnSet.recursively]`() }`
+     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnSet.colsOf]`<`[String][String]`>().`[recursively][ColumnSet.recursivelyImpl]`() }`
      *
      * This will return all columns of type [String] in lower levels (unless [includeTopLevel]` == true`).
      *
@@ -3989,49 +3983,42 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnSet<C>.recursively(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
-    ): ColumnSet<C> = object : ColumnSet<C> {
-
-        private fun flatten(columnSet: ColumnSet<*>): ColumnSet<*> = columnSet.transform { list ->
-            list
-                .filter { includeTopLevel || it.isColumnGroup() } // TODO should I include this from dfs?
-                .flatMap {
-                    it.children()
-                        .dfs()
-                        .filter { includeGroups || !it.isColumnGroup() }
-                }
-        }
-
-        override fun resolve(
-            context: ColumnResolutionContext,
-        ): List<ColumnWithPath<C>> =
-            this@recursively
-                .resolveAfterTransform(context = context, transform = ::flatten)
-
-        override fun resolveAfterTransform(
-            context: ColumnResolutionContext,
-            transform: (ColumnSet<*>) -> ColumnSet<*>,
-        ): List<ColumnWithPath<C>> =
-            transform(this@recursively).cast<C>()
-                .resolveAfterTransform(context = context, transform = ::flatten)
-    }
+    ): ColumnSet<C> = recursivelyImpl(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
     public fun <C> ColumnSet<C>.rec(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
     ): ColumnSet<C> = recursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
+    public fun SingleColumn<*>.recursively(
+        includeGroups: Boolean = true,
+        includeTopLevel: Boolean = true,
+    ): ColumnSet<*> = all().recursivelyImpl(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+
+    public fun SingleColumn<*>.rec(
+        includeGroups: Boolean = true,
+        includeTopLevel: Boolean = true,
+    ): ColumnSet<*> = recursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+
     public fun <C> ColumnSet<C>.allRecursively(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
-    ): ColumnSet<C> =
-        wrap().recursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+    ): ColumnSet<C> = wrap().recursivelyImpl(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
     public fun <C> ColumnSet<C>.allRec(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
-    ): ColumnSet<C> =
-        allRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+    ): ColumnSet<C> = allRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
+    public fun SingleColumn<*>.allRecursively(
+        includeGroups: Boolean = true,
+        includeTopLevel: Boolean = true,
+    ): ColumnSet<*> = all().recursivelyImpl(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+
+    public fun SingleColumn<*>.allRec(
+        includeGroups: Boolean = true,
+        includeTopLevel: Boolean = true,
+    ): ColumnSet<*> = allRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
     // endregion
 
@@ -4200,14 +4187,14 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnSet<C>.dropLast(n: Int = 1): ColumnSet<C> = transform { it.dropLast(n) }
     public fun <C> ColumnSet<C>.takeLast(n: Int): ColumnSet<C> = transform { it.takeLast(n) }
     public fun <C> ColumnSet<C>.top(): ColumnSet<C> = transform { it.top() }
-    public fun <C> ColumnSet<C>.takeWhile(predicate: Predicate<ColumnWithPath<C>>): ColumnSet<C> =
+    public fun <C> ColumnSet<C>.takeWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
         transform { it.takeWhile(predicate) }
 
-    public fun <C> ColumnSet<C>.takeLastWhile(predicate: Predicate<ColumnWithPath<C>>): ColumnSet<C> =
+    public fun <C> ColumnSet<C>.takeLastWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
         transform { it.takeLastWhile(predicate) }
 
-    public fun <C> ColumnSet<C>.filter(predicate: Predicate<ColumnWithPath<C>>): ColumnSet<C> =
-        transform { it.filter(predicate) }
+    public fun <C> ColumnSet<C>.filter(predicate: ColumnFilter<C>): ColumnSet<C> =
+        colsInternal(predicate as ColumnFilter<*>) as ColumnSet<C>
 
     public fun SingleColumn<*>.nameContains(text: CharSequence): ColumnSet<*> = cols { it.name.contains(text) }
     public fun <C> ColumnSet<C>.nameContains(text: CharSequence): ColumnSet<C> = cols { it.name.contains(text) }
@@ -4433,8 +4420,26 @@ public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(
 internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) -> Boolean): ColumnsSelector<T, C> =
     { this@filter(it, it).filter(predicate) }
 
-internal fun ColumnSet<*>.colsInternal(predicate: ColumnFilter<*>) =
-    transform { it.flatMap { it.children().filter { predicate(it) } } }
+
+/**
+ * If this [ColumnSet] is a [SingleColumn], it
+ * returns a new [ColumnSet] containing the children of this [SingleColumn] that
+ * match the given [predicate].
+ *
+ * Else, it returns a new [ColumnSet] containing all columns in this [ColumnSet] that
+ * match the given [predicate].
+ */
+internal fun ColumnSet<*>.colsInternal(predicate: ColumnFilter<*>): ColumnSet<*> =
+    when (this) {
+        is SingleColumn<*> -> transformSingle {
+            it.children().filter { predicate(it) }
+        }
+
+        else -> transform {
+            it.filter { predicate(it) }
+        }
+    }
+
 
 @Deprecated("Replaced with recursively()")
 internal fun ColumnSet<*>.dfsInternal(predicate: (ColumnWithPath<*>) -> Boolean) =
@@ -4606,6 +4611,88 @@ public fun <C> ColumnSet<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boole
  * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
  */
 public inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<C> =
+    colsOf(typeOf<C>(), filter)
+
+/**
+ * ## Cols Of
+ * Get columns by a given type and an optional filter.
+ *
+ * #### For example:
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
+ * ## ‎
+ * Alternatively, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also be called on existing columns:
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { (Type::myColumnGroup)().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Double][Double]`>() }`
+ * ## ‎
+ * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also take a [KType] argument instead of a reified type.
+ * This is useful when the type is not known at compile time or when the API function cannot be inlined.
+ *
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[Int][Int]`> -> it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
+ * ## This Cols Of Overload
+ * Get (sub-)columns by [type] with or without [filter].
+ * #### For example:
+ *
+ * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+ *
+ * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
+ *
+ * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+ *
+ * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
+ * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
+ */
+public fun <C> SingleColumn<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<C> =
+    colsInternal { it.isSubtypeOf(type) && filter(it.cast()) } as ColumnSet<C>
+
+/**
+ * ## Cols Of
+ * Get columns by a given type and an optional filter.
+ *
+ * #### For example:
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
+ * ## ‎
+ * Alternatively, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also be called on existing columns:
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { (Type::myColumnGroup)().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Double][Double]`>() }`
+ * ## ‎
+ * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also take a [KType] argument instead of a reified type.
+ * This is useful when the type is not known at compile time or when the API function cannot be inlined.
+ *
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[Int][Int]`> -> it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
+ * ## This Cols Of Overload
+ * Get (sub-)columns by a given type with or without [filter].
+ * #### For example:
+ *
+ * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`<`[Int][Int]`>() }`
+ *
+ * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][colsOf]`<`[Int][Int]`> { it.`[size][DataColumn.size]` > 10 } }`
+ *
+ * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][colsOf]`<`[Int][Int]`>() }`
+ *
+ * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
+ * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
+ */
+public inline fun <reified C> SingleColumn<*>.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<C> =
     colsOf(typeOf<C>(), filter)
 
 /* TODO: [Issue: #325, context receiver support](https://github.com/Kotlin/dataframe/issues/325)

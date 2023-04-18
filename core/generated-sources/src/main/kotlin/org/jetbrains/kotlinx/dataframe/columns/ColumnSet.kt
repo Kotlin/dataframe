@@ -21,13 +21,20 @@ public interface ColumnSet<out C> {
     public fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>>
 
     /**
-     * Resolves this [ColumnSet] as a [List]<[ColumnWithPath]<[C]>> after applying [transform] to the parent
+     * Resolves this [ColumnSet] as a [List]<[ColumnWithPath]<[C]>> after applying [transformer] to the parent
      * [ColumnSet]. This essentially injects a call right before the current in the [ColumnSet.resolve] chain.
      */
     public fun resolveAfterTransform(
         context: ColumnResolutionContext,
-        transform: (ColumnSet<*>) -> ColumnSet<*>,
+        transformer: ColumnSetTransformer,
     ): List<ColumnWithPath<C>>
+}
+
+public interface ColumnSetTransformer {
+
+    public fun transformRemainingSingle(singleColumn: SingleColumn<*>): SingleColumn<*>
+
+    public fun transform(columnSet: ColumnSet<*>): ColumnSet<*>
 }
 
 public class ColumnResolutionContext internal constructor(

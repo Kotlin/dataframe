@@ -111,7 +111,7 @@ public class ColumnMatch<C>(public val left: ColumnReference<C>, public val righ
 
     override fun resolveAfterTransform(
         context: ColumnResolutionContext,
-        transform: (ColumnSet<*>) -> ColumnSet<*>,
+        transformer: ColumnSetTransformer,
     ): List<ColumnWithPath<C>> {
         throw UnsupportedOperationException()
     }

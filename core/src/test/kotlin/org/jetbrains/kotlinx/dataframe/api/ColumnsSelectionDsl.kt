@@ -3,12 +3,11 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.impl.columns.asValueColumn
 import org.jetbrains.kotlinx.dataframe.samples.api.*
 import org.junit.Test
 import kotlin.reflect.typeOf
 
-class ColumnsSelectionDslTests : TestBase() {
+open class ColumnsSelectionDslTests : TestBase() {
 
     @Test
     fun first() {
@@ -127,31 +126,8 @@ class ColumnsSelectionDslTests : TestBase() {
         ).shouldAllBeEqual()
     }
 
-    @DataSchema
-    interface FirstNames {
-        val firstName: String
-        val secondName: String?
-        val thirdName: String?
-    }
-
-    @DataSchema
-    interface MyName : Name {
-        val firstNames: FirstNames
-    }
-
     @Test
     fun colGroup() {
-        val firstNames by columnGroup<FirstNames>()
-        val dfGroup = df.convert { name.firstName }.to {
-            val firstName by it
-            val secondName by it.map<_, String?> { null }.asValueColumn()
-            val thirdName by it.map<_, String?> { null }.asValueColumn()
-
-            dataFrameOf(firstName, secondName, thirdName)
-                .cast<FirstNames>(verify = true)
-                .asColumnGroup(firstNames)
-        }
-
         listOf(
             dfGroup.select { name },
 
@@ -165,7 +141,7 @@ class ColumnsSelectionDslTests : TestBase() {
         ).shouldAllBeEqual()
 
         listOf(
-            dfGroup.select { name[firstNames] },
+            dfGroup.select { name.firstNames },
 
             dfGroup.select { colGroup("name").colGroup("firstNames") },
             dfGroup.select { colGroup("name").colGroup<FirstNames>("firstNames") },
@@ -173,13 +149,13 @@ class ColumnsSelectionDslTests : TestBase() {
             dfGroup.select { colGroup("name").colGroup(pathOf("firstNames")) },
             dfGroup.select { colGroup("name").colGroup<FirstNames>(pathOf("firstNames")) },
 
-            dfGroup.select { colGroup("name").colGroup(MyName::firstNames) },
+            dfGroup.select { colGroup("name").colGroup(Name2::firstNames) },
         ).shouldAllBeEqual()
 
         dfGroup.select {
             "name"["firstNames"]["firstName", "secondName"]
         } shouldBe dfGroup.select {
-            name[firstNames]["firstName"] and name[firstNames]["secondName"]
+            name.firstNames["firstName"] and name.firstNames["secondName"]
         }
     }
 
