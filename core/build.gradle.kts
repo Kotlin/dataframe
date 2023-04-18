@@ -269,7 +269,7 @@ dataframes {
     schema {
         sourceSet = "test"
         visibility = org.jetbrains.dataframe.gradle.DataSchemaVisibility.IMPLICIT_PUBLIC
-        data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains%20repositories.csv"
+        data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
         name = "org.jetbrains.kotlinx.dataframe.samples.api.Repository"
     }
 }
