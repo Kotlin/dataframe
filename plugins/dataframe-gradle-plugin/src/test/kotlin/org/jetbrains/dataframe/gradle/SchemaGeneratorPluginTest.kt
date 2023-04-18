@@ -159,7 +159,7 @@ internal class SchemaGeneratorPluginTest {
                     packageName = "org.test"
                 }
                 schema {
-                    data = URL("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv")
+                    data = URL("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains%20repositories.csv")
                     name = "Schema"
                     packageName = "org.test"
                 }

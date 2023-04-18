@@ -66,7 +66,7 @@ the same package as file containing the annotation.
 ```kotlin
 @file:ImportDataSchema(
     "Repository",
-    "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv",
+    "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains%20repositories.csv",
 )
 
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
@@ -88,7 +88,7 @@ to `build/generated/dataframe/org/example` folder.
 ```kotlin
 dataframes {
     schema {
-        data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
+        data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains%20repositories.csv"
         name = "org.example.Repository"
     }
 }
@@ -104,7 +104,7 @@ After `assemble`, the following code should compile and run:
 <!---FUN useInferredSchema-->
 
 ```kotlin
-// Repository.readCSV() has argument 'path' with default value https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv
+// Repository.readCSV() has argument 'path' with default value https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains%20repositories.csv
 val df = Repository.readCSV()
 // Use generated properties to access data in rows
 df.maxBy { stargazersCount }.print()
