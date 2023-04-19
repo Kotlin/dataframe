@@ -3,6 +3,10 @@ package org.jetbrains.kotlinx.dataframe.io
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
+import org.apache.arrow.vector.types.FloatingPointPrecision
+import org.apache.arrow.vector.types.pojo.ArrowType
+import org.apache.arrow.vector.types.pojo.Field
+import org.apache.arrow.vector.types.pojo.FieldType
 import org.apache.arrow.vector.types.pojo.Schema
 import org.apache.arrow.vector.util.Text
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -23,6 +27,7 @@ import java.io.File
 import java.net.URL
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.Locale
 import kotlin.reflect.typeOf
 
 internal class ArrowKtTest {
@@ -237,5 +242,28 @@ internal class ArrowKtTest {
         warnings.shouldContain(ConvertingMismatch.NullableMismatch.NullValueIgnored("settled", 0))
         DataFrame.readArrowFeather(testLoyalNullable)["settled"].type() shouldBe typeOf<LocalDateTime?>()
         DataFrame.readArrowFeather(testLoyalNullable)["settled"].values() shouldBe arrayOfNulls<LocalDate>(frameRenaming.rowsCount()).asList()
+    }
+
+    @Test
+    fun testParsing() {
+        val columnStringDot = columnOf("12.345", "67.890")
+        val columnStringComma = columnOf("12,345", "67,890")
+        val frameString = dataFrameOf("columnDot", "columnComma")(columnStringDot, columnStringComma)
+        val columnDoubleFraction = columnOf(12.345, 67.890)
+        val columnDoubleRound = columnOf(12345.0, 67890.0)
+        val targetType = FieldType.notNullable(ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE))
+        val targetSchema = Schema(listOf(Field("columnDot", targetType, emptyList()), Field("columnComma", targetType, emptyList())))
+
+        val currentLocale = Locale.getDefault()
+        try {
+            Locale.setDefault(Locale.forLanguageTag("en-US"))
+            val serializedAsUs = frameString.arrowWriter(targetSchema).saveArrowFeatherToByteArray()
+            DataFrame.readArrowFeather(serializedAsUs) shouldBe dataFrameOf("columnDot", "columnComma")(columnDoubleFraction, columnDoubleRound)
+            Locale.setDefault(Locale.forLanguageTag("ru-RU"))
+            val serializedAsRu = frameString.arrowWriter(targetSchema).saveArrowFeatherToByteArray()
+            DataFrame.readArrowFeather(serializedAsRu) shouldBe dataFrameOf("columnDot", "columnComma")(columnDoubleFraction, columnDoubleFraction)
+        } finally {
+            Locale.setDefault(currentLocale)
+        }
     }
 }
