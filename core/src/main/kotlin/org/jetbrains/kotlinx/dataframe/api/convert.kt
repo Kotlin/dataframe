@@ -36,6 +36,8 @@ import java.time.LocalTime
 import java.util.*
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
 public fun <T, C> DataFrame<T>.convert(columns: ColumnsSelector<T, C>): Convert<T, C> =
@@ -103,8 +105,9 @@ public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>)
 
 public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(typeOf<C>()) as DataColumn<C>
 public fun AnyCol.convertTo(newType: KType): AnyCol {
-    if (this.type() == typeOf<String>() && newType == typeOf<Double>()) return (this as DataColumn<String>).convertToDouble()
-    if (this.type() == typeOf<String?>() && newType == typeOf<Double?>()) return (this as DataColumn<String?>).convertToDouble()
+    if (this.type().withNullability(true).isSubtypeOf(typeOf<String?>()) && newType.withNullability(true) == typeOf<Double?>()) {
+        return (this as DataColumn<String?>).convertToDouble().setNullable(newType.isMarkedNullable)
+    }
     return convertToTypeImpl(newType)
 }
 

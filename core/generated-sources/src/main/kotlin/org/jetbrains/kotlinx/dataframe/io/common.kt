@@ -55,6 +55,6 @@ public fun isFile(url: URL): Boolean = url.protocol == "file"
 
 public fun asFileOrNull(url: URL): File? = if (isFile(url)) File(url.path) else null
 
-public fun urlAsFile(url: URL): File = File(url.path)
+public fun urlAsFile(url: URL): File = File(url.toURI())
 
 public fun isProtocolSupported(url: URL): Boolean = url.protocol in setOf("http", "https", "ftp")
