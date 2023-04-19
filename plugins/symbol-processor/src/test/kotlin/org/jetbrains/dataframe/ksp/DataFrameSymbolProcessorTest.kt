@@ -1042,7 +1042,7 @@ class DataFrameSymbolProcessorTest {
         result.successfulCompilation shouldBe false
     }
 
-    private val jetbrainsCsv = File("../../data/jetbrains_repositories.csv")
+    private val jetbrainsCsv = File("../../data/jetbrains repositories.csv")
 
     @Test
     fun `imported schema resolved`() {
