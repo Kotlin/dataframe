@@ -40,17 +40,16 @@ public fun <T, C> DataFrame<T>.rename(cols: Iterable<ColumnReference<C>>): Renam
 
 public data class RenameClause<T, C>(val df: DataFrame<T>, val columns: ColumnsSelector<T, C>)
 
-public fun <T> DataFrame<T>.renameToCamelCase(): DataFrame<T> {
-    return rename {
-        dfs { it.isColumnGroup() && it.name() matches DELIMITED_STRING_REGEX }
+public fun <T> DataFrame<T>.renameToCamelCase(): DataFrame<T> = this
+    .rename {
+        cols { it.isColumnGroup() && it.name() matches DELIMITED_STRING_REGEX }.rec()
     }.toCamelCase()
-        .rename {
-            dfs { !it.isColumnGroup() && it.name() matches DELIMITED_STRING_REGEX }
-        }.toCamelCase()
-        .update {
-            dfsOf<AnyFrame>()
-        }.with { it.renameToCamelCase() }
-}
+    .rename {
+        cols { !it.isColumnGroup() && it.name() matches DELIMITED_STRING_REGEX }.rec()
+    }.toCamelCase()
+    .update {
+        colsOf<AnyFrame>().rec()
+    }.with { it.renameToCamelCase() }
 
 public fun <T, C> RenameClause<T, C>.into(vararg newColumns: ColumnReference<*>): DataFrame<T> =
     into(*newColumns.map { it.name() }.toTypedArray())
@@ -59,6 +58,7 @@ public fun <T, C> RenameClause<T, C>.into(vararg newNames: String): DataFrame<T>
     df.move(columns).intoIndexed { col, index ->
         col.path.dropLast(1) + newNames[index]
     }
+
 public fun <T, C> RenameClause<T, C>.into(vararg newNames: KProperty<*>): DataFrame<T> =
     into(*newNames.map { it.name }.toTypedArray())
 

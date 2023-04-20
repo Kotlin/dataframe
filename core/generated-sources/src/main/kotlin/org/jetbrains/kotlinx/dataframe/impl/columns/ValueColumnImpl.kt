@@ -2,9 +2,6 @@ package org.jetbrains.kotlinx.dataframe.impl.columns
 
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
-import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.*
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
@@ -62,16 +59,6 @@ internal class ResolvingValueColumn<T>(
 
     override fun resolveSingle(context: ColumnResolutionContext) =
         context.df.getColumn<T>(source.name(), context.unresolvedColumnsPolicy)?.addPath()
-
-    override fun resolveSingleAfterTransform(
-        context: ColumnResolutionContext,
-        transformer: ColumnSetTransformer,
-    ): ColumnWithPath<T>? =
-        transformer.transformRemainingSingle(context.df.asColumnGroup()).cast<T>()
-            .resolve(context)
-            .toDataFrame()
-            .getColumn<T>(source.name(), context.unresolvedColumnsPolicy)
-            ?.addPath()
 
     override fun getValue(row: AnyRow) = super<ValueColumn>.getValue(row)
 

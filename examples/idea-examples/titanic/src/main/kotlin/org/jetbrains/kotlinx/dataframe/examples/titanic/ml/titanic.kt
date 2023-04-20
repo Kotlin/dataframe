@@ -100,7 +100,7 @@ private fun <T> OnHeapDataset.Companion.create(
 
     fun extractX(): Array<FloatArray> =
         dataframe.remove(yColumn)
-            .convert { allDfs() }.toFloat()
+            .convert { all().recursively(includeGroups = false) }.toFloat()
             .merge { dfsOf<Float>() }.by { it.toFloatArray() }.into(x)
             .getColumn(x).toTypedArray()
 

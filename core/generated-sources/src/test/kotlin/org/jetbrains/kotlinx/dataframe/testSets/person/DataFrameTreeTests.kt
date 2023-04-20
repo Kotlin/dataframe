@@ -250,7 +250,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun selectDfs() {
-        val cols = typed2.select { dfs { it.hasNulls } }
+        val cols = typed2.select { cols { it.hasNulls }.rec() }
         cols shouldBe typed2.select { nameAndCity.city and weight }
     }
 
@@ -457,14 +457,14 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun parentColumnTest() {
-        val res = typed2.move { dfs { it.depth > 0 } }.toTop { it.parentName + "-" + it.name }
+        val res = typed2.move { cols { it.depth > 0 }.rec() }.toTop { it.parentName + "-" + it.name }
         res.columnsCount() shouldBe 4
         res.columnNames() shouldBe listOf("nameAndCity-name", "nameAndCity-city", "age", "weight")
     }
 
     @Test
     fun `group cols`() {
-        val joined = typed2.move { allDfs() }.into { pathOf(it.path.joinToString(".")) }
+        val joined = typed2.move { all().rec(includeGroups = false) }.into { pathOf(it.path.joinToString(".")) }
         val grouped = joined.group { nameContains(".") }.into { it.name().substringBefore(".") }
         val expected = typed2.rename { nameAndCity.all() }.into { it.path.joinToString(".") }
         grouped shouldBe expected
