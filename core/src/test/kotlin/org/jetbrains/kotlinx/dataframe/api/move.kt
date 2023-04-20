@@ -68,7 +68,7 @@ class MoveTests {
     }
 
     @Test
-    fun `selectDfs`() {
+    fun `select recursively`() {
         val selected = grouped.select {
             it["a"].cols { !it.isColumnGroup() }.recursively()
         }

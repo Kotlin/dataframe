@@ -23,7 +23,7 @@ See [column selectors](ColumnSelectors.md) and [row expressions](DataRow.md#row-
 
 ```kotlin
 df.update { age }.with { it * 2 }
-df.update { dfsOf<String>() }.with { it.uppercase() }
+df.update { colsOf<String>().recursively() }.with { it.uppercase() }
 df.update { weight }.at(1..4).notNull { it / 2 }
 df.update { name.lastName and age }.at(1, 3, 4).withNull()
 ```

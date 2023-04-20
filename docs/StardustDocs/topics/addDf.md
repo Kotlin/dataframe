@@ -4,7 +4,7 @@
 
 Returns [`DataFrame`](DataFrame.md) with union of columns from several given [`DataFrames`](DataFrame.md).
 
-<!---FUN addDfs-->
+<!---FUN addDataFrames-->
 
 ```kotlin
 df.add(df1, df2)

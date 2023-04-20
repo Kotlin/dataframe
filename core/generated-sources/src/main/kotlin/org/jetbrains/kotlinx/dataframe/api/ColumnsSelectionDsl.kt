@@ -17,7 +17,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.*
-import org.jetbrains.kotlinx.dataframe.impl.columns.tree.dfs
+import org.jetbrains.kotlinx.dataframe.impl.columns.tree.flattenRecursively
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -3907,21 +3907,28 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     @Deprecated(
         message = "dfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.cols(predicate).recursively(includeTopLevel = true)"),
+        replaceWith = ReplaceWith("this.cols(predicate).recursively(includeTopLevel = false)"),
         level = DeprecationLevel.WARNING,
     )
     public fun <C> ColumnSet<C>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<Any?> = dfsInternal(predicate)
 
     @Deprecated(
         message = "dfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.cols(predicate).recursively(includeTopLevel = true)"),
+        replaceWith = ReplaceWith("this.cols(predicate).recursively()"),
+        level = DeprecationLevel.WARNING,
+    )
+    public fun SingleColumn<*>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<Any?> = dfsInternal(predicate)
+
+    @Deprecated(
+        message = "dfs is deprecated, use recursively instead.",
+        replaceWith = ReplaceWith("this.cols(predicate).recursively()"),
         level = DeprecationLevel.WARNING,
     )
     public fun String.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> = toColumnAccessor().dfs(predicate)
 
     @Deprecated(
         message = "dfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.cols(predicate).recursively(includeTopLevel = true)"),
+        replaceWith = ReplaceWith("this.cols(predicate).recursively()"),
         level = DeprecationLevel.WARNING,
     )
     public fun <C> KProperty<C>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
@@ -3942,10 +3949,18 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     @Deprecated(
         message = "allDfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.all().recursively(includeGroups = includeGroups)"),
+        replaceWith = ReplaceWith("this.all().recursively(includeGroups = includeGroups, includeTopLevel = false)"),
         level = DeprecationLevel.WARNING,
     )
     public fun ColumnSet<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> =
+        if (includeGroups) dfs { true } else dfs { !it.isColumnGroup() }
+
+    @Deprecated(
+        message = "allDfs is deprecated, use recursively instead.",
+        replaceWith = ReplaceWith("this.all().recursively(includeGroups = includeGroups)"),
+        level = DeprecationLevel.WARNING,
+    )
+    public fun SingleColumn<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> =
         if (includeGroups) dfs { true } else dfs { !it.isColumnGroup() }
 
     @Deprecated(
@@ -4296,7 +4311,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     @Deprecated(
         message = "Use recursively() instead",
         replaceWith = ReplaceWith(
-            "this.colsOf(type, predicate).recursively(includeTopLevel = false)",
+            "this.colsOf(type, predicate).recursively()",
             "org.jetbrains.kotlinx.dataframe.columns.recursively",
             "org.jetbrains.kotlinx.dataframe.api.colsOf",
         ),
@@ -4307,7 +4322,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     @Deprecated(
         message = "Use recursively() instead",
         replaceWith = ReplaceWith(
-            "this.colsOf(type, predicate).recursively(includeTopLevel = false)",
+            "this.colsOf(type, predicate).recursively()",
             "org.jetbrains.kotlinx.dataframe.columns.recursively",
             "org.jetbrains.kotlinx.dataframe.api.colsOf",
         ),
@@ -4440,7 +4455,7 @@ internal fun ColumnSet<*>.colsInternal(predicate: ColumnFilter<*>): ColumnSet<*>
 
 @Deprecated("Replaced with recursively()")
 internal fun ColumnSet<*>.dfsInternal(predicate: (ColumnWithPath<*>) -> Boolean) =
-    transform { it.filter { it.isColumnGroup() }.flatMap { it.children().dfs().filter(predicate) } }
+    transform { it.filter { it.isColumnGroup() }.flatMap { it.children().flattenRecursively().filter(predicate) } }
 
 @Deprecated(
     message = "Use recursively() instead",
@@ -4456,12 +4471,34 @@ public fun <C> ColumnSet<*>.dfsOf(type: KType, predicate: (ColumnWithPath<C>) ->
 @Deprecated(
     message = "Use recursively() instead",
     replaceWith = ReplaceWith(
+        "this.colsOf(type, predicate).recursively()",
+        "org.jetbrains.kotlinx.dataframe.columns.recursively",
+        "org.jetbrains.kotlinx.dataframe.api.colsOf",
+    ),
+)
+public fun <C> SingleColumn<*>.dfsOf(type: KType, predicate: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<*> =
+    dfsInternal { it.isSubtypeOf(type) && predicate(it.cast()) }
+
+@Deprecated(
+    message = "Use recursively() instead",
+    replaceWith = ReplaceWith(
         "this.colsOf<C>(filter).recursively(includeTopLevel = false)",
         "org.jetbrains.kotlinx.dataframe.columns.recursively",
         "org.jetbrains.kotlinx.dataframe.api.colsOf",
     ),
 )
 public inline fun <reified C> ColumnSet<*>.dfsOf(noinline filter: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<C> =
+    dfsOf(typeOf<C>(), filter) as ColumnSet<C>
+
+@Deprecated(
+    message = "Use recursively() instead",
+    replaceWith = ReplaceWith(
+        "this.colsOf<C>(filter).recursively()",
+        "org.jetbrains.kotlinx.dataframe.columns.recursively",
+        "org.jetbrains.kotlinx.dataframe.api.colsOf",
+    ),
+)
+public inline fun <reified C> SingleColumn<*>.dfsOf(noinline filter: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<C> =
     dfsOf(typeOf<C>(), filter) as ColumnSet<C>
 
 /**

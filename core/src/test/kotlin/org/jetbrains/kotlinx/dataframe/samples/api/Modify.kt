@@ -23,7 +23,6 @@ import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.default
-import org.jetbrains.kotlinx.dataframe.api.dfsOf
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.fill
@@ -114,7 +113,7 @@ class Modify : TestBase() {
     fun update() {
         // SampleStart
         df.update { age }.with { it * 2 }
-        df.update { dfsOf<String>() }.with { it.uppercase() }
+        df.update { colsOf<String>().recursively() }.with { it.uppercase() }
         df.update { weight }.at(1..4).notNull { it / 2 }
         df.update { name.lastName and age }.at(1, 3, 4).withNull()
         // SampleEnd
@@ -169,7 +168,7 @@ class Modify : TestBase() {
     fun convert() {
         // SampleStart
         df.convert { age }.with { it.toDouble() }
-        df.convert { dfsOf<String>() }.with { it.toCharArray().toList() }
+        df.convert { colsOf<String>().recursively() }.with { it.toCharArray().toList() }
         // SampleEnd
     }
 
@@ -698,7 +697,7 @@ class Modify : TestBase() {
     }
 
     @Test
-    fun concatDfs() {
+    fun concatDataFrames() {
         val df1 = df
         val df2 = df
         // SampleStart
@@ -813,7 +812,7 @@ class Modify : TestBase() {
     }
 
     @Test
-    fun addDfs() {
+    fun addDataFrames() {
         val df1 = df.select { name named "name2" }
         val df2 = df.select { age named "age2" }
         // SampleStart

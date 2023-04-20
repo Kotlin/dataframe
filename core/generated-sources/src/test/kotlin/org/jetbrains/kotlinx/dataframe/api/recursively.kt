@@ -22,31 +22,12 @@ class Recursively : TestBase() {
 
     private val recursivelyGoal = dfGroup.getColumnsWithPaths { dfs { true } }
         .sortedBy { it.name }
-        .also { it.print() }
+
     private val recursivelyNoGroups = dfGroup.getColumnsWithPaths { allDfs(false) }
         .sortedBy { it.name }
-        .also { it.print() }
+
     private val recursivelyString = dfGroup.getColumnsWithPaths { dfsOf<String?>() }
         .sortedBy { it.name }
-        .also { it.print() }
-
-    @Test
-    fun `recursively all`() {
-//        df.select { all().recursively() }.alsoDebug() shouldBe recursivelyGoal
-//        df.select { cols().recursively() }.alsoDebug() shouldBe recursivelyGoal
-//
-//        df.select { allRecursively() }.alsoDebug() shouldBe recursivelyGoal
-//        df.select { all().allRecursively() }.alsoDebug() shouldBe recursivelyGoal
-//        df.select { cols().allRecursively() }.alsoDebug() shouldBe recursivelyGoal
-
-//        df.select { dfs { true } }.alsoDebug() // correct
-//        df.select { all().dfs { true } }.alsoDebug() // incorrect (returns firstName, lastName)
-//        df.select { cols().dfs { true } }.alsoDebug() // incorrect (returns firstName, lastName)
-//
-//        df.select { allDfs(includeGroups = true) }.alsoDebug() // correct
-//        df.select { all().allDfs(includeGroups = true) }.alsoDebug() // incorrect (returns firstName, lastName)
-//        df.select { cols().allDfs(includeGroups = true) }.alsoDebug() // incorrect (returns firstName, lastName)
-    }
 
     @Test
     fun recursively() {

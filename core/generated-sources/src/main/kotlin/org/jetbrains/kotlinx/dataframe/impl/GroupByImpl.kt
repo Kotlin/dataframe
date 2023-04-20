@@ -95,7 +95,7 @@ internal fun <T, G, R> aggregateGroupBy(
 
     if (!removeColumns) removedNode.data.wasRemoved = false
 
-    val columnsToInsert = groupedFrame.getColumnsWithPaths { allDfs() }.map {
+    val columnsToInsert = groupedFrame.getColumnsWithPaths { all().recursively(includeGroups = false) }.map {
         ColumnToInsert(insertPath + it.path, it, removedNode)
     }
     val src = if (removeColumns) removed.df else df

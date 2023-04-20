@@ -628,7 +628,7 @@ class Access : TestBase() {
     fun columnSelectorsUsages() {
         // SampleStart
         df.select { age and name }
-        df.fillNaNs { dfsOf<Double>() }.withZero()
+        df.fillNaNs { colsOf<Double>().recursively() }.withZero()
         df.remove { cols { it.hasNulls() } }
         df.group { cols { it.data != name } }.into { "nameless" }
         df.update { city }.notNull { it.lowercase() }
@@ -737,8 +737,8 @@ class Access : TestBase() {
         // all children of ColumnGroup
         df.select { Person::name.all() }
 
-        // depth-first-search traversal of all children columns
-        df.select { Person::name.allDfs() }
+        // recursive traversal of all children columns excluding groups
+        df.select { Person::name.all().recursively(includeGroups = false) }
         // SampleEnd
     }
 
@@ -770,8 +770,8 @@ class Access : TestBase() {
         // all children of ColumnGroup
         df.select { "name".all() }
 
-        // depth-first-search traversal of all children columns
-        df.select { "name".allDfs() }
+        // recursive traversal of all children columns excluding groups
+        df.select { "name".all().recursively(includeGroups = false) }
         // SampleEnd
     }
 
