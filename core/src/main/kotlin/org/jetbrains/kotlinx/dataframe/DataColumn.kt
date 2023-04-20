@@ -107,14 +107,6 @@ public interface DataColumn<out T> : BaseColumn<T> {
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? = this.addPath()
 
-    override fun resolveSingleAfterTransform(
-        context: ColumnResolutionContext,
-        transformer: ColumnSetTransformer,
-    ): ColumnWithPath<T>? =
-        transformer.transformRemainingSingle(this).cast<T>()
-            .let { it as DataColumn<T> }
-            .addPath()
-
     override operator fun getValue(thisRef: Any?, property: KProperty<*>): DataColumn<T> =
         super.getValue(thisRef, property) as DataColumn<T>
 

@@ -16,12 +16,12 @@ public interface SingleColumn<out C> : ColumnSet<C> {
     override fun resolveAfterTransform(
         context: ColumnResolutionContext,
         transformer: ColumnSetTransformer,
-    ): List<ColumnWithPath<C>> = resolveSingleAfterTransform(context, transformer)?.let { listOf(it) } ?: emptyList()
+    ): List<ColumnWithPath<C>> =
+        throw UnsupportedOperationException(
+            "SingleColumn.resolveAfterTransform is not supported because transformations can only be applied on normal ColumnSets. use '.wrap()' to wrap a SingleColumn into a ColumnSet"
+        )
 
     public fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>?
-
-    public fun resolveSingleAfterTransform(
-        context: ColumnResolutionContext,
-        transformer: ColumnSetTransformer,
-    ): ColumnWithPath<C>?
 }
+
+public fun ColumnSet<*>.isSingleColumn(): Boolean = this is SingleColumn<*>

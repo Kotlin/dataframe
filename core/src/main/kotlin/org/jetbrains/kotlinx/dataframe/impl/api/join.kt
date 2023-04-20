@@ -147,12 +147,13 @@ internal fun <A, B> DataFrame<A>.joinImpl(
         outputRowsCount += rightUnmatchedCount
     }
 
-    val leftColumns = getColumnsWithPaths { allDfs() }
+    val leftColumns = getColumnsWithPaths { all().recursively(includeGroups = false) }
 
-    val rightJoinColumnPaths = allRightJoinColumns.map { it.path to it.data }.toMap()
+    val rightJoinColumnPaths = allRightJoinColumns.associate { it.path to it.data }
 
     val newRightColumns =
-        if (addNewColumns) other.getColumnsWithPaths { dfs { !it.isColumnGroup() && !rightJoinColumnPaths.contains(it.path) } } else emptyList()
+        if (addNewColumns) other.getColumnsWithPaths { cols { !it.isColumnGroup() && !rightJoinColumnPaths.contains(it.path) }.rec() }
+        else emptyList()
 
     // for every column index from the left dataframe store matching column from the right dataframe
     val leftToRightColumns = leftColumns.map { rightJoinColumnPaths[pathMapping[it.path()]] }

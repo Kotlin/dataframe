@@ -665,8 +665,8 @@ class Access : TestBase() {
         // all children of ColumnGroup
         df.select { name.all() }
 
-        // depth-first-search traversal of all children columns
-        df.select { name.allDfs() }
+        // recursive traversal of all children columns excluding ColumnGroups
+        df.select { name.all().recursively(includeGroups = false) }
 
         // SampleEnd
     }
@@ -702,8 +702,8 @@ class Access : TestBase() {
         // all children of ColumnGroup
         df.select { name.all() }
 
-        // depth-first-search traversal of all children columns
-        df.select { name.allDfs() }
+        // recursive traversal of all children columns excluding ColumnGroups
+        df.select { name.all().recursively(includeGroups = false) }
         // SampleEnd
     }
 
@@ -827,17 +827,17 @@ class Access : TestBase() {
             Person::name.single { it.name().startsWith("first") }
         }
 
-        // depth-first-search traversal of all columns, excluding ColumnGroups from result
-        df.select { allDfs() }
+        // recursive traversal of all columns, excluding ColumnGroups from result
+        df.select { all().recursively(includeGroups = false) }
 
         // depth-first-search traversal of all columns, including ColumnGroups in result
-        df.select { allDfs(includeGroups = true) }
+        df.select { all().recursively() }
 
-        // depth-first-search traversal with condition
-        df.select { dfs { it.name().contains(":") } }
+        // recursive traversal with condition
+        df.select { cols { it.name().contains(":") }.recursively() }
 
-        // depth-first-search traversal of columns of given type
-        df.select { dfsOf<String>() }
+        // recursive traversal of columns of given type
+        df.select { colsOf<String>().recursively() }
 
         // all columns except given column set
         df.select { except { colsOf<String>() } }
@@ -851,18 +851,18 @@ class Access : TestBase() {
     fun columnSelectorsModifySet() {
         // SampleStart
         // first/last n columns in column set
-        df.select { allDfs().take(3) }
-        df.select { allDfs().takeLast(3) }
+        df.select { all().rec(includeGroups = false).take(3) }
+        df.select { all().rec(includeGroups = false).takeLast(3) }
 
         // all except first/last n columns in column set
-        df.select { allDfs().drop(3) }
-        df.select { allDfs().dropLast(3) }
+        df.select { all().rec(includeGroups = false).drop(3) }
+        df.select { all().rec(includeGroups = false).dropLast(3) }
 
         // filter column set by condition
-        df.select { allDfs().filter { it.name().startsWith("year") } }
+        df.select { all().rec(includeGroups = false).filter { it.name().startsWith("year") } }
 
         // exclude columns from column set
-        df.select { allDfs().except { age } }
+        df.select { all().rec(includeGroups = false).except { age } }
 
         // keep only unique columns
         df.select { (colsOf<Int>() and age).distinct() }

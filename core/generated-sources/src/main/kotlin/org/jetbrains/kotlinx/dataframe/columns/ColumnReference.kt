@@ -36,16 +36,6 @@ public interface ColumnReference<out C> : SingleColumn<C> {
         context.df
             .getColumn<C>(path(), context.unresolvedColumnsPolicy)
             ?.addPath(path())
-
-    override fun resolveSingleAfterTransform(
-        context: ColumnResolutionContext,
-        transformer: ColumnSetTransformer,
-    ): ColumnWithPath<C>? =
-        transformer.transformRemainingSingle(context.df.asColumnGroup()).cast<C>()
-            .resolve(context)
-            .toDataFrame()
-            .getColumn<C>(path(), context.unresolvedColumnsPolicy)
-            ?.addPath(path())
 }
 
 internal fun <C> ColumnReference<C>.renamedReference(newName: String): ColumnReference<C> =

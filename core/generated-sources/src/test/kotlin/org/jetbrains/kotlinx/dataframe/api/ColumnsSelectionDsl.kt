@@ -213,6 +213,15 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select { cols(name, age, city, weight, isHappy) },
             df.select { all().cols() },
             df.select { cols() },
+            df.select { all() },
+        ).shouldAllBeEqual()
+
+        listOf(
+            df.select { name },
+            df.select { name }.select { all() },
+            df.select { name }.select { cols() },
+            df.select { name }.select { cols().all() },
+            df.select { name }.select { all().cols() },
         ).shouldAllBeEqual()
 
         listOf(

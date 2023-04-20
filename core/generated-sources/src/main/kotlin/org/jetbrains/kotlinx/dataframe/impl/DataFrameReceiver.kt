@@ -55,18 +55,6 @@ internal open class DataFrameReceiver<T>(
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<DataRow<T>>? =
         DataColumn.createColumnGroup("", df).addPath(emptyPath())
 
-    override fun resolveSingleAfterTransform(
-        context: ColumnResolutionContext,
-        transformer: ColumnSetTransformer,
-    ): ColumnWithPath<DataRow<T>>? =
-        DataColumn.createColumnGroup(
-            name = "",
-            df = createColumnSet { df.columns().map { it.addPath() } }
-                .let(transformer::transform).cast<T>()
-                .resolve(context)
-                .toDataFrame() as DataFrame<T>,
-        ).addPath(emptyPath())
-
     override fun columns() =
         df.columns().map { if (it.isColumnGroup()) ColumnGroupWithParent(null, it.asColumnGroup()) else it }
 

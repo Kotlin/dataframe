@@ -465,9 +465,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
             override fun resolveAfterTransform(
                 context: ColumnResolutionContext,
                 transformer: ColumnSetTransformer,
-            ): List<ColumnWithPath<Any?>> =
-                process(transformer.transformRemainingSingle(this@rangeTo) as AnyColumnReference, context)
-        }
+            ): List<ColumnWithPath<Any?>> = throw UnsupportedOperationException("Not implemented")
+        }.wrap()
 
     /**
      * ## None
@@ -1576,21 +1575,21 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     @Deprecated(
         message = "dfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.cols(predicate).recursively(includeTopLevel = false)"),
+        replaceWith = ReplaceWith("this.cols(predicate).recursively(includeTopLevel = true)"),
         level = DeprecationLevel.WARNING,
     )
     public fun <C> ColumnSet<C>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<Any?> = dfsInternal(predicate)
 
     @Deprecated(
         message = "dfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.cols(predicate).recursively(includeTopLevel = false)"),
+        replaceWith = ReplaceWith("this.cols(predicate).recursively(includeTopLevel = true)"),
         level = DeprecationLevel.WARNING,
     )
     public fun String.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> = toColumnAccessor().dfs(predicate)
 
     @Deprecated(
         message = "dfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.cols(predicate).recursively(includeTopLevel = false)"),
+        replaceWith = ReplaceWith("this.cols(predicate).recursively(includeTopLevel = true)"),
         level = DeprecationLevel.WARNING,
     )
     public fun <C> KProperty<C>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
@@ -1601,7 +1600,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     // region all
     public fun ColumnSet<*>.all(): ColumnSet<*> = wrap()
 
-    public fun SingleColumn<*>.all(): ColumnSet<*> = transformSingle { it.children() }.wrap()
+    public fun SingleColumn<*>.all(): ColumnSet<*> = transformSingle { it.children() }
 
     public fun String.all(): ColumnSet<*> = toColumnAccessor().all()
 
@@ -1611,7 +1610,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     @Deprecated(
         message = "allDfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.allRecursively(includeGroups = includeGroups, includeTopLevel = false)"),
+        replaceWith = ReplaceWith("this.all().recursively(includeGroups = includeGroups)"),
         level = DeprecationLevel.WARNING,
     )
     public fun ColumnSet<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> =
@@ -1619,14 +1618,14 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     @Deprecated(
         message = "allDfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.allRecursively(includeGroups = includeGroups, includeTopLevel = false)"),
+        replaceWith = ReplaceWith("this.all().recursively(includeGroups = includeGroups)"),
         level = DeprecationLevel.WARNING,
     )
     public fun String.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> = toColumnAccessor().allDfs(includeGroups)
 
     @Deprecated(
         message = "allDfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.allRecursively(includeGroups = includeGroups, includeTopLevel = false)"),
+        replaceWith = ReplaceWith("this.all().recursively(includeGroups = includeGroups)"),
         level = DeprecationLevel.WARNING,
     )
     public fun KProperty<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> =
@@ -1668,25 +1667,26 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         includeTopLevel: Boolean = true,
     ): ColumnSet<*> = recursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
-    public fun <C> ColumnSet<C>.allRecursively(
+    public fun String.recursively(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
-    ): ColumnSet<C> = wrap().recursivelyImpl(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+    ): ColumnSet<*> = toColumnAccessor().recursively(includeGroups, includeTopLevel)
 
-    public fun <C> ColumnSet<C>.allRec(
+    public fun String.rec(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
-    ): ColumnSet<C> = allRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+    ): ColumnSet<*> = recursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
-    public fun SingleColumn<*>.allRecursively(
+    public fun KProperty<*>.recursively(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
-    ): ColumnSet<*> = all().recursivelyImpl(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+    ): ColumnSet<*> = toColumnAccessor().recursively(includeGroups, includeTopLevel)
 
-    public fun SingleColumn<*>.allRec(
+    public fun KProperty<*>.rec(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
-    ): ColumnSet<*> = allRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+    ): ColumnSet<*> = recursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+
 
     // endregion
 
@@ -2047,7 +2047,7 @@ internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) 
  */
 internal fun ColumnSet<*>.colsInternal(predicate: ColumnFilter<*>): ColumnSet<*> =
     transform {
-        if (this is SingleColumn<*> && it.singleOrNull()?.isColumnGroup() == true) {
+        if (isSingleColumn() && it.singleOrNull()?.isColumnGroup() == true) {
             it.single().children()
         } else {
             it

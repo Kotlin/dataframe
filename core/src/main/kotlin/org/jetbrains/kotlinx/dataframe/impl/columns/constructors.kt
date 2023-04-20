@@ -151,10 +151,9 @@ internal fun <C> createColumnSet(resolver: (ColumnResolutionContext) -> List<Col
         override fun resolveAfterTransform(
             context: ColumnResolutionContext,
             transformer: ColumnSetTransformer,
-        ): List<ColumnWithPath<C>> {
-            throw UnsupportedOperationException("Not implemented")
-        }
-    }
+        ): List<ColumnWithPath<C>> = throw UnsupportedOperationException("Not implemented")
+
+    }.wrap()
 
 // region toColumnSet
 
