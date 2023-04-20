@@ -53,18 +53,18 @@ internal fun <T> TreeNode<T?>.dfsTopNotNull() = dfs(enterCondition = { it.data =
 
 internal fun TreeNode<ColumnPosition>.allRemovedColumns() = dfs { it.data.wasRemoved && it.data.column != null }
 internal fun TreeNode<ColumnPosition>.allWithColumns() = dfs { it.data.column != null }
-internal fun Iterable<ColumnWithPath<*>>.dfs(): List<ColumnWithPath<*>> {
+internal fun Iterable<ColumnWithPath<*>>.flattenRecursively(): List<ColumnWithPath<*>> {
     val result = mutableListOf<ColumnWithPath<*>>()
-    fun dfs(cols: Iterable<ColumnWithPath<*>>) {
+    fun flattenRecursively(cols: Iterable<ColumnWithPath<*>>) {
         cols.forEach {
             result.add(it)
             val path = it.path
             if (it.data.isColumnGroup()) {
-                dfs(it.data.asColumnGroup().columns().map { it.addPath(path + it.name()) })
+                flattenRecursively(it.data.asColumnGroup().columns().map { it.addPath(path + it.name()) })
             }
         }
     }
-    dfs(this)
+    flattenRecursively(this)
     return result
 }
 

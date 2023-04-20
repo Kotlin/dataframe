@@ -4,7 +4,7 @@
 
 Returns [`DataFrame`](DataFrame.md) with the union of rows from several given [`DataFrames`](DataFrame.md).
 
-<!---FUN concatDfs-->
+<!---FUN concatDataFrames-->
 
 ```kotlin
 df.concat(df1, df2)

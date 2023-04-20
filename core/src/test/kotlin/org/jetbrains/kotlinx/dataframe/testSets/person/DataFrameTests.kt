@@ -1004,7 +1004,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `gather bool`() {
         val pivoted = typed.pivot { city }.groupBy { name }.matches()
-        val res = pivoted.gather { dfsOf<Boolean>() }.where { it }.keysInto("city")
+        val res = pivoted.gather { colsOf<Boolean>().recursively() }.where { it }.keysInto("city")
         val sorted = res.sortBy { name and city }
         sorted shouldBe typed.select { name and city.map { it.toString() } }.distinct().sortBy { name and city }
     }
@@ -1392,10 +1392,10 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `union table columns`() {
         val grouped = typed.addId("id").groupBy { name }.toDataFrame()
-        val dfs = (0 until grouped.nrow).map {
+        val flattened = (0 until grouped.nrow).map {
             grouped[it..it]
         }
-        val dst = dfs.concat().asGroupBy().concat().sortBy("id").remove("id")
+        val dst = flattened.concat().asGroupBy().concat().sortBy("id").remove("id")
         dst shouldBe typed
     }
 

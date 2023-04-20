@@ -8,7 +8,7 @@ Returns [`DataFrame`](DataFrame.md) with the union of rows from several given [`
 
 [`DataFrame`](DataFrame.md):
 
-<!---FUN concatDfs-->
+<!---FUN concatDataFrames-->
 
 ```kotlin
 df.concat(df1, df2)

@@ -132,11 +132,11 @@ internal fun <C> ColumnSet<C>.recursivelyImpl(
                 else list
 
             return if (includeTopLevel) {
-                cols.dfs()
+                cols.flattenRecursively()
             } else {
                 cols
                     .filter { it.isColumnGroup() }
-                    .flatMap { it.children().dfs() }
+                    .flatMap { it.children().flattenRecursively() }
             }.filter { includeGroups || !it.isColumnGroup() }
         }
 

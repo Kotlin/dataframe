@@ -37,7 +37,7 @@ val df = dataFrameOf("name", "age")(
     "Alice", 15,
     "Bob", 20
 ).cast<Person>()
-// age only available after executing `assemble` or `kspKotlin`!
+// age only available after executing `build` or `kspKotlin`!
 val teens = df.filter { age in 10..19 }
 teens.print()
 ```

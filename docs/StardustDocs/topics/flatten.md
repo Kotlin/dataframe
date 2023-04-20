@@ -27,7 +27,6 @@ df.flatten { name }
 val name by columnGroup()
 val firstName by name.column<String>()
 val lastName by name.column<String>()
-
 // name.firstName -> firstName
 // name.lastName -> lastName
 df.flatten(name)
@@ -37,6 +36,8 @@ df.flatten(name)
 <tab title="Strings">
 
 ```kotlin
+// name.firstName -> firstName
+// name.lastName -> lastName
 df.flatten("name")
 ```
 
