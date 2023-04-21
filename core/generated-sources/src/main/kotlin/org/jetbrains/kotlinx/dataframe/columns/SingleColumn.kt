@@ -1,6 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.columns
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 
 /**
  * Entity that can be [resolved][resolveSingle] into [DataColumn].
@@ -17,11 +20,18 @@ public interface SingleColumn<out C> : ColumnSet<C> {
         context: ColumnResolutionContext,
         transformer: ColumnSetTransformer,
     ): List<ColumnWithPath<C>> =
-        throw UnsupportedOperationException(
-            "SingleColumn.resolveAfterTransform is not supported because transformations can only be applied on normal ColumnSets. use '.wrap()' to wrap a SingleColumn into a ColumnSet"
-        )
+        transformer(this).resolve(context) as List<ColumnWithPath<C>>
 
     public fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>?
 }
 
-public fun ColumnSet<*>.isSingleColumn(): Boolean = this is SingleColumn<*>
+@OptIn(ExperimentalContracts::class)
+public fun ColumnSet<*>.isSingleColumn(): Boolean {
+    contract {
+        returns(true) implies (this@isSingleColumn is SingleColumn<*>)
+    }
+    return this is SingleColumn<*>
+}
+
+public fun ColumnSet<*>.isSingleColumnGroup(cols: List<ColumnWithPath<*>>): Boolean =
+    isSingleColumn() && cols.singleOrNull()?.isColumnGroup() == true

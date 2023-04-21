@@ -1,7 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
+import org.jetbrains.kotlinx.dataframe.impl.columns.recursivelyImpl
+import org.jetbrains.kotlinx.dataframe.impl.columns.singleImpl
+import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.junit.Test
@@ -28,6 +32,18 @@ class Recursively : TestBase() {
 
     private val recursivelyString = dfGroup.getColumnsWithPaths { dfsOf<String?>() }
         .sortedBy { it.name }
+
+    @Test
+    fun first() {
+        dfGroup.select {
+            first { it.data.any { it == "Alice" } }
+                .recursively()
+        }.alsoDebug()
+
+        dfGroup.select {
+            first { it.data.any { it == "London" } }.recursively()
+        }.alsoDebug()
+    }
 
     @Test
     fun recursively() {

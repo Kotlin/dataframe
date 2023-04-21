@@ -4224,7 +4224,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * @see [cols]
      */
-    public fun ColumnSet<*>.all(): ColumnSet<*> = wrap()
+    public fun <C> ColumnSet<C>.all(): ColumnSet<C> = allInternal() as ColumnSet<C>
 
     /**
      * ## All
@@ -4250,7 +4250,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * @see [cols]
      */
-    public fun SingleColumn<*>.all(): ColumnSet<*> = transformSingle { it.children() }
+    public fun SingleColumn<*>.all(): ColumnSet<*> = allInternal()
 
     /**
      * ## All
@@ -4330,6 +4330,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         toColumnAccessor().allDfs(includeGroups)
 
     /**
+     * ## Recursively / Rec
+     *
      * Modifies the previous call to run not only on the current column set, but also on all of its children.
      *
      * For example:
@@ -4341,10 +4343,16 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][ColumnSet.colsOf]`<`[String][String]`>().`[recursively][ColumnSet.recursivelyImpl]`() }`
      *
-     * This will return all columns of type [String] in lower levels (unless [includeTopLevel]` == true`).
+     * This will return all columns of type [String] in lower levels (unless [includeTopLevel\]` == true`).
      *
      * TODO
      */
+    private interface CommonRecursivelyDocs {
+
+        /** Example argument */
+        interface Examples
+    }
+
     public fun <C> ColumnSet<C>.recursively(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
@@ -4358,7 +4366,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun SingleColumn<*>.recursively(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
-    ): ColumnSet<*> = all().recursivelyImpl(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+    ): ColumnSet<*> = recursivelyImpl(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
     public fun SingleColumn<*>.rec(
         includeGroups: Boolean = true,
@@ -4795,12 +4803,22 @@ internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) 
  */
 internal fun ColumnSet<*>.colsInternal(predicate: ColumnFilter<*>): ColumnSet<*> =
     transform {
-        if (isSingleColumn() && it.singleOrNull()?.isColumnGroup() == true) {
+        if (isSingleColumnGroup(it)) {
             it.single().children()
         } else {
             it
         }.filter(predicate)
     }
+
+internal fun ColumnSet<*>.allInternal(): ColumnSet<*> =
+    transform {
+        if (isSingleColumnGroup(it)) {
+            it.single().children()
+        } else {
+            it
+        }
+    }
+
 
 @Deprecated("Replaced with recursively()")
 internal fun ColumnSet<*>.dfsInternal(predicate: (ColumnWithPath<*>) -> Boolean) =
