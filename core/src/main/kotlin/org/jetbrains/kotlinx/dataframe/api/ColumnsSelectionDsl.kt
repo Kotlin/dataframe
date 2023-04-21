@@ -857,7 +857,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * ## Cols
-     * Creates a subset of columns ([ColumnSet]) from a parent [ColumnSet], -[ColumnGroup], or -[DataFrame].
+     * Creates a subset of columns ([ColumnSet]) from the current [ColumnSet].
+     *
+     * If the current [ColumnSet] is a [SingleColumn] (and thus consists of only one column (or [column group][ColumnGroup])),
+     * then `cols` will create a subset of its children.
+     *
      * You can use either a [ColumnFilter] or any of the `vararg` overloads for all
      * [APIs][AccessApi] (+ [ColumnPath]).
      *
@@ -1204,15 +1208,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     private interface ColumnSetColsVarargStringDocs
 
     /** @include [ColumnSetColsVarargStringDocs] */
-    @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.cols(
         firstCol: String,
         vararg otherCols: String,
-    ): ColumnSet<C> = transformWithContext {
-        dataFrameOf(it)
-            .asColumnGroup()
-            .cols(firstCol, *otherCols)
-            .resolve(this) as List<ColumnWithPath<C>>
+    ): ColumnSet<C> = headPlusArray(firstCol, otherCols).let { names ->
+        filter { it.name in names }
     }
 
     /**
@@ -1340,11 +1340,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnSet<C>.cols(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
-    ): ColumnSet<C> = transformWithContext {
-        dataFrameOf(it)
-            .asColumnGroup()
-            .cols(firstCol, *otherCols)
-            .resolve(this)
+    ): ColumnSet<C> = headPlusArray(firstCol, otherCols).map { it.name }.let { names ->
+        filter { it.name in names }
     }
 
     /** @include [ColumnSetColsVarargKPropertyDocs] */
@@ -1451,15 +1448,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region indices
 
-    @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
-    ): ColumnSet<C> = transformWithContext {
-        dataFrameOf(it)
-            .asColumnGroup()
-            .cols(firstIndex, *otherIndices)
-            .resolve(this) as List<ColumnWithPath<C>>
+    ): ColumnSet<C> = headPlusArray(firstIndex, otherIndices).let { indices ->
+        transform { list ->
+            indices.map { list[it] }
+        }
     }
 
     public operator fun <C> ColumnSet<C>.get(
@@ -1516,14 +1511,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region ranges
 
-    @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.cols(range: IntRange): ColumnSet<C> =
-        transformWithContext {
-            dataFrameOf(it)
-                .asColumnGroup()
-                .cols(range)
-                .resolve(this) as List<ColumnWithPath<C>>
-        }
+        transform { it.subList(range.first, range.last + 1) }
 
     public operator fun <C> ColumnSet<C>.get(range: IntRange): ColumnSet<C> = cols(range)
 
@@ -1605,12 +1594,70 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     // endregion
 
     // region all
+
+    /**
+     * ## All
+     * Creates a new [ColumnSet] that contains all columns from the current [ColumnSet].
+     *
+     * If the current [ColumnSet] is a [SingleColumn] (and thus consists of only one column (or [column group][ColumnGroup])),
+     * then `all` will create a new [ColumnSet] consisting of its children.
+     *
+     * This makes the function essentially equivalent to [cols()][ColumnSet.cols].
+     *
+     * #### For example:
+     * `df.`[move][DataFrame.move]` { `[all][ColumnSet.all]`().`[recursively][ColumnSet.recursively]`() }.`[under][MoveClause.under]`("info")`
+     *
+     * `df.`[select][DataFrame.select]` { myGroup.`[all][ColumnSet.all]`() }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [CommonAllDocs.Examples]}
+     *
+     * @see [cols\]
+     */
+    private interface CommonAllDocs {
+
+        /** Example argument */
+        interface Examples
+    }
+
+    /**
+     * @include [CommonAllDocs]
+     * @arg [CommonAllDocs.Examples]
+     *
+     * `df.`[select][select]` { `[cols][cols]` { "a" in `[name][ColumnWithPath.name]` }.`[all][all]`() }`
+     * {@include [LineBreak]}
+     * NOTE: This is an identity call and can be omitted in most cases. However, it can still prove useful
+     * for readability or in combination with [recursively].
+     */
     public fun ColumnSet<*>.all(): ColumnSet<*> = wrap()
 
+    /**
+     * @include [CommonAllDocs]
+     * @arg [CommonAllDocs.Examples]
+     *
+     * `df.`[select][select]` { `[all][all]`() }`
+     *
+     * `df.`[select][select]` { myGroup.`[all][all]`() }`
+     *
+     * `df.`[select][select]` { "pathTo"["myGroup"].`[all][all]`() }`
+     */
     public fun SingleColumn<*>.all(): ColumnSet<*> = transformSingle { it.children() }
 
+    /**
+     * @include [CommonAllDocs]
+     * @arg [CommonAllDocs.Examples]
+     *
+     * `df.`[select][select]` { "myGroupCol".`[all][all]`() }`
+     */
     public fun String.all(): ColumnSet<*> = toColumnAccessor().all()
 
+    /**
+     * @include [CommonAllDocs]
+     * @arg [CommonAllDocs.Examples]
+     *
+     * `df.`[select][select]` { Type::columnGroup.`[all][all]`() }`
+     */
     public fun KProperty<*>.all(): ColumnSet<*> = toColumnAccessor().all()
 
     // region allDfs
@@ -1701,7 +1748,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
     ): ColumnSet<*> = recursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
-
 
     // endregion
 
@@ -2050,7 +2096,6 @@ public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(
 
 internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) -> Boolean): ColumnsSelector<T, C> =
     { this@filter(it, it).filter(predicate) }
-
 
 /**
  * If this [ColumnSet] is a [SingleColumn], it

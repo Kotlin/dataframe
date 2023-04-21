@@ -41,13 +41,14 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
                     .collectAll(true)
 
             ColumnKind.Group ->
-                if (recursively)
+                if (recursively) {
                     col.asColumnGroup()
                         .columns()
                         .map { it.addPath(col.path() + it.name) }
                         .collectAll(true)
-                else
+                } else {
                     listOf(col)
+                }
 
             ColumnKind.Value -> listOf(col)
         }
