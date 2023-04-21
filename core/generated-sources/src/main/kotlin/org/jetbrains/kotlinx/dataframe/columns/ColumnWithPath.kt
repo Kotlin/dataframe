@@ -27,10 +27,11 @@ public interface ColumnWithPath<out T> : DataColumn<T> {
         asColumnGroup().getColumnOrNull(accessor)?.addParentPath(path)
 
     public fun children(): List<ColumnWithPath<Any?>> =
-        if (isColumnGroup())
+        if (isColumnGroup()) {
             data.asColumnGroup().columns().map { it.addParentPath(path) }
-        else
+        } else {
             emptyList()
+        }
 
     override fun path(): ColumnPath = path
 

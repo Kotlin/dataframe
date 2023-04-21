@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.columns.*
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnGroupWithParent
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnGroupWithPathImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
-import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingDataColumn
 

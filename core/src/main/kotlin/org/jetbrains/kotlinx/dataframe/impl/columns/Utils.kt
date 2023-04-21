@@ -127,9 +127,11 @@ internal fun <C> ColumnSet<C>.recursivelyImpl(
 
         private fun flattenColumnWithPaths(list: List<ColumnWithPath<*>>, isSingleColumn: Boolean): List<ColumnWithPath<*>> {
             val cols =
-                if (isSingleColumn && list.singleOrNull()?.isColumnGroup() == true)
+                if (isSingleColumn && list.singleOrNull()?.isColumnGroup() == true) {
                     list.single().children()
-                else list
+                } else {
+                    list
+                }
 
             return if (includeTopLevel) {
                 cols.flattenRecursively()
