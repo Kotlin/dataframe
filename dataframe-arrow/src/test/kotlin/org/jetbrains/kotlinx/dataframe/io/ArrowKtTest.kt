@@ -266,4 +266,11 @@ internal class ArrowKtTest {
             Locale.setDefault(currentLocale)
         }
     }
+
+    @Test
+    fun testBigStringColumn() {
+        val dataFrame = dataFrameOf(bigStringColumn)
+        val data = dataFrame.saveArrowFeatherToByteArray()
+        DataFrame.readArrowFeather(data) shouldBe dataFrame
+    }
 }
