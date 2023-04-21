@@ -89,12 +89,10 @@ internal fun <A, B> SingleColumn<A>.transformSingle(
     override fun resolveAfterTransform(
         context: ColumnResolutionContext,
         transformer: ColumnSetTransformer,
-    ): List<ColumnWithPath<B>> = throw NotImplementedError("converter cannot be applied after transform.")
-//        transformer.transformRemainingSingle(this@transformSingle).cast<A>()
-//            .resolveSingle(context)
-//            ?.let(converter)
-//            ?: emptyList()
-}.wrap()
+    ): List<ColumnWithPath<B>> =
+        this@transformSingle.resolveAfterTransform(context, transformer)
+            .flatMap(converter)
+}
 
 internal fun <A, B> SingleColumn<A>.transformRemainingSingle(
     converter: (ColumnWithPath<A>) -> ColumnWithPath<B>,
@@ -125,9 +123,9 @@ internal fun <C> ColumnSet<C>.recursivelyImpl(
 
     val flattenTransformer = object : ColumnSetTransformer {
 
-        private fun flattenColumnWithPaths(list: List<ColumnWithPath<*>>, isSingleColumn: Boolean): List<ColumnWithPath<*>> {
+        private fun flattenColumnWithPaths(list: List<ColumnWithPath<*>>, columnSet: ColumnSet<*>): List<ColumnWithPath<*>> {
             val cols =
-                if (isSingleColumn && list.singleOrNull()?.isColumnGroup() == true) {
+                if (columnSet.isSingleColumnGroup(list)) {
                     list.single().children()
                 } else {
                     list
@@ -142,27 +140,8 @@ internal fun <C> ColumnSet<C>.recursivelyImpl(
             }.filter { includeGroups || !it.isColumnGroup() }
         }
 
-        // TODO remove/clean
-//        override fun transformRemainingSingle(singleColumn: SingleColumn<*>): SingleColumn<*> =
-//            singleColumn.transformRemainingSingle {
-//                if (!it.isColumnGroup()) return@transformRemainingSingle it
-//
-//                val list = it.asColumnGroup().getColumnsWithPaths { all() }
-//                val res = flattenColumnWithPaths(list, true)
-//
-//                DataColumn.createColumnGroup(it.name, res.toDataFrame()).addPath(it.path())
-//            }
-
-        // TODO remove/clean
-//        override fun transformSingle(singleColumn: SingleColumn<*>): ColumnSet<*> = singleColumn.transformSingle {
-//            if (!it.isColumnGroup()) return@transformSingle listOf(it)
-//
-//            val list = it.asColumnGroup().getColumnsWithPaths { all() }
-//            flattenColumnWithPaths(list, true)
-//        }
-
         override fun transform(columnSet: ColumnSet<*>): ColumnSet<*> = columnSet.transform {
-            flattenColumnWithPaths(it, columnSet.isSingleColumn())
+            flattenColumnWithPaths(it, columnSet)
         }
     }
 
@@ -217,6 +196,15 @@ internal fun <A, B> ColumnSet<A>.transformWithContext(
 internal fun <T> ColumnSet<T>.singleImpl() = object : SingleColumn<T> {
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? =
         this@singleImpl.resolve(context).singleOrNull()
+
+    override fun resolveAfterTransform(
+        context: ColumnResolutionContext,
+        transformer: ColumnSetTransformer,
+    ): List<ColumnWithPath<T>> =
+        this@singleImpl.resolveAfterTransform(
+            context = context,
+            transformer = transformer,
+        )
 }
 
 internal fun <T> ColumnSet<T>.getAt(index: Int) = object : SingleColumn<T> {

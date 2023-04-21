@@ -30,14 +30,11 @@ public interface ColumnSet<out C> {
     ): List<ColumnWithPath<C>>
 }
 
-public interface ColumnSetTransformer {
-
-//    @Deprecated("see if this can be removed")
-//    public fun transformRemainingSingle(singleColumn: SingleColumn<*>): SingleColumn<*>
-
-//    public fun transformSingle(singleColumn: SingleColumn<*>): ColumnSet<*>
+public fun interface ColumnSetTransformer {
 
     public fun transform(columnSet: ColumnSet<*>): ColumnSet<*>
+
+    public operator fun invoke(columnSet: ColumnSet<*>): ColumnSet<*> = transform(columnSet)
 }
 
 public class ColumnResolutionContext internal constructor(
