@@ -53,6 +53,10 @@ import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.exceptions.CellConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.name
+import org.jetbrains.kotlinx.dataframe.values
+import java.nio.charset.Charset
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.typeOf
 
 /**
  * Save [dataFrame] content in Apache Arrow format (can be written to File, ByteArray, OutputStream or raw Channel) with [targetSchema].
@@ -67,11 +71,22 @@ internal class ArrowWriterImpl(
 
     private val allocator = RootAllocator()
 
-    private fun allocateVector(vector: FieldVector, size: Int) {
+    private fun allocateVector(vector: FieldVector, size: Int, totalBytes: Long? = null) {
         when (vector) {
             is FixedWidthVector -> vector.allocateNew(size)
-            is VariableWidthVector -> vector.allocateNew(size)
+            is VariableWidthVector -> totalBytes?.let { vector.allocateNew(it, size) } ?: vector.allocateNew(size)
             else -> throw IllegalArgumentException("Can not allocate ${vector.javaClass.canonicalName}")
+        }
+    }
+
+    /**
+     * Calculate buffer size for VariableWidthVector (return null for FixedWidthVector)
+     */
+    private fun countTotalBytes(column: AnyCol): Long? {
+        val columnType = column.type()
+        return when {
+            columnType.isSubtypeOf(typeOf<String?>()) -> column.values.fold(0L) {totalBytes, value -> totalBytes + value.toString().length * 4}
+            else -> null
         }
     }
 
@@ -189,11 +204,12 @@ internal class ArrowWriterImpl(
             actualField.createVector(allocator)!!
         }
 
-        allocateVector(vector, dataFrame.rowsCount())
         if (convertedColumn == null) {
             check(actualField.isNullable)
+            allocateVector(vector, dataFrame.rowsCount())
             infillWithNulls(vector, dataFrame.rowsCount())
         } else {
+            allocateVector(vector, dataFrame.rowsCount(), countTotalBytes(convertedColumn))
             infillVector(vector, convertedColumn)
         }
         return vector

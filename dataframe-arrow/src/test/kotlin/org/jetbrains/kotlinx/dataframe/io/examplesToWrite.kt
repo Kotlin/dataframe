@@ -154,3 +154,39 @@ val citiesExampleSchema = """{
   } ]
 }
 """.trimIndent()
+
+/**
+ * String column (variable length vector) with size >1 MiB
+ */
+val bigStringColumn = run {
+    val list = ArrayList<String>()
+    for (i in 0 until 1024) {
+        val row = StringBuilder()
+        for (j in 0 until 64) {
+            row.append("abcd")
+        }
+        list.add(row.toString())
+    }
+    for (i in 0 until 1024) {
+        val row = StringBuilder()
+        for (j in 0 until 64) {
+            row.append("гдёж")
+        }
+        list.add(row.toString())
+    }
+    for (i in 0 until 1024) {
+        val row = StringBuilder()
+        for (j in 0 until 64) {
+            row.append("αβγδ")
+        }
+        list.add(row.toString())
+    }
+    for (i in 0 until 1024) {
+        val row = StringBuilder()
+        for (j in 0 until 64) {
+            row.append("正体字")
+        }
+        list.add(row.toString())
+    }
+    DataColumn.createValueColumn("bigStringColumn", list)
+}
