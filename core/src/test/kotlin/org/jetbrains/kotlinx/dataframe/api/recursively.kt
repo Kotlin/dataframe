@@ -2,10 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.impl.columns.singleImpl
-import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.jetbrains.kotlinx.dataframe.samples.api.city
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
@@ -44,24 +41,32 @@ class Recursively : TestBase() {
         listOf(
             dfGroup.select { name.firstName.firstName },
 
-            dfGroup.select { first { it.data.any { it == "Alice" } }.recursively() },
-            dfGroup.select { last { it.data.any { it == "Alice" } }.recursively() },
-            dfGroup.select { single { it.data.any { it == "Alice" } }.recursively() },
+            dfGroup.select { first { col -> col.any { it == "Alice" } }.recursively() },
+            dfGroup.select { last { col -> col.any { it == "Alice" } }.recursively() },
+            dfGroup.select { single { col -> col.any { it == "Alice" } }.recursively() },
         ).shouldAllBeEqual()
 
         listOf(
             dfGroup.select { city },
 
-            dfGroup.select { first { it.data.any { it == "London" } }.recursively() },
-            dfGroup.select { last { it.data.any { it == "London" } }.recursively() },
-            dfGroup.select { single { it.data.any { it == "London" } }.recursively() },
+            dfGroup.select { first { col -> col.any { it == "London" } }.recursively() },
+            dfGroup.select { last { col -> col.any { it == "London" } }.recursively() },
+            dfGroup.select { single { col -> col.any { it == "London" } }.recursively() },
         ).shouldAllBeEqual()
     }
 
-//    @Test
-//    fun `get at`() {
-//        dfGroup.getColumnsWithPaths { it[0].recursively() }.print()
-//    }
+    @Test
+    fun `get at`() {
+//        dfGroup.getColumnsWithPaths { it[0..3].recursively() }.print()
+        dfGroup.getColumnsWithPaths { all().recursively()[0..3] }.print()
+    }
+
+    @Test
+    fun `children`() {
+        dfGroup.getColumnsWithPaths { children().recursively() }.print()
+        dfGroup.getColumnsWithPaths { name.children() }.print()
+    }
+
 
 //    @Test
 //    fun `combination`() {
