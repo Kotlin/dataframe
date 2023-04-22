@@ -4031,11 +4031,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnSet<C>.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
-    ): ColumnSet<C> = headPlusArray(firstIndex, otherIndices).let { indices ->
-        transform { list ->
-            indices.map { list[it] }
-        }
-    }
+    ): ColumnSet<C> = colsInternal(headPlusArray(firstIndex, otherIndices)) as ColumnSet<C>
 
     public operator fun <C> ColumnSet<C>.get(
         firstIndex: Int,
@@ -4045,9 +4041,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun SingleColumn<*>.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
-    ): ColumnSet<*> = headPlusArray(firstIndex, otherIndices).let { indices ->
-        transform { it.flatMap { it.children().let { children -> indices.map { children[it] } } } }
-    }
+    ): ColumnSet<*> = colsInternal(headPlusArray(firstIndex, otherIndices))
 
     /**
      *
@@ -4092,12 +4086,12 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     // region ranges
 
     public fun <C> ColumnSet<C>.cols(range: IntRange): ColumnSet<C> =
-        transform { it.subList(range.first, range.last + 1) }
+        colsInternal(range) as ColumnSet<C>
 
     public operator fun <C> ColumnSet<C>.get(range: IntRange): ColumnSet<C> = cols(range)
 
     public fun SingleColumn<*>.cols(range: IntRange): ColumnSet<*> =
-        transform { it.flatMap { it.children().subList(range.first, range.last + 1) } }
+        colsInternal(range)
 
     /**
      *
@@ -4808,6 +4802,28 @@ internal fun ColumnSet<*>.colsInternal(predicate: ColumnFilter<*>): ColumnSet<*>
         } else {
             it
         }.filter(predicate)
+    }
+
+internal fun ColumnSet<*>.colsInternal(indices: IntArray): ColumnSet<*> =
+    transform {
+        if (isSingleColumnGroup(it)) {
+            it.single().children()
+        } else {
+            it
+        }.let { cols ->
+            indices.map { cols[it] }
+        }
+    }
+
+internal fun ColumnSet<*>.colsInternal(range: IntRange): ColumnSet<*> =
+    transform {
+        if (isSingleColumnGroup(it)) {
+            it.single().children()
+        } else {
+            it
+        }.let { cols ->
+            cols.subList(range.first, range.last + 1)
+        }
     }
 
 internal fun ColumnSet<*>.allInternal(): ColumnSet<*> =
