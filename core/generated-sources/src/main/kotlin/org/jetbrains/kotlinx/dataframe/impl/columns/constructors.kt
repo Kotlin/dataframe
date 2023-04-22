@@ -147,12 +147,7 @@ internal fun <T> createColumn(values: Iterable<T>, suggestedType: KType, guessTy
 internal fun <C> createColumnSet(resolver: (ColumnResolutionContext) -> List<ColumnWithPath<C>>): ColumnSet<C> =
     object : ColumnSet<C> {
         override fun resolve(context: ColumnResolutionContext) = resolver(context)
-
-        override fun resolveAfterTransform(
-            context: ColumnResolutionContext,
-            transformer: ColumnSetTransformer,
-        ): List<ColumnWithPath<C>> = throw UnsupportedOperationException("Not implemented")
-    }.wrap()
+    }
 
 // region toColumnSet
 

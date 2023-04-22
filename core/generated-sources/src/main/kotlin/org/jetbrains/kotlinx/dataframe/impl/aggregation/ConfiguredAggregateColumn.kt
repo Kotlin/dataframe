@@ -29,12 +29,6 @@ internal class ConfiguredAggregateColumn<C> private constructor(
     override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> =
         resolve(context, columns)
 
-    override fun resolveAfterTransform(
-        context: ColumnResolutionContext,
-        transformer: ColumnSetTransformer,
-    ): List<ColumnWithPath<C>> =
-        resolve(context, transformer.transform(columns).cast<C>())
-
     companion object {
 
         fun <C> withDefault(src: ColumnSet<C>, default: C?): ColumnSet<C> = when (src) {

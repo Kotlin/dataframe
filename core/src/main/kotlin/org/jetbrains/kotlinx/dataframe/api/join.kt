@@ -108,13 +108,6 @@ public class ColumnMatch<C>(public val left: ColumnReference<C>, public val righ
     override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> {
         throw UnsupportedOperationException()
     }
-
-    override fun resolveAfterTransform(
-        context: ColumnResolutionContext,
-        transformer: ColumnSetTransformer,
-    ): List<ColumnWithPath<C>> {
-        throw UnsupportedOperationException()
-    }
 }
 
 public typealias JoinColumnsSelector<A, B> = JoinDsl<A, B>.(ColumnsContainer<A>) -> ColumnSet<*>

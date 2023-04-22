@@ -85,103 +85,46 @@ internal fun <A, B> SingleColumn<A>.transformSingle(
             .resolveSingle(context)
             ?.let(converter)
             ?: emptyList()
-
-    // calling resolveAfterTransform up the receiver column set call chain
-    override fun resolveAfterTransform(
-        context: ColumnResolutionContext,
-        transformer: ColumnSetTransformer,
-    ): List<ColumnWithPath<B>> =
-        this@transformSingle.resolveAfterTransform(context, transformer)
-            .flatMap(converter)
 }
 
-//internal fun <A, B> SingleColumn<A>.transformRemainingSingle(
-//    converter: (ColumnWithPath<A>) -> ColumnWithPath<B>,
-//): SingleColumn<B> = object : SingleColumn<B> {
-//    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<B>? =
-//        this@transformRemainingSingle
-//            .resolveSingle(context)
-//            ?.let(converter)
-//
-//    override fun resolveAfterTransform(
-//        context: ColumnResolutionContext,
-//        transformer: ColumnSetTransformer
-//    ): List<ColumnWithPath<B>> =
-//        this@transformRemainingSingle.resolveAfterTransform(context, transformer)
-//
-//}
 
-internal fun <A> ColumnSet<A>.wrap(): ColumnSet<A> = object : ColumnSet<A> {
-
-    override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<A>> =
-        this@wrap.resolve(context)
-
-    // applying transformer here
-    override fun resolveAfterTransform(
-        context: ColumnResolutionContext,
-        transformer: ColumnSetTransformer,
-    ): List<ColumnWithPath<A>> =
-        transformer(this@wrap).cast<A>()
-            .resolve(context)
-}
-
-internal fun <C> ColumnSet<C>.recursivelyImpl(
+internal fun ColumnSet<*>.flattenRecursively(
     includeGroups: Boolean = true,
     includeTopLevel: Boolean = true,
-): ColumnSet<C> = object : ColumnSet<C> {
-
-    val flattenTransformer = object : ColumnSetTransformer {
-
-        override fun transform(columnSet: ColumnSet<*>): ColumnSet<*> = columnSet.transform { list ->
-            val cols =
-                if (columnSet.isSingleColumnGroup(list)) {
-                    list.single().children()
-                } else {
-                    list
-                }
-
-            if (includeTopLevel) {
-                cols.flattenRecursively()
-            } else {
-                cols
-                    .filter { it.isColumnGroup() }
-                    .flatMap { it.children().flattenRecursively() }
-            }.filter { includeGroups || !it.isColumnGroup() }
+): ColumnSet<*> = transform { list ->
+    val cols =
+        if (isSingleColumnGroup(list)) {
+            list.single().children()
+        } else {
+            list
         }
-    }
 
-    // calling resolveAfterTransform up the receiver column set call chain
-    override fun resolve(
-        context: ColumnResolutionContext,
-    ): List<ColumnWithPath<C>> =
-        this@recursivelyImpl
-            .resolveAfterTransform(context = context, transformer = flattenTransformer)
-
-    // applying transformer here
-    override fun resolveAfterTransform(
-        context: ColumnResolutionContext,
-        transformer: ColumnSetTransformer,
-    ): List<ColumnWithPath<C>> =
-        transformer(this@recursivelyImpl).cast<C>()
-            .resolveAfterTransform(context = context, transformer = flattenTransformer)
+    if (includeTopLevel) {
+        cols.flattenRecursively()
+    } else {
+        cols
+            .filter { it.isColumnGroup() }
+            .flatMap { it.children().flattenRecursively() }
+    }.filter { includeGroups || !it.isColumnGroup() }
 }
 
 internal fun <A, B> ColumnSet<A>.transform(
     converter: (List<ColumnWithPath<A>>) -> List<ColumnWithPath<B>>,
-): ColumnSet<B> = object : ColumnSet<B> {
+): ColumnSetWithRecursively<B> = object : ColumnSetWithRecursively<B> {
     override fun resolve(context: ColumnResolutionContext) =
         this@transform
             .resolve(context)
             .let(converter)
 
-    // applying transformer here
-    override fun resolveAfterTransform(
+    override fun resolveRecursively(
         context: ColumnResolutionContext,
-        transformer: ColumnSetTransformer,
+        includeGroups: Boolean,
+        includeTopLevel: Boolean,
     ): List<ColumnWithPath<B>> =
-        transformer(this@transform).cast<A>()
+        this@transform
+            .flattenRecursively(includeGroups, includeTopLevel)
             .resolve(context)
-            .let { converter(it) }
+            .let { converter(it as List<ColumnWithPath<A>>) }
 }
 
 internal fun <A, B> ColumnSet<A>.transformWithContext(
@@ -191,47 +134,36 @@ internal fun <A, B> ColumnSet<A>.transformWithContext(
         this@transformWithContext
             .resolve(context)
             .let { converter(context, it) }
-
-    // applying transformer here
-    override fun resolveAfterTransform(
-        context: ColumnResolutionContext,
-        transformer: ColumnSetTransformer,
-    ): List<ColumnWithPath<B>> =
-        transformer(this@transformWithContext).cast<A>()
-            .resolve(context)
-            .let { converter(context, it) }
 }
 
-internal fun <T> ColumnSet<T>.singleImpl() = object : SingleColumn<T> {
+internal fun <T> ColumnSet<T>.singleImpl(): SingleColumn<T> = object : SingleColumn<T> {
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? =
         this@singleImpl.resolve(context).singleOrNull()
-
-    // passing back the transformer to the previous call
-    override fun resolveAfterTransform(
-        context: ColumnResolutionContext,
-        transformer: ColumnSetTransformer,
-    ): List<ColumnWithPath<T>> =
-        this@singleImpl.resolveAfterTransform(
-            context = context,
-            transformer = transformer,
-        )
 }
+
+internal fun <T> ColumnSetWithRecursively<T>.singleWithRecursivelyImpl(): SingleColumnWithRecursively<T> =
+    object : SingleColumnWithRecursively<T> {
+        override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? =
+            this@singleWithRecursivelyImpl.resolve(context).singleOrNull()
+
+        override fun resolveSingleRecursively(
+            context: ColumnResolutionContext,
+            includeGroups: Boolean,
+            includeTopLevel: Boolean,
+        ): ColumnWithPath<T>? =
+            this@singleWithRecursivelyImpl.resolveRecursively(
+                context = context,
+                includeGroups = includeGroups,
+                includeTopLevel = includeTopLevel,
+            ).singleOrNull()
+    }
+
 
 internal fun <T> ColumnSet<T>.getAt(index: Int): SingleColumn<T> = object : SingleColumn<T> {
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? =
         this@getAt
             .resolve(context)
             .getOrNull(index)
-
-    // passing back the transformer to the previous call
-    override fun resolveAfterTransform(
-        context: ColumnResolutionContext,
-        transformer: ColumnSetTransformer,
-    ): List<ColumnWithPath<T>> =
-        this@getAt.resolveAfterTransform(
-            context = context,
-            transformer = transformer,
-        )
 }
 
 internal fun <T> ColumnSet<T>.getChildrenAt(index: Int): ColumnSet<Any?> =

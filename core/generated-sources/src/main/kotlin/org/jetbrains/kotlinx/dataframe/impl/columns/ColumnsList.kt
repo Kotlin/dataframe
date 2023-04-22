@@ -10,10 +10,4 @@ internal class ColumnsList<C>(val columns: List<ColumnSet<C>>) : ColumnSet<C> {
 
     override fun resolve(context: ColumnResolutionContext) =
         columns.flatMap { it.resolve(context) }
-
-    override fun resolveAfterTransform(
-        context: ColumnResolutionContext,
-        transformer: ColumnSetTransformer,
-    ): List<ColumnWithPath<C>> =
-        columns.flatMap { it.resolveAfterTransform(context, transformer) }
 }

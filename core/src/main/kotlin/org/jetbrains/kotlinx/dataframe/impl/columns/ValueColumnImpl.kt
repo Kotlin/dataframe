@@ -52,10 +52,6 @@ internal class ResolvingValueColumn<T>(
 ) : ValueColumn<T> by source, ForceResolvedColumn<T> {
 
     override fun resolve(context: ColumnResolutionContext) = super<ValueColumn>.resolve(context)
-    override fun resolveAfterTransform(
-        context: ColumnResolutionContext,
-        transformer: ColumnSetTransformer,
-    ): List<ColumnWithPath<T>> = super<ValueColumn>.resolveAfterTransform(context, transformer)
 
     override fun resolveSingle(context: ColumnResolutionContext) =
         context.df.getColumn<T>(source.name(), context.unresolvedColumnsPolicy)?.addPath()

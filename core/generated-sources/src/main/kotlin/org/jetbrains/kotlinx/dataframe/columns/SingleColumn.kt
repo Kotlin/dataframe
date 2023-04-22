@@ -16,14 +16,29 @@ public interface SingleColumn<out C> : ColumnSet<C> {
         context: ColumnResolutionContext,
     ): List<ColumnWithPath<C>> = resolveSingle(context)?.let { listOf(it) } ?: emptyList()
 
-    /** By default, we transform the current SingleColumn using the transformer and then resolve it */
-    override fun resolveAfterTransform(
-        context: ColumnResolutionContext,
-        transformer: ColumnSetTransformer,
-    ): List<ColumnWithPath<C>> =
-        transformer(this).resolve(context) as List<ColumnWithPath<C>>
-
     public fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>?
+}
+
+internal fun <C> SingleColumnWithRecursively<C>.recursivelyImpl(
+    includeGroups: Boolean = true,
+    includeTopLevel: Boolean = true,
+): SingleColumn<C> = object : SingleColumn<C> {
+
+    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? =
+        this@recursivelyImpl.resolveSingleRecursively(
+            context = context,
+            includeGroups = includeGroups,
+            includeTopLevel = includeTopLevel,
+        )
+}
+
+public interface SingleColumnWithRecursively<out C> : SingleColumn<C> {
+
+    public fun resolveSingleRecursively(
+        context: ColumnResolutionContext,
+        includeGroups: Boolean = true,
+        includeTopLevel: Boolean = true,
+    ): ColumnWithPath<C>?
 }
 
 
