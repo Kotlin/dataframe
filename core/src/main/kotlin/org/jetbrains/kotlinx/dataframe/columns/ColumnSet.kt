@@ -33,9 +33,9 @@ public interface ColumnSet<out C> {
 public fun interface ColumnSetTransformer {
 
     public fun transform(columnSet: ColumnSet<*>): ColumnSet<*>
-
-    public operator fun invoke(columnSet: ColumnSet<*>): ColumnSet<*> = transform(columnSet)
 }
+
+public operator fun ColumnSetTransformer.invoke(columnSet: ColumnSet<*>): ColumnSet<*> = transform(columnSet)
 
 public class ColumnResolutionContext internal constructor(
     internal val df: DataFrame<*>,

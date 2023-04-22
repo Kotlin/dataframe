@@ -86,6 +86,7 @@ internal fun <A, B> SingleColumn<A>.transformSingle(
             ?.let(converter)
             ?: emptyList()
 
+    // calling resolveAfterTransform up the receiver column set call chain
     override fun resolveAfterTransform(
         context: ColumnResolutionContext,
         transformer: ColumnSetTransformer,
@@ -94,25 +95,33 @@ internal fun <A, B> SingleColumn<A>.transformSingle(
             .flatMap(converter)
 }
 
-internal fun <A, B> SingleColumn<A>.transformRemainingSingle(
-    converter: (ColumnWithPath<A>) -> ColumnWithPath<B>,
-): SingleColumn<B> = object : SingleColumn<B> {
-    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<B>? =
-        this@transformRemainingSingle
-            .resolveSingle(context)
-            ?.let(converter)
-}
+//internal fun <A, B> SingleColumn<A>.transformRemainingSingle(
+//    converter: (ColumnWithPath<A>) -> ColumnWithPath<B>,
+//): SingleColumn<B> = object : SingleColumn<B> {
+//    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<B>? =
+//        this@transformRemainingSingle
+//            .resolveSingle(context)
+//            ?.let(converter)
+//
+//    override fun resolveAfterTransform(
+//        context: ColumnResolutionContext,
+//        transformer: ColumnSetTransformer
+//    ): List<ColumnWithPath<B>> =
+//        this@transformRemainingSingle.resolveAfterTransform(context, transformer)
+//
+//}
 
 internal fun <A> ColumnSet<A>.wrap(): ColumnSet<A> = object : ColumnSet<A> {
 
     override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<A>> =
         this@wrap.resolve(context)
 
+    // applying transformer here
     override fun resolveAfterTransform(
         context: ColumnResolutionContext,
         transformer: ColumnSetTransformer,
     ): List<ColumnWithPath<A>> =
-        transformer.transform(this@wrap).cast<A>()
+        transformer(this@wrap).cast<A>()
             .resolve(context)
 }
 
@@ -123,7 +132,7 @@ internal fun <C> ColumnSet<C>.recursivelyImpl(
 
     val flattenTransformer = object : ColumnSetTransformer {
 
-        private fun flattenColumnWithPaths(list: List<ColumnWithPath<*>>, columnSet: ColumnSet<*>): List<ColumnWithPath<*>> {
+        override fun transform(columnSet: ColumnSet<*>): ColumnSet<*> = columnSet.transform { list ->
             val cols =
                 if (columnSet.isSingleColumnGroup(list)) {
                     list.single().children()
@@ -131,7 +140,7 @@ internal fun <C> ColumnSet<C>.recursivelyImpl(
                     list
                 }
 
-            return if (includeTopLevel) {
+            if (includeTopLevel) {
                 cols.flattenRecursively()
             } else {
                 cols
@@ -139,23 +148,21 @@ internal fun <C> ColumnSet<C>.recursivelyImpl(
                     .flatMap { it.children().flattenRecursively() }
             }.filter { includeGroups || !it.isColumnGroup() }
         }
-
-        override fun transform(columnSet: ColumnSet<*>): ColumnSet<*> = columnSet.transform {
-            flattenColumnWithPaths(it, columnSet)
-        }
     }
 
+    // calling resolveAfterTransform up the receiver column set call chain
     override fun resolve(
         context: ColumnResolutionContext,
     ): List<ColumnWithPath<C>> =
         this@recursivelyImpl
             .resolveAfterTransform(context = context, transformer = flattenTransformer)
 
+    // applying transformer here
     override fun resolveAfterTransform(
         context: ColumnResolutionContext,
         transformer: ColumnSetTransformer,
     ): List<ColumnWithPath<C>> =
-        transformer.transform(this@recursivelyImpl).cast<C>()
+        transformer(this@recursivelyImpl).cast<C>()
             .resolveAfterTransform(context = context, transformer = flattenTransformer)
 }
 
@@ -167,11 +174,12 @@ internal fun <A, B> ColumnSet<A>.transform(
             .resolve(context)
             .let(converter)
 
+    // applying transformer here
     override fun resolveAfterTransform(
         context: ColumnResolutionContext,
         transformer: ColumnSetTransformer,
     ): List<ColumnWithPath<B>> =
-        transformer.transform(this@transform).cast<A>()
+        transformer(this@transform).cast<A>()
             .resolve(context)
             .let { converter(it) }
 }
@@ -184,11 +192,12 @@ internal fun <A, B> ColumnSet<A>.transformWithContext(
             .resolve(context)
             .let { converter(context, it) }
 
+    // applying transformer here
     override fun resolveAfterTransform(
         context: ColumnResolutionContext,
         transformer: ColumnSetTransformer,
     ): List<ColumnWithPath<B>> =
-        transformer.transform(this@transformWithContext).cast<A>()
+        transformer(this@transformWithContext).cast<A>()
             .resolve(context)
             .let { converter(context, it) }
 }
@@ -197,6 +206,7 @@ internal fun <T> ColumnSet<T>.singleImpl() = object : SingleColumn<T> {
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? =
         this@singleImpl.resolve(context).singleOrNull()
 
+    // passing back the transformer to the previous call
     override fun resolveAfterTransform(
         context: ColumnResolutionContext,
         transformer: ColumnSetTransformer,
@@ -207,11 +217,21 @@ internal fun <T> ColumnSet<T>.singleImpl() = object : SingleColumn<T> {
         )
 }
 
-internal fun <T> ColumnSet<T>.getAt(index: Int) = object : SingleColumn<T> {
+internal fun <T> ColumnSet<T>.getAt(index: Int): SingleColumn<T> = object : SingleColumn<T> {
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? =
         this@getAt
             .resolve(context)
             .getOrNull(index)
+
+    // passing back the transformer to the previous call
+    override fun resolveAfterTransform(
+        context: ColumnResolutionContext,
+        transformer: ColumnSetTransformer,
+    ): List<ColumnWithPath<T>> =
+        this@getAt.resolveAfterTransform(
+            context = context,
+            transformer = transformer,
+        )
 }
 
 internal fun <T> ColumnSet<T>.getChildrenAt(index: Int): ColumnSet<Any?> =
