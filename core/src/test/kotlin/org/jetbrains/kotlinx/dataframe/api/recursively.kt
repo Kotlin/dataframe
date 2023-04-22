@@ -4,7 +4,6 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.impl.columns.recursivelyImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
@@ -59,30 +58,28 @@ class Recursively : TestBase() {
         ).shouldAllBeEqual()
     }
 
-    @Test
-    fun `get at`() {
-        dfGroup.getColumnsWithPaths { it[0].recursively() }.print()
+//    @Test
+//    fun `get at`() {
+//        dfGroup.getColumnsWithPaths { it[0].recursively() }.print()
+//    }
 
-//        dfGroup.getColumnsWithPaths { recursively()[0] }.print()
-    }
+//    @Test
+//    fun `combination`() {
+//        dfGroup.getColumnsWithPaths {
+//            cols { it.name in listOf("name", "firstName") }
+//                .last().recursively()
+//        } shouldNotBe
+//            dfGroup.getColumnsWithPaths {
+//                cols { it.name in listOf("name", "firstName") }.recursively()
+//                    .last().recursively()
+//            }
+//    }
 
-    @Test
-    fun `combination`() {
-        dfGroup.getColumnsWithPaths {
-            cols { it.name in listOf("name", "firstName") }
-                .last().recursively()
-        } shouldNotBe
-            dfGroup.getColumnsWithPaths {
-                cols { it.name in listOf("name", "firstName") }.recursively()
-                    .last().recursively()
-            }
-    }
-
-    @Test
-    fun `recursively`() {
-        dfGroup.getColumnsWithPaths { recursively() }.sortedBy { it.name } shouldBe recursivelyGoal
-        dfGroup.getColumnsWithPaths { rec(includeGroups = false) }.sortedBy { it.name } shouldBe recursivelyNoGroups
-    }
+//    @Test
+//    fun `recursively`() {
+//        dfGroup.getColumnsWithPaths { recursively() }.sortedBy { it.name } shouldBe recursivelyGoal
+//        dfGroup.getColumnsWithPaths { rec(includeGroups = false) }.sortedBy { it.name } shouldBe recursivelyNoGroups
+//    }
 
     @Test
     fun `all recursively`() {
@@ -105,12 +102,6 @@ class Recursively : TestBase() {
             .sortedBy { it.name } shouldBe recursivelyString
     }
 
-//    @Test
-//    fun `allRecursively`() {
-//        dfGroup.getColumnsWithPaths { allRecursively() }.sortedBy { it.name } shouldBe recursivelyGoal
-//        dfGroup.getColumnsWithPaths { allRec(includeGroups = false) }.sortedBy { it.name } shouldBe recursivelyNoGroups
-//    }
-
     @Test
     fun `all allRecursively`() {
         dfGroup.getColumnsWithPaths { all().all().recursively() }.sortedBy { it.name } shouldBe recursivelyGoal
@@ -125,12 +116,12 @@ class Recursively : TestBase() {
             .sortedBy { it.name } shouldBe recursivelyNoGroups
     }
 
-    @Test
-    fun `accessor recursively`() {
-        listOf(
-            dfGroup.getColumnsWithPaths { name.recursively() }.sortedBy { it.name }.map { it.name to it.path },
-            dfGroup.getColumnsWithPaths { it["name"].recursively() }.sortedBy { it.name }.map { it.name to it.path },
-            dfGroup.getColumnsWithPaths { name.dfs { true } }.sortedBy { it.name }.map { it.name to it.path },
-        ).shouldAllBeEqual()
-    }
+//    @Test
+//    fun `accessor recursively`() {
+//        listOf(
+//            dfGroup.getColumnsWithPaths { name.recursively() }.sortedBy { it.name }.map { it.name to it.path },
+//            dfGroup.getColumnsWithPaths { it["name"].recursively() }.sortedBy { it.name }.map { it.name to it.path },
+//            dfGroup.getColumnsWithPaths { name.dfs { true } }.sortedBy { it.name }.map { it.name to it.path },
+//        ).shouldAllBeEqual()
+//    }
 }

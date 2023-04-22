@@ -79,7 +79,7 @@ class MoveTests {
     fun `columnsWithPath in selector`() {
         val selected = grouped.getColumnsWithPaths { it["a"] }
         val actual = grouped.getColumnsWithPaths {
-            selected.map { it.recursively(includeGroups = false) }.toColumnSet()
+            selected.map { it.all().recursively(includeGroups = false) }.toColumnSet()
         }
         actual.map { it.path.joinToString(".") } shouldBe listOf("a.b", "a.c.d")
     }

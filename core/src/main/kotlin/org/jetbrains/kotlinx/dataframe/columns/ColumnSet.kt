@@ -19,16 +19,30 @@ public interface ColumnSet<out C> {
      * the current [ColumnSet] result.
      */
     public fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>>
+}
 
-    /**
-     * Resolves this [ColumnSet] as a [List]<[ColumnWithPath]<[C]>> after applying [transformer] to the parent
-     * [ColumnSet]. This essentially injects a call right before the current in the [ColumnSet.resolve] chain.
-     */
-    public fun resolveAfterTransform(
+public interface ColumnSetWithRecursively<out C> : ColumnSet<C> {
+
+    public fun resolveRecursively(
         context: ColumnResolutionContext,
-        transformer: ColumnSetTransformer,
+        includeGroups: Boolean = true,
+        includeTopLevel: Boolean = true,
     ): List<ColumnWithPath<C>>
 }
+
+internal fun <C> ColumnSetWithRecursively<C>.recursivelyImpl(
+    includeGroups: Boolean = true,
+    includeTopLevel: Boolean = true,
+): ColumnSet<C> = object : ColumnSet<C> {
+
+    override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> =
+        this@recursivelyImpl.resolveRecursively(
+            context = context,
+            includeGroups = includeGroups,
+            includeTopLevel = includeTopLevel,
+        )
+}
+
 
 public fun interface ColumnSetTransformer {
 

@@ -266,8 +266,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [last]
      */
-    public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C> = { true }): SingleColumn<C> =
-        transform { listOf(it.first(condition)) }.singleImpl()
+    public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C> = { true }): SingleColumnWithRecursively<C> =
+        transform { listOf(it.first(condition)) }.singleWithRecursivelyImpl()
 
     /**
      * ## First
@@ -284,7 +284,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [last]
      */
-    public fun SingleColumn<*>.first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun SingleColumn<*>.first(condition: ColumnFilter<*> = { true }): SingleColumnWithRecursively<*> =
         all().first(condition)
 
     /**
@@ -300,7 +300,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [last]
      */
-    public fun String.first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun String.first(condition: ColumnFilter<*> = { true }): SingleColumnWithRecursively<*> =
         colGroup(this).first(condition)
 
     /**
@@ -316,7 +316,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [last]
      */
-    public fun ColumnPath.first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun ColumnPath.first(condition: ColumnFilter<*> = { true }): SingleColumnWithRecursively<*> =
         colGroup(this).first(condition)
 
     /**
@@ -332,7 +332,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [last]
      */
-    public fun KProperty<*>.first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun KProperty<*>.first(condition: ColumnFilter<*> = { true }): SingleColumnWithRecursively<*> =
         colGroup(this).first(condition)
 
     /**
@@ -369,8 +369,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [first]
      */
-    public fun <C> ColumnSet<C>.last(condition: ColumnFilter<C> = { true }): SingleColumn<C> =
-        transform { listOf(it.last(condition)) }.singleImpl()
+    public fun <C> ColumnSet<C>.last(condition: ColumnFilter<C> = { true }): SingleColumnWithRecursively<C> =
+        transform { listOf(it.last(condition)) }.singleWithRecursivelyImpl()
 
     /**
      * ## Last
@@ -387,7 +387,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [first]
      */
-    public fun SingleColumn<*>.last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun SingleColumn<*>.last(condition: ColumnFilter<*> = { true }): SingleColumnWithRecursively<*> =
         all().last(condition)
 
     /**
@@ -403,7 +403,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [first]
      */
-    public fun String.last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun String.last(condition: ColumnFilter<*> = { true }): SingleColumnWithRecursively<*> =
         colGroup(this).last(condition)
 
     /**
@@ -419,7 +419,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [first]
      */
-    public fun ColumnPath.last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun ColumnPath.last(condition: ColumnFilter<*> = { true }): SingleColumnWithRecursively<*> =
         colGroup(this).last(condition)
 
     /**
@@ -435,7 +435,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [first]
      */
-    public fun KProperty<*>.last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun KProperty<*>.last(condition: ColumnFilter<*> = { true }): SingleColumnWithRecursively<*> =
         colGroup(this).last(condition)
 
     /**
@@ -472,8 +472,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
      */
-    public fun <C> ColumnSet<C>.single(condition: ColumnFilter<C> = { true }): SingleColumn<C> =
-        transform { listOf(it.single(condition)) }.singleImpl()
+    public fun <C> ColumnSet<C>.single(condition: ColumnFilter<C> = { true }): SingleColumnWithRecursively<C> =
+        transform { listOf(it.single(condition)) }.singleWithRecursivelyImpl()
 
     /**
      * ## Single
@@ -490,7 +490,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
      */
-    public fun SingleColumn<*>.single(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun SingleColumn<*>.single(condition: ColumnFilter<*> = { true }): SingleColumnWithRecursively<*> =
         all().single(condition)
 
     /**
@@ -506,7 +506,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
      */
-    public fun String.single(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun String.single(condition: ColumnFilter<*> = { true }): SingleColumnWithRecursively<*> =
         colGroup(this).single(condition)
 
     /**
@@ -522,7 +522,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
      */
-    public fun ColumnPath.single(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun ColumnPath.single(condition: ColumnFilter<*> = { true }): SingleColumnWithRecursively<*> =
         colGroup(this).single(condition)
 
     /**
@@ -538,7 +538,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
      */
-    public fun KProperty<*>.single(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun KProperty<*>.single(condition: ColumnFilter<*> = { true }): SingleColumnWithRecursively<*> =
         colGroup(this).single(condition)
 
     /**
@@ -730,12 +730,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
             override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<Any?>> =
                 process(this@rangeTo, context)
-
-            override fun resolveAfterTransform(
-                context: ColumnResolutionContext,
-                transformer: ColumnSetTransformer,
-            ): List<ColumnWithPath<Any?>> = throw UnsupportedOperationException("Not implemented")
-        }.wrap()
+        }
 
     /**
      * ## None
@@ -1837,7 +1832,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.cols(
         predicate: ColumnFilter<C> = { true },
-    ): ColumnSet<C> = colsInternal(predicate as ColumnFilter<*>) as ColumnSet<C>
+    ): ColumnSetWithRecursively<C> = colsInternal(predicate as ColumnFilter<*>) as ColumnSetWithRecursively<C>
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
@@ -1878,7 +1873,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      */
     public operator fun <C> ColumnSet<C>.get(
         predicate: ColumnFilter<C> = { true },
-    ): ColumnSet<C> = cols(predicate)
+    ): ColumnSetWithRecursively<C> = cols(predicate)
 
     /**
      * ## Cols
@@ -1973,7 +1968,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      */
     public fun SingleColumn<*>.cols(
         predicate: ColumnFilter<*> = { true },
-    ): ColumnSet<*> = colsInternal(predicate)
+    ): ColumnSetWithRecursively<*> = colsInternal(predicate)
 
     /**
      * ## Cols
@@ -2023,7 +2018,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      */
     public operator fun SingleColumn<*>.get(
         predicate: ColumnFilter<*> = { true },
-    ): ColumnSet<Any?> = cols(predicate)
+    ): ColumnSetWithRecursively<Any?> = cols(predicate)
 
     /**
      * ## Cols
@@ -2096,7 +2091,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      */
     public fun String.cols(
         predicate: ColumnFilter<*> = { true },
-    ): ColumnSet<*> = colGroup(this).cols(predicate)
+    ): ColumnSetWithRecursively<*> = colGroup(this).cols(predicate)
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
@@ -2133,7 +2128,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      */
     public operator fun String.get(
         predicate: ColumnFilter<*> = { true },
-    ): ColumnSet<Any?> = cols(predicate)
+    ): ColumnSetWithRecursively<Any?> = cols(predicate)
 
     /**
      * ## Cols
@@ -2210,7 +2205,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      */
     public fun ColumnPath.cols(
         predicate: ColumnFilter<*> = { true },
-    ): ColumnSet<*> = colGroup(this).cols(predicate)
+    ): ColumnSetWithRecursively<*> = colGroup(this).cols(predicate)
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
@@ -2249,7 +2244,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      */
     public operator fun ColumnPath.get(
         predicate: ColumnFilter<*> = { true },
-    ): ColumnSet<Any?> = cols(predicate)
+    ): ColumnSetWithRecursively<Any?> = cols(predicate)
 
     /**
      * ## Cols
@@ -2326,7 +2321,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      */
     public fun KProperty<*>.cols(
         predicate: ColumnFilter<*> = { true },
-    ): ColumnSet<*> = colGroup(this).cols(predicate)
+    ): ColumnSetWithRecursively<*> = colGroup(this).cols(predicate)
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
@@ -2365,7 +2360,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      */
     public operator fun KProperty<*>.get(
         predicate: ColumnFilter<*> = { true },
-    ): ColumnSet<Any?> = cols(predicate)
+    ): ColumnSetWithRecursively<Any?> = cols(predicate)
 
     // endregion
 
@@ -4205,7 +4200,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * This makes the function essentially equivalent to [cols()][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols].
      *
      * #### For example:
-     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.all]`().`[recursively][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.recursively]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.all]`().`[recursively][ColumnSet.recursively]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[all][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.all]`() }`
      *
@@ -4218,7 +4213,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * @see [cols]
      */
-    public fun <C> ColumnSet<C>.all(): ColumnSet<C> = allInternal() as ColumnSet<C>
+    public fun <C> ColumnSet<C>.all(): ColumnSetWithRecursively<C> = allInternal() as ColumnSetWithRecursively<C>
 
     /**
      * ## All
@@ -4230,7 +4225,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * This makes the function essentially equivalent to [cols()][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols].
      *
      * #### For example:
-     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.all]`().`[recursively][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.recursively]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.all]`().`[recursively][ColumnSet.recursively]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[all][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.all]`() }`
      *
@@ -4244,7 +4239,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * @see [cols]
      */
-    public fun SingleColumn<*>.all(): ColumnSet<*> = allInternal()
+    public fun SingleColumn<*>.all(): ColumnSetWithRecursively<*> = allInternal()
 
     /**
      * ## All
@@ -4256,7 +4251,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * This makes the function essentially equivalent to [cols()][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols].
      *
      * #### For example:
-     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.all]`().`[recursively][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.recursively]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.all]`().`[recursively][ColumnSet.recursively]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[all][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.all]`() }`
      *
@@ -4266,7 +4261,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * @see [cols]
      */
-    public fun String.all(): ColumnSet<*> = toColumnAccessor().all()
+    public fun String.all(): ColumnSetWithRecursively<*> = toColumnAccessor().all()
 
     /**
      * ## All
@@ -4278,7 +4273,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * This makes the function essentially equivalent to [cols()][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols].
      *
      * #### For example:
-     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.all]`().`[recursively][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.recursively]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.all]`().`[recursively][ColumnSet.recursively]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[all][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.all]`() }`
      *
@@ -4288,7 +4283,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * @see [cols]
      */
-    public fun KProperty<*>.all(): ColumnSet<*> = toColumnAccessor().all()
+    public fun KProperty<*>.all(): ColumnSetWithRecursively<*> = toColumnAccessor().all()
 
     // region allDfs
 
@@ -4347,42 +4342,22 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         interface Examples
     }
 
-    public fun <C> ColumnSet<C>.recursively(
+    public fun <C> ColumnSetWithRecursively<C>.recursively(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
     ): ColumnSet<C> = recursivelyImpl(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
-    public fun <C> ColumnSet<C>.rec(
+    public fun <C> ColumnSetWithRecursively<C>.rec(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
     ): ColumnSet<C> = recursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
-    public fun SingleColumn<*>.recursively(
+    public fun SingleColumnWithRecursively<*>.recursively(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
     ): ColumnSet<*> = recursivelyImpl(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
-    public fun SingleColumn<*>.rec(
-        includeGroups: Boolean = true,
-        includeTopLevel: Boolean = true,
-    ): ColumnSet<*> = recursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
-
-    public fun String.recursively(
-        includeGroups: Boolean = true,
-        includeTopLevel: Boolean = true,
-    ): ColumnSet<*> = toColumnAccessor().recursively(includeGroups, includeTopLevel)
-
-    public fun String.rec(
-        includeGroups: Boolean = true,
-        includeTopLevel: Boolean = true,
-    ): ColumnSet<*> = recursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
-
-    public fun KProperty<*>.recursively(
-        includeGroups: Boolean = true,
-        includeTopLevel: Boolean = true,
-    ): ColumnSet<*> = toColumnAccessor().recursively(includeGroups, includeTopLevel)
-
-    public fun KProperty<*>.rec(
+    public fun SingleColumnWithRecursively<*>.rec(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
     ): ColumnSet<*> = recursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
@@ -4795,7 +4770,7 @@ internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) 
  * Else, it returns a new [ColumnSet] containing all columns in this [ColumnSet] that
  * match the given [predicate].
  */
-internal fun ColumnSet<*>.colsInternal(predicate: ColumnFilter<*>): ColumnSet<*> =
+internal fun ColumnSet<*>.colsInternal(predicate: ColumnFilter<*>): ColumnSetWithRecursively<*> =
     transform {
         if (isSingleColumnGroup(it)) {
             it.single().children()
@@ -4804,7 +4779,7 @@ internal fun ColumnSet<*>.colsInternal(predicate: ColumnFilter<*>): ColumnSet<*>
         }.filter(predicate)
     }
 
-internal fun ColumnSet<*>.colsInternal(indices: IntArray): ColumnSet<*> =
+internal fun ColumnSet<*>.colsInternal(indices: IntArray): ColumnSetWithRecursively<*> =
     transform {
         if (isSingleColumnGroup(it)) {
             it.single().children()
@@ -4815,7 +4790,7 @@ internal fun ColumnSet<*>.colsInternal(indices: IntArray): ColumnSet<*> =
         }
     }
 
-internal fun ColumnSet<*>.colsInternal(range: IntRange): ColumnSet<*> =
+internal fun ColumnSet<*>.colsInternal(range: IntRange): ColumnSetWithRecursively<*> =
     transform {
         if (isSingleColumnGroup(it)) {
             it.single().children()
@@ -4826,7 +4801,7 @@ internal fun ColumnSet<*>.colsInternal(range: IntRange): ColumnSet<*> =
         }
     }
 
-internal fun ColumnSet<*>.allInternal(): ColumnSet<*> =
+internal fun ColumnSet<*>.allInternal(): ColumnSetWithRecursively<*> =
     transform {
         if (isSingleColumnGroup(it)) {
             it.single().children()
@@ -4986,8 +4961,8 @@ private interface CommonColsOfDocs {
  * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
  * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
  */
-public fun <C> ColumnSet<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<C> =
-    colsInternal { it.isSubtypeOf(type) && filter(it.cast()) } as ColumnSet<C>
+public fun <C> ColumnSet<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean = { true }): ColumnSetWithRecursively<C> =
+    colsInternal { it.isSubtypeOf(type) && filter(it.cast()) } as ColumnSetWithRecursively<C>
 
 /**
  * ## Cols Of
@@ -5027,7 +5002,7 @@ public fun <C> ColumnSet<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boole
  * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
  * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
  */
-public inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<C> =
+public inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }): ColumnSetWithRecursively<C> =
     colsOf(typeOf<C>(), filter)
 
 /**
@@ -5068,8 +5043,8 @@ public inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: (DataColumn<C
  * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
  * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
  */
-public fun <C> SingleColumn<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<C> =
-    colsInternal { it.isSubtypeOf(type) && filter(it.cast()) } as ColumnSet<C>
+public fun <C> SingleColumn<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean = { true }): ColumnSetWithRecursively<C> =
+    colsInternal { it.isSubtypeOf(type) && filter(it.cast()) } as ColumnSetWithRecursively<C>
 
 /**
  * ## Cols Of
@@ -5109,7 +5084,7 @@ public fun <C> SingleColumn<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Bo
  * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
  * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
  */
-public inline fun <reified C> SingleColumn<*>.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<C> =
+public inline fun <reified C> SingleColumn<*>.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }): ColumnSetWithRecursively<C> =
     colsOf(typeOf<C>(), filter)
 
 /* TODO: [Issue: #325, context receiver support](https://github.com/Kotlin/dataframe/issues/325)
