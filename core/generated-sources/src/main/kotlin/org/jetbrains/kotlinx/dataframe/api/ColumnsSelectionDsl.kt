@@ -4496,23 +4496,26 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region groups
 
-    public fun SingleColumn<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): ColumnSet<AnyRow> =
-        children { it.isColumnGroup() && filter(it.asColumnGroup()) } as ColumnSet<AnyRow>
+    public fun SingleColumn<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): ColumnSetWithRecursively<AnyRow> =
+        children { it.isColumnGroup() && filter(it.asColumnGroup()) } as ColumnSetWithRecursively<AnyRow>
 
-    public fun String.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): ColumnSet<AnyRow> =
+    public fun String.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): ColumnSetWithRecursively<AnyRow> =
         toColumnAccessor().groups(filter)
 
-    public fun KProperty<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): ColumnSet<AnyRow> =
+    public fun KProperty<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): ColumnSetWithRecursively<AnyRow> =
         toColumnAccessor().groups(filter)
 
     // endregion
 
     // region children
 
-    public fun ColumnSet<*>.children(predicate: (ColumnWithPath<Any?>) -> Boolean = { true }): ColumnSet<Any?> =
+    // takes children of all columns in the column set
+    public fun ColumnSet<*>.children(predicate: ColumnFilter<Any?> = { true }): ColumnSetWithRecursively<Any?> =
         transform { it.flatMap { it.children().filter { predicate(it) } } }
 
-    public fun ColumnGroupReference.children(): ColumnSet<Any?> = transformSingle { it.children() }
+    // same as cols
+    public fun SingleColumn<*>.children(predicate: ColumnFilter<Any?> = { true }): ColumnSetWithRecursively<Any?> =
+        (this as ColumnSet<*>).children(predicate)
 
     // endregion
 
@@ -4796,9 +4799,7 @@ internal fun ColumnSet<*>.colsInternal(range: IntRange): ColumnSetWithRecursivel
             it.single().children()
         } else {
             it
-        }.let { cols ->
-            cols.subList(range.first, range.last + 1)
-        }
+        }.subList(range.first, range.last + 1)
     }
 
 internal fun ColumnSet<*>.allInternal(): ColumnSetWithRecursively<*> =
@@ -4809,6 +4810,15 @@ internal fun ColumnSet<*>.allInternal(): ColumnSetWithRecursively<*> =
             it
         }
     }
+
+//internal fun ColumnSet<*>.childrenInternal(predicate: (ColumnWithPath<Any?>) -> Boolean): ColumnSetWithRecursively<*> =
+//    transform {
+//        if (isSingleColumnGroup(it)) {
+//            it.single().children()
+//        } else {
+//            it
+//        }
+//    }
 
 
 @Deprecated("Replaced with recursively()")

@@ -6,8 +6,10 @@ import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.name
+import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.columns.*
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
@@ -85,8 +87,35 @@ internal fun <A, B> SingleColumn<A>.transformSingle(
             .resolveSingle(context)
             ?.let(converter)
             ?: emptyList()
+
+//    override fun resolveRecursively(
+//        context: ColumnResolutionContext,
+//        includeGroups: Boolean,
+//        includeTopLevel: Boolean,
+//    ): List<ColumnWithPath<B>> =
+//        this@transformSingle
+//            .flattenRecursively(includeGroups, includeTopLevel)
+//            .resolve(context) as List<ColumnWithPath<B>>
 }
 
+internal fun <A, B> SingleColumn<A>.transformRemainingSingle(
+    converter: (ColumnWithPath<A>?) -> ColumnWithPath<B>?,
+): SingleColumnWithRecursively<B> = object : SingleColumnWithRecursively<B> {
+    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<B>? =
+        this@transformRemainingSingle
+            .resolveSingle(context)
+            ?.let(converter)
+
+    override fun resolveSingleRecursively(
+        context: ColumnResolutionContext,
+        includeGroups: Boolean,
+        includeTopLevel: Boolean,
+    ): ColumnWithPath<B>? =
+        this@transformRemainingSingle
+            .flattenRecursively(includeGroups, includeTopLevel)
+            .resolveSingle(context)
+            .let { converter(it as ColumnWithPath<A>?) }
+}
 
 internal fun ColumnSet<*>.flattenRecursively(
     includeGroups: Boolean = true,
@@ -106,6 +135,27 @@ internal fun ColumnSet<*>.flattenRecursively(
             .filter { it.isColumnGroup() }
             .flatMap { it.children().flattenRecursively() }
     }.filter { includeGroups || !it.isColumnGroup() }
+}
+
+internal fun SingleColumn<*>.flattenRecursively(
+    includeGroups: Boolean = true,
+    includeTopLevel: Boolean = true,
+): SingleColumn<*> = transformRemainingSingle {
+    val cols = it?.let {
+        if (isSingleColumnGroup(listOf(it))) {
+            it.children()
+        } else {
+            listOf(it)
+        }
+    } ?: emptyList()
+
+    if (includeTopLevel) {
+        cols.flattenRecursively()
+    } else {
+        cols
+            .filter { it.isColumnGroup() }
+            .flatMap { it.children().flattenRecursively() }
+    }.singleOrNull { includeGroups || !it.isColumnGroup() }
 }
 
 internal fun <A, B> ColumnSet<A>.transform(
