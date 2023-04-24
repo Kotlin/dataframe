@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe
 
-import java.io.File
 import org.jetbrains.kotlin.backend.common.FileLoweringPass
 import org.jetbrains.kotlin.backend.common.extensions.FirIncompatiblePluginAPI
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
@@ -44,10 +43,13 @@ import org.jetbrains.kotlin.ir.visitors.IrElementTransformerVoid
 import org.jetbrains.kotlin.ir.visitors.transformChildrenVoid
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
+import java.io.File
 
 data class ContainingDeclarations(val clazz: IrClass?, val function: IrFunction?, val statementIndex: Int = 0)
 
-class ExplainerIrTransformer(val pluginContext: IrPluginContext) : FileLoweringPass, IrElementTransformer<ContainingDeclarations> {
+class ExplainerIrTransformer(
+    val pluginContext: IrPluginContext
+) : FileLoweringPass, IrElementTransformer<ContainingDeclarations> {
     lateinit var file: IrFile
     lateinit var source: String
     override fun lower(irFile: IrFile) {
@@ -70,7 +72,7 @@ class ExplainerIrTransformer(val pluginContext: IrPluginContext) : FileLoweringP
     override fun visitBlockBody(body: IrBlockBody, data: ContainingDeclarations): IrBody {
         for (i in 0 until body.statements.size) {
             @Suppress("UNCHECKED_CAST")
-            (body.statements.set(i, (body.statements.get(i) as IrElementBase).transform(this, data.copy(statementIndex = i)) as IrStatement))
+            (body.statements.set(i, (body.statements.get(i) as IrElementBase).transform(this, data.copy(statementIndex = i)) as IrStatement)) // ktlint-disable
         }
         return body
     }
@@ -168,14 +170,14 @@ class ExplainerIrTransformer(val pluginContext: IrPluginContext) : FileLoweringP
 
             val symbol = IrSimpleFunctionSymbolImpl()
             val alsoLambda = IrFunctionImpl(
-                -1,
-                -1,
-                IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA,
-                symbol,
-                Name.special("<anonymous>"),
-                DescriptorVisibilities.LOCAL,
-                Modality.FINAL,
-                pluginContext.irBuiltIns.unitType,
+                startOffset = -1,
+                endOffset = -1,
+                origin = IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA,
+                symbol = symbol,
+                name = Name.special("<anonymous>"),
+                visibility = DescriptorVisibilities.LOCAL,
+                modality = Modality.FINAL,
+                returnType = pluginContext.irBuiltIns.unitType,
                 isInline = false,
                 isExternal = false,
                 isTailrec = false,
@@ -185,55 +187,58 @@ class ExplainerIrTransformer(val pluginContext: IrPluginContext) : FileLoweringP
                 isExpect = false
             ).apply {
                 valueParameters = buildList {
-                    add(IrValueParameterImpl(
-                        -1,
-                        -1,
-                        IrDeclarationOrigin.DEFINED,
-                        IrValueParameterSymbolImpl(),
-                        Name.identifier("it"),
-                        0,
-                        expression.type,
-                        null,
-                        isCrossinline = false,
-                        isNoinline = false,
-                        isHidden = false,
-                        isAssignable = false
-                    ))
+                    add(
+                        IrValueParameterImpl(
+                            startOffset = -1,
+                            endOffset = -1,
+                            origin = IrDeclarationOrigin.DEFINED,
+                            symbol = IrValueParameterSymbolImpl(),
+                            name = Name.identifier("it"),
+                            index = 0,
+                            type = expression.type,
+                            varargElementType = null,
+                            isCrossinline = false,
+                            isNoinline = false,
+                            isHidden = false,
+                            isAssignable = false
+                        )
+                    )
                 }
-                val it = expression
                 val itSymbol = valueParameters[0].symbol
+                val source = try {
+                    source.substring(expression.startOffset, expression.endOffset)
+                } catch (e: Exception) {
+                    throw Exception("$expression ${ownerName.asString()} $source", e)
+                }
+                val expressionId = expressionId(expression)
+                val receiverId = receiver?.let { expressionId(it) }
+                val valueArguments = buildList<IrExpression?> {
+                    add(source.irConstImpl())
+                    add(ownerName.asStringStripSpecialMarkers().irConstImpl())
+                    add(IrGetValueImpl(-1, -1, itSymbol))
+                    add(expressionId.irConstImpl())
+                    add(receiverId.irConstImpl())
+                    add(data.clazz?.fqNameWhenAvailable?.asString().irConstImpl())
+                    add(data.function?.name?.asString().irConstImpl())
+                    add(IrConstImpl.int(-1, -1, pluginContext.irBuiltIns.intType, data.statementIndex))
+                }
                 body = pluginContext.irFactory.createBlockBody(-1, -1) {
-                    val doAction = pluginContext.referenceFunctions(FqName("org.jetbrains.kotlinx.dataframe.explainer.PluginCallback.doAction")).single()
-                    statements += IrCallImpl(-1, -1, doAction.owner.returnType, doAction, 0, 8).apply {
-                        val pluginAction =
-                            pluginContext.referenceClass(FqName("org.jetbrains.kotlinx.dataframe.explainer.PluginCallback"))!!
-                        dispatchReceiver = IrGetObjectValueImpl(-1, -1, pluginAction.defaultType, pluginAction)
-                        val source = try {
-                            source.substring(it.startOffset, it.endOffset)
-                        } catch (e: Exception) {
-                            throw Exception("$it ${ownerName.asString()} $source", e)
+                    val callback = FqName("org.jetbrains.kotlinx.dataframe.explainer.PluginCallback.doAction")
+                    val doAction = pluginContext.referenceFunctions(callback).single()
+                    statements += IrCallImpl(
+                        startOffset = -1,
+                        endOffset = -1,
+                        type = doAction.owner.returnType,
+                        symbol = doAction,
+                        typeArgumentsCount = 0,
+                        valueArgumentsCount = valueArguments.size
+                    ).apply {
+                        val clazz = FqName("org.jetbrains.kotlinx.dataframe.explainer.PluginCallback")
+                        val plugin = pluginContext.referenceClass(clazz)!!
+                        dispatchReceiver = IrGetObjectValueImpl(-1, -1, plugin.defaultType, plugin)
+                        valueArguments.forEachIndexed { i, argument ->
+                            putValueArgument(i, argument)
                         }
-                        val expressionId = expressionId(expression)
-                        val receiverId = receiver?.let { expressionId(it) }
-                        putValueArgument(0, IrConstImpl.string(-1, -1, pluginContext.irBuiltIns.stringType, source))
-                        putValueArgument(1, IrConstImpl.string(-1, -1, pluginContext.irBuiltIns.stringType, ownerName.asStringStripSpecialMarkers()))
-                        putValueArgument(2, IrGetValueImpl(-1, -1, itSymbol))
-                        putValueArgument(3, IrConstImpl.string(-1, -1, pluginContext.irBuiltIns.stringType, expressionId))
-                        fun String?.irConstImpl(): IrConstImpl<out String?> {
-                            val nullableString = pluginContext.irBuiltIns.stringType.makeNullable()
-                            val argument = if (this == null) {
-                                IrConstImpl.constNull(-1, -1, nullableString)
-                            } else {
-                                IrConstImpl.string(-1, -1, nullableString, this)
-                            }
-                            return argument
-                        }
-
-                        val argument = receiverId.irConstImpl()
-                        putValueArgument(4, argument)
-                        putValueArgument(5, data.clazz?.fqNameWhenAvailable?.asString().irConstImpl())
-                        putValueArgument(6, data.function?.name?.asString().irConstImpl())
-                        putValueArgument(7, IrConstImpl.int(-1, -1, pluginContext.irBuiltIns.intType, data.statementIndex))
                     }
                 }
             }
@@ -248,6 +253,16 @@ class ExplainerIrTransformer(val pluginContext: IrPluginContext) : FileLoweringP
             putValueArgument(0, alsoLambdaExpression)
         }
         return result
+    }
+
+    private fun String?.irConstImpl(): IrConstImpl<out String?> {
+        val nullableString = pluginContext.irBuiltIns.stringType.makeNullable()
+        val argument = if (this == null) {
+            IrConstImpl.constNull(-1, -1, nullableString)
+        } else {
+            IrConstImpl.string(-1, -1, nullableString, this)
+        }
+        return argument
     }
 
     private fun expressionId(expression: IrExpression): String {
