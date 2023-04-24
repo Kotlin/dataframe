@@ -167,10 +167,16 @@ internal fun <C> ColumnsContainer<*>.getColumn(path: ColumnPath, policy: Unresol
             UnresolvedColumnsPolicy.Create -> DataColumn.empty().cast<C>()
         }
 
-internal fun <T> List<ColumnWithPath<T>>.top(): List<ColumnWithPath<T>> {
-    val root = TreeNode.createRoot<ColumnWithPath<T>?>(null)
-    forEach { root.put(it.path, it) }
-    return root.topDfs { it.data != null }.map { it.data!! }
+/**
+ * Returns a sub-list of columns that are roots of the trees of columns.
+ *
+ * In practice, this means that if a column in [this] is a child of another column in [this],
+ * it will not be included in the result.
+ */
+internal fun <T> List<ColumnWithPath<T>>.roots(): List<ColumnWithPath<T>> {
+    val emptyRoot = TreeNode.createRoot<ColumnWithPath<T>?>(data = null)
+    this.forEach { emptyRoot.put(it.path, it) }
+    return emptyRoot.topmostChildren { it.data != null }.map { it.data!! }
 }
 
 internal fun List<ColumnWithPath<*>>.allColumnsExcept(columns: Iterable<ColumnWithPath<*>>): List<ColumnWithPath<*>> {
@@ -178,14 +184,14 @@ internal fun List<ColumnWithPath<*>>.allColumnsExcept(columns: Iterable<ColumnWi
     val fullTree = collectTree()
     columns.forEach {
         var node = fullTree.getOrPut(it.path).asNullable()
-        node?.dfs()?.forEach { it.data = null }
+        node?.allChildren()?.forEach { it.data = null }
         while (node != null) {
             node.data = null
             node = node.parent
         }
     }
-    val dfs = fullTree.topDfs { it.data != null }
-    return dfs.map { it.data!!.addPath(it.pathFromRoot()) }
+    val subtrees = fullTree.topmostChildren { it.data != null }
+    return subtrees.map { it.data!!.addPath(it.pathFromRoot()) }
 }
 
 internal fun KType.toColumnKind(): ColumnKind = jvmErasure.let {
