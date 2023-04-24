@@ -217,7 +217,11 @@ public fun <T> DataFrame<T>.toHTML(
  * Container for HTML page data in form of String
  * Can be used to compose rendered dataframe tables with additional HTML elements
  */
-public data class DataFrameHtmlData(val style: String = "", val body: String = "", val script: String = "") {
+public data class DataFrameHtmlData(
+    @Language("css") val style: String = "",
+    @Language("html", prefix = "<body>", suffix = "</body>") val body: String = "",
+    @Language("js") val script: String = ""
+) {
     @Language("html")
     override fun toString(): String = """
         <html>
