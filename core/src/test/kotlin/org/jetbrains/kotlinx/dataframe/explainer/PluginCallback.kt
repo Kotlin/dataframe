@@ -84,7 +84,7 @@ object PluginCallback {
         // make copy to avoid concurrent modification exception
         val statements = expressionsByStatement.toMap()
         when (statements.size) {
-            0 -> TODO("function doesn't have any dataframe expression")
+            0 -> error("function doesn't have any dataframe expression")
             1 -> {
                 output += statementOutput(statements.values.single())
             }
