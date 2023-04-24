@@ -6,10 +6,14 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.impl.columns.*
 
 /**
+ * ## ColumnSet
  * Entity that can be resolved into a list of [columns][DataColumn].
  *
  * Used as a return type of [ColumnsSelector].
  * @param C common type of resolved columns
+ * @see [SingleColumn]
+ * @see [TransformableColumnSet]
+ * @see [TransformableSingleColumn]
  */
 public interface ColumnSet<out C> {
 
@@ -20,36 +24,6 @@ public interface ColumnSet<out C> {
      */
     public fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>>
 }
-
-public interface ColumnSetWithRecursively<out C> : ColumnSet<C> {
-
-    public fun resolveRecursively(
-        context: ColumnResolutionContext,
-        includeGroups: Boolean = true,
-        includeTopLevel: Boolean = true,
-    ): List<ColumnWithPath<C>>
-}
-
-internal fun <C> ColumnSetWithRecursively<C>.recursivelyImpl(
-    includeGroups: Boolean = true,
-    includeTopLevel: Boolean = true,
-): ColumnSet<C> = object : ColumnSet<C> {
-
-    override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> =
-        this@recursivelyImpl.resolveRecursively(
-            context = context,
-            includeGroups = includeGroups,
-            includeTopLevel = includeTopLevel,
-        )
-}
-
-
-public fun interface ColumnSetTransformer {
-
-    public fun transform(columnSet: ColumnSet<*>): ColumnSet<*>
-}
-
-public operator fun ColumnSetTransformer.invoke(columnSet: ColumnSet<*>): ColumnSet<*> = transform(columnSet)
 
 public class ColumnResolutionContext internal constructor(
     internal val df: DataFrame<*>,

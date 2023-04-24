@@ -199,8 +199,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][select]` { `[colsOf][colsOf]`<`[Int][Int]`>().`[first][first]`() }`
      */
-    public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C> = { true }): SingleColumnWithRecursively<C> =
-        transform { listOf(it.first(condition)) }.singleWithRecursivelyImpl()
+    public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
+        transform { listOf(it.first(condition)) }.singleWithTransformerImpl()
 
     /**
      * @include [CommonFirstDocs]
@@ -209,7 +209,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][select]` { myColumnGroup.`[first][first]`() }`
      */
-    public fun SingleColumn<*>.first(condition: ColumnFilter<*> = { true }): SingleColumnWithRecursively<*> =
+    public fun SingleColumn<*>.first(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         all().first(condition)
 
     /**
@@ -217,7 +217,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @arg [CommonFirstDocs.Examples]
      * `df.`[select][select]` { "myColumnGroup".`[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun String.first(condition: ColumnFilter<*> = { true }): SingleColumnWithRecursively<*> =
+    public fun String.first(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         colGroup(this).first(condition)
 
     /**
@@ -225,7 +225,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @arg [CommonFirstDocs.Examples]
      * `df.`[select][select]` { "pathTo"["myColumnGroup"].`[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun ColumnPath.first(condition: ColumnFilter<*> = { true }): SingleColumnWithRecursively<*> =
+    public fun ColumnPath.first(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         colGroup(this).first(condition)
 
     /**
@@ -233,7 +233,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @arg [CommonFirstDocs.Examples]
      * `df.`[select][select]` { Type::myColumnGroup.`[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun KProperty<*>.first(condition: ColumnFilter<*> = { true }): SingleColumnWithRecursively<*> =
+    public fun KProperty<*>.first(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         colGroup(this).first(condition)
 
     /**
@@ -262,8 +262,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][select]` { `[colsOf][colsOf]`<`[Int][Int]`>().`[first][last]`() }`
      */
-    public fun <C> ColumnSet<C>.last(condition: ColumnFilter<C> = { true }): SingleColumnWithRecursively<C> =
-        transform { listOf(it.last(condition)) }.singleWithRecursivelyImpl()
+    public fun <C> ColumnSet<C>.last(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
+        transform { listOf(it.last(condition)) }.singleWithTransformerImpl()
 
     /**
      * @include [CommonLastDocs]
@@ -272,7 +272,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][select]` { myColumnGroup.`[last][last]`() }`
      */
-    public fun SingleColumn<*>.last(condition: ColumnFilter<*> = { true }): SingleColumnWithRecursively<*> =
+    public fun SingleColumn<*>.last(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         all().last(condition)
 
     /**
@@ -280,7 +280,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @arg [CommonLastDocs.Examples]
      * `df.`[select][select]` { "myColumnGroup".`[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun String.last(condition: ColumnFilter<*> = { true }): SingleColumnWithRecursively<*> =
+    public fun String.last(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         colGroup(this).last(condition)
 
     /**
@@ -288,7 +288,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @arg [CommonLastDocs.Examples]
      * `df.`[select][select]` { "pathTo"["myColumnGroup"].`[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun ColumnPath.last(condition: ColumnFilter<*> = { true }): SingleColumnWithRecursively<*> =
+    public fun ColumnPath.last(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         colGroup(this).last(condition)
 
     /**
@@ -296,7 +296,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @arg [CommonLastDocs.Examples]
      * `df.`[select][select]` { Type::myColumnGroup.`[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun KProperty<*>.last(condition: ColumnFilter<*> = { true }): SingleColumnWithRecursively<*> =
+    public fun KProperty<*>.last(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         colGroup(this).last(condition)
 
     /**
@@ -325,8 +325,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][select]` { `[colsOf][colsOf]`<`[Int][Int]`>().`[single][single]`() }`
      */
-    public fun <C> ColumnSet<C>.single(condition: ColumnFilter<C> = { true }): SingleColumnWithRecursively<C> =
-        transform { listOf(it.single(condition)) }.singleWithRecursivelyImpl()
+    public fun <C> ColumnSet<C>.single(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
+        transform { listOf(it.single(condition)) }.singleWithTransformerImpl()
 
     /**
      * @include [CommonSingleDocs]
@@ -335,7 +335,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][select]` { myColumnGroup.`[single][single]`() }`
      */
-    public fun SingleColumn<*>.single(condition: ColumnFilter<*> = { true }): SingleColumnWithRecursively<*> =
+    public fun SingleColumn<*>.single(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         all().single(condition)
 
     /**
@@ -343,7 +343,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @arg [CommonSingleDocs.Examples]
      * `df.`[select][select]` { "myColumnGroup".`[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun String.single(condition: ColumnFilter<*> = { true }): SingleColumnWithRecursively<*> =
+    public fun String.single(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         colGroup(this).single(condition)
 
     /**
@@ -351,7 +351,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @arg [CommonSingleDocs.Examples]
      * `df.`[select][select]` { "pathTo"["myColumnGroup"].`[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun ColumnPath.single(condition: ColumnFilter<*> = { true }): SingleColumnWithRecursively<*> =
+    public fun ColumnPath.single(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         colGroup(this).single(condition)
 
     /**
@@ -359,7 +359,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @arg [CommonSingleDocs.Examples]
      * `df.`[select][select]` { Type::myColumnGroup.`[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun KProperty<*>.single(condition: ColumnFilter<*> = { true }): SingleColumnWithRecursively<*> =
+    public fun KProperty<*>.single(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         colGroup(this).single(condition)
 
     /**
@@ -925,12 +925,12 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.cols(
         predicate: ColumnFilter<C> = { true },
-    ): ColumnSetWithRecursively<C> = colsInternal(predicate as ColumnFilter<*>) as ColumnSetWithRecursively<C>
+    ): TransformableColumnSet<C> = colsInternal(predicate as ColumnFilter<*>) as TransformableColumnSet<C>
 
     /** @include [ColumnSetColsPredicateDocs] */
     public operator fun <C> ColumnSet<C>.get(
         predicate: ColumnFilter<C> = { true },
-    ): ColumnSetWithRecursively<C> = cols(predicate)
+    ): TransformableColumnSet<C> = cols(predicate)
 
     /**
      * @include [CommonColsDocs.Predicate]
@@ -960,7 +960,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     /** @include [SingleColumnAnyRowColsPredicateDocs] */
     public fun SingleColumn<*>.cols(
         predicate: ColumnFilter<*> = { true },
-    ): ColumnSetWithRecursively<*> = colsInternal(predicate)
+    ): TransformableColumnSet<*> = colsInternal(predicate)
 
     /**
      * @include [SingleColumnAnyRowColsPredicateDocs]
@@ -968,7 +968,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      */
     public operator fun SingleColumn<*>.get(
         predicate: ColumnFilter<*> = { true },
-    ): ColumnSetWithRecursively<Any?> = cols(predicate)
+    ): TransformableColumnSet<Any?> = cols(predicate)
 
     /**
      * @include [CommonColsDocs.Predicate]
@@ -987,12 +987,12 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     /** @include [StringColsPredicateDocs] */
     public fun String.cols(
         predicate: ColumnFilter<*> = { true },
-    ): ColumnSetWithRecursively<*> = colGroup(this).cols(predicate)
+    ): TransformableColumnSet<*> = colGroup(this).cols(predicate)
 
     /** @include [StringColsPredicateDocs] */
     public operator fun String.get(
         predicate: ColumnFilter<*> = { true },
-    ): ColumnSetWithRecursively<Any?> = cols(predicate)
+    ): TransformableColumnSet<Any?> = cols(predicate)
 
     /**
      * @include [CommonColsDocs.Predicate]
@@ -1013,12 +1013,12 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     /** @include [ColumnPathColsPredicateDocs] */
     public fun ColumnPath.cols(
         predicate: ColumnFilter<*> = { true },
-    ): ColumnSetWithRecursively<*> = colGroup(this).cols(predicate)
+    ): TransformableColumnSet<*> = colGroup(this).cols(predicate)
 
     /** @include [ColumnPathColsPredicateDocs] */
     public operator fun ColumnPath.get(
         predicate: ColumnFilter<*> = { true },
-    ): ColumnSetWithRecursively<Any?> = cols(predicate)
+    ): TransformableColumnSet<Any?> = cols(predicate)
 
     /**
      * @include [CommonColsDocs.Predicate]
@@ -1039,12 +1039,12 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     /** @include [KPropertyColsPredicateDocs] */
     public fun KProperty<*>.cols(
         predicate: ColumnFilter<*> = { true },
-    ): ColumnSetWithRecursively<*> = colGroup(this).cols(predicate)
+    ): TransformableColumnSet<*> = colGroup(this).cols(predicate)
 
     /** @include [KPropertyColsPredicateDocs] */
     public operator fun KProperty<*>.get(
         predicate: ColumnFilter<*> = { true },
-    ): ColumnSetWithRecursively<Any?> = cols(predicate)
+    ): TransformableColumnSet<Any?> = cols(predicate)
 
     // endregion
 
@@ -1619,7 +1619,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * NOTE: This is an identity call and can be omitted in most cases. However, it can still prove useful
      * for readability or in combination with [recursively].
      */
-    public fun <C> ColumnSet<C>.all(): ColumnSetWithRecursively<C> = allInternal() as ColumnSetWithRecursively<C>
+    public fun <C> ColumnSet<C>.all(): TransformableColumnSet<C> = allInternal() as TransformableColumnSet<C>
 
     /**
      * @include [CommonAllDocs]
@@ -1631,7 +1631,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][select]` { "pathTo"["myGroup"].`[all][all]`() }`
      */
-    public fun SingleColumn<*>.all(): ColumnSetWithRecursively<*> = allInternal()
+    public fun SingleColumn<*>.all(): TransformableColumnSet<*> = allInternal()
 
     /**
      * @include [CommonAllDocs]
@@ -1639,7 +1639,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][select]` { "myGroupCol".`[all][all]`() }`
      */
-    public fun String.all(): ColumnSetWithRecursively<*> = toColumnAccessor().all()
+    public fun String.all(): TransformableColumnSet<*> = toColumnAccessor().all()
 
     /**
      * @include [CommonAllDocs]
@@ -1647,7 +1647,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][select]` { Type::columnGroup.`[all][all]`() }`
      */
-    public fun KProperty<*>.all(): ColumnSetWithRecursively<*> = toColumnAccessor().all()
+    public fun KProperty<*>.all(): TransformableColumnSet<*> = toColumnAccessor().all()
 
     // region allDfs
 
@@ -1706,22 +1706,22 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         interface Examples
     }
 
-    public fun <C> ColumnSetWithRecursively<C>.recursively(
+    public fun <C> TransformableColumnSet<C>.recursively(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
     ): ColumnSet<C> = recursivelyImpl(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
-    public fun <C> ColumnSetWithRecursively<C>.rec(
+    public fun <C> TransformableColumnSet<C>.rec(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
     ): ColumnSet<C> = recursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
-    public fun SingleColumnWithRecursively<*>.recursively(
+    public fun TransformableSingleColumn<*>.recursively(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
     ): ColumnSet<*> = recursivelyImpl(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
-    public fun SingleColumnWithRecursively<*>.rec(
+    public fun TransformableSingleColumn<*>.rec(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
     ): ColumnSet<*> = recursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
@@ -1860,13 +1860,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region groups
 
-    public fun SingleColumn<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): ColumnSetWithRecursively<AnyRow> =
-        children { it.isColumnGroup() && filter(it.asColumnGroup()) } as ColumnSetWithRecursively<AnyRow>
+    public fun SingleColumn<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
+        children { it.isColumnGroup() && filter(it.asColumnGroup()) } as TransformableColumnSet<AnyRow>
 
-    public fun String.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): ColumnSetWithRecursively<AnyRow> =
+    public fun String.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
         toColumnAccessor().groups(filter)
 
-    public fun KProperty<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): ColumnSetWithRecursively<AnyRow> =
+    public fun KProperty<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
         toColumnAccessor().groups(filter)
 
     // endregion
@@ -1874,11 +1874,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     // region children
 
     // takes children of all columns in the column set
-    public fun ColumnSet<*>.children(predicate: ColumnFilter<Any?> = { true }): ColumnSetWithRecursively<Any?> =
+    public fun ColumnSet<*>.children(predicate: ColumnFilter<Any?> = { true }): TransformableColumnSet<Any?> =
         transform { it.flatMap { it.children().filter { predicate(it) } } }
 
     // same as cols
-    public fun SingleColumn<*>.children(predicate: ColumnFilter<Any?> = { true }): ColumnSetWithRecursively<Any?> =
+    public fun SingleColumn<*>.children(predicate: ColumnFilter<Any?> = { true }): TransformableColumnSet<Any?> =
         (this as ColumnSet<*>).children(predicate)
 
     // endregion
@@ -2085,7 +2085,7 @@ internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) 
  * Else, it returns a new [ColumnSet] containing all columns in this [ColumnSet] that
  * match the given [predicate].
  */
-internal fun ColumnSet<*>.colsInternal(predicate: ColumnFilter<*>): ColumnSetWithRecursively<*> =
+internal fun ColumnSet<*>.colsInternal(predicate: ColumnFilter<*>): TransformableColumnSet<*> =
     transform {
         if (isSingleColumnGroup(it)) {
             it.single().children()
@@ -2094,7 +2094,7 @@ internal fun ColumnSet<*>.colsInternal(predicate: ColumnFilter<*>): ColumnSetWit
         }.filter(predicate)
     }
 
-internal fun ColumnSet<*>.colsInternal(indices: IntArray): ColumnSetWithRecursively<*> =
+internal fun ColumnSet<*>.colsInternal(indices: IntArray): TransformableColumnSet<*> =
     transform {
         if (isSingleColumnGroup(it)) {
             it.single().children()
@@ -2105,7 +2105,7 @@ internal fun ColumnSet<*>.colsInternal(indices: IntArray): ColumnSetWithRecursiv
         }
     }
 
-internal fun ColumnSet<*>.colsInternal(range: IntRange): ColumnSetWithRecursively<*> =
+internal fun ColumnSet<*>.colsInternal(range: IntRange): TransformableColumnSet<*> =
     transform {
         if (isSingleColumnGroup(it)) {
             it.single().children()
@@ -2114,7 +2114,7 @@ internal fun ColumnSet<*>.colsInternal(range: IntRange): ColumnSetWithRecursivel
         }.subList(range.first, range.last + 1)
     }
 
-internal fun ColumnSet<*>.allInternal(): ColumnSetWithRecursively<*> =
+internal fun ColumnSet<*>.allInternal(): TransformableColumnSet<*> =
     transform {
         if (isSingleColumnGroup(it)) {
             it.single().children()
@@ -2236,8 +2236,8 @@ private interface CommonColsOfDocs {
  * @include [CommonColsOfDocs.FilterParam]
  * @include [CommonColsOfDocs.Return]
  */
-public fun <C> ColumnSet<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean = { true }): ColumnSetWithRecursively<C> =
-    colsInternal { it.isSubtypeOf(type) && filter(it.cast()) } as ColumnSetWithRecursively<C>
+public fun <C> ColumnSet<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean = { true }): TransformableColumnSet<C> =
+    colsInternal { it.isSubtypeOf(type) && filter(it.cast()) } as TransformableColumnSet<C>
 
 /**
  * @include [CommonColsOfDocs]
@@ -2253,7 +2253,7 @@ public fun <C> ColumnSet<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boole
  * @include [CommonColsOfDocs.FilterParam]
  * @include [CommonColsOfDocs.Return]
  */
-public inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }): ColumnSetWithRecursively<C> =
+public inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }): TransformableColumnSet<C> =
     colsOf(typeOf<C>(), filter)
 
 /**
@@ -2270,8 +2270,8 @@ public inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: (DataColumn<C
  * @include [CommonColsOfDocs.FilterParam]
  * @include [CommonColsOfDocs.Return]
  */
-public fun <C> SingleColumn<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean = { true }): ColumnSetWithRecursively<C> =
-    colsInternal { it.isSubtypeOf(type) && filter(it.cast()) } as ColumnSetWithRecursively<C>
+public fun <C> SingleColumn<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean = { true }): TransformableColumnSet<C> =
+    colsInternal { it.isSubtypeOf(type) && filter(it.cast()) } as TransformableColumnSet<C>
 
 /**
  * @include [CommonColsOfDocs]
@@ -2287,7 +2287,7 @@ public fun <C> SingleColumn<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Bo
  * @include [CommonColsOfDocs.FilterParam]
  * @include [CommonColsOfDocs.Return]
  */
-public inline fun <reified C> SingleColumn<*>.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }): ColumnSetWithRecursively<C> =
+public inline fun <reified C> SingleColumn<*>.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }): TransformableColumnSet<C> =
     colsOf(typeOf<C>(), filter)
 
 /* TODO: [Issue: #325, context receiver support](https://github.com/Kotlin/dataframe/issues/325)

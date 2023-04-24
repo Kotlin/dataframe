@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.columns
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
+import org.jetbrains.kotlinx.dataframe.impl.columns.*
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
@@ -9,6 +10,9 @@ import kotlin.contracts.contract
  * Entity that can be [resolved][resolveSingle] into [DataColumn].
  *
  * @param C Column [type][BaseColumn.type] of resolved column.
+ * @see [ColumnSet]
+ * @see [TransformableColumnSet]
+ * @see [TransformableSingleColumn]
  */
 public interface SingleColumn<out C> : ColumnSet<C> {
 
@@ -18,29 +22,6 @@ public interface SingleColumn<out C> : ColumnSet<C> {
 
     public fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>?
 }
-
-internal fun <C> SingleColumnWithRecursively<C>.recursivelyImpl(
-    includeGroups: Boolean = true,
-    includeTopLevel: Boolean = true,
-): SingleColumn<C> = object : SingleColumn<C> {
-
-    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? =
-        this@recursivelyImpl.resolveSingleRecursively(
-            context = context,
-            includeGroups = includeGroups,
-            includeTopLevel = includeTopLevel,
-        )
-}
-
-public interface SingleColumnWithRecursively<out C> : SingleColumn<C> {
-
-    public fun resolveSingleRecursively(
-        context: ColumnResolutionContext,
-        includeGroups: Boolean = true,
-        includeTopLevel: Boolean = true,
-    ): ColumnWithPath<C>?
-}
-
 
 @OptIn(ExperimentalContracts::class)
 public fun ColumnSet<*>.isSingleColumn(): Boolean {
