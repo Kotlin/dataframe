@@ -29,9 +29,22 @@ internal fun <T> TreeNode<T>.getOrPut(path: ColumnPath, createData: (ColumnPath)
     return node
 }
 
-internal fun <T> TreeNode<T>.topDfs(yieldCondition: (TreeNode<T>) -> Boolean): List<TreeNode<T>> = dfs(enterCondition = { !yieldCondition(it) }, yieldCondition = yieldCondition)
+/**
+ * Traverses all children in the tree in depth-first order and returns the top-most nodes that satisfy
+ * [yieldCondition]. This means that if a node satisfies [yieldCondition], its children are not traversed, regardless of
+ * whether they satisfy [yieldCondition] or not.
+ */
+internal fun <T> TreeNode<T>.topmostChildren(yieldCondition: (TreeNode<T>) -> Boolean): List<TreeNode<T>> =
+    allChildren(
+        enterCondition = { !yieldCondition(it) },
+        yieldCondition = yieldCondition,
+    )
 
-internal fun <T> TreeNode<T>.topDfsExcluding(excludeRoot: TreeNode<*>): List<TreeNode<T>> {
+@Deprecated("Use topmostChildren instead", ReplaceWith("topmostChildren(yieldCondition)"))
+internal fun <T> TreeNode<T>.topDfs(yieldCondition: (TreeNode<T>) -> Boolean): List<TreeNode<T>> =
+    topmostChildren(yieldCondition)
+
+internal fun <T> TreeNode<T>.topmostChildrenExcluding(excludeRoot: TreeNode<*>): List<TreeNode<T>> {
     val result = mutableListOf<TreeNode<T>>()
     fun doDfs(node: TreeNode<T>, exclude: TreeNode<*>) {
         if (exclude.children.isNotEmpty()) {
@@ -48,19 +61,31 @@ internal fun <T> TreeNode<T>.topDfsExcluding(excludeRoot: TreeNode<*>): List<Tre
     return result
 }
 
-internal fun <T> TreeNode<T?>.dfsNotNull() = dfs { it.data != null }.map { it as TreeNode<T> }
-internal fun <T> TreeNode<T?>.dfsTopNotNull() = dfs(enterCondition = { it.data == null }, yieldCondition = { it.data != null }).map { it as TreeNode<T> }
+internal fun <T> TreeNode<T?>.allChildrenNotNull(): List<TreeNode<T>> =
+    allChildren { it.data != null } as List<TreeNode<T>>
 
-internal fun TreeNode<ColumnPosition>.allRemovedColumns() = dfs { it.data.wasRemoved && it.data.column != null }
-internal fun TreeNode<ColumnPosition>.allWithColumns() = dfs { it.data.column != null }
+internal fun <T> TreeNode<T?>.topmostChildrenNotNull() =
+    topmostChildren { it.data != null } as List<TreeNode<T>>
+
+internal fun TreeNode<ColumnPosition>.allRemovedColumns() =
+    allChildren { it.data.wasRemoved && it.data.column != null }
+
+internal fun TreeNode<ColumnPosition>.allWithColumns() =
+    allChildren { it.data.column != null }
+
 internal fun Iterable<ColumnWithPath<*>>.flattenRecursively(): List<ColumnWithPath<*>> {
     val result = mutableListOf<ColumnWithPath<*>>()
+
     fun flattenRecursively(cols: Iterable<ColumnWithPath<*>>) {
         cols.forEach {
             result.add(it)
             val path = it.path
             if (it.data.isColumnGroup()) {
-                flattenRecursively(it.data.asColumnGroup().columns().map { it.addPath(path + it.name()) })
+                flattenRecursively(
+                    it.data.asColumnGroup()
+                        .columns()
+                        .map { it.addPath(path + it.name()) }
+                )
             }
         }
     }

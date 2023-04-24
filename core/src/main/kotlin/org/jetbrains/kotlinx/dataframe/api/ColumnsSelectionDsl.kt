@@ -1895,36 +1895,75 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnSet<C>.take(n: Int): ColumnSet<C> = transform { it.take(n) }
     public fun <C> ColumnSet<C>.dropLast(n: Int = 1): ColumnSet<C> = transform { it.dropLast(n) }
     public fun <C> ColumnSet<C>.takeLast(n: Int): ColumnSet<C> = transform { it.takeLast(n) }
-    public fun <C> ColumnSet<C>.top(): ColumnSet<C> = transform { it.top() }
+
+    @Deprecated("Use roots() instead", ReplaceWith("roots()"))
+    public fun <C> ColumnSet<C>.top(): ColumnSet<C> = roots()
+
+    /**
+     * ## Roots
+     *
+     * Returns a sub-set of columns that are roots of the trees of columns.
+     *
+     * In practice, this means that if a column in [this] is a child of another column in [this],
+     * it will not be included in the result.
+     *
+     * TODO example and SingleColumn case
+     */
+    public fun <C> ColumnSet<C>.roots(): ColumnSet<C> = transform { it.roots() }
+
     public fun <C> ColumnSet<C>.takeWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
         transform { it.takeWhile(predicate) }
 
     public fun <C> ColumnSet<C>.takeLastWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
         transform { it.takeLastWhile(predicate) }
 
-    public fun <C> ColumnSet<C>.filter(predicate: ColumnFilter<C>): ColumnSet<C> =
-        colsInternal(predicate as ColumnFilter<*>) as ColumnSet<C>
+    public fun <C> ColumnSet<C>.filter(predicate: ColumnFilter<C>): TransformableColumnSet<C> =
+        colsInternal(predicate as ColumnFilter<*>) as TransformableColumnSet<C>
 
-    public fun SingleColumn<*>.nameContains(text: CharSequence): ColumnSet<*> = cols { it.name.contains(text) }
-    public fun <C> ColumnSet<C>.nameContains(text: CharSequence): ColumnSet<C> = cols { it.name.contains(text) }
-    public fun SingleColumn<*>.nameContains(regex: Regex): ColumnSet<*> = cols { it.name.contains(regex) }
-    public fun <C> ColumnSet<C>.nameContains(regex: Regex): ColumnSet<C> = cols { it.name.contains(regex) }
-    public fun SingleColumn<*>.startsWith(prefix: CharSequence): ColumnSet<*> = cols { it.name.startsWith(prefix) }
-    public fun <C> ColumnSet<C>.startsWith(prefix: CharSequence): ColumnSet<C> = cols { it.name.startsWith(prefix) }
-    public fun SingleColumn<*>.endsWith(suffix: CharSequence): ColumnSet<*> = cols { it.name.endsWith(suffix) }
-    public fun <C> ColumnSet<C>.endsWith(suffix: CharSequence): ColumnSet<C> = cols { it.name.endsWith(suffix) }
+    public fun SingleColumn<*>.nameContains(text: CharSequence): TransformableColumnSet<*> =
+        cols { it.name.contains(text) }
 
-    public fun <C> ColumnSet<C>.except(vararg other: ColumnSet<*>): ColumnSet<*> = except(other.toColumnSet())
-    public fun <C> ColumnSet<C>.except(vararg other: String): ColumnSet<*> = except(other.toColumnSet())
+    public fun <C> ColumnSet<C>.nameContains(text: CharSequence): TransformableColumnSet<C> =
+        cols { it.name.contains(text) }
 
-    public fun <C> ColumnSet<C?>.withoutNulls(): ColumnSet<C> =
-        transform { it.filter { !it.hasNulls() } } as ColumnSet<C>
+    public fun SingleColumn<*>.nameContains(regex: Regex): TransformableColumnSet<*> = cols { it.name.contains(regex) }
+    public fun <C> ColumnSet<C>.nameContains(regex: Regex): TransformableColumnSet<C> = cols { it.name.contains(regex) }
+    public fun SingleColumn<*>.startsWith(prefix: CharSequence): TransformableColumnSet<*> =
+        cols { it.name.startsWith(prefix) }
 
-    public infix fun <C> ColumnSet<C>.except(other: ColumnSet<*>): ColumnSet<*> =
-        createColumnSet { resolve(it).allColumnsExcept(other.resolve(it)) }
+    public fun <C> ColumnSet<C>.startsWith(prefix: CharSequence): TransformableColumnSet<C> =
+        cols { it.name.startsWith(prefix) }
 
-    public infix fun <C> ColumnSet<C>.except(selector: ColumnsSelector<T, *>): ColumnSet<C> =
-        except(selector.toColumns()) as ColumnSet<C>
+    public fun SingleColumn<*>.endsWith(suffix: CharSequence): TransformableColumnSet<*> =
+        cols { it.name.endsWith(suffix) }
+
+    public fun <C> ColumnSet<C>.endsWith(suffix: CharSequence): TransformableColumnSet<C> =
+        cols { it.name.endsWith(suffix) }
+
+    public fun <C> ColumnSet<C>.except(vararg other: ColumnSet<*>): TransformableColumnSet<*> = except(other.toColumnSet())
+    public fun <C> ColumnSet<C>.except(vararg other: String): TransformableColumnSet<*> = except(other.toColumnSet())
+
+    public fun <C> ColumnSet<C?>.withoutNulls(): TransformableColumnSet<C> =
+        transform { it.filter { !it.hasNulls() } } as TransformableColumnSet<C>
+
+    public infix fun <C> ColumnSet<C>.except(other: ColumnSet<*>): TransformableColumnSet<*> =
+//        createColumnSet {
+//            this@except.resolve(it).allColumnsExcept(other.resolve(it))
+//        }
+        createTransformableColumnSet(
+            resolver = { context ->
+                this@except.resolve(context).allColumnsExcept(other.resolve(context))
+            },
+            transformResolve = { context, transformer ->
+                transformer.transform(this@except)
+                    .resolve(context)
+                    .allColumnsExcept(other.resolve(context))
+            },
+        )
+
+
+    public infix fun <C> ColumnSet<C>.except(selector: ColumnsSelector<T, *>): TransformableColumnSet<C> =
+        except(selector.toColumns()) as TransformableColumnSet<C>
 
     public operator fun <C> ColumnsSelector<T, C>.invoke(): ColumnSet<C> =
         this(this@ColumnsSelectionDsl, this@ColumnsSelectionDsl)
@@ -2236,7 +2275,10 @@ private interface CommonColsOfDocs {
  * @include [CommonColsOfDocs.FilterParam]
  * @include [CommonColsOfDocs.Return]
  */
-public fun <C> ColumnSet<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean = { true }): TransformableColumnSet<C> =
+public fun <C> ColumnSet<*>.colsOf(
+    type: KType,
+    filter: (DataColumn<C>) -> Boolean = { true },
+): TransformableColumnSet<C> =
     colsInternal { it.isSubtypeOf(type) && filter(it.cast()) } as TransformableColumnSet<C>
 
 /**
@@ -2270,7 +2312,10 @@ public inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: (DataColumn<C
  * @include [CommonColsOfDocs.FilterParam]
  * @include [CommonColsOfDocs.Return]
  */
-public fun <C> SingleColumn<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean = { true }): TransformableColumnSet<C> =
+public fun <C> SingleColumn<*>.colsOf(
+    type: KType,
+    filter: (DataColumn<C>) -> Boolean = { true },
+): TransformableColumnSet<C> =
     colsInternal { it.isSubtypeOf(type) && filter(it.cast()) } as TransformableColumnSet<C>
 
 /**
