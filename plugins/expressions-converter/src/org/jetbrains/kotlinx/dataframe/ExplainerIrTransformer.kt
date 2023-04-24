@@ -106,10 +106,6 @@ class ExplainerIrTransformer(val pluginContext: IrPluginContext) : FileLoweringP
         return body
     }
 
-
-    //org.jetbrains.kotlinx.dataframe.AnyCol
-    //org.jetbrains.kotlinx.dataframe.AnyRow
-
     val dataFrameLike = setOf(
         FqName("org.jetbrains.kotlinx.dataframe.api.Pivot"),
         FqName("org.jetbrains.kotlinx.dataframe.api.ReducedPivot"),
@@ -118,12 +114,6 @@ class ExplainerIrTransformer(val pluginContext: IrPluginContext) : FileLoweringP
         FqName("org.jetbrains.kotlinx.dataframe.api.SplitWithTransform"),
         FqName("org.jetbrains.kotlinx.dataframe.api.Merge"),
         FqName("org.jetbrains.kotlinx.dataframe.api.Split"),
-//        FqName("org.jetbrains.kotlinx.dataframe.api.MoveClause"),
-//        FqName("org.jetbrains.kotlinx.dataframe.api.RenameClause"),
-//        FqName("org.jetbrains.kotlinx.dataframe.api.ReplaceClause"),
-//        FqName("org.jetbrains.kotlinx.dataframe.api.GroupClause"),
-//        FqName("org.jetbrains.kotlinx.dataframe.api.InsertClause"),
-//        FqName("org.jetbrains.kotlinx.dataframe.api.FormatClause"),
         FqName("org.jetbrains.kotlinx.dataframe.api.Gather"),
         FqName("org.jetbrains.kotlinx.dataframe.api.Update"),
         FqName("org.jetbrains.kotlinx.dataframe.api.Convert"),
@@ -131,7 +121,6 @@ class ExplainerIrTransformer(val pluginContext: IrPluginContext) : FileLoweringP
         FqName("org.jetbrains.kotlinx.dataframe.api.GroupBy"),
         FqName("org.jetbrains.kotlinx.dataframe.DataFrame"),
         FqName("org.jetbrains.kotlinx.dataframe.DataRow")
-//        FqName("org.jetbrains.kotlinx.dataframe.DataColumn"),
     )
 
     override fun visitGetValue(expression: IrGetValue, data: ContainingDeclarations): IrExpression {

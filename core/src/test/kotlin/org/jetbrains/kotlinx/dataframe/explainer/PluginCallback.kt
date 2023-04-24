@@ -221,12 +221,6 @@ private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
         is AnyCol -> dataframeLike.toDataFrame().toHTML()
         is DataRow<*> -> dataframeLike.toDataFrame().toHTML()
         is Split<*, *> -> dataframeLike.toDataFrame().toHTML()
-//        is MoveClause<*, *>-> null
-//        is RenameClause<*, *> -> null
-//        is ReplaceClause<*, *> -> null
-//        is GroupClause<*, *> -> null
-//        is InsertClause<*> -> null
-//        is FormatClause<*, *> -> null
         else -> throw IllegalArgumentException("Unsupported type: ${dataframeLike::class}")
     }
 }
@@ -240,12 +234,6 @@ private fun convertToDescription(dataframeLike: Any): String {
         is ReducedPivotGroupBy<*> -> "ReducedPivotGroupBy"
         is SplitWithTransform<*, *, *> -> "SplitWithTransform"
         is Split<*, *> -> "Split"
-//        is MoveClause<*, *> -> "Move"
-//        is RenameClause<*, *> -> "Rename"
-//        is ReplaceClause<*, *> -> "Replace"
-//        is GroupClause<*, *> -> "Group"
-//        is InsertClause<*> -> "Insert"
-//        is FormatClause<*, *> -> "Format"
         is Merge<*, *, *> -> "Merge"
         is Gather<*, *, *, *> -> "Gather"
         is Update<*, *> -> "Update"
