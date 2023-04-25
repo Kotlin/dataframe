@@ -132,14 +132,14 @@ class ParserTests {
     fun `converting String to Double in different locales`() {
         val currentLocale = Locale.getDefault()
         try {
-            // Test 36 behaviour combinations:
+            // Test 45 behaviour combinations:
 
             // 3 source columns
             val columnDot = columnOf("12.345", "67.890")
             val columnComma = columnOf("12,345", "67,890")
             val columnMixed = columnOf("12.345", "67,890")
             // *
-            // (3 locales as converting parameter + original converting)
+            // (3 locales as converting parameter + original converting + original converting to nullable)
             val parsingLocaleNotDefined: Locale? = null
             val parsingLocaleUsesDot: Locale = Locale.forLanguageTag("en-US")
             val parsingLocaleUsesComma: Locale = Locale.forLanguageTag("ru-RU")
@@ -151,6 +151,10 @@ class ParserTests {
             columnDot.convertTo<Double>().shouldBe(columnOf(12.345, 67.89))
             columnComma.convertTo<Double>().shouldBe(columnOf(12345.0, 67890.0))
             columnMixed.convertTo<Double>().shouldBe(columnOf(12.345, 67890.0))
+
+            columnDot.convertTo<Double?>().shouldBe(columnOf(12.345, 67.89))
+            columnComma.convertTo<Double?>().shouldBe(columnOf(12345.0, 67890.0))
+            columnMixed.convertTo<Double?>().shouldBe(columnOf(12.345, 67890.0))
 
             columnDot.convertToDouble(parsingLocaleNotDefined).shouldBe(columnOf(12.345, 67.89))
             columnComma.convertToDouble(parsingLocaleNotDefined).shouldBe(columnOf(12345.0, 67890.0))
@@ -170,6 +174,10 @@ class ParserTests {
             columnComma.convertTo<Double>().shouldBe(columnOf(12345.0, 67890.0))
             columnMixed.convertTo<Double>().shouldBe(columnOf(12.345, 67890.0))
 
+            columnDot.convertTo<Double?>().shouldBe(columnOf(12.345, 67.89))
+            columnComma.convertTo<Double?>().shouldBe(columnOf(12345.0, 67890.0))
+            columnMixed.convertTo<Double?>().shouldBe(columnOf(12.345, 67890.0))
+
             columnDot.convertToDouble(parsingLocaleNotDefined).shouldBe(columnOf(12.345, 67.89))
             columnComma.convertToDouble(parsingLocaleNotDefined).shouldBe(columnOf(12345.0, 67890.0))
             columnMixed.convertToDouble(parsingLocaleNotDefined).shouldBe(columnOf(12.345, 67890.0))
@@ -187,6 +195,10 @@ class ParserTests {
             columnDot.convertTo<Double>().shouldBe(columnOf(12.345, 67.89))
             columnComma.convertTo<Double>().shouldBe(columnOf(12.345, 67.89))
             columnMixed.convertTo<Double>().shouldBe(columnOf(12.345, 67890.0))
+
+            columnDot.convertTo<Double?>().shouldBe(columnOf(12.345, 67.89))
+            columnComma.convertTo<Double?>().shouldBe(columnOf(12.345, 67.89))
+            columnMixed.convertTo<Double?>().shouldBe(columnOf(12.345, 67890.0))
 
             columnDot.convertToDouble(parsingLocaleNotDefined).shouldBe(columnOf(12.345, 67.89))
             columnComma.convertToDouble(parsingLocaleNotDefined).shouldBe(columnOf(12.345, 67.89))

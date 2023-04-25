@@ -1,6 +1,6 @@
 [versions]
 ksp = "1.8.20-1.0.10"
-kotlinJupyter = "0.11.0-311"
+kotlinJupyter = "0.11.0-358"
 ktlint = "3.4.5"
 kotlin = "1.8.20"
 dokka = "1.8.10"
@@ -23,7 +23,7 @@ openapi = "2.1.13"
 junit = "4.13.2"
 kotestAsserions = "4.6.3"
 jsoup = "1.14.3"
-arrow = "10.0.0"
+arrow = "11.0.0"
 docProcessor = "0.1.6"
 simpleGit = "2.0.1"
 
