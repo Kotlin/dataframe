@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
+import org.jetbrains.kotlinx.dataframe.api.allInternal
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.*
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.flattenRecursively
@@ -46,7 +47,7 @@ private class RecursivelyTransformer(
         )
 
     override fun transformSingle(singleColumn: SingleColumn<*>): ColumnSet<*> =
-        singleColumn.flattenRecursivelySingle(
+        singleColumn.flattenRecursively(
             includeGroups = includeGroups,
             includeTopLevel = includeTopLevel,
         )
@@ -55,14 +56,7 @@ private class RecursivelyTransformer(
 internal fun ColumnSet<*>.flattenRecursively(
     includeGroups: Boolean = true,
     includeTopLevel: Boolean = true,
-): ColumnSet<*> = transform { list ->
-    val cols =
-        if (isSingleColumnGroup(list)) {
-            list.single().children()
-        } else {
-            list
-        }
-
+): ColumnSet<*> = allInternal().transform { cols ->
     if (includeTopLevel) {
         cols.flattenRecursively()
     } else {
@@ -72,22 +66,10 @@ internal fun ColumnSet<*>.flattenRecursively(
     }.filter { includeGroups || !it.isColumnGroup() }
 }
 
-internal fun SingleColumn<*>.flattenRecursivelySingle(
+internal fun SingleColumn<*>.flattenRecursively(
     includeGroups: Boolean = true,
     includeTopLevel: Boolean = true,
-): ColumnSet<*> = transformSingle {
-    val cols =
-        if (isSingleColumnGroup(listOf(it))) {
-            it.children()
-        } else {
-            listOf(it)
-        }
-
-    if (includeTopLevel) {
-        cols.flattenRecursively()
-    } else {
-        cols
-            .filter { it.isColumnGroup() }
-            .flatMap { it.children().flattenRecursively() }
-    }.filter { includeGroups || !it.isColumnGroup() }
-}
+): ColumnSet<*> = (this as ColumnSet<*>).flattenRecursively(
+    includeGroups = includeGroups,
+    includeTopLevel = includeTopLevel,
+)

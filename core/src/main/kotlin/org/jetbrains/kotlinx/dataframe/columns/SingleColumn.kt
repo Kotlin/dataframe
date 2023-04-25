@@ -3,8 +3,6 @@ package org.jetbrains.kotlinx.dataframe.columns
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.*
-import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.contract
 
 /**
  * Entity that can be [resolved][resolveSingle] into [DataColumn].
@@ -23,13 +21,10 @@ public interface SingleColumn<out C> : ColumnSet<C> {
     public fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>?
 }
 
-@OptIn(ExperimentalContracts::class)
-public fun ColumnSet<*>.isSingleColumn(): Boolean {
-    contract {
-        returns(true) implies (this@isSingleColumn is SingleColumn<*>)
-    }
-    return this is SingleColumn<*>
-}
+public fun ColumnSet<*>.isSingleColumn(): Boolean = this is SingleColumn<*>
 
-public fun ColumnSet<*>.isSingleColumnGroup(cols: List<ColumnWithPath<*>>): Boolean =
+/**
+ * Returns true if [this] is a [SingleColumn] and [cols] consists of a single column group.
+ */
+public fun ColumnSet<*>.isSingleColumnWithGroup(cols: List<ColumnWithPath<*>>): Boolean =
     isSingleColumn() && cols.singleOrNull()?.isColumnGroup() == true

@@ -4174,7 +4174,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * This makes the function essentially equivalent to [cols()][ColumnSet.cols].
      *
      * #### For example:
-     * `df.`[move][DataFrame.move]` { `[all][ColumnSet.all]`().`[recursively][ColumnSet.recursively]`() }.`[under][MoveClause.under]`("info")`
+     * `df.`[move][DataFrame.move]` { `[all][ColumnSet.all]`().`[recursively][recursively]`() }.`[under][MoveClause.under]`("info")`
      *
      * `df.`[select][DataFrame.select]` { myGroup.`[all][ColumnSet.all]`() }`
      *
@@ -4200,7 +4200,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * This makes the function essentially equivalent to [cols()][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols].
      *
      * #### For example:
-     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.all]`().`[recursively][ColumnSet.recursively]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.all]`().`[recursively][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.recursively]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[all][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.all]`() }`
      *
@@ -4213,7 +4213,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * @see [cols]
      */
-    public fun <C> ColumnSet<C>.all(): TransformableColumnSet<C> = allInternal() as TransformableColumnSet<C>
+    public fun <C> ColumnSet<C>.all(): TransformableColumnSet<C> = allInternal()
 
     /**
      * ## All
@@ -4225,7 +4225,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * This makes the function essentially equivalent to [cols()][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols].
      *
      * #### For example:
-     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.all]`().`[recursively][ColumnSet.recursively]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.all]`().`[recursively][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.recursively]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[all][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.all]`() }`
      *
@@ -4251,7 +4251,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * This makes the function essentially equivalent to [cols()][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols].
      *
      * #### For example:
-     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.all]`().`[recursively][ColumnSet.recursively]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.all]`().`[recursively][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.recursively]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[all][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.all]`() }`
      *
@@ -4273,7 +4273,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * This makes the function essentially equivalent to [cols()][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols].
      *
      * #### For example:
-     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.all]`().`[recursively][ColumnSet.recursively]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.all]`().`[recursively][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.recursively]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[all][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.all]`() }`
      *
@@ -4289,7 +4289,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     @Deprecated(
         message = "allDfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.all().recursively(includeGroups = includeGroups, includeTopLevel = false)"),
+        replaceWith = ReplaceWith("this.allRecursively(includeGroups = includeGroups, includeTopLevel = false)"),
         level = DeprecationLevel.WARNING,
     )
     public fun ColumnSet<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> =
@@ -4297,7 +4297,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     @Deprecated(
         message = "allDfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.all().recursively(includeGroups = includeGroups)"),
+        replaceWith = ReplaceWith("this.allRecursively(includeGroups = includeGroups)"),
         level = DeprecationLevel.WARNING,
     )
     public fun SingleColumn<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> =
@@ -4305,14 +4305,14 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     @Deprecated(
         message = "allDfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.all().recursively(includeGroups = includeGroups)"),
+        replaceWith = ReplaceWith("this.allRecursively(includeGroups = includeGroups)"),
         level = DeprecationLevel.WARNING,
     )
     public fun String.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> = toColumnAccessor().allDfs(includeGroups)
 
     @Deprecated(
         message = "allDfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.all().recursively(includeGroups = includeGroups)"),
+        replaceWith = ReplaceWith("this.allRecursively(includeGroups = includeGroups)"),
         level = DeprecationLevel.WARNING,
     )
     public fun KProperty<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> =
@@ -4321,20 +4321,24 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     /**
      * ## Recursively / Rec
      *
-     * Modifies the previous call to run not only on the current column set, but also on all of its children.
+     * Modifies the previous call to run not only on the current column set,
+     * but also on all columns inside [column groups][ColumnGroup].
      *
      * For example:
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][ColumnSet.colsOf]`<`[String][String]`>() }`
      *
      * returns all columns of type [String] in the top-level, as expected. However, what if you want ALL
-     * columns of type [String] even if they are inside a nested column group? Then you can use [recursivelyImpl]:
+     * columns of type [String] even if they are inside a nested column group? Then you can use [recursively]:
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnSet.colsOf]`<`[String][String]`>().`[recursively][ColumnSet.recursivelyImpl]`() }`
+     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnSet.colsOf]`<`[String][String]`>().`[recursively][recursively]`() }`
      *
-     * This will return all columns of type [String] in lower levels (unless [includeTopLevel\]` == true`).
+     * This will return the columns of type [String] in all levels (unless [includeTopLevel\]` == true`).
      *
      * TODO
+     *
+     * @param [includeGroups\] Whether to include [column groups][ColumnGroup] in the result. `true` by default.
+     * @param [includeTopLevel\] Whether to include the top-level columns in the result. `true` by default.
      */
     private interface CommonRecursivelyDocs {
 
@@ -4342,25 +4346,258 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         interface Examples
     }
 
+    /**
+     * ## Recursively / Rec
+     *
+     * Modifies the previous call to run not only on the current column set,
+     * but also on all columns inside [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsOf]`<`[String][String]`>() }`
+     *
+     * returns all columns of type [String] in the top-level, as expected. However, what if you want ALL
+     * columns of type [String] even if they are inside a nested column group? Then you can use [recursively][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.recursively]:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsOf]`<`[String][String]`>().`[recursively][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.recursively]`() }`
+     *
+     * This will return the columns of type [String] in all levels (unless [includeTopLevel]` == true`).
+     *
+     * TODO
+     *
+     * @param [includeGroups] Whether to include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in the result. `true` by default.
+     * @param [includeTopLevel] Whether to include the top-level columns in the result. `true` by default.
+     */
     public fun <C> TransformableColumnSet<C>.recursively(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
     ): ColumnSet<C> = recursivelyImpl(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
+    /**
+     * ## Recursively / Rec
+     *
+     * Modifies the previous call to run not only on the current column set,
+     * but also on all columns inside [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsOf]`<`[String][String]`>() }`
+     *
+     * returns all columns of type [String] in the top-level, as expected. However, what if you want ALL
+     * columns of type [String] even if they are inside a nested column group? Then you can use [recursively][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.recursively]:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsOf]`<`[String][String]`>().`[recursively][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.recursively]`() }`
+     *
+     * This will return the columns of type [String] in all levels (unless [includeTopLevel]` == true`).
+     *
+     * TODO
+     *
+     * @param [includeGroups] Whether to include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in the result. `true` by default.
+     * @param [includeTopLevel] Whether to include the top-level columns in the result. `true` by default.
+     */
     public fun <C> TransformableColumnSet<C>.rec(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
     ): ColumnSet<C> = recursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
+    /**
+     * ## Recursively / Rec
+     *
+     * Modifies the previous call to run not only on the current column set,
+     * but also on all columns inside [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsOf]`<`[String][String]`>() }`
+     *
+     * returns all columns of type [String] in the top-level, as expected. However, what if you want ALL
+     * columns of type [String] even if they are inside a nested column group? Then you can use [recursively][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.recursively]:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsOf]`<`[String][String]`>().`[recursively][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.recursively]`() }`
+     *
+     * This will return the columns of type [String] in all levels (unless [includeTopLevel]` == true`).
+     *
+     * TODO
+     *
+     * @param [includeGroups] Whether to include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in the result. `true` by default.
+     * @param [includeTopLevel] Whether to include the top-level columns in the result. `true` by default.
+     */
     public fun TransformableSingleColumn<*>.recursively(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
-    ): ColumnSet<*> = recursivelyImpl(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+    ): SingleColumn<*> = recursivelyImpl(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
+    /**
+     * ## Recursively / Rec
+     *
+     * Modifies the previous call to run not only on the current column set,
+     * but also on all columns inside [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsOf]`<`[String][String]`>() }`
+     *
+     * returns all columns of type [String] in the top-level, as expected. However, what if you want ALL
+     * columns of type [String] even if they are inside a nested column group? Then you can use [recursively][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.recursively]:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsOf]`<`[String][String]`>().`[recursively][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.recursively]`() }`
+     *
+     * This will return the columns of type [String] in all levels (unless [includeTopLevel]` == true`).
+     *
+     * TODO
+     *
+     * @param [includeGroups] Whether to include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in the result. `true` by default.
+     * @param [includeTopLevel] Whether to include the top-level columns in the result. `true` by default.
+     */
     public fun TransformableSingleColumn<*>.rec(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
-    ): ColumnSet<*> = recursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+    ): SingleColumn<*> = recursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+
+    /**
+     * ## All Recursively / All Rec
+     *
+     * Returns all columns in the current [ColumnSet], including all columns that are nested
+     * inside [column groups][ColumnGroup].
+     *
+     * TODO
+     *
+     * @param [includeGroups\] Whether to include [column groups][ColumnGroup] in the result. `true` by default.
+     * @param [includeTopLevel\] Whether to include the top-level columns in the result. `true` by default.
+     */
+    private interface CommonAllRecursivelyDocs {
+
+        /** Example argument */
+        interface Examples
+    }
+
+    /**
+     * ## All Recursively / All Rec
+     *
+     * Returns all columns in the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], including all columns that are nested
+     * inside [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * TODO
+     *
+     * @param [includeGroups] Whether to include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in the result. `true` by default.
+     * @param [includeTopLevel] Whether to include the top-level columns in the result. `true` by default.
+     */
+    public fun ColumnSet<*>.allRecursively(
+        includeGroups: Boolean = true,
+        includeTopLevel: Boolean = true,
+    ): ColumnSet<*> = flattenRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+
+    /**
+     * ## All Recursively / All Rec
+     *
+     * Returns all columns in the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], including all columns that are nested
+     * inside [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * TODO
+     *
+     * @param [includeGroups] Whether to include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in the result. `true` by default.
+     * @param [includeTopLevel] Whether to include the top-level columns in the result. `true` by default.
+     */
+    public fun ColumnSet<*>.allRec(
+        includeGroups: Boolean = true,
+        includeTopLevel: Boolean = true,
+    ): ColumnSet<*> = allRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+
+    /**
+     * ## All Recursively / All Rec
+     *
+     * Returns all columns in the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], including all columns that are nested
+     * inside [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * TODO
+     *
+     * @param [includeGroups] Whether to include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in the result. `true` by default.
+     * @param [includeTopLevel] Whether to include the top-level columns in the result. `true` by default.
+     */
+    public fun SingleColumn<*>.allRecursively(
+        includeGroups: Boolean = true,
+        includeTopLevel: Boolean = true,
+    ): ColumnSet<*> = flattenRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+
+    /**
+     * ## All Recursively / All Rec
+     *
+     * Returns all columns in the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], including all columns that are nested
+     * inside [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * TODO
+     *
+     * @param [includeGroups] Whether to include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in the result. `true` by default.
+     * @param [includeTopLevel] Whether to include the top-level columns in the result. `true` by default.
+     */
+    public fun SingleColumn<*>.allRec(
+        includeGroups: Boolean = true,
+        includeTopLevel: Boolean = true,
+    ): ColumnSet<*> = allRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+
+    /**
+     * ## All Recursively / All Rec
+     *
+     * Returns all columns in the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], including all columns that are nested
+     * inside [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * TODO
+     *
+     * @param [includeGroups] Whether to include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in the result. `true` by default.
+     * @param [includeTopLevel] Whether to include the top-level columns in the result. `true` by default.
+     */
+    public fun String.allRecursively(
+        includeGroups: Boolean = true,
+        includeTopLevel: Boolean = true,
+    ): ColumnSet<*> = toColumnAccessor().allRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+
+    /**
+     * ## All Recursively / All Rec
+     *
+     * Returns all columns in the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], including all columns that are nested
+     * inside [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * TODO
+     *
+     * @param [includeGroups] Whether to include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in the result. `true` by default.
+     * @param [includeTopLevel] Whether to include the top-level columns in the result. `true` by default.
+     */
+    public fun String.allRec(
+        includeGroups: Boolean = true,
+        includeTopLevel: Boolean = true,
+    ): ColumnSet<*> = allRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+
+    /**
+     * ## All Recursively / All Rec
+     *
+     * Returns all columns in the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], including all columns that are nested
+     * inside [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * TODO
+     *
+     * @param [includeGroups] Whether to include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in the result. `true` by default.
+     * @param [includeTopLevel] Whether to include the top-level columns in the result. `true` by default.
+     */
+    public fun KProperty<*>.allRecursively(
+        includeGroups: Boolean = true,
+        includeTopLevel: Boolean = true,
+    ): ColumnSet<*> = toColumnAccessor().allRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+
+    /**
+     * ## All Recursively / All Rec
+     *
+     * Returns all columns in the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], including all columns that are nested
+     * inside [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * TODO
+     *
+     * @param [includeGroups] Whether to include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in the result. `true` by default.
+     * @param [includeTopLevel] Whether to include the top-level columns in the result. `true` by default.
+     */
+    public fun KProperty<*>.allRec(
+        includeGroups: Boolean = true,
+        includeTopLevel: Boolean = true,
+    ): ColumnSet<*> = toColumnAccessor().allRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
     // endregion
 
@@ -4576,19 +4813,20 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnSet<C>.endsWith(suffix: CharSequence): TransformableColumnSet<C> =
         cols { it.name.endsWith(suffix) }
 
-    public fun <C> ColumnSet<C>.except(vararg other: ColumnSet<*>): TransformableColumnSet<*> = except(other.toColumnSet())
+    public fun <C> ColumnSet<C>.except(vararg other: ColumnSet<*>): TransformableColumnSet<*> =
+        except(other.toColumnSet())
+
     public fun <C> ColumnSet<C>.except(vararg other: String): TransformableColumnSet<*> = except(other.toColumnSet())
 
     public fun <C> ColumnSet<C?>.withoutNulls(): TransformableColumnSet<C> =
         transform { it.filter { !it.hasNulls() } } as TransformableColumnSet<C>
 
     public infix fun <C> ColumnSet<C>.except(other: ColumnSet<*>): TransformableColumnSet<*> =
-//        createColumnSet {
-//            this@except.resolve(it).allColumnsExcept(other.resolve(it))
-//        }
         createTransformableColumnSet(
             resolver = { context ->
-                this@except.resolve(context).allColumnsExcept(other.resolve(context))
+                this@except
+                    .resolve(context)
+                    .allColumnsExcept(other.resolve(context))
             },
             transformResolve = { context, transformer ->
                 transformer.transform(this@except)
@@ -4813,52 +5051,37 @@ internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) 
  * match the given [predicate].
  */
 internal fun ColumnSet<*>.colsInternal(predicate: ColumnFilter<*>): TransformableColumnSet<*> =
-    transform {
-        if (isSingleColumnGroup(it)) {
-            it.single().children()
-        } else {
-            it
-        }.filter(predicate)
-    }
+    allInternal().transform { it.filter(predicate) }
 
 internal fun ColumnSet<*>.colsInternal(indices: IntArray): TransformableColumnSet<*> =
-    transform {
-        if (isSingleColumnGroup(it)) {
-            it.single().children()
-        } else {
-            it
-        }.let { cols ->
-            indices.map { cols[it] }
-        }
+    allInternal().transform { cols ->
+        indices.map { cols[it] }
     }
 
 internal fun ColumnSet<*>.colsInternal(range: IntRange): TransformableColumnSet<*> =
-    transform {
-        if (isSingleColumnGroup(it)) {
-            it.single().children()
-        } else {
-            it
-        }.subList(range.first, range.last + 1)
+    allInternal().transform {
+        it.subList(range.first, range.last + 1)
     }
 
-internal fun ColumnSet<*>.allInternal(): TransformableColumnSet<*> =
+/**
+ * If [this] is a [SingleColumn] containing a single [ColumnGroup], it
+ * returns a [(transformable) ColumnSet][TransformableColumnSet] containing the children of this [ColumnGroup],
+ * else it simply returns a [(transformable) ColumnSet][TransformableColumnSet] from [this].
+ */
+internal fun <C> ColumnSet<C>.allInternal(): TransformableColumnSet<C> =
     transform {
-        if (isSingleColumnGroup(it)) {
+        if (isSingleColumnWithGroup(it)) {
             it.single().children()
         } else {
             it
         }
-    }
+    }.cast()
 
-//internal fun ColumnSet<*>.childrenInternal(predicate: (ColumnWithPath<Any?>) -> Boolean): ColumnSetWithRecursively<*> =
-//    transform {
-//        if (isSingleColumnGroup(it)) {
-//            it.single().children()
-//        } else {
-//            it
-//        }
-//    }
-
+/** If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a single [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], it
+ * returns a [(transformable) ColumnSet][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet] containing the children of this [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+ * else it simply returns a [(transformable) ColumnSet][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet] from [this]. */
+internal fun SingleColumn<*>.allInternal(): TransformableColumnSet<*> =
+    (this as ColumnSet<*>).allInternal()
 
 @Deprecated("Replaced with recursively()")
 internal fun ColumnSet<*>.dfsInternal(predicate: (ColumnWithPath<*>) -> Boolean) =

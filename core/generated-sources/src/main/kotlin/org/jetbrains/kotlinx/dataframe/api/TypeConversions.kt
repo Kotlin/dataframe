@@ -95,6 +95,14 @@ public fun <T> DataColumn<T>.castToNullable(): DataColumn<T?> = cast()
 
 public fun <T> ColumnReference<T>.castToNullable(): ColumnReference<T?> = cast()
 
+public fun AnyCol.setNullable(nullable: Boolean): AnyCol {
+    return if (nullable) {
+        this.castToNullable()
+    } else {
+        this.castToNotNullable()
+    }
+}
+
 // region to array
 
 public inline fun <reified T> DataColumn<T>.toTypedArray(): Array<T> = toList().toTypedArray()
