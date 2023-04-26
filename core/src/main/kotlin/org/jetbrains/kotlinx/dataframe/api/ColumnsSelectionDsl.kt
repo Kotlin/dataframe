@@ -2001,7 +2001,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
             },
         )
 
-
     public infix fun <C> ColumnSet<C>.except(selector: ColumnsSelector<T, *>): TransformableColumnSet<C> =
         except(selector.toColumns()) as TransformableColumnSet<C>
 
