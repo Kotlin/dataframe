@@ -44,17 +44,17 @@ kotlin.sourceSets {
 }
 
 sourceSets {
-    create("myTest") {
+    create("samples") {
         kotlin.srcDir("src/test/kotlin")
     }
 }
 
 dependencies {
-    val kotlinCompilerPluginClasspathMyTest by configurations.getting
+    val kotlinCompilerPluginClasspathSamples by configurations.getting
 
     api(libs.kotlin.reflect)
     implementation(libs.kotlin.stdlib)
-    kotlinCompilerPluginClasspathMyTest(project(":plugins:expressions-converter"))
+    kotlinCompilerPluginClasspathSamples(project(":plugins:expressions-converter"))
     implementation(libs.kotlin.stdlib.jdk8)
 
     api(libs.commonsCsv)
@@ -72,11 +72,11 @@ dependencies {
     testImplementation(libs.jsoup)
 }
 
-val myTestImplementation by configurations.getting {
+val samplesImplementation by configurations.getting {
     extendsFrom(configurations.testImplementation.get())
 }
 
-val myKotlinCompileTask = tasks.named<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>("compileMyTestKotlin") {
+val myKotlinCompileTask = tasks.named<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>("compileSamplesKotlin") {
     friendPaths.from(sourceSets["main"].output.classesDirs)
     source(sourceSets["test"].kotlin)
     destinationDirectory.set(file("$buildDir/classes/testWithOutputs/kotlin"))
@@ -84,17 +84,17 @@ val myKotlinCompileTask = tasks.named<org.jetbrains.kotlin.gradle.tasks.KotlinCo
 
 tasks.withType<KspTask> {
     // "test" classpath is re-used, so repeated generation should be disabled
-    if (name == "kspMyTestKotlin") {
+    if (name == "kspSamplesKotlin") {
         dependsOn("kspTestKotlin")
         enabled = false
     }
 }
 
-tasks.named("lintKotlinMyTest") {
+tasks.named("lintKotlinSamples") {
     onlyIf { false }
 }
 
-val customTest = tasks.register<Test>("customTest") {
+val samplesTest = tasks.register<Test>("samplesTest") {
     group = "Verification"
     description = "Runs the custom tests."
 
@@ -115,20 +115,25 @@ val customTest = tasks.register<Test>("customTest") {
     ignoreFailures = true
 
     testClassesDirs = fileTree("$buildDir/classes/testWithOutputs/kotlin")
-    classpath = files("$buildDir/classes/testWithOutputs/kotlin") + configurations["myTestRuntimeClasspath"] + sourceSets["main"].runtimeClasspath
+    classpath = files("$buildDir/classes/testWithOutputs/kotlin") + configurations["samplesRuntimeClasspath"] + sourceSets["main"].runtimeClasspath
 }
 
-val copySamplesOutputs = tasks.register<JavaExec>("copySamplesOutputs") {
+val clearSamplesOutputs by tasks.creating {
     group = "documentation"
-    mainClass.set("org.jetbrains.kotlinx.dataframe.explainer.SampleAggregatorKt")
 
     doFirst {
         delete {
             delete(fileTree(File(projectDir, "../docs/StardustDocs/snippets")))
         }
     }
+}
 
-    dependsOn(customTest)
+val copySamplesOutputs = tasks.register<JavaExec>("copySamplesOutputs") {
+    group = "documentation"
+    mainClass.set("org.jetbrains.kotlinx.dataframe.explainer.SampleAggregatorKt")
+
+    dependsOn(samplesTest)
+    dependsOn(clearSamplesOutputs)
     classpath = sourceSets.test.get().runtimeClasspath
 }
 
