@@ -27,7 +27,7 @@ import org.jetbrains.kotlin.test.services.configuration.CommonEnvironmentConfigu
 import org.jetbrains.kotlin.test.services.configuration.JvmEnvironmentConfigurator
 import java.io.File
 
-open class AbstractExplainerBlackBoxCodegenTest : BaseTestRunner()/*, RunnerWithTargetBackendForTestGeneratorMarker*/ {
+open class AbstractExplainerBlackBoxCodegenTest : BaseTestRunner() {
 
     override fun TestConfigurationBuilder.configuration() {
         globalDefaults {
