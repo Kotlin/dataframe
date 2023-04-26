@@ -51,6 +51,7 @@ df.split { "name"["firstName"]<String>() }.by { it.chars().toList() }.inplace()
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitInplace.html"/>
 <!---END-->
 
 ## Split horizontally
@@ -98,6 +99,7 @@ df.split { "name"["lastName"] }.by(" ").default("").inward { "word$it" }
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.split.html"/>
 <!---END-->
 
 `String` columns can also be split into group matches of [`Regex`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/-regex/) pattern:
@@ -110,6 +112,7 @@ merged.split { name }
     .inward("firstName", "lastName")
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitRegex.html"/>
 <!---END-->
 
 [`FrameColumn`](DataColumn.md#framecolumn) can be split into columns:
@@ -133,6 +136,7 @@ val df = dataFrameOf(id, group)
 df.split { group }.intoColumns()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitFrameColumn.html"/>
 <!---END-->
 
 ## Split vertically
@@ -175,6 +179,7 @@ df.split { colGroup("name") }.by { it.values() }.intoRows()
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitIntoRows.html"/>
 <!---END-->
 
 Equals to `split { column }...inplace().explode { column }`. See [`explode`](explode.md) for details.

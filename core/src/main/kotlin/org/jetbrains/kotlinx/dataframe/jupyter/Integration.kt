@@ -266,6 +266,7 @@ internal fun convertToDataFrame(dataframeLike: Any): AnyFrame =
         is PivotGroupBy<*> -> dataframeLike.frames()
         is ReducedPivotGroupBy<*> -> dataframeLike.values()
         is SplitWithTransform<*, *, *> -> dataframeLike.into()
+        is Split<*, *> -> dataframeLike.toDataFrame()
         is Merge<*, *, *> -> dataframeLike.into("merged")
         is Gather<*, *, *, *> -> dataframeLike.into("key", "value")
         is Update<*, *> -> dataframeLike.df

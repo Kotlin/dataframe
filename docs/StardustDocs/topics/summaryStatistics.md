@@ -27,6 +27,7 @@ df.pivot { city }.median()
 df.pivot { city }.groupBy { name.lastName }.std()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticAggregations.html"/>
 <!---END-->
 
 [sum](sum.md), [mean](mean.md), [std](std.md) are available for numeric columns of types `Int`, `Double`, `Float`, `BigDecimal`, `Long`, `Byte`.
@@ -51,6 +52,7 @@ df.sumFor { age and weight } // sum of values per `age` and `weight` separately
 df.sumOf { (weight ?: 0) / age } // sum of expression evaluated for every row
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticModes.html"/>
 <!---END-->
 
 ### groupBy statistics
@@ -66,6 +68,7 @@ df.groupBy { city }.mean { age } // [`city`, `mean`]
 df.groupBy { city }.meanOf { age / 2 } // [`city`, `mean`]
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticGroupBySingle.html"/>
 <!---END-->
 
 You can also pass custom name for aggregated column:
@@ -77,6 +80,7 @@ df.groupBy { city }.mean("mean age") { age } // [`city`, `mean age`]
 df.groupBy { city }.meanOf("custom") { age / 2 } // [`city`, `custom`]
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticGroupBySingleNamed.html"/>
 <!---END-->
 
 If statistic is applied in a mode that returns separate value per every column in data group, aggregated values will be stored in columns with original column names.
@@ -88,6 +92,7 @@ df.groupBy { city }.meanFor { age and weight } // [`city`, `age`, `weight`]
 df.groupBy { city }.mean() // [`city`, `age`, `weight`, ...]
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticGroupByMany.html"/>
 <!---END-->
 
 ### pivot statistics
@@ -127,6 +132,7 @@ df.groupBy("city").pivot { "name"["lastName"] }.meanOf { "age"<Int>() / 2.0 }
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticPivotSingle.html"/>
 <!---END-->
 
 If statistic is applied in such a way that it returns separate value per every column in data group, 
@@ -139,6 +145,7 @@ df.groupBy { city }.pivot { name.lastName }.meanFor { age and weight }
 df.groupBy { city }.pivot { name.lastName }.mean()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticPivotMany.html"/>
 <!---END-->
 
 To group columns in aggregation results not by pivoted values, but by aggregated columns, apply `separate` flag:
@@ -150,4 +157,5 @@ df.groupBy { city }.pivot { name.lastName }.meanFor(separate = true) { age and w
 df.groupBy { city }.pivot { name.lastName }.mean(separate = true)
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticPivotManySeparate.html"/>
 <!---END-->

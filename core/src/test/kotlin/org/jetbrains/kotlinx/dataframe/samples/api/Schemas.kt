@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.api.maxBy
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.toList
+import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.junit.Test
 
 class Schemas {
@@ -26,6 +27,7 @@ class Schemas {
     fun DataFrame<Person>.adults() = filter { age > 18 }
 
     @Test
+    @TransformDataFrameExpressions
     fun createDfNullable() {
         // SampleStart
         val df = dataFrameOf("name", "age")(
@@ -36,6 +38,7 @@ class Schemas {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun createDf() {
         // SampleStart
         val df = dataFrameOf("name", "age")(
@@ -46,6 +49,7 @@ class Schemas {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun extendedDf() {
         // SampleStart
         val df = dataFrameOf("name", "age", "weight")(
@@ -57,6 +61,7 @@ class Schemas {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun splitNameWorks() {
         val df = dataFrameOf("name", "age", "weight")(
             "Merton, Alice", 15, 60.0,
@@ -68,6 +73,7 @@ class Schemas {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun adultsWorks() {
         val df = dataFrameOf("name", "age", "weight")(
             "Merton, Alice", 15, 60.0,
@@ -81,6 +87,7 @@ class Schemas {
     fun DataFrame<Person>.countAdults() = count { it[Person::age] > 18 }
 
     @Test
+    @TransformDataFrameExpressions
     fun convertTo() {
         // SampleStart
         @DataSchema
@@ -98,6 +105,7 @@ class Schemas {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun useProperties() {
         // SampleStart
         val df = dataFrameOf("name", "age")(
@@ -111,6 +119,7 @@ class Schemas {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun useInferredSchema() {
         // SampleStart
         // Repository.readCSV() has argument 'path' with default value https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv

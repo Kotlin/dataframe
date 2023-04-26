@@ -10,4 +10,5 @@ Returns [`DataFrame`](DataFrame.md) with randomly reordered rows.
 df.shuffle()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.shuffle.html"/>
 <!---END-->
