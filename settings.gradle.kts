@@ -32,5 +32,3 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-
-

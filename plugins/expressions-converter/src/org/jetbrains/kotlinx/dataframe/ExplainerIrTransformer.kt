@@ -243,12 +243,12 @@ class ExplainerIrTransformer(
                 }
             }
             val alsoLambdaExpression = IrFunctionExpressionImpl(
-                -1,
-                -1,
+                startOffset = -1,
+                endOffset = -1,
                 type = pluginContext.irBuiltIns.functionN(2)
                     .typeWith(listOf(expression.type, pluginContext.irBuiltIns.unitType)),
-                alsoLambda,
-                IrStatementOrigin.LAMBDA
+                function = alsoLambda,
+                origin = IrStatementOrigin.LAMBDA
             )
             putValueArgument(0, alsoLambdaExpression)
         }
