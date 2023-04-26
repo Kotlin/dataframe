@@ -39,6 +39,7 @@ df.add("year of birth") { 2021 - "age"<Int>() }
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.add.html"/>
 <!---END-->
 
 See [row expressions](DataRow.md#row-expressions)
@@ -54,6 +55,7 @@ df.add("fibonacci") {
 }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addRecurrent.html"/>
 <!---END-->
 
 ## Create and add several columns to [`DataFrame`](DataFrame.md)
@@ -129,6 +131,7 @@ df.add {
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addMany.html"/>
 <!---END-->
 
 ### Create columns using intermediate result
@@ -144,6 +147,7 @@ fun queryCityInfo(city: String?): CityInfo {
 }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addCalculatedApi.html"/>
 <!---END-->
 
 Use the following approach to add multiple columns by calling the given API only once per row:
@@ -190,6 +194,7 @@ val personWithCityInfo = df.add {
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addCalculated.html"/>
 <!---END-->
 
 ## Add existing column to [`DataFrame`](DataFrame.md)
@@ -203,6 +208,7 @@ df.add(score)
 df + score
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addExisting.html"/>
 <!---END-->
 
 ## Add all columns from another [`DataFrame`](DataFrame.md)
@@ -213,6 +219,7 @@ df + score
 df.add(df1, df2)
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addDfs.html"/>
 <!---END-->
 
 ## addId

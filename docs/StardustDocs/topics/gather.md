@@ -42,6 +42,7 @@ Storage options:
 pivoted.gather { "London".."Tokyo" }.into("city", "population")
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.gather.html"/>
 <!---END-->
 
 <!---FUN gatherWithMapping-->
@@ -55,4 +56,5 @@ pivoted.gather { "London".."Tokyo" }
     .into("city", "density")
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.gatherWithMapping.html"/>
 <!---END-->

@@ -8,11 +8,13 @@ import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toListOf
+import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.junit.Test
 
 class Collections {
 
     @Test
+    @TransformDataFrameExpressions
     fun listInterop1() {
         // SampleStart
         data class Input(val a: Int, val b: Int)
@@ -22,6 +24,7 @@ class Collections {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun listInterop2() {
         data class Input(val a: Int, val b: Int)
         val list = listOf(Input(1, 2), Input(3, 4))
@@ -31,6 +34,7 @@ class Collections {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun listInterop3() {
         val list = listOf(Input(1, 2), Input(3, 4))
         val df = list.toDataFrame()
@@ -53,6 +57,7 @@ class Collections {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun listInterop4() {
         val list = listOf(Input(1, 2), Input(3, 4))
         val df2 = list.toDataFrame().add("c") { a + b }
@@ -65,6 +70,7 @@ class Collections {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun listInterop5() {
         // SampleStart
         val df = dataFrameOf("name", "lastName", "age")("John", "Doe", 21)

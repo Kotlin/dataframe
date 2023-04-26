@@ -18,6 +18,7 @@ df.gather { colsOf<Number>() }.into("key", "value")
 df.move { name.firstName and name.lastName }.after { city }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectorsUsages.html"/>
 <!---END-->
 
 **Select columns by name:**
@@ -93,6 +94,41 @@ df.select { name.all().recursively(includeGroups = false) }
 ```
 
 </tab>
+<tab title="KProperties">
+
+```kotlin
+// by column name
+df.select { it[Person::name] }
+df.select { (Person::name)() }
+df.select { col(Person::name) }
+
+// by column path
+df.select { it[Person::name][Name::firstName] }
+df.select { Person::name[Name::firstName] }
+
+// with a new name
+df.select { Person::name named "Full Name" }
+
+// converted
+df.select { Person::name[Name::firstName].map { it.lowercase() } }
+
+// column arithmetics
+df.select { 2021 - (Person::age)() }
+
+// two columns
+df.select { Person::name and Person::age }
+
+// range of columns
+df.select { Person::name..Person::age }
+
+// all children of ColumnGroup
+df.select { Person::name.all() }
+
+// recursive traversal of all children columns excluding groups
+df.select { Person::name.all().recursively(includeGroups = false) }
+```
+
+</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -126,6 +162,7 @@ df.select { "name".all().recursively(includeGroups = false) }
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectors.html"/>
 <!---END-->
 
 **Select columns by column index:**
@@ -143,6 +180,7 @@ df.select { cols(0, 1, 3) }
 df.select { cols(1..4) }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.columnsSelectorByIndices.html"/>
 <!---END-->
 
 **Other column selectors:**
@@ -203,6 +241,7 @@ df.select { except { colsOf<String>() } }
 df.select { take(2) and col(3) }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectorsMisc.html"/>
 <!---END-->
 
 **Modify the set of selected columns:**
@@ -228,4 +267,5 @@ df.select { all().rec(includeGroups = false).except { age } }
 df.select { (colsOf<Int>() and age).distinct() }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectorsModifySet.html"/>
 <!---END-->

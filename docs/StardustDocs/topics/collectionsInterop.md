@@ -26,6 +26,7 @@ df.rows() // Iterable<DataRow>
 df.values() // Sequence<Any?>
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.getRowsColumns.html"/>
 <!---END-->
 
 ## Interop with data classes
@@ -42,6 +43,7 @@ data class Input(val a: Int, val b: Int)
 val list = listOf(Input(1, 2), Input(3, 4))
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Collections.listInterop1.html"/>
 <!---END-->
 
 You can convert this list into [`DataFrame`](DataFrame.md) using [`toDataFrame()`](createDataFrame.md#todataframe) extension:
@@ -52,6 +54,7 @@ You can convert this list into [`DataFrame`](DataFrame.md) using [`toDataFrame()
 val df = list.toDataFrame()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Collections.listInterop2.html"/>
 <!---END-->
 
 Mark original data class with [`DataSchema`](schemas.md) annotation to get [extension properties](extensionPropertiesApi.md) and perform data transformations.
@@ -65,6 +68,7 @@ data class Input(val a: Int, val b: Int)
 val df2 = df.add("c") { a + b }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Collections.listInterop3.html"/>
 <!---END-->
 
 <tip>
@@ -85,6 +89,7 @@ data class Output(val a: Int, val b: Int, val c: Int)
 val result = df2.toListOf<Output>()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Collections.listInterop4.html"/>
 <!---END-->
 
 ### Converting columns with objects instances to ColumnGroup

@@ -21,6 +21,7 @@ class MyType(val value: Int)
 class MySchema(val a: MyType, val b: MyType, val c: Int)
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.customConvertersData.html"/>
 <!---END-->
 <!---FUN customConverters-->
 
@@ -33,4 +34,5 @@ df.convertTo<MySchema> {
 }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.customConverters.html"/>
 <!---END-->

@@ -15,6 +15,7 @@ df.meanFor(skipNA = true) { age and weight } // mean of values per `age` and `we
 df.meanOf { (weight ?: 0) / age } // median of expression evaluated for every row
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.meanModes.html"/>
 <!---END-->
 
 <!---FUN meanAggregations-->
@@ -27,6 +28,7 @@ df.pivot { city }.mean()
 df.pivot { city }.groupBy { name.lastName }.mean()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.meanAggregations.html"/>
 <!---END-->
 
 See [statistics](summaryStatistics.md#groupby-statistics) for details on complex data aggregations.

@@ -1,0 +1,6 @@
+name: Build Writerside docs using Docker
+description: Build Writerside documentation artifacts
+
+runs:
+    using: 'docker'
+    image: 'Dockerfile'

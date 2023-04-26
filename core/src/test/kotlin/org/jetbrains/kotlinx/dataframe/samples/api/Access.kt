@@ -1,11 +1,13 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.junit.Test
 
 class Access : TestBase() {
 
     @Test
+    @TransformDataFrameExpressions
     fun getColumnByName_properties() {
         // SampleStart
         df.age
@@ -14,6 +16,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getColumnByName_accessors() {
         // SampleStart
         val age by column<Int>()
@@ -26,6 +29,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getColumnByName_strings() {
         // SampleStart
         df["age"]
@@ -34,6 +38,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getColumn_properties() {
         // SampleStart
         df.getColumn { age }
@@ -41,6 +46,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getColumn_accessors() {
         // SampleStart
         val age by column<Int>()
@@ -50,6 +56,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getColumn_strings() {
         // SampleStart
         df.getColumn("age")
@@ -57,6 +64,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getColumnOrNull_properties() {
         // SampleStart
         df.getColumnOrNull { age }
@@ -64,6 +72,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getColumnOrNull_accessors() {
         // SampleStart
         val age by column<Int>()
@@ -73,6 +82,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getColumnOrNull_strings() {
         // SampleStart
         df.getColumnOrNull("age")
@@ -80,6 +90,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getColumns_properties() {
         // SampleStart
         df.getColumns { age and name }
@@ -87,6 +98,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getColumns_accessors() {
         // SampleStart
         val age by column<Int>()
@@ -97,6 +109,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getColumns_strings() {
         // SampleStart
         df.getColumns("age", "name")
@@ -104,6 +117,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getColumnGroup_properties() {
         // SampleStart
         df.getColumnGroup { name }
@@ -111,6 +125,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getColumnGroup_accessors() {
         // SampleStart
         val name by columnGroup()
@@ -120,6 +135,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getColumnGroup_strings() {
         // SampleStart
         df.getColumnGroup("name")
@@ -127,6 +143,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getColumnByIndex() {
         // SampleStart
         df.getColumn(2)
@@ -135,6 +152,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getRowByIndex() {
         // SampleStart
         df[2]
@@ -142,6 +160,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getRowByCondition_properties() {
         // SampleStart
         df.single { age == 45 }
@@ -153,6 +172,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getRowByCondition_accessors() {
         // SampleStart
         val age by column<Int>()
@@ -169,6 +189,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getRowByCondition_strings() {
         // SampleStart
         df.single { "age"<Int>() == 45 }
@@ -180,6 +201,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getCell_strings() {
         // SampleStart
         df["age"][1]
@@ -188,6 +210,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getCell_properties() {
         // SampleStart
         df.age[1]
@@ -196,6 +219,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getCell_accessors() {
         // SampleStart
         val age by column<String>()
@@ -206,6 +230,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getColumnsByName_properties() {
         // SampleStart
         df[df.age, df.weight]
@@ -213,6 +238,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getColumnsByName_accessors() {
         // SampleStart
         val age by column<Int>()
@@ -223,6 +249,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getColumnsByName_strings() {
         // SampleStart
         df["age", "weight"]
@@ -230,6 +257,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun select_properties() {
         // SampleStart
         df.select { age and weight }
@@ -237,6 +265,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun select_accessors() {
         // SampleStart
         val age by column<Int>()
@@ -248,6 +277,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun select_strings() {
         // SampleStart
         df.select { "age" and "weight" }
@@ -256,6 +286,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getSeveralRowsByIndices() {
         // SampleStart
         df[0, 3, 4]
@@ -263,6 +294,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getSeveralRowsByRanges() {
         // SampleStart
         df[1..2]
@@ -271,6 +303,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun getRowsColumns() {
         // SampleStart
         df.columns() // List<DataColumn>
@@ -280,6 +313,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun take() {
         // SampleStart
         df.take(5)
@@ -287,6 +321,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun takeLast() {
         // SampleStart
         df.takeLast(5)
@@ -294,6 +329,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun takeWhile() {
         // SampleStart
         df.takeWhile { isHappy }
@@ -301,6 +337,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun drop() {
         // SampleStart
         df.drop(5)
@@ -308,6 +345,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun dropLast() {
         // SampleStart
         df.dropLast() // default 1
@@ -316,6 +354,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun dropWhile() {
         // SampleStart
         df.dropWhile { !isHappy }
@@ -323,6 +362,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun filter_properties() {
         // SampleStart
         df.filter { age > 18 && name.firstName.startsWith("A") }
@@ -330,6 +370,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun filter_accessors() {
         // SampleStart
         val age by column<Int>()
@@ -343,6 +384,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun filter_strings() {
         // SampleStart
         df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }
@@ -350,6 +392,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun filterBy_properties() {
         // SampleStart
         df.filterBy { isHappy }
@@ -357,6 +400,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun filterBy_accessors() {
         // SampleStart
         val isHappy by column<Boolean>()
@@ -365,6 +409,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun filterBy_strings() {
         // SampleStart
         df.filterBy("isHappy")
@@ -372,6 +417,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun dropWhere_properties() {
         // SampleStart
         df.drop { weight == null || city == null }
@@ -379,6 +425,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun dropWhere_accessors() {
         // SampleStart
         val name by columnGroup()
@@ -392,6 +439,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun dropWhere_strings() {
         // SampleStart
         df.drop { it["weight"] == null || it["city"] == null }
@@ -399,6 +447,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun dropNulls() {
         // SampleStart
         df.dropNulls() // remove rows with null value in any column
@@ -410,6 +459,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun dropNaNs() {
         // SampleStart
         df.dropNaNs() // remove rows containing NaN in any column
@@ -421,6 +471,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun dropNA() {
         // SampleStart
         df.dropNA() // remove rows containing null or NaN in any column
@@ -432,6 +483,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun byColumn_strings() {
         // SampleStart
         df["name"][0]
@@ -441,6 +493,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun byColumn_accessors() {
         // SampleStart
         val name by column<String>()
@@ -452,6 +505,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun byColumn_properties() {
         // SampleStart
         df.name[0]
@@ -461,6 +515,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun byRow_strings() {
         // SampleStart
         df[0]["name"]
@@ -470,6 +525,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun byRow_accessors() {
         // SampleStart
         val name by column<String>()
@@ -481,6 +537,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun byRow_properties() {
         // SampleStart
         df[0].name
@@ -490,6 +547,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun namedAndRenameCol() {
         // SampleStart
         val unnamedCol = columnOf("Alice", "Bob")
@@ -499,6 +557,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun namedColumnWithoutValues() {
         // SampleStart
         val name by column<String>()
@@ -507,6 +566,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun colRefForTypedAccess() {
         val df = dataFrameOf("name")("Alice", "Bob")
         val name by column<String>()
@@ -518,6 +578,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun iterableApi() {
         // SampleStart
         df.forEach { println(it) }
@@ -528,6 +589,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun distinct() {
         // SampleStart
         df.distinct()
@@ -535,6 +597,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun distinctColumns_properties() {
         // SampleStart
         df.distinct { age and name }
@@ -544,6 +607,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun distinctColumns_accessors() {
         // SampleStart
         val age by column<Int>()
@@ -555,6 +619,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun countDistinct() {
         // SampleStart
         df.countDistinct()
@@ -562,6 +627,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun countDistinctColumns_properties() {
         // SampleStart
         df.countDistinct { age and name }
@@ -569,6 +635,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun countDistinctColumns_accessors() {
         // SampleStart
         val age by column<Int>()
@@ -578,6 +645,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun countDistinctColumns_strings() {
         // SampleStart
         df.countDistinct("age", "name")
@@ -585,6 +653,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun distinctColumns_strings() {
         // SampleStart
         df.distinct("age", "name")
@@ -594,6 +663,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun distinctBy_properties() {
         // SampleStart
         df.distinctBy { age and name }
@@ -603,6 +673,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun distinctBy_accessors() {
         // SampleStart
         val age by column<Int>()
@@ -616,6 +687,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun distinctBy_strings() {
         // SampleStart
         df.distinctBy("age", "name")
@@ -625,6 +697,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun columnSelectorsUsages() {
         // SampleStart
         df.select { age and name }
@@ -638,6 +711,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun columnSelectors_properties() {
         // SampleStart
         // by column name
@@ -672,6 +746,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun columnSelectors_accessors() {
         // SampleStart
         // by column name
@@ -743,6 +818,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun columnSelectors_strings() {
         // SampleStart
         // by column name
@@ -776,6 +852,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun columnsSelectorByIndices() {
         // SampleStart
         // by index
@@ -790,6 +867,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun columnSelectorsMisc() {
         val df = df.add { "year" from { 0 } }
         // SampleStart
@@ -848,6 +926,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun columnSelectorsModifySet() {
         // SampleStart
         // first/last n columns in column set
@@ -870,6 +949,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun forRows_properties() {
         // SampleStart
         for (row in df) {
@@ -887,6 +967,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun forRows_accessors() {
         // SampleStart
         val age by column<Int>()
@@ -906,6 +987,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun forRows_strings() {
         // SampleStart
         for (row in df) {
@@ -923,6 +1005,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun forColumn() {
         // SampleStart
         df.columns().forEach {
@@ -932,6 +1015,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun forCells() {
         // SampleStart
         // from top to bottom, then from left to right
@@ -947,6 +1031,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun xs() {
         // SampleStart
         df.xs("Charlie", "Chaplin")
@@ -956,6 +1041,7 @@ class Access : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun values() {
         // SampleStart
         df.values()

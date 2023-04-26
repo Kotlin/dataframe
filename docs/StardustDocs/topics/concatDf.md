@@ -10,6 +10,7 @@ Returns [`DataFrame`](DataFrame.md) with the union of rows from several given [`
 df.concat(df1, df2)
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.concatDfs.html"/>
 <!---END-->
 
 <!---FUN concatIterable-->
@@ -18,6 +19,7 @@ df.concat(df1, df2)
 listOf(df1, df2).concat()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.concatIterable.html"/>
 <!---END-->
 
 See [all use cases of 'concat' operation](concat.md).
