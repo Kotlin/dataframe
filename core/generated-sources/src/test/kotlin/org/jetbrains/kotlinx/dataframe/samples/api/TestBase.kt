@@ -5,9 +5,30 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.explainer.PluginCallbackProxy
 import org.jetbrains.kotlinx.dataframe.impl.columns.asValueColumn
+import org.junit.After
+import org.junit.Before
 
 public open class TestBase {
+
+    companion object {
+        internal const val OUTPUTS = "DATAFRAME_SAVE_OUTPUTS"
+    }
+
+    @Before
+    fun start() {
+        if (System.getenv(OUTPUTS) != null) {
+            PluginCallbackProxy.start()
+        }
+    }
+
+    @After
+    fun save() {
+        if (System.getenv(OUTPUTS) != null) {
+            PluginCallbackProxy.save()
+        }
+    }
 
     val df = dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(
         "Alice", "Cooper", 15, "London", 54, true,
