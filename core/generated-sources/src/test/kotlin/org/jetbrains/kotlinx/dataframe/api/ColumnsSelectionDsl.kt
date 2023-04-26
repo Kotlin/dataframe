@@ -491,4 +491,13 @@ open class ColumnsSelectionDslTests : TestBase() {
 //            df.select { it["name"][0..1] },
         ).shouldAllBeEqual()
     }
+
+    @Test
+    fun roots() {
+        df.select { cols(name.firstName, name.lastName, age).roots() } shouldBe
+            df.select { cols(name.firstName, name.lastName, age) }
+
+        df.select { cols(name.firstName, name.lastName, age, name).roots() } shouldBe
+            df.select { cols(name, age) }
+    }
 }
