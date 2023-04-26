@@ -208,6 +208,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][select]` { `[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * `df.`[select][select]` { myColumnGroup.`[first][first]`() }`
+     *
+     * `df.`[select][select]` { "pathTo"["myColumnGroup"].`[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun SingleColumn<*>.first(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         all().first(condition)
@@ -218,14 +220,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][select]` { "myColumnGroup".`[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun String.first(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        colGroup(this).first(condition)
-
-    /**
-     * @include [CommonFirstDocs]
-     * @arg [CommonFirstDocs.Examples]
-     * `df.`[select][select]` { "pathTo"["myColumnGroup"].`[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     */
-    public fun ColumnPath.first(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         colGroup(this).first(condition)
 
     /**
@@ -271,6 +265,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][select]` { `[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * `df.`[select][select]` { myColumnGroup.`[last][last]`() }`
+     *
+     * `df.`[select][select]` { "pathTo"["myColumnGroup"].`[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun SingleColumn<*>.last(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         all().last(condition)
@@ -281,14 +277,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][select]` { "myColumnGroup".`[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun String.last(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        colGroup(this).last(condition)
-
-    /**
-     * @include [CommonLastDocs]
-     * @arg [CommonLastDocs.Examples]
-     * `df.`[select][select]` { "pathTo"["myColumnGroup"].`[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     */
-    public fun ColumnPath.last(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         colGroup(this).last(condition)
 
     /**
@@ -334,6 +322,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][select]` { `[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * `df.`[select][select]` { myColumnGroup.`[single][single]`() }`
+     *
+     * `df.`[select][select]` { "pathTo"["myColumnGroup"].`[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun SingleColumn<*>.single(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         all().single(condition)
@@ -344,14 +334,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][select]` { "myColumnGroup".`[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun String.single(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        colGroup(this).single(condition)
-
-    /**
-     * @include [CommonSingleDocs]
-     * @arg [CommonSingleDocs.Examples]
-     * `df.`[select][select]` { "pathTo"["myColumnGroup"].`[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     */
-    public fun ColumnPath.single(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         colGroup(this).single(condition)
 
     /**
@@ -942,16 +924,17 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][select]` { myColumnGroup`.[cols][cols]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
      *
-     * `// same as `[all][all]
+     * `df.`[select][select]` { `[cols][cols]`() } // same as `[all][all]
      *
-     * `df.`[select][select]` { `[cols][cols]`() }`
+     * `df.`[select][select]` { "pathTo"["myGroupCol"].`[cols][cols]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
+     *
+     * `df.`[select][select]` { "pathTo"["myGroupCol"]`[`[`][cols]`{ it.`[any\][ColumnWithPath.any\]` { it == "Alice" } }`[`]`][cols]` }`
+     *
+     * `df.`[select][select]` { "pathTo"["myGroupCol"].`[cols][cols]`() } // identity call, same as `[all][all]
      *
      * `// NOTE: there's a `[DataFrame.get]` overload that prevents this:`
      *
      * `df.`[select][select]` { myColumnGroup`[`[`][cols]`{ ... }`[`]`][cols]` }`
-     *
-     * `// use `[cols][cols]` instead`
-     * `df.`[select][select]` { myColumnGroup`.[cols][cols]` { ... } }`
      *
      * @see [all\]
      */
@@ -991,32 +974,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /** @include [StringColsPredicateDocs] */
     public operator fun String.get(
-        predicate: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<Any?> = cols(predicate)
-
-    /**
-     * @include [CommonColsDocs.Predicate]
-     * @arg [CommonColsDocs.Examples]
-     *
-     * `df.`[select][select]` { "pathTo"["myGroupCol"].`[cols][cols]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
-     *
-     * `df.`[select][select]` { "pathTo"["myGroupCol"]`[`[`][cols]`{ it.`[any\][ColumnWithPath.any\]` { it == "Alice" } }`[`]`][cols]` }`
-     *
-     * `// identity call, same as `[all][all]
-     *
-     * `df.`[select][select]` { "pathTo"["myGroupCol"].`[cols][cols]`() }`
-     *
-     * @see [all\]
-     */
-    private interface ColumnPathColsPredicateDocs
-
-    /** @include [ColumnPathColsPredicateDocs] */
-    public fun ColumnPath.cols(
-        predicate: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> = colGroup(this).cols(predicate)
-
-    /** @include [ColumnPathColsPredicateDocs] */
-    public operator fun ColumnPath.get(
         predicate: ColumnFilter<*> = { true },
     ): TransformableColumnSet<Any?> = cols(predicate)
 
@@ -1091,6 +1048,12 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][select]` { myColumnGroup.`[cols][cols]`(columnA, columnB) }`
      *
+     * `df.`[select][select]` { "pathTo"["columnGroup"].`[cols][cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][select]` { "pathTo"["columnGroup"].`[cols][cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
+     *
+     * `df.`[select][select]` { "pathTo"["columnGroup"]`[`[`][cols]`columnA, columnB`[`]`][cols]` }`
+     *
      * `// NOTE: there's a `[DataFrame.get]` overload that prevents this:`
      *
      * `df.`[select][select]` { myColumnGroup`[`[`][cols]`columnA, columnB`[`]`][cols]` }`
@@ -1136,30 +1099,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /** @include [StringColsVarargColumnReferenceDocs] */
     public operator fun <C> String.get(
-        firstCol: ColumnReference<C>,
-        vararg otherCols: ColumnReference<C>,
-    ): ColumnSet<C> = cols(firstCol, *otherCols)
-
-    /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
-     * @arg [CommonColsDocs.Examples]
-     *
-     * `df.`[select][select]` { "pathTo"["columnGroup"].`[cols][cols]`(columnA, columnB) }`
-     *
-     * `df.`[select][select]` { "pathTo"["columnGroup"].`[cols][cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
-     *
-     * `df.`[select][select]` { "pathTo"["columnGroup"]`[`[`][cols]`columnA, columnB`[`]`][cols]` }`
-     */
-    private interface ColumnPathColsVarargColumnReferenceDocs
-
-    /** @include [ColumnPathColsVarargColumnReferenceDocs] */
-    public fun <C> ColumnPath.cols(
-        firstCol: ColumnReference<C>,
-        vararg otherCols: ColumnReference<C>,
-    ): ColumnSet<C> = colGroup(this).cols(firstCol, *otherCols)
-
-    /** @include [ColumnPathColsVarargColumnReferenceDocs] */
-    public operator fun <C> ColumnPath.get(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
     ): ColumnSet<C> = cols(firstCol, *otherCols)
@@ -1228,6 +1167,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][select]` { myColumnGroup.`[cols][cols]`("columnA", "columnB") }`
      *
+     * `df.`[select][select]` { "pathTo"["columnGroup"].`[cols][cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][select]` { "pathTo"["columnGroup"]`[`[`][cols]`"columnA", "columnB"`[`]`][cols]` }`
+     *
      * `// NOTE: there's a `[DataFrame.get]` overload that prevents this:`
      *
      * `df.`[select][select]` { myColumnGroup`[`[`][cols]`"columnA", "columnB"`[`]`][cols]` }`
@@ -1269,28 +1212,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /** @include [StringColsVarargStringDocs] */
     public operator fun String.get(
-        firstCol: String,
-        vararg otherCols: String,
-    ): ColumnSet<*> = cols(firstCol, *otherCols)
-
-    /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [String]}
-     * @arg [CommonColsDocs.Examples]
-     *
-     * `df.`[select][select]` { "pathTo"["columnGroup"].`[cols][cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][select]` { "pathTo"["columnGroup"]`[`[`][cols]`"columnA", "columnB"`[`]`][cols]` }`
-     */
-    private interface ColumnPathColsVarargStringDocs
-
-    /** @include [ColumnPathColsVarargStringDocs] */
-    public fun ColumnPath.cols(
-        firstCol: String,
-        vararg otherCols: String,
-    ): ColumnSet<*> = colGroup(this).cols(firstCol, *otherCols)
-
-    /** @include [ColumnPathColsVarargStringDocs] */
-    public operator fun ColumnPath.get(
         firstCol: String,
         vararg otherCols: String,
     ): ColumnSet<*> = cols(firstCol, *otherCols)
@@ -1356,6 +1277,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][select]` { myColumnGroup.`[cols][cols]`(Type::colA, Type::colB) }`
      *
      * `df.`[select][select]` { myColumnGroup`[`[`][cols]`Type::colA, Type::colB`[`]`][cols]` }`
+     *
+     * `df.`[select][select]` { "pathTo"["columnGroup"].`[cols][cols]`(Type::colA, Type::colB) }`
+     *
+     * `df.`[select][select]` { "pathTo"["columnGroup"]`[`[`][cols]`Type::colA, Type::colB`[`]`][cols]` }`
      */
     private interface SingleColumnColsVarargKPropertyDocs
 
@@ -1391,28 +1316,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /** @include [StringColsVarargKPropertyDocs] */
     public operator fun <C> String.get(
-        firstCol: KProperty<C>,
-        vararg otherCols: KProperty<C>,
-    ): ColumnSet<C> = cols(firstCol, *otherCols)
-
-    /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [KProperty]}
-     * @arg [CommonColsDocs.Examples]
-     *
-     * `df.`[select][select]` { "pathTo"["columnGroup"].`[cols][cols]`(Type::colA, Type::colB) }`
-     *
-     * `df.`[select][select]` { "pathTo"["columnGroup"]`[`[`][cols]`Type::colA, Type::colB`[`]`][cols]` }`
-     */
-    private interface ColumnPathColsVarargKPropertyDocs
-
-    /** @include [ColumnPathColsVarargKPropertyDocs] */
-    public fun <C> ColumnPath.cols(
-        firstCol: KProperty<C>,
-        vararg otherCols: KProperty<C>,
-    ): ColumnSet<C> = colGroup(this).cols(firstCol, *otherCols)
-
-    /** @include [ColumnPathColsVarargKPropertyDocs] */
-    public operator fun <C> ColumnPath.get(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
     ): ColumnSet<C> = cols(firstCol, *otherCols)
@@ -1476,16 +1379,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         vararg otherIndices: Int,
     ): ColumnSet<*> = cols(firstIndex, *otherIndices)
 
-    public fun ColumnPath.cols(
-        firstIndex: Int,
-        vararg otherIndices: Int,
-    ): ColumnSet<*> = colGroup(this).cols(firstIndex, *otherIndices)
-
-    public operator fun ColumnPath.get(
-        firstIndex: Int,
-        vararg otherIndices: Int,
-    ): ColumnSet<*> = cols(firstIndex, *otherIndices)
-
     public fun KProperty<*>.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
@@ -1505,8 +1398,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public operator fun <C> ColumnSet<C>.get(range: IntRange): ColumnSet<C> = cols(range)
 
-    public fun SingleColumn<*>.cols(range: IntRange): ColumnSet<*> =
-        colsInternal(range)
+    public fun SingleColumn<*>.cols(range: IntRange): ColumnSet<*> = colsInternal(range)
 
     /**
      * {@comment this function is shadowed by [ColumnGroup.get] for accessors}
@@ -1516,10 +1408,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun String.cols(range: IntRange): ColumnSet<*> = colGroup(this).cols(range)
 
     public operator fun String.get(range: IntRange): ColumnSet<*> = cols(range)
-
-    public fun ColumnPath.cols(range: IntRange): ColumnSet<*> = colGroup(this).cols(range)
-
-    public operator fun ColumnPath.get(range: IntRange): ColumnSet<*> = cols(range)
 
     public fun KProperty<*>.cols(range: IntRange): ColumnSet<*> = colGroup(this).cols(range)
 
@@ -1588,10 +1476,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * ## All
      * Creates a new [ColumnSet] that contains all columns from the current [ColumnSet].
      *
-     * If the current [ColumnSet] is a [SingleColumn] (and thus consists of only one column (or [column group][ColumnGroup])),
+     * If the current [ColumnSet] is a [SingleColumn] and consists of only one [column group][ColumnGroup],
      * then `all` will create a new [ColumnSet] consisting of its children.
      *
-     * This makes the function essentially equivalent to [cols()][ColumnSet.cols].
+     * This makes the function equivalent to [cols()][ColumnSet.cols].
      *
      * #### For example:
      * `df.`[move][DataFrame.move]` { `[all][ColumnSet.all]`().`[recursively][recursively]`() }.`[under][MoveClause.under]`("info")`
@@ -1688,18 +1576,24 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * Modifies the previous call to run not only on the current column set,
      * but also on all columns inside [column groups][ColumnGroup].
      *
-     * For example:
-     *
      * `df.`[select][DataFrame.select]` { `[colsOf][ColumnSet.colsOf]`<`[String][String]`>() }`
      *
      * returns all columns of type [String] in the top-level, as expected. However, what if you want ALL
-     * columns of type [String] even if they are inside a nested column group? Then you can use [recursively]:
+     * columns of type [String] even if they are inside a nested [column group][ColumnGroup]? Then you can use [recursively]:
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][ColumnSet.colsOf]`<`[String][String]`>().`[recursively][recursively]`() }`
      *
-     * This will return the columns of type [String] in all levels (unless [includeTopLevel\]` == true`).
+     * This will return the columns of type [String] in all levels.
      *
-     * TODO
+     * More examples:
+     *
+     * `df.`[select][DataFrame.select]` { `[first][ColumnSet.first]` { col -> col.`[any][DataColumn.any]` { it == "Alice" } }.`[recursively][recursively]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnSet.cols]` { "name" in it.`[name][ColumnReference.name]` }.`[recursively][recursively]`() }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [CommonRecursivelyDocs.Examples]}
      *
      * @param [includeGroups\] Whether to include [column groups][ColumnGroup] in the result. `true` by default.
      * @param [includeTopLevel\] Whether to include the top-level columns in the result. `true` by default.
@@ -1712,15 +1606,20 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonRecursivelyDocs]
+     * @arg [CommonRecursivelyDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnSet.colsOf]`<`[String][String]`>().`[recursively][recursively]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[all][ColumnSet.all]`().`[rec][rec]`(includeGroups = false) }`
+     *
+     * `df.`[select][DataFrame.select]` { `[groups][ColumnSet.groups]`().`[recursively][recursively]`(includeTopLevel = false) }`
      */
     public fun <C> TransformableColumnSet<C>.recursively(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
     ): ColumnSet<C> = recursivelyImpl(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
-    /**
-     * @include [CommonRecursivelyDocs]
-     */
+    /** @include [TransformableColumnSet.recursively] */
     public fun <C> TransformableColumnSet<C>.rec(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
@@ -1728,15 +1627,18 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonRecursivelyDocs]
+     * @arg [CommonRecursivelyDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { `[first][ColumnSet.first]` { col -> col.`[any][DataColumn.any]` { it == "Alice" } }.`[recursively][recursively]`(includeTopLevel = false) }`
+     *
+     * `df.`[select][DataFrame.select]` { `[single][ColumnSet.single]` { it.name == "myCol" }.`[rec][rec]`(includeGroups = false) }`
      */
     public fun TransformableSingleColumn<*>.recursively(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
     ): SingleColumn<*> = recursivelyImpl(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
-    /**
-     * @include [CommonRecursivelyDocs]
-     */
+    /** @include [TransformableSingleColumn.recursively] */
     public fun TransformableSingleColumn<*>.rec(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
@@ -1746,9 +1648,20 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * ## All Recursively / All Rec
      *
      * Returns all columns in the current [ColumnSet], including all columns that are nested
-     * inside [column groups][ColumnGroup].
+     * inside [column groups][ColumnGroup]. Similar to [all][ColumnSet.all], if [this\] is a [SingleColumn] containing
+     * a single [column group][ColumnGroup], then the operation will be applied to the single [column group][ColumnGroup].
      *
-     * TODO
+     * This can be seen as a shortcut to [all][ColumnSet.all]`().`[recursively][TransformableColumnSet.recursively]`()`.
+     *
+     * For example:
+     *
+     * `df.`[select][DataFrame.select]` { `[allRec][allRec]`(includeGroups = false) }`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[allRecursively][allRecursively]`() }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [CommonAllRecursivelyDocs.Examples]}
      *
      * @param [includeGroups\] Whether to include [column groups][ColumnGroup] in the result. `true` by default.
      * @param [includeTopLevel\] Whether to include the top-level columns in the result. `true` by default.
@@ -1761,6 +1674,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonAllRecursivelyDocs]
+     * @arg [CommonAllRecursivelyDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][cols]`(colA, colGroupB).`[allRecursively][ColumnSet.allRecursively]`(includeGroups = false) }`
      */
     public fun ColumnSet<*>.allRecursively(
         includeGroups: Boolean = true,
@@ -1768,7 +1684,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     ): ColumnSet<*> = flattenRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
     /**
-     * @include [CommonAllRecursivelyDocs]
+     * @include [ColumnSet.allRecursively]
      */
     public fun ColumnSet<*>.allRec(
         includeGroups: Boolean = true,
@@ -1777,6 +1693,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonAllRecursivelyDocs]
+     * @arg [CommonAllRecursivelyDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { `[allRecursively][ColumnSet.allRecursively]`(includeGroups = false) }`
+     *
+     * `df.`[select][DataFrame.select]` { colA `[and][ColumnSet.and]` colGroupB.`[allRec][ColumnSet.allRec]`() }`
      */
     public fun SingleColumn<*>.allRecursively(
         includeGroups: Boolean = true,
@@ -1784,7 +1705,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     ): ColumnSet<*> = flattenRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
     /**
-     * @include [CommonAllRecursivelyDocs]
+     * @include [SingleColumn.allRecursively] {@comment IntelliJ plugin shows this wrong, gradle plugin will work fine}
      */
     public fun SingleColumn<*>.allRec(
         includeGroups: Boolean = true,
@@ -1793,14 +1714,20 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonAllRecursivelyDocs]
+     * @arg [CommonAllRecursivelyDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { "colGroupA".`[allRecursively][ColumnSet.allRecursively]`(includeGroups = false) }`
+     *
+     * `df.`[select][DataFrame.select]` { colA `[and][ColumnSet.and]` "colGroupB".`[allRec][ColumnSet.allRec]`() }`
      */
     public fun String.allRecursively(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
-    ): ColumnSet<*> = toColumnAccessor().allRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+    ): ColumnSet<*> =
+        toColumnAccessor().allRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
     /**
-     * @include [CommonAllRecursivelyDocs]
+     * @include [String.allRecursively]
      */
     public fun String.allRec(
         includeGroups: Boolean = true,
@@ -1809,19 +1736,26 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonAllRecursivelyDocs]
+     * @arg [CommonAllRecursivelyDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { Type::columnGroupA.`[allRecursively][ColumnSet.allRecursively]`(includeGroups = false) }`
+     *
+     * `df.`[select][DataFrame.select]` { colA `[and][ColumnSet.and]` Type::columnGroupB.`[allRec][ColumnSet.allRec]`() }`
      */
     public fun KProperty<*>.allRecursively(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
-    ): ColumnSet<*> = toColumnAccessor().allRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+    ): ColumnSet<*> =
+        toColumnAccessor().allRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
     /**
-     * @include [CommonAllRecursivelyDocs]
+     * @include [KProperty.allRecursively]
      */
     public fun KProperty<*>.allRec(
         includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
-    ): ColumnSet<*> = toColumnAccessor().allRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+    ): ColumnSet<*> =
+        toColumnAccessor().allRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
 
     // endregion
 
@@ -1956,9 +1890,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     // endregion
 
     // region groups
+    public fun ColumnSet<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
+        groupsInternal(filter)
 
     public fun SingleColumn<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
-        children { it.isColumnGroup() && filter(it.asColumnGroup()) } as TransformableColumnSet<AnyRow>
+        groupsInternal(filter)
 
     public fun String.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
         toColumnAccessor().groups(filter)
@@ -2004,9 +1940,15 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * In practice, this means that if a column in [this] is a child of another column in [this],
      * it will not be included in the result.
      *
-     * TODO example and SingleColumn case
+     * If [this] is a [SingleColumn] containing a single [ColumnGroup] it will run on the children of that group,
+     * else it simply runs on the columns in the [ColumnSet] itself.
      */
-    public fun <C> ColumnSet<C>.roots(): ColumnSet<C> = transform { it.roots() }
+    public fun <C> ColumnSet<C>.roots(): ColumnSet<C> = rootsInternal() as ColumnSet<C>
+
+    /**
+     * @include [roots]
+     */
+    public fun SingleColumn<*>.roots(): ColumnSet<*> = rootsInternal()
 
     public fun <C> ColumnSet<C>.takeWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
         transform { it.takeWhile(predicate) }
@@ -2235,6 +2177,12 @@ internal fun ColumnSet<*>.colsInternal(range: IntRange): TransformableColumnSet<
         it.subList(range.first, range.last + 1)
     }
 
+internal fun ColumnSet<*>.rootsInternal(): ColumnSet<*> =
+    allInternal().transform { it.roots() }
+
+internal fun ColumnSet<*>.groupsInternal(filter: (ColumnGroup<*>) -> Boolean): TransformableColumnSet<AnyRow> =
+    colsInternal { it.isColumnGroup() && filter(it.asColumnGroup()) } as TransformableColumnSet<AnyRow>
+
 /**
  * If [this] is a [SingleColumn] containing a single [ColumnGroup], it
  * returns a [(transformable) ColumnSet][TransformableColumnSet] containing the children of this [ColumnGroup],
@@ -2242,7 +2190,7 @@ internal fun ColumnSet<*>.colsInternal(range: IntRange): TransformableColumnSet<
  */
 internal fun <C> ColumnSet<C>.allInternal(): TransformableColumnSet<C> =
     transform {
-        if (isSingleColumnWithGroup(it)) {
+        if (this.isSingleColumnWithGroup(it)) {
             it.single().children()
         } else {
             it

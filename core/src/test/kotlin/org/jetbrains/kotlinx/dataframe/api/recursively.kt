@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.jetbrains.kotlinx.dataframe.samples.api.city
@@ -61,18 +62,20 @@ class Recursively : TestBase() {
         dfGroup.getColumnsWithPaths { name.children() }.print()
     }
 
+    @Test
+    fun `groups`() {
+        listOf(
+            df.select { name },
+            df.select { groups().recursively() },
+            df.select { groups() },
+            df.select { all().groups() },
+            df.select { all().groups().rec() },
+        ).shouldAllBeEqual()
 
-//    @Test
-//    fun `combination`() {
-//        dfGroup.getColumnsWithPaths {
-//            cols { it.name in listOf("name", "firstName") }
-//                .last().recursively()
-//        } shouldNotBe
-//            dfGroup.getColumnsWithPaths {
-//                cols { it.name in listOf("name", "firstName") }.recursively()
-//                    .last().recursively()
-//            }
-//    }
+        dfGroup.select { groups() } shouldBe dfGroup.select { name }
+        dfGroup.select { groups().rec() } shouldBe dfGroup.select { name and name.firstName }
+        dfGroup.select { groups().rec(includeTopLevel = false) } shouldBe dfGroup.select { name.firstName }
+    }
 
     @Test
     fun `all recursively`() {
