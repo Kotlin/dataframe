@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.rightJoin
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.junit.Test
 
 class Join : TestBase() {
@@ -24,6 +25,7 @@ class Join : TestBase() {
     private val other = df.add("year") { 2021 - age }.select { name and city and "year" }
 
     @Test
+    @TransformDataFrameExpressions
     fun join_properties() {
         // SampleStart
         df.join(other) { name and city }
@@ -31,6 +33,7 @@ class Join : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun join_accessors() {
         // SampleStart
         val name by columnGroup()
@@ -41,6 +44,7 @@ class Join : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun join_strings() {
         // SampleStart
         df.join(other, "name", "city")
@@ -48,6 +52,7 @@ class Join : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun joinDefault() {
         // SampleStart
         df.join(other)
@@ -58,6 +63,7 @@ class Join : TestBase() {
     val DataFrame<Right>.fullName: ColumnGroup<Name> get() = getColumnGroup("fullName").cast()
 
     @Test
+    @TransformDataFrameExpressions
     fun joinWithMatch_properties() {
         val other = other.rename { name }.into("fullName").cast<Right>()
         val joined =
@@ -69,6 +75,7 @@ class Join : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun joinWithMatch_accessors() {
         val other = df.add("year") { 2021 - age }.select { name named "fullName" and "year" }
         // SampleStart
@@ -80,6 +87,7 @@ class Join : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun joinWithMatch_strings() {
         val other = df.add("year") { 2021 - age }.select { name named "fullName" and "year" }
         // SampleStart
@@ -88,6 +96,7 @@ class Join : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun joinSpecial_properties() {
         // SampleStart
         df.innerJoin(other) { name and city }
@@ -99,6 +108,7 @@ class Join : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun joinSpecial_accessors() {
         // SampleStart
         val name by columnGroup()
@@ -113,6 +123,7 @@ class Join : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun joinSpecial_strings() {
         // SampleStart
         df.innerJoin(other, "name", "city")

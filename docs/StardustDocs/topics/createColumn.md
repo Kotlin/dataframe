@@ -14,6 +14,7 @@ Returns new column with given elements. Column [`type`](DataColumn.md#properties
 val student by columnOf("Alice", "Bob")
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createValueByColumnOf.html"/>
 <!---END-->
 
 To assign column name explicitly, use `named` infix function and replace `by` with `=`.
@@ -24,6 +25,7 @@ To assign column name explicitly, use `named` infix function and replace `by` wi
 val column = columnOf("Alice", "Bob") named "student"
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createColumnRenamed.html"/>
 <!---END-->
 
 When column elements are columns themselves, it returns [`ColumnGroup`](DataColumn.md#columngroup):
@@ -38,6 +40,7 @@ val lastName by columnOf("Cooper", "Marley")
 val fullName by columnOf(firstName, lastName)
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createColumnGroup.html"/>
 <!---END-->
 
 When column elements are [`DataFrames`](DataFrame.md) it returns [`FrameColumn`](DataColumn.md#framecolumn):
@@ -52,6 +55,7 @@ val df2 = dataFrameOf("name", "temp")("Charlie", 36.6)
 val frames by columnOf(df1, df2)
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createFrameColumn.html"/>
 <!---END-->
 
 ### toColumn
@@ -64,6 +68,7 @@ Converts `Iterable` of values into column.
 listOf("Alice", "Bob").toColumn("name")
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createValueByToColumn.html"/>
 <!---END-->
 
 To compute column type at runtime by scanning through actual values, set `Infer.Type` option. 
@@ -80,6 +85,7 @@ values.toColumn("data", Infer.Type) // type: Number
 values.toColumn("data", Infer.Nulls) // type: Any
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createValueColumnInferred.html"/>
 <!---END-->
 
 ### toColumnOf
@@ -94,6 +100,7 @@ val values: List<Any?> = listOf(1, 2.5)
 values.toColumnOf<Number?>("data") // type: Number?
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createValueColumnOfType.html"/>
 <!---END-->
 
 

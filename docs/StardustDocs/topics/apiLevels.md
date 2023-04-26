@@ -52,6 +52,7 @@ DataFrame.read("titanic.csv")
     }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.strings.html"/>
 <!---END-->
 
 </tab>
@@ -73,6 +74,7 @@ DataFrame.read("titanic.csv")
     .filter { survived() && home().endsWith("NY") && age()!! in 10..20 }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.accessors3.html"/>
 <!---END-->
 
 </tab>
@@ -100,6 +102,7 @@ val passengers = DataFrame.read("titanic.csv")
     .toListOf<Passenger>()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.kproperties1.html"/>
 <!---END-->
 
 </tab>
@@ -112,6 +115,7 @@ val passengers = DataFrame.read("titanic.csv")
 val df = DataFrame.read("titanic.csv")
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.extensionProperties1.html"/>
 <!---END-->
 
 <!---FUN extensionProperties2-->
@@ -122,6 +126,7 @@ df.add("lastName") { name.split(",").last() }
     .filter { survived && home.endsWith("NY") && age in 10..20 }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.extensionProperties2.html"/>
 <!---END-->
 
 </tab>
