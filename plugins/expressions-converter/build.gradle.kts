@@ -3,6 +3,7 @@ plugins {
     kotlin("jvm")
     id("com.github.johnrengelman.shadow") version "7.1.2"
     kotlin("libs.publisher")
+    id("org.jmailen.kotlinter")
 }
 
 group = "org.jetbrains.kotlinx.dataframe"
@@ -44,6 +45,14 @@ tasks.test {
         setLibraryProperty("org.jetbrains.kotlin.test.kotlin-script-runtime", "kotlin-script-runtime")
         setLibraryProperty("org.jetbrains.kotlin.test.kotlin-annotations-jvm", "kotlin-annotations-jvm")
     }
+}
+
+kotlinter {
+    ignoreFailures = false
+    reporters = arrayOf("checkstyle", "plain")
+    disabledRules = arrayOf(
+        "max-line-length",
+    )
 }
 
 sourceSets {

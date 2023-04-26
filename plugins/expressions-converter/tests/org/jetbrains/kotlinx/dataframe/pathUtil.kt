@@ -67,7 +67,6 @@ private fun splitJarUrl(url: String): Pair<String, String>? {
                 jarPath = jarPath.substring(1)
             }
         }
-
     }
     return Pair(jarPath, resourcePath)
 }
