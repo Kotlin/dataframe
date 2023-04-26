@@ -740,7 +740,7 @@ class Access : TestBase() {
         df.select { name.all() }
 
         // recursive traversal of all children columns excluding ColumnGroups
-        df.select { name.all().recursively(includeGroups = false) }
+        df.select { name.allRecursively(includeGroups = false) }
 
         // SampleEnd
     }
@@ -778,7 +778,7 @@ class Access : TestBase() {
         df.select { name.all() }
 
         // recursive traversal of all children columns excluding ColumnGroups
-        df.select { name.all().recursively(includeGroups = false) }
+        df.select { name.allRecursively(includeGroups = false) }
         // SampleEnd
     }
 
@@ -813,7 +813,7 @@ class Access : TestBase() {
         df.select { Person::name.all() }
 
         // recursive traversal of all children columns excluding groups
-        df.select { Person::name.all().recursively(includeGroups = false) }
+        df.select { Person::name.allRecursively(includeGroups = false) }
         // SampleEnd
     }
 
@@ -847,7 +847,7 @@ class Access : TestBase() {
         df.select { "name".all() }
 
         // recursive traversal of all children columns excluding groups
-        df.select { "name".all().recursively(includeGroups = false) }
+        df.select { "name".allRecursively(includeGroups = false) }
         // SampleEnd
     }
 
@@ -906,10 +906,10 @@ class Access : TestBase() {
         }
 
         // recursive traversal of all columns, excluding ColumnGroups from result
-        df.select { all().recursively(includeGroups = false) }
+        df.select { allRecursively(includeGroups = false) }
 
         // depth-first-search traversal of all columns, including ColumnGroups in result
-        df.select { all().recursively() }
+        df.select { allRecursively() }
 
         // recursive traversal with condition
         df.select { cols { it.name().contains(":") }.recursively() }
@@ -930,18 +930,18 @@ class Access : TestBase() {
     fun columnSelectorsModifySet() {
         // SampleStart
         // first/last n columns in column set
-        df.select { all().rec(includeGroups = false).take(3) }
-        df.select { all().rec(includeGroups = false).takeLast(3) }
+        df.select { allRec(includeGroups = false).take(3) }
+        df.select { allRec(includeGroups = false).takeLast(3) }
 
         // all except first/last n columns in column set
-        df.select { all().rec(includeGroups = false).drop(3) }
-        df.select { all().rec(includeGroups = false).dropLast(3) }
+        df.select { allRec(includeGroups = false).drop(3) }
+        df.select { allRec(includeGroups = false).dropLast(3) }
 
         // filter column set by condition
-        df.select { all().rec(includeGroups = false).filter { it.name().startsWith("year") } }
+        df.select { allRec(includeGroups = false).filter { it.name().startsWith("year") } }
 
         // exclude columns from column set
-        df.select { all().rec(includeGroups = false).except { age } }
+        df.select { allRec(includeGroups = false).except { age } }
 
         // keep only unique columns
         df.select { (colsOf<Int>() and age).distinct() }
