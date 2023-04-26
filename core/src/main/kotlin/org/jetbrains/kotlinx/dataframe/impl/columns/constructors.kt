@@ -162,7 +162,6 @@ internal fun <C> createTransformableColumnSet(
     ): List<ColumnWithPath<C>> = transformResolve(context, transformer)
 }
 
-
 // region toColumnSet
 
 // region DSL

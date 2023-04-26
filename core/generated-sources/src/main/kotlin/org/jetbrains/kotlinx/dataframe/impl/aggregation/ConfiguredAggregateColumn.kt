@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation
 
-import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.columns.*
 
 internal class ConfiguredAggregateColumn<C> private constructor(

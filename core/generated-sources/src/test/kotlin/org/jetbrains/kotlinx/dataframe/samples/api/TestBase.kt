@@ -66,7 +66,6 @@ public open class TestBase {
         val isHappy: Boolean
     }
 
-
     infix fun <T, U : T> T.willBe(expected: U?) = shouldBe(expected)
 
     fun <T> Iterable<T>.shouldAllBeEqual(): Iterable<T> {

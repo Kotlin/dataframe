@@ -1,7 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
-import org.jetbrains.kotlinx.dataframe.columns.*
-import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
+import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
+import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
+import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 
 /**
  * ## Transformable ColumnSet
