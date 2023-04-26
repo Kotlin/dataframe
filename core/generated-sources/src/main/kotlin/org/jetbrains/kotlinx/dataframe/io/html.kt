@@ -114,7 +114,7 @@ internal fun tableJs(columns: List<ColumnDataForJs>, id: Int, rootId: Int, nrow:
 }
 
 internal var tableInSessionId = 0
-internal val sessionId = (Random().nextInt() % 128) shl 24
+internal var sessionId = (Random().nextInt() % 128) shl 24
 internal fun nextTableId() = sessionId + (tableInSessionId++)
 
 internal fun AnyFrame.toHtmlData(
@@ -217,7 +217,11 @@ public fun <T> DataFrame<T>.toHTML(
  * Container for HTML page data in form of String
  * Can be used to compose rendered dataframe tables with additional HTML elements
  */
-public data class DataFrameHtmlData(val style: String = "", val body: String = "", val script: String = "") {
+public data class DataFrameHtmlData(
+    @Language("css") val style: String = "",
+    @Language("html", prefix = "<body>", suffix = "</body>") val body: String = "",
+    @Language("js") val script: String = ""
+) {
     @Language("html")
     override fun toString(): String = """
         <html>

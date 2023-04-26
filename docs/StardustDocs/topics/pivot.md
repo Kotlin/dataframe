@@ -48,6 +48,7 @@ df.pivot("city")
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivot.html"/>
 <!---END-->
 
 To pivot several columns at once you can combine them using `and` or `then` infix function:
@@ -84,6 +85,7 @@ df.pivot { "city" then "name"["firstName"] }
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivot2.html"/>
 <!---END-->
 
 ## pivot + groupBy
@@ -123,6 +125,7 @@ df.groupBy("name").pivot("city")
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotGroupBy.html"/>
 <!---END-->
 
 To group by all columns except pivoted use `groupByOther`:
@@ -133,6 +136,7 @@ To group by all columns except pivoted use `groupByOther`:
 df.pivot { city }.groupByOther()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotGroupByOther.html"/>
 <!---END-->
 
 ## Aggregation
@@ -145,6 +149,37 @@ To aggregate data groups with one or several statistics use `aggregate`:
 
 ```kotlin
 df.pivot { city }.aggregate { minBy { age }.name }
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val city by column<String?>()
+val name by columnGroup()
+val firstName by name.column<String>()
+val age by column<Int>()
+val weight by column<Int?>()
+
+df.pivot { city }.aggregate { minBy(age).name }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.pivot("city").aggregate { minBy("age")["name"] }
+```
+
+</tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotAggregate.html"/>
+<!---END-->
+
+<!---FUN pivotAggregate1-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
 df.pivot { city }.groupBy { name.firstName }.aggregate {
     meanFor { age and weight } into "means"
     stdFor { age and weight } into "stds"
@@ -162,8 +197,6 @@ val firstName by name.column<String>()
 val age by column<Int>()
 val weight by column<Int?>()
 
-df.pivot { city }.aggregate { minBy(age).name }
-
 df.pivot { city }.groupBy { firstName }.aggregate {
     meanFor { age and weight } into "means"
     stdFor { age and weight } into "stds"
@@ -175,8 +208,6 @@ df.pivot { city }.groupBy { firstName }.aggregate {
 <tab title="Strings">
 
 ```kotlin
-df.pivot("city").aggregate { minBy("age")["name"] }
-
 df.pivot("city").groupBy { "name"["firstName"] }.aggregate {
     meanFor("age", "weight") into "means"
     stdFor("age", "weight") into "stds"
@@ -185,6 +216,7 @@ df.pivot("city").groupBy { "name"["firstName"] }.aggregate {
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotAggregate1.html"/>
 <!---END-->
 
 Shortcuts for common aggregation functions are also available:
@@ -220,6 +252,7 @@ df.groupBy("name").pivot("city").median("age")
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotCommonAggregations.html"/>
 <!---END-->
 
 By default, when aggregation function produces several values for single data group, 
@@ -267,7 +300,10 @@ df.pivot("city").aggregate(separate = true) {
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotSeparate.html"/>
 <!---END-->
+
+<dataFrame src="pivotSeparate.html"/>
 
 By default, any aggregation function will result in `null` value for those matrix cells, where intersection of column and row keys produced an empty data group.
 You can specify default value for any aggregation by `default` infix function. This value will replace all `null` results of aggregation function over non-empty data groups as well.
@@ -279,10 +315,6 @@ To use one default value for all aggregation functions, use `default()` before a
 
 ```kotlin
 df.pivot { city }.groupBy { name }.aggregate { min { age } default 0 }
-df.pivot { city }.groupBy { name }.aggregate {
-    median { age } into "median age" default 0
-    minOrNull { weight } into "min weight" default 100
-}
 df.pivot { city }.groupBy { name }.default(0).min()
 ```
 
@@ -296,10 +328,6 @@ val weight by column<Int?>()
 val name by columnGroup()
 
 df.pivot { city }.groupBy { name }.aggregate { min { age } default 0 }
-df.pivot { city }.groupBy { name }.aggregate {
-    median { age } into "median age" default 0
-    minOrNull { weight } into "min weight" default 100
-}
 df.pivot { city }.groupBy { name }.default(0).min()
 ```
 
@@ -308,14 +336,51 @@ df.pivot { city }.groupBy { name }.default(0).min()
 
 ```kotlin
 df.pivot("city").groupBy("name").aggregate { min("age") default 0 }
-df.pivot("city").groupBy("name").aggregate {
-    median("age") into "median age" default 0
-    minOrNull("weight") into "min weight" default 100
-}
 df.pivot("city").groupBy("name").default(0).min()
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotDefault.html"/>
+<!---END-->
+
+<!---FUN pivotDefault1-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.pivot { city }.groupBy { name }.aggregate {
+    median { age } into "median age" default 0
+    minOrNull { weight } into "min weight" default 100
+}
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val city by column<String?>()
+val age by column<Int>()
+val weight by column<Int?>()
+val name by columnGroup()
+
+df.pivot { city }.groupBy { name }.aggregate {
+    median { age } into "median age" default 0
+    minOrNull { weight } into "min weight" default 100
+}
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.pivot("city").groupBy("name").aggregate {
+    median("age") into "median age" default 0
+    minOrNull("weight") into "min weight" default 100
+}
+```
+
+</tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotDefault1.html"/>
 <!---END-->
 
 ### Pivot inside aggregate
@@ -369,6 +434,7 @@ df.groupBy { "name"["firstName"] }.aggregate {
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotInAggregate.html"/>
 <!---END-->
 
 ### pivotCounts
@@ -392,6 +458,7 @@ df.groupBy { name }.aggregate {
 }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotCounts.html"/>
 <!---END-->
 
 ### pivotMatches
@@ -414,4 +481,5 @@ df.groupBy { name }.aggregate {
 }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotMatches.html"/>
 <!---END-->

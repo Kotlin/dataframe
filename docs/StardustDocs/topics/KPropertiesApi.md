@@ -28,6 +28,7 @@ val passengers = DataFrame.read("titanic.csv")
     .toListOf<Passenger>()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.kproperties1.html"/>
 <!---END-->
 
 By default, [`DataFrame`](DataFrame.md) uses `name` and `returnType` of `KProperty` for typed access to data. 
@@ -47,4 +48,5 @@ val passengers = DataFrame.read("titanic.csv")
     .toListOf<Passenger>()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.kproperties2.html"/>
 <!---END-->

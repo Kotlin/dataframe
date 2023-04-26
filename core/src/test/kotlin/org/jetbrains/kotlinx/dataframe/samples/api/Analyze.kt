@@ -51,12 +51,14 @@ import org.jetbrains.kotlinx.dataframe.api.sumFor
 import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.api.valueCounts
 import org.jetbrains.kotlinx.dataframe.api.values
+import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.junit.Test
 import kotlin.math.ln
 
 class Analyze : TestBase() {
 
     @Test
+    @TransformDataFrameExpressions
     fun basicInfo() {
         // SampleStart
         df.count() // same as df.rowsCount()
@@ -70,6 +72,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun head() {
         // SampleStart
         df.head(3)
@@ -77,6 +80,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun schema() {
         // SampleStart
         df.schema()
@@ -84,6 +88,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun schemaGroupBy() {
         // SampleStart
         df.groupBy { city }.schema()
@@ -91,6 +96,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun describe() {
         // SampleStart
         df.describe()
@@ -98,6 +104,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun describeColumns_properties() {
         // SampleStart
         df.describe { age and name.all() }
@@ -105,6 +112,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun describeColumns_accessors() {
         // SampleStart
         val age by column<Int>()
@@ -115,6 +123,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun describeColumns_strings() {
         // SampleStart
         df.describe { "age" and "name".all() }
@@ -122,6 +131,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun countCondition() {
         // SampleStart
         df.count { age > 15 }
@@ -129,6 +139,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun count() {
         // SampleStart
         df.count()
@@ -136,6 +147,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun countAggregation() {
         // SampleStart
         df.groupBy { city }.count()
@@ -145,6 +157,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun sumAggregations() {
         // SampleStart
         df.age.sum()
@@ -155,6 +168,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun statisticModes() {
         // SampleStart
         df.sum() // sum of values per every numeric column
@@ -165,6 +179,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun minmaxModes() {
         // SampleStart
         df.min() // min of values per every comparable column
@@ -176,6 +191,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun minmaxAggregations() {
         // SampleStart
         df.min()
@@ -187,6 +203,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun medianModes() {
         // SampleStart
         df.median() // median of values per every comparable column
@@ -197,6 +214,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun medianAggregations() {
         // SampleStart
         df.median()
@@ -208,6 +226,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun meanModes() {
         // SampleStart
         df.mean() // mean of values per every numeric column
@@ -218,6 +237,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun meanAggregations() {
         // SampleStart
         df.mean()
@@ -229,6 +249,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun stdModes() {
         // SampleStart
         df.std() // std of values per every numeric column
@@ -239,6 +260,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun stdAggregations() {
         // SampleStart
         df.std()
@@ -250,6 +272,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun meanAggregationsSkipNA() {
         // SampleStart
         df.mean(skipNA = true)
@@ -257,6 +280,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun statisticAggregations() {
         // SampleStart
         df.mean()
@@ -268,6 +292,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun statisticGroupBySingle() {
         // SampleStart
         df.groupBy { city }.mean { age } // [`city`, `mean`]
@@ -276,6 +301,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun statisticGroupBySingleNamed() {
         // SampleStart
         df.groupBy { city }.mean("mean age") { age } // [`city`, `mean age`]
@@ -284,6 +310,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun statisticGroupByMany() {
         // SampleStart
         df.groupBy { city }.meanFor { age and weight } // [`city`, `age`, `weight`]
@@ -292,6 +319,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun statisticPivotSingle_properties() {
         // SampleStart
         df.groupBy { city }.pivot { name.lastName }.mean { age }
@@ -300,6 +328,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun statisticPivotSingle_accessors() {
         // SampleStart
         val city by column<String?>()
@@ -313,6 +342,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun statisticPivotSingle_strings() {
         // SampleStart
         df.groupBy("city").pivot { "name"["lastName"] }.mean("age")
@@ -321,6 +351,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun statisticPivotMany() {
         // SampleStart
         df.groupBy { city }.pivot { name.lastName }.meanFor { age and weight }
@@ -329,6 +360,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun statisticPivotManySeparate() {
         // SampleStart
         df.groupBy { city }.pivot { name.lastName }.meanFor(separate = true) { age and weight }
@@ -337,6 +369,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun columnStats_properties() {
         // SampleStart
         df.sum { weight }
@@ -352,6 +385,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun columnStats_accessors() {
         // SampleStart
         val weight by column<Int?>()
@@ -375,6 +409,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun columnStats_strings() {
         // SampleStart
         df.sum("weight")
@@ -385,6 +420,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun multipleColumnsStat_properties() {
         // SampleStart
         df.min { colsOf<Int>() }
@@ -396,6 +432,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun multipleColumnsStat_accessors() {
         // SampleStart
         val name by columnGroup()
@@ -420,6 +457,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun multipleColumnsStat_strings() {
         // SampleStart
 
@@ -437,6 +475,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun columnsFor_properties() {
         // SampleStart
         df.minFor { colsOf<Int>() }
@@ -448,6 +487,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun columnsFor_aсcessors() {
         // SampleStart
         val name by columnGroup()
@@ -472,6 +512,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun columnsFor_strings() {
         // SampleStart
         df.minFor { colsOf<Int>() }
@@ -487,6 +528,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun ofExpressions_properties() {
         // SampleStart
         df.minOf { 2021 - age }
@@ -498,6 +540,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun ofExpressions_accessors() {
         // SampleStart
         val name by columnGroup()
@@ -516,6 +559,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun ofExpressions_strings() {
         // SampleStart
         df.minOf { 2021 - "age"<Int>() }
@@ -527,6 +571,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun groupBy_properties() {
         // SampleStart
         df.groupBy { name }
@@ -537,6 +582,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun groupBy_accessors() {
         // SampleStart
         val name by columnGroup()
@@ -560,6 +606,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun groupBy_strings() {
         // SampleStart
         df.groupBy("name")
@@ -570,6 +617,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun dataFrameToGroupBy() {
         // SampleStart
         val key by columnOf(1, 2) // create int column with name "key"
@@ -581,6 +629,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun groupByToFrame() {
         // SampleStart
         df.groupBy { city }.toDataFrame()
@@ -588,6 +637,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun groupByAggregations_properties() {
         // SampleStart
         df.groupBy { city }.aggregate {
@@ -601,6 +651,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun groupByAggregations_accessors() {
         // SampleStart
         val city by column<String?>()
@@ -634,6 +685,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun groupByAggregations_strings() {
         // SampleStart
         df.groupBy("city").aggregate {
@@ -655,6 +707,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun groupByAggregateWithoutInto_properties() {
         // SampleStart
         df.groupBy { city }.aggregate { maxBy { age }.name }
@@ -662,6 +715,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun groupByAggregateWithoutInto_accessors() {
         // SampleStart
         val city by column<String?>()
@@ -675,6 +729,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun groupByAggregateWithoutInto_strings() {
         // SampleStart
         df.groupBy("city").aggregate { maxBy("age")["name"] }
@@ -682,6 +737,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun groupByDirectAggregations_properties() {
         // SampleStart
         df.groupBy { city }.max() // max for every comparable column
@@ -700,6 +756,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun groupByDirectAggregations_accessors() {
         // SampleStart
         val city by column<String?>()
@@ -725,6 +782,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun groupByDirectAggregations_strings() {
         // SampleStart
         df.groupBy("city").max() // max for every comparable column
@@ -746,6 +804,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun groupByWithoutAggregation_properties() {
         // SampleStart
         df.groupBy { city }.values()
@@ -755,6 +814,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun groupByWithoutAggregation_accessors() {
         // SampleStart
         val city by column<String?>()
@@ -769,6 +829,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun groupByWithoutAggregation_strings() {
         // SampleStart
         df.groupBy("city").values()
@@ -778,6 +839,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivot_properties() {
         // SampleStart
         df.pivot { city }
@@ -785,6 +847,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivot_accessors() {
         // SampleStart
         val city by column<String?>()
@@ -794,6 +857,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivot_strings() {
         // SampleStart
         df.pivot("city")
@@ -801,6 +865,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivot2_properties() {
         // SampleStart
         df.pivot { city and name.firstName }
@@ -809,6 +874,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivot2_accessors() {
         // SampleStart
         val city by column<String?>()
@@ -821,6 +887,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivot2_strings() {
         // SampleStart
         df.pivot { "city" and "name"["firstName"] }
@@ -829,6 +896,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivotInward_properties() {
         // SampleStart
         df.pivot(inward = true) { city }
@@ -836,6 +904,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivotInward_accessors() {
         // SampleStart
         val city by column<String?>()
@@ -845,6 +914,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivotInward_strings() {
         // SampleStart
         df.pivot("city", inward = true)
@@ -852,6 +922,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivotAsDataRowOrFrame() {
         // SampleStart
         df.pivot { city }.frames()
@@ -860,6 +931,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivotGroupBy_properties() {
         // SampleStart
         df.pivot { city }.groupBy { name }
@@ -869,6 +941,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivotGroupBy_accessors() {
         // SampleStart
         val city by column<String?>()
@@ -881,6 +954,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivotGroupBy_strings() {
         // SampleStart
         df.pivot("city").groupBy("name")
@@ -890,6 +964,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivotGroupByOther() {
         // SampleStart
         df.pivot { city }.groupByOther()
@@ -897,9 +972,17 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivotAggregate_properties() {
         // SampleStart
         df.pivot { city }.aggregate { minBy { age }.name }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun pivotAggregate1_properties() {
+        // SampleStart
         df.pivot { city }.groupBy { name.firstName }.aggregate {
             meanFor { age and weight } into "means"
             stdFor { age and weight } into "stds"
@@ -909,6 +992,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivotAggregate_accessors() {
         // SampleStart
         val city by column<String?>()
@@ -918,6 +1002,18 @@ class Analyze : TestBase() {
         val weight by column<Int?>()
 
         df.pivot { city }.aggregate { minBy(age).name }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun pivotAggregate1_accessors() {
+        // SampleStart
+        val city by column<String?>()
+        val name by columnGroup()
+        val firstName by name.column<String>()
+        val age by column<Int>()
+        val weight by column<Int?>()
 
         df.pivot { city }.groupBy { firstName }.aggregate {
             meanFor { age and weight } into "means"
@@ -928,10 +1024,17 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivotAggregate_strings() {
         // SampleStart
         df.pivot("city").aggregate { minBy("age")["name"] }
+        // SampleEnd
+    }
 
+    @Test
+    @TransformDataFrameExpressions
+    fun pivotAggregate1_strings() {
+        // SampleStart
         df.pivot("city").groupBy { "name"["firstName"] }.aggregate {
             meanFor("age", "weight") into "means"
             stdFor("age", "weight") into "stds"
@@ -941,6 +1044,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivotCommonAggregations_properties() {
         // SampleStart
         df.pivot { city }.maxFor { age and weight }
@@ -949,6 +1053,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivotCommonAggregations_accessors() {
         // SampleStart
         val city by column<String?>()
@@ -962,6 +1067,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivotCommonAggregations_strings() {
         // SampleStart
         df.pivot("city").maxFor("age", "weight")
@@ -970,6 +1076,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivotSeparate_properties() {
         // SampleStart
         df.pivot { city }.maxFor(separate = true) { age and weight }
@@ -981,6 +1088,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivotSeparate_accessors() {
         // SampleStart
         val city by column<String?>()
@@ -996,6 +1104,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivotSeparate_strings() {
         // SampleStart
         df.pivot("city").maxFor("age", "weight", separate = true)
@@ -1007,18 +1116,27 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivotDefault_properties() {
         // SampleStart
         df.pivot { city }.groupBy { name }.aggregate { min { age } default 0 }
-        df.pivot { city }.groupBy { name }.aggregate {
-            median { age } into "median age" default 0
-            minOrNull { weight } into "min weight" default 100
-        }
         df.pivot { city }.groupBy { name }.default(0).min()
         // SampleEnd
     }
 
     @Test
+    @TransformDataFrameExpressions
+    fun pivotDefault1_properties() {
+        // SampleStart
+        df.pivot { city }.groupBy { name }.aggregate {
+            median { age } into "median age" default 0
+            minOrNull { weight } into "min weight" default 100
+        }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
     fun pivotDefault_accessors() {
         // SampleStart
         val city by column<String?>()
@@ -1027,27 +1145,48 @@ class Analyze : TestBase() {
         val name by columnGroup()
 
         df.pivot { city }.groupBy { name }.aggregate { min { age } default 0 }
-        df.pivot { city }.groupBy { name }.aggregate {
-            median { age } into "median age" default 0
-            minOrNull { weight } into "min weight" default 100
-        }
         df.pivot { city }.groupBy { name }.default(0).min()
         // SampleEnd
     }
 
     @Test
+    @TransformDataFrameExpressions
+    fun pivotDefault1_accessors() {
+        // SampleStart
+        val city by column<String?>()
+        val age by column<Int>()
+        val weight by column<Int?>()
+        val name by columnGroup()
+
+        df.pivot { city }.groupBy { name }.aggregate {
+            median { age } into "median age" default 0
+            minOrNull { weight } into "min weight" default 100
+        }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
     fun pivotDefault_strings() {
         // SampleStart
         df.pivot("city").groupBy("name").aggregate { min("age") default 0 }
-        df.pivot("city").groupBy("name").aggregate {
-            median("age") into "median age" default 0
-            minOrNull("weight") into "min weight" default 100
-        }
         df.pivot("city").groupBy("name").default(0).min()
         // SampleEnd
     }
 
     @Test
+    @TransformDataFrameExpressions
+    fun pivotDefault1_strings() {
+        // SampleStart
+        df.pivot("city").groupBy("name").aggregate {
+            median("age") into "median age" default 0
+            minOrNull("weight") into "min weight" default 100
+        }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
     fun pivotInAggregate_properties() {
         // SampleStart
         df.groupBy { name.firstName }.aggregate {
@@ -1061,6 +1200,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivotInAggregate_accessors() {
         // SampleStart
         val city by column<String?>()
@@ -1079,6 +1219,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivotInAggregate_strings() {
         // SampleStart
         df.groupBy { "name"["firstName"] }.aggregate {
@@ -1092,6 +1233,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivotCounts() {
         // SampleStart
         df.pivotCounts { city }
@@ -1109,6 +1251,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun pivotMatches() {
         // SampleStart
         df.pivotMatches { city }
@@ -1126,6 +1269,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun cumSum() {
         // SampleStart
         df.cumSum { weight }
@@ -1135,6 +1279,7 @@ class Analyze : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun valueCounts() {
         // SampleStart
         df.city.valueCounts()

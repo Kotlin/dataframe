@@ -42,6 +42,7 @@ val teens = df.filter { age in 10..19 }
 teens.print()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Schemas.useProperties.html"/>
 <!---END-->
 
 ### Schema inference
@@ -112,6 +113,7 @@ df.maxBy { stargazersCount }.print()
 print(df.fullName.count { it.contains("kotlin") })
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Schemas.useInferredSchema.html"/>
 <!---END-->
 
 ### OpenAPI Schemas

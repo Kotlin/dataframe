@@ -5,6 +5,7 @@ rootProject.name = "dataframe"
 includeBuild("generator")
 include("plugins:dataframe-gradle-plugin")
 include("plugins:symbol-processor")
+include("plugins:expressions-converter")
 include("tests")
 include("dataframe-arrow")
 include("dataframe-openapi")
@@ -31,4 +32,3 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-

@@ -5,6 +5,7 @@
     <categories src="c.list"/>
     <topics dir="topics"/>
     <images dir="images" version="0.10" web-path="images/" />
+    <snippets dir="snippets" version="0.10" web-path="snippets/" />
     <vars src="v.list"/>
     <instance src="d.tree" version="0.10" id="dataframe"/>
     <settings>

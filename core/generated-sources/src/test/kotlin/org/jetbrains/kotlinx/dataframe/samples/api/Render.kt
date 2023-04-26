@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 import org.jetbrains.kotlinx.dataframe.api.reorderColumnsByName
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.sortByDesc
+import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.toHTML
@@ -14,6 +15,7 @@ import kotlin.io.path.Path
 
 class Render : TestBase() {
     @Test
+    @TransformDataFrameExpressions
     @Ignore
     fun useRenderingResult() {
         // SampleStart
@@ -24,6 +26,7 @@ class Render : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun composeTables() {
         // SampleStart
         val df1 = df.reorderColumnsByName()
@@ -35,6 +38,7 @@ class Render : TestBase() {
     }
 
     @Test
+    @TransformDataFrameExpressions
     fun configureCellOutput() {
         // SampleStart
         df.toHTML(DisplayConfiguration(cellContentLimit = -1))

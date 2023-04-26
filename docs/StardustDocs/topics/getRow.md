@@ -10,6 +10,7 @@ Get single [`DataRow`](DataRow.md) by [index](indexing.md):
 df[2]
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.getRowByIndex.html"/>
 <!---END-->
 
 Get single [`DataRow`](DataRow.md) by [row condition](DataRow.md#row-conditions):
@@ -54,4 +55,5 @@ df.maxByOrNull("weight")
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.getRowByCondition.html"/>
 <!---END-->

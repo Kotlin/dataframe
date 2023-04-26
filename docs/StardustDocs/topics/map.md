@@ -19,6 +19,7 @@ rowExpression: DataRow.(DataRow) -> Value
 df.map { 2021 - it.age }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.map.html"/>
 <!---END-->
 
 **Map into `DataColumn`:**
@@ -55,6 +56,7 @@ df.mapToColumn("year of birth") { 2021 - "age"<Int>() }
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.mapToColumn.html"/>
 <!---END-->
 
 See [row expressions](DataRow.md#row-expressions)
@@ -122,4 +124,5 @@ df.mapToFrame {
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.mapMany.html"/>
 <!---END-->
