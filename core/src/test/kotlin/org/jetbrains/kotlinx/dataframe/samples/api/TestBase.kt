@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.explainer.PluginCallback
+import org.jetbrains.kotlinx.dataframe.explainer.PluginCallbackProxy
 import org.junit.After
 import org.junit.Before
 
@@ -20,14 +20,14 @@ public open class TestBase {
     @Before
     fun start() {
         if (System.getenv(OUTPUTS) != null) {
-            PluginCallback.start()
+            PluginCallbackProxy.start()
         }
     }
 
     @After
     fun save() {
         if (System.getenv(OUTPUTS) != null) {
-            PluginCallback.save()
+            PluginCallbackProxy.save()
         }
     }
 

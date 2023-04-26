@@ -98,7 +98,7 @@ import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withNull
 import org.jetbrains.kotlinx.dataframe.api.withValue
 import org.jetbrains.kotlinx.dataframe.api.withZero
-import org.jetbrains.kotlinx.dataframe.explainer.PluginCallback
+import org.jetbrains.kotlinx.dataframe.explainer.PluginCallbackProxy
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.jetbrains.kotlinx.dataframe.impl.api.mapNotNullValues
 import org.jetbrains.kotlinx.dataframe.indices
@@ -259,14 +259,14 @@ class Modify : TestBase() {
         df.shuffle()
         // SampleEnd
 
-        PluginCallback.expressionsByStatement[0] = listOf(
-            PluginCallback.Expression(
+        PluginCallbackProxy.expressionsByStatement[0] = listOf(
+            PluginCallbackProxy.Expression(
                 source = "df",
                 containingClassFqName = "org.jetbrains.kotlinx.dataframe.samples.api.Modify",
                 containingFunName = "shuffle",
                 df = df
             ),
-            PluginCallback.Expression(
+            PluginCallbackProxy.Expression(
                 source = "shuffle()",
                 containingClassFqName = "org.jetbrains.kotlinx.dataframe.samples.api.Modify",
                 containingFunName = "shuffle",

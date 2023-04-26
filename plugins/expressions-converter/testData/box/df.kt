@@ -71,27 +71,41 @@ fun move() {
     df.move("age", "weight").into { pathOf("info", it.name()) }
 }
 
-object PluginCallback {
-    var action: (String, String, Any, String, String?, String? String?, Int) -> Unit = { _, _, _, _, _, _, _, _  -> Unit }
+fun interface PluginCallback {
+    fun doAction(
+        source: String,
+        name: String,
+        df: Any,
+        id: String,
+        receiverId: String?,
+        containingClassFqName: String?,
+        containingFunName: String?,
+        statementIndex: Int
+    )
+}
 
-    fun doAction(string: String, name: String, df: Any, id: String, receiverId: String?, containingClassFqName: String?, containingFunName: String?, statemenIndex: Int) {
-        action(string, name, df, id, receiverId, containingClassFqName, containingFunName, statemenIndex)
+object PluginCallbackProxy : PluginCallback {
+
+    var action: PluginCallback = PluginCallback { _, _, _, _, _, _, _, _  -> Unit }
+
+    override fun doAction(source: String, name: String, df: Any, id: String, receiverId: String?, containingClassFqName: String?, containingFunName: String?, statemenIndex: Int) {
+        action.doAction(source, name, df, id, receiverId, containingClassFqName, containingFunName, statemenIndex)
     }
 }
 
 //fun callChainTransformed(df: DataFrame<*>) {
 //    val df1 = df
 //        .filter { "age"<Int>() > 20 }
-//        .also { PluginCallback.doAction(""".filter { "age"<Int>() > 20 }""", "filter", it) }
+//        .also { PluginCallbackProxy.doAction(""".filter { "age"<Int>() > 20 }""", "filter", it) }
 //}
 
 //fun callChainTransformed(df: DataFrame<*>) {
 //    val df1 = df
 //        .filter { "age"<Int>() > 20 }
-//        .also { PluginCallback.action(""".filter { "age"<Int>() > 20 }""", it) }
+//        .also { PluginCallbackProxy.action(""".filter { "age"<Int>() > 20 }""", it) }
 //        .groupBy("something")
 //        .sum()
-//        .also { PluginCallback.action(""".groupBy("something").sum()""", it) }
+//        .also { PluginCallbackProxy.action(""".groupBy("something").sum()""", it) }
 //}
 
 annotation class TransformDataFrameExpressions
@@ -101,7 +115,7 @@ fun box(): String {
     val value by columnOf("a", "b", "c", "c")
     val df = dataFrameOf(age, value)
     val expressions = mutableListOf<String>()
-    PluginCallback.action = { source, _, df, id, receiverId, containingClassFqName, containingFunName, statementIndex ->
+    PluginCallbackProxy.action = PluginCallback { source, _, df, id, receiverId, containingClassFqName, containingFunName, statementIndex ->
         println("== Call ==")
         expressions += source
         if (df is AnyFrame) {

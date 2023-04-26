@@ -223,7 +223,7 @@ class ExplainerIrTransformer(
                     add(IrConstImpl.int(-1, -1, pluginContext.irBuiltIns.intType, data.statementIndex))
                 }
                 body = pluginContext.irFactory.createBlockBody(-1, -1) {
-                    val callback = FqName("org.jetbrains.kotlinx.dataframe.explainer.PluginCallback.doAction")
+                    val callback = FqName("org.jetbrains.kotlinx.dataframe.explainer.PluginCallbackProxy.doAction")
                     val doAction = pluginContext.referenceFunctions(callback).single()
                     statements += IrCallImpl(
                         startOffset = -1,
@@ -233,7 +233,7 @@ class ExplainerIrTransformer(
                         typeArgumentsCount = 0,
                         valueArgumentsCount = valueArguments.size
                     ).apply {
-                        val clazz = FqName("org.jetbrains.kotlinx.dataframe.explainer.PluginCallback")
+                        val clazz = FqName("org.jetbrains.kotlinx.dataframe.explainer.PluginCallbackProxy")
                         val plugin = pluginContext.referenceClass(clazz)!!
                         dispatchReceiver = IrGetObjectValueImpl(-1, -1, plugin.defaultType, plugin)
                         valueArguments.forEachIndexed { i, argument ->
