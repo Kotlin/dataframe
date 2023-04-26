@@ -62,9 +62,11 @@ fun classpathFromClassloader(currentClassLoader: ClassLoader, unpackJarCollectio
             setWritable(true, true)
             setExecutable(true, true)
 
-            Runtime.getRuntime().addShutdownHook(Thread {
-                deleteRecursively()
-            })
+            Runtime.getRuntime().addShutdownHook(
+                Thread {
+                    deleteRecursively()
+                }
+            )
         }
     }
     return allRelatedClassLoaders(currentClassLoader).flatMap { classLoader ->
@@ -198,7 +200,7 @@ fun classpathFromClass(classLoader: ClassLoader, klass: KClass<out Any>): List<F
 fun classpathFromClass(klass: KClass<out Any>): List<File>? =
     classpathFromClass(klass.java.classLoader, klass)
 
-inline fun <reified T: Any> classpathFromClass(): List<File>? = classpathFromClass(T::class)
+inline fun <reified T : Any> classpathFromClass(): List<File>? = classpathFromClass(T::class)
 
 fun classpathFromFQN(classLoader: ClassLoader, fqn: String): List<File>? {
     val clp = "${fqn.replace('.', '/')}.class"
@@ -207,8 +209,8 @@ fun classpathFromFQN(classLoader: ClassLoader, fqn: String): List<File>? {
 
 fun File.matchMaybeVersionedFile(baseName: String) =
     name == baseName ||
-            name == baseName.removeSuffix(".jar") || // for classes dirs
-            Regex(Regex.escape(baseName.removeSuffix(".jar")) + "(-\\d.*)?\\.jar").matches(name)
+        name == baseName.removeSuffix(".jar") || // for classes dirs
+        Regex(Regex.escape(baseName.removeSuffix(".jar")) + "(-\\d.*)?\\.jar").matches(name)
 
 fun File.hasParentNamed(baseName: String): Boolean =
     nameWithoutExtension == baseName || parentFile?.hasParentNamed(baseName) ?: false
@@ -310,7 +312,6 @@ fun scriptCompilationClasspathFromContextOrNull(
         ?: classpathFromClasspathProperty()?.takeAndFilter()
 }
 
-
 fun scriptCompilationClasspathFromContext(
     vararg keyNames: String,
     classLoader: ClassLoader = Thread.currentThread().contextClassLoader,
@@ -363,19 +364,21 @@ object KotlinJars {
         val kotlinBaseJars = kotlinCompilerJars + kotlinLibsJars + kotlinScriptingJars
 
         val classpath = explicitCompilerClasspath
-        // search classpath from context classloader and `java.class.path` property
-            ?: (classpathFromFQN(Thread.currentThread().contextClassLoader, "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler")
-                ?: classpathFromClassloader(Thread.currentThread().contextClassLoader)?.takeIf { it.isNotEmpty() }
-                ?: classpathFromClasspathProperty()
-                    )?.filter { f -> kotlinBaseJars.any { f.matchMaybeVersionedFile(it) } }?.takeIf { it.isNotEmpty() }
+            // search classpath from context classloader and `java.class.path` property
+            ?: (
+                classpathFromFQN(Thread.currentThread().contextClassLoader, "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler")
+                    ?: classpathFromClassloader(Thread.currentThread().contextClassLoader)?.takeIf { it.isNotEmpty() }
+                    ?: classpathFromClasspathProperty()
+                )?.filter { f -> kotlinBaseJars.any { f.matchMaybeVersionedFile(it) } }?.takeIf { it.isNotEmpty() }
         // if autodetected, additionally check for presence of the compiler jars
-        if (classpath == null || (explicitCompilerClasspath == null && classpath.none { f ->
+        if (classpath == null || (
+            explicitCompilerClasspath == null && classpath.none { f ->
                 kotlinCompilerJars.any {
-                    f.matchMaybeVersionedFile(
-                        it
-                    )
+                    f.matchMaybeVersionedFile(it)
                 }
-            })) {
+            }
+            )
+        ) {
             throw FileNotFoundException("Cannot find kotlin compiler jar, set kotlin.compiler.classpath property to proper location")
         }
         return classpath
@@ -422,5 +425,4 @@ object KotlinJars {
             "kotlin.reflect.full.KClasses" // using a class that is a part of the kotlin-reflect.jar
         )
     }
-
 }
