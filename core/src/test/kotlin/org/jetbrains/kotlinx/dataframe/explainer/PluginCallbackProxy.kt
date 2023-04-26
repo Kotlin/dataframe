@@ -35,7 +35,20 @@ import java.io.File
 
 annotation class TransformDataFrameExpressions
 
-object PluginCallback {
+fun interface PluginCallback {
+    fun doAction(
+        source: String,
+        name: String,
+        df: Any,
+        id: String,
+        receiverId: String?,
+        containingClassFqName: String?,
+        containingFunName: String?,
+        statementIndex: Int
+    )
+}
+
+object PluginCallbackProxy : PluginCallback {
     val names = mutableMapOf<String, List<String>>()
     val expressionsByStatement = mutableMapOf<Int, List<Expression>>()
 
@@ -169,17 +182,15 @@ object PluginCallback {
         return data
     }
 
-    var action: (String, String, Any, String, String?, String?, String?, Int) -> Unit =
-        { source, name, df, id, receiverId, containingClassFqName, containingFunName, statementIndex ->
-            expressionsByStatement.compute(statementIndex) { _, list ->
-                val element = Expression(source, containingClassFqName, containingFunName, df)
-                list?.plus(element) ?: listOf(element)
-            }
+    var action: PluginCallback = PluginCallback { source, name, df, id, receiverId, containingClassFqName, containingFunName, statementIndex ->
+        expressionsByStatement.compute(statementIndex) { _, list ->
+            val element = Expression(source, containingClassFqName, containingFunName, df)
+            list?.plus(element) ?: listOf(element)
         }
+    }
 
-    @Suppress("unused")
-    fun doAction(
-        string: String,
+    override fun doAction(
+        source: String,
         name: String,
         df: Any,
         id: String,
@@ -188,7 +199,7 @@ object PluginCallback {
         containingFunName: String?,
         statementIndex: Int
     ) {
-        action(string, name, df, id, receiverId, containingClassFqName, containingFunName, statementIndex)
+        action.doAction(source, name, df, id, receiverId, containingClassFqName, containingFunName, statementIndex)
     }
 }
 
