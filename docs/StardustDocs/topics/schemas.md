@@ -11,7 +11,7 @@ It ignores order of columns in [`DataFrame`](DataFrame.md), but tracks column hi
 
 In Jupyter environment compile-time [`DataFrame`](DataFrame.md) schema is synchronized with real-time data after every cell execution.
 
-In IDEA projects you can use [gradle plugin](installation.md#data-schema-preprocessor) to extract schema from dataset
+In IDEA projects, you can use the [Gradle plugin](gradle.md#configuration) to extract schema from the dataset
 and generate extension properties.
 
 ## DataSchema workflow in Jupyter
