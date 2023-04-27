@@ -28,7 +28,7 @@ public class TSV : SupportedDataFrameFormat {
     }
 }
 
-private val tabChar = '\t'
+private const val tabChar = '\t'
 
 public fun DataFrame.Companion.readTSV(
     fileOrUrl: String,

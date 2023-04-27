@@ -44,6 +44,7 @@ public fun <T> ColumnPath.toColumnOf(): ColumnAccessor<T> = ColumnAccessorImpl(t
 public fun ColumnPath.toColumnAccessor(): ColumnAccessor<Any?> = ColumnAccessorImpl(this)
 
 public fun ColumnPath.toColumnGroupAccessor(): ColumnAccessor<AnyRow> = ColumnAccessorImpl(this)
+
 public fun ColumnPath.toFrameColumnAccessor(): ColumnAccessor<AnyFrame> = ColumnAccessorImpl(this)
 
 // endregion
@@ -123,7 +124,8 @@ public fun DataColumn<Number>.toByteArray(): ByteArray = convertTo<Byte>().toLis
 
 public fun AnyCol.asColumnGroup(): ColumnGroup<*> = this as ColumnGroup<*>
 
-public fun <T> DataColumn<DataFrame<T>>.asFrameColumn(): FrameColumn<T> = (this as AnyCol).asAnyFrameColumn().castFrameColumn()
+public fun <T> DataColumn<DataFrame<T>>.asFrameColumn(): FrameColumn<T> =
+    (this as AnyCol).asAnyFrameColumn().castFrameColumn()
 
 @JvmName("asGroupedT")
 public fun <T> DataColumn<DataRow<T>>.asColumnGroup(): ColumnGroup<T> = (this as AnyCol).asColumnGroup().cast()
@@ -242,6 +244,7 @@ public fun NullabilityOptions.applyNullability(data: List<Any?>, expectedNulls: 
             }
             expectedNulls
         }
+
         NullabilityOptions.Widening -> {
             expectedNulls || hasNulls
         }
@@ -250,7 +253,7 @@ public fun NullabilityOptions.applyNullability(data: List<Any?>, expectedNulls: 
 
 public inline fun <reified T> Iterable<T>.toColumn(
     name: String = "",
-    infer: Infer = Infer.None
+    infer: Infer = Infer.None,
 ): DataColumn<T> =
     (
         if (infer == Infer.Type) DataColumn.createWithTypeInference(name, asList())
@@ -269,7 +272,9 @@ public inline fun <reified T> Iterable<T>.toColumn(property: KProperty<T>): Data
 public fun Iterable<String>.toPath(): ColumnPath = ColumnPath(asList())
 
 public fun Iterable<AnyBaseCol>.toColumnGroup(name: String): ColumnGroup<*> = dataFrameOf(this).asColumnGroup(name)
-public fun <T> Iterable<AnyBaseCol>.toColumnGroup(column: ColumnGroupAccessor<T>): ColumnGroup<T> = dataFrameOf(this).cast<T>().asColumnGroup(column)
+
+public fun <T> Iterable<AnyBaseCol>.toColumnGroup(column: ColumnGroupAccessor<T>): ColumnGroup<T> =
+    dataFrameOf(this).cast<T>().asColumnGroup(column)
 
 public fun <T> Iterable<AnyBaseCol>.toColumnGroupOf(name: String): ColumnGroup<T> = toColumnGroup(name).cast()
 

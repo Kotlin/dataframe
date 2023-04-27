@@ -22,7 +22,9 @@ public interface BaseColumn<out T> : ColumnReference<T> {
     // region info
 
     public fun size(): Int
+
     public fun kind(): ColumnKind
+
     public fun type(): KType
 
     // TODO: remove
@@ -33,6 +35,7 @@ public interface BaseColumn<out T> : ColumnReference<T> {
     // region get
 
     public operator fun get(index: Int): T
+
     public operator fun get(firstIndex: Int, vararg otherIndices: Int): BaseColumn<T> = get(
         headPlusIterable(
             firstIndex,
@@ -54,9 +57,11 @@ public interface BaseColumn<out T> : ColumnReference<T> {
     public fun values(): Iterable<T>
 
     public fun toList(): List<T> = values().asList()
+
     public fun toSet(): Set<T>
 
     public fun distinct(): BaseColumn<T>
+
     public fun countDistinct(): Int
 
     public operator fun contains(value: @UnsafeVariance T): Boolean
@@ -69,4 +74,5 @@ public interface BaseColumn<out T> : ColumnReference<T> {
 }
 
 internal val <T> BaseColumn<T>.values: Iterable<T> get() = values()
+
 internal val AnyBaseCol.size: Int get() = size()

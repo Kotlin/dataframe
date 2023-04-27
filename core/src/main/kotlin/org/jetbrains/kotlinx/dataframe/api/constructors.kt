@@ -41,7 +41,8 @@ public fun <T> column(property: KProperty<T>): ColumnAccessor<T> = ColumnAccesso
 public fun <T> ColumnGroupReference.column(): ColumnDelegate<T> = ColumnDelegate(this)
 public fun <T> ColumnGroupReference.column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(path() + name)
 public fun <T> ColumnGroupReference.column(path: ColumnPath): ColumnAccessor<T> = ColumnAccessorImpl(this.path() + path)
-public fun <T> ColumnGroupReference.column(property: KProperty<T>): ColumnAccessor<T> = ColumnAccessorImpl(this.path() + property.name)
+public fun <T> ColumnGroupReference.column(property: KProperty<T>): ColumnAccessor<T> =
+    ColumnAccessorImpl(this.path() + property.name)
 
 public inline fun <reified T> column(
     name: String = "",
