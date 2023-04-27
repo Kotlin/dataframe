@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Schemas-->
 
-In Gradle project the Kotlin DataFrame library provides
+In Gradle projects, the Kotlin DataFrame library provides
 
 1. Annotation processing for generation of extension properties
 2. Annotation processing for [`DataSchema`](schemas.md) inference from datasets.
@@ -10,8 +10,38 @@ In Gradle project the Kotlin DataFrame library provides
 
 ### Configuration
 
-To use [extension properties API](extensionPropertiesApi.md) in Gradle project you
-should [configure the Kotlin DataFrame plugin](installation.md#data-schema-preprocessor).
+To use the [extension properties API](extensionPropertiesApi.md) in Gradle project add the `dataframe` plugin as follows:
+
+<tabs>
+<tab title="Kotlin DSL">
+
+```kotlin
+plugins {
+    id("org.jetbrains.kotlinx.dataframe") version "%dataFrameVersion%"
+}
+
+dependencies {
+    implementation("org.jetbrains.kotlinx:dataframe:%dataFrameVersion%")
+}
+```
+
+</tab>
+
+<tab title="Groovy DSL">
+
+```groovy
+plugins {
+    id("org.jetbrains.kotlinx.dataframe") version "%dataFrameVersion%"
+}
+
+dependencies {
+    implementation 'org.jetbrains.kotlinx:dataframe:%dataFrameVersion%'
+}
+```
+
+</tab>
+
+</tabs>
 
 ### Annotation processing
 
@@ -52,14 +82,21 @@ Specify schema with preferred method and execute the `assemble` task.
 <tabs>
 <tab title="Method 1. Annotation processing">
 
-`@ImportDataSchema` annotation must be above package directive. You can put this annotation in the same file as data
-processing code. You can import schema from URL or relative path of the file. Relative path by default is resolved to
-project root directory. You can configure it
-by [passing](https://kotlinlang.org/docs/ksp-quickstart.html#pass-options-to-processors) `dataframe.resolutionDir`
-option to preprocessor
+`@ImportDataSchema` annotation must be above package directive.
+You can import schemas from a URL or from the relative path of a file.
+Relative path by default is resolved to the project root directory.
+You can configure it by [passing](https://kotlinlang.org/docs/ksp-quickstart.html#pass-options-to-processors) `dataframe.resolutionDir`
+option to preprocessor.
+For example:
+
+```kotlin
+ksp {
+    arg("dataframe.resolutionDir", file("data").absolutePath)
+}
+```
 
 **Note that due to incremental processing, imported schema will be re-generated only if some source code has changed
-from previous invocation, at least one character**
+from the previous invocation, at least one character.**
 
 For the following configuration, file `Repository.Generated.kt` will be generated to `build/generated/ksp/` folder in
 the same package as file containing the annotation.
@@ -75,8 +112,8 @@ import org.jetbrains.kotlinx.dataframe.api.*
 ```
 
 See KDocs for `@ImportDataSchema` in IDE
-or [github](https://github.com/Kotlin/dataframe/blob/master/core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/annotations/ImportDataSchema.kt)
-for more details
+or [GitHub](https://github.com/Kotlin/dataframe/blob/master/core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/annotations/ImportDataSchema.kt)
+for more details.
 
 </tab>
 
