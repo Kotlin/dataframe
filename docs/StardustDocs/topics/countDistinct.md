@@ -29,7 +29,6 @@ df.countDistinct("age", "name")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.countDistinctColumns.html"/>
 <!---END-->
 
 When `columns` are not specified, returns number of distinct rows in [`DataFrame`](DataFrame.md).
@@ -40,5 +39,4 @@ When `columns` are not specified, returns number of distinct rows in [`DataFrame
 df.countDistinct()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.countDistinct.html"/>
 <!---END-->

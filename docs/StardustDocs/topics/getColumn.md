@@ -29,7 +29,6 @@ df.getColumn("age")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.getColumn.html"/>
 <!---END-->
 
 ## getColumnOrNull
@@ -61,7 +60,6 @@ df.getColumnOrNull("age")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.getColumnOrNull.html"/>
 <!---END-->
 
 ## getColumnGroup
@@ -93,7 +91,6 @@ df.getColumnGroup("name")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.getColumnGroup.html"/>
 <!---END-->
 
 ## getColumns
@@ -126,5 +123,4 @@ df.getColumns("age", "name")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.getColumns.html"/>
 <!---END-->

@@ -12,7 +12,6 @@ with typed [`DataFrame`](DataFrame.md) wrapper with auto-generated extension pro
 val df = DataFrame.read("titanic.csv")
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.extensionProperties1.html"/>
 <!---END-->
 
 Now data can be accessed by `.` member accessor
@@ -25,7 +24,6 @@ df.add("lastName") { name.split(",").last() }
     .filter { survived && home.endsWith("NY") && age in 10..20 }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.extensionProperties2.html"/>
 <!---END-->
 
 In notebooks, extension properties are generated for [`DataSchema`](schemas.md) that is extracted from [`DataFrame`](DataFrame.md) 

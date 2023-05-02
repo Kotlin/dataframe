@@ -34,7 +34,6 @@ df["name"]["firstName"]
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.getColumnByName.html"/>
 <!---END-->
 
 Get single column by index (starting from 0):
@@ -46,5 +45,4 @@ df.getColumn(2)
 df.getColumnGroup(0).getColumn(1)
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.getColumnByIndex.html"/>
 <!---END-->

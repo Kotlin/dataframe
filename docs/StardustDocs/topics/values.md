@@ -21,7 +21,6 @@ df.values(byRows = true)
 df.values { age and weight }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.values.html"/>
 <!---END-->
 
 ## values in aggregation

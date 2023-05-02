@@ -67,12 +67,11 @@ val df = dataFrameOf("name", "age")(
     "Alice", 15,
     "Bob", 20
 ).cast<Person>()
-// age only available after executing `assemble` or `kspKotlin`!
+// age only available after executing `build` or `kspKotlin`!
 val teens = df.filter { age in 10..19 }
 teens.print()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Schemas.useProperties.html"/>
 <!---END-->
 
 ### Schema inference
@@ -150,7 +149,6 @@ df.maxBy { stargazersCount }.print()
 print(df.fullName.count { it.contains("kotlin") })
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Schemas.useInferredSchema.html"/>
 <!---END-->
 
 ### OpenAPI Schemas
