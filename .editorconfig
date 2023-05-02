@@ -17,7 +17,7 @@ insert_final_newline = false
 
 [*.{kt,kts}]
 ktlint_code_style = ktlint_official
-# ktlint_standard = enabled
-# ktlint_experimental = enabled
+ktlint_standard = enabled
+ktlint_experimental = enabled
 ktlint_standard_filename = disabled
-ktlint_standard_curly-spacing = disabled
+ktlint_experimental_function-signature = disabled

@@ -48,7 +48,7 @@ import java.io.File
 data class ContainingDeclarations(val clazz: IrClass?, val function: IrFunction?, val statementIndex: Int = 0)
 
 class ExplainerIrTransformer(
-    val pluginContext: IrPluginContext
+    val pluginContext: IrPluginContext,
 ) : FileLoweringPass, IrElementTransformer<ContainingDeclarations> {
     lateinit var file: IrFile
     lateinit var source: String
@@ -122,7 +122,7 @@ class ExplainerIrTransformer(
         FqName("org.jetbrains.kotlinx.dataframe.api.FormattedFrame"),
         FqName("org.jetbrains.kotlinx.dataframe.api.GroupBy"),
         FqName("org.jetbrains.kotlinx.dataframe.DataFrame"),
-        FqName("org.jetbrains.kotlinx.dataframe.DataRow")
+        FqName("org.jetbrains.kotlinx.dataframe.DataRow"),
     )
 
     override fun visitGetValue(expression: IrGetValue, data: ContainingDeclarations): IrExpression {
@@ -160,7 +160,7 @@ class ExplainerIrTransformer(
         expression: IrDeclarationReference,
         ownerName: Name,
         receiver: IrExpression?,
-        data: ContainingDeclarations
+        data: ContainingDeclarations,
     ): IrCall {
         val alsoReference = pluginContext.referenceFunctions(FqName("kotlin.also")).single()
 
@@ -184,7 +184,7 @@ class ExplainerIrTransformer(
                 isSuspend = false,
                 isOperator = false,
                 isInfix = false,
-                isExpect = false
+                isExpect = false,
             ).apply {
                 valueParameters = buildList {
                     add(
@@ -200,8 +200,8 @@ class ExplainerIrTransformer(
                             isCrossinline = false,
                             isNoinline = false,
                             isHidden = false,
-                            isAssignable = false
-                        )
+                            isAssignable = false,
+                        ),
                     )
                 }
                 val itSymbol = valueParameters[0].symbol
@@ -231,7 +231,7 @@ class ExplainerIrTransformer(
                         type = doAction.owner.returnType,
                         symbol = doAction,
                         typeArgumentsCount = 0,
-                        valueArgumentsCount = valueArguments.size
+                        valueArgumentsCount = valueArguments.size,
                     ).apply {
                         val clazz = FqName("org.jetbrains.kotlinx.dataframe.explainer.PluginCallbackProxy")
                         val plugin = pluginContext.referenceClass(clazz)!!
@@ -248,7 +248,7 @@ class ExplainerIrTransformer(
                 type = pluginContext.irBuiltIns.functionN(2)
                     .typeWith(listOf(expression.type, pluginContext.irBuiltIns.unitType)),
                 function = alsoLambda,
-                origin = IrStatementOrigin.LAMBDA
+                origin = IrStatementOrigin.LAMBDA,
             )
             putValueArgument(0, alsoLambdaExpression)
         }

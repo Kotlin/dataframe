@@ -50,9 +50,9 @@ tasks.test {
 kotlinter {
     ignoreFailures = false
     reporters = arrayOf("checkstyle", "plain")
-    disabledRules = arrayOf(
-        "max-line-length",
-    )
+//    disabledRules = arrayOf(
+//        "max-line-length",
+//    )
 }
 
 sourceSets {

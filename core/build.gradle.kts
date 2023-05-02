@@ -239,19 +239,19 @@ korro {
 kotlinter {
     ignoreFailures = false
     reporters = arrayOf("checkstyle", "plain")
-    experimentalRules = true
-    disabledRules = arrayOf(
-        "no-wildcard-imports",
-        "experimental:spacing-between-declarations-with-annotations",
-        "experimental:enum-entry-name-case",
-        "experimental:argument-list-wrapping",
-        "experimental:annotation",
-        "max-line-length",
-        "filename",
-        "comment-spacing",
-        "curly-spacing",
-        "experimental:annotation-spacing"
-    )
+//    experimentalRules = true
+//    disabledRules = arrayOf(
+//        "no-wildcard-imports",
+//        "experimental:spacing-between-declarations-with-annotations",
+//        "experimental:enum-entry-name-case",
+//        "experimental:argument-list-wrapping",
+//        "experimental:annotation",
+//        "max-line-length",
+//        "filename",
+//        "comment-spacing",
+//        "curly-spacing",
+//        "experimental:annotation-spacing"
+//    )
 }
 
 tasks.withType<KspTaskJvm> {
