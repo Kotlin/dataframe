@@ -300,7 +300,6 @@ df.pivot("city").aggregate(separate = true) {
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotSeparate.html"/>
 <!---END-->
 
 <dataFrame src="pivotSeparate.html"/>

@@ -58,39 +58,6 @@ df.select { name.allDfs() }
 ```
 
 </tab>
-<tab title="Strings">
-
-```kotlin
-// by column name
-df.select { it["name"] }
-
-// by column path
-df.select { it["name"]["firstName"] }
-df.select { "name"["firstName"] }
-
-// with a new name
-df.select { "name" named "Full Name" }
-
-// converted
-df.select { "name"["firstName"]<String>().map { it.uppercase() } }
-
-// column arithmetics
-df.select { 2021 - "age"<Int>() }
-
-// two columns
-df.select { "name" and "age" }
-
-// by range of names
-df.select { "name".."age" }
-
-// all children of ColumnGroup
-df.select { "name".all() }
-
-// depth-first-search traversal of all children columns
-df.select { "name".allDfs() }
-```
-
-</tab>
 <tab title="Accessors">
 
 ```kotlin
@@ -127,42 +94,39 @@ df.select { name.allDfs() }
 ```
 
 </tab>
-<tab title="KProperties">
+<tab title="Strings">
 
 ```kotlin
 // by column name
-df.select { it[Person::name] }
-df.select { (Person::name)() }
-df.select { col(Person::name) }
+df.select { it["name"] }
 
 // by column path
-df.select { it[Person::name][Name::firstName] }
-df.select { Person::name[Name::firstName] }
+df.select { it["name"]["firstName"] }
+df.select { "name"["firstName"] }
 
 // with a new name
-df.select { Person::name named "Full Name" }
+df.select { "name" named "Full Name" }
 
 // converted
-df.select { Person::name[Name::firstName].map { it.lowercase() } }
+df.select { "name"["firstName"]<String>().map { it.uppercase() } }
 
 // column arithmetics
-df.select { 2021 - (Person::age)() }
+df.select { 2021 - "age"<Int>() }
 
 // two columns
-df.select { Person::name and Person::age }
+df.select { "name" and "age" }
 
-// range of columns
-df.select { Person::name..Person::age }
+// by range of names
+df.select { "name".."age" }
 
 // all children of ColumnGroup
-df.select { Person::name.all() }
+df.select { "name".all() }
 
 // depth-first-search traversal of all children columns
-df.select { Person::name.allDfs() }
+df.select { "name".allDfs() }
 ```
 
-</tab>
-</tabs>
+</tab></tabs>
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectors.html"/>
 <!---END-->
 

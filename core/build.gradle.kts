@@ -1,5 +1,6 @@
 import com.google.devtools.ksp.gradle.KspTaskJvm
 import com.google.devtools.ksp.gradle.KspTask
+import io.github.devcrocod.korro.KorroTask
 import nl.jolanrensen.docProcessor.defaultProcessors.*
 import nl.jolanrensen.docProcessor.gradle.creatingProcessDocTask
 import org.gradle.jvm.tasks.Jar
@@ -103,6 +104,7 @@ val samplesTest = tasks.register<Test>("samplesTest") {
     doFirst {
         delete {
             delete(fileTree(File(buildDir, "dataframes")))
+            delete(fileTree(File(buildDir, "korroOutputLines")))
         }
     }
 
@@ -135,6 +137,10 @@ val copySamplesOutputs = tasks.register<JavaExec>("copySamplesOutputs") {
     dependsOn(samplesTest)
     dependsOn(clearSamplesOutputs)
     classpath = sourceSets.test.get().runtimeClasspath
+}
+
+tasks.withType<KorroTask> {
+    dependsOn(copySamplesOutputs)
 }
 
 val generatedSourcesFolderName = "generated-sources"
@@ -215,6 +221,10 @@ korro {
     samples = fileTree(project.projectDir) {
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
+    }
+
+    outputs = fileTree(project.buildDir) {
+        include("korroOutputLines/*")
     }
 
     groupSamples {
