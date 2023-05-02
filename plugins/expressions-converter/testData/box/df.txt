@@ -1,0 +1,59 @@
+package
+
+package org {
+
+    package org.jetbrains {
+
+        package org.jetbrains.kotlinx {
+
+            package org.jetbrains.kotlinx.dataframe {
+
+                package org.jetbrains.kotlinx.dataframe.explainer {
+                    @org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions public fun aggregateDf(): kotlin.Unit
+                    public fun box(): kotlin.String
+                    @org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions public fun callChain(/*0*/ df: org.jetbrains.kotlinx.dataframe.DataFrame<*>): kotlin.Unit
+                    @org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions public fun move(): kotlin.Unit
+
+                    public interface Person {
+                        public open override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
+                        public open override /*1*/ /*fake_override*/ fun hashCode(): kotlin.Int
+                        public open override /*1*/ /*fake_override*/ fun toString(): kotlin.String
+                    }
+
+                    public fun interface PluginCallback {
+                        public abstract fun doAction(/*0*/ source: kotlin.String, /*1*/ name: kotlin.String, /*2*/ df: kotlin.Any, /*3*/ id: kotlin.String, /*4*/ receiverId: kotlin.String?, /*5*/ containingClassFqName: kotlin.String?, /*6*/ containingFunName: kotlin.String?, /*7*/ statementIndex: kotlin.Int): kotlin.Unit
+                        public open override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
+                        public open override /*1*/ /*fake_override*/ fun hashCode(): kotlin.Int
+                        public open override /*1*/ /*fake_override*/ fun toString(): kotlin.String
+                    }
+
+                    public object PluginCallbackProxy : org.jetbrains.kotlinx.dataframe.explainer.PluginCallback {
+                        private constructor PluginCallbackProxy()
+                        public final var action: org.jetbrains.kotlinx.dataframe.explainer.PluginCallback
+                        public open override /*1*/ fun doAction(/*0*/ source: kotlin.String, /*1*/ name: kotlin.String, /*2*/ df: kotlin.Any, /*3*/ id: kotlin.String, /*4*/ receiverId: kotlin.String?, /*5*/ containingClassFqName: kotlin.String?, /*6*/ containingFunName: kotlin.String?, /*7*/ statemenIndex: kotlin.Int): kotlin.Unit
+                        public open override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
+                        public open override /*1*/ /*fake_override*/ fun hashCode(): kotlin.Int
+                        public open override /*1*/ /*fake_override*/ fun toString(): kotlin.String
+                    }
+
+                    public final annotation class TransformDataFrameExpressions : kotlin.Annotation {
+                        public constructor TransformDataFrameExpressions()
+                        public open override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
+                        public open override /*1*/ /*fake_override*/ fun hashCode(): kotlin.Int
+                        public open override /*1*/ /*fake_override*/ fun toString(): kotlin.String
+                    }
+
+                    public final class Wrapper {
+                        public constructor Wrapper()
+                        public final val df: org.jetbrains.kotlinx.dataframe.AnyFrame /* = org.jetbrains.kotlinx.dataframe.DataFrame<*> */
+                        public final val typed: org.jetbrains.kotlinx.dataframe.DataFrame<org.jetbrains.kotlinx.dataframe.explainer.Person>
+                        public open override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
+                        @org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions public final fun ff(): kotlin.Unit
+                        public open override /*1*/ /*fake_override*/ fun hashCode(): kotlin.Int
+                        public open override /*1*/ /*fake_override*/ fun toString(): kotlin.String
+                    }
+                }
+            }
+        }
+    }
+}

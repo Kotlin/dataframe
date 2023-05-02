@@ -11,7 +11,7 @@ It ignores order of columns in [`DataFrame`](DataFrame.md), but tracks column hi
 
 In Jupyter environment compile-time [`DataFrame`](DataFrame.md) schema is synchronized with real-time data after every cell execution.
 
-In IDEA projects you can use [gradle plugin](installation.md#data-schema-preprocessor) to extract schema from dataset
+In IDEA projects, you can use the [Gradle plugin](gradle.md#configuration) to extract schema from the dataset
 and generate extension properties.
 
 ## DataSchema workflow in Jupyter
@@ -27,6 +27,7 @@ val df = dataFrameOf("name", "age")(
 )
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Schemas.createDfNullable.html"/>
 <!---END-->
 
 the following actions take place:
@@ -140,6 +141,7 @@ val df = dataFrameOf("name", "age", "weight")(
 )
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Schemas.extendedDf.html"/>
 <!---END-->
 
 Schema of `df` is compatible with `Person`, so auto-generated schema interface will inherit from it:
@@ -160,6 +162,7 @@ Despite `df` has additional column `weight`, previously defined functions for `D
 df.splitName()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Schemas.splitNameWorks.html"/>
 <!---END-->
 
 ```text
@@ -174,6 +177,7 @@ firstName lastName age weight
 df.adults()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Schemas.adultsWorks.html"/>
 <!---END-->
 
 ```text
@@ -227,6 +231,7 @@ val df = dataFrameOf("name", "age")(
 )
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Schemas.createDf.html"/>
 <!---END-->
 
 Now `df` is assignable to `DataFrame<Person>` and `countAdults` is available:

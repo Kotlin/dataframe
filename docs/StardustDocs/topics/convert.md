@@ -21,6 +21,7 @@ df.convert { age }.with { it.toDouble() }
 df.convert { dfsOf<String>() }.with { it.toCharArray().toList() }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convert.html"/>
 <!---END-->
 
 `convert` supports automatic type conversions between the following types:
@@ -45,6 +46,7 @@ df.convert { name.firstName and name.lastName }.to { it.length() }
 df.convert { weight }.toFloat()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertTo.html"/>
 <!---END-->
 
 Automatic conversion from `String` into enum class is also supported:
@@ -60,4 +62,5 @@ dataFrameOf("direction")("NORTH", "WEST")
     .convert("direction").to<Direction>()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertToEnum.html"/>
 <!---END-->

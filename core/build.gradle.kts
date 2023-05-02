@@ -1,4 +1,5 @@
 import com.google.devtools.ksp.gradle.KspTaskJvm
+import com.google.devtools.ksp.gradle.KspTask
 import nl.jolanrensen.docProcessor.defaultProcessors.*
 import nl.jolanrensen.docProcessor.gradle.creatingProcessDocTask
 import org.gradle.jvm.tasks.Jar
@@ -33,9 +34,27 @@ repositories {
     maven(jupyterApiTCRepo)
 }
 
+kotlin.sourceSets {
+    main {
+        kotlin.srcDir("build/generated/ksp/main/kotlin/")
+    }
+    test {
+        kotlin.srcDir("build/generated/ksp/test/kotlin/")
+    }
+}
+
+sourceSets {
+    create("samples") {
+        kotlin.srcDir("src/test/kotlin")
+    }
+}
+
 dependencies {
+    val kotlinCompilerPluginClasspathSamples by configurations.getting
+
     api(libs.kotlin.reflect)
     implementation(libs.kotlin.stdlib)
+    kotlinCompilerPluginClasspathSamples(project(":plugins:expressions-converter"))
     implementation(libs.kotlin.stdlib.jdk8)
 
     api(libs.commonsCsv)
@@ -53,13 +72,69 @@ dependencies {
     testImplementation(libs.jsoup)
 }
 
-kotlin.sourceSets {
-    main {
-        kotlin.srcDir("build/generated/ksp/main/kotlin/")
+val samplesImplementation by configurations.getting {
+    extendsFrom(configurations.testImplementation.get())
+}
+
+val myKotlinCompileTask = tasks.named<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>("compileSamplesKotlin") {
+    friendPaths.from(sourceSets["main"].output.classesDirs)
+    source(sourceSets["test"].kotlin)
+    destinationDirectory.set(file("$buildDir/classes/testWithOutputs/kotlin"))
+}
+
+tasks.withType<KspTask> {
+    // "test" classpath is re-used, so repeated generation should be disabled
+    if (name == "kspSamplesKotlin") {
+        dependsOn("kspTestKotlin")
+        enabled = false
     }
-    test {
-        kotlin.srcDir("build/generated/ksp/test/kotlin/")
+}
+
+tasks.named("lintKotlinSamples") {
+    onlyIf { false }
+}
+
+val samplesTest = tasks.register<Test>("samplesTest") {
+    group = "Verification"
+    description = "Runs the custom tests."
+
+    dependsOn(myKotlinCompileTask)
+
+    doFirst {
+        delete {
+            delete(fileTree(File(buildDir, "dataframes")))
+        }
     }
+
+    environment("DATAFRAME_SAVE_OUTPUTS", "")
+
+    filter {
+        includeTestsMatching("org.jetbrains.kotlinx.dataframe.samples.api.*")
+    }
+
+    ignoreFailures = true
+
+    testClassesDirs = fileTree("$buildDir/classes/testWithOutputs/kotlin")
+    classpath = files("$buildDir/classes/testWithOutputs/kotlin") + configurations["samplesRuntimeClasspath"] + sourceSets["main"].runtimeClasspath
+}
+
+val clearSamplesOutputs by tasks.creating {
+    group = "documentation"
+
+    doFirst {
+        delete {
+            delete(fileTree(File(projectDir, "../docs/StardustDocs/snippets")))
+        }
+    }
+}
+
+val copySamplesOutputs = tasks.register<JavaExec>("copySamplesOutputs") {
+    group = "documentation"
+    mainClass.set("org.jetbrains.kotlinx.dataframe.explainer.SampleAggregatorKt")
+
+    dependsOn(samplesTest)
+    dependsOn(clearSamplesOutputs)
+    classpath = sourceSets.test.get().runtimeClasspath
 }
 
 val generatedSourcesFolderName = "generated-sources"
@@ -164,18 +239,19 @@ korro {
 kotlinter {
     ignoreFailures = false
     reporters = arrayOf("checkstyle", "plain")
-//    experimentalRules = true
-//    disabledRules = arrayOf(
-//        "no-wildcard-imports",
-//        "experimental:spacing-between-declarations-with-annotations",
-//        "experimental:enum-entry-name-case",
-//        "experimental:argument-list-wrapping",
-//        "experimental:annotation",
-//        "max-line-length",
-//        "filename",
-//        "comment-spacing",
-//        "curly-spacing",
-//    )
+    experimentalRules = true
+    disabledRules = arrayOf(
+        "no-wildcard-imports",
+        "experimental:spacing-between-declarations-with-annotations",
+        "experimental:enum-entry-name-case",
+        "experimental:argument-list-wrapping",
+        "experimental:annotation",
+        "max-line-length",
+        "filename",
+        "comment-spacing",
+        "curly-spacing",
+        "experimental:annotation-spacing"
+    )
 }
 
 tasks.withType<KspTaskJvm> {

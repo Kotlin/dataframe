@@ -46,6 +46,7 @@ df.move { name.cols() }.toTop()
 df.move { dfs { it.name() == "e" } }.toTop { it.parentName + it.name() }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.move.html"/>
 <!---END-->
 
 Special cases of `move`:

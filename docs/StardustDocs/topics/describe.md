@@ -31,6 +31,7 @@ Collected statistics:
 df.describe()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.describe.html"/>
 <!---END-->
 
 To describe only specific columns, pass them as an argument:
@@ -61,4 +62,5 @@ df.describe { "age" and "name".all() }
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.describeColumns.html"/>
 <!---END-->

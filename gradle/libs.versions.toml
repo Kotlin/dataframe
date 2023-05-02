@@ -1,5 +1,5 @@
 [versions]
-ksp = "1.8.20-1.0.10"
+ksp = "1.8.20-1.0.11"
 kotlinJupyter = "0.11.0-358"
 ktlint = "3.14.0"
 kotlin = "1.8.20"

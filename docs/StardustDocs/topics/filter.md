@@ -33,6 +33,7 @@ df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.filter.html"/>
 <!---END-->
 
 ## filterBy
@@ -63,4 +64,5 @@ df.filterBy("isHappy")
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.filterBy.html"/>
 <!---END-->
