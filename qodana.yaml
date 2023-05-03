@@ -3,3 +3,7 @@ profile:
   name: qodana.starter
 include:
   - name: CheckDependencyLicenses
+exclude:
+  - name: All
+    paths:
+      - build/generated/*
