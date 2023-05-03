@@ -23,12 +23,17 @@ import kotlin.reflect.KProperty
 // region DataColumn
 
 public fun <T : Comparable<T>> DataColumn<T?>.max(): T = maxOrNull().suggestIfNull("max")
+
 public fun <T : Comparable<T>> DataColumn<T?>.maxOrNull(): T? = asSequence().filterNotNull().maxOrNull()
 
-public fun <T, R : Comparable<R>> DataColumn<T>.maxBy(selector: (T) -> R): T = maxByOrNull(selector).suggestIfNull("maxBy")
+public fun <T, R : Comparable<R>> DataColumn<T>.maxBy(selector: (T) -> R): T =
+    maxByOrNull(selector).suggestIfNull("maxBy")
+
 public fun <T, R : Comparable<R>> DataColumn<T>.maxByOrNull(selector: (T) -> R): T? = values.maxByOrNull(selector)
 
-public fun <T, R : Comparable<R>> DataColumn<T>.maxOf(selector: (T) -> R): R = maxOfOrNull(selector).suggestIfNull("maxOf")
+public fun <T, R : Comparable<R>> DataColumn<T>.maxOf(selector: (T) -> R): R =
+    maxOfOrNull(selector).suggestIfNull("maxOf")
+
 public fun <T, R : Comparable<R>> DataColumn<T>.maxOfOrNull(selector: (T) -> R): R? = values.maxOfOrNull(selector)
 
 // endregion
@@ -36,8 +41,11 @@ public fun <T, R : Comparable<R>> DataColumn<T>.maxOfOrNull(selector: (T) -> R):
 // region DataRow
 
 public fun AnyRow.rowMaxOrNull(): Any? = values().filterIsInstance<Comparable<*>>().maxWithOrNull(compareBy { it })
+
 public fun AnyRow.rowMax(): Any = rowMaxOrNull().suggestIfNull("rowMax")
+
 public inline fun <reified T : Comparable<T>> AnyRow.rowMaxOfOrNull(): T? = values().filterIsInstance<T>().maxOrNull()
+
 public inline fun <reified T : Comparable<T>> AnyRow.rowMaxOf(): T = rowMaxOfOrNull<T>().suggestIfNull("rowMaxOf")
 
 // endregion
@@ -50,6 +58,7 @@ public fun <T, C : Comparable<C>> DataFrame<T>.maxFor(columns: ColumnsForAggrega
     Aggregators.max.aggregateFor(this, columns)
 
 public fun <T> DataFrame<T>.maxFor(vararg columns: String): DataRow<T> = maxFor { columns.toComparableColumns() }
+
 public fun <T, C : Comparable<C>> DataFrame<T>.maxFor(vararg columns: ColumnReference<C?>): DataRow<T> =
     maxFor { columns.toColumnSet() }
 
@@ -60,6 +69,7 @@ public fun <T, C : Comparable<C>> DataFrame<T>.max(columns: ColumnsSelector<T, C
     maxOrNull(columns).suggestIfNull("max")
 
 public fun <T> DataFrame<T>.max(vararg columns: String): Comparable<Any?> = maxOrNull(*columns).suggestIfNull("max")
+
 public fun <T, C : Comparable<C>> DataFrame<T>.max(vararg columns: ColumnReference<C?>): C =
     maxOrNull(*columns).suggestIfNull("max")
 
@@ -88,6 +98,7 @@ public fun <T, C : Comparable<C>> DataFrame<T>.maxBy(expression: RowExpression<T
     maxByOrNull(expression).suggestIfNull("maxBy")
 
 public fun <T> DataFrame<T>.maxBy(column: String): DataRow<T> = maxByOrNull(column).suggestIfNull("maxBy")
+
 public fun <T, C : Comparable<C>> DataFrame<T>.maxBy(column: ColumnReference<C?>): DataRow<T> =
     maxByOrNull(column).suggestIfNull("maxBy")
 
@@ -96,8 +107,13 @@ public fun <T, C : Comparable<C>> DataFrame<T>.maxBy(column: KProperty<C?>): Dat
 
 public fun <T, C : Comparable<C>> DataFrame<T>.maxByOrNull(expression: RowExpression<T, C?>): DataRow<T>? =
     getOrNull(rows().asSequence().map { expression(it, it) }.indexOfMax())
-public fun <T> DataFrame<T>.maxByOrNull(column: String): DataRow<T>? = maxByOrNull(column.toColumnOf<Comparable<Any?>?>())
-public fun <T, C : Comparable<C>> DataFrame<T>.maxByOrNull(column: ColumnReference<C?>): DataRow<T>? = getOrNull(get(column).asSequence().indexOfMax())
+
+public fun <T> DataFrame<T>.maxByOrNull(column: String): DataRow<T>? =
+    maxByOrNull(column.toColumnOf<Comparable<Any?>?>())
+
+public fun <T, C : Comparable<C>> DataFrame<T>.maxByOrNull(column: ColumnReference<C?>): DataRow<T>? =
+    getOrNull(get(column).asSequence().indexOfMax())
+
 public fun <T, C : Comparable<C>> DataFrame<T>.maxByOrNull(column: KProperty<C?>): DataRow<T>? =
     maxByOrNull(column.toColumnAccessor())
 
@@ -111,6 +127,7 @@ public fun <T, C : Comparable<C>> Grouped<T>.maxFor(columns: ColumnsForAggregate
     Aggregators.max.aggregateFor(this, columns)
 
 public fun <T> Grouped<T>.maxFor(vararg columns: String): DataFrame<T> = maxFor { columns.toComparableColumns() }
+
 public fun <T, C : Comparable<C>> Grouped<T>.maxFor(vararg columns: ColumnReference<C?>): DataFrame<T> =
     maxFor { columns.toColumnSet() }
 
@@ -160,7 +177,7 @@ public fun <T> Pivot<T>.max(separate: Boolean = false): DataRow<T> = delegate { 
 
 public fun <T, R : Comparable<R>> Pivot<T>.maxFor(
     separate: Boolean = false,
-    columns: ColumnsForAggregateSelector<T, R?>
+    columns: ColumnsForAggregateSelector<T, R?>,
 ): DataRow<T> = delegate { maxFor(separate, columns) }
 
 public fun <T> Pivot<T>.maxFor(vararg columns: String, separate: Boolean = false): DataRow<T> =
@@ -177,7 +194,9 @@ public fun <T, R : Comparable<R>> Pivot<T>.maxFor(
 ): DataRow<T> = maxFor(separate) { columns.toColumnSet() }
 
 public fun <T, R : Comparable<R>> Pivot<T>.max(columns: ColumnsSelector<T, R?>): DataRow<T> = delegate { max(columns) }
+
 public fun <T> Pivot<T>.max(vararg columns: String): DataRow<T> = max { columns.toComparableColumns() }
+
 public fun <T, R : Comparable<R>> Pivot<T>.max(vararg columns: ColumnReference<R?>): DataRow<T> =
     max { columns.toColumnSet() }
 
@@ -207,7 +226,7 @@ public fun <T> PivotGroupBy<T>.max(separate: Boolean = false): DataFrame<T> = ma
 
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.maxFor(
     separate: Boolean = false,
-    columns: ColumnsForAggregateSelector<T, R?>
+    columns: ColumnsForAggregateSelector<T, R?>,
 ): DataFrame<T> =
     Aggregators.max.aggregateFor(this, separate, columns)
 
@@ -228,6 +247,7 @@ public fun <T, R : Comparable<R>> PivotGroupBy<T>.max(columns: ColumnsSelector<T
     Aggregators.max.aggregateAll(this, columns)
 
 public fun <T> PivotGroupBy<T>.max(vararg columns: String): DataFrame<T> = max { columns.toComparableColumns() }
+
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.max(vararg columns: ColumnReference<R?>): DataFrame<T> =
     max { columns.toColumnSet() }
 

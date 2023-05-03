@@ -14,16 +14,19 @@ import kotlin.reflect.typeOf
 // region GroupBy
 
 public fun <T, G> GroupBy<T, G>.into(column: String): DataFrame<T> = toDataFrame(column)
+
 public fun <T> GroupBy<T, *>.into(column: ColumnAccessor<AnyFrame>): DataFrame<T> = toDataFrame(column.name())
+
 public fun <T> GroupBy<T, *>.into(column: KProperty<AnyFrame>): DataFrame<T> = toDataFrame(column.columnName)
 
 public inline fun <T, G, reified V> GroupBy<T, G>.into(
     columnName: String? = null,
-    noinline expression: RowExpression<G, V>
+    noinline expression: RowExpression<G, V>,
 ): DataFrame<G> = into(pathOf(columnName ?: groups.name()).cast(), expression)
+
 public inline fun <T, G, reified V> GroupBy<T, G>.into(
     column: ColumnAccessor<V>,
-    noinline expression: RowExpression<G, V>
+    noinline expression: RowExpression<G, V>,
 ): DataFrame<G> {
     val type = typeOf<V>()
     val path = column.path()
@@ -31,7 +34,11 @@ public inline fun <T, G, reified V> GroupBy<T, G>.into(
         internal().withExpr(type, path, expression)
     }
 }
-public inline fun <T, G, reified V> GroupBy<T, G>.into(column: KProperty<V>, noinline expression: RowExpression<G, V>): DataFrame<G> = into(column.columnName, expression)
+
+public inline fun <T, G, reified V> GroupBy<T, G>.into(
+    column: KProperty<V>,
+    noinline expression: RowExpression<G, V>,
+): DataFrame<G> = into(column.columnName, expression)
 
 // endregion
 
@@ -39,7 +46,7 @@ public inline fun <T, G, reified V> GroupBy<T, G>.into(column: KProperty<V>, noi
 
 public inline fun <T, G, reified V> ReducedGroupBy<T, G>.into(
     columnName: String? = null,
-    noinline expression: RowExpression<G, V>
+    noinline expression: RowExpression<G, V>,
 ): DataFrame<G> {
     val type = typeOf<V>()
     val name = columnName ?: groupBy.groups.name()
@@ -50,17 +57,21 @@ public inline fun <T, G, reified V> ReducedGroupBy<T, G>.into(
         }
     }
 }
+
 public inline fun <T, G, reified V> ReducedGroupBy<T, G>.into(
     column: ColumnAccessor<V>,
-    noinline expression: RowExpression<G, V>
+    noinline expression: RowExpression<G, V>,
 ): DataFrame<G> = into(column.name(), expression)
+
 public inline fun <T, G, reified V> ReducedGroupBy<T, G>.into(
     column: KProperty<V>,
-    noinline expression: RowExpression<G, V>
+    noinline expression: RowExpression<G, V>,
 ): DataFrame<G> = into(column.columnName, expression)
 
 public fun <T, G> ReducedGroupBy<T, G>.into(columnName: String): DataFrame<G> = into(columnName) { this }
+
 public fun <T, G> ReducedGroupBy<T, G>.into(column: ColumnAccessor<AnyRow>): DataFrame<G> = into(column) { this }
+
 public fun <T, G> ReducedGroupBy<T, G>.into(column: KProperty<AnyRow>): DataFrame<G> = into(column) { this }
 
 public fun <T, G> ReducedGroupBy<T, G>.concat(): DataFrame<G> = groupBy.groups.values().map { reducer(it, it) }.concat()

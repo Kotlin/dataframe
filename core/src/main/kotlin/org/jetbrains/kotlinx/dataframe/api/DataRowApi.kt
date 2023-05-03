@@ -20,6 +20,7 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
 public fun AnyRow.isEmpty(): Boolean = owner.columns().all { it[index] == null }
+
 public fun AnyRow.isNotEmpty(): Boolean = !isEmpty()
 
 public inline fun <reified R> AnyRow.valuesOf(): List<R> = values().filterIsInstance<R>()
@@ -30,9 +31,11 @@ public data class NameValuePair<V>(val name: String, val value: V)
 
 // Without these overloads row.transpose().name or row.map { name } won't resolve
 public val ColumnsContainer<NameValuePair<*>>.name: DataColumn<String> @JvmName("NameValuePairAny_name") get() = this["name"] as DataColumn<String>
+
 public val DataRow<NameValuePair<*>>.name: String @JvmName("NameValuePairAny_name") get() = this["name"] as String
 
 public val ColumnsContainer<NameValuePair<*>>.value: DataColumn<*> @JvmName("NameValuePairAny_value") get() = this["value"]
+
 public val DataRow<NameValuePair<*>>.value: Any? @JvmName("NameValuePairAny_value") get() = this["value"]
 
 // endregion
@@ -46,10 +49,13 @@ public fun AnyRow.namedValues(): List<NameValuePair<Any?>> =
 // region getValue
 
 public fun <T> AnyRow.getValue(columnName: String): T = get(columnName) as T
+
 public fun <T> AnyRow.getValue(column: ColumnReference<T>): T = get(column)
+
 public fun <T> AnyRow.getValue(column: KProperty<T>): T = get(column)
 
 public fun <T> AnyRow.getValueOrNull(columnName: String): T? = getOrNull(columnName) as T?
+
 public fun <T> AnyRow.getValueOrNull(column: KProperty<T>): T? = getValueOrNull<T>(column.columnName)
 
 // endregion
@@ -57,10 +63,13 @@ public fun <T> AnyRow.getValueOrNull(column: KProperty<T>): T? = getValueOrNull<
 // region contains
 
 public fun AnyRow.containsKey(columnName: String): Boolean = owner.containsColumn(columnName)
+
 public fun AnyRow.containsKey(column: AnyColumnReference): Boolean = owner.containsColumn(column)
+
 public fun AnyRow.containsKey(column: KProperty<*>): Boolean = owner.containsColumn(column)
 
 public operator fun AnyRow.contains(column: AnyColumnReference): Boolean = containsKey(column)
+
 public operator fun AnyRow.contains(column: KProperty<*>): Boolean = containsKey(column)
 
 // endregion
@@ -80,12 +89,15 @@ public fun <T> DataRow<T>.diff(expression: RowExpression<T, Float>): Float? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
 public fun AnyRow.columnsCount(): Int = df().ncol
+
 public fun AnyRow.columnNames(): List<String> = df().columnNames()
+
 public fun AnyRow.columnTypes(): List<KType> = df().columnTypes()
 
 public fun <T> DataRow<T>.getRow(index: Int): DataRow<T> = getRowOrNull(index)!!
 
 public fun <T> DataRow<T>.getRows(indices: Iterable<Int>): DataFrame<T> = df().getRows(indices)
+
 public fun <T> DataRow<T>.getRows(indices: IntRange): DataFrame<T> = df().getRows(indices)
 
 public fun <T> DataRow<T>.getRowOrNull(index: Int): DataRow<T>? {

@@ -19,7 +19,10 @@ import kotlin.reflect.typeOf
 
 // region ColumnReference
 
-public inline fun <C, reified R> ColumnReference<C>.map(infer: Infer = Infer.Nulls, noinline transform: (C) -> R): ColumnReference<R> =
+public inline fun <C, reified R> ColumnReference<C>.map(
+    infer: Infer = Infer.Nulls,
+    noinline transform: (C) -> R,
+): ColumnReference<R> =
     createComputedColumnReference(name(), typeOf<R>(), infer) { transform(this@map()) }
 
 // endregion
@@ -28,7 +31,7 @@ public inline fun <C, reified R> ColumnReference<C>.map(infer: Infer = Infer.Nul
 
 public inline fun <T, reified R> DataColumn<T>.map(
     infer: Infer = Infer.Nulls,
-    crossinline transform: (T) -> R
+    crossinline transform: (T) -> R,
 ): DataColumn<R> {
     val newValues = Array(size()) { transform(get(it)) }.asList()
     return DataColumn.create(name(), newValues, typeOf<R>(), infer)
@@ -37,7 +40,7 @@ public inline fun <T, reified R> DataColumn<T>.map(
 public fun <T, R> DataColumn<T>.map(
     type: KType,
     infer: Infer = Infer.Nulls,
-    transform: (T) -> R
+    transform: (T) -> R,
 ): DataColumn<R> {
     val values = Array<Any?>(size()) { transform(get(it)) }.asList()
     return DataColumn.create(name(), values, type, infer).cast()
@@ -45,7 +48,7 @@ public fun <T, R> DataColumn<T>.map(
 
 public inline fun <T, reified R> DataColumn<T>.mapIndexed(
     infer: Infer = Infer.Nulls,
-    crossinline transform: (Int, T) -> R
+    crossinline transform: (Int, T) -> R,
 ): DataColumn<R> {
     val newValues = Array(size()) { transform(it, get(it)) }.asList()
     return DataColumn.create(name(), newValues, typeOf<R>(), infer)
@@ -54,7 +57,7 @@ public inline fun <T, reified R> DataColumn<T>.mapIndexed(
 public fun <T, R> DataColumn<T>.mapIndexed(
     type: KType,
     infer: Infer = Infer.Nulls,
-    transform: (Int, T) -> R
+    transform: (Int, T) -> R,
 ): DataColumn<R> {
     val values = Array<Any?>(size()) { transform(it, get(it)) }.asList()
     return DataColumn.create(name(), values, type, infer).cast()
@@ -69,40 +72,40 @@ public fun <T, R> DataFrame<T>.map(transform: RowExpression<T, R>): List<R> = ro
 public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
     name: String,
     infer: Infer = Infer.Nulls,
-    noinline body: AddExpression<T, R>
+    noinline body: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(name, typeOf<R>(), infer, body)
 
 public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
     column: ColumnAccessor<R>,
     infer: Infer = Infer.Nulls,
-    noinline body: AddExpression<T, R>
+    noinline body: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(column, typeOf<R>(), infer, body)
 
 public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
     column: KProperty<R>,
     infer: Infer = Infer.Nulls,
-    noinline body: AddExpression<T, R>
+    noinline body: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(column, typeOf<R>(), infer, body)
 
 public fun <T, R> ColumnsContainer<T>.mapToColumn(
     name: String,
     type: KType,
     infer: Infer = Infer.Nulls,
-    body: AddExpression<T, R>
+    body: AddExpression<T, R>,
 ): DataColumn<R> = newColumn(type, name, infer, body)
 
 public fun <T, R> ColumnsContainer<T>.mapToColumn(
     column: ColumnAccessor<R>,
     type: KType,
     infer: Infer = Infer.Nulls,
-    body: AddExpression<T, R>
+    body: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(column.name(), type, infer, body)
 
 public fun <T, R> ColumnsContainer<T>.mapToColumn(
     column: KProperty<R>,
     type: KType,
     infer: Infer = Infer.Nulls,
-    body: AddExpression<T, R>
+    body: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(column.columnName, type, infer, body)
 
 public fun <T> DataFrame<T>.mapToFrame(body: AddDsl<T>.() -> Unit): AnyFrame {
@@ -115,11 +118,12 @@ public fun <T> DataFrame<T>.mapToFrame(body: AddDsl<T>.() -> Unit): AnyFrame {
 
 // region GroupBy
 
-public fun <T, G, R> GroupBy<T, G>.map(body: Selector<GroupWithKey<T, G>, R>): List<R> = keys.rows().mapIndexedNotNull { index, row ->
-    val group = groups[index]
-    val g = GroupWithKey(row, group)
-    body(g, g)
-}
+public fun <T, G, R> GroupBy<T, G>.map(body: Selector<GroupWithKey<T, G>, R>): List<R> =
+    keys.rows().mapIndexedNotNull { index, row ->
+        val group = groups[index]
+        val g = GroupWithKey(row, group)
+        body(g, g)
+    }
 
 public fun <T, G> GroupBy<T, G>.mapToRows(body: Selector<GroupWithKey<T, G>, DataRow<G>?>): DataFrame<G> =
     map(body).concat()
