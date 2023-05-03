@@ -125,4 +125,5 @@ public enum class JoinType {
 }
 
 public val JoinType.allowLeftNulls: Boolean get() = this == JoinType.Right || this == JoinType.Full
+
 public val JoinType.allowRightNulls: Boolean get() = this == JoinType.Left || this == JoinType.Full || this == JoinType.Exclude

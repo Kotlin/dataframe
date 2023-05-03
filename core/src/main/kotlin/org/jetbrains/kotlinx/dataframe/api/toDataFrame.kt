@@ -166,7 +166,7 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
     public abstract fun properties(
         vararg roots: KProperty<*>,
         maxDepth: Int = 0,
-        body: (TraversePropertiesDsl.() -> Unit)? = null
+        body: (TraversePropertiesDsl.() -> Unit)? = null,
     )
 
     public inline fun <reified R> expr(noinline expression: (T) -> R): DataColumn<R> =

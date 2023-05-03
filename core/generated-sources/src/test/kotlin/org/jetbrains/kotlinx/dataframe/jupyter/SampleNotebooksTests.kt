@@ -109,7 +109,7 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
         cleanup: () -> Unit = {},
     ) {
         val fileName = if (notebookName == null) "$dir.ipynb" else "$notebookName.ipynb"
-        doTest("$jupyterExamplesPath/$dir/$fileName", replacer, cellClause, cleanup)
+        doTest("$notebookExamplesPath/$dir/$fileName", replacer, cellClause, cleanup)
     }
 
     data class CodeCellData(
@@ -119,8 +119,8 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
 
     companion object {
         const val ideaExamplesPath = "../examples/idea-examples"
-        const val jupyterExamplesPath = "../examples/jupyter-notebooks"
+        const val notebookExamplesPath = "../examples/notebooks"
 
-        fun testFile(folder: String, fileName: String) = fileName to "$jupyterExamplesPath/$folder/$fileName"
+        fun testFile(folder: String, fileName: String) = fileName to "$notebookExamplesPath/$folder/$fileName"
     }
 }
