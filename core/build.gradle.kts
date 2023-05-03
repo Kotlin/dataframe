@@ -1,8 +1,9 @@
-import com.google.devtools.ksp.gradle.KspTaskJvm
 import com.google.devtools.ksp.gradle.KspTask
+import com.google.devtools.ksp.gradle.KspTaskJvm
 import nl.jolanrensen.docProcessor.defaultProcessors.*
 import nl.jolanrensen.docProcessor.gradle.creatingProcessDocTask
 import org.gradle.jvm.tasks.Jar
+import org.jmailen.gradle.kotlinter.support.ReporterType
 import org.jmailen.gradle.kotlinter.tasks.LintTask
 import xyz.ronella.gradle.plugin.simple.git.task.GitTask
 
@@ -115,7 +116,9 @@ val samplesTest = tasks.register<Test>("samplesTest") {
     ignoreFailures = true
 
     testClassesDirs = fileTree("$buildDir/classes/testWithOutputs/kotlin")
-    classpath = files("$buildDir/classes/testWithOutputs/kotlin") + configurations["samplesRuntimeClasspath"] + sourceSets["main"].runtimeClasspath
+    classpath = files("$buildDir/classes/testWithOutputs/kotlin") +
+        configurations["samplesRuntimeClasspath"] +
+        sourceSets["main"].runtimeClasspath
 }
 
 val clearSamplesOutputs by tasks.creating {
@@ -153,7 +156,7 @@ fun pathOf(vararg parts: String) = parts.joinToString(File.separator)
 // Task to generate the processed documentation
 val processKDocsMain by creatingProcessDocTask(
     sources = (kotlinMainSources + kotlinTestSources) // Include both test and main sources for cross-referencing
-        .filterNot { pathOf("build", "generated") in it.path }, // Exclude generated sources
+        .filterNot { pathOf("build", "generated") in it.path } // Exclude generated sources
 ) {
     target = file(generatedSourcesFolderName)
     processors = listOf(
@@ -161,7 +164,7 @@ val processKDocsMain by creatingProcessDocTask(
         INCLUDE_FILE_DOC_PROCESSOR,
         INCLUDE_ARG_DOC_PROCESSOR,
         COMMENT_DOC_PROCESSOR,
-        SAMPLE_DOC_PROCESSOR,
+        SAMPLE_DOC_PROCESSOR
     )
 
     task {
@@ -193,9 +196,11 @@ tasks.withType<Jar> {
                         pathOf("src", "test", "kotlin") in it.path ||
                             pathOf("src", "test", "java") in it.path
                     } // filter out test sources again
-                    .plus(kotlinMainSources.filter {
-                        pathOf("build", "generated") in it.path
-                    }) // Include generated sources (which were excluded above)
+                    .plus(
+                        kotlinMainSources.filter {
+                            pathOf("build", "generated") in it.path
+                        }
+                    ) // Include generated sources (which were excluded above)
             )
         }
     }
@@ -238,7 +243,11 @@ korro {
 
 kotlinter {
     ignoreFailures = false
-    reporters = arrayOf("checkstyle", "plain")
+    reporters = arrayOf(
+        ReporterType.checkstyle.name,
+        ReporterType.plain.name,
+    )
+
 //    experimentalRules = true
 //    disabledRules = arrayOf(
 //        "no-wildcard-imports",
