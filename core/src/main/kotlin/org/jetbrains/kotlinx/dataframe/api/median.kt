@@ -37,8 +37,7 @@ public inline fun <T, reified R : Comparable<R>> DataColumn<T>.medianOf(noinline
 
 // region DataRow
 
-public fun AnyRow.rowMedianOrNull(): Any? =
-    org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators.median.aggregateMixed(
+public fun AnyRow.rowMedianOrNull(): Any? = Aggregators.median.aggregateMixed(
         values().filterIsInstance<Comparable<Any?>>().asIterable()
     )
 

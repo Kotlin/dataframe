@@ -29,13 +29,18 @@ internal object Aggregators {
         AggregatorOptionSwitch2.Factory(getAggregator)
 
     val min by preservesType<Comparable<Any?>> { minOrNull() }
+
     val max by preservesType<Comparable<Any?>> { maxOrNull() }
+
     val std by withOption2<Boolean, Int, Number, Double> { skipNA, ddof ->
         mergedValues { std(it, skipNA, ddof) }
     }
+
     val mean by withOption<Boolean, Number, Double> { skipNA ->
         changesType({ mean(it, skipNA) }) { mean(skipNA) }
     }
+
     val median by mergedValues<Comparable<Any?>, Comparable<Any?>> { median(it) }
+
     val sum by extendsNumbers { sum(it) }
 }

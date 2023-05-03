@@ -35,12 +35,19 @@ import kotlin.reflect.typeOf
 // region column
 
 public fun <T> column(): ColumnDelegate<T> = ColumnDelegate()
+
 public fun <T> column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(name)
+
 public fun <T> column(path: ColumnPath): ColumnAccessor<T> = ColumnAccessorImpl(path)
+
 public fun <T> column(property: KProperty<T>): ColumnAccessor<T> = ColumnAccessorImpl(property.name)
+
 public fun <T> ColumnGroupReference.column(): ColumnDelegate<T> = ColumnDelegate(this)
+
 public fun <T> ColumnGroupReference.column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(path() + name)
+
 public fun <T> ColumnGroupReference.column(path: ColumnPath): ColumnAccessor<T> = ColumnAccessorImpl(this.path() + path)
+
 public fun <T> ColumnGroupReference.column(property: KProperty<T>): ColumnAccessor<T> =
     ColumnAccessorImpl(this.path() + property.name)
 

@@ -37,7 +37,6 @@ public inline fun <T, reified R> DataFrame<T>.insert(
 
 // endregion
 
-
 public data class InsertClause<T>(val df: DataFrame<T>, val column: AnyCol)
 
 // region under

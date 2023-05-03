@@ -12,8 +12,6 @@ import kotlin.reflect.KProperty
 
 // region DataFrame
 
-// region group
-
 public fun <T, C> DataFrame<T>.group(columns: ColumnsSelector<T, C>): GroupClause<T, C> = GroupClause(this, columns)
 
 public fun <T> DataFrame<T>.group(vararg columns: String): GroupClause<T, Any?> = group { columns.toColumnSet() }
@@ -24,6 +22,8 @@ public fun <T> DataFrame<T>.group(vararg columns: AnyColumnReference): GroupClau
 public fun <T> DataFrame<T>.group(vararg columns: KProperty<*>): GroupClause<T, Any?> = group { columns.toColumnSet() }
 
 // endregion
+
+// region GroupClause
 
 public data class GroupClause<T, C>(val df: DataFrame<T>, val columns: ColumnsSelector<T, C>)
 

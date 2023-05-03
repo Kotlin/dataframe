@@ -72,6 +72,10 @@ public fun <T> DataFrame<T>.moveToRight(vararg columns: KProperty<*>): DataFrame
 
 // endregion
 
+// endregion
+
+// region MoveClause
+
 // region into
 
 public fun <T, C> MoveClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> AnyColumnReference): DataFrame<T> =
@@ -131,8 +135,6 @@ public fun <T, C> MoveClause<T, C>.after(column: KProperty<*>): DataFrame<T> = a
 
 // endregion
 
-// endregion
-
 // TODO: implement 'before'
 /*
 fun <T, C> MoveColsClause<T, C>.before(columnPath: ColumnPath) = before { columnPath.toColumnDef() }
@@ -147,3 +149,5 @@ public fun <T, C> MoveClause<T, C>.toLeft(): DataFrame<T> = to(0)
 public fun <T, C> MoveClause<T, C>.toRight(): DataFrame<T> = to(df.ncol)
 
 public class MoveClause<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>)
+
+// endregion

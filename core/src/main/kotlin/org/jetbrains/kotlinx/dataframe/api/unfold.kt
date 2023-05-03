@@ -29,4 +29,3 @@ public fun <T> DataFrame<T>.unfold(vararg columns: String): DataFrame<T> = unfol
 public fun <T> DataFrame<T>.unfold(vararg columns: AnyColumnReference): DataFrame<T> = unfold { columns.toColumnSet() }
 
 public fun <T> DataFrame<T>.unfold(vararg columns: KProperty<*>): DataFrame<T> = unfold { columns.toColumnSet() }
-

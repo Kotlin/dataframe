@@ -32,6 +32,8 @@ public fun <T, C> DataFrame<T>.format(vararg columns: ColumnReference<C>): Forma
 public fun <T, C> DataFrame<T>.format(vararg columns: KProperty<C>): FormatClause<T, C> =
     format { columns.toColumnSet() }
 
+public fun <T> DataFrame<T>.format(): FormatClause<T, Any?> = FormatClause(this)
+
 // endregion
 
 public fun <T, C> FormatClause<T, C>.perRowCol(formatter: RowColFormatter<T, C>): FormattedFrame<T> =
@@ -41,8 +43,6 @@ public fun <T, C> FormatClause<T, C>.with(formatter: CellFormatter<C>): Formatte
     formatImpl { row, col -> formatter(row[col]) }
 
 public fun <T, C> FormatClause<T, C>.where(filter: RowValueFilter<T, C>): FormatClause<T, C> = copy(filter = filter)
-
-public fun <T> DataFrame<T>.format(): FormatClause<T, Any?> = FormatClause(this)
 
 public fun <T> FormattedFrame<T>.format(): FormatClause<T, Any?> = FormatClause(df, null, formatter)
 

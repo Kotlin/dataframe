@@ -105,10 +105,12 @@ public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>)
     df.replace(columns).with { columnConverter(df, it) }
 
 public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(typeOf<C>()) as DataColumn<C>
+
 public fun AnyCol.convertTo(newType: KType): AnyCol {
-    if (this.type().withNullability(true)
-            .isSubtypeOf(typeOf<String?>()) && newType.withNullability(true) == typeOf<Double?>()
-    ) {
+    val isTypesAreCorrect = this.type().withNullability(true)
+        .isSubtypeOf(typeOf<String?>()) && newType.withNullability(true) == typeOf<Double?>()
+
+    if (isTypesAreCorrect) {
         return (this as DataColumn<String?>).convertToDouble().setNullable(newType.isMarkedNullable)
     }
     return convertToTypeImpl(newType)
@@ -183,10 +185,10 @@ public fun DataColumn<String?>.convertToDouble(locale: Locale? = null): DataColu
                 currentRow = row
                 value?.let {
                     parser(value.trim()) ?: throw TypeConversionException(
-                        value,
-                        typeOf<String>(),
-                        typeOf<Double>(),
-                        path
+                        value = value,
+                        from = typeOf<String>(),
+                        to = typeOf<Double>(),
+                        column = path
                     )
                 }
             }

@@ -40,7 +40,7 @@ public inline fun <T, reified R : Number> DataColumn<T>.meanOf(
 
 // region DataRow
 
-public fun AnyRow.rowMean(skipNA: Boolean = org.jetbrains.kotlinx.dataframe.api.skipNA_default): Double =
+public fun AnyRow.rowMean(skipNA: Boolean = skipNA_default): Double =
     values().filterIsInstance<Number>().map { it.toDouble() }.mean(skipNA)
 
 public inline fun <reified T : Number> AnyRow.rowMeanOf(): Double = values().filterIsInstance<T>().mean(typeOf<T>())

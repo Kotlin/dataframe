@@ -45,9 +45,6 @@ public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {
 public fun <T> DataFrame<T>.pivot(inward: Boolean? = null, columns: PivotColumnsSelector<T, *>): Pivot<T> =
     PivotImpl(this, columns, inward)
 
-public fun <T> DataFrame<T>.pivotMatches(inward: Boolean = true, columns: ColumnsSelector<T, *>): DataFrame<T> =
-    pivot(inward, columns).groupByOther().matches()
-
 public fun <T> DataFrame<T>.pivot(vararg columns: String, inward: Boolean? = null): Pivot<T> =
     pivot(inward) { columns.toColumnSet() }
 
@@ -60,6 +57,9 @@ public fun <T> DataFrame<T>.pivot(vararg columns: KProperty<*>, inward: Boolean?
 // endregion
 
 // region pivotMatches
+
+public fun <T> DataFrame<T>.pivotMatches(inward: Boolean = true, columns: ColumnsSelector<T, *>): DataFrame<T> =
+    pivot(inward, columns).groupByOther().matches()
 
 public fun <T> DataFrame<T>.pivotMatches(vararg columns: String, inward: Boolean = true): DataFrame<T> =
     pivotMatches(inward) { columns.toColumnSet() }
