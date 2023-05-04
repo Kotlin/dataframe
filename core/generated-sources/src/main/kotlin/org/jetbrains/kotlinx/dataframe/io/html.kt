@@ -74,8 +74,8 @@ internal fun tableJs(columns: List<ColumnDataForJs>, id: Int, rootId: Int, nrow:
     var index = 0
     val data = buildString {
         append("[")
-        fun depthFirstSearch(col: ColumnDataForJs): Int {
-            val children = col.nested.map { depthFirstSearch(it) }
+        fun appendColWithChildren(col: ColumnDataForJs): Int {
+            val children = col.nested.map { appendColWithChildren(it) }
             val colIndex = index++
             val values = col.values.joinToString(",", prefix = "[", postfix = "]") {
                 when (it) {
@@ -100,7 +100,7 @@ internal fun tableJs(columns: List<ColumnDataForJs>, id: Int, rootId: Int, nrow:
 
             return colIndex
         }
-        columns.forEach { depthFirstSearch(it) }
+        columns.forEach { appendColWithChildren(it) }
         append("]")
     }
     val js = getResourceText(

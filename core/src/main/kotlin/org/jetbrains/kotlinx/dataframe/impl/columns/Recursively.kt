@@ -5,6 +5,11 @@ import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.*
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.flattenRecursively
 
+/**
+ * Recursively implementation for [TransformableColumnSet].
+ * This converts a [TransformableColumnSet] into a [ColumnSet] by redirecting [ColumnSet.resolve]
+ * to [TransformableColumnSet.transformResolve] with a correctly configured [RecursivelyTransformer].
+ */
 internal fun <C> TransformableColumnSet<C>.recursivelyImpl(
     includeGroups: Boolean = true,
     includeTopLevel: Boolean = true,
@@ -20,6 +25,11 @@ internal fun <C> TransformableColumnSet<C>.recursivelyImpl(
         )
 }
 
+/**
+ * Recursively implementation for [TransformableSingleColumn].
+ * This converts a [TransformableSingleColumn] into a [SingleColumn] by redirecting [SingleColumn.resolveSingle]
+ * to [TransformableSingleColumn.transformResolveSingle] with a correctly configured [RecursivelyTransformer].
+ */
 internal fun <C> TransformableSingleColumn<C>.recursivelyImpl(
     includeGroups: Boolean = true,
     includeTopLevel: Boolean = true,
@@ -35,6 +45,11 @@ internal fun <C> TransformableSingleColumn<C>.recursivelyImpl(
         )
 }
 
+/**
+ * ## Recursively transformer.
+ * A [ColumnSetTransformer] implementation around the [ColumnSet.flattenRecursively] function.
+ * Created only using [recursivelyImpl].
+ */
 private class RecursivelyTransformer(
     val includeGroups: Boolean = true,
     val includeTopLevel: Boolean = true,
@@ -53,6 +68,16 @@ private class RecursivelyTransformer(
         )
 }
 
+/**
+ * Flattens a [ColumnSet]/[SingleColumn] recursively.
+ *
+ * If [this] is a [SingleColumn] containing a single [ColumnGroup], the "top-level" is
+ * considered to be the [ColumnGroup]'s children, otherwise, if this is a [ColumnSet],
+ * the "top-level" is considered to be the columns in the [ColumnSet].
+ *
+ * @param includeGroups Whether to include [ColumnGroup]s in the result.
+ * @param includeTopLevel Whether to include the "top-level" columns in the result.
+ */
 internal fun ColumnSet<*>.flattenRecursively(
     includeGroups: Boolean = true,
     includeTopLevel: Boolean = true,
@@ -65,11 +90,3 @@ internal fun ColumnSet<*>.flattenRecursively(
             .flatMap { it.children().flattenRecursively() }
     }.filter { includeGroups || !it.isColumnGroup() }
 }
-
-internal fun SingleColumn<*>.flattenRecursively(
-    includeGroups: Boolean = true,
-    includeTopLevel: Boolean = true,
-): ColumnSet<*> = (this as ColumnSet<*>).flattenRecursively(
-    includeGroups = includeGroups,
-    includeTopLevel = includeTopLevel,
-)

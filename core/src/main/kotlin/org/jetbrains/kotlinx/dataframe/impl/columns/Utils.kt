@@ -78,6 +78,11 @@ internal fun <T> DataColumn<T>.assertIsComparable(): DataColumn<T> {
     return this
 }
 
+/**
+ * Applies a transformation on [this] [SingleColumn] by converting its
+ * single [ColumnWithPath]<[A]> to [List]<[ColumnWithPath]<[B]>] using [converter].
+ * Since [converter] allows you to return multiple columns, the result is turned into a [ColumnSet]<[B]>.
+ */
 internal fun <A, B> SingleColumn<A>.transformSingle(
     converter: (ColumnWithPath<A>) -> List<ColumnWithPath<B>>,
 ): ColumnSet<B> = object : ColumnSet<B> {
@@ -88,6 +93,16 @@ internal fun <A, B> SingleColumn<A>.transformSingle(
             ?: emptyList()
 }
 
+/**
+ * Applies a transformation on [this] by converting its [List]<[ColumnWithPath]<[A]>] to [List]<[ColumnWithPath]<[B]>]
+ * using [converter].
+ *
+ * The result can either be used as a normal [ColumnSet]<[B]>,
+ * which resolves [this] and then applies [converter] on the result,
+ *
+ * or it can be used as a [TransformableColumnSet]<[B]>, where a [ColumnSetTransformer] can be injected before
+ * the [converter] is applied.
+ */
 internal fun <A, B> ColumnSet<A>.transform(
     converter: (List<ColumnWithPath<A>>) -> List<ColumnWithPath<B>>,
 ): TransformableColumnSet<B> = object : TransformableColumnSet<B> {
@@ -105,22 +120,45 @@ internal fun <A, B> ColumnSet<A>.transform(
             .let { converter(it as List<ColumnWithPath<A>>) }
 }
 
+/**
+ * Applies a transformation on [this] by converting its [List]<[ColumnWithPath]<[A]>] to [List]<[ColumnWithPath]<[B]>]
+ * using [converter], but also providing the [ColumnResolutionContext] to the converter.
+ *
+ * The result can either be used as a normal [ColumnSet]<[B]>,
+ * which resolves [this] and then applies [converter] on the result,
+ *
+ * or it can be used as a [TransformableColumnSet]<[B]>, where a [ColumnSetTransformer] can be injected before
+ * the [converter] is applied.
+ */
 internal fun <A, B> ColumnSet<A>.transformWithContext(
     converter: ColumnResolutionContext.(List<ColumnWithPath<A>>) -> List<ColumnWithPath<B>>,
-): ColumnSet<B> = object : ColumnSet<B> {
+): TransformableColumnSet<B> = object : TransformableColumnSet<B> {
     override fun resolve(context: ColumnResolutionContext) =
         this@transformWithContext
             .resolve(context)
             .let { converter(context, it) }
+
+    override fun transformResolve(
+        context: ColumnResolutionContext,
+        transformer: ColumnSetTransformer,
+    ): List<ColumnWithPath<B>> =
+        transformer.transform(this@transformWithContext)
+            .resolve(context)
+            .let { converter(context, it as List<ColumnWithPath<A>>) }
 }
 
+/**
+ * Converts [this] [ColumnSet] to a [SingleColumn].
+ * [resolveSingle] will return the single column of [this] if there is only one, else it will return `null`.
+ * If the result used as a [ColumnSet], `null` will be converted to an empty list.
+ */
 internal fun <T> ColumnSet<T>.singleImpl(): SingleColumn<T> = object : SingleColumn<T> {
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? =
         this@singleImpl.resolve(context).singleOrNull()
 }
 
 /**
- * Same as [singleImpl], however, if passes any [ColumnSetTransformer] back to [this] if it is supplied.
+ * Same as [singleImpl], however, it passes any [ColumnSetTransformer] back to [this] if it is supplied.
  */
 internal fun <T> TransformableColumnSet<T>.singleWithTransformerImpl(): TransformableSingleColumn<T> =
     object : TransformableSingleColumn<T> {
