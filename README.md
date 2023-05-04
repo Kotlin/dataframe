@@ -53,7 +53,6 @@ android {
     }
     packaging {
         resources {
-            // These exclusions are needed for the dataframe-arrow and dataframe-openapi dependencies
             excludes += listOf(
                 "META-INF/kotlin-jupyter-libraries/libraries.json",
                 "META-INF/{AL2.0,LGPL2.1,ASL-2.0.txt,INDEX.LIST,DEPENDENCIES,LICENSE.md,NOTICE.md,LGPL-3.0.txt}",
@@ -63,7 +62,9 @@ android {
         }
     }
 }
-tasks.withType<KotlinCompile> { kotlinOptions.jvmTarget = "1.8" }
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> { 
+    kotlinOptions.jvmTarget = "1.8"
+}
 ```
 ### Jupyter Notebook
 
