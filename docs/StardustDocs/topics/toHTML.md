@@ -38,7 +38,6 @@ val df3 = df.sortByDesc { age }
 listOf(df1, df2, df3).fold(DataFrameHtmlData.tableDefinitions()) { acc, df -> acc + df.toHTML() }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Render.composeTables.html"/>
 <!---END-->
 
 ## Jupyter Notebooks
