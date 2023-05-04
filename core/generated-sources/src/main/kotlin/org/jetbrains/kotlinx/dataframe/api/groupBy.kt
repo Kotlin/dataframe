@@ -30,8 +30,11 @@ public fun <T> DataFrame<T>.groupBy(moveToTop: Boolean = true, cols: ColumnsSele
     level = DeprecationLevel.ERROR,
 )
 public fun <T> DataFrame<T>.groupBy(cols: Iterable<AnyColumnReference>): GroupBy<T, T> = groupBy { cols.toColumnSet() }
+
 public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupBy<T, T> = groupBy { cols.toColumnSet() }
+
 public fun <T> DataFrame<T>.groupBy(vararg cols: String): GroupBy<T, T> = groupBy { cols.toColumnSet() }
+
 public fun <T> DataFrame<T>.groupBy(vararg cols: AnyColumnReference, moveToTop: Boolean = true): GroupBy<T, T> =
     groupBy(moveToTop) { cols.toColumnSet() }
 
@@ -43,7 +46,9 @@ public fun <T> Pivot<T>.groupBy(moveToTop: Boolean = true, columns: ColumnsSelec
     (this as PivotImpl<T>).toGroupedPivot(moveToTop, columns)
 
 public fun <T> Pivot<T>.groupBy(vararg columns: AnyColumnReference): PivotGroupBy<T> = groupBy { columns.toColumnSet() }
+
 public fun <T> Pivot<T>.groupBy(vararg columns: String): PivotGroupBy<T> = groupBy { columns.toColumnSet() }
+
 public fun <T> Pivot<T>.groupBy(vararg columns: KProperty<*>): PivotGroupBy<T> = groupBy { columns.toColumnSet() }
 
 public fun <T> Pivot<T>.groupByOther(): PivotGroupBy<T> {
@@ -93,7 +98,7 @@ public interface Grouped<out T> : Aggregatable<T> {
 
 public data class ReducedGroupBy<T, G>(
     @PublishedApi internal val groupBy: GroupBy<T, G>,
-    @PublishedApi internal val reducer: Selector<DataFrame<G>, DataRow<G>?>
+    @PublishedApi internal val reducer: Selector<DataFrame<G>, DataRow<G>?>,
 )
 
 internal fun <T, G> GroupBy<T, G>.reduce(reducer: Selector<DataFrame<G>, DataRow<G>?>) = ReducedGroupBy(this, reducer)
