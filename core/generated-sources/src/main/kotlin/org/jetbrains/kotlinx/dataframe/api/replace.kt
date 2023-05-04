@@ -18,6 +18,7 @@ public fun <T, C> DataFrame<T>.replace(columns: ColumnsSelector<T, C>): ReplaceC
     ReplaceClause(this, columns)
 
 public fun <T> DataFrame<T>.replace(vararg columns: String): ReplaceClause<T, Any?> = replace { columns.toColumnSet() }
+
 public fun <T, C> DataFrame<T>.replace(vararg columns: ColumnReference<C>): ReplaceClause<T, C> =
     replace { columns.toColumnSet() }
 

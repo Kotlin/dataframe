@@ -24,18 +24,27 @@ import kotlin.reflect.KProperty
 // region DataColumn
 
 public fun <T : Comparable<T>> DataColumn<T?>.median(): T = medianOrNull().suggestIfNull("median")
+
 public fun <T : Comparable<T>> DataColumn<T?>.medianOrNull(): T? = Aggregators.median.cast<T>().aggregate(this)
 
-public inline fun <T, reified R : Comparable<R>> DataColumn<T>.medianOfOrNull(noinline expression: (T) -> R?): R? = Aggregators.median.cast<R?>().aggregateOf(this, expression)
-public inline fun <T, reified R : Comparable<R>> DataColumn<T>.medianOf(noinline expression: (T) -> R?): R = medianOfOrNull(expression).suggestIfNull("medianOf")
+public inline fun <T, reified R : Comparable<R>> DataColumn<T>.medianOfOrNull(noinline expression: (T) -> R?): R? =
+    Aggregators.median.cast<R?>().aggregateOf(this, expression)
+
+public inline fun <T, reified R : Comparable<R>> DataColumn<T>.medianOf(noinline expression: (T) -> R?): R =
+    medianOfOrNull(expression).suggestIfNull("medianOf")
 
 // endregion
 
 // region DataRow
 
-public fun AnyRow.rowMedianOrNull(): Any? = org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators.median.aggregateMixed(values().filterIsInstance<Comparable<Any?>>().asIterable())
+public fun AnyRow.rowMedianOrNull(): Any? = Aggregators.median.aggregateMixed(
+    values().filterIsInstance<Comparable<Any?>>().asIterable()
+)
+
 public fun AnyRow.rowMedian(): Any = rowMedianOrNull().suggestIfNull("rowMedian")
+
 public inline fun <reified T : Comparable<T>> AnyRow.rowMedianOfOrNull(): T? = valuesOf<T>().medianOrNull()
+
 public inline fun <reified T : Comparable<T>> AnyRow.rowMedianOf(): T =
     rowMedianOfOrNull<T>().suggestIfNull("rowMedianOf")
 
@@ -49,6 +58,7 @@ public fun <T, C : Comparable<C>> DataFrame<T>.medianFor(columns: ColumnsForAggr
     Aggregators.median.aggregateFor(this, columns)
 
 public fun <T> DataFrame<T>.medianFor(vararg columns: String): DataRow<T> = medianFor { columns.toComparableColumns() }
+
 public fun <T, C : Comparable<C>> DataFrame<T>.medianFor(vararg columns: ColumnReference<C?>): DataRow<T> =
     medianFor { columns.toColumnSet() }
 
@@ -59,6 +69,7 @@ public fun <T, C : Comparable<C>> DataFrame<T>.median(columns: ColumnsSelector<T
     medianOrNull(columns).suggestIfNull("median")
 
 public fun <T> DataFrame<T>.median(vararg columns: String): Any = median { columns.toComparableColumns() }
+
 public fun <T, C : Comparable<C>> DataFrame<T>.median(vararg columns: ColumnReference<C?>): C =
     median { columns.toColumnSet() }
 
@@ -69,6 +80,7 @@ public fun <T, C : Comparable<C>> DataFrame<T>.medianOrNull(columns: ColumnsSele
     Aggregators.median.aggregateAll(this, columns) as C?
 
 public fun <T> DataFrame<T>.medianOrNull(vararg columns: String): Any? = medianOrNull { columns.toComparableColumns() }
+
 public fun <T, C : Comparable<C>> DataFrame<T>.medianOrNull(vararg columns: ColumnReference<C?>): C? =
     medianOrNull { columns.toColumnSet() }
 
@@ -88,6 +100,7 @@ public fun <T, C : Comparable<C>> Grouped<T>.medianFor(columns: ColumnsForAggreg
     Aggregators.median.aggregateFor(this, columns)
 
 public fun <T> Grouped<T>.medianFor(vararg columns: String): DataFrame<T> = medianFor { columns.toComparableColumns() }
+
 public fun <T, C : Comparable<C>> Grouped<T>.medianFor(vararg columns: ColumnReference<C?>): DataFrame<T> =
     medianFor { columns.toColumnSet() }
 
@@ -123,7 +136,7 @@ public fun <T> Pivot<T>.median(separate: Boolean = false): DataRow<T> = medianFo
 
 public fun <T, C : Comparable<C>> Pivot<T>.medianFor(
     separate: Boolean = false,
-    columns: ColumnsForAggregateSelector<T, C?>
+    columns: ColumnsForAggregateSelector<T, C?>,
 ): DataRow<T> = delegate { medianFor(separate, columns) }
 
 public fun <T> Pivot<T>.medianFor(vararg columns: String, separate: Boolean = false): DataRow<T> =
@@ -143,6 +156,7 @@ public fun <T, C : Comparable<C>> Pivot<T>.median(columns: ColumnsSelector<T, C?
     delegate { median(columns) }
 
 public fun <T> Pivot<T>.median(vararg columns: String): DataRow<T> = median { columns.toComparableColumns() }
+
 public fun <T, C : Comparable<C>> Pivot<T>.median(
     vararg columns: ColumnReference<C?>,
 ): DataRow<T> = median { columns.toColumnSet() }
@@ -163,7 +177,7 @@ public fun <T> PivotGroupBy<T>.median(separate: Boolean = false): DataFrame<T> =
 
 public fun <T, C : Comparable<C>> PivotGroupBy<T>.medianFor(
     separate: Boolean = false,
-    columns: ColumnsForAggregateSelector<T, C?>
+    columns: ColumnsForAggregateSelector<T, C?>,
 ): DataFrame<T> = Aggregators.median.aggregateFor(this, separate, columns)
 
 public fun <T> PivotGroupBy<T>.medianFor(vararg columns: String, separate: Boolean = false): DataFrame<T> =
@@ -183,6 +197,7 @@ public fun <T, C : Comparable<C>> PivotGroupBy<T>.median(columns: ColumnsSelecto
     Aggregators.median.aggregateAll(this, columns)
 
 public fun <T> PivotGroupBy<T>.median(vararg columns: String): DataFrame<T> = median { columns.toComparableColumns() }
+
 public fun <T, C : Comparable<C>> PivotGroupBy<T>.median(
     vararg columns: ColumnReference<C?>,
 ): DataFrame<T> = median { columns.toColumnSet() }

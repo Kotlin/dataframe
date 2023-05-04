@@ -25,19 +25,24 @@ import kotlin.reflect.typeOf
 
 // region DataColumn
 
-public fun <T : Number> DataColumn<T?>.mean(skipNA: Boolean = skipNA_default): Double = meanOrNull(skipNA).suggestIfNull("mean")
-public fun <T : Number> DataColumn<T?>.meanOrNull(skipNA: Boolean = skipNA_default): Double? = Aggregators.mean(skipNA).aggregate(this)
+public fun <T : Number> DataColumn<T?>.mean(skipNA: Boolean = skipNA_default): Double =
+    meanOrNull(skipNA).suggestIfNull("mean")
+
+public fun <T : Number> DataColumn<T?>.meanOrNull(skipNA: Boolean = skipNA_default): Double? =
+    Aggregators.mean(skipNA).aggregate(this)
 
 public inline fun <T, reified R : Number> DataColumn<T>.meanOf(
     skipNA: Boolean = skipNA_default,
-    noinline expression: (T) -> R?
+    noinline expression: (T) -> R?,
 ): Double = Aggregators.mean(skipNA).cast2<R?, Double>().aggregateOf(this, expression) ?: Double.NaN
 
 // endregion
 
 // region DataRow
 
-public fun AnyRow.rowMean(skipNA: Boolean = org.jetbrains.kotlinx.dataframe.api.skipNA_default): Double = values().filterIsInstance<Number>().map { it.toDouble() }.mean(skipNA)
+public fun AnyRow.rowMean(skipNA: Boolean = skipNA_default): Double =
+    values().filterIsInstance<Number>().map { it.toDouble() }.mean(skipNA)
+
 public inline fun <reified T : Number> AnyRow.rowMeanOf(): Double = values().filterIsInstance<T>().mean(typeOf<T>())
 
 // endregion
@@ -136,7 +141,7 @@ public fun <T, C : Number> Grouped<T>.mean(
 public inline fun <T, reified R : Number> Grouped<T>.meanOf(
     name: String? = null,
     skipNA: Boolean = skipNA_default,
-    crossinline expression: RowExpression<T, R?>
+    crossinline expression: RowExpression<T, R?>,
 ): DataFrame<T> =
     Aggregators.mean(skipNA).aggregateOf(this, name, expression)
 
@@ -144,12 +149,13 @@ public inline fun <T, reified R : Number> Grouped<T>.meanOf(
 
 // region Pivot
 
-public fun <T> Pivot<T>.mean(skipNA: Boolean = skipNA_default, separate: Boolean = false): DataRow<T> = meanFor(skipNA, separate, numberColumns())
+public fun <T> Pivot<T>.mean(skipNA: Boolean = skipNA_default, separate: Boolean = false): DataRow<T> =
+    meanFor(skipNA, separate, numberColumns())
 
 public fun <T, C : Number> Pivot<T>.meanFor(
     skipNA: Boolean = skipNA_default,
     separate: Boolean = false,
-    columns: ColumnsForAggregateSelector<T, C?>
+    columns: ColumnsForAggregateSelector<T, C?>,
 ): DataRow<T> = delegate { meanFor(skipNA, separate, columns) }
 
 public fun <T> Pivot<T>.meanFor(
@@ -170,12 +176,15 @@ public fun <T, C : Number> Pivot<T>.meanFor(
     separate: Boolean = false,
 ): DataRow<T> = meanFor(skipNA, separate) { columns.toColumnSet() }
 
-public fun <T, R : Number> Pivot<T>.mean(skipNA: Boolean = skipNA_default, columns: ColumnsSelector<T, R?>): DataRow<T> =
+public fun <T, R : Number> Pivot<T>.mean(
+    skipNA: Boolean = skipNA_default,
+    columns: ColumnsSelector<T, R?>,
+): DataRow<T> =
     delegate { mean(skipNA, columns) }
 
 public inline fun <T, reified R : Number> Pivot<T>.meanOf(
     skipNA: Boolean = skipNA_default,
-    crossinline expression: RowExpression<T, R?>
+    crossinline expression: RowExpression<T, R?>,
 ): DataRow<T> =
     delegate { meanOf(skipNA, expression) }
 
@@ -183,12 +192,13 @@ public inline fun <T, reified R : Number> Pivot<T>.meanOf(
 
 // region PivotGroupBy
 
-public fun <T> PivotGroupBy<T>.mean(separate: Boolean = false, skipNA: Boolean = skipNA_default): DataFrame<T> = meanFor(skipNA, separate, numberColumns())
+public fun <T> PivotGroupBy<T>.mean(separate: Boolean = false, skipNA: Boolean = skipNA_default): DataFrame<T> =
+    meanFor(skipNA, separate, numberColumns())
 
 public fun <T, C : Number> PivotGroupBy<T>.meanFor(
     skipNA: Boolean = skipNA_default,
     separate: Boolean = false,
-    columns: ColumnsForAggregateSelector<T, C?>
+    columns: ColumnsForAggregateSelector<T, C?>,
 ): DataFrame<T> = Aggregators.mean(skipNA).aggregateFor(this, separate, columns)
 
 public fun <T> PivotGroupBy<T>.meanFor(

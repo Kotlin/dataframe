@@ -8,9 +8,9 @@
 
 ### Notebook examples
 
-* people [Datalore](https://datalore.jetbrains.com/view/notebook/aOTioEClQQrsZZBKeUPAQj)
+* people ([Datalore](https://datalore.jetbrains.com/view/notebook/aOTioEClQQrsZZBKeUPAQj)) &ndash;
 Small artificial dataset used in [DataFrame API examples](https://kotlin.github.io/dataframe/operations.html) 
-
+___
 * puzzles ([notebook](notebooks/puzzles/40%20puzzles.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/CVp3br3CDXjUGaxxqfJjFF)) &ndash;
 Inspired [by 100 pandas puzzles](https://github.com/ajcr/100-pandas-puzzles). You will go from the simplest tasks to 
 complex problems where need to think. This notebook will show you how to solve these tasks with the Kotlin 

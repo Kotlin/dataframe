@@ -45,6 +45,7 @@ public data class Merge<T, C, R>(
 public fun <T, C, R> Merge<T, C, R>.notNull(): Merge<T, C, R> = copy(notNull = true)
 
 public fun <T, C, R> Merge<T, C, R>.into(columnName: String): DataFrame<T> = into(pathOf(columnName))
+
 public fun <T, C, R> Merge<T, C, R>.into(column: ColumnAccessor<*>): DataFrame<T> = into(column.path())
 
 public fun <T, C, R> Merge<T, C, R>.intoList(): List<R> =
@@ -76,12 +77,13 @@ public fun <T, C, R> Merge<T, C, R>.into(path: ColumnPath): DataFrame<T> {
 }
 
 public fun <T, C, R> Merge<T, C, R>.asStrings(): Merge<T, C, String> = by(", ")
+
 public fun <T, C, R> Merge<T, C, R>.by(
     separator: CharSequence = ", ",
     prefix: CharSequence = "",
     postfix: CharSequence = "",
     limit: Int = -1,
-    truncated: CharSequence = "..."
+    truncated: CharSequence = "...",
 ): Merge<T, C, String> =
     Merge(
         df, selector, notNull,
@@ -99,6 +101,6 @@ public fun <T, C, R> Merge<T, C, R>.by(
 
 public inline fun <T, C, R, reified V> Merge<T, C, R>.by(
     infer: Infer = Infer.Nulls,
-    crossinline transform: DataRow<T>.(R) -> V
+    crossinline transform: DataRow<T>.(R) -> V,
 ): Merge<T, C, V> =
     Merge(df, selector, notNull, { transform(this@by.transform(this, it)) }, typeOf<V>(), infer)

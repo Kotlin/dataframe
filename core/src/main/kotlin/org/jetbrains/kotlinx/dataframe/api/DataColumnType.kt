@@ -11,14 +11,21 @@ import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
 
 public fun AnyCol.isColumnGroup(): Boolean = kind() == ColumnKind.Group
+
 public fun AnyCol.isFrameColumn(): Boolean = kind() == ColumnKind.Frame
+
 public fun AnyCol.isValueColumn(): Boolean = kind() == ColumnKind.Value
 
 public fun AnyCol.isSubtypeOf(type: KType): Boolean = this.type.isSubtypeOf(type) && (!this.type.isMarkedNullable || type.isMarkedNullable)
+
 public inline fun <reified T> AnyCol.isSubtypeOf(): Boolean = isSubtypeOf(typeOf<T>())
+
 public inline fun <reified T> AnyCol.isType(): Boolean = type() == typeOf<T>()
+
 public fun AnyCol.isNumber(): Boolean = isSubtypeOf<Number?>()
+
 public fun AnyCol.isList(): Boolean = typeClass == List::class
+
 public fun AnyCol.isComparable(): Boolean = isSubtypeOf<Comparable<*>?>()
 
 @PublishedApi

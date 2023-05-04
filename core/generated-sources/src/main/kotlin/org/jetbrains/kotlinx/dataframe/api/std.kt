@@ -23,12 +23,13 @@ import kotlin.reflect.typeOf
 
 // region DataColumn
 
-public fun <T : Number> DataColumn<T?>.std(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): Double = Aggregators.std(skipNA, ddof).aggregate(this) ?: .0
+public fun <T : Number> DataColumn<T?>.std(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): Double =
+    Aggregators.std(skipNA, ddof).aggregate(this) ?: .0
 
 public inline fun <T, reified R : Number> DataColumn<T>.stdOf(
     skipNA: Boolean = skipNA_default,
     ddof: Int = ddof_default,
-    noinline expression: (T) -> R?
+    noinline expression: (T) -> R?,
 ): Double = Aggregators.std(skipNA, ddof).cast2<R?, Double>().aggregateOf(this, expression) ?: .0
 
 // endregion
@@ -36,18 +37,21 @@ public inline fun <T, reified R : Number> DataColumn<T>.stdOf(
 // region DataRow
 
 public fun AnyRow.rowStd(
-    skipNA: Boolean = org.jetbrains.kotlinx.dataframe.api.skipNA_default,
-    ddof: Int = org.jetbrains.kotlinx.dataframe.api.ddof_default
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default,
 ): Double = values().filterIsInstance<Number>().map { it.toDouble() }.std(skipNA, ddof)
-public inline fun <reified T : Number> AnyRow.rowStdOf(ddof: Int = org.jetbrains.kotlinx.dataframe.api.ddof_default): Double = values().filterIsInstance<T>().std(
-    typeOf<T>(), ddof = ddof
-)
+
+public inline fun <reified T : Number> AnyRow.rowStdOf(ddof: Int = ddof_default): Double =
+    values().filterIsInstance<T>().std(
+        typeOf<T>(), ddof = ddof
+    )
 
 // endregion
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.std(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): DataRow<T> = stdFor(skipNA, ddof, numberColumns())
+public fun <T> DataFrame<T>.std(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): DataRow<T> =
+    stdFor(skipNA, ddof, numberColumns())
 
 public fun <T> DataFrame<T>.stdFor(
     skipNA: Boolean = skipNA_default,
@@ -80,7 +84,9 @@ public fun <T> DataFrame<T>.std(
 ): Double = Aggregators.std(skipNA, ddof).aggregateAll(this, columns) ?: .0
 
 public fun <T> DataFrame<T>.std(vararg columns: ColumnReference<Number?>): Double = std { columns.toColumnSet() }
+
 public fun <T> DataFrame<T>.std(vararg columns: String): Double = std { columns.toColumnsSetOf() }
+
 public fun <T> DataFrame<T>.std(vararg columns: KProperty<Number?>): Double = std { columns.toColumnSet() }
 
 public inline fun <T, reified R : Number> DataFrame<T>.stdOf(
@@ -93,7 +99,8 @@ public inline fun <T, reified R : Number> DataFrame<T>.stdOf(
 
 // region GroupBy
 
-public fun <T> Grouped<T>.std(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): DataFrame<T> = stdFor(skipNA, ddof, numberColumns())
+public fun <T> Grouped<T>.std(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): DataFrame<T> =
+    stdFor(skipNA, ddof, numberColumns())
 
 public fun <T> Grouped<T>.stdFor(
     skipNA: Boolean = skipNA_default,
@@ -151,14 +158,18 @@ public inline fun <T, reified R : Number> Grouped<T>.stdOf(
     name: String? = null,
     skipNA: Boolean = skipNA_default,
     ddof: Int = ddof_default,
-    crossinline expression: RowExpression<T, R?>
+    crossinline expression: RowExpression<T, R?>,
 ): DataFrame<T> = Aggregators.std(skipNA, ddof).aggregateOf(this, name, expression)
 
 // endregion
 
 // region Pivot
 
-public fun <T> Pivot<T>.std(separate: Boolean = false, skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): DataRow<T> = stdFor(separate, skipNA, ddof, numberColumns())
+public fun <T> Pivot<T>.std(
+    separate: Boolean = false,
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default,
+): DataRow<T> = stdFor(separate, skipNA, ddof, numberColumns())
 
 public fun <T, R : Number> Pivot<T>.stdFor(
     separate: Boolean = false,
@@ -225,7 +236,7 @@ public inline fun <reified T : Number> Pivot<T>.stdOf(
 public fun <T> PivotGroupBy<T>.std(
     separate: Boolean = false,
     skipNA: Boolean = skipNA_default,
-    ddof: Int = ddof_default
+    ddof: Int = ddof_default,
 ): DataFrame<T> = stdFor(separate, skipNA, ddof, numberColumns())
 
 public fun <T, R : Number> PivotGroupBy<T>.stdFor(

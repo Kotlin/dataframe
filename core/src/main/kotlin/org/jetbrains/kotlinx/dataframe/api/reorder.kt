@@ -21,10 +21,12 @@ public data class Reorder<T, C>(
 }
 
 public fun <T, C> DataFrame<T>.reorder(selector: ColumnsSelector<T, C>): Reorder<T, C> = Reorder(this, selector, false)
+
 public fun <T, C> DataFrame<T>.reorder(vararg columns: ColumnReference<C>): Reorder<T, C> =
     reorder { columns.toColumnSet() }
 
 public fun <T, C> DataFrame<T>.reorder(vararg columns: KProperty<C>): Reorder<T, C> = reorder { columns.toColumnSet() }
+
 public fun <T> DataFrame<T>.reorder(vararg columns: String): Reorder<T, *> = reorder { columns.toColumnSet() }
 
 public fun <T, C, V : Comparable<V>> Reorder<T, C>.by(expression: ColumnExpression<C, V>): DataFrame<T> =
