@@ -21,10 +21,12 @@ public fun <T> DataFrame<T>.rename(vararg mappings: Pair<String, String>): DataF
         .into(*mappings.map { it.second }.toTypedArray())
 
 public fun <T, C> DataFrame<T>.rename(columns: ColumnsSelector<T, C>): RenameClause<T, C> = RenameClause(this, columns)
+
 public fun <T, C> DataFrame<T>.rename(vararg cols: ColumnReference<C>): RenameClause<T, C> =
     rename { cols.toColumnSet() }
 
 public fun <T, C> DataFrame<T>.rename(vararg cols: KProperty<C>): RenameClause<T, C> = rename { cols.toColumnSet() }
+
 public fun <T> DataFrame<T>.rename(vararg cols: String): RenameClause<T, Any?> = rename { cols.toColumnSet() }
 
 @Deprecated(
@@ -75,6 +77,7 @@ public fun <T, C> RenameClause<T, C>.toCamelCase(): DataFrame<T> =
 // region DataColumn
 
 public fun <T, C : ColumnReference<T>> C.rename(column: KProperty<T>): C = rename(column.columnName) as C
+
 public fun <T, C : ColumnReference<T>> C.rename(column: ColumnAccessor<T>): C = rename(column.name()) as C
 
 // endregion
@@ -82,7 +85,9 @@ public fun <T, C : ColumnReference<T>> C.rename(column: ColumnAccessor<T>): C = 
 // region named
 
 public infix fun <T, C : ColumnReference<T>> C.named(name: String): C = rename(name) as C
+
 public infix fun <T, C : ColumnReference<T>> C.named(name: KProperty<*>): C = rename(name)
+
 public infix fun <T, C : ColumnReference<T>> C.named(name: ColumnAccessor<*>): C = rename(name)
 
 // endregion
