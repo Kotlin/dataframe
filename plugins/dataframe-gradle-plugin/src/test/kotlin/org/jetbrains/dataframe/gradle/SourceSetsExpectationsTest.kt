@@ -3,9 +3,6 @@ package org.jetbrains.dataframe.gradle
 import io.kotest.assertions.asClue
 import io.kotest.inspectors.forAny
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldEndWith
-import org.gradle.api.internal.project.ProjectInternal
-import org.gradle.testfixtures.ProjectBuilder
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension

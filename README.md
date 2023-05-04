@@ -38,6 +38,32 @@ repositories {
 dependencies {
     implementation("org.jetbrains.kotlinx:dataframe:0.10.0")
 }
+
+// Below only applies to Android projects
+android {
+    defaultConfig {
+        minSdk = 26 // Android O+
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+    packaging {
+        resources {
+            // These exclusions are needed for the dataframe-arrow and dataframe-openapi dependencies
+            excludes += listOf(
+                "META-INF/kotlin-jupyter-libraries/libraries.json",
+                "META-INF/{AL2.0,LGPL2.1,ASL-2.0.txt,INDEX.LIST,DEPENDENCIES,LICENSE.md,NOTICE.md,LGPL-3.0.txt}",
+                "{draftv3,draftv4}/schema",
+                "arrow-git.properties",
+            )
+        }
+    }
+}
+tasks.withType<KotlinCompile> { kotlinOptions.jvmTarget = "1.8" }
 ```
 ### Jupyter Notebook
 
