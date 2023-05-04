@@ -11,8 +11,11 @@ import org.jetbrains.kotlinx.dataframe.nrow
 // region DataColumn
 
 public fun <T> DataColumn<T>.last(): T = get(size - 1)
+
 public fun <T> DataColumn<T>.lastOrNull(): T? = if (size > 0) last() else null
+
 public fun <T> DataColumn<T>.last(predicate: (T) -> Boolean): T = values.last(predicate)
+
 public fun <T> DataColumn<T>.lastOrNull(predicate: (T) -> Boolean): T? = values.lastOrNull(predicate)
 
 // endregion
@@ -23,7 +26,9 @@ public fun <T> DataFrame<T>.lastOrNull(predicate: RowFilter<T>): DataRow<T>? =
     rowsReversed().firstOrNull { predicate(it, it) }
 
 public fun <T> DataFrame<T>.last(predicate: RowFilter<T>): DataRow<T> = rowsReversed().first { predicate(it, it) }
+
 public fun <T> DataFrame<T>.lastOrNull(): DataRow<T>? = if (nrow > 0) get(nrow - 1) else null
+
 public fun <T> DataFrame<T>.last(): DataRow<T> {
     if (nrow == 0) {
         throw NoSuchElementException("DataFrame has no rows. Use `lastOrNull`.")
