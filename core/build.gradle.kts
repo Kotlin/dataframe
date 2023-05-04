@@ -77,7 +77,7 @@ val samplesImplementation by configurations.getting {
     extendsFrom(configurations.testImplementation.get())
 }
 
-val myKotlinCompileTask = tasks.named<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>("compileSamplesKotlin") {
+val compileSamplesKotlin = tasks.named<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>("compileSamplesKotlin") {
     friendPaths.from(sourceSets["main"].output.classesDirs)
     source(sourceSets["test"].kotlin)
     destinationDirectory.set(file("$buildDir/classes/testWithOutputs/kotlin"))
@@ -95,18 +95,17 @@ tasks.named("lintKotlinSamples") {
     onlyIf { false }
 }
 
+val clearTestResults by tasks.creating(Delete::class) {
+    delete(File(buildDir, "dataframes"))
+    delete(File(buildDir, "korroOutputLines"))
+}
+
 val samplesTest = tasks.register<Test>("samplesTest") {
     group = "Verification"
     description = "Runs the custom tests."
 
-    dependsOn(myKotlinCompileTask)
-
-    doFirst {
-        delete {
-            delete(fileTree(File(buildDir, "dataframes")))
-            delete(fileTree(File(buildDir, "korroOutputLines")))
-        }
-    }
+    dependsOn(compileSamplesKotlin)
+    dependsOn(clearTestResults)
 
     environment("DATAFRAME_SAVE_OUTPUTS", "")
 
@@ -134,8 +133,8 @@ val copySamplesOutputs = tasks.register<JavaExec>("copySamplesOutputs") {
     group = "documentation"
     mainClass.set("org.jetbrains.kotlinx.dataframe.explainer.SampleAggregatorKt")
 
-    dependsOn(samplesTest)
     dependsOn(clearSamplesOutputs)
+    dependsOn(samplesTest)
     classpath = sourceSets.test.get().runtimeClasspath
 }
 
