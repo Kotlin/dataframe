@@ -836,7 +836,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * ## Cols
      * Creates a subset of columns ([ColumnSet]) from the current [ColumnSet].
      *
-     * If the current [ColumnSet] is a [SingleColumn] (and thus consists of only one column (or [column group][ColumnGroup])),
+     * If the current [ColumnSet] is a [SingleColumn]
+     * (and thus consists of only one column (or [column group][ColumnGroup])),
      * then `cols` will create a subset of its children.
      *
      * You can use either a [ColumnFilter] or any of the `vararg` overloads for all
@@ -1966,7 +1967,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         cols { it.name.contains(text) }
 
     public fun SingleColumn<*>.nameContains(regex: Regex): TransformableColumnSet<*> = cols { it.name.contains(regex) }
+
     public fun <C> ColumnSet<C>.nameContains(regex: Regex): TransformableColumnSet<C> = cols { it.name.contains(regex) }
+
     public fun SingleColumn<*>.startsWith(prefix: CharSequence): TransformableColumnSet<*> =
         cols { it.name.startsWith(prefix) }
 
