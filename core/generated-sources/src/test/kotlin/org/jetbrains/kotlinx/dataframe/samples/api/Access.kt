@@ -915,7 +915,7 @@ class Access : TestBase() {
         df.select { cols { it.name().contains(":") }.recursively() }
 
         // recursive traversal of columns of given type
-        df.select { colsOf<String>().recursively() }
+        df.select { colsOf<String>().rec() }
 
         // all columns except given column set
         df.select { except { colsOf<String>() } }
@@ -930,12 +930,12 @@ class Access : TestBase() {
     fun columnSelectorsModifySet() {
         // SampleStart
         // first/last n columns in column set
-        df.select { allRec(includeGroups = false).take(3) }
-        df.select { allRec(includeGroups = false).takeLast(3) }
+        df.select { allRecursively(includeGroups = false).take(3) }
+        df.select { allRecursively(includeGroups = false).takeLast(3) }
 
         // all except first/last n columns in column set
-        df.select { allRec(includeGroups = false).drop(3) }
-        df.select { allRec(includeGroups = false).dropLast(3) }
+        df.select { allRecursively(includeGroups = false).drop(3) }
+        df.select { allRecursively(includeGroups = false).dropLast(3) }
 
         // filter column set by condition
         df.select { allRec(includeGroups = false).filter { it.name().startsWith("year") } }
