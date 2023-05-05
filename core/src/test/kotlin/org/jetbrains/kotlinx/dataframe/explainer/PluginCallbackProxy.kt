@@ -130,6 +130,17 @@ object PluginCallbackProxy : PluginCallback {
             it.mkdirs()
         }
         output.writeHTML(File(destination, "$name.html"))
+        val korro = File("build/korroOutputLines").also {
+            it.mkdirs()
+        }
+
+        val group = name.substringBefore("_")
+        File(korro, group).writeText(
+            """
+            
+            <dataFrame src="$group.html"/>
+            """.trimIndent()
+        )
     }
 
     private fun statementOutput(

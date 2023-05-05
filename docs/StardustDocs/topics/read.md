@@ -39,7 +39,6 @@ val df = DataFrame.readCSV(
 )
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Read.readCsvCustom.html"/>
 <!---END-->
 
 Column types will be inferred from the actual CSV data. Suppose that CSV from the previous
@@ -117,7 +116,6 @@ val df = DataFrame.readCSV(
 )
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Read.readNumbersWithSpecificLocale.html"/>
 <!---END-->
 
 2) Disable type inference for specific column and convert it yourself
@@ -131,7 +129,6 @@ val df = DataFrame.readCSV(
 )
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Read.readNumbersWithColType.html"/>
 <!---END-->
 
 
@@ -189,7 +186,6 @@ We can read it from file
 val df = DataFrame.readJson(file)
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Read.readJson.html"/>
 <!---END-->
 
 Corresponding [`DataFrame`](DataFrame.md) schema will be
@@ -389,7 +385,6 @@ val df1 = df.convert("IDS").with(Infer.Type) {
 df1["IDS"].type() shouldBe typeOf<String>()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Read.fixMixedColumn.html"/>
 <!---END-->
 
 ## Reading Apache Arrow formats
@@ -413,5 +408,4 @@ from raw Channel (ReadableByteChannel for streaming and SeekableByteChannel for 
 val df = DataFrame.readArrowFeather(file)
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Read.readArrowFeather.html"/>
 <!---END-->

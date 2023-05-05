@@ -136,7 +136,6 @@ val df = dataFrameOf(id, group)
 df.split { group }.intoColumns()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitFrameColumn.html"/>
 <!---END-->
 
 ## Split vertically

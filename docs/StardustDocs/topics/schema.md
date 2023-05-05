@@ -12,7 +12,6 @@ Returns [`DataFrameSchema`](schemas.md) object with [`DataFrame`](DataFrame.md) 
 df.schema()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.schema.html"/>
 <!---END-->
 
 Output:

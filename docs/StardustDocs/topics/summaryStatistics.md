@@ -27,7 +27,6 @@ df.pivot { city }.median()
 df.pivot { city }.groupBy { name.lastName }.std()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticAggregations.html"/>
 <!---END-->
 
 [sum](sum.md), [mean](mean.md), [std](std.md) are available for numeric columns of types `Int`, `Double`, `Float`, `BigDecimal`, `Long`, `Byte`.
@@ -52,7 +51,6 @@ df.sumFor { age and weight } // sum of values per `age` and `weight` separately
 df.sumOf { (weight ?: 0) / age } // sum of expression evaluated for every row
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticModes.html"/>
 <!---END-->
 
 ### groupBy statistics
