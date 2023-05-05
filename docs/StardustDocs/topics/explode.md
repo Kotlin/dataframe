@@ -52,7 +52,6 @@ df.explode("b")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.explode.html"/>
 <!---END-->
 
 When several columns are exploded in one operation, lists in different columns will be aligned.
@@ -67,7 +66,6 @@ val df = dataFrameOf(a, b)
 df.explode { a and b }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.explodeSeveral.html"/>
 <!---END-->
 
 Explode [`DataColumn<Collection>`](DataColumn.md):
@@ -80,7 +78,6 @@ val col by columnOf(listOf(1, 2), listOf(3, 4))
 col.explode()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.explodeColumnList.html"/>
 <!---END-->
 
 Explode [`FrameColumn`](DataColumn.md#framecolumn):
@@ -96,5 +93,4 @@ val col by columnOf(
 col.explode()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.explodeColumnFrames.html"/>
 <!---END-->

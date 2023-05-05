@@ -14,7 +14,6 @@ val name by column<String>()
 val lastName by column<String>()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.accessors1.html"/>
 <!---END-->
 
 Now columns can be accessed in a type-safe way using `invoke` operator:
@@ -28,7 +27,6 @@ DataFrame.read("titanic.csv")
     .filter { survived() && home().endsWith("NY") && age()!! in 10..20 }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.accessors2.html"/>
 <!---END-->
 
 <warning>

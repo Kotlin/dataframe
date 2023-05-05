@@ -13,7 +13,6 @@ Returns [`DataFrame`](DataFrame.md) with no rows and no columns.
 val df = emptyDataFrame<Any>()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createEmptyDataFrame.html"/>
 <!---END-->
 
 ### dataFrameOf
@@ -31,7 +30,6 @@ val df = dataFrameOf("name", "age")(
 )
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameOf.html"/>
 <!---END-->
 
 <!---FUN createDataFrameOfPairs-->
@@ -44,7 +42,6 @@ val df = dataFrameOf(
 )
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameOfPairs.html"/>
 <!---END-->
 
 <!---FUN createDataFrameFromColumns-->
@@ -57,7 +54,6 @@ val age by columnOf(15, 20, 22)
 val df = dataFrameOf(name, age)
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFromColumns.html"/>
 <!---END-->
 
 <!---FUN createDataFrameFromNamesAndValues-->
@@ -72,7 +68,6 @@ val values = listOf(
 val df = dataFrameOf(names, values)
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFromNamesAndValues.html"/>
 <!---END-->
 
 <!---FUN createDataFrameWithFill-->
@@ -82,7 +77,6 @@ val df = dataFrameOf(names, values)
 dataFrameOf(1..10) { x -> (1..10).map { x * it } }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameWithFill.html"/>
 <!---END-->
 
 <!---FUN createDataFrameWithRandom-->
@@ -99,7 +93,6 @@ dataFrameOf(names).randomDouble(7, 0.0..1.0).print()
 dataFrameOf(names).randomInt(7, 0..100).print()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameWithRandom.html"/>
 <!---END-->
 
 <!---FUN createDataFrameFillConstant-->
@@ -111,7 +104,6 @@ val names = listOf("first", "second", "third")
 val df = dataFrameOf(names).fill(15, true)
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFillConstant.html"/>
 <!---END-->
 
 ### toDataFrame
@@ -127,7 +119,6 @@ val age by columnOf(15, 20, 22)
 listOf(name, age).toDataFrame()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFromIterable.html"/>
 <!---END-->
 
 `DataFrame` from `Map<String, List<*>>`:
@@ -141,7 +132,6 @@ val map = mapOf("name" to listOf("Alice", "Bob", "Charlie"), "age" to listOf(15,
 map.toDataFrame()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFromMap.html"/>
 <!---END-->
 
 [`DataFrame`](DataFrame.md) from [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of [basic types](https://kotlinlang.org/docs/basic-types.html) (except arrays):
@@ -170,7 +160,6 @@ val persons = listOf(Person("Alice", 15), Person("Bob", 20), Person("Charlie", 2
 val df = persons.toDataFrame()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.readDataFrameFromObject.html"/>
 <!---END-->
 
 Scans object properties using reflection and creates [ValueColumn](DataColumn.md#valuecolumn) for every property. 
@@ -193,7 +182,6 @@ val students = listOf(
 val df = students.toDataFrame(maxDepth = 1)
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.readDataFrameFromDeepObject.html"/>
 <!---END-->
 
 For detailed control over object graph transformation use configuration DSL. It allows you to exclude particular properties or classes from object graph traversal, compute additional columns and configure column grouping.
@@ -219,5 +207,4 @@ val df = students.toDataFrame {
 }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.readDataFrameFromDeepObjectWithExclude.html"/>
 <!---END-->

@@ -14,7 +14,6 @@ Returns [`DataFrame`](DataFrame.md) with the union of rows from several given [`
 df.concat(df1, df2)
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.concatDfs.html"/>
 <!---END-->
 
 [`DataColumn`](DataColumn.md):
@@ -27,7 +26,6 @@ val b by columnOf(3, 4)
 a.concat(b)
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.concatColumns.html"/>
 <!---END-->
 
 `Iterable<DataFrame>`:
@@ -38,7 +36,6 @@ a.concat(b)
 listOf(df1, df2).concat()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.concatIterable.html"/>
 <!---END-->
 
 `Iterable<DataRow>`:
@@ -50,7 +47,6 @@ val rows = listOf(df[2], df[4], df[5])
 rows.concat()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.concatRows.html"/>
 <!---END-->
 
 `Iterable<DataColumn>`:
@@ -63,7 +59,6 @@ val b by columnOf(3, 4)
 listOf(a, b).concat()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.concatColumnsIterable.html"/>
 <!---END-->
 
 [`groupBy`](groupBy.md#transformation):
@@ -94,7 +89,6 @@ val frameColumn by columnOf(x, y)
 frameColumn.concat()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.concatFrameColumn.html"/>
 <!---END-->
 
 If you want to union columns (not rows) from several [`DataFrames`](DataFrame.md), see [`add`](add.md).

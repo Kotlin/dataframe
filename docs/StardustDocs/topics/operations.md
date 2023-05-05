@@ -16,7 +16,6 @@ df.update { age }.where { city == "Paris" }.with { it - 5 }
     .rename { isHappy }.into("isOK")
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.multiCallOperations.html"/>
 <!---END-->
 
 <tip>

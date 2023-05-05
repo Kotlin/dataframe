@@ -56,7 +56,6 @@ val df = dataFrameOf("c", "d", "a", "b")(
 df.reorder("d", "b").cast<Int>().by { sum() } // [c, b, a, d]
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.reorderSome.html"/>
 <!---END-->
 
 When exactly one [`ColumnGroup`](DataColumn.md#columngroup) is selected, reordering is applied to its nested columns.

@@ -17,7 +17,6 @@ df.minOf { (weight ?: 0) / age } // min of expression evaluated for every row
 df.minBy { age } // DataRow with minimal `age`
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.minmaxModes.html"/>
 <!---END-->
 
 <!---FUN minmaxAggregations-->
@@ -30,7 +29,6 @@ df.pivot { city }.min()
 df.pivot { city }.groupBy { name.lastName }.min()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.minmaxAggregations.html"/>
 <!---END-->
 
 See [statistics](summaryStatistics.md#groupby-statistics) for details on complex data aggregations.
