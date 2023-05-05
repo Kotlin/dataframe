@@ -83,7 +83,7 @@ private fun <T> OnHeapDataset.Companion.create(
 
     fun extractX(): Array<FloatArray> =
         dataframe.remove(yColumn)
-            .convert { all().recursively(includeGroups = false) }.toFloat()
+            .convert { allRecursively(includeGroups = false) }.toFloat()
             .merge { colsOf<Float>().recursively() }.by { it.toFloatArray() }.into(x)
             .getColumn(x).toTypedArray()
 

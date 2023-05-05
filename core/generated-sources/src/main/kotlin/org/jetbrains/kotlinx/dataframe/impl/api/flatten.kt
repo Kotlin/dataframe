@@ -27,7 +27,7 @@ internal fun <T, C> DataFrame<T>.flattenImpl(
     fun getRootPrefix(path: ColumnPath) =
         (1 until path.size).asSequence().map { path.take(it) }.first { rootPrefixes.contains(it) }
 
-    val result = move { rootPrefixes.toColumnSet().all().recursively(includeGroups = false, includeTopLevel = false) }
+    val result = move { rootPrefixes.toColumnSet().allRecursively(includeGroups = false, includeTopLevel = false) }
         .into {
             val targetPath = getRootPrefix(it.path).dropLast(1)
             val nameGen = nameGenerators[targetPath]!!

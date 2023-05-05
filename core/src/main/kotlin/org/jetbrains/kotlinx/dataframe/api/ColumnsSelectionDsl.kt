@@ -1596,7 +1596,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * {@includeArg [CommonRecursivelyDocs.Examples]}
      *
-     * @param [includeGroups\] Whether to include [column groups][ColumnGroup] in the result. `true` by default.
      * @param [includeTopLevel\] Whether to include the top-level columns in the result. `true` by default.
      */
     private interface CommonRecursivelyDocs {
@@ -1611,20 +1610,18 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][ColumnSet.colsOf]`<`[String][String]`>().`[recursively][recursively]`() }`
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[all][ColumnSet.all]`().`[rec][rec]`(includeGroups = false) }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[all][ColumnSet.all]`().`[rec][rec]`() }`
      *
      * `df.`[select][DataFrame.select]` { `[groups][ColumnSet.groups]`().`[recursively][recursively]`(includeTopLevel = false) }`
      */
     public fun <C> TransformableColumnSet<C>.recursively(
-        includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
-    ): ColumnSet<C> = recursivelyImpl(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+    ): ColumnSet<C> = recursivelyImpl(includeTopLevel = includeTopLevel, includeGroups = true)
 
     /** @include [TransformableColumnSet.recursively] */
     public fun <C> TransformableColumnSet<C>.rec(
-        includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
-    ): ColumnSet<C> = recursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+    ): ColumnSet<C> = recursively(includeTopLevel = includeTopLevel)
 
     /**
      * @include [CommonRecursivelyDocs]
@@ -1632,18 +1629,16 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { `[first][ColumnSet.first]` { col -> col.`[any][DataColumn.any]` { it == "Alice" } }.`[recursively][recursively]`(includeTopLevel = false) }`
      *
-     * `df.`[select][DataFrame.select]` { `[single][ColumnSet.single]` { it.name == "myCol" }.`[rec][rec]`(includeGroups = false) }`
+     * `df.`[select][DataFrame.select]` { `[single][ColumnSet.single]` { it.name == "myCol" }.`[rec][rec]`() }`
      */
     public fun TransformableSingleColumn<*>.recursively(
-        includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
-    ): SingleColumn<*> = recursivelyImpl(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+    ): SingleColumn<*> = recursivelyImpl(includeTopLevel = includeTopLevel, includeGroups = true)
 
     /** @include [TransformableSingleColumn.recursively] */
     public fun TransformableSingleColumn<*>.rec(
-        includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
-    ): SingleColumn<*> = recursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+    ): SingleColumn<*> = recursively(includeTopLevel = includeTopLevel)
 
     /**
      * ## All Recursively / All Rec

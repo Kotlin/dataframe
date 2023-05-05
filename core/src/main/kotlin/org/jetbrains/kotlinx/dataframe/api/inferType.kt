@@ -14,7 +14,7 @@ public fun AnyCol.inferType(): DataColumn<*> = guessColumnType(name, toList(), t
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.inferType(): DataFrame<T> = inferType { all().recursively(includeGroups = false) }
+public fun <T> DataFrame<T>.inferType(): DataFrame<T> = inferType { allRecursively(includeGroups = false) }
 
 public fun <T> DataFrame<T>.inferType(columns: ColumnsSelector<T, *>): DataFrame<T> =
     replace(columns).with { it.inferType() }
