@@ -107,6 +107,7 @@ val samplesTest = tasks.register<Test>("samplesTest") {
 
     dependsOn(compileSamplesKotlin)
     dependsOn(clearTestResults)
+    outputs.upToDateWhen { false }
 
     environment("DATAFRAME_SAVE_OUTPUTS", "")
 
