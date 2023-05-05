@@ -16,7 +16,6 @@ Values of [`ColumnGroup`](DataColumn.md#columngroup), [`FrameColumn`](DataColumn
 df.writeCSV(file)
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Write.writeCsv.html"/>
 <!---END-->
 
 <!---FUN writeCsvStr-->
@@ -25,7 +24,6 @@ df.writeCSV(file)
 val csvStr = df.toCsv(CSVFormat.DEFAULT.withDelimiter(';').withRecordSeparator(System.lineSeparator()))
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Write.writeCsvStr.html"/>
 <!---END-->
 
 [`ColumnGroup`](DataColumn.md#columngroup) and [`FrameColumn`](DataColumn.md#framecolumn) values will be serialized as JSON strings.
@@ -41,7 +39,6 @@ You can write your [`DataFrame`](DataFrame.md) in JSON format to file, to string
 df.writeJson(file)
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Write.writeJson.html"/>
 <!---END-->
 
 <!---FUN writeJsonStr-->
@@ -50,7 +47,6 @@ df.writeJson(file)
 val jsonStr = df.toJson(prettyPrint = true)
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Write.writeJsonStr.html"/>
 <!---END-->
 
 ### Write to Excel spreadsheet
@@ -69,7 +65,6 @@ You can write your [`DataFrame`](DataFrame.md) in XLS, XLSX format to a file, `O
 df.writeExcel(file)
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Write.writeXls.html"/>
 <!---END-->
 
 Values of [`ColumnGroup`](DataColumn.md#columngroup), [`FrameColumn`](DataColumn.md#framecolumn), i.e. AnyRow, AnyFrame will be serialized as JSON objects. 
@@ -120,7 +115,6 @@ file.outputStream().use { wb.write(it) }
 wb.close()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Write.writeXlsAppendAndPostProcessing.html"/>
 <!---END-->
 
 ### Writing to Apache Arrow formats
@@ -151,7 +145,6 @@ df.writeArrowIPC(file)
 df.writeArrowFeather(file)
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Write.writeArrowFile.html"/>
 <!---END-->
 (writing to file, opened stream or channel),
 <!---FUN writeArrowByteArray-->
@@ -162,7 +155,6 @@ val ipcByteArray: ByteArray = df.saveArrowIPCToByteArray()
 val featherByteArray: ByteArray = df.saveArrowFeatherToByteArray()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Write.writeArrowByteArray.html"/>
 <!---END-->
 (creating byte array). Nested frames and columns with mixed or unsupported types will be saved as String.
 
@@ -203,7 +195,6 @@ df.arrowWriter(
 }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Write.writeArrowPerSchema.html"/>
 <!---END-->
 On executing you should get two warnings:
 >Column "city" contains nulls but expected not nullable

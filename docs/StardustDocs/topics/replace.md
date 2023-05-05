@@ -46,7 +46,6 @@ val interestingRepos = dataFrameOf("name", "url", "contributors")(
 )
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertToFrameColumnAPI.html"/>
 <!---END-->
 
 We can use `replace` and `with` to read a [`DataFrame`](DataFrame.md) for every row in `contributors`,
@@ -69,5 +68,4 @@ val df = interestingRepos
 df.asGroupBy("contributors").max("contributions")
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.customUnfoldRead.html"/>
 <!---END-->

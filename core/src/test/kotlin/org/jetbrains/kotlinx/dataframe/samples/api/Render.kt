@@ -26,7 +26,6 @@ class Render : TestBase() {
     }
 
     @Test
-    @TransformDataFrameExpressions
     fun composeTables() {
         // SampleStart
         val df1 = df.reorderColumnsByName()

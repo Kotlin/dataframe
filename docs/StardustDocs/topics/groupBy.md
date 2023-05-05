@@ -99,7 +99,6 @@ val df = dataFrameOf(key, data) // create dataframe with two columns
 df.asGroupBy { data } // convert dataframe to GroupBy by interpreting 'data' column as groups
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.dataFrameToGroupBy.html"/>
 <!---END-->
 
 And any [`GroupBy DataFrame`](groupBy.md#transformation) can be reinterpreted as [`DataFrame`](DataFrame.md) with `FrameColumn`:

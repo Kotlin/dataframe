@@ -15,7 +15,6 @@ df.stdFor { age and weight } // std of values per `age` and `weight` separately,
 df.stdOf { (weight ?: 0) / age } // std of expression evaluated for every row
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.stdModes.html"/>
 <!---END-->
 
 <!---FUN stdAggregations-->
@@ -28,7 +27,6 @@ df.pivot { city }.std()
 df.pivot { city }.groupBy { name.lastName }.std()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.stdAggregations.html"/>
 <!---END-->
 
 See [statistics](summaryStatistics.md#groupby-statistics) for details on complex data aggregations.
