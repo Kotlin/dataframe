@@ -60,5 +60,4 @@ DataFrame.parser.locale = Locale.FRANCE
 DataFrame.parser.addDateTimePattern("dd.MM.uuuu HH:mm:ss")
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.globalParserOptions.html"/>
 <!---END-->

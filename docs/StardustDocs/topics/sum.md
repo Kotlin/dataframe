@@ -15,7 +15,6 @@ df.sumFor { age and weight } // sum of values per `age` and `weight` separately
 df.sumOf { (weight ?: 0) / age } // sum of expression evaluated for every row
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticModes.html"/>
 <!---END-->
 
 <!---FUN sumAggregations-->
@@ -27,7 +26,6 @@ df.pivot { city }.sum()
 df.pivot { city }.groupBy { name.lastName }.sum()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.sumAggregations.html"/>
 <!---END-->
 
 See [statistics](summaryStatistics.md#groupby-statistics) for details on complex data aggregations.

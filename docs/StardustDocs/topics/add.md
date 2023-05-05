@@ -142,12 +142,12 @@ Consider this API:
 
 ```kotlin
 class CityInfo(val city: String?, val population: Int, val location: String)
+
 fun queryCityInfo(city: String?): CityInfo {
     return CityInfo(city, city?.length ?: 0, "35.5 32.2")
 }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addCalculatedApi.html"/>
 <!---END-->
 
 Use the following approach to add multiple columns by calling the given API only once per row:
@@ -194,7 +194,6 @@ val personWithCityInfo = df.add {
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addCalculated.html"/>
 <!---END-->
 
 ## Add existing column to [`DataFrame`](DataFrame.md)

@@ -10,7 +10,6 @@ Counts the number of rows.
 df.count()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.count.html"/>
 <!---END-->
 
 Pass [row condition](DataRow.md#row-conditions) to count number of rows that satisfy to that condition:
@@ -21,7 +20,6 @@ Pass [row condition](DataRow.md#row-conditions) to count number of rows that sat
 df.count { age > 15 }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.countCondition.html"/>
 <!---END-->
 
 When `count` is used in [`groupBy`](groupBy.md#aggregation) or [`pivot`](pivot.md#aggregation) aggregations, it counts rows for every data group:

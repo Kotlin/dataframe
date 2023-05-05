@@ -94,41 +94,6 @@ df.select { name.allRecursively(includeGroups = false) }
 ```
 
 </tab>
-<tab title="KProperties">
-
-```kotlin
-// by column name
-df.select { it[Person::name] }
-df.select { (Person::name)() }
-df.select { col(Person::name) }
-
-// by column path
-df.select { it[Person::name][Name::firstName] }
-df.select { Person::name[Name::firstName] }
-
-// with a new name
-df.select { Person::name named "Full Name" }
-
-// converted
-df.select { Person::name[Name::firstName].map { it.lowercase() } }
-
-// column arithmetics
-df.select { 2021 - (Person::age)() }
-
-// two columns
-df.select { Person::name and Person::age }
-
-// range of columns
-df.select { Person::name..Person::age }
-
-// all children of ColumnGroup
-df.select { Person::name.all() }
-
-// recursive traversal of all children columns excluding groups
-df.select { Person::name.allRecursively(includeGroups = false) }
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -250,12 +215,12 @@ df.select { take(2) and col(3) }
 
 ```kotlin
 // first/last n columns in column set
-df.select { allRec(includeGroups = false).take(3) }
-df.select { allRec(includeGroups = false).takeLast(3) }
+df.select { allRecursively(includeGroups = false).take(3) }
+df.select { allRecursively(includeGroups = false).takeLast(3) }
 
 // all except first/last n columns in column set
-df.select { allRec(includeGroups = false).drop(3) }
-df.select { allRec(includeGroups = false).dropLast(3) }
+df.select { allRecursively(includeGroups = false).drop(3) }
+df.select { allRecursively(includeGroups = false).dropLast(3) }
 
 // filter column set by condition
 df.select { allRec(includeGroups = false).filter { it.name().startsWith("year") } }

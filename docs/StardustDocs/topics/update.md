@@ -61,7 +61,6 @@ Update with value depending on column:
 df.update { colsOf<Number?>() }.perCol { mean(skipNA = true) }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.updatePerColumn.html"/>
 <!---END-->
 
 Update with value depending on row and column:

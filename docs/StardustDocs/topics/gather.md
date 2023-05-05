@@ -56,5 +56,4 @@ pivoted.gather { "London".."Tokyo" }
     .into("city", "density")
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.gatherWithMapping.html"/>
 <!---END-->
