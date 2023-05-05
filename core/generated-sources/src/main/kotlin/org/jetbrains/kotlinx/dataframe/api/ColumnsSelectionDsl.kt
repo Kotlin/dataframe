@@ -3951,7 +3951,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * {@includeArg [CommonRecursivelyDocs.Examples]}
      *
-     * @param [includeGroups\] Whether to include [column groups][ColumnGroup] in the result. `true` by default.
      * @param [includeTopLevel\] Whether to include the top-level columns in the result. `true` by default.
      */
     private interface CommonRecursivelyDocs {
@@ -3985,17 +3984,15 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][ColumnSet.colsOf]`<`[String][String]`>().`[recursively][recursively]`() }`
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[all][ColumnSet.all]`().`[rec][rec]`(includeGroups = false) }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[all][ColumnSet.all]`().`[rec][rec]`() }`
      *
      * `df.`[select][DataFrame.select]` { `[groups][ColumnSet.groups]`().`[recursively][recursively]`(includeTopLevel = false) }`
      *
-     * @param [includeGroups] Whether to include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in the result. `true` by default.
      * @param [includeTopLevel] Whether to include the top-level columns in the result. `true` by default.
      */
     public fun <C> TransformableColumnSet<C>.recursively(
-        includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
-    ): ColumnSet<C> = recursivelyImpl(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+    ): ColumnSet<C> = recursivelyImpl(includeTopLevel = includeTopLevel, includeGroups = true)
 
     /** ## Recursively / Rec
      *
@@ -4021,17 +4018,15 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsOf]`<`[String][String]`>().`[recursively][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.recursively]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[all][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.all]`().`[rec][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.rec]`(includeGroups = false) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[all][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.all]`().`[rec][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.rec]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[groups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.groups]`().`[recursively][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.recursively]`(includeTopLevel = false) }`
      *
-     * @param [includeGroups] Whether to include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in the result. `true` by default.
      * @param [includeTopLevel] Whether to include the top-level columns in the result. `true` by default.
      */
     public fun <C> TransformableColumnSet<C>.rec(
-        includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
-    ): ColumnSet<C> = recursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+    ): ColumnSet<C> = recursively(includeTopLevel = includeTopLevel)
 
     /**
      * ## Recursively / Rec
@@ -4058,15 +4053,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { `[first][ColumnSet.first]` { col -> col.`[any][DataColumn.any]` { it == "Alice" } }.`[recursively][recursively]`(includeTopLevel = false) }`
      *
-     * `df.`[select][DataFrame.select]` { `[single][ColumnSet.single]` { it.name == "myCol" }.`[rec][rec]`(includeGroups = false) }`
+     * `df.`[select][DataFrame.select]` { `[single][ColumnSet.single]` { it.name == "myCol" }.`[rec][rec]`() }`
      *
-     * @param [includeGroups] Whether to include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in the result. `true` by default.
      * @param [includeTopLevel] Whether to include the top-level columns in the result. `true` by default.
      */
     public fun TransformableSingleColumn<*>.recursively(
-        includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
-    ): SingleColumn<*> = recursivelyImpl(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+    ): SingleColumn<*> = recursivelyImpl(includeTopLevel = includeTopLevel, includeGroups = true)
 
     /** ## Recursively / Rec
      *
@@ -4092,15 +4085,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.first]` { col -> col.`[any][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }.`[recursively][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.recursively]`(includeTopLevel = false) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[single][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.single]` { it.name == "myCol" }.`[rec][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.rec]`(includeGroups = false) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[single][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.single]` { it.name == "myCol" }.`[rec][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.rec]`() }`
      *
-     * @param [includeGroups] Whether to include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in the result. `true` by default.
      * @param [includeTopLevel] Whether to include the top-level columns in the result. `true` by default.
      */
     public fun TransformableSingleColumn<*>.rec(
-        includeGroups: Boolean = true,
         includeTopLevel: Boolean = true,
-    ): SingleColumn<*> = recursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+    ): SingleColumn<*> = recursively(includeTopLevel = includeTopLevel)
 
     /**
      * ## All Recursively / All Rec

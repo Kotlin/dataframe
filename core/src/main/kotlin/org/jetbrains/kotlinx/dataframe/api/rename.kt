@@ -49,7 +49,7 @@ public fun <T> DataFrame<T>.renameToCamelCase(): DataFrame<T> = this
     }.toCamelCase()
 
     .rename {
-        cols { it.name() matches DELIMITED_STRING_REGEX }.recursively(includeGroups = false)
+        cols { !it.isColumnGroup() && it.name() matches DELIMITED_STRING_REGEX }.recursively()
     }.toCamelCase()
 
     .update {

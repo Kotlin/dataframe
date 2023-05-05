@@ -45,7 +45,7 @@ public fun <T, V : Comparable<V>> DataFrame<T>.reorderColumnsBy(
 ): DataFrame<T> =
     Reorder(
         df = this,
-        columns = { if (recursively) all().recursively() else all() },
+        columns = { if (recursively) allRecursively() else all() },
         inFrameColumns = recursively,
     ).reorderImpl(desc, expression)
 
