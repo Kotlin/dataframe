@@ -197,7 +197,7 @@ df.select { allRecursively() }
 df.select { cols { it.name().contains(":") }.recursively() }
 
 // recursive traversal of columns of given type
-df.select { colsOf<String>().recursively() }
+df.select { colsOf<String>().rec() }
 
 // all columns except given column set
 df.select { except { colsOf<String>() } }

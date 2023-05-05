@@ -499,7 +499,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { allDfs() }</summary>
+                        <summary>df.select { allRecursively(includeGroups = false) }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
@@ -516,7 +516,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { allDfs(includeGroups = true) }</summary>
+                        <summary>df.select { allRecursively() }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
@@ -533,7 +533,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { dfs { it.name().contains(&quot;:&quot;) } }</summary>
+                        <summary>df.select { cols { it.name().contains(&quot;:&quot;) }.recursively() }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
@@ -550,7 +550,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { dfsOf&amp;lt;String&amp;gt;() }</summary>
+                        <summary>df.select { colsOf&amp;lt;String&amp;gt;().rec() }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
