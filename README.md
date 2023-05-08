@@ -53,9 +53,17 @@ android {
     }
     packaging {
         resources {
+            pickFirsts += listOf(
+                "META-INF/AL2.0",
+                "META-INF/LGPL2.1",
+                "META-INF/ASL-2.0.txt",
+                "META-INF/LICENSE.md",
+                "META-INF/NOTICE.md",
+                "META-INF/LGPL-3.0.txt",
+            )
             excludes += listOf(
                 "META-INF/kotlin-jupyter-libraries/libraries.json",
-                "META-INF/{AL2.0,LGPL2.1,ASL-2.0.txt,INDEX.LIST,DEPENDENCIES,LICENSE.md,NOTICE.md,LGPL-3.0.txt}",
+                "META-INF/{INDEX.LIST,DEPENDENCIES}",
                 "{draftv3,draftv4}/schema",
                 "arrow-git.properties",
             )
