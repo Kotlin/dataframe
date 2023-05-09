@@ -740,7 +740,7 @@ class Access : TestBase() {
         df.select { name.all() }
 
         // recursive traversal of all children columns excluding ColumnGroups
-        df.select { name.allRecursively(includeGroups = false) }
+        df.select { name.cols { !it.isColumnGroup() }.recursively() }
 
         // SampleEnd
     }
@@ -778,7 +778,7 @@ class Access : TestBase() {
         df.select { name.all() }
 
         // recursive traversal of all children columns excluding ColumnGroups
-        df.select { name.allRecursively(includeGroups = false) }
+        df.select { name.cols { !it.isColumnGroup() }.recursively() }
         // SampleEnd
     }
 
@@ -813,7 +813,7 @@ class Access : TestBase() {
         df.select { Person::name.all() }
 
         // recursive traversal of all children columns excluding groups
-        df.select { Person::name.allRecursively(includeGroups = false) }
+        df.select { Person::name.cols { !it.isColumnGroup() }.recursively() }
         // SampleEnd
     }
 
@@ -847,7 +847,7 @@ class Access : TestBase() {
         df.select { "name".all() }
 
         // recursive traversal of all children columns excluding groups
-        df.select { "name".allRecursively(includeGroups = false) }
+        df.select { "name".cols { !it.isColumnGroup() }.recursively() }
         // SampleEnd
     }
 
@@ -906,10 +906,10 @@ class Access : TestBase() {
         }
 
         // recursive traversal of all columns, excluding ColumnGroups from result
-        df.select { allRecursively(includeGroups = false) }
+        df.select { cols { !it.isColumnGroup() }.recursively() }
 
         // depth-first-search traversal of all columns, including ColumnGroups in result
-        df.select { allRecursively() }
+        df.select { all().recursively() }
 
         // recursive traversal with condition
         df.select { cols { it.name().contains(":") }.recursively() }
@@ -929,19 +929,19 @@ class Access : TestBase() {
     @TransformDataFrameExpressions
     fun columnSelectorsModifySet() {
         // SampleStart
-        // first/last n columns in column set
-        df.select { allRecursively(includeGroups = false).take(3) }
-        df.select { allRecursively(includeGroups = false).takeLast(3) }
+        // first/last n value- and frame columns in column set
+        df.select { cols { !it.isColumnGroup() }.recursively().take(3) }
+        df.select { cols { !it.isColumnGroup() }.recursively().takeLast(3) }
 
-        // all except first/last n columns in column set
-        df.select { allRecursively(includeGroups = false).drop(3) }
-        df.select { allRecursively(includeGroups = false).dropLast(3) }
+        // all except first/last n value- and frame columns in column set
+        df.select { cols { !it.isColumnGroup() }.recursively().drop(3) }
+        df.select { cols { !it.isColumnGroup() }.recursively().dropLast(3) }
 
         // filter column set by condition
-        df.select { allRec(includeGroups = false).filter { it.name().startsWith("year") } }
+        df.select { cols { !it.isColumnGroup() }.rec().filter { it.name().startsWith("year") } }
 
         // exclude columns from column set
-        df.select { allRec(includeGroups = false).except { age } }
+        df.select { cols { !it.isColumnGroup() }.rec().except { age } }
 
         // keep only unique columns
         df.select { (colsOf<Int>() and age).distinct() }

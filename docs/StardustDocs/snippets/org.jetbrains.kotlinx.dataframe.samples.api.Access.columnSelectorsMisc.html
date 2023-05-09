@@ -499,7 +499,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { allRecursively(includeGroups = false) }</summary>
+                        <summary>df.select { cols { !it.isColumnGroup() }.recursively() }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
@@ -516,7 +516,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { allRecursively() }</summary>
+                        <summary>df.select { all().recursively() }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>

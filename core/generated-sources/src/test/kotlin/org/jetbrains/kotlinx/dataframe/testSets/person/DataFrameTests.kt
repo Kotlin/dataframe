@@ -750,7 +750,7 @@ class DataFrameTests : BaseTest() {
         df["e"].kind() shouldBe ColumnKind.Group
         df.getColumnGroup("d").columnNames() shouldBe listOf("f")
         df.getColumnGroup("e").getColumnGroup("g").columnNames() shouldBe listOf("h")
-        val cols = df.getColumns { allRecursively(includeGroups = false) }
+        val cols = df.getColumns { cols { !it.isColumnGroup() }.recursively() }
         cols.size shouldBe 5
         cols.forEach {
             it.toList() shouldBe expected
