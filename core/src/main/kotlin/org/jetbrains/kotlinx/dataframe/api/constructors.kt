@@ -66,6 +66,47 @@ public inline fun <T, reified C> column(
 
 // endregion
 
+// region valueColumn
+
+public fun valueColumn(): ColumnDelegate<Any?> = column()
+
+@JvmName("valueColumnTyped")
+public fun <T> valueColumn(): ColumnDelegate<T> = column()
+
+public fun valueColumn(name: String): ColumnAccessor<Any?> = column(name)
+
+@JvmName("valueColumnTyped")
+public fun <T> valueColumn(name: String): ColumnAccessor<T> = column(name)
+
+public fun valueColumn(path: ColumnPath): ColumnAccessor<Any?> = column(path)
+
+@JvmName("valueColumnTyped")
+public fun <T> valueColumn(path: ColumnPath): ColumnAccessor<T> = column(path)
+
+public fun <T> valueColumn(property: KProperty<T>): ColumnAccessor<T> = column(property.name)
+
+public fun ColumnGroupReference.valueColumn(): ColumnDelegate<Any?> = ColumnDelegate(this)
+
+@JvmName("valueColumnTyped")
+public fun <T> ColumnGroupReference.valueColumn(): ColumnDelegate<T> = ColumnDelegate(this)
+
+public fun ColumnGroupReference.valueColumn(name: String): ColumnAccessor<Any?> = ColumnAccessorImpl(path() + name)
+
+@JvmName("valueColumnTyped")
+public fun <T> ColumnGroupReference.valueColumn(name: String): ColumnAccessor<T> =
+    ColumnAccessorImpl(path() + name)
+
+public fun ColumnGroupReference.valueColumn(path: ColumnPath): ColumnAccessor<Any?> = ColumnAccessorImpl(this.path() + path)
+
+@JvmName("valueColumnTyped")
+public fun <T> ColumnGroupReference.valueColumn(path: ColumnPath): ColumnAccessor<T> =
+    ColumnAccessorImpl(this.path() + path)
+
+public fun <T> ColumnGroupReference.valueColumn(property: KProperty<T>): ColumnAccessor<T> =
+    ColumnAccessorImpl(this.path() + property.name)
+
+// endregion
+
 // region columnGroup
 
 public fun columnGroup(): ColumnDelegate<AnyRow> = column()

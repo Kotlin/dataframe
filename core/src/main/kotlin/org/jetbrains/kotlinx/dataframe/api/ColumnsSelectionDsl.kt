@@ -576,6 +576,112 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public operator fun <C> ColumnSet<C>.get(index: Int): SingleColumn<C> = getAt(index)
 
     // endregion
+    
+    // region valueCol
+
+    /**
+     * ## Value Column Accessor
+     * Creates a [ColumnAccessor] for a value column with the given argument.
+     * This is a shorthand for [valueColumn] and can be both typed and untyped.
+     * The function can also be called on [ColumnGroupReferences][ColumnGroupReference] to create
+     * an accessor for a value column inside a [ColumnGroup].
+     *
+     * #### For example:
+     *
+     * `df.`[select][select]` { `[valueCol][valueCol]`({@includeArg [CommonValueColDocs.Arg]}) }`
+     *
+     * `df.`[select][select]` { myColGroup.`[valueCol][valueCol]`<SomeType>({@includeArg [CommonValueColDocs.Arg]}) }`
+     *
+     * @return A [ColumnAccessor] for the column group with the given argument.
+     * @see [columnGroup\]
+     * @see [col\]
+     * @see [frameCol\]
+     */
+    private interface CommonValueColDocs {
+
+        /** Example argument */
+        interface Arg
+    }
+
+    /**
+     * @include [CommonValueColDocs] {@arg [CommonValueColDocs.Arg] "columnName"}
+     * @param [name] The name of the value column.
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("valueColUntyped")
+    public fun valueCol(name: String): ColumnAccessor<*> = valueColumn<Any?>(name)
+
+    /**
+     * @include [CommonValueColDocs] {@arg [CommonValueColDocs.Arg] "columnName"}
+     * @param [name] The name of the value column.
+     * @param [C] The type of the value column.
+     */
+    public fun <C> valueCol(name: String): ColumnAccessor<C> = valueColumn<C>(name)
+
+    /**
+     * @include [CommonValueColDocs] {@arg [CommonValueColDocs.Arg] "columnGroup"["columnName"]}
+     * @param [path] The [ColumnPath] pointing to the value column.
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("valueColUntyped")
+    public fun valueCol(path: ColumnPath): ColumnAccessor<*> = valueColumn<Any?>(path)
+
+    /**
+     * @include [CommonValueColDocs] {@arg [CommonValueColDocs.Arg] "columnGroup"["columnName"]}
+     * @param [path] The [ColumnPath] pointing to the value column.
+     * @param [C] The type of the value column.
+     */
+    public fun <C> valueCol(path: ColumnPath): ColumnAccessor<C> = valueColumn<C>(path)
+
+    /**
+     * @include [CommonValueColDocs] {@arg [CommonValueColDocs.Arg] Type::columnName}
+     * @param [property] The [KProperty] pointing to the value column.
+     */
+    public fun <C> valueCol(property: KProperty<C>): ColumnAccessor<C> = valueColumn(property)
+
+    /**
+     * @include [CommonValueColDocs] {@arg [CommonValueColDocs.Arg] "columnName"}
+     * @param [name] The name of the value column.
+     * @receiver The [ColumnGroupReference] to get the value column from.
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("valueColUntyped")
+    public fun ColumnGroupReference.valueCol(name: String): ColumnAccessor<*> = valueColumn<Any?>(name)
+
+    /**
+     * @include [CommonValueColDocs] {@arg [CommonValueColDocs.Arg] "columnName"}
+     * @param [name] The name of the value column.
+     * @param [C] The type of the value column.
+     * @receiver The [ColumnGroupReference] to get the value column from.
+     */
+    public fun <C> ColumnGroupReference.valueCol(name: String): ColumnAccessor<C> = valueColumn<C>(name)
+
+    /**
+     * @include [CommonValueColDocs] {@arg [CommonValueColDocs.Arg] "columnGroup"["columnName"]}
+     * @param [path] The [ColumnPath] pointing to the value column.
+     * @receiver The [ColumnGroupReference] to get the value column from.
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("valueColUntyped")
+    public fun ColumnGroupReference.valueCol(path: ColumnPath): ColumnAccessor<*> = valueColumn<Any?>(path)
+
+    /**
+     * @include [CommonValueColDocs] {@arg [CommonValueColDocs.Arg] "columnGroup"["columnName"]}
+     * @param [path] The [ColumnPath] pointing to the value column.
+     * @param [C] The type of the value column.
+     * @receiver The [ColumnGroupReference] to get the value column from.
+     */
+    public fun <C> ColumnGroupReference.valueCol(path: ColumnPath): ColumnAccessor<C> = valueColumn<C>(path)
+
+    /**
+     * @include [CommonValueColDocs] {@arg [CommonValueColDocs.Arg] Type::columnName}
+     * @param [property] The [KProperty] pointing to the value column.
+     * @receiver The [ColumnGroupReference] to get the value column from.
+     */
+    public fun <C> ColumnGroupReference.valueCol(property: KProperty<C>): ColumnAccessor<C> = valueColumn(property)
+
+    // endregion
+    
     // region colGroup
 
     /**
@@ -594,6 +700,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor] for the column group with the given argument.
      * @see [columnGroup\]
      * @see [col\]
+     * @see [valueCol\]
      * @see [frameCol\]
      */
     private interface CommonColGroupDocs {
@@ -625,7 +732,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @param [path] The [ColumnPath] pointing to the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("colGroupUnTyped")
+    @JvmName("colGroupUntyped")
     public fun colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = columnGroup<Any?>(path)
 
     /**
@@ -655,7 +762,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @receiver The [ColumnGroupReference] to get the column group from.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("colGroupUnTyped")
+    @JvmName("colGroupUntyped")
     public fun ColumnGroupReference.colGroup(name: String): ColumnAccessor<DataRow<*>> = columnGroup<Any?>(name)
 
     /**
@@ -672,7 +779,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @receiver The [ColumnGroupReference] to get the column group from.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("colGroupUnTyped")
+    @JvmName("colGroupUntyped")
     public fun ColumnGroupReference.colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> =
         columnGroup<Any?>(path)
 
@@ -721,6 +828,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor] for the frame column with the given argument.
      * @see [frameColumn\]
      * @see [colGroup\]
+     * @see [valueCol\]
      * @see [col\]
      */
     private interface CommonFrameColDocs {
@@ -734,7 +842,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @param [name] The name of the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("frameUnTyped")
+    @JvmName("frameColUntyped")
     public fun frameCol(name: String): ColumnAccessor<DataFrame<*>> = frameColumn<Any?>(name)
 
     /**
@@ -749,7 +857,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @param [path] The [ColumnPath] pointing to the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("frameUnTyped")
+    @JvmName("frameColUntyped")
     public fun frameCol(path: ColumnPath): ColumnAccessor<DataFrame<*>> = frameColumn<Any?>(path)
 
     /**
@@ -779,7 +887,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @receiver The [ColumnGroupReference] to get the frame column from.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("frameUnTyped")
+    @JvmName("frameColUntyped")
     public fun ColumnGroupReference.frameCol(name: String): ColumnAccessor<DataFrame<*>> = frameColumn<Any?>(name)
 
     /**
@@ -796,7 +904,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @receiver The [ColumnGroupReference] to get the frame column from.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("frameUnTyped")
+    @JvmName("frameColUntyped")
     public fun ColumnGroupReference.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<*>> =
         frameColumn<Any?>(path)
 
@@ -828,6 +936,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         frameColumn(property)
 
     // endregion
+    
     // endregion
 
     // region cols
@@ -1418,6 +1527,40 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // endregion
 
+    // region colGroups
+
+    @Deprecated("Use colGroups instead", ReplaceWith("this.colGroups(filter)"))
+    public fun ColumnSet<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
+        columnGroupsInternal(filter)
+
+    @Deprecated("Use colGroups instead", ReplaceWith("this.colGroups(filter)"))
+    public fun SingleColumn<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
+        columnGroupsInternal(filter)
+
+    @Deprecated("Use colGroups instead", ReplaceWith("this.colGroups(filter)"))
+    public fun String.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
+        toColumnAccessor().groups(filter)
+
+    @Deprecated("Use colGroups instead", ReplaceWith("this.colGroups(filter)"))
+    public fun KProperty<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
+        toColumnAccessor().groups(filter)
+
+    public fun ColumnSet<*>.colGroups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
+        columnGroupsInternal(filter)
+
+    public fun SingleColumn<*>.colGroups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
+        columnGroupsInternal(filter)
+
+    public fun String.colGroups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
+        toColumnAccessor().colGroups(filter)
+
+    public fun KProperty<*>.colGroups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
+        toColumnAccessor().colGroups(filter)
+
+    // endregion
+    
+    // TODO value, frame
+
     // region select
 
     public fun <C, R> ColumnSet<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> = createColumnSet {
@@ -1885,20 +2028,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // endregion
 
-    // region groups
-    public fun ColumnSet<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
-        groupsInternal(filter)
-
-    public fun SingleColumn<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
-        groupsInternal(filter)
-
-    public fun String.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
-        toColumnAccessor().groups(filter)
-
-    public fun KProperty<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
-        toColumnAccessor().groups(filter)
-
-    // endregion
+    
 
     // region children
 
@@ -2177,7 +2307,7 @@ internal fun ColumnSet<*>.colsInternal(range: IntRange): TransformableColumnSet<
 internal fun ColumnSet<*>.rootsInternal(): ColumnSet<*> =
     allInternal().transform { it.roots() }
 
-internal fun ColumnSet<*>.groupsInternal(filter: (ColumnGroup<*>) -> Boolean): TransformableColumnSet<AnyRow> =
+internal fun ColumnSet<*>.columnGroupsInternal(filter: (ColumnGroup<*>) -> Boolean): TransformableColumnSet<AnyRow> =
     colsInternal { it.isColumnGroup() && filter(it.asColumnGroup()) } as TransformableColumnSet<AnyRow>
 
 /**
