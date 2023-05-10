@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.jetbrains.kotlinx.dataframe.samples.api.city
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
+import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.junit.Test
 
@@ -56,13 +57,13 @@ class Recursively : TestBase() {
     }
 
     @Test
-    fun `children`() {
+    fun children() {
         dfGroup.getColumnsWithPaths { children().recursively() }.print()
         dfGroup.getColumnsWithPaths { name.children() }.print()
     }
 
     @Test
-    fun `groups`() {
+    fun groups() {
         listOf(
             df.select { name },
             df.select { groups().recursively() },
@@ -104,5 +105,39 @@ class Recursively : TestBase() {
         dfGroup.getColumnsWithPaths { cols().all().recursively() }.sortedBy { it.name } shouldBe recursivelyGoal
         dfGroup.getColumnsWithPaths { cols().cols { !it.isColumnGroup() }.recursively() }
             .sortedBy { it.name } shouldBe recursivelyNoGroups
+    }
+
+    @Test
+    fun `valueCols recursively`() {
+        dfGroup.getColumnsWithPaths { valueCols().recursively() }.sortedBy { it.name } shouldBe
+            recursivelyNoGroups
+    }
+
+    @Test
+    fun `colGroups recursively`() {
+        dfGroup.getColumnsWithPaths { colGroups().recursively() } shouldBe
+            dfGroup.getColumnsWithPaths { name and name.firstName }
+    }
+
+    @Test
+    fun `frameCols recursively`() {
+        val frameCol by frameColumn<Person>()
+
+        val dfWithFrames = df
+            .add {
+                expr { df } into frameCol
+            }
+            .convert { name }.to {
+                val firstName by it.asColumnGroup().firstName
+                val lastName by it.asColumnGroup().lastName
+
+                @Suppress("NAME_SHADOWING")
+                val frameCol by it.map { df }.asFrameColumn()
+
+                dataFrameOf(firstName, lastName, frameCol).asColumnGroup("name")
+            }
+
+        dfWithFrames.getColumnsWithPaths { frameCols().recursively() } shouldBe
+            dfWithFrames.getColumnsWithPaths { name[frameCol] and frameCol }
     }
 }

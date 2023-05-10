@@ -122,7 +122,13 @@ public fun DataColumn<Number>.toByteArray(): ByteArray = convertTo<Byte>().toLis
 
 // endregion
 
+public fun AnyCol.asValueColumn(): ValueColumn<*> = this as ValueColumn<*>
+
+@JvmName("asColumnGroupUntyped")
 public fun AnyCol.asColumnGroup(): ColumnGroup<*> = this as ColumnGroup<*>
+
+@JvmName("asFrameColumnUntyped")
+public fun AnyCol.asFrameColumn(): FrameColumn<*> = this as FrameColumn<*>
 
 public fun <T> DataColumn<DataFrame<T>>.asFrameColumn(): FrameColumn<T> =
     (this as AnyCol).asAnyFrameColumn().castFrameColumn()

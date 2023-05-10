@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
@@ -1009,6 +1010,262 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public operator fun <C> ColumnSet<C>.get(index: Int): SingleColumn<C> = getAt(index)
 
     // endregion
+    
+    // region valueCol
+
+    /**
+     * ## Value Column Accessor
+     * Creates a [ColumnAccessor] for a value column with the given argument.
+     * This is a shorthand for [valueColumn] and can be both typed and untyped.
+     * The function can also be called on [ColumnGroupReferences][ColumnGroupReference] to create
+     * an accessor for a value column inside a [ColumnGroup].
+     *
+     * #### For example:
+     *
+     * `df.`[select][select]` { `[valueCol][valueCol]`({@includeArg [CommonValueColDocs.Arg]}) }`
+     *
+     * `df.`[select][select]` { myColGroup.`[valueCol][valueCol]`<SomeType>({@includeArg [CommonValueColDocs.Arg]}) }`
+     *
+     * @return A [ColumnAccessor] for the column group with the given argument.
+     * @see [columnGroup\]
+     * @see [col\]
+     * @see [frameCol\]
+     */
+    private interface CommonValueColDocs {
+
+        /** Example argument */
+        interface Arg
+    }
+
+    /**
+     * ## Value Column Accessor
+     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a value column with the given argument.
+     * This is a shorthand for [valueColumn][org.jetbrains.kotlinx.dataframe.api.valueColumn] and can be both typed and untyped.
+     * The function can also be called on [ColumnGroupReferences][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a value column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`("columnName") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { myColGroup.`[valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`<SomeType>("columnName") }`
+     *
+     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column group with the given argument.
+     * @see [columnGroup]
+     * @see [col]
+     * @see [frameCol] 
+     * @param [name] The name of the value column.
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("valueColUntyped")
+    public fun valueCol(name: String): ColumnAccessor<*> = valueColumn<Any?>(name)
+
+    /**
+     * ## Value Column Accessor
+     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a value column with the given argument.
+     * This is a shorthand for [valueColumn][org.jetbrains.kotlinx.dataframe.api.valueColumn] and can be both typed and untyped.
+     * The function can also be called on [ColumnGroupReferences][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a value column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`("columnName") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { myColGroup.`[valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`<SomeType>("columnName") }`
+     *
+     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column group with the given argument.
+     * @see [columnGroup]
+     * @see [col]
+     * @see [frameCol] 
+     * @param [name] The name of the value column.
+     * @param [C] The type of the value column.
+     */
+    public fun <C> valueCol(name: String): ColumnAccessor<C> = valueColumn<C>(name)
+
+    /**
+     * ## Value Column Accessor
+     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a value column with the given argument.
+     * This is a shorthand for [valueColumn][org.jetbrains.kotlinx.dataframe.api.valueColumn] and can be both typed and untyped.
+     * The function can also be called on [ColumnGroupReferences][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a value column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`("columnGroup"["columnName"]) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { myColGroup.`[valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`<SomeType>("columnGroup"["columnName"]) }`
+     *
+     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column group with the given argument.
+     * @see [columnGroup]
+     * @see [col]
+     * @see [frameCol] 
+     * @param [path] The [ColumnPath] pointing to the value column.
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("valueColUntyped")
+    public fun valueCol(path: ColumnPath): ColumnAccessor<*> = valueColumn<Any?>(path)
+
+    /**
+     * ## Value Column Accessor
+     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a value column with the given argument.
+     * This is a shorthand for [valueColumn][org.jetbrains.kotlinx.dataframe.api.valueColumn] and can be both typed and untyped.
+     * The function can also be called on [ColumnGroupReferences][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a value column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`("columnGroup"["columnName"]) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { myColGroup.`[valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`<SomeType>("columnGroup"["columnName"]) }`
+     *
+     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column group with the given argument.
+     * @see [columnGroup]
+     * @see [col]
+     * @see [frameCol] 
+     * @param [path] The [ColumnPath] pointing to the value column.
+     * @param [C] The type of the value column.
+     */
+    public fun <C> valueCol(path: ColumnPath): ColumnAccessor<C> = valueColumn<C>(path)
+
+    /**
+     * ## Value Column Accessor
+     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a value column with the given argument.
+     * This is a shorthand for [valueColumn][org.jetbrains.kotlinx.dataframe.api.valueColumn] and can be both typed and untyped.
+     * The function can also be called on [ColumnGroupReferences][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a value column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`(Type::columnName) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { myColGroup.`[valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`<SomeType>(Type::columnName) }`
+     *
+     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column group with the given argument.
+     * @see [columnGroup]
+     * @see [col]
+     * @see [frameCol] 
+     * @param [property] The [KProperty] pointing to the value column.
+     */
+    public fun <C> valueCol(property: KProperty<C>): ColumnAccessor<C> = valueColumn(property)
+
+    /**
+     * ## Value Column Accessor
+     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a value column with the given argument.
+     * This is a shorthand for [valueColumn][org.jetbrains.kotlinx.dataframe.api.valueColumn] and can be both typed and untyped.
+     * The function can also be called on [ColumnGroupReferences][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a value column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`("columnName") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { myColGroup.`[valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`<SomeType>("columnName") }`
+     *
+     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column group with the given argument.
+     * @see [columnGroup]
+     * @see [col]
+     * @see [frameCol] 
+     * @param [name] The name of the value column.
+     * @receiver The [ColumnGroupReference] to get the value column from.
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("valueColUntyped")
+    public fun ColumnGroupReference.valueCol(name: String): ColumnAccessor<*> = valueColumn<Any?>(name)
+
+    /**
+     * ## Value Column Accessor
+     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a value column with the given argument.
+     * This is a shorthand for [valueColumn][org.jetbrains.kotlinx.dataframe.api.valueColumn] and can be both typed and untyped.
+     * The function can also be called on [ColumnGroupReferences][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a value column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`("columnName") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { myColGroup.`[valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`<SomeType>("columnName") }`
+     *
+     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column group with the given argument.
+     * @see [columnGroup]
+     * @see [col]
+     * @see [frameCol] 
+     * @param [name] The name of the value column.
+     * @param [C] The type of the value column.
+     * @receiver The [ColumnGroupReference] to get the value column from.
+     */
+    public fun <C> ColumnGroupReference.valueCol(name: String): ColumnAccessor<C> = valueColumn<C>(name)
+
+    /**
+     * ## Value Column Accessor
+     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a value column with the given argument.
+     * This is a shorthand for [valueColumn][org.jetbrains.kotlinx.dataframe.api.valueColumn] and can be both typed and untyped.
+     * The function can also be called on [ColumnGroupReferences][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a value column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`("columnGroup"["columnName"]) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { myColGroup.`[valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`<SomeType>("columnGroup"["columnName"]) }`
+     *
+     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column group with the given argument.
+     * @see [columnGroup]
+     * @see [col]
+     * @see [frameCol] 
+     * @param [path] The [ColumnPath] pointing to the value column.
+     * @receiver The [ColumnGroupReference] to get the value column from.
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("valueColUntyped")
+    public fun ColumnGroupReference.valueCol(path: ColumnPath): ColumnAccessor<*> = valueColumn<Any?>(path)
+
+    /**
+     * ## Value Column Accessor
+     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a value column with the given argument.
+     * This is a shorthand for [valueColumn][org.jetbrains.kotlinx.dataframe.api.valueColumn] and can be both typed and untyped.
+     * The function can also be called on [ColumnGroupReferences][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a value column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`("columnGroup"["columnName"]) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { myColGroup.`[valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`<SomeType>("columnGroup"["columnName"]) }`
+     *
+     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column group with the given argument.
+     * @see [columnGroup]
+     * @see [col]
+     * @see [frameCol] 
+     * @param [path] The [ColumnPath] pointing to the value column.
+     * @param [C] The type of the value column.
+     * @receiver The [ColumnGroupReference] to get the value column from.
+     */
+    public fun <C> ColumnGroupReference.valueCol(path: ColumnPath): ColumnAccessor<C> = valueColumn<C>(path)
+
+    /**
+     * ## Value Column Accessor
+     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a value column with the given argument.
+     * This is a shorthand for [valueColumn][org.jetbrains.kotlinx.dataframe.api.valueColumn] and can be both typed and untyped.
+     * The function can also be called on [ColumnGroupReferences][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a value column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`(Type::columnName) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { myColGroup.`[valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`<SomeType>(Type::columnName) }`
+     *
+     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column group with the given argument.
+     * @see [columnGroup]
+     * @see [col]
+     * @see [frameCol] 
+     * @param [property] The [KProperty] pointing to the value column.
+     * @receiver The [ColumnGroupReference] to get the value column from.
+     */
+    public fun <C> ColumnGroupReference.valueCol(property: KProperty<C>): ColumnAccessor<C> = valueColumn(property)
+
+    // endregion
+    
     // region colGroup
 
     /**
@@ -1027,6 +1284,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor] for the column group with the given argument.
      * @see [columnGroup\]
      * @see [col\]
+     * @see [valueCol\]
      * @see [frameCol\]
      */
     private interface CommonColGroupDocs {
@@ -1054,6 +1312,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column group with the given argument.
      * @see [columnGroup]
      * @see [col]
+     * @see [valueCol]
      * @see [frameCol] 
      * @param [name] The name of the column group.
      */
@@ -1077,6 +1336,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column group with the given argument.
      * @see [columnGroup]
      * @see [col]
+     * @see [valueCol]
      * @see [frameCol] 
      * @param [name] The name of the column group.
      * @param [C] The type of the column group.
@@ -1099,11 +1359,12 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column group with the given argument.
      * @see [columnGroup]
      * @see [col]
+     * @see [valueCol]
      * @see [frameCol] 
      * @param [path] The [ColumnPath] pointing to the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("colGroupUnTyped")
+    @JvmName("colGroupUntyped")
     public fun colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = columnGroup<Any?>(path)
 
     /**
@@ -1122,6 +1383,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column group with the given argument.
      * @see [columnGroup]
      * @see [col]
+     * @see [valueCol]
      * @see [frameCol] 
      * @param [path] The [ColumnPath] pointing to the column group.
      * @param [C] The type of the column group.
@@ -1144,6 +1406,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column group with the given argument.
      * @see [columnGroup]
      * @see [col]
+     * @see [valueCol]
      * @see [frameCol] 
      * @param [property] The [KProperty] pointing to the column group.
      */
@@ -1167,6 +1430,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column group with the given argument.
      * @see [columnGroup]
      * @see [col]
+     * @see [valueCol]
      * @see [frameCol] 
      * @param [property] The [KProperty] pointing to the column group.
      */
@@ -1188,12 +1452,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column group with the given argument.
      * @see [columnGroup]
      * @see [col]
+     * @see [valueCol]
      * @see [frameCol] 
      * @param [name] The name of the column group.
      * @receiver The [ColumnGroupReference] to get the column group from.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("colGroupUnTyped")
+    @JvmName("colGroupUntyped")
     public fun ColumnGroupReference.colGroup(name: String): ColumnAccessor<DataRow<*>> = columnGroup<Any?>(name)
 
     /**
@@ -1212,6 +1477,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column group with the given argument.
      * @see [columnGroup]
      * @see [col]
+     * @see [valueCol]
      * @see [frameCol] 
      * @param [name] The name of the column group.
      * @receiver The [ColumnGroupReference] to get the column group from.
@@ -1235,12 +1501,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column group with the given argument.
      * @see [columnGroup]
      * @see [col]
+     * @see [valueCol]
      * @see [frameCol] 
      * @param [path] The [ColumnPath] pointing to the column group.
      * @receiver The [ColumnGroupReference] to get the column group from.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("colGroupUnTyped")
+    @JvmName("colGroupUntyped")
     public fun ColumnGroupReference.colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> =
         columnGroup<Any?>(path)
 
@@ -1260,6 +1527,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column group with the given argument.
      * @see [columnGroup]
      * @see [col]
+     * @see [valueCol]
      * @see [frameCol] 
      * @param [path] The [ColumnPath] pointing to the column group.
      * @receiver The [ColumnGroupReference] to get the column group from.
@@ -1284,6 +1552,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column group with the given argument.
      * @see [columnGroup]
      * @see [col]
+     * @see [valueCol]
      * @see [frameCol] 
      * @param [property] The [KProperty] pointing to the column group.
      * @receiver The [ColumnGroupReference] to get the column group from.
@@ -1309,6 +1578,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column group with the given argument.
      * @see [columnGroup]
      * @see [col]
+     * @see [valueCol]
      * @see [frameCol] 
      * @param [property] The [KProperty] pointing to the column group.
      * @receiver The [ColumnGroupReference] to get the column group from.
@@ -1334,6 +1604,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor] for the frame column with the given argument.
      * @see [frameColumn\]
      * @see [colGroup\]
+     * @see [valueCol\]
      * @see [col\]
      */
     private interface CommonFrameColDocs {
@@ -1357,11 +1628,12 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument.
      * @see [frameColumn]
      * @see [colGroup]
+     * @see [valueCol]
      * @see [col] 
      * @param [name] The name of the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("frameUnTyped")
+    @JvmName("frameColUntyped")
     public fun frameCol(name: String): ColumnAccessor<DataFrame<*>> = frameColumn<Any?>(name)
 
     /**
@@ -1379,6 +1651,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument.
      * @see [frameColumn]
      * @see [colGroup]
+     * @see [valueCol]
      * @see [col] 
      * @param [name] The name of the frame column.
      * @param [C] The type of the frame column.
@@ -1400,11 +1673,12 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument.
      * @see [frameColumn]
      * @see [colGroup]
+     * @see [valueCol]
      * @see [col] 
      * @param [path] The [ColumnPath] pointing to the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("frameUnTyped")
+    @JvmName("frameColUntyped")
     public fun frameCol(path: ColumnPath): ColumnAccessor<DataFrame<*>> = frameColumn<Any?>(path)
 
     /**
@@ -1422,6 +1696,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument.
      * @see [frameColumn]
      * @see [colGroup]
+     * @see [valueCol]
      * @see [col] 
      * @param [path] The [ColumnPath] pointing to the frame column.
      * @param [C] The type of the frame column.
@@ -1443,6 +1718,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument.
      * @see [frameColumn]
      * @see [colGroup]
+     * @see [valueCol]
      * @see [col] 
      * @param [property] The [KProperty] pointing to the frame column.
      */
@@ -1465,6 +1741,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument.
      * @see [frameColumn]
      * @see [colGroup]
+     * @see [valueCol]
      * @see [col] 
      * @param [property] The [KProperty] pointing to the frame column.
      */
@@ -1485,12 +1762,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument.
      * @see [frameColumn]
      * @see [colGroup]
+     * @see [valueCol]
      * @see [col] 
      * @param [name] The name of the frame column.
      * @receiver The [ColumnGroupReference] to get the frame column from.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("frameUnTyped")
+    @JvmName("frameColUntyped")
     public fun ColumnGroupReference.frameCol(name: String): ColumnAccessor<DataFrame<*>> = frameColumn<Any?>(name)
 
     /**
@@ -1508,6 +1786,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument.
      * @see [frameColumn]
      * @see [colGroup]
+     * @see [valueCol]
      * @see [col] 
      * @param [name] The name of the frame column.
      * @receiver The [ColumnGroupReference] to get the frame column from.
@@ -1530,12 +1809,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument.
      * @see [frameColumn]
      * @see [colGroup]
+     * @see [valueCol]
      * @see [col] 
      * @param [path] The [ColumnPath] pointing to the frame column.
      * @receiver The [ColumnGroupReference] to get the frame column from.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("frameUnTyped")
+    @JvmName("frameColUntyped")
     public fun ColumnGroupReference.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<*>> =
         frameColumn<Any?>(path)
 
@@ -1554,6 +1834,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument.
      * @see [frameColumn]
      * @see [colGroup]
+     * @see [valueCol]
      * @see [col] 
      * @param [path] The [ColumnPath] pointing to the frame column.
      * @receiver The [ColumnGroupReference] to get the frame column from.
@@ -1577,6 +1858,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument.
      * @see [frameColumn]
      * @see [colGroup]
+     * @see [valueCol]
      * @see [col] 
      * @param [property] The [KProperty] pointing to the frame column.
      * @receiver The [ColumnGroupReference] to get the frame column from.
@@ -1601,6 +1883,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument.
      * @see [frameColumn]
      * @see [colGroup]
+     * @see [valueCol]
      * @see [col] 
      * @param [property] The [KProperty] pointing to the frame column.
      * @receiver The [ColumnGroupReference] to get the frame column from.
@@ -1609,6 +1892,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         frameColumn(property)
 
     // endregion
+    
     // endregion
 
     // region cols
@@ -3717,6 +4001,70 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // endregion
 
+    // region valueCols
+
+    public fun ColumnSet<*>.valueCols(filter: (ValueColumn<*>) -> Boolean = { true }): TransformableColumnSet<*> =
+        valueColumnsInternal(filter)
+
+    public fun SingleColumn<*>.valueCols(filter: (ValueColumn<*>) -> Boolean = { true }): TransformableColumnSet<*> =
+        valueColumnsInternal(filter)
+
+    public fun String.valueCols(filter: (ValueColumn<*>) -> Boolean = { true }): TransformableColumnSet<*> =
+        toColumnAccessor().valueCols(filter)
+
+    public fun KProperty<*>.valueCols(filter: (ValueColumn<*>) -> Boolean = { true }): TransformableColumnSet<*> =
+        toColumnAccessor().valueCols(filter)
+
+    // endregion
+
+    // region colGroups
+
+    @Deprecated("Use colGroups instead", ReplaceWith("this.colGroups(filter)"))
+    public fun ColumnSet<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
+        columnGroupsInternal(filter)
+
+    @Deprecated("Use colGroups instead", ReplaceWith("this.colGroups(filter)"))
+    public fun SingleColumn<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
+        columnGroupsInternal(filter)
+
+    @Deprecated("Use colGroups instead", ReplaceWith("this.colGroups(filter)"))
+    public fun String.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
+        toColumnAccessor().groups(filter)
+
+    @Deprecated("Use colGroups instead", ReplaceWith("this.colGroups(filter)"))
+    public fun KProperty<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
+        toColumnAccessor().groups(filter)
+
+    public fun ColumnSet<*>.colGroups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
+        columnGroupsInternal(filter)
+
+    public fun SingleColumn<*>.colGroups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
+        columnGroupsInternal(filter)
+
+    public fun String.colGroups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
+        toColumnAccessor().colGroups(filter)
+
+    public fun KProperty<*>.colGroups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
+        toColumnAccessor().colGroups(filter)
+
+    // endregion
+
+    // region frameCols
+
+    public fun ColumnSet<*>.frameCols(filter: (FrameColumn<*>) -> Boolean = { true }): TransformableColumnSet<DataFrame<*>> =
+        frameColumnsInternal(filter)
+
+    public fun SingleColumn<*>.frameCols(filter: (FrameColumn<*>) -> Boolean = { true }): TransformableColumnSet<DataFrame<*>> =
+        frameColumnsInternal(filter)
+
+    public fun String.frameCols(filter: (FrameColumn<*>) -> Boolean = { true }): TransformableColumnSet<DataFrame<*>> =
+        toColumnAccessor().frameCols(filter)
+
+    public fun KProperty<*>.frameCols(filter: (FrameColumn<*>) -> Boolean = { true }): TransformableColumnSet<DataFrame<*>> =
+        toColumnAccessor().frameCols(filter)
+
+    // endregion
+
     // region select
 
     public fun <C, R> ColumnSet<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> = createColumnSet {
@@ -3947,6 +4295,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnSet.cols]` { "name" in it.`[name][ColumnReference.name]` }.`[recursively][recursively]`() }`
      *
+     * `df.`[select][DataFrame.select]` { `[valueCols][ColumnSet.valueCols]`().`[recursively][recursively]`() }`
+     *
      * #### Examples for this overload:
      *
      * {@includeArg [CommonRecursivelyDocs.Examples]}
@@ -3979,6 +4329,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.first]` { col -> col.`[any][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }.`[recursively][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` { "name" in it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]` }.`[recursively][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[valueCols][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.valueCols]`().`[recursively][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.recursively]`() }`
      *
      * #### Examples for this overload:
      *
@@ -4013,6 +4365,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` { "name" in it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]` }.`[recursively][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.recursively]`() }`
      *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[valueCols][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.valueCols]`().`[recursively][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.recursively]`() }`
+     *
      * #### Examples for this overload:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsOf]`<`[String][String]`>().`[recursively][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.recursively]`() }`
@@ -4046,6 +4400,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` { "name" in it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]` }.`[recursively][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.recursively]`() }`
      *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[valueCols][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.valueCols]`().`[recursively][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.recursively]`() }`
+     *
      * #### Examples for this overload:
      *
      * `df.`[select][DataFrame.select]` { `[first][ColumnSet.first]` { col -> col.`[any][DataColumn.any]` { it == "Alice" } }.`[recursively][recursively]`() }`
@@ -4076,6 +4432,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.first]` { col -> col.`[any][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }.`[recursively][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` { "name" in it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]` }.`[recursively][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[valueCols][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.valueCols]`().`[recursively][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.recursively]`() }`
      *
      * #### Examples for this overload:
      *
@@ -4219,20 +4577,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // endregion
 
-    // region groups
-    public fun ColumnSet<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
-        groupsInternal(filter)
-
-    public fun SingleColumn<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
-        groupsInternal(filter)
-
-    public fun String.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
-        toColumnAccessor().groups(filter)
-
-    public fun KProperty<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): TransformableColumnSet<AnyRow> =
-        toColumnAccessor().groups(filter)
-
-    // endregion
+    
 
     // region children
 
@@ -4571,8 +4916,14 @@ internal fun ColumnSet<*>.colsInternal(range: IntRange): TransformableColumnSet<
 internal fun ColumnSet<*>.rootsInternal(): ColumnSet<*> =
     allInternal().transform { it.roots() }
 
-internal fun ColumnSet<*>.groupsInternal(filter: (ColumnGroup<*>) -> Boolean): TransformableColumnSet<AnyRow> =
+internal fun ColumnSet<*>.valueColumnsInternal(filter: (ValueColumn<*>) -> Boolean): TransformableColumnSet<*> =
+    colsInternal { it.isValueColumn() && filter(it.asValueColumn()) }
+
+internal fun ColumnSet<*>.columnGroupsInternal(filter: (ColumnGroup<*>) -> Boolean): TransformableColumnSet<AnyRow> =
     colsInternal { it.isColumnGroup() && filter(it.asColumnGroup()) } as TransformableColumnSet<AnyRow>
+
+internal fun ColumnSet<*>.frameColumnsInternal(filter: (FrameColumn<*>) -> Boolean): TransformableColumnSet<AnyFrame> =
+    colsInternal { it.isFrameColumn() && filter(it.asFrameColumn()) } as TransformableColumnSet<AnyFrame>
 
 /**
  * If [this] is a [SingleColumn] containing a single [ColumnGroup], it

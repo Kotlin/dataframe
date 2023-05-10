@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
@@ -1527,6 +1528,22 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // endregion
 
+    // region valueCols
+
+    public fun ColumnSet<*>.valueCols(filter: (ValueColumn<*>) -> Boolean = { true }): TransformableColumnSet<*> =
+        valueColumnsInternal(filter)
+
+    public fun SingleColumn<*>.valueCols(filter: (ValueColumn<*>) -> Boolean = { true }): TransformableColumnSet<*> =
+        valueColumnsInternal(filter)
+
+    public fun String.valueCols(filter: (ValueColumn<*>) -> Boolean = { true }): TransformableColumnSet<*> =
+        toColumnAccessor().valueCols(filter)
+
+    public fun KProperty<*>.valueCols(filter: (ValueColumn<*>) -> Boolean = { true }): TransformableColumnSet<*> =
+        toColumnAccessor().valueCols(filter)
+
+    // endregion
+
     // region colGroups
 
     @Deprecated("Use colGroups instead", ReplaceWith("this.colGroups(filter)"))
@@ -1558,8 +1575,22 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         toColumnAccessor().colGroups(filter)
 
     // endregion
-    
-    // TODO value, frame
+
+    // region frameCols
+
+    public fun ColumnSet<*>.frameCols(filter: (FrameColumn<*>) -> Boolean = { true }): TransformableColumnSet<DataFrame<*>> =
+        frameColumnsInternal(filter)
+
+    public fun SingleColumn<*>.frameCols(filter: (FrameColumn<*>) -> Boolean = { true }): TransformableColumnSet<DataFrame<*>> =
+        frameColumnsInternal(filter)
+
+    public fun String.frameCols(filter: (FrameColumn<*>) -> Boolean = { true }): TransformableColumnSet<DataFrame<*>> =
+        toColumnAccessor().frameCols(filter)
+
+    public fun KProperty<*>.frameCols(filter: (FrameColumn<*>) -> Boolean = { true }): TransformableColumnSet<DataFrame<*>> =
+        toColumnAccessor().frameCols(filter)
+
+    // endregion
 
     // region select
 
@@ -1734,6 +1765,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][DataFrame.select]` { `[first][ColumnSet.first]` { col -> col.`[any][DataColumn.any]` { it == "Alice" } }.`[recursively][recursively]`() }`
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnSet.cols]` { "name" in it.`[name][ColumnReference.name]` }.`[recursively][recursively]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { `[valueCols][ColumnSet.valueCols]`().`[recursively][recursively]`() }`
      *
      * #### Examples for this overload:
      *
@@ -2188,8 +2221,14 @@ internal fun ColumnSet<*>.colsInternal(range: IntRange): TransformableColumnSet<
 internal fun ColumnSet<*>.rootsInternal(): ColumnSet<*> =
     allInternal().transform { it.roots() }
 
+internal fun ColumnSet<*>.valueColumnsInternal(filter: (ValueColumn<*>) -> Boolean): TransformableColumnSet<*> =
+    colsInternal { it.isValueColumn() && filter(it.asValueColumn()) }
+
 internal fun ColumnSet<*>.columnGroupsInternal(filter: (ColumnGroup<*>) -> Boolean): TransformableColumnSet<AnyRow> =
     colsInternal { it.isColumnGroup() && filter(it.asColumnGroup()) } as TransformableColumnSet<AnyRow>
+
+internal fun ColumnSet<*>.frameColumnsInternal(filter: (FrameColumn<*>) -> Boolean): TransformableColumnSet<AnyFrame> =
+    colsInternal { it.isFrameColumn() && filter(it.asFrameColumn()) } as TransformableColumnSet<AnyFrame>
 
 /**
  * If [this] is a [SingleColumn] containing a single [ColumnGroup], it

@@ -1,6 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.samples.api.*
@@ -127,6 +129,33 @@ open class ColumnsSelectionDslTests : TestBase() {
     }
 
     @Test
+    fun valueCol() {
+        listOf(
+            df.select { age },
+
+            df.select { valueCol("age") },
+            df.select { valueCol<Int>("age") },
+
+            df.select { valueCol(pathOf("age")) },
+            df.select { valueCol<Int>(pathOf("age")) },
+
+            df.select { valueCol(Person::age) },
+        ).shouldAllBeEqual()
+
+        listOf(
+            df.select { name.firstName },
+
+            df.select { colGroup("name").valueCol("firstName") },
+            df.select { colGroup("name").valueCol<String>("firstName") },
+
+            df.select { colGroup("name").valueCol(pathOf("firstName")) },
+            df.select { colGroup("name").valueCol<String>(pathOf("firstName")) },
+
+            df.select { colGroup("name").valueCol(Name::firstName) },
+        ).shouldAllBeEqual()
+    }
+
+    @Test
     fun colGroup() {
         listOf(
             dfGroup.select { name },
@@ -164,24 +193,24 @@ open class ColumnsSelectionDslTests : TestBase() {
         val frameCol: DataFrame<Person>
     }
 
+    private val frameCol by frameColumn<Person>()
+
+    private val dfWithFrames = df
+        .add {
+            expr { df } into frameCol
+        }
+        .convert { name }.to {
+            val firstName by it.asColumnGroup().firstName
+            val lastName by it.asColumnGroup().lastName
+
+            @Suppress("NAME_SHADOWING")
+            val frameCol by it.map { df }.asFrameColumn()
+
+            dataFrameOf(firstName, lastName, frameCol).asColumnGroup("name")
+        }
+
     @Test
     fun frameCol() {
-        val frameCol by frameColumn<Person>()
-
-        val dfWithFrames = df
-            .add {
-                expr { df } into frameCol
-            }
-            .convert { name }.to {
-                val firstName by it.asColumnGroup().firstName
-                val lastName by it.asColumnGroup().lastName
-
-                @Suppress("NAME_SHADOWING")
-                val frameCol by it.map { df }.asFrameColumn()
-
-                dataFrameOf(firstName, lastName, frameCol).asColumnGroup("name")
-            }
-
         listOf(
             dfWithFrames.select { frameCol },
 
@@ -254,6 +283,116 @@ open class ColumnsSelectionDslTests : TestBase() {
 
             df.select { it["name"].cols { "Name" in it.name() } },
             df.select { it["name"][{ "Name" in it.name() }] },
+        ).shouldAllBeEqual()
+    }
+
+    @Test
+    fun valueCols() {
+        listOf(
+            df.select { cols(age, city, weight, isHappy) },
+
+            df.select { all().valueCols() },
+            df.select { valueCols() },
+        ).shouldAllBeEqual()
+
+        listOf(
+            df.select { age },
+
+            df.select { age }.select { all() },
+            df.select { age }.select { valueCols() },
+            df.select { age }.select { valueCols().all() },
+            df.select { age }.select { all().valueCols() },
+        ).shouldAllBeEqual()
+
+        listOf(
+            df.select { cols(age, weight) },
+            df.select { valueCols { "e" in it.name() } },
+            df.select { all().valueCols { "e" in it.name() } },
+        ).shouldAllBeEqual()
+
+        listOf(
+            df.select { name.firstName and name.lastName },
+
+            df.select { name.valueCols { "Name" in it.name() } },
+            df.select { name.colsOf<String>().valueCols { "Name" in it.name() } },
+            df.select { "name".valueCols { "Name" in it.name() } },
+            df.select { Person::name.valueCols { "Name" in it.name() } },
+            df.select { pathOf("name").valueCols { "Name" in it.name() } },
+            df.select { it["name"].valueCols { "Name" in it.name() } },
+        ).shouldAllBeEqual()
+    }
+
+    @Test
+    fun colGroups() {
+        listOf(
+            df.select { name },
+
+            df.select { all().colGroups() },
+            df.select { colGroups() },
+        ).shouldAllBeEqual()
+
+        listOf(
+            df.select { name },
+
+            df.select { name }.select { all() },
+            df.select { name }.select { colGroups() },
+            df.select { name }.select { colGroups().all() },
+            df.select { name }.select { all().colGroups() },
+        ).shouldAllBeEqual()
+
+        listOf(
+            df.select { name },
+            df.select { colGroups { "e" in it.name() } },
+            df.select { all().colGroups { "e" in it.name() } },
+        ).shouldAllBeEqual()
+
+        listOf(
+            dfGroup.select { name.firstName },
+
+            dfGroup.select { name.colGroups { "Name" in it.name() } },
+            dfGroup.select { name.colsOf<AnyRow> { "Name" in it.name() } },
+            dfGroup.select { name.colsOf<AnyRow>().colGroups { "Name" in it.name() } },
+            dfGroup.select { "name".colGroups { "Name" in it.name() } },
+            dfGroup.select { Person::name.colGroups { "Name" in it.name() } },
+            dfGroup.select { pathOf("name").colGroups { "Name" in it.name() } },
+            dfGroup.select { it["name"].colGroups { "Name" in it.name() } },
+        ).shouldAllBeEqual()
+    }
+
+    @Test
+    fun frameCols() {
+        listOf(
+            dfWithFrames.select { frameCol },
+
+            dfWithFrames.select { all().frameCols() },
+            dfWithFrames.select { frameCols() },
+        ).shouldAllBeEqual()
+
+        listOf(
+            dfWithFrames.select { name[frameCol] },
+
+            dfWithFrames.select { name[frameCol] }.select { all() },
+            dfWithFrames.select { name[frameCol] }.select { frameCols() },
+            dfWithFrames.select { name[frameCol] }.select { frameCols().all() },
+            dfWithFrames.select { name[frameCol] }.select { all().frameCols() },
+        ).shouldAllBeEqual()
+
+        listOf(
+            dfWithFrames.select { frameCol },
+            dfWithFrames.select { frameCols { "e" in it.name() } },
+            dfWithFrames.select { all().frameCols { "e" in it.name() } },
+        ).shouldAllBeEqual()
+
+        listOf(
+            dfWithFrames.select { name[frameCol] },
+
+            dfWithFrames.select { name.frameCols { "frame" in it.name() } },
+            dfWithFrames.select { name.colsOf<AnyFrame> { "frame" in it.name() } },
+            dfWithFrames.select { name.colsOf<AnyFrame>().frameCols { "frame" in it.name() } },
+            dfWithFrames.select { "name".frameCols { "frame" in it.name() } },
+            dfWithFrames.select { Person::name.frameCols { "frame" in it.name() } },
+            dfWithFrames.select { pathOf("name").frameCols { "frame" in it.name() } },
+            dfWithFrames.select { it["name"].frameCols { "frame" in it.name() } },
         ).shouldAllBeEqual()
     }
 
