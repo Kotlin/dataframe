@@ -22,7 +22,10 @@ dependencies {
 
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlinpoet)
-    api(libs.swagger)
+    api(libs.swagger) {
+        // Fix for Android
+        exclude("jakarta.validation")
+    }
 
     testApi(project(":core"))
     testImplementation(libs.junit)
