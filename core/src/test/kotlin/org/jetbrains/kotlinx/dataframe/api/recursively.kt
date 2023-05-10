@@ -73,15 +73,12 @@ class Recursively : TestBase() {
 
         dfGroup.select { groups() } shouldBe dfGroup.select { name }
         dfGroup.select { groups().rec() } shouldBe dfGroup.select { name and name.firstName }
-        dfGroup.select { groups().rec(includeTopLevel = false) } shouldBe dfGroup.select { name.firstName }
     }
 
     @Test
     fun `all recursively`() {
         dfGroup.getColumnsWithPaths { all().recursively() }.sortedBy { it.name } shouldBe recursivelyGoal
-
-        dfGroup.getColumnsWithPaths { allRecursively() }.sortedBy { it.name } shouldBe recursivelyGoal
-        dfGroup.getColumnsWithPaths { allRec(includeGroups = false) }
+        dfGroup.getColumnsWithPaths { all().cols { !it.isColumnGroup() }.rec() }
             .sortedBy { it.name } shouldBe recursivelyNoGroups
     }
 
@@ -98,18 +95,14 @@ class Recursively : TestBase() {
     @Test
     fun `all allRecursively`() {
         dfGroup.getColumnsWithPaths { all().all().recursively() }.sortedBy { it.name } shouldBe recursivelyGoal
-
-        dfGroup.getColumnsWithPaths { all().allRecursively() }.sortedBy { it.name } shouldBe recursivelyGoal
-        dfGroup.getColumnsWithPaths { all().allRec(includeGroups = false) }
+        dfGroup.getColumnsWithPaths { all().cols { !it.isColumnGroup() }.recursively() }
             .sortedBy { it.name } shouldBe recursivelyNoGroups
     }
 
     @Test
     fun `cols allRecursively`() {
         dfGroup.getColumnsWithPaths { cols().all().recursively() }.sortedBy { it.name } shouldBe recursivelyGoal
-
-        dfGroup.getColumnsWithPaths { cols().allRecursively() }.sortedBy { it.name } shouldBe recursivelyGoal
-        dfGroup.getColumnsWithPaths { cols().allRec(includeGroups = false) }
+        dfGroup.getColumnsWithPaths { cols().cols { !it.isColumnGroup() }.recursively() }
             .sortedBy { it.name } shouldBe recursivelyNoGroups
     }
 }

@@ -1685,7 +1685,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     @Deprecated(
         message = "allDfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.allRecursively(includeGroups = includeGroups, includeTopLevel = false)"),
+        replaceWith = ReplaceWith("this.cols { includeGroups || !it.isColumnGroup() }.recursively()"),
         level = DeprecationLevel.WARNING,
     )
     public fun ColumnSet<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> =
@@ -1693,7 +1693,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     @Deprecated(
         message = "allDfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.allRecursively(includeGroups = includeGroups)"),
+        replaceWith = ReplaceWith("this.cols { includeGroups || !it.isColumnGroup() }.recursively()"),
         level = DeprecationLevel.WARNING,
     )
     public fun SingleColumn<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> =
@@ -1701,14 +1701,14 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     @Deprecated(
         message = "allDfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.allRecursively(includeGroups = includeGroups)"),
+        replaceWith = ReplaceWith("this.cols { includeGroups || !it.isColumnGroup() }.recursively()"),
         level = DeprecationLevel.WARNING,
     )
     public fun String.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> = toColumnAccessor().allDfs(includeGroups)
 
     @Deprecated(
         message = "allDfs is deprecated, use recursively instead.",
-        replaceWith = ReplaceWith("this.allRecursively(includeGroups = includeGroups)"),
+        replaceWith = ReplaceWith("this.cols { includeGroups || !it.isColumnGroup() }.recursively()"),
         level = DeprecationLevel.WARNING,
     )
     public fun KProperty<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> =
@@ -1755,146 +1755,27 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[all][ColumnSet.all]`().`[rec][rec]`() }`
      *
-     * `df.`[select][DataFrame.select]` { `[groups][ColumnSet.groups]`().`[recursively][recursively]`(includeTopLevel = false) }`
+     * `df.`[select][DataFrame.select]` { `[groups][ColumnSet.groups]`().`[recursively][recursively]`() }`
      */
-    public fun <C> TransformableColumnSet<C>.recursively(
-        includeTopLevel: Boolean = true,
-    ): ColumnSet<C> = recursivelyImpl(includeTopLevel = includeTopLevel, includeGroups = true)
+    public fun <C> TransformableColumnSet<C>.recursively(): ColumnSet<C> =
+        recursivelyImpl(includeTopLevel = true, includeGroups = true)
 
     /** @include [TransformableColumnSet.recursively] */
-    public fun <C> TransformableColumnSet<C>.rec(
-        includeTopLevel: Boolean = true,
-    ): ColumnSet<C> = recursively(includeTopLevel = includeTopLevel)
+    public fun <C> TransformableColumnSet<C>.rec(): ColumnSet<C> = recursively()
 
     /**
      * @include [CommonRecursivelyDocs]
      * @arg [CommonRecursivelyDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { `[first][ColumnSet.first]` { col -> col.`[any][DataColumn.any]` { it == "Alice" } }.`[recursively][recursively]`(includeTopLevel = false) }`
+     * `df.`[select][DataFrame.select]` { `[first][ColumnSet.first]` { col -> col.`[any][DataColumn.any]` { it == "Alice" } }.`[recursively][recursively]`() }`
      *
      * `df.`[select][DataFrame.select]` { `[single][ColumnSet.single]` { it.name == "myCol" }.`[rec][rec]`() }`
      */
-    public fun TransformableSingleColumn<*>.recursively(
-        includeTopLevel: Boolean = true,
-    ): SingleColumn<*> = recursivelyImpl(includeTopLevel = includeTopLevel, includeGroups = true)
+    public fun TransformableSingleColumn<*>.recursively(): SingleColumn<*> =
+        recursivelyImpl(includeTopLevel = true, includeGroups = true)
 
     /** @include [TransformableSingleColumn.recursively] */
-    public fun TransformableSingleColumn<*>.rec(
-        includeTopLevel: Boolean = true,
-    ): SingleColumn<*> = recursively(includeTopLevel = includeTopLevel)
-
-    /**
-     * ## All Recursively / All Rec
-     *
-     * Returns all columns in the current [ColumnSet], including all columns that are nested
-     * inside [column groups][ColumnGroup]. Similar to [all][ColumnSet.all], if [this\] is a [SingleColumn] containing
-     * a single [column group][ColumnGroup], then the operation will be applied to the single [column group][ColumnGroup].
-     *
-     * This can be seen as a shortcut to [all][ColumnSet.all]`().`[recursively][TransformableColumnSet.recursively]`()`.
-     *
-     * For example:
-     *
-     * `df.`[select][DataFrame.select]` { `[allRec][allRec]`(includeGroups = false) }`
-     *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[allRecursively][allRecursively]`() }`
-     *
-     * #### Examples for this overload:
-     *
-     * {@includeArg [CommonAllRecursivelyDocs.Examples]}
-     *
-     * @param [includeGroups\] Whether to include [column groups][ColumnGroup] in the result. `true` by default.
-     * @param [includeTopLevel\] Whether to include the top-level columns in the result. `true` by default.
-     */
-    private interface CommonAllRecursivelyDocs {
-
-        /** Example argument */
-        interface Examples
-    }
-
-    /**
-     * @include [CommonAllRecursivelyDocs]
-     * @arg [CommonAllRecursivelyDocs.Examples]
-     *
-     * `df.`[select][DataFrame.select]` { `[cols][cols]`(colA, colGroupB).`[allRecursively][ColumnSet.allRecursively]`(includeGroups = false) }`
-     */
-    public fun ColumnSet<*>.allRecursively(
-        includeGroups: Boolean = true,
-        includeTopLevel: Boolean = true,
-    ): ColumnSet<*> = flattenRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
-
-    /**
-     * @include [ColumnSet.allRecursively]
-     */
-    public fun ColumnSet<*>.allRec(
-        includeGroups: Boolean = true,
-        includeTopLevel: Boolean = true,
-    ): ColumnSet<*> = allRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
-
-    /**
-     * @include [CommonAllRecursivelyDocs]
-     * @arg [CommonAllRecursivelyDocs.Examples]
-     *
-     * `df.`[select][DataFrame.select]` { `[allRecursively][ColumnSet.allRecursively]`(includeGroups = false) }`
-     *
-     * `df.`[select][DataFrame.select]` { colA `[and][ColumnSet.and]` colGroupB.`[allRec][ColumnSet.allRec]`() }`
-     */
-    public fun SingleColumn<*>.allRecursively(
-        includeGroups: Boolean = true,
-        includeTopLevel: Boolean = true,
-    ): ColumnSet<*> = flattenRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
-
-    /**
-     * @include [SingleColumn.allRecursively] {@comment IntelliJ plugin shows this wrong, gradle plugin will work fine}
-     */
-    public fun SingleColumn<*>.allRec(
-        includeGroups: Boolean = true,
-        includeTopLevel: Boolean = true,
-    ): ColumnSet<*> = allRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
-
-    /**
-     * @include [CommonAllRecursivelyDocs]
-     * @arg [CommonAllRecursivelyDocs.Examples]
-     *
-     * `df.`[select][DataFrame.select]` { "colGroupA".`[allRecursively][ColumnSet.allRecursively]`(includeGroups = false) }`
-     *
-     * `df.`[select][DataFrame.select]` { colA `[and][ColumnSet.and]` "colGroupB".`[allRec][ColumnSet.allRec]`() }`
-     */
-    public fun String.allRecursively(
-        includeGroups: Boolean = true,
-        includeTopLevel: Boolean = true,
-    ): ColumnSet<*> =
-        toColumnAccessor().allRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
-
-    /**
-     * @include [String.allRecursively]
-     */
-    public fun String.allRec(
-        includeGroups: Boolean = true,
-        includeTopLevel: Boolean = true,
-    ): ColumnSet<*> = allRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
-
-    /**
-     * @include [CommonAllRecursivelyDocs]
-     * @arg [CommonAllRecursivelyDocs.Examples]
-     *
-     * `df.`[select][DataFrame.select]` { Type::columnGroupA.`[allRecursively][ColumnSet.allRecursively]`(includeGroups = false) }`
-     *
-     * `df.`[select][DataFrame.select]` { colA `[and][ColumnSet.and]` Type::columnGroupB.`[allRec][ColumnSet.allRec]`() }`
-     */
-    public fun KProperty<*>.allRecursively(
-        includeGroups: Boolean = true,
-        includeTopLevel: Boolean = true,
-    ): ColumnSet<*> =
-        toColumnAccessor().allRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
-
-    /**
-     * @include [KProperty.allRecursively]
-     */
-    public fun KProperty<*>.allRec(
-        includeGroups: Boolean = true,
-        includeTopLevel: Boolean = true,
-    ): ColumnSet<*> =
-        toColumnAccessor().allRecursively(includeTopLevel = includeTopLevel, includeGroups = includeGroups)
+    public fun TransformableSingleColumn<*>.rec(): SingleColumn<*> = recursively()
 
     // endregion
 
@@ -2335,7 +2216,7 @@ internal fun ColumnSet<*>.dfsInternal(predicate: (ColumnWithPath<*>) -> Boolean)
 @Deprecated(
     message = "Use recursively() instead",
     replaceWith = ReplaceWith(
-        "this.colsOf(type, predicate).recursively(includeTopLevel = false)",
+        "this.colsOf(type, predicate).recursively()",
         "org.jetbrains.kotlinx.dataframe.columns.recursively",
         "org.jetbrains.kotlinx.dataframe.api.colsOf",
     ),
