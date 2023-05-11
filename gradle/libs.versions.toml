@@ -24,7 +24,7 @@ junit = "4.13.2"
 kotestAsserions = "4.6.3"
 jsoup = "1.14.3"
 arrow = "11.0.0"
-docProcessor = "0.1.6"
+docProcessor = "0.2.0"
 simpleGit = "2.0.1"
 
 [libraries]

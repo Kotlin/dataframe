@@ -5,6 +5,8 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
+import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value
 import org.jetbrains.kotlinx.dataframe.samples.api.*
 import org.junit.Test
 import kotlin.reflect.typeOf
@@ -125,6 +127,12 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select { colGroup("name").col<String>(pathOf("firstName")) },
 
             df.select { colGroup("name").col(Name::firstName) },
+        ).shouldAllBeEqual()
+
+        listOf(
+            df.select { col(0) },
+
+            df.select { this[0] },
         ).shouldAllBeEqual()
     }
 
@@ -393,6 +401,18 @@ open class ColumnsSelectionDslTests : TestBase() {
             dfWithFrames.select { Person::name.frameCols { "frame" in it.name() } },
             dfWithFrames.select { pathOf("name").frameCols { "frame" in it.name() } },
             dfWithFrames.select { it["name"].frameCols { "frame" in it.name() } },
+        ).shouldAllBeEqual()
+    }
+
+    @Test
+    fun `cols of kind`() {
+        listOf(
+            df.select { cols(age, city, weight, isHappy) },
+
+            df.select { all().valueCols() },
+            df.select { valueCols() },
+            df.select { colsOfKind(Value) },
+            df.select { colsOfKind(Value, Value) },
         ).shouldAllBeEqual()
     }
 

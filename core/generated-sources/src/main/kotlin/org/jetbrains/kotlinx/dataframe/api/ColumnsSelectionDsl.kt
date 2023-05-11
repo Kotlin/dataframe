@@ -704,10 +704,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun none(): ColumnSet<*> = ColumnsList<Any?>(emptyList())
 
     // region colGroupFrame
-    // region col
+
+    // region colAccessor
 
     /**
-     * ## Column Accessor
+     * ## Col: Column Accessor
      *
      * Creates a [ColumnAccessor] for a column with the given argument.
      * This is a shorthand for [column] and can be both typed and untyped.
@@ -718,9 +719,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### For example:
      *
-     * `df.`[select][select]` { `[col][col]`({@includeArg [CommonColDocs.Arg]}) }`
+     * `df.`[select][select]` { `[col][col]`({@includeArg [CommonColAccessorDocs.Arg]}) }`
      *
-     * `df.`[select][select]` { myColGroup.`[col][col]`<SomeType>({@includeArg [CommonColDocs.Arg]}) }`
+     * `df.`[select][select]` { myColGroup.`[col][col]`<SomeType>({@includeArg [CommonColAccessorDocs.Arg]}) }`
      *
      * @return A [ColumnAccessor] for the column with the given argument.
      * @see [column\]
@@ -728,7 +729,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @see [frameCol\]
      *
      */
-    private interface CommonColDocs {
+    private interface CommonColAccessorDocs {
 
         /** Example argument */
         interface Arg
@@ -738,7 +739,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     }
 
     /**
-     * ## Column Accessor
+     * ## Col: Column Accessor
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a column with the given argument.
      * This is a shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped.
@@ -765,7 +766,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun col(name: String): ColumnAccessor<*> = column<Any?>(name)
 
     /**
-     * ## Column Accessor
+     * ## Col: Column Accessor
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a column with the given argument.
      * This is a shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped.
@@ -791,7 +792,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> col(name: String): ColumnAccessor<C> = column(name)
 
     /**
-     * ## Column Accessor
+     * ## Col: Column Accessor
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a column with the given argument.
      * This is a shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped.
@@ -819,7 +820,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun col(path: ColumnPath): ColumnAccessor<*> = column<Any?>(path)
 
     /**
-     * ## Column Accessor
+     * ## Col: Column Accessor
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a column with the given argument.
      * This is a shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped.
@@ -845,7 +846,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> col(path: ColumnPath): ColumnAccessor<C> = column(path)
 
     /**
-     * ## Column Accessor
+     * ## Col: Column Accessor
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a column with the given argument.
      * This is a shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped.
@@ -870,7 +871,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> col(property: KProperty<C>): ColumnAccessor<C> = column(property)
 
     /**
-     * ## Column Accessor
+     * ## Col: Column Accessor
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a column with the given argument.
      * This is a shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped.
@@ -898,7 +899,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun ColumnGroupReference.col(name: String): ColumnAccessor<*> = column<Any?>(name)
 
     /**
-     * ## Column Accessor
+     * ## Col: Column Accessor
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a column with the given argument.
      * This is a shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped.
@@ -925,7 +926,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnGroupReference.col(name: String): ColumnAccessor<C> = column(name)
 
     /**
-     * ## Column Accessor
+     * ## Col: Column Accessor
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a column with the given argument.
      * This is a shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped.
@@ -953,7 +954,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun ColumnGroupReference.col(path: ColumnPath): ColumnAccessor<*> = column<Any?>(path)
 
     /**
-     * ## Column Accessor
+     * ## Col: Column Accessor
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a column with the given argument.
      * This is a shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped.
@@ -980,7 +981,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnGroupReference.col(path: ColumnPath): ColumnAccessor<C> = column(path)
 
     /**
-     * ## Column Accessor
+     * ## Col: Column Accessor
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a column with the given argument.
      * This is a shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped.
@@ -1005,12 +1006,410 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      */
     public fun <C> ColumnGroupReference.col(property: KProperty<C>): ColumnAccessor<C> = column(property)
 
-    public fun SingleColumn<*>.col(index: Int): SingleColumn<Any?> = getChildrenAt(index).singleImpl()
+    // endregion
 
-    public operator fun <C> ColumnSet<C>.get(index: Int): SingleColumn<C> = getAt(index)
+    // region colIndex
+
+    /**
+     * ## Col: Column by Index
+     *
+     * Retrieves a [column][SingleColumn] by index.
+     * If the index is out of bounds, the returned [SingleColumn] will yield `null` when resolved.
+     *
+     * If called on a [SingleColumn], [ColumnGroup], or [DataFrame], the function will take the child found at the
+     * given [index\].
+     * Else, if called on a normal [ColumnSet],
+     * the function will return the [index\]'th column in the set.
+     *
+     * #### For example:
+     *
+     * `df.`[select][select]` { `[col][SingleColumn.col\]`(3) }`
+     *
+     * `df.`[select][select]` { this`[`[`][SingleColumn.get\]`5`[`]`][SingleColumn.get\]` }`
+     *
+     * `df.`[select][select]` { "myColumnGroup".`[col][String.col\]`(0) }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [CommonColIndexDocs.ExampleArg]}
+     *
+     * @param [index\] The index of the column to retrieve.
+     * @return A [SingleColumn] for the column at the given index.
+     */
+    private interface CommonColIndexDocs {
+
+        /** Example argument */
+        interface ExampleArg
+    }
+
+    /**
+     * ## Col: Column by Index
+     *
+     * Retrieves a [column][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] by index.
+     * If the index is out of bounds, the returned [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] will yield `null` when resolved.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the child found at the
+     * given [index].
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * the function will return the [index]'th column in the set.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[col][SingleColumn.col]`(3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { this`[`[`][SingleColumn.get]`5`[`]`][SingleColumn.get]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { "myColumnGroup".`[col][String.col]`(0) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][select]` { `[colsOf][colsOf]`<`[Int][Int]`>().`[col][ColumnSet.col]`(0) }`
+     *
+     * `df.`[select][select]` { `[all][all]`()`[`[`][SingleColumn.get]`5`[`]`][SingleColumn.get]` }`
+     *
+     * @param [index] The index of the column to retrieve.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] for the column at the given index.
+     */
+    private interface ColumnSetColIndexDocs
+
+    /** ## Col: Column by Index
+     *
+     * Retrieves a [column][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] by index.
+     * If the index is out of bounds, the returned [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] will yield `null` when resolved.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the child found at the
+     * given [index].
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * the function will return the [index]'th column in the set.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[col][SingleColumn.col]`(3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { this`[`[`][SingleColumn.get]`5`[`]`][SingleColumn.get]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { "myColumnGroup".`[col][String.col]`(0) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[col][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.col]`(0) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`()`[`[`][SingleColumn.get]`5`[`]`][SingleColumn.get]` }`
+     *
+     * @param [index] The index of the column to retrieve.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] for the column at the given index.
+     */
+    public fun <C> ColumnSet<C>.col(index: Int): SingleColumn<C> = getAt(index)
+
+    /** ## Col: Column by Index
+     *
+     * Retrieves a [column][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] by index.
+     * If the index is out of bounds, the returned [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] will yield `null` when resolved.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the child found at the
+     * given [index].
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * the function will return the [index]'th column in the set.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[col][SingleColumn.col]`(3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { this`[`[`][SingleColumn.get]`5`[`]`][SingleColumn.get]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { "myColumnGroup".`[col][String.col]`(0) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[col][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.col]`(0) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`()`[`[`][SingleColumn.get]`5`[`]`][SingleColumn.get]` }`
+     *
+     * @param [index] The index of the column to retrieve.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] for the column at the given index.
+     */
+    public operator fun <C> ColumnSet<C>.get(index: Int): SingleColumn<C> = col(index)
+
+    /**
+     * ## Col: Column by Index
+     *
+     * Retrieves a [column][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] by index.
+     * If the index is out of bounds, the returned [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] will yield `null` when resolved.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the child found at the
+     * given [index].
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * the function will return the [index]'th column in the set.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[col][SingleColumn.col]`(3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { this`[`[`][SingleColumn.get]`5`[`]`][SingleColumn.get]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { "myColumnGroup".`[col][String.col]`(0) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][select]` { `[col][SingleColumn.col]`(0) }`
+     *
+     * `df.`[select][select]` { myColumnGroup`[`[`][SingleColumn.get]`5`[`]`][SingleColumn.get]` }`
+     *
+     * `df.`[select][select]` { "pathTo"["myColGroup"].`[col][SingleColumn.col]`(0) }`
+     *
+     * @param [index] The index of the column to retrieve.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] for the column at the given index.
+     */
+    private interface SingleColumnColIndexDocs
+
+    /** ## Col: Column by Index
+     *
+     * Retrieves a [column][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] by index.
+     * If the index is out of bounds, the returned [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] will yield `null` when resolved.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the child found at the
+     * given [index].
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * the function will return the [index]'th column in the set.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[col][SingleColumn.col]`(3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { this`[`[`][SingleColumn.get]`5`[`]`][SingleColumn.get]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { "myColumnGroup".`[col][String.col]`(0) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[col][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.col]`(0) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { myColumnGroup`[`[`][SingleColumn.get]`5`[`]`][SingleColumn.get]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { "pathTo"["myColGroup"].`[col][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.col]`(0) }`
+     *
+     * @param [index] The index of the column to retrieve.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] for the column at the given index.
+     */
+    public fun SingleColumn<*>.col(index: Int): SingleColumn<*> = getChildrenAt(index).singleImpl()
+
+    /** ## Col: Column by Index
+     *
+     * Retrieves a [column][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] by index.
+     * If the index is out of bounds, the returned [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] will yield `null` when resolved.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the child found at the
+     * given [index].
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * the function will return the [index]'th column in the set.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[col][SingleColumn.col]`(3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { this`[`[`][SingleColumn.get]`5`[`]`][SingleColumn.get]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { "myColumnGroup".`[col][String.col]`(0) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[col][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.col]`(0) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { myColumnGroup`[`[`][SingleColumn.get]`5`[`]`][SingleColumn.get]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { "pathTo"["myColGroup"].`[col][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.col]`(0) }`
+     *
+     * @param [index] The index of the column to retrieve.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] for the column at the given index.
+     */
+    public operator fun SingleColumn<*>.get(index: Int): SingleColumn<*> = col(index)
+
+    /**
+     * ## Col: Column by Index
+     *
+     * Retrieves a [column][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] by index.
+     * If the index is out of bounds, the returned [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] will yield `null` when resolved.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the child found at the
+     * given [index].
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * the function will return the [index]'th column in the set.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[col][SingleColumn.col]`(3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { this`[`[`][SingleColumn.get]`5`[`]`][SingleColumn.get]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { "myColumnGroup".`[col][String.col]`(0) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][select]` { "myColumnGroup".`[col][String.col]`(5) }`
+     *
+     * `// NOTE: There's a `[String.get][String.get]` function that prevents this:`
+     *
+     * `df.`[select][select]` { "myColumnGroup"[0] }`
+     *
+     * @param [index] The index of the column to retrieve.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] for the column at the given index.
+     */
+    private interface StringIndexDocs
+
+    /** ## Col: Column by Index
+     *
+     * Retrieves a [column][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] by index.
+     * If the index is out of bounds, the returned [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] will yield `null` when resolved.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the child found at the
+     * given [index].
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * the function will return the [index]'th column in the set.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[col][SingleColumn.col]`(3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { this`[`[`][SingleColumn.get]`5`[`]`][SingleColumn.get]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { "myColumnGroup".`[col][String.col]`(0) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { "myColumnGroup".`[col][kotlin.String.col]`(5) }`
+     *
+     * `// NOTE: There's a `[String.get][kotlin.String.get]` function that prevents this:`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { "myColumnGroup"[0] }`
+     *
+     * @param [index] The index of the column to retrieve.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] for the column at the given index.
+     */
+    public fun String.col(index: Int): SingleColumn<*> = colGroup(this).col(index)
+
+    /** ## Col: Column by Index
+     *
+     * Retrieves a [column][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] by index.
+     * If the index is out of bounds, the returned [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] will yield `null` when resolved.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the child found at the
+     * given [index].
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * the function will return the [index]'th column in the set.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[col][SingleColumn.col]`(3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { this`[`[`][SingleColumn.get]`5`[`]`][SingleColumn.get]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { "myColumnGroup".`[col][String.col]`(0) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { "myColumnGroup".`[col][kotlin.String.col]`(5) }`
+     *
+     * `// NOTE: There's a `[String.get][kotlin.String.get]` function that prevents this:`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { "myColumnGroup"[0] }`
+     *
+     *
+     * @param [index] The index of the column to retrieve.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] for the column at the given index.
+     */
+    public operator fun String.get(index: Int): SingleColumn<*> = col(index)
+
+    /**
+     * ## Col: Column by Index
+     *
+     * Retrieves a [column][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] by index.
+     * If the index is out of bounds, the returned [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] will yield `null` when resolved.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the child found at the
+     * given [index].
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * the function will return the [index]'th column in the set.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[col][SingleColumn.col]`(3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { this`[`[`][SingleColumn.get]`5`[`]`][SingleColumn.get]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { "myColumnGroup".`[col][String.col]`(0) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][select]` { Type::myColumnGroup.`[col][KProperty.col]`(5) }`
+     *
+     * `df.`[select][select]` { Type::myColumnGroup.`[`[`][KProperty.get]`0`[`]`][KProperty.get]` }`
+     *
+     * @param [index] The index of the column to retrieve.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] for the column at the given index.
+     */
+    private interface KPropertyIndexDocs
+
+    /** ## Col: Column by Index
+     *
+     * Retrieves a [column][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] by index.
+     * If the index is out of bounds, the returned [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] will yield `null` when resolved.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the child found at the
+     * given [index].
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * the function will return the [index]'th column in the set.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[col][SingleColumn.col]`(3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { this`[`[`][SingleColumn.get]`5`[`]`][SingleColumn.get]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { "myColumnGroup".`[col][String.col]`(0) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { Type::myColumnGroup.`[col][kotlin.reflect.KProperty.col]`(5) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { Type::myColumnGroup.`[`[`][kotlin.reflect.KProperty.get]`0`[`]`][kotlin.reflect.KProperty.get]` }`
+     *
+     * @param [index] The index of the column to retrieve.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] for the column at the given index.
+     */
+    public fun KProperty<*>.col(index: Int): SingleColumn<*> = colGroup(this).col(index)
+
+    /** ## Col: Column by Index
+     *
+     * Retrieves a [column][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] by index.
+     * If the index is out of bounds, the returned [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] will yield `null` when resolved.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the child found at the
+     * given [index].
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * the function will return the [index]'th column in the set.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[col][SingleColumn.col]`(3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { this`[`[`][SingleColumn.get]`5`[`]`][SingleColumn.get]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { "myColumnGroup".`[col][String.col]`(0) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { Type::myColumnGroup.`[col][kotlin.reflect.KProperty.col]`(5) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { Type::myColumnGroup.`[`[`][kotlin.reflect.KProperty.get]`0`[`]`][kotlin.reflect.KProperty.get]` }`
+     *
+     * @param [index] The index of the column to retrieve.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] for the column at the given index.
+     */
+    public operator fun KProperty<*>.get(index: Int): SingleColumn<*> = col(index)
+
 
     // endregion
-    
+
     // region valueCol
 
     /**
@@ -1265,7 +1664,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnGroupReference.valueCol(property: KProperty<C>): ColumnAccessor<C> = valueColumn(property)
 
     // endregion
-    
+
     // region colGroup
 
     /**
@@ -1892,7 +2291,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         frameColumn(property)
 
     // endregion
-    
+
     // endregion
 
     // region cols
@@ -2070,12 +2469,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>().`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() }`
      *
-     * @see [all]
-     *
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
-     */
+     * @see [all] */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.cols(
         predicate: ColumnFilter<C> = { true },
@@ -2113,12 +2510,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>().`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() }`
      *
-     * @see [all]
-     *
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
-     */
+     * @see [all] */
     public operator fun <C> ColumnSet<C>.get(
         predicate: ColumnFilter<C> = { true },
     ): TransformableColumnSet<C> = cols(predicate)
@@ -2212,12 +2607,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`{ ... }`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
-     * @see [all]
-     *
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
-     */
+     * @see [all] */
     public fun SingleColumn<*>.cols(
         predicate: ColumnFilter<*> = { true },
     ): TransformableColumnSet<*> = colsInternal(predicate)
@@ -2263,12 +2656,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`{ ... }`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
-     * @see [all]
-     *
-     *
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
+     * @see [all]
+     *
      */
     public operator fun SingleColumn<*>.get(
         predicate: ColumnFilter<*> = { true },
@@ -2456,12 +2848,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { Type::columnGroup.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() }`
      *
-     * @see [all]
-     *
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
-     */
+     * @see [all] */
     public fun KProperty<*>.cols(
         predicate: ColumnFilter<*> = { true },
     ): TransformableColumnSet<*> = colGroup(this).cols(predicate)
@@ -2496,12 +2886,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.select]` { Type::columnGroup.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() }`
      *
-     * @see [all]
-     *
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
-     */
+     * @see [all] */
     public operator fun KProperty<*>.get(
         predicate: ColumnFilter<*> = { true },
     ): TransformableColumnSet<Any?> = cols(predicate)
@@ -4065,9 +4453,53 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // endregion
 
+    // region colsOfKind
+
+    /** TODO tbd */
+    public fun ColumnSet<*>.colsOfKind(
+        kind: ColumnKind,
+        vararg others: ColumnKind,
+        predicate: ColumnFilter<*> = { true },
+    ): TransformableColumnSet<*> =
+        columnsOfKindInternal(
+            kinds = headPlusArray(kind, others).toSet(),
+            predicate = predicate
+        )
+
+    /** TODO tbd */
+    public fun SingleColumn<*>.colsOfKind(
+        kind: ColumnKind,
+        vararg others: ColumnKind,
+        predicate: ColumnFilter<*> = { true },
+    ): TransformableColumnSet<*> =
+        columnsOfKindInternal(
+            kinds = headPlusArray(kind, others).toSet(),
+            predicate = predicate
+        )
+
+    /** TODO tbd */
+    public fun String.colsOfKind(
+        kind: ColumnKind,
+        vararg others: ColumnKind,
+        predicate: ColumnFilter<*> = { true },
+    ): TransformableColumnSet<*> =
+        toColumnAccessor().colsOfKind(kind, *others, predicate = predicate)
+
+    /** TODO tbd */
+    public fun KProperty<*>.colsOfKind(
+        kind: ColumnKind,
+        vararg others: ColumnKind,
+        predicate: ColumnFilter<*> = { true },
+    ): TransformableColumnSet<*> =
+        toColumnAccessor().colsOfKind(kind, *others, predicate = predicate)
+
+    // endregion
+
     // region select
 
-    public fun <C, R> ColumnSet<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> = createColumnSet {
+    public
+
+    fun <C, R> ColumnSet<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> = createColumnSet {
         this@select.resolve(it).flatMap { group ->
             group.asColumnGroup().getColumnsWithPaths(selector).map {
                 it.changePath(group.path + it.path)
@@ -4577,7 +5009,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // endregion
 
-    
 
     // region children
 
@@ -4924,6 +5355,13 @@ internal fun ColumnSet<*>.columnGroupsInternal(filter: (ColumnGroup<*>) -> Boole
 
 internal fun ColumnSet<*>.frameColumnsInternal(filter: (FrameColumn<*>) -> Boolean): TransformableColumnSet<AnyFrame> =
     colsInternal { it.isFrameColumn() && filter(it.asFrameColumn()) } as TransformableColumnSet<AnyFrame>
+
+internal fun ColumnSet<*>.columnsOfKindInternal(
+    kinds: Set<ColumnKind>,
+    predicate: ColumnFilter<*>,
+): TransformableColumnSet<*> = colsInternal {
+    it.kind() in kinds && predicate(it)
+}
 
 /**
  * If [this] is a [SingleColumn] containing a single [ColumnGroup], it

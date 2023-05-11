@@ -2,6 +2,9 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
+import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame
+import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.jetbrains.kotlinx.dataframe.samples.api.city
@@ -139,5 +142,20 @@ class Recursively : TestBase() {
 
         dfWithFrames.getColumnsWithPaths { frameCols().recursively() } shouldBe
             dfWithFrames.getColumnsWithPaths { name[frameCol] and frameCol }
+    }
+
+    @Test
+    fun `cols of kind recursively`() {
+        listOf(
+            dfGroup.getColumnsWithPaths {
+                colsOfKind(Frame, Value) { "e" in it.name }.rec()
+            },
+            dfGroup.getColumnsWithPaths {
+                dfs { "e" in it.name }
+            }
+        ).map {
+            it.sortedBy { it.name }.map { it.name to it.path }
+        }.shouldAllBeEqual()
+
     }
 }

@@ -182,7 +182,7 @@ internal fun <T> ColumnSet<T>.getAt(index: Int): SingleColumn<T> = object : Sing
             .getOrNull(index)
 }
 
-internal fun <T> ColumnSet<T>.getChildrenAt(index: Int): ColumnSet<Any?> =
+internal fun ColumnSet<*>.getChildrenAt(index: Int): ColumnSet<*> =
     transform { it.mapNotNull { it.getChild(index) } }
 
 internal fun <C> ColumnsContainer<*>.getColumn(name: String, policy: UnresolvedColumnsPolicy) =
