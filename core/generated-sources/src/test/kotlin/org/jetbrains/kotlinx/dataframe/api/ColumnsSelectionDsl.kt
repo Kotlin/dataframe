@@ -4,6 +4,7 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value
@@ -128,6 +129,7 @@ open class ColumnsSelectionDslTests : TestBase() {
 
             df.select { colGroup("name").col(Name::firstName) },
         ).shouldAllBeEqual()
+
 
         listOf(
             df.select { col(0) },

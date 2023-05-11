@@ -177,6 +177,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     /**
      * ## First
      * Returns the first column in this [ColumnSet] or [ColumnGroup] that adheres to the given [condition\].
+     * If no column adheres to the given [condition\], no column is selected.
      *
      * #### For example:
      *
@@ -201,7 +202,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][select]` { `[colsOf][colsOf]`<`[Int][Int]`>().`[first][first]`() }`
      */
     public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
-        transform { listOf(it.first(condition)) }.singleWithTransformerImpl()
+        transform { listOf(it.first(condition)) }.singleOrNullWithTransformerImpl()
 
     /**
      * @include [CommonFirstDocs]
@@ -234,6 +235,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     /**
      * ## Last
      * Returns the last column in this [ColumnSet] or [ColumnGroup] that adheres to the given [condition\].
+     * If no column adheres to the given [condition\], no column is selected.
      *
      * #### For example:
      *
@@ -258,7 +260,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][select]` { `[colsOf][colsOf]`<`[Int][Int]`>().`[first][last]`() }`
      */
     public fun <C> ColumnSet<C>.last(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
-        transform { listOf(it.last(condition)) }.singleWithTransformerImpl()
+        transform { listOf(it.last(condition)) }.singleOrNullWithTransformerImpl()
 
     /**
      * @include [CommonLastDocs]
@@ -291,6 +293,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     /**
      * ## Single
      * Returns the single column in this [ColumnSet] or [ColumnGroup] that adheres to the given [condition\].
+     * If no column adheres to the given [condition\] or multiple columns adhere to it, no column is selected.
      *
      * #### For example:
      *
@@ -315,7 +318,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][select]` { `[colsOf][colsOf]`<`[Int][Int]`>().`[single][single]`() }`
      */
     public fun <C> ColumnSet<C>.single(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
-        transform { listOf(it.single(condition)) }.singleWithTransformerImpl()
+        transform { listOf(it.single(condition)) }.singleOrNullWithTransformerImpl()
 
     /**
      * @include [CommonSingleDocs]
@@ -579,7 +582,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * ## Col: Column by Index
      *
      * Retrieves a [column][SingleColumn] by index.
-     * If the index is out of bounds, the returned [SingleColumn] will yield `null` when resolved.
+     * If the index is out of bounds, an [IndexOutOfBoundsException] will be thrown.
      *
      * If called on a [SingleColumn], [ColumnGroup], or [DataFrame], the function will take the child found at the
      * given [index\].
@@ -598,6 +601,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * {@includeArg [CommonColIndexDocs.ExampleArg]}
      *
+     * @throws [IndexOutOfBoundsException] If the index is out of bounds.
      * @param [index\] The index of the column to retrieve.
      * @return A [SingleColumn] for the column at the given index.
      */
@@ -1558,6 +1562,41 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region indices
 
+    /**
+     * ## Cols: Columns by Indices
+     *
+     * Retrieves multiple columns in the form of a [ColumnSet] by their indices.
+     * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
+     *
+     * If called on a [SingleColumn], [ColumnGroup], or [DataFrame], the function will take the children found at the
+     * given indices.
+     * Else, if called on a normal [ColumnSet], the function will return a new [ColumnSet] with the columns found at
+     * the given indices in the set.
+     *
+     * #### For example:
+     *
+     * `df.`[select][select]` { `[col][SingleColumn.col\]`(1, 2, 3) }`
+     *
+     * `df.`[select][select]` { this`[`[`][SingleColumn.get\]`5, 1, 2`[`]`][SingleColumn.get\]` }`
+     *
+     * `df.`[select][select]` { "myColumnGroup".`[col][String.col\]`(0, 2) }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [CommonColIndexDocs.ExampleArg]}
+     *
+     * @throws [IndexOutOfBoundsException] If any index is out of bounds.
+     * @param [firstIndex\] The index of the first column to retrieve.
+     * @param [otherIndices\] The other indices of the columns to retrieve.
+     * @return A [ColumnSet] containing the columns found at the given indices.
+     */
+    private interface CommonColsIndicesDocs {
+
+        /** Example argument */
+        interface ExampleArg
+    }
+
+    /** TODO */
     public fun <C> ColumnSet<C>.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
@@ -2354,7 +2393,13 @@ internal fun ColumnSet<*>.colsInternal(predicate: ColumnFilter<*>): Transformabl
 
 internal fun ColumnSet<*>.colsInternal(indices: IntArray): TransformableColumnSet<*> =
     allInternal().transform { cols ->
-        indices.map { cols[it] }
+        indices.map {
+            try {
+                cols[it]
+            } catch (e: IndexOutOfBoundsException) {
+                throw IndexOutOfBoundsException("Index $it is out of bounds for column set of size ${cols.size}")
+            }
+        }
     }
 
 internal fun ColumnSet<*>.colsInternal(range: IntRange): TransformableColumnSet<*> =

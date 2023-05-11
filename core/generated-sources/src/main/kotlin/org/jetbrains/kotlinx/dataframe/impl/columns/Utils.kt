@@ -147,14 +147,26 @@ internal fun <A, B> ColumnSet<A>.transformWithContext(
             .let { converter(context, it as List<ColumnWithPath<A>>) }
 }
 
+/** Makes sure the right error messages appear when running [List.single] */
+private fun <T> List<ColumnWithPath<T>>.singleImpl(): ColumnWithPath<T> =
+    try {
+        single()
+    } catch (e: NoSuchElementException) {
+        throw NoSuchElementException("ColumnSet is empty")
+    } catch (e: IllegalArgumentException) {
+        throw IllegalArgumentException("ColumnSet contains more than one column")
+    }
+
 /**
  * Converts [this] [ColumnSet] to a [SingleColumn].
- * [resolveSingle] will return the single column of [this] if there is only one, else it will return `null`.
+ * [resolveSingle] will return the single column of [this] if there is only one, else it will return throw an exception:
+ * In case of an empty [ColumnSet], a [NoSuchElementException] will be thrown.
+ * In case of more than one column, a [IllegalArgumentException] will be thrown.
  * If the result used as a [ColumnSet], `null` will be converted to an empty list.
  */
 internal fun <T> ColumnSet<T>.singleImpl(): SingleColumn<T> = object : SingleColumn<T> {
-    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? =
-        this@singleImpl.resolve(context).singleOrNull()
+    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T> =
+        this@singleImpl.resolve(context).singleImpl()
 }
 
 /**
@@ -162,22 +174,61 @@ internal fun <T> ColumnSet<T>.singleImpl(): SingleColumn<T> = object : SingleCol
  */
 internal fun <T> TransformableColumnSet<T>.singleWithTransformerImpl(): TransformableSingleColumn<T> =
     object : TransformableSingleColumn<T> {
+        override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T> =
+            this@singleWithTransformerImpl.resolve(context).singleImpl()
+
+        override fun transformResolveSingle(
+            context: ColumnResolutionContext,
+            transformer: ColumnSetTransformer,
+        ): ColumnWithPath<T> =
+            this@singleWithTransformerImpl.transformResolve(
+                context = context,
+                transformer = transformer,
+            ).singleImpl()
+    }
+
+/**
+ * Converts [this] [ColumnSet] to a [SingleColumn].
+ * [resolveSingle] will return the single column of [this] if there is only one, else it will return `null`.
+ * If the result used as a [ColumnSet], `null` will be converted to an empty list.
+ */
+internal fun <T> ColumnSet<T>.singleOrNullImpl(): SingleColumn<T> = object : SingleColumn<T> {
+    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? =
+        this@singleOrNullImpl.resolve(context).singleOrNull()
+}
+
+/**
+ * Same as [singleOrNullImpl], however, it passes any [ColumnSetTransformer] back to [this] if it is supplied.
+ */
+internal fun <T> TransformableColumnSet<T>.singleOrNullWithTransformerImpl(): TransformableSingleColumn<T> =
+    object : TransformableSingleColumn<T> {
         override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? =
-            this@singleWithTransformerImpl.resolve(context).singleOrNull()
+            this@singleOrNullWithTransformerImpl.resolve(context).singleOrNull()
 
         override fun transformResolveSingle(
             context: ColumnResolutionContext,
             transformer: ColumnSetTransformer,
         ): ColumnWithPath<T>? =
-            this@singleWithTransformerImpl.transformResolve(
+            this@singleOrNullWithTransformerImpl.transformResolve(
                 context = context,
                 transformer = transformer,
             ).singleOrNull()
     }
 
 internal fun <T> ColumnSet<T>.getAt(index: Int): SingleColumn<T> = object : SingleColumn<T> {
+    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T> =
+        this@getAt.resolve(context).let {
+            try {
+                it[index]
+            } catch (e: IndexOutOfBoundsException) {
+                throw IndexOutOfBoundsException("ColumnSet has no column at index $index")
+            }
+        }
+}
+
+internal fun <T> ColumnSet<T>.getAtOrNull(index: Int): SingleColumn<T> = object : SingleColumn<T> {
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? =
-        this@getAt
+        this@getAtOrNull
             .resolve(context)
             .getOrNull(index)
 }
