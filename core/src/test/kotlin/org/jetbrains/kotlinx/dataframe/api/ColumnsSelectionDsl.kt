@@ -136,6 +136,7 @@ open class ColumnsSelectionDslTests : TestBase() {
 
             df.select { this[0] },
         ).shouldAllBeEqual()
+        // TODO
     }
 
     @Test
@@ -598,7 +599,7 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select { name.firstName and name.lastName },
 
             df.select { name.cols(0, 1) },
-//            df.select { name[0, 1] },
+//            df.select { name[0, 1] }, //takes rows instead of columns
 
             df.select { name.colsOf<String>().cols(0, 1) },
             df.select { name.colsOf<String>()[0, 1] },
