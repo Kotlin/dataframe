@@ -1821,7 +1821,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `get by column`() {
-        typed[1..2][{ typed.age }].size() shouldBe typed.age.size()
+        typed[1..2].get { typed.age }.size() shouldBe typed.age.size()
     }
 
     @Test

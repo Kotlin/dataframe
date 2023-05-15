@@ -49,11 +49,11 @@ class UpdateTests {
                 update { a }.with { 0 }
             }
 
-        val (first, second) = res[{ group }].map { it.a }.toList()
+        val (first, second) = res.get { group }.map { it.a }.toList()
         first shouldBe 1
         second shouldBe 0
 
-        res[{ group }].name() shouldBe "Some Group"
+        res.get { group }.name() shouldBe "Some Group"
     }
 
     @DataSchema
