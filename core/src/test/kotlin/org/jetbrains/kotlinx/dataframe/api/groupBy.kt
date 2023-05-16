@@ -76,7 +76,7 @@ class GroupByTests {
         val aggregate = df.groupBy("city")
             .aggregate {
                 mean() into "mean"
-                std() into "sd"
+                std() into "std"
             }
 
         aggregate
