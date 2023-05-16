@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
-import org.jetbrains.kotlinx.dataframe.api.allInternal
+import org.jetbrains.kotlinx.dataframe.api.allColumnsInternal
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.*
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.flattenRecursively
@@ -81,7 +81,7 @@ private class RecursivelyTransformer(
 internal fun ColumnSet<*>.flattenRecursively(
     includeGroups: Boolean = true,
     includeTopLevel: Boolean = true,
-): ColumnSet<*> = allInternal().transform { cols ->
+): ColumnSet<*> = allColumnsInternal().transform { cols ->
     if (includeTopLevel) {
         cols.flattenRecursively()
     } else {

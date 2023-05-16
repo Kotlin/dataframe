@@ -2201,97 +2201,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // endregion
 
-    // region all
-
-    /**
-     * #### Flavors of All:
-     * - [all][SingleColumn.all]`()`: returns all columns.
-     * - [allBefore][SingleColumn.allBefore]`(column)`: returns all columns before the specified column,
-     *   excluding that column.
-     * - [allAfter][SingleColumn.allAfter]`(column)`: returns all columns after the specified column,
-     *   excluding that column.
-     * - [allFrom][SingleColumn.allFrom]`(column)`: returns all columns from the specified column,
-     *   including that column.
-     * - [allUpTo][SingleColumn.allUpTo]`(column)`: returns all columns up to the specified column,
-     *   including that column.
-     */
-    private interface AllFlavors
-
-    // region all
-
-    /**
-     * ## All
-     * Creates a new [ColumnSet] that contains all columns from the current [ColumnSet].
-     *
-     * If the current [ColumnSet] is a [SingleColumn] and consists of only one [column group][ColumnGroup],
-     * then `all` will create a new [ColumnSet] consisting of its children.
-     *
-     * This makes the function equivalent to [cols()][ColumnSet.cols].
-     *
-     * #### For example:
-     * `df.`[move][DataFrame.move]` { `[all][ColumnSet.all]`().`[recursively][recursively]`() }.`[under][MoveClause.under]`("info")`
-     *
-     * `df.`[select][DataFrame.select]` { myGroup.`[all][ColumnSet.all]`() }`
-     *
-     * #### Examples for this overload:
-     *
-     * {@includeArg [CommonAllDocs.Examples]}
-     *
-     * {@include [AllFlavors]}
-     *
-     * @see [allBefore\]
-     * @see [allAfter\]
-     * @see [allFrom\]
-     * @see [allUpTo\]
-     * @see [cols\]
-     */
-    private interface CommonAllDocs {
-
-        /** Example argument */
-        interface Examples
-    }
-
-    /**
-     * @include [CommonAllDocs]
-     * @arg [CommonAllDocs.Examples]
-     *
-     * `df.`[select][select]` { `[cols][cols]` { "a" in `[name][ColumnWithPath.name]` }.`[all][all]`() }`
-     * {@include [LineBreak]}
-     * NOTE: This is an identity call and can be omitted in most cases. However, it can still prove useful
-     * for readability or in combination with [recursively].
-     */
-    public fun <C> ColumnSet<C>.all(): TransformableColumnSet<C> = allInternal()
-
-    /**
-     * @include [CommonAllDocs]
-     * @arg [CommonAllDocs.Examples]
-     *
-     * `df.`[select][select]` { `[all][all]`() }`
-     *
-     * `df.`[select][select]` { myGroup.`[all][all]`() }`
-     *
-     * `df.`[select][select]` { "pathTo"["myGroup"].`[all][all]`() }`
-     */
-    public fun SingleColumn<*>.all(): TransformableColumnSet<*> = allInternal()
-
-    /**
-     * @include [CommonAllDocs]
-     * @arg [CommonAllDocs.Examples]
-     *
-     * `df.`[select][select]` { "myGroupCol".`[all][all]`() }`
-     */
-    public fun String.all(): TransformableColumnSet<*> = toColumnAccessor().all()
-
-    /**
-     * @include [CommonAllDocs]
-     * @arg [CommonAllDocs.Examples]
-     *
-     * `df.`[select][select]` { Type::columnGroup.`[all][all]`() }`
-     */
-    public fun KProperty<*>.all(): TransformableColumnSet<*> = toColumnAccessor().all()
-
-    // endregion
-
     // region allDfs
 
     @Deprecated(
@@ -2392,174 +2301,655 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // endregion
 
+    // region all
+
+    /**
+     * #### Flavors of All:
+     *
+     * - [all][SingleColumn.all]`()`:
+     *     All columns
+     *
+     * - [allBefore][SingleColumn.allBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [allAfter][SingleColumn.allAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [allFrom][SingleColumn.allFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [allUpTo][SingleColumn.allUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     */
+    private interface AllFlavors
+
+    // region all
+
+    /**
+     * ## All
+     *
+     * Creates a new [ColumnSet] that contains all columns from the current [ColumnSet].
+     *
+     * If the current [ColumnSet] is a [SingleColumn] and consists of only one [column group][ColumnGroup],
+     * then `all` will create a new [ColumnSet] consisting of its children.
+     *
+     * This makes the function equivalent to [cols()][ColumnSet.cols].
+     *
+     * #### For example:
+     * `df.`[move][DataFrame.move]` { `[all][ColumnSet.all]`().`[recursively][recursively]`() }.`[under][MoveClause.under]`("info")`
+     *
+     * `df.`[select][DataFrame.select]` { myGroup.`[all][ColumnSet.all]`() }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [CommonAllDocs.Examples]}
+     *
+     * {@include [AllFlavors]}
+     *
+     * @see [allBefore\]
+     * @see [allAfter\]
+     * @see [allFrom\]
+     * @see [allUpTo\]
+     * @see [cols\]
+     */
+    private interface CommonAllDocs {
+
+        /** Example argument */
+        interface Examples
+    }
+
+    /**
+     * @include [CommonAllDocs]
+     * @arg [CommonAllDocs.Examples]
+     *
+     * `df.`[select][select]` { `[cols][cols]` { "a" in `[name][ColumnWithPath.name]` }.`[all][all]`() }`
+     * {@include [LineBreak]}
+     * NOTE: This is an identity call and can be omitted in most cases. However, it can still prove useful
+     * for readability or in combination with [recursively][TransformableColumnSet.recursively].
+     */
+    public fun <C> ColumnSet<C>.all(): TransformableColumnSet<C> = allColumnsInternal()
+
+    /**
+     * @include [CommonAllDocs]
+     * @arg [CommonAllDocs.Examples]
+     *
+     * `df.`[select][select]` { `[all][all]`() }`
+     *
+     * `df.`[select][select]` { myGroup.`[all][all]`() }`
+     *
+     * `df.`[select][select]` { "pathTo"["myGroup"].`[all][all]`() }`
+     */
+    public fun SingleColumn<*>.all(): TransformableColumnSet<*> = allColumnsInternal()
+
+    /**
+     * @include [CommonAllDocs]
+     * @arg [CommonAllDocs.Examples]
+     *
+     * `df.`[select][select]` { "myGroupCol".`[all][all]`() }`
+     */
+    public fun String.all(): TransformableColumnSet<*> = toColumnAccessor().all()
+
+    /**
+     * @include [CommonAllDocs]
+     * @arg [CommonAllDocs.Examples]
+     *
+     * `df.`[select][select]` { Type::columnGroup.`[all][all]`() }`
+     */
+    public fun KProperty<*>.all(): TransformableColumnSet<*> = toColumnAccessor().all()
+
+    // endregion
+
+    /**
+     * ## {@includeArg [TitleArg]}
+     *
+     * Creates a new [ColumnSet] that contains a subset from the current [ColumnSet],
+     * containing all columns {@includeArg [BehaviorArg]}.
+     *
+     * If the current [ColumnSet] is a [SingleColumn] and consists of only one [column group][ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * #### For example:
+     *
+     * `df.`[select][DataFrame.select]` { `[{@includeArg [FunctionArg]}][SingleColumn.{@includeArg [FunctionArg]}]`("someColumn") }`
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[{@includeArg [FunctionArg]}][SingleColumn.{@includeArg [FunctionArg]}]`(someColumn) }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[{@includeArg [FunctionArg]}][SingleColumn.{@includeArg [FunctionArg]}]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [ExampleArg]}
+     *
+     * {@include [AllFlavors]}
+     *
+     * @return A new [ColumnSet] containing all columns {@includeArg [BehaviorArg]}.
+     * @see [allBefore\]
+     * @see [allAfter\]
+     * @see [allFrom\]
+     * @see [allUpTo\]
+     * @see [all\]
+     * @see [cols\]
+     */
+    private interface CommonAllSubsetDocs {
+
+        /** The title of the function, a.k.a "All After" */
+        interface TitleArg
+
+        /** The exact name of the function, a.k.a "allAfter" */
+        interface FunctionArg
+
+        /**
+         * Small line of text explaining the behavior of the function,
+         * a.k.a "after [column\], excluding [column\]"
+         */
+        interface BehaviorArg
+
+        /** Example argument */
+        interface ExampleArg
+    }
+
     // region allAfter
 
-    public fun <C> ColumnSet<C>.allAfter(colPath: ColumnPath): ColumnSet<C> {
+    /**
+     * @include [CommonAllSubsetDocs]
+     * @arg [CommonAllSubsetDocs.TitleArg] All After
+     * @arg [CommonAllSubsetDocs.FunctionArg] allAfter
+     * @arg [CommonAllSubsetDocs.BehaviorArg] after [column\], excluding [column\] itself
+     * @param [column\] The specified column after which all columns should be taken.
+     */
+    private interface AllAfterDocs
+
+    /**
+     * @include [AllAfterDocs]
+     * @arg [CommonAllSubsetDocs.ExampleArg]
+     *
+     * `df.`[select][select]` { `[cols][SingleColumn.cols]` { .. }.`[allAfter][ColumnSet.allAfter]`({@includeArg [ColumnSetAllAfterDocs.Arg]}) }`
+     */
+    private interface ColumnSetAllAfterDocs {
+
+        /** Example argument to use */
+        interface Arg
+    }
+
+    /** @include [ColumnSetAllAfterDocs] {@arg [ColumnSetAllAfterDocs.Arg] "pathTo"["myColumn"]} */
+    public fun <C> ColumnSet<C>.allAfter(column: ColumnPath): ColumnSet<C> {
         var take = false
         return cols {
             if (take) {
                 true
             } else {
-                take = colPath == it.path
+                take = column == it.path
                 false
             }
         }
     }
 
-    public fun <C> ColumnSet<C>.allAfter(colName: String): ColumnSet<C> = allAfter(pathOf(colName))
+    /** @include [ColumnSetAllAfterDocs] {@arg [ColumnSetAllAfterDocs.Arg] "myColumn"} */
+    public fun <C> ColumnSet<C>.allAfter(column: String): ColumnSet<C> = allAfter(pathOf(column))
 
+    /** @include [ColumnSetAllAfterDocs] {@arg [ColumnSetAllAfterDocs.Arg] myColumn} */
     public fun <C> ColumnSet<C>.allAfter(column: AnyColumnReference): ColumnSet<C> = allAfter(column.path())
 
+    /** @include [ColumnSetAllAfterDocs] {@arg [ColumnSetAllAfterDocs.Arg] Type::myColumn} */
     public fun <C> ColumnSet<C>.allAfter(column: KProperty<*>): ColumnSet<C> =
         allAfter(column.toColumnAccessor().path())
 
-    // excluding current
-    public fun SingleColumn<*>.allAfter(colPath: ColumnPath): ColumnSet<*> =
-        (this as ColumnSet<*>).allAfter(colPath)
+    /**
+     * @include [AllAfterDocs]
+     * @arg [CommonAllSubsetDocs.ExampleArg]
+     *
+     * `df.`[select][select]` { `[allAfter][SingleColumn.allAfter]`({@includeArg [SingleColumnAllAfterDocs.Arg]}) }`
+     *
+     * `df.`[select][select]` { "pathTo"["someColGroup"].`[allAfter][SingleColumn.allAfter]`({@includeArg [SingleColumnAllAfterDocs.Arg]}) }`
+     *
+     * `df.`[select][select]` { someColumnGroup.`[allAfter][SingleColumn.allAfter]`({@includeArg [SingleColumnAllAfterDocs.Arg]}) }`
+     */
+    private interface SingleColumnAllAfterDocs {
 
-    public fun SingleColumn<*>.allAfter(colName: String): ColumnSet<*> = allAfter(pathOf(colName))
+        /** Example argument to use */
+        interface Arg
+    }
+
+    /** @include [SingleColumnAllAfterDocs] {@arg [SingleColumnAllAfterDocs.Arg] "pathTo"["myColumn"]} */
+    public fun SingleColumn<*>.allAfter(column: ColumnPath): ColumnSet<*> =
+        (this as ColumnSet<*>).allAfter(column)
+
+    /** @include [SingleColumnAllAfterDocs] {@arg [SingleColumnAllAfterDocs.Arg] "myColumn"} */
+    public fun SingleColumn<*>.allAfter(column: String): ColumnSet<*> = allAfter(pathOf(column))
+
+    /** @include [SingleColumnAllAfterDocs] {@arg [SingleColumnAllAfterDocs.Arg] myColumn} */
     public fun SingleColumn<*>.allAfter(column: AnyColumnReference): ColumnSet<*> = allAfter(column.path())
+
+    /** @include [SingleColumnAllAfterDocs] {@arg [SingleColumnAllAfterDocs.Arg] Type::myColumn} */
     public fun SingleColumn<*>.allAfter(column: KProperty<*>): ColumnSet<*> =
         allAfter(column.toColumnAccessor().path())
 
-    public fun String.allAfter(colPath: ColumnPath): ColumnSet<*> = columnGroup(this).allAfter(colPath)
-    public fun String.allAfter(colName: String): ColumnSet<*> = columnGroup(this).allAfter(colName)
+    /**
+     * @include [AllAfterDocs]
+     * @arg [CommonAllSubsetDocs.ExampleArg]
+     *
+     * `df.`[select][select]` { "someColGroup".`[allAfter][String.allAfter]`({@includeArg [StringAllAfterDocs.Arg]}) }`
+     */
+    private interface StringAllAfterDocs {
+
+        /** Example argument to use */
+        interface Arg
+    }
+
+    /** @include [StringAllAfterDocs] {@arg [StringAllAfterDocs.Arg] "pathTo"["myColumn"]} */
+    public fun String.allAfter(column: ColumnPath): ColumnSet<*> = columnGroup(this).allAfter(column)
+
+    /** @include [StringAllAfterDocs] {@arg [StringAllAfterDocs.Arg] "myColumn"} */
+    public fun String.allAfter(column: String): ColumnSet<*> = columnGroup(this).allAfter(column)
+
+    /** @include [StringAllAfterDocs] {@arg [StringAllAfterDocs.Arg] myColumn} */
     public fun String.allAfter(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allAfter(column)
+
+    /** @include [StringAllAfterDocs] {@arg [StringAllAfterDocs.Arg] Type::myColumn} */
     public fun String.allAfter(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allAfter(column)
 
-    public fun KProperty<*>.allAfter(colPath: ColumnPath): ColumnSet<*> = columnGroup(this).allAfter(colPath)
-    public fun KProperty<*>.allAfter(colName: String): ColumnSet<*> = columnGroup(this).allAfter(colName)
+    /**
+     * @include [AllAfterDocs]
+     * @arg [CommonAllSubsetDocs.ExampleArg]
+     *
+     * `df.`[select][select]` { SomeType::myColGroup.`[allAfter][KProperty.allAfter]`({@includeArg [KPropertyAllAfterDocs.Arg]}) }`
+     */
+    private interface KPropertyAllAfterDocs {
+
+        /** Example argument to use */
+        interface Arg
+    }
+
+    /** @include [KPropertyAllAfterDocs] {@arg [KPropertyAllAfterDocs.Arg] "pathTo"["myColumn"]} */
+    public fun KProperty<*>.allAfter(column: ColumnPath): ColumnSet<*> = columnGroup(this).allAfter(column)
+
+    /** @include [KPropertyAllAfterDocs] {@arg [KPropertyAllAfterDocs.Arg] "myColumn"} */
+    public fun KProperty<*>.allAfter(column: String): ColumnSet<*> = columnGroup(this).allAfter(column)
+
+    /** @include [KPropertyAllAfterDocs] {@arg [KPropertyAllAfterDocs.Arg] myColumn} */
     public fun KProperty<*>.allAfter(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allAfter(column)
+
+    /** @include [KPropertyAllAfterDocs] {@arg [KPropertyAllAfterDocs.Arg] Type::myColumn} */
     public fun KProperty<*>.allAfter(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allAfter(column)
 
     // endregion
 
     // region allFrom
 
-    // including current
-    public fun <C> ColumnSet<C>.allFrom(colPath: ColumnPath): ColumnSet<C> {
+    /**
+     * @include [CommonAllSubsetDocs]
+     * @arg [CommonAllSubsetDocs.TitleArg] All From
+     * @arg [CommonAllSubsetDocs.FunctionArg] allFrom
+     * @arg [CommonAllSubsetDocs.BehaviorArg] from [column\], including [column\] itself
+     * @param [column\] The specified column from which all columns should be taken.
+     */
+    private interface AllFromDocs
+
+    /**
+     * @include [AllFromDocs]
+     * @arg [CommonAllSubsetDocs.ExampleArg]
+     *
+     * `df.`[select][select]` { `[cols][SingleColumn.cols]` { .. }.`[allFrom][ColumnSet.allFrom]`({@includeArg [ColumnSetAllFromDocs.Arg]}) }`
+     */
+    private interface ColumnSetAllFromDocs {
+
+        /** Example argument to use */
+        interface Arg
+    }
+
+    /** @include [ColumnSetAllFromDocs] {@arg [ColumnSetAllFromDocs.Arg] "pathTo"["myColumn"]} */
+    public fun <C> ColumnSet<C>.allFrom(column: ColumnPath): ColumnSet<C> {
         var take = false
         return cols {
             if (take) {
                 true
             } else {
-                take = colPath == it.path
+                take = column == it.path
                 take
             }
         }
     }
 
-    public fun <C> ColumnSet<C>.allFrom(colName: String): ColumnSet<C> = allFrom(pathOf(colName))
+    /** @include [ColumnSetAllFromDocs] {@arg [ColumnSetAllFromDocs.Arg] "myColumn"} */
+    public fun <C> ColumnSet<C>.allFrom(column: String): ColumnSet<C> = allFrom(pathOf(column))
+
+    /** @include [ColumnSetAllFromDocs] {@arg [ColumnSetAllFromDocs.Arg] myColumn} */
     public fun <C> ColumnSet<C>.allFrom(column: AnyColumnReference): ColumnSet<C> = allFrom(column.path())
+
+    /** @include [ColumnSetAllFromDocs] {@arg [ColumnSetAllFromDocs.Arg] Type::myColumn} */
     public fun <C> ColumnSet<C>.allFrom(column: KProperty<*>): ColumnSet<C> =
         allFrom(column.toColumnAccessor().path())
 
-    // including current
-    public fun SingleColumn<*>.allFrom(colPath: ColumnPath): ColumnSet<*> =
-        (this as ColumnSet<*>).allFrom(colPath)
+    /**
+     * @include [AllFromDocs]
+     * @arg [CommonAllSubsetDocs.ExampleArg]
+     *
+     * `df.`[select][select]` { `[allFrom][SingleColumn.allFrom]`({@includeArg [SingleColumnAllFromDocs.Arg]}) }`
+     *
+     * `df.`[select][select]` { "pathTo"["someColGroup"].`[allFrom][SingleColumn.allFrom]`({@includeArg [SingleColumnAllFromDocs.Arg]}) }`
+     *
+     * `df.`[select][select]` { someColumnGroup.`[allFrom][SingleColumn.allFrom]`({@includeArg [SingleColumnAllFromDocs.Arg]}) }`
+     */
+    private interface SingleColumnAllFromDocs {
 
-    public fun SingleColumn<*>.allFrom(colName: String): ColumnSet<*> = allFrom(pathOf(colName))
+        /** Example argument to use */
+        interface Arg
+    }
+
+    /** @include [SingleColumnAllFromDocs] {@arg [SingleColumnAllFromDocs.Arg] "pathTo"["myColumn"]} */
+    public fun SingleColumn<*>.allFrom(column: ColumnPath): ColumnSet<*> =
+        (this as ColumnSet<*>).allFrom(column)
+
+    /** @include [SingleColumnAllFromDocs] {@arg [SingleColumnAllFromDocs.Arg] "myColumn"} */
+    public fun SingleColumn<*>.allFrom(column: String): ColumnSet<*> = allFrom(pathOf(column))
+
+    /** @include [SingleColumnAllFromDocs] {@arg [SingleColumnAllFromDocs.Arg] myColumn} */
     public fun SingleColumn<*>.allFrom(column: AnyColumnReference): ColumnSet<*> = allFrom(column.path())
+
+    /** @include [SingleColumnAllFromDocs] {@arg [SingleColumnAllFromDocs.Arg] Type::myColumn} */
     public fun SingleColumn<*>.allFrom(column: KProperty<*>): ColumnSet<*> =
         allFrom(column.toColumnAccessor().path())
 
-    public fun String.allFrom(colPath: ColumnPath): ColumnSet<*> = columnGroup(this).allFrom(colPath)
-    public fun String.allFrom(colName: String): ColumnSet<*> = columnGroup(this).allFrom(colName)
+    /**
+     * @include [AllFromDocs]
+     * @arg [CommonAllSubsetDocs.ExampleArg]
+     *
+     * `df.`[select][select]` { "someColGroup".`[allFrom][String.allFrom]`({@includeArg [StringAllFromDocs.Arg]}) }`
+     */
+    private interface StringAllFromDocs {
+
+        /** Example argument to use */
+        interface Arg
+    }
+
+    /** @include [StringAllFromDocs] {@arg [StringAllFromDocs.Arg] "pathTo"["myColumn"]} */
+    public fun String.allFrom(column: ColumnPath): ColumnSet<*> = columnGroup(this).allFrom(column)
+
+    /** @include [StringAllFromDocs] {@arg [StringAllFromDocs.Arg] "myColumn"} */
+    public fun String.allFrom(column: String): ColumnSet<*> = columnGroup(this).allFrom(column)
+
+    /** @include [StringAllFromDocs] {@arg [StringAllFromDocs.Arg] myColumn} */
     public fun String.allFrom(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allFrom(column)
+
+    /** @include [StringAllFromDocs] {@arg [StringAllFromDocs.Arg] Type::myColumn} */
     public fun String.allFrom(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allFrom(column)
 
-    public fun KProperty<*>.allFrom(colPath: ColumnPath): ColumnSet<*> = columnGroup(this).allFrom(colPath)
-    public fun KProperty<*>.allFrom(colName: String): ColumnSet<*> = columnGroup(this).allFrom(colName)
+    /**
+     * @include [AllFromDocs]
+     * @arg [CommonAllSubsetDocs.ExampleArg]
+     *
+     * `df.`[select][select]` { SomeType::someColGroup.`[allFrom][KProperty.allFrom]`({@includeArg [KPropertyAllFromDocs.Arg]}) }`
+     */
+    private interface KPropertyAllFromDocs {
+
+        /** Example argument to use */
+        interface Arg
+    }
+
+    /** @include [KPropertyAllFromDocs] {@arg [KPropertyAllFromDocs.Arg] "pathTo"["myColumn"]} */
+    public fun KProperty<*>.allFrom(column: ColumnPath): ColumnSet<*> = columnGroup(this).allFrom(column)
+
+    /** @include [KPropertyAllFromDocs] {@arg [KPropertyAllFromDocs.Arg] "myColumn"} */
+    public fun KProperty<*>.allFrom(column: String): ColumnSet<*> = columnGroup(this).allFrom(column)
+
+    /** @include [KPropertyAllFromDocs] {@arg [KPropertyAllFromDocs.Arg] myColumn} */
     public fun KProperty<*>.allFrom(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allFrom(column)
+
+    /** @include [KPropertyAllFromDocs] {@arg [KPropertyAllFromDocs.Arg] Type::myColumn} */
     public fun KProperty<*>.allFrom(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allFrom(column)
 
     // endregion
 
     // region allBefore
 
-    // excluding current
-    public fun <C> ColumnSet<C>.allBefore(colPath: ColumnPath): ColumnSet<C> {
+    /**
+     * @include [CommonAllSubsetDocs]
+     * @arg [CommonAllSubsetDocs.TitleArg] All Before
+     * @arg [CommonAllSubsetDocs.FunctionArg] allBefore
+     * @arg [CommonAllSubsetDocs.BehaviorArg] before [column\], excluding [column\] itself
+     * @param [column\] The specified column before which all columns should be taken
+     */
+    private interface AllBeforeDocs
+
+    /**
+     * @include [AllBeforeDocs]
+     * @arg [CommonAllSubsetDocs.ExampleArg]
+     *
+     * `df.`[select][select]` { `[cols][SingleColumn.cols]` { .. }.`[allBefore][ColumnSet.allBefore]`({@includeArg [ColumnSetAllBeforeDocs.Arg]}) }`
+     */
+    private interface ColumnSetAllBeforeDocs {
+
+        /** Example argument to use */
+        interface Arg
+    }
+
+    /** @include [ColumnSetAllBeforeDocs] {@arg [ColumnSetAllBeforeDocs.Arg] "pathTo"["myColumn"]} */
+    public fun <C> ColumnSet<C>.allBefore(column: ColumnPath): ColumnSet<C> {
         var take = true
         return cols {
             if (!take) {
                 false
             } else {
-                take = colPath != it.path
+                take = column != it.path
                 take
             }
         }
     }
 
-    public fun <C> ColumnSet<C>.allBefore(colName: String): ColumnSet<C> = allBefore(pathOf(colName))
+    /** @include [ColumnSetAllBeforeDocs] {@arg [ColumnSetAllBeforeDocs.Arg] "myColumn"} */
+    public fun <C> ColumnSet<C>.allBefore(column: String): ColumnSet<C> = allBefore(pathOf(column))
 
+    /** @include [ColumnSetAllBeforeDocs] {@arg [ColumnSetAllBeforeDocs.Arg] myColumn} */
     public fun <C> ColumnSet<C>.allBefore(column: AnyColumnReference): ColumnSet<C> = allBefore(column.path())
 
+    /** @include [ColumnSetAllBeforeDocs] {@arg [ColumnSetAllBeforeDocs.Arg] Type::myColumn} */
     public fun <C> ColumnSet<C>.allBefore(column: KProperty<*>): ColumnSet<C> =
         allBefore(column.toColumnAccessor().path())
 
+    /**
+     * @include [AllBeforeDocs]
+     * @arg [CommonAllSubsetDocs.ExampleArg]
+     *
+     * `df.`[select][select]` { `[allBefore][SingleColumn.allBefore]`({@includeArg [SingleColumnAllBeforeDocs.Arg]}) }`
+     *
+     * `df.`[select][select]` { "pathTo"["someColGroup"].`[allBefore][SingleColumn.allBefore]`({@includeArg [SingleColumnAllBeforeDocs.Arg]}) }`
+     *
+     * `df.`[select][select]` { someColumnGroup.`[allBefore][SingleColumn.allBefore]`({@includeArg [SingleColumnAllBeforeDocs.Arg]}) }`
+     */
+    private interface SingleColumnAllBeforeDocs {
 
-    public fun SingleColumn<*>.allBefore(colPath: ColumnPath): ColumnSet<*> =
-        (this as ColumnSet<*>).allBefore(colPath)
+        /** Example argument to use */
+        interface Arg
+    }
 
-    public fun SingleColumn<*>.allBefore(colName: String): ColumnSet<*> = allBefore(pathOf(colName))
+    /** @include [SingleColumnAllBeforeDocs] {@arg [SingleColumnAllBeforeDocs.Arg] "pathTo"["myColumn"]} */
+    public fun SingleColumn<*>.allBefore(column: ColumnPath): ColumnSet<*> =
+        (this as ColumnSet<*>).allBefore(column)
+
+    /** @include [SingleColumnAllBeforeDocs] {@arg [SingleColumnAllBeforeDocs.Arg] "myColumn"} */
+    public fun SingleColumn<*>.allBefore(column: String): ColumnSet<*> = allBefore(pathOf(column))
+
+    /** @include [SingleColumnAllBeforeDocs] {@arg [SingleColumnAllBeforeDocs.Arg] myColumn} */
     public fun SingleColumn<*>.allBefore(column: AnyColumnReference): ColumnSet<*> = allBefore(column.path())
+
+    /** @include [SingleColumnAllBeforeDocs] {@arg [SingleColumnAllBeforeDocs.Arg] Type::myColumn} */
     public fun SingleColumn<*>.allBefore(column: KProperty<*>): ColumnSet<*> =
         allBefore(column.toColumnAccessor().path())
 
-    public fun String.allBefore(colPath: ColumnPath): ColumnSet<*> = columnGroup(this).allBefore(colPath)
-    public fun String.allBefore(colName: String): ColumnSet<*> = columnGroup(this).allBefore(colName)
+    /**
+     * @include [AllBeforeDocs]
+     * @arg [CommonAllSubsetDocs.ExampleArg]
+     *
+     * `df.`[select][select]` { "someColGroup".`[allBefore][String.allBefore]`({@includeArg [StringAllBeforeDocs.Arg]}) }`
+     */
+    private interface StringAllBeforeDocs {
+
+        /** Example argument to use */
+        interface Arg
+    }
+
+    /** @include [StringAllBeforeDocs] {@arg [StringAllBeforeDocs.Arg] "pathTo"["myColumn"]} */
+    public fun String.allBefore(column: ColumnPath): ColumnSet<*> = columnGroup(this).allBefore(column)
+
+    /** @include [StringAllBeforeDocs] {@arg [StringAllBeforeDocs.Arg] "myColumn"} */
+    public fun String.allBefore(column: String): ColumnSet<*> = columnGroup(this).allBefore(column)
+
+    /** @include [StringAllBeforeDocs] {@arg [StringAllBeforeDocs.Arg] myColumn} */
     public fun String.allBefore(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allBefore(column)
+
+    /** @include [StringAllBeforeDocs] {@arg [StringAllBeforeDocs.Arg] Type::myColumn} */
     public fun String.allBefore(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allBefore(column)
 
-    public fun KProperty<*>.allBefore(colPath: ColumnPath): ColumnSet<*> =
-        toColumnAccessor().allBefore(colPath)
+    /**
+     * @include [AllBeforeDocs]
+     * @arg [CommonAllSubsetDocs.ExampleArg]
+     *
+     * `df.`[select][select]` { SomeType::someColGroup.`[allBefore][KProperty.allBefore]`({@includeArg [KPropertyAllBeforeDocs.Arg]}) }`
+     */
+    private interface KPropertyAllBeforeDocs {
 
-    public fun KProperty<*>.allBefore(colName: String): ColumnSet<*> = columnGroup(this).allBefore(colName)
+        /** Example argument to use */
+        interface Arg
+    }
+
+    /** @include [KPropertyAllBeforeDocs] {@arg [KPropertyAllBeforeDocs.Arg] "pathTo"["myColumn"]} */
+    public fun KProperty<*>.allBefore(column: ColumnPath): ColumnSet<*> =
+        toColumnAccessor().allBefore(column)
+
+    /** @include [KPropertyAllBeforeDocs] {@arg [KPropertyAllBeforeDocs.Arg] "myColumn"} */
+    public fun KProperty<*>.allBefore(column: String): ColumnSet<*> = columnGroup(this).allBefore(column)
+
+    /** @include [KPropertyAllBeforeDocs] {@arg [KPropertyAllBeforeDocs.Arg] myColumn} */
     public fun KProperty<*>.allBefore(column: AnyColumnReference): ColumnSet<*> =
         columnGroup(this).allBefore(column)
 
+    /** @include [KPropertyAllBeforeDocs] {@arg [KPropertyAllBeforeDocs.Arg] Type::myColumn} */
     public fun KProperty<*>.allBefore(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allBefore(column)
 
     // endregion
 
     // region allUpTo
 
-    // including current
-    public fun <C> ColumnSet<C>.allUpTo(colPath: ColumnPath): ColumnSet<C> {
+    /**
+     * @include [CommonAllSubsetDocs]
+     * @arg [CommonAllSubsetDocs.TitleArg] All Up To
+     * @arg [CommonAllSubsetDocs.FunctionArg] allUpTo
+     * @arg [CommonAllSubsetDocs.BehaviorArg] up to [column\], including [column\] itself
+     * @param [column\] The specified column up to which all columns should be taken.
+     */
+    private interface AllUpToDocs
+
+    /**
+     * @include [AllUpToDocs]
+     * @arg [CommonAllSubsetDocs.ExampleArg]
+     *
+     * `df.`[select][select]` { `[cols][SingleColumn.cols]` { .. }.`[allUpTo][ColumnSet.allUpTo]`({@includeArg [ColumnSetAllUpToDocs.Arg]}) }`
+     */
+    private interface ColumnSetAllUpToDocs {
+
+        /** Example argument to use */
+        interface Arg
+    }
+
+    /** @include [ColumnSetAllUpToDocs] {@arg [ColumnSetAllUpToDocs.Arg] "pathTo"["myColumn"]} */
+    public fun <C> ColumnSet<C>.allUpTo(column: ColumnPath): ColumnSet<C> {
         var take = true
         return cols {
             if (!take) {
                 false
             } else {
-                take = colPath != it.path
+                take = column != it.path
                 true
             }
         }
     }
 
-    public fun <C> ColumnSet<C>.allUpTo(colName: String): ColumnSet<C> = allUpTo(pathOf(colName))
+    /** @include [ColumnSetAllUpToDocs] {@arg [ColumnSetAllUpToDocs.Arg] "myColumn"} */
+    public fun <C> ColumnSet<C>.allUpTo(column: String): ColumnSet<C> = allUpTo(pathOf(column))
 
+    /** @include [ColumnSetAllUpToDocs] {@arg [ColumnSetAllUpToDocs.Arg] myColumn} */
     public fun <C> ColumnSet<C>.allUpTo(column: AnyColumnReference): ColumnSet<C> = allUpTo(column.path())
 
+    /** @include [ColumnSetAllUpToDocs] {@arg [ColumnSetAllUpToDocs.Arg] Type::myColumn} */
     public fun <C> ColumnSet<C>.allUpTo(column: KProperty<*>): ColumnSet<C> =
         allUpTo(column.toColumnAccessor().path())
 
-    public fun SingleColumn<*>.allUpTo(colPath: ColumnPath): ColumnSet<*> =
-        (this as ColumnSet<*>).allUpTo(colPath)
+    /**
+     * @include [AllUpToDocs]
+     * @arg [CommonAllSubsetDocs.ExampleArg]
+     *
+     * `df.`[select][select]` { `[allUpTo][SingleColumn.allUpTo]`({@includeArg [SingleColumnAllUpToDocs.Arg]}) }`
+     *
+     * `df.`[select][select]` { "pathTo"["someColGroup"].`[allUpTo][SingleColumn.allUpTo]`({@includeArg [SingleColumnAllUpToDocs.Arg]}) }`
+     *
+     * `df.`[select][select]` { someColumnGroup.`[allUpTo][SingleColumn.allUpTo]`({@includeArg [SingleColumnAllUpToDocs.Arg]}) }`
+     */
+    private interface SingleColumnAllUpToDocs {
 
-    public fun SingleColumn<*>.allUpTo(colName: String): ColumnSet<*> = allUpTo(pathOf(colName))
+        /** Example argument to use */
+        interface Arg
+    }
+
+    /** @include [SingleColumnAllUpToDocs] {@arg [SingleColumnAllUpToDocs.Arg] "pathTo"["myColumn"]} */
+    public fun SingleColumn<*>.allUpTo(column: ColumnPath): ColumnSet<*> =
+        (this as ColumnSet<*>).allUpTo(column)
+
+    /** @include [SingleColumnAllUpToDocs] {@arg [SingleColumnAllUpToDocs.Arg] "myColumn"} */
+    public fun SingleColumn<*>.allUpTo(column: String): ColumnSet<*> = allUpTo(pathOf(column))
+
+    /** @include [SingleColumnAllUpToDocs] {@arg [SingleColumnAllUpToDocs.Arg] myColumn} */
     public fun SingleColumn<*>.allUpTo(column: AnyColumnReference): ColumnSet<*> = allUpTo(column.path())
+
+    /** @include [SingleColumnAllUpToDocs] {@arg [SingleColumnAllUpToDocs.Arg] Type::myColumn} */
     public fun SingleColumn<*>.allUpTo(column: KProperty<*>): ColumnSet<*> =
         allUpTo(column.toColumnAccessor().path())
 
-    public fun String.allUpTo(colPath: ColumnPath): ColumnSet<*> = columnGroup(this).allUpTo(colPath)
-    public fun String.allUpTo(colName: String): ColumnSet<*> = columnGroup(this).allUpTo(colName)
+    /**
+     * @include [AllUpToDocs]
+     * @arg [CommonAllSubsetDocs.ExampleArg]
+     *
+     * `df.`[select][select]` { "someColGroup".`[allUpTo][String.allUpTo]`({@includeArg [StringAllUpToDocs.Arg]}) }`
+     */
+    private interface StringAllUpToDocs {
+
+        /** Example argument to use */
+        interface Arg
+    }
+
+    /** @include [StringAllUpToDocs] {@arg [StringAllUpToDocs.Arg] "pathTo"["myColumn"]} */
+    public fun String.allUpTo(column: ColumnPath): ColumnSet<*> = columnGroup(this).allUpTo(column)
+
+    /** @include [StringAllUpToDocs] {@arg [StringAllUpToDocs.Arg] "myColumn"} */
+    public fun String.allUpTo(column: String): ColumnSet<*> = columnGroup(this).allUpTo(column)
+
+    /** @include [StringAllUpToDocs] {@arg [StringAllUpToDocs.Arg] myColumn} */
     public fun String.allUpTo(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allUpTo(column)
+
+    /** @include [StringAllUpToDocs] {@arg [StringAllUpToDocs.Arg] Type::myColumn} */
     public fun String.allUpTo(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allUpTo(column)
 
-    public fun KProperty<*>.allUpTo(colPath: ColumnPath): ColumnSet<*> = columnGroup(this).allUpTo(colPath)
-    public fun KProperty<*>.allUpTo(colName: String): ColumnSet<*> = columnGroup(this).allUpTo(colName)
+    /**
+     * @include [AllUpToDocs]
+     * @arg [CommonAllSubsetDocs.ExampleArg]
+     *
+     * `df.`[select][select]` { SomeType::someColGroup.`[allUpTo][KProperty.allUpTo]`({@includeArg [KPropertyAllUpToDocs.Arg]}) }`
+     */
+    private interface KPropertyAllUpToDocs {
+
+        /** Example argument to use */
+        interface Arg
+    }
+
+    /** @include [KPropertyAllUpToDocs] {@arg [KPropertyAllUpToDocs.Arg] "pathTo"["myColumn"]} */
+    public fun KProperty<*>.allUpTo(column: ColumnPath): ColumnSet<*> = columnGroup(this).allUpTo(column)
+
+    /** @include [KPropertyAllUpToDocs] {@arg [KPropertyAllUpToDocs.Arg] "myColumn"} */
+    public fun KProperty<*>.allUpTo(column: String): ColumnSet<*> = columnGroup(this).allUpTo(column)
+
+    /** @include [KPropertyAllUpToDocs] {@arg [KPropertyAllUpToDocs.Arg] myColumn} */
     public fun KProperty<*>.allUpTo(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allUpTo(column)
+
+    /** @include [KPropertyAllUpToDocs] {@arg [KPropertyAllUpToDocs.Arg] Type::myColumn} */
     public fun KProperty<*>.allUpTo(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allUpTo(column)
 
     // endregion
@@ -2825,10 +3215,10 @@ internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) 
  * match the given [predicate].
  */
 internal fun ColumnSet<*>.colsInternal(predicate: ColumnFilter<*>): TransformableColumnSet<*> =
-    allInternal().transform { it.filter(predicate) }
+    allColumnsInternal().transform { it.filter(predicate) }
 
 internal fun ColumnSet<*>.colsInternal(indices: IntArray): TransformableColumnSet<*> =
-    allInternal().transform { cols ->
+    allColumnsInternal().transform { cols ->
         indices.map {
             try {
                 cols[it]
@@ -2839,7 +3229,7 @@ internal fun ColumnSet<*>.colsInternal(indices: IntArray): TransformableColumnSe
     }
 
 internal fun ColumnSet<*>.colsInternal(range: IntRange): TransformableColumnSet<*> =
-    allInternal().transform {
+    allColumnsInternal().transform {
         try {
             it.subList(range.first, range.last + 1)
         } catch (e: IndexOutOfBoundsException) {
@@ -2848,7 +3238,7 @@ internal fun ColumnSet<*>.colsInternal(range: IntRange): TransformableColumnSet<
     }
 
 internal fun ColumnSet<*>.rootsInternal(): ColumnSet<*> =
-    allInternal().transform { it.roots() }
+    allColumnsInternal().transform { it.roots() }
 
 internal fun ColumnSet<*>.valueColumnsInternal(filter: (ValueColumn<*>) -> Boolean): TransformableColumnSet<*> =
     colsInternal { it.isValueColumn() && filter(it.asValueColumn()) }
@@ -2871,7 +3261,7 @@ internal fun ColumnSet<*>.columnsOfKindInternal(
  * returns a [(transformable) ColumnSet][TransformableColumnSet] containing the children of this [ColumnGroup],
  * else it simply returns a [(transformable) ColumnSet][TransformableColumnSet] from [this].
  */
-internal fun <C> ColumnSet<C>.allInternal(): TransformableColumnSet<C> =
+internal fun <C> ColumnSet<C>.allColumnsInternal(): TransformableColumnSet<C> =
     transform {
         if (this.isSingleColumnWithGroup(it)) {
             it.single().children()
@@ -2880,9 +3270,9 @@ internal fun <C> ColumnSet<C>.allInternal(): TransformableColumnSet<C> =
         }
     }.cast()
 
-/** @include [allInternal] */
-internal fun SingleColumn<*>.allInternal(): TransformableColumnSet<*> =
-    (this as ColumnSet<*>).allInternal()
+/** @include [allColumnsInternal] */
+internal fun SingleColumn<*>.allColumnsInternal(): TransformableColumnSet<*> =
+    (this as ColumnSet<*>).allColumnsInternal()
 
 @Deprecated("Replaced with recursively()")
 internal fun ColumnSet<*>.dfsInternal(predicate: (ColumnWithPath<*>) -> Boolean) =
