@@ -23,10 +23,7 @@ internal fun <T, C> DataFrame<T>.flattenImpl(
     }
 
     fun getRootPrefix(path: ColumnPath) =
-        (1 until path.size)
-            .asSequence()
-            .map { path.take(it) }
-            .first { rootPrefixes.contains(it) }
+        (1 until path.size).asSequence().map { path.take(it) }.first { rootPrefixes.contains(it) }
 
     val result = move { rootPrefixes.toColumnSet().allDfs() }
         .into {

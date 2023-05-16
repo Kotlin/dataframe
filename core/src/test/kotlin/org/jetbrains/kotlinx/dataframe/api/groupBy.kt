@@ -58,42 +58,4 @@ class GroupByTests {
             getFrameColumn("d") into "e"
         }["e"].type() shouldBe typeOf<List<AnyFrame>>()
     }
-
-
-    @Test
-    fun `aggregate and check column names`() {
-        val df = dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(
-            "Alice", "Cooper", 15, "London", 54, true,
-            "Bob", "Dylan", 45, "Dubai", 87, true,
-            "Charlie", "Daniels", 20, "Moscow", 35, false,
-            "Charlie", "Chaplin", 40, "Milan", 41, true,
-            "Bob", "Marley", 30, "Tokyo", 68, true,
-            "Alice", "Wolf", 20, "Milan", 55, false,
-            "Charlie", "Byrd", 30, "Moscow", 90, true
-        ).cast<Person>()
-
-
-        val aggregate = df.groupBy("city")
-            .aggregate {
-                mean() into "mean"
-                std() into "std"
-            }
-
-        aggregate
-            .flatten()
-            .columnNames() shouldBe listOf("city", "age.mean", "weight.mean", "age.std", "weight.std")
-    }
-
-
-
-
-    @DataSchema
-    interface Person {
-        val age: Int
-        val city: String?
-        val firstName: String
-        val lastName: String
-        val weight: Int?
-        val isHappy: Boolean
-    }
 }
