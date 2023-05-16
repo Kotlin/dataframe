@@ -444,7 +444,20 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select { name.colsOf<String>().cols(firstName, lastName) },
             df.select { name.colsOf<String>()[firstName, lastName] },
 
-            df.select { name.select { cols(this@select.firstName, this@select.lastName) } },
+            df.select {
+                name.select {
+                    cols(this@select.firstName, this@select.lastName)
+                }
+//                it["name"].select {
+//
+//                }
+            },
+
+//            df.select {
+//                it["name"].select {
+//                    //cols(this@select.firstName, this@select.lastName)
+//                }
+//            },
 
             df.select { "name".cols(firstName, lastName) },
             df.select { "name"[firstName, lastName] },

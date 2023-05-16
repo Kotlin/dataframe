@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
@@ -16,6 +17,12 @@ open class ColumnsSelectionDslTests : TestBase() {
 
     @Test
     fun first() {
+        shouldThrow<IllegalArgumentException> {
+            df.select {
+                "age".first()
+            }
+        }
+
         listOf(
             df.select { name },
             df.select { first() },
@@ -444,7 +451,17 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select { name.colsOf<String>().cols(firstName, lastName) },
             df.select { name.colsOf<String>()[firstName, lastName] },
 
-            df.select { name.select { cols(this@select.firstName, this@select.lastName) } },
+            df.select {
+                name.select {
+                    cols(this@select.firstName, this@select.lastName)
+                }
+            },
+
+            df.select {
+                it["name"].selectUntyped {
+                    cols("firstName", "lastName")
+                }
+            },
 
             df.select { "name".cols(firstName, lastName) },
             df.select { "name"[firstName, lastName] },
