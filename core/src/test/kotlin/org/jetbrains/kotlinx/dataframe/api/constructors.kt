@@ -13,4 +13,15 @@ class ConstructorsTests {
         }
         builder.toDataFrame() shouldBe dataFrameOf(List(5) { columnOf(1, 2, 3) })
     }
+
+    @Test
+    fun `duplicated name`() {
+        val builder = DynamicDataFrameBuilder()
+        val column by columnOf(1, 2, 3)
+        builder.add(column)
+        builder.add(column)
+        val df = builder.toDataFrame()
+        df.columnsCount() shouldBe 2
+        df.columnNames() shouldBe listOf(column.name(), "${column.name()}1")
+    }
 }
