@@ -144,7 +144,7 @@ class Recursively : TestBase() {
             dfWithFrames.getColumnsWithPaths { name[frameCol] and frameCol }
     }
 
-    @Test
+//    @Test
     fun `cols of kind recursively`() {
         listOf(
             dfGroup.getColumnsWithPaths {

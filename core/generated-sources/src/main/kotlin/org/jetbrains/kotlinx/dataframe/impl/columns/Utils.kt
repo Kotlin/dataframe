@@ -78,6 +78,46 @@ internal fun <T> DataColumn<T>.assertIsComparable(): DataColumn<T> {
     return this
 }
 
+internal fun <A> SingleColumn<A>.performCheck(
+    check: (ColumnWithPath<A>?) -> Unit,
+): SingleColumn<A> = object : SingleColumn<A> {
+    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<A>? =
+        this@performCheck.resolveSingle(context).also(check)
+}
+
+internal fun <A> TransformableSingleColumn<A>.performCheck(
+    check: (ColumnWithPath<A>?) -> Unit,
+): TransformableSingleColumn<A> = object : TransformableSingleColumn<A> {
+    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<A>? =
+        this@performCheck.resolveSingle(context).also(check)
+
+    override fun transformResolveSingle(
+        context: ColumnResolutionContext,
+        transformer: ColumnSetTransformer,
+    ): ColumnWithPath<A>? =
+        this@performCheck.transformResolveSingle(context, transformer).also(check)
+}
+
+internal fun <A> ColumnSet<A>.performCheck(
+    check: (List<ColumnWithPath<A>>) -> Unit,
+): ColumnSet<A> = object : ColumnSet<A> {
+    override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<A>> =
+        this@performCheck.resolve(context).also(check)
+}
+
+internal fun <A> TransformableColumnSet<A>.performCheck(
+    check: (List<ColumnWithPath<A>>) -> Unit,
+): TransformableColumnSet<A> = object : TransformableColumnSet<A> {
+    override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<A>> =
+        this@performCheck.resolve(context).also(check)
+
+    override fun transformResolve(
+        context: ColumnResolutionContext,
+        transformer: ColumnSetTransformer,
+    ): List<ColumnWithPath<A>> =
+        this@performCheck.transformResolve(context, transformer).also(check)
+}
+
 /**
  * Applies a transformation on [this] [SingleColumn] by converting its
  * single [ColumnWithPath]<[A]> to [List]<[ColumnWithPath]<[B]>] using [converter].

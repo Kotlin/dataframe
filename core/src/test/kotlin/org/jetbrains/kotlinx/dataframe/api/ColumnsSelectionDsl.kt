@@ -18,10 +18,17 @@ open class ColumnsSelectionDslTests : TestBase() {
     @Test
     fun first() {
         shouldThrow<IllegalArgumentException> {
-            df.select {
-                "age".first()
-            }
+            df.select { "age".first() }
         }
+        shouldThrow<IllegalArgumentException> {
+            df.select { age.first() }.alsoDebug()
+        }
+        shouldThrow<IllegalArgumentException> {
+            df.select { it["age"].first() }.alsoDebug()
+        }
+        df.select { name.first() }.alsoDebug()
+        df.select { first() }.alsoDebug()
+
 
         listOf(
             df.select { name },
