@@ -1,7 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.DynamicDataFrameBuilder
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.ValueProperty
 import org.jetbrains.kotlinx.dataframe.api.add
@@ -430,5 +432,22 @@ class Create : TestBase() {
         df["name"].type shouldBe typeOf<Name>()
         df["scores"].kind shouldBe ColumnKind.Frame
         df["summary"]["min score"].values() shouldBe listOf(3, 5)
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun duplicatedColumns() {
+        // SampleStart
+        fun peek(vararg dataframes: AnyFrame): AnyFrame {
+            val builder = DynamicDataFrameBuilder()
+            for (df in dataframes) {
+                df.columns().firstOrNull()?.let { builder.add(it) }
+            }
+            return builder.toDataFrame()
+        }
+
+        val col by columnOf(1, 2, 3)
+        peek(dataFrameOf(col), dataFrameOf(col))
+        // SampleEnd
     }
 }
