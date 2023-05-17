@@ -27,7 +27,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 import kotlin.reflect.KProperty
 
-private const val unnamedColumnPrefix = "untitled"
+internal const val unnamedColumnPrefix = "untitled"
 
 internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) : DataFrame<T>, AggregatableInternal<T> {
 
