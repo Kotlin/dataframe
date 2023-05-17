@@ -469,7 +469,7 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun splitInplace_properties() {
         // SampleStart
-        df.split { name.firstName }.by { it.chars().toList() }.inplace()
+        df.split { name.firstName }.by { it.asIterable() }.inplace()
         // SampleEnd
     }
 
@@ -480,7 +480,7 @@ class Modify : TestBase() {
         val name by columnGroup()
         val firstName by name.column<String>()
 
-        df.split { firstName }.by { it.chars().toList() }.inplace()
+        df.split { firstName }.by { it.asIterable() }.inplace()
         // SampleEnd
     }
 
@@ -488,7 +488,7 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun splitInplace_strings() {
         // SampleStart
-        df.split { "name"["firstName"]<String>() }.by { it.chars().toList() }.inplace()
+        df.split { "name"["firstName"]<String>() }.by { it.asIterable() }.inplace()
         // SampleEnd
     }
 
@@ -523,7 +523,9 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun split1_properties() {
         // SampleStart
-        df.split { name.lastName }.by { it.asIterable() }.default(' ').inward { "char$it" }
+        df.split { name.lastName }
+            .by { it.asIterable() }.default(' ')
+            .inward { "char$it" }
         // SampleEnd
     }
 
@@ -534,7 +536,9 @@ class Modify : TestBase() {
         val name by columnGroup()
         val lastName by name.column<String>()
 
-        df.split { lastName }.by { it.asIterable() }.default(' ').inward { "char$it" }
+        df.split { lastName }
+            .by { it.asIterable() }.default(' ')
+            .inward { "char$it" }
         // SampleEnd
     }
 
@@ -542,7 +546,9 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun split1_strings() {
         // SampleStart
-        df.split { "name"["lastName"]<String>() }.by { it.asIterable() }.default(' ').inward { "char$it" }
+        df.split { "name"["lastName"]<String>() }
+            .by { it.asIterable() }.default(' ')
+            .inward { "char$it" }
         // SampleEnd
     }
 
@@ -550,7 +556,9 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun splitRegex() {
         // SampleStart
-        val merged = df.merge { name.lastName and name.firstName }.by { it[0] + " (" + it[1] + ")" }.into("name")
+        val merged = df.merge { name.lastName and name.firstName }
+            .by { it[0] + " (" + it[1] + ")" }
+            .into("name")
         // SampleEnd
     }
 
@@ -593,7 +601,7 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun splitIntoRows_properties() {
         // SampleStart
-        df.split { name.firstName }.by { it.chars().toList() }.intoRows()
+        df.split { name.firstName }.by { it.asIterable() }.intoRows()
 
         df.split { name }.by { it.values() }.intoRows()
         // SampleEnd
@@ -606,7 +614,7 @@ class Modify : TestBase() {
         val name by columnGroup()
         val firstName by name.column<String>()
 
-        df.split { firstName }.by { it.chars().toList() }.intoRows()
+        df.split { firstName }.by { it.asIterable() }.intoRows()
 
         df.split { name }.by { it.values() }.intoRows()
         // SampleEnd
@@ -616,7 +624,7 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun splitIntoRows_strings() {
         // SampleStart
-        df.split { "name"["firstName"]<String>() }.by { it.chars().toList() }.intoRows()
+        df.split { "name"["firstName"]<String>() }.by { it.asIterable() }.intoRows()
 
         df.split { colGroup("name") }.by { it.values() }.intoRows()
         // SampleEnd
