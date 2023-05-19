@@ -94,7 +94,7 @@ class FlattenTests {
             }
 
         aggregate
-            .flatten()
+            .flatten(keepParentNameForColumns = true)
             .columnNames() shouldBe listOf("city", "age.mean", "weight.mean", "age.std", "weight.std")
     }
 
