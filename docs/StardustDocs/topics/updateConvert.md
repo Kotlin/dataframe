@@ -1,4 +1,4 @@
-[//]: # (title: Update/convert values)
+[//]: # (title: Update / convert values)
 
 Both [`update`](update.md) and [`convert`](convert.md) can be used to change columns values in `DataFrame`.
 
