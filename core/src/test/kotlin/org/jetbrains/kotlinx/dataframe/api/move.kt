@@ -13,7 +13,7 @@ class MoveTests {
     val grouped = df.move { cols { it.name.contains(".") } }.into { it.name.split(".").toPath() }
 
     @Test
-    fun batchGrouping() {
+    fun `batch grouping`() {
         grouped.columnNames() shouldBe listOf("q", "a", "b", "w", "e", "r")
         grouped["a"].asColumnGroup().columnNames() shouldBe listOf("b", "c")
         grouped["a"]["c"].asColumnGroup().columnNames() shouldBe listOf("d")
@@ -33,7 +33,7 @@ class MoveTests {
     }
 
     @Test
-    fun batchUngrouping() {
+    fun `batch ungrouping`() {
         val ungrouped = grouped.move { dfs { it.depth() > 0 && !it.isColumnGroup() } }.into { pathOf(it.path.joinToString(".")) }
         ungrouped.columnNames() shouldBe listOf("q", "a.b", "a.c.d", "b.c", "b.d", "w", "e.f", "r")
     }
@@ -64,7 +64,7 @@ class MoveTests {
     }
 
     @Test
-    fun `selectDfs`() {
+    fun `select Dfs`() {
         val selected = grouped.select { it["a"].dfs { !it.isColumnGroup() } }
         selected.columnNames() shouldBe listOf("b", "d")
     }
