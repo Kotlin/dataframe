@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 
 internal fun <T, C> DataFrame<T>.flattenImpl(
     columns: ColumnsSelector<T, C>,
+    keepParentNameForColumns: Boolean = false
 ): DataFrame<T> {
     val rootColumns = getColumnsWithPaths {
         columns.toColumnSet().filter { it.isColumnGroup() }.roots()
@@ -31,7 +32,8 @@ internal fun <T, C> DataFrame<T>.flattenImpl(
         .into {
             val targetPath = getRootPrefix(it.path).dropLast(1)
             val nameGen = nameGenerators[targetPath]!!
-            val name = nameGen.addUnique(it.name())
+            val preferredName = if (keepParentNameForColumns) "${it.name()}.${it.parentName}" else it.name()
+            val name = nameGen.addUnique(preferredName)
             targetPath + name
         }
     return result

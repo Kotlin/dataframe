@@ -80,7 +80,7 @@ fun detectVersion(): String {
         if (rootProject.findProperty("build.number.detection") == "true") {
             "$versionProp-dev-$buildNumber"
         } else {
-            buildNumber
+            error("use build.number + build.number.detection = true or release build")
         }
     } else if (hasProperty("release")) {
         versionProp
