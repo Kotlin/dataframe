@@ -65,7 +65,6 @@ public fun <T> DataFrame<T>.renameToCamelCase(): DataFrame<T> = this
         it.name.replaceFirstChar { it.lowercaseChar() }
     }
 
-
 public fun <T, C> RenameClause<T, C>.into(vararg newColumns: ColumnReference<*>): DataFrame<T> =
     into(*newColumns.map { it.name() }.toTypedArray())
 
