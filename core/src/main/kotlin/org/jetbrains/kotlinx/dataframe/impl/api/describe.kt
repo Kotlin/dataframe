@@ -31,12 +31,25 @@ import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.jvm.jvmErasure
 
 internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
-    fun List<AnyCol>.collectAll(dfs: Boolean): List<AnyCol> = flatMap { col ->
+    fun List<AnyCol>.collectAll(recursively: Boolean): List<AnyCol> = flatMap { col ->
         when (col.kind) {
-            ColumnKind.Frame -> col.asAnyFrameColumn().concat().columns().map {
-                it.addPath(col.path() + it.name)
-            }.collectAll(true)
-            ColumnKind.Group -> if (dfs) col.asColumnGroup().columns().map { it.addPath(col.path() + it.name) }.collectAll(true) else listOf(col)
+            ColumnKind.Frame ->
+                col.asAnyFrameColumn()
+                    .concat()
+                    .columns()
+                    .map { it.addPath(col.path() + it.name) }
+                    .collectAll(true)
+
+            ColumnKind.Group ->
+                if (recursively) {
+                    col.asColumnGroup()
+                        .columns()
+                        .map { it.addPath(col.path() + it.name) }
+                        .collectAll(true)
+                } else {
+                    listOf(col)
+                }
+
             ColumnKind.Value -> listOf(col)
         }
     }
@@ -55,14 +68,18 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
         ColumnDescription::count from { it.size }
         ColumnDescription::unique from { it.countDistinct() }
         ColumnDescription::nulls from { it.values.count { it == null } }
-        ColumnDescription::top from inferType { it.values.filterNotNull().groupBy { it }.maxByOrNull { it.value.size }?.key }
+        ColumnDescription::top from inferType {
+            it.values.filterNotNull().groupBy { it }.maxByOrNull { it.value.size }?.key
+        }
         if (hasNumeric) {
             ColumnDescription::mean from { if (it.isNumber()) it.asNumbers().mean() else null }
             ColumnDescription::std from { if (it.isNumber()) it.asNumbers().std() else null }
         }
         if (hasComparable) {
             ColumnDescription::min from inferType { if (it.isComparable()) it.asComparable().minOrNull() else null }
-            ColumnDescription::median from inferType { if (it.isComparable()) it.asComparable().medianOrNull() else null }
+            ColumnDescription::median from inferType {
+                if (it.isComparable()) it.asComparable().medianOrNull() else null
+            }
             ColumnDescription::max from inferType { if (it.isComparable()) it.asComparable().maxOrNull() else null }
         }
     }

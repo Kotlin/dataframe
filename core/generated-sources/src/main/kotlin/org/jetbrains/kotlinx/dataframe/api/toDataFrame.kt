@@ -131,12 +131,12 @@ public fun Iterable<Pair<String, Iterable<Any?>>>.toDataFrameFromPairs(): AnyFra
 public interface TraversePropertiesDsl {
 
     /**
-     * Skip given [classes] during dfs traversal
+     * Skip given [classes] during recursive (dfs) traversal
      */
     public fun exclude(vararg classes: KClass<*>)
 
     /**
-     * Skip given [properties] during dfs traversal
+     * Skip given [properties] during recursive (dfs) traversal
      */
     public fun exclude(vararg properties: KProperty<*>)
 

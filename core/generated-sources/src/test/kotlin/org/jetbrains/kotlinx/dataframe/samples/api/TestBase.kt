@@ -1,13 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
+import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.group
-import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.explainer.PluginCallbackProxy
+import org.jetbrains.kotlinx.dataframe.impl.columns.asValueColumn
 import org.junit.After
 import org.junit.Before
 
@@ -41,6 +40,16 @@ public open class TestBase {
         "Charlie", "Byrd", 30, "Moscow", 90, true
     ).group("firstName", "lastName").into("name").cast<Person>()
 
+    val dfGroup = df.convert { name.firstName }.to {
+        val firstName by it
+        val secondName by it.map<_, String?> { null }.asValueColumn()
+        val thirdName by it.map<_, String?> { null }.asValueColumn()
+
+        dataFrameOf(firstName, secondName, thirdName)
+            .cast<FirstNames>(verify = true)
+            .asColumnGroup("firstName")
+    }.cast<Person2>(verify = true)
+
     @DataSchema
     interface Name {
         val firstName: String
@@ -56,5 +65,34 @@ public open class TestBase {
         val isHappy: Boolean
     }
 
+    @DataSchema
+    interface FirstNames {
+        val firstName: String
+        val secondName: String?
+        val thirdName: String?
+    }
+
+    @DataSchema
+    interface Name2 {
+        val firstName: DataRow<FirstNames>
+        val lastName: String
+    }
+
+    @DataSchema
+    interface Person2 {
+        val age: Int
+        val city: String?
+        val name: DataRow<Name2>
+        val weight: Int?
+        val isHappy: Boolean
+    }
+
     infix fun <T, U : T> T.willBe(expected: U?) = shouldBe(expected)
+
+    fun <T> Iterable<T>.shouldAllBeEqual(): Iterable<T> {
+        this should {
+            it.reduce { a, b -> a shouldBe b; b }
+        }
+        return this
+    }
 }

@@ -52,7 +52,9 @@ public fun <T> DataFrame<T>.cumSum(
 public fun <T> DataFrame<T>.cumSum(vararg columns: KProperty<*>, skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> =
     cumSum(skipNA) { columns.toColumnSet() }
 
-public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> = cumSum(skipNA) { allDfs() }
+public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> = cumSum(skipNA) {
+    cols { !it.isColumnGroup() }.recursively()
+}
 
 // endregion
 
@@ -77,7 +79,8 @@ public fun <T, G> GroupBy<T, G>.cumSum(
     skipNA: Boolean = defaultCumSumSkipNA,
 ): GroupBy<T, G> = cumSum(skipNA) { columns.toColumnSet() }
 
-public fun <T, G> GroupBy<T, G>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): GroupBy<T, G> =
-    cumSum(skipNA) { allDfs() }
+public fun <T, G> GroupBy<T, G>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): GroupBy<T, G> = cumSum(skipNA) {
+    cols { !it.isColumnGroup() }.recursively()
+}
 
 // endregion

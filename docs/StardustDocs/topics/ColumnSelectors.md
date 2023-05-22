@@ -10,7 +10,7 @@ Column selectors are used in many operations:
 
 ```kotlin
 df.select { age and name }
-df.fillNaNs { dfsOf<Double>() }.withZero()
+df.fillNaNs { colsOf<Double>().recursively() }.withZero()
 df.remove { cols { it.hasNulls() } }
 df.group { cols { it.data != name } }.into { "nameless" }
 df.update { city }.notNull { it.lowercase() }
@@ -53,8 +53,8 @@ df.select { name..age }
 // all children of ColumnGroup
 df.select { name.all() }
 
-// depth-first-search traversal of all children columns
-df.select { name.allDfs() }
+// recursive traversal of all children columns excluding ColumnGroups
+df.select { name.cols { !it.isColumnGroup() }.recursively() }
 ```
 
 </tab>
@@ -89,8 +89,8 @@ df.select { name..age }
 // all children of ColumnGroup
 df.select { name.all() }
 
-// depth-first-search traversal of all children columns
-df.select { name.allDfs() }
+// recursive traversal of all children columns excluding ColumnGroups
+df.select { name.cols { !it.isColumnGroup() }.recursively() }
 ```
 
 </tab>
@@ -122,8 +122,8 @@ df.select { "name".."age" }
 // all children of ColumnGroup
 df.select { "name".all() }
 
-// depth-first-search traversal of all children columns
-df.select { "name".allDfs() }
+// recursive traversal of all children columns excluding groups
+df.select { "name".cols { !it.isColumnGroup() }.recursively() }
 ```
 
 </tab></tabs>
@@ -187,17 +187,17 @@ df.select {
     Person::name.single { it.name().startsWith("first") }
 }
 
-// depth-first-search traversal of all columns, excluding ColumnGroups from result
-df.select { allDfs() }
+// recursive traversal of all columns, excluding ColumnGroups from result
+df.select { cols { !it.isColumnGroup() }.recursively() }
 
 // depth-first-search traversal of all columns, including ColumnGroups in result
-df.select { allDfs(includeGroups = true) }
+df.select { all().recursively() }
 
-// depth-first-search traversal with condition
-df.select { dfs { it.name().contains(":") } }
+// recursive traversal with condition
+df.select { cols { it.name().contains(":") }.recursively() }
 
-// depth-first-search traversal of columns of given type
-df.select { dfsOf<String>() }
+// recursive traversal of columns of given type
+df.select { colsOf<String>().rec() }
 
 // all columns except given column set
 df.select { except { colsOf<String>() } }
@@ -214,19 +214,19 @@ df.select { take(2) and col(3) }
 <!---FUN columnSelectorsModifySet-->
 
 ```kotlin
-// first/last n columns in column set
-df.select { allDfs().take(3) }
-df.select { allDfs().takeLast(3) }
+// first/last n value- and frame columns in column set
+df.select { cols { !it.isColumnGroup() }.recursively().take(3) }
+df.select { cols { !it.isColumnGroup() }.recursively().takeLast(3) }
 
-// all except first/last n columns in column set
-df.select { allDfs().drop(3) }
-df.select { allDfs().dropLast(3) }
+// all except first/last n value- and frame columns in column set
+df.select { cols { !it.isColumnGroup() }.recursively().drop(3) }
+df.select { cols { !it.isColumnGroup() }.recursively().dropLast(3) }
 
 // filter column set by condition
-df.select { allDfs().filter { it.name().startsWith("year") } }
+df.select { cols { !it.isColumnGroup() }.rec().filter { it.name().startsWith("year") } }
 
 // exclude columns from column set
-df.select { allDfs().except { age } }
+df.select { cols { !it.isColumnGroup() }.rec().except { age } }
 
 // keep only unique columns
 df.select { (colsOf<Int>() and age).distinct() }

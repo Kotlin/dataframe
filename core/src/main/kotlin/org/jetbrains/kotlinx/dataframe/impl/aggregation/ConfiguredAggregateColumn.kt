@@ -1,11 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation
 
-import org.jetbrains.kotlinx.dataframe.api.name
-import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
-import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
-import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
-import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.columns.shortPath
+import org.jetbrains.kotlinx.dataframe.columns.*
 
 internal class ConfiguredAggregateColumn<C> private constructor(
     val columns: ColumnSet<C>,
@@ -22,13 +17,16 @@ internal class ConfiguredAggregateColumn<C> private constructor(
         else -> AggregateColumnDescriptor(col, default, if (keepName) newPath?.plus(col.name) else newPath)
     }
 
-    override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> {
+    private fun resolve(context: ColumnResolutionContext, columns: ColumnSet<C>): List<ColumnWithPath<C>> {
         val resolved = columns.resolve(context)
         if (resolved.size == 1) return listOf(resolved[0].toDescriptor(false))
         else return resolved.map {
             it.toDescriptor(true)
         }
     }
+
+    override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> =
+        resolve(context, columns)
 
     companion object {
 

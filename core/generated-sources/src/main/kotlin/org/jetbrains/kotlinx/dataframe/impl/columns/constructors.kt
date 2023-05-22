@@ -144,10 +144,23 @@ internal fun <T> createColumn(values: Iterable<T>, suggestedType: KType, guessTy
 
 // region create Columns
 
-internal fun <C> createColumnSet(resolver: (ColumnResolutionContext) -> List<ColumnWithPath<C>>): ColumnSet<C> =
-    object : ColumnSet<C> {
-        override fun resolve(context: ColumnResolutionContext) = resolver(context)
-    }
+internal fun <C> createColumnSet(
+    resolver: (context: ColumnResolutionContext) -> List<ColumnWithPath<C>>,
+): ColumnSet<C> = object : ColumnSet<C> {
+    override fun resolve(context: ColumnResolutionContext) = resolver(context)
+}
+
+internal fun <C> createTransformableColumnSet(
+    resolver: (context: ColumnResolutionContext) -> List<ColumnWithPath<C>>,
+    transformResolve: (context: ColumnResolutionContext, transformer: ColumnSetTransformer) -> List<ColumnWithPath<C>>,
+): TransformableColumnSet<C> = object : TransformableColumnSet<C> {
+    override fun resolve(context: ColumnResolutionContext) = resolver(context)
+
+    override fun transformResolve(
+        context: ColumnResolutionContext,
+        transformer: ColumnSetTransformer,
+    ): List<ColumnWithPath<C>> = transformResolve(context, transformer)
+}
 
 // region toColumnSet
 
@@ -155,12 +168,11 @@ internal fun <C> createColumnSet(resolver: (ColumnResolutionContext) -> List<Col
 
 internal fun <TD, T : DataFrame<TD>, C> Selector<T, ColumnSet<C>>.toColumnSet(
     createReceiver: (ColumnResolutionContext) -> T,
-): ColumnSet<C> =
-    createColumnSet {
-        val receiver = createReceiver(it)
-        val columnSet = this(receiver, receiver)
-        columnSet.resolve(receiver, it.unresolvedColumnsPolicy)
-    }
+): ColumnSet<C> = createColumnSet {
+    val receiver = createReceiver(it)
+    val columnSet = this(receiver, receiver)
+    columnSet.resolve(receiver, it.unresolvedColumnsPolicy)
+}
 
 @JvmName("toColumnSetForPivot")
 internal fun <T, C> PivotColumnsSelector<T, C>.toColumnSet(): ColumnSet<C> = toColumnSet {

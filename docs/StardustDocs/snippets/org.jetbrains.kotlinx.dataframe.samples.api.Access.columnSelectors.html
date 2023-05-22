@@ -382,7 +382,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { name.allDfs() }</summary>
+                        <summary>df.select { name.cols { !it.isColumnGroup() }.recursively() }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>

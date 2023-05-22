@@ -214,7 +214,7 @@ summary {
             
 
                         <details>
-                        <summary>df.select { allDfs().take(3) }</summary>
+                        <summary>df.select { cols { !it.isColumnGroup() }.recursively().take(3) }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
@@ -231,7 +231,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { allDfs().takeLast(3) }</summary>
+                        <summary>df.select { cols { !it.isColumnGroup() }.recursively().takeLast(3) }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
@@ -248,7 +248,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { allDfs().drop(3) }</summary>
+                        <summary>df.select { cols { !it.isColumnGroup() }.recursively().drop(3) }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
@@ -265,7 +265,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { allDfs().dropLast(3) }</summary>
+                        <summary>df.select { cols { !it.isColumnGroup() }.recursively().dropLast(3) }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
@@ -282,7 +282,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { allDfs().filter { it.name().startsWith(&quot;year&quot;) } }</summary>
+                        <summary>df.select { cols { !it.isColumnGroup() }.rec().filter { it.name().startsWith(&quot;year&quot;) } }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
@@ -299,7 +299,7 @@ summary {
                         </details>
                         <br>
                         <details>
-                        <summary>df.select { allDfs().except { age } }</summary>
+                        <summary>df.select { cols { !it.isColumnGroup() }.rec().except { age } }</summary>
                         
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>

@@ -42,28 +42,29 @@ public fun <T, C> DataFrame<T>.rename(cols: Iterable<ColumnReference<C>>): Renam
 
 public data class RenameClause<T, C>(val df: DataFrame<T>, val columns: ColumnsSelector<T, C>)
 
-public fun <T> DataFrame<T>.renameToCamelCase(): DataFrame<T> {
+public fun <T> DataFrame<T>.renameToCamelCase(): DataFrame<T> = this
     // recursively rename all column groups to camel case
-    return rename {
-        dfs { it.isColumnGroup() && it.name() matches DELIMITED_STRING_REGEX }
+    .rename {
+        groups { it.name() matches DELIMITED_STRING_REGEX }.recursively()
     }.toCamelCase()
-        // recursively rename all other columns to camel case
-        .rename {
-            dfs { !it.isColumnGroup() && it.name() matches DELIMITED_STRING_REGEX }
-        }.toCamelCase()
 
-        // take all frame columns recursively and call renameToCamelCase() on all dataframes inside
-        .update {
-            dfsOf<AnyFrame>()
-        }.with { it.renameToCamelCase() }
+    // recursively rename all other columns to camel case
+    .rename {
+        cols { !it.isColumnGroup() && it.name() matches DELIMITED_STRING_REGEX }.recursively()
+    }.toCamelCase()
 
-        // convert all first chars of all columns to the lowercase
-        .rename {
-            allDfs()
-        }.into {
-            it.name.replaceFirstChar { it.lowercaseChar() }
-        }
-}
+    // take all frame columns recursively and call renameToCamelCase() on all dataframes inside
+    .update {
+        colsOf<AnyFrame>().recursively()
+    }.with { it.renameToCamelCase() }
+
+    // convert all first chars of all columns to the lowercase
+    .rename {
+        cols { !it.isColumnGroup() }.recursively()
+    }.into {
+        it.name.replaceFirstChar { it.lowercaseChar() }
+    }
+
 
 public fun <T, C> RenameClause<T, C>.into(vararg newColumns: ColumnReference<*>): DataFrame<T> =
     into(*newColumns.map { it.name() }.toTypedArray())
