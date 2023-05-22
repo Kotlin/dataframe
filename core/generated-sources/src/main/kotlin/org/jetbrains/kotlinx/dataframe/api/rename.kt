@@ -60,7 +60,7 @@ public fun <T> DataFrame<T>.renameToCamelCase(): DataFrame<T> = this
 
     // convert all first chars of all columns to the lowercase
     .rename {
-        allDfs()
+        cols { !it.isColumnGroup() }.recursively()
     }.into {
         it.name.replaceFirstChar { it.lowercaseChar() }
     }
