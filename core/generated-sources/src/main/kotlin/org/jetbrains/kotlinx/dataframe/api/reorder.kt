@@ -39,12 +39,17 @@ public fun <T, C, V : Comparable<V>> Reorder<T, C>.byDesc(expression: ColumnExpr
     reorderImpl(true, expression)
 
 public fun <T, V : Comparable<V>> DataFrame<T>.reorderColumnsBy(
-    dfs: Boolean = true,
+    recursively: Boolean = true,
     desc: Boolean = false,
     expression: Selector<AnyCol, V>,
-): DataFrame<T> = Reorder(this, { if (dfs) allDfs(true) else all() }, dfs).reorderImpl(desc, expression)
+): DataFrame<T> =
+    Reorder(
+        df = this,
+        columns = { if (recursively) all().recursively() else all() },
+        inFrameColumns = recursively,
+    ).reorderImpl(desc, expression)
 
-public fun <T> DataFrame<T>.reorderColumnsByName(dfs: Boolean = true, desc: Boolean = false): DataFrame<T> =
-    reorderColumnsBy(dfs, desc) { name() }
+public fun <T> DataFrame<T>.reorderColumnsByName(recursively: Boolean = true, desc: Boolean = false): DataFrame<T> =
+    reorderColumnsBy(recursively, desc) { name() }
 
 // endregion

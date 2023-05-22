@@ -18,7 +18,7 @@ See [column selectors](ColumnSelectors.md) and [row expressions](DataRow.md#row-
 
 ```kotlin
 df.convert { age }.with { it.toDouble() }
-df.convert { dfsOf<String>() }.with { it.toCharArray().toList() }
+df.convert { colsOf<String>().recursively() }.with { it.toCharArray().toList() }
 ```
 
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convert.html"/>

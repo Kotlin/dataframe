@@ -222,7 +222,7 @@ internal fun DataFrame.Companion.readArrowIPCImpl(
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame {
     ArrowStreamReader(channel, allocator).use { reader ->
-        val dfs = buildList {
+        val flattened = buildList {
             val root = reader.vectorSchemaRoot
             val schema = root.schema
             while (reader.loadNextBatch()) {
@@ -230,7 +230,7 @@ internal fun DataFrame.Companion.readArrowIPCImpl(
                 add(df)
             }
         }
-        return dfs.concatKeepingSchema()
+        return flattened.concatKeepingSchema()
     }
 }
 
@@ -243,7 +243,7 @@ internal fun DataFrame.Companion.readArrowFeatherImpl(
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame {
     ArrowFileReader(channel, allocator).use { reader ->
-        val dfs = buildList {
+        val flattened = buildList {
             reader.recordBlocks.forEach { block ->
                 reader.loadRecordBatch(block)
                 val root = reader.vectorSchemaRoot
@@ -252,6 +252,6 @@ internal fun DataFrame.Companion.readArrowFeatherImpl(
                 add(df)
             }
         }
-        return dfs.concatKeepingSchema()
+        return flattened.concatKeepingSchema()
     }
 }

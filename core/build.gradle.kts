@@ -4,6 +4,7 @@ import io.github.devcrocod.korro.KorroTask
 import nl.jolanrensen.docProcessor.defaultProcessors.*
 import nl.jolanrensen.docProcessor.gradle.creatingProcessDocTask
 import org.gradle.jvm.tasks.Jar
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jmailen.gradle.kotlinter.tasks.LintTask
 import xyz.ronella.gradle.plugin.simple.git.task.GitTask
 
@@ -77,7 +78,7 @@ val samplesImplementation by configurations.getting {
     extendsFrom(configurations.testImplementation.get())
 }
 
-val compileSamplesKotlin = tasks.named<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>("compileSamplesKotlin") {
+val compileSamplesKotlin = tasks.named<KotlinCompile>("compileSamplesKotlin") {
     friendPaths.from(sourceSets["main"].output.classesDirs)
     source(sourceSets["test"].kotlin)
     destinationDirectory.set(file("$buildDir/classes/testWithOutputs/kotlin"))
@@ -106,6 +107,7 @@ val samplesTest = tasks.register<Test>("samplesTest") {
 
     dependsOn(compileSamplesKotlin)
     dependsOn(clearTestResults)
+    outputs.upToDateWhen { false }
 
     environment("DATAFRAME_SAVE_OUTPUTS", "")
 
@@ -129,6 +131,12 @@ val clearSamplesOutputs by tasks.creating {
     }
 }
 
+val addSamplesToGit by tasks.creating(GitTask::class) {
+    directory.set(file("."))
+    command.set("add")
+    args.set(listOf("-A", "../docs/StardustDocs/snippets"))
+}
+
 val copySamplesOutputs = tasks.register<JavaExec>("copySamplesOutputs") {
     group = "documentation"
     mainClass.set("org.jetbrains.kotlinx.dataframe.explainer.SampleAggregatorKt")
@@ -136,6 +144,10 @@ val copySamplesOutputs = tasks.register<JavaExec>("copySamplesOutputs") {
     dependsOn(clearSamplesOutputs)
     dependsOn(samplesTest)
     classpath = sourceSets.test.get().runtimeClasspath
+
+    doLast {
+        addSamplesToGit.executeCommand()
+    }
 }
 
 tasks.withType<KorroTask> {
@@ -307,7 +319,7 @@ tasks.withType<JavaCompile> {
     targetCompatibility = JavaVersion.VERSION_1_8.toString()
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = freeCompilerArgs + listOf("-Xinline-classes", "-Xopt-in=kotlin.RequiresOptIn")
     }

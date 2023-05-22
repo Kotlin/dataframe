@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
@@ -15,6 +17,8 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToImpl
+import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import kotlin.reflect.typeOf
 
 public fun <T> AnyFrame.cast(): DataFrame<T> = this as DataFrame<T>
@@ -44,6 +48,10 @@ public fun <T> ColumnAccessor<*>.cast(): ColumnAccessor<T> = this as ColumnAcces
 
 public fun <C> ColumnSet<*>.cast(): ColumnSet<C> = this as ColumnSet<C>
 
+public fun <C> TransformableColumnSet<*>.cast(): TransformableColumnSet<C> = this as TransformableColumnSet<C>
+
 public fun <C> ColumnReference<*>.cast(): ColumnReference<C> = this as ColumnReference<C>
 
 public fun <C> SingleColumn<*>.cast(): SingleColumn<C> = this as SingleColumn<C>
+
+public fun <C> TransformableSingleColumn<*>.cast(): TransformableSingleColumn<C> = this as TransformableSingleColumn<C>

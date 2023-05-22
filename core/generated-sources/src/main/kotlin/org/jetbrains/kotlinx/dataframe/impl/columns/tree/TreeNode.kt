@@ -6,7 +6,7 @@ internal class TreeNode<T>(
     override val name: String,
     override val depth: Int,
     override var data: T,
-    override val parent: TreeNode<T>? = null
+    override val parent: TreeNode<T>? = null,
 ) : ReadonlyTreeNode<T> {
 
     companion object {
@@ -28,7 +28,7 @@ internal class TreeNode<T>(
     fun pathFromRoot(): ColumnPath {
         val path = mutableListOf<String>()
         var node: TreeNode<T>? = this
-        while (node != null && node.parent != null) {
+        while (node?.parent != null) {
             path.add(node.name)
             node = node.parent
         }
@@ -48,19 +48,34 @@ internal class TreeNode<T>(
         return addChild(childName, createData())
     }
 
-    fun dfs(enterCondition: (TreeNode<T>) -> Boolean = { true }, yieldCondition: (TreeNode<T>) -> Boolean = { true }): List<TreeNode<T>> {
+    @Deprecated("Use allChildren instead", ReplaceWith("allChildren(enterCondition, yieldCondition)"))
+    fun dfs(
+        enterCondition: (TreeNode<T>) -> Boolean = { true },
+        yieldCondition: (TreeNode<T>) -> Boolean = { true },
+    ): List<TreeNode<T>> = allChildren(enterCondition, yieldCondition)
+
+    /**
+     * Traverses the tree in depth-first order and returns all nodes that satisfy [yieldCondition].
+     * If [enterCondition] returns false for a node, its children are not traversed.
+     * By default, all nodes are traversed and all nodes are returned.
+     */
+    fun allChildren(
+        enterCondition: (TreeNode<T>) -> Boolean = { true },
+        yieldCondition: (TreeNode<T>) -> Boolean = { true },
+    ): List<TreeNode<T>> {
         val result = mutableListOf<TreeNode<T>>()
-        fun doDfs(node: TreeNode<T>) {
+
+        fun traverse(node: TreeNode<T>) {
             if (yieldCondition(node)) {
                 result.add(node)
             }
             if (enterCondition(node)) {
                 node.children.forEach {
-                    doDfs(it)
+                    traverse(it)
                 }
             }
         }
-        doDfs(this)
+        traverse(this)
         return result
     }
 }

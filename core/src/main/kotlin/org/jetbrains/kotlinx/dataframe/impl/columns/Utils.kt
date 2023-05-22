@@ -9,27 +9,12 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.pathOf
-import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
-import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
-import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
-import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
-import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
-import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
-import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.columns.*
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.asNullable
 import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingDataColumn
-import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
-import org.jetbrains.kotlinx.dataframe.impl.columns.tree.TreeNode
-import org.jetbrains.kotlinx.dataframe.impl.columns.tree.collectTree
-import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getOrPut
-import org.jetbrains.kotlinx.dataframe.impl.columns.tree.put
-import org.jetbrains.kotlinx.dataframe.impl.columns.tree.topDfs
+import org.jetbrains.kotlinx.dataframe.impl.columns.tree.*
 import org.jetbrains.kotlinx.dataframe.impl.equalsByElement
 import org.jetbrains.kotlinx.dataframe.impl.rollingHash
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -93,34 +78,108 @@ internal fun <T> DataColumn<T>.assertIsComparable(): DataColumn<T> {
     return this
 }
 
-internal fun <A, B> SingleColumn<A>.transformSingle(converter: (ColumnWithPath<A>) -> List<ColumnWithPath<B>>): ColumnSet<B> =
-    object : ColumnSet<B> {
-        override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<B>> =
-            this@transformSingle.resolveSingle(context)?.let { converter(it) } ?: emptyList()
-    }
+/**
+ * Applies a transformation on [this] [SingleColumn] by converting its
+ * single [ColumnWithPath]<[A]> to [List]<[ColumnWithPath]<[B]>] using [converter].
+ * Since [converter] allows you to return multiple columns, the result is turned into a [ColumnSet]<[B]>.
+ */
+internal fun <A, B> SingleColumn<A>.transformSingle(
+    converter: (ColumnWithPath<A>) -> List<ColumnWithPath<B>>,
+): ColumnSet<B> = object : ColumnSet<B> {
+    override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<B>> =
+        this@transformSingle
+            .resolveSingle(context)
+            ?.let(converter)
+            ?: emptyList()
+}
 
-internal fun <A, B> ColumnSet<A>.transform(converter: (List<ColumnWithPath<A>>) -> List<ColumnWithPath<B>>): ColumnSet<B> =
-    object : ColumnSet<B> {
-        override fun resolve(context: ColumnResolutionContext) = converter(this@transform.resolve(context))
-    }
+/**
+ * Applies a transformation on [this] by converting its [List]<[ColumnWithPath]<[A]>] to [List]<[ColumnWithPath]<[B]>]
+ * using [converter].
+ *
+ * The result can either be used as a normal [ColumnSet]<[B]>,
+ * which resolves [this] and then applies [converter] on the result,
+ *
+ * or it can be used as a [TransformableColumnSet]<[B]>, where a [ColumnSetTransformer] can be injected before
+ * the [converter] is applied.
+ */
+internal fun <A, B> ColumnSet<A>.transform(
+    converter: (List<ColumnWithPath<A>>) -> List<ColumnWithPath<B>>,
+): TransformableColumnSet<B> = object : TransformableColumnSet<B> {
+    override fun resolve(context: ColumnResolutionContext) =
+        this@transform
+            .resolve(context)
+            .let(converter)
 
+    override fun transformResolve(
+        context: ColumnResolutionContext,
+        transformer: ColumnSetTransformer,
+    ): List<ColumnWithPath<B>> =
+        transformer.transform(this@transform)
+            .resolve(context)
+            .let { converter(it as List<ColumnWithPath<A>>) }
+}
+
+/**
+ * Applies a transformation on [this] by converting its [List]<[ColumnWithPath]<[A]>] to [List]<[ColumnWithPath]<[B]>]
+ * using [converter], but also providing the [ColumnResolutionContext] to the converter.
+ *
+ * The result can either be used as a normal [ColumnSet]<[B]>,
+ * which resolves [this] and then applies [converter] on the result,
+ *
+ * or it can be used as a [TransformableColumnSet]<[B]>, where a [ColumnSetTransformer] can be injected before
+ * the [converter] is applied.
+ */
 internal fun <A, B> ColumnSet<A>.transformWithContext(
     converter: ColumnResolutionContext.(List<ColumnWithPath<A>>) -> List<ColumnWithPath<B>>,
-): ColumnSet<B> = object : ColumnSet<B> {
+): TransformableColumnSet<B> = object : TransformableColumnSet<B> {
     override fun resolve(context: ColumnResolutionContext) =
-        converter(context, this@transformWithContext.resolve(context))
+        this@transformWithContext
+            .resolve(context)
+            .let { converter(context, it) }
+
+    override fun transformResolve(
+        context: ColumnResolutionContext,
+        transformer: ColumnSetTransformer,
+    ): List<ColumnWithPath<B>> =
+        transformer.transform(this@transformWithContext)
+            .resolve(context)
+            .let { converter(context, it as List<ColumnWithPath<A>>) }
 }
 
-internal fun <T> ColumnSet<T>.singleImpl() = object : SingleColumn<T> {
-    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? {
-        return this@singleImpl.resolve(context).singleOrNull()
-    }
+/**
+ * Converts [this] [ColumnSet] to a [SingleColumn].
+ * [resolveSingle] will return the single column of [this] if there is only one, else it will return `null`.
+ * If the result used as a [ColumnSet], `null` will be converted to an empty list.
+ */
+internal fun <T> ColumnSet<T>.singleImpl(): SingleColumn<T> = object : SingleColumn<T> {
+    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? =
+        this@singleImpl.resolve(context).singleOrNull()
 }
 
-internal fun <T> ColumnSet<T>.getAt(index: Int) = object : SingleColumn<T> {
-    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? {
-        return this@getAt.resolve(context).getOrNull(index)
+/**
+ * Same as [singleImpl], however, it passes any [ColumnSetTransformer] back to [this] if it is supplied.
+ */
+internal fun <T> TransformableColumnSet<T>.singleWithTransformerImpl(): TransformableSingleColumn<T> =
+    object : TransformableSingleColumn<T> {
+        override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? =
+            this@singleWithTransformerImpl.resolve(context).singleOrNull()
+
+        override fun transformResolveSingle(
+            context: ColumnResolutionContext,
+            transformer: ColumnSetTransformer,
+        ): ColumnWithPath<T>? =
+            this@singleWithTransformerImpl.transformResolve(
+                context = context,
+                transformer = transformer,
+            ).singleOrNull()
     }
+
+internal fun <T> ColumnSet<T>.getAt(index: Int): SingleColumn<T> = object : SingleColumn<T> {
+    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? =
+        this@getAt
+            .resolve(context)
+            .getOrNull(index)
 }
 
 internal fun <T> ColumnSet<T>.getChildrenAt(index: Int): ColumnSet<Any?> =
@@ -146,10 +205,16 @@ internal fun <C> ColumnsContainer<*>.getColumn(path: ColumnPath, policy: Unresol
             UnresolvedColumnsPolicy.Create -> DataColumn.empty().cast<C>()
         }
 
-internal fun <T> List<ColumnWithPath<T>>.top(): List<ColumnWithPath<T>> {
-    val root = TreeNode.createRoot<ColumnWithPath<T>?>(null)
-    forEach { root.put(it.path, it) }
-    return root.topDfs { it.data != null }.map { it.data!! }
+/**
+ * Returns a sub-list of columns that are roots of the trees of columns.
+ *
+ * In practice, this means that if a column in [this] is a child of another column in [this],
+ * it will not be included in the result.
+ */
+internal fun <T> List<ColumnWithPath<T>>.roots(): List<ColumnWithPath<T>> {
+    val emptyRoot = TreeNode.createRoot<ColumnWithPath<T>?>(data = null)
+    this.forEach { emptyRoot.put(it.path, it) }
+    return emptyRoot.topmostChildren { it.data != null }.map { it.data!! }
 }
 
 internal fun List<ColumnWithPath<*>>.allColumnsExcept(columns: Iterable<ColumnWithPath<*>>): List<ColumnWithPath<*>> {
@@ -157,14 +222,14 @@ internal fun List<ColumnWithPath<*>>.allColumnsExcept(columns: Iterable<ColumnWi
     val fullTree = collectTree()
     columns.forEach {
         var node = fullTree.getOrPut(it.path).asNullable()
-        node?.dfs()?.forEach { it.data = null }
+        node?.allChildren()?.forEach { it.data = null }
         while (node != null) {
             node.data = null
             node = node.parent
         }
     }
-    val dfs = fullTree.topDfs { it.data != null }
-    return dfs.map { it.data!!.addPath(it.pathFromRoot()) }
+    val subtrees = fullTree.topmostChildren { it.data != null }
+    return subtrees.map { it.data!!.addPath(it.pathFromRoot()) }
 }
 
 internal fun KType.toColumnKind(): ColumnKind = jvmErasure.let {
@@ -177,13 +242,13 @@ internal fun KType.toColumnKind(): ColumnKind = jvmErasure.let {
 
 internal fun <C> ColumnSet<C>.resolve(
     df: DataFrame<*>,
-    unresolvedColumnsPolicy: UnresolvedColumnsPolicy = UnresolvedColumnsPolicy.Fail
+    unresolvedColumnsPolicy: UnresolvedColumnsPolicy = UnresolvedColumnsPolicy.Fail,
 ) =
     resolve(ColumnResolutionContext(df, unresolvedColumnsPolicy))
 
 internal fun <C> SingleColumn<C>.resolveSingle(
     df: DataFrame<*>,
-    unresolvedColumnsPolicy: UnresolvedColumnsPolicy = UnresolvedColumnsPolicy.Fail
+    unresolvedColumnsPolicy: UnresolvedColumnsPolicy = UnresolvedColumnsPolicy.Fail,
 ): ColumnWithPath<C>? =
     resolveSingle(ColumnResolutionContext(df, unresolvedColumnsPolicy))
 

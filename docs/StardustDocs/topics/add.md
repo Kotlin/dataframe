@@ -212,13 +212,13 @@ df + score
 
 ## Add all columns from another [`DataFrame`](DataFrame.md)
 
-<!---FUN addDfs-->
+<!---FUN addDataFrames-->
 
 ```kotlin
 df.add(df1, df2)
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addDfs.html"/>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addDataFrames.html"/>
 <!---END-->
 
 ## addId
