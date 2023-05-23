@@ -21,7 +21,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.*
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.flattenRecursively
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
-import org.jetbrains.kotlinx.dataframe.path
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -296,7 +295,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [last]
      */
-    public fun SingleColumn<*>.first(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun SingleColumn<DataRow<*>>.first(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         (ensureIsColGroup() as ColumnSet<DataRow<*>>).first(condition)
 
     /**
@@ -5726,33 +5725,127 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region select
 
+    /**
+     * ## Select from [ColumnGroup]
+     *
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] on
+     * any [ColumnGroup]. This is more powerful than [SingleColumn.cols], because all operations of
+     * the DSL are at your disposal.
+     *
+     * This function comes in the form of [select][SingleColumn.select] and [selectUntyped][SingleColumn.selectUntyped].
+     * [select][SingleColumn.select] is preferred, because it is type-safe, but it's not always possible to use it if
+     * you don't know/have the type of the [ColumnGroup] you want to select from.
+     *
+     * #### For example:
+     *
+     * `df.`[select][DataFrame.select]` { myColGroup.`[select][SingleColumn.select]` { someCol `[and][SingleColumn.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[selectUntyped][SingleColumn.selectUntyped]` { "colA" and "colB" } }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [CommonSelectDocs.ExampleArg]}
+     *
+     * @param [selector\] The [ColumnsSelector] to use for the selection.
+     * @receiver The [ColumnGroup] to select from.
+     * @throws [IllegalArgumentException\] If [this\] is not a [ColumnGroup].
+     * @return A [ColumnSet] containing the columns selected by [selector\].
+     */
+    private interface CommonSelectDocs {
+
+        interface ExampleArg
+    }
+
+    /**
+     * ## Select from [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     *
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] on
+     * any [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]. This is more powerful than [SingleColumn.cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols], because all operations of
+     * the DSL are at your disposal.
+     *
+     * This function comes in the form of [select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select] and [selectUntyped][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.selectUntyped].
+     * [select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select] is preferred, because it is type-safe, but it's not always possible to use it if
+     * you don't know/have the type of the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] you want to select from.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` { someCol `[and][SingleColumn.and]` `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[selectUntyped][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.selectUntyped]` { "colA" and "colB" } }`
+     *
+     * #### Examples for this overload:
+     *
+     * TODO
+     *
+     * @param [selector] The [ColumnsSelector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] to use for the selection.
+     * @receiver The [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
+     * @throws [IllegalArgumentException] If [this] is not a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
+     */
     public fun <C, R> SingleColumn<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         selectUntyped(selector as ColumnsSelector<*, R>)
 
-    // TODO
-    public fun <R> SingleColumn<*>.selectUntyped(selector: ColumnsSelector<*, R>): ColumnSet<R> {
-        ensureIsColGroup()
-        return createColumnSet {
-            this@selectUntyped.resolveSingle(it)?.let { col ->
-                require(col.isColumnGroup()) {
-                    "Column ${col.path} is not a ColumnGroup and can thus not be selected from."
-                }
+    public fun <R> SingleColumn<*>.selectUntyped(selector: ColumnsSelector<*, R>): ColumnSet<R> =
+        ensureIsColGroup().let { singleColumn ->
+            createColumnSet {
+                singleColumn.resolveSingle(it)?.let { col ->
+                    require(col.isColumnGroup()) {
+                        "Column ${col.path} is not a ColumnGroup and can thus not be selected from."
+                    }
 
-                col.asColumnGroup().getColumnsWithPaths(selector).map {
-                    it.changePath(col.path + it.path)
-                }
-            } ?: emptyList()
+                    col.asColumnGroup().getColumnsWithPaths(selector).map {
+                        it.changePath(col.path + it.path)
+                    }
+                } ?: emptyList()
+            }
         }
-    }
 
-//    public fun <C> SingleColumn<DataRow<C>>.select(vararg columns: String): ColumnSet<*> =
-//        select { columns.toColumnSet() }
-//
-//    public fun <C, R> SingleColumn<DataRow<C>>.select(vararg columns: ColumnReference<R>): ColumnSet<R> =
-//        select { columns.toColumnSet() }
-//
-//    public fun <C, R> SingleColumn<DataRow<C>>.select(vararg columns: KProperty<R>): ColumnSet<R> =
-//        select { columns.toColumnSet() }
+    public fun <C, R> KProperty<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> =
+        colGroup(this).selectUntyped(selector as ColumnsSelector<*, R>)
+
+//    @Deprecated(
+//        message = "While you can use selectUntyped, the typed select is preferred for better type safety.",
+//        replaceWith = ReplaceWith("colGroup<MyType>(this).select(selector)"),
+//        level = DeprecationLevel.WARNING,
+//    )
+    public fun <R> KProperty<*>.selectUntyped(selector: ColumnsSelector<*, R>): ColumnSet<R> =
+        colGroup(this).selectUntyped(selector)
+
+//    @Deprecated(
+//        message = "While you can use selectUntyped, the typed select is preferred for better type safety.",
+//        replaceWith = ReplaceWith("colGroup<MyType>(this).select(selector)"),
+//        level = DeprecationLevel.WARNING,
+//    )
+    public fun <R> String.select(selector: ColumnsSelector<*, R>): ColumnSet<R> =
+        colGroup(this).selectUntyped(selector)
+
+
+    @Deprecated(
+        message = "Nested select is reserved for ColumnsSelector/ColumnsSelectionDsl behavior. " +
+            "Use myGroup.cols(\"col1\", \"col2\") to select columns by name from a ColumnGroup.",
+        replaceWith = ReplaceWith("this.cols(*columns)"),
+        level = DeprecationLevel.ERROR,
+    )
+    public fun SingleColumn<*>.select(vararg columns: String): ColumnSet<*> =
+        select { columns.toColumnSet() }
+
+    @Deprecated(
+        message = "Nested select is reserved for ColumnsSelector/ColumnsSelectionDsl behavior. " +
+            "Use myGroup.cols(col1, col2) to select columns by name from a ColumnGroup.",
+        replaceWith = ReplaceWith("this.cols(*columns)"),
+        level = DeprecationLevel.ERROR,
+    )
+    public fun <R> SingleColumn<*>.select(vararg columns: ColumnReference<R>): ColumnSet<R> =
+        select { columns.toColumnSet() }
+
+    @Deprecated(
+        message = "Nested select is reserved for ColumnsSelector/ColumnsSelectionDsl behavior. " +
+            "Use myGroup.cols(Type::col1, Type::col2) to select columns by name from a ColumnGroup.",
+        replaceWith = ReplaceWith("this.cols(*columns)"),
+        level = DeprecationLevel.ERROR,
+    )
+    public fun <R> SingleColumn<*>.select(vararg columns: KProperty<R>): ColumnSet<R> =
+        select { columns.toColumnSet() }
 
     // endregion
 
@@ -10620,14 +10713,18 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // same as cols
     public fun SingleColumn<*>.children(predicate: ColumnFilter<Any?> = { true }): TransformableColumnSet<*> =
-        (this as ColumnSet<*>).children(predicate)
+        (ensureIsColGroup() as ColumnSet<*>).children(predicate)
 
     // endregion
 
-    public fun SingleColumn<*>.take(n: Int): ColumnSet<*> = transformSingle { it.children().take(n) }
-    public fun SingleColumn<*>.takeLast(n: Int): ColumnSet<*> = transformSingle { it.children().takeLast(n) }
-    public fun SingleColumn<*>.drop(n: Int): ColumnSet<*> = transformSingle { it.children().drop(n) }
-    public fun SingleColumn<*>.dropLast(n: Int = 1): ColumnSet<*> = transformSingle { it.children().dropLast(n) }
+    public fun SingleColumn<*>.take(n: Int): ColumnSet<*> =
+        ensureIsColGroup().transformSingle { it.children().take(n) }
+    public fun SingleColumn<*>.takeLast(n: Int): ColumnSet<*> =
+        ensureIsColGroup().transformSingle { it.children().takeLast(n) }
+    public fun SingleColumn<*>.drop(n: Int): ColumnSet<*> =
+        ensureIsColGroup().transformSingle { it.children().drop(n) }
+    public fun SingleColumn<*>.dropLast(n: Int = 1): ColumnSet<*> =
+        ensureIsColGroup().transformSingle { it.children().dropLast(n) }
 
     public fun <C> ColumnSet<C>.drop(n: Int): ColumnSet<C> = transform { it.drop(n) }
     public fun <C> ColumnSet<C>.take(n: Int): ColumnSet<C> = transform { it.take(n) }
@@ -10661,44 +10758,61 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a single [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] it will run on the children of that group,
      * else it simply runs on the columns in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
      */
-    public fun SingleColumn<*>.roots(): ColumnSet<*> = rootsInternal()
+    public fun SingleColumn<*>.roots(): ColumnSet<*> = ensureIsColGroup().rootsInternal()
 
     public fun <C> ColumnSet<C>.takeWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
         transform { it.takeWhile(predicate) }
 
+    public fun SingleColumn<*>.takeWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        ensureIsColGroup().transformSingle { it.children().takeWhile(predicate) }
+
     public fun <C> ColumnSet<C>.takeLastWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
         transform { it.takeLastWhile(predicate) }
 
+    public fun SingleColumn<*>.takeLastWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        ensureIsColGroup().transformSingle { it.children().takeLastWhile(predicate) }
+
+    @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.filter(predicate: ColumnFilter<C>): TransformableColumnSet<C> =
         colsInternal(predicate as ColumnFilter<*>) as TransformableColumnSet<C>
 
+    public fun SingleColumn<*>.filter(predicate: ColumnFilter<*>): TransformableColumnSet<*> =
+        ensureIsColGroup().colsInternal(predicate)
+
     public fun SingleColumn<*>.nameContains(text: CharSequence): TransformableColumnSet<*> =
-        cols { it.name.contains(text) }
+        ensureIsColGroup().colsInternal { it.name.contains(text) }
 
+    @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.nameContains(text: CharSequence): TransformableColumnSet<C> =
-        cols { it.name.contains(text) }
+        colsInternal { it.name.contains(text) } as TransformableColumnSet<C>
 
-    public fun SingleColumn<*>.nameContains(regex: Regex): TransformableColumnSet<*> = cols { it.name.contains(regex) }
+    public fun SingleColumn<*>.nameContains(regex: Regex): TransformableColumnSet<*> =
+        ensureIsColGroup().colsInternal { it.name.contains(regex) }
 
-    public fun <C> ColumnSet<C>.nameContains(regex: Regex): TransformableColumnSet<C> = cols { it.name.contains(regex) }
+    @Suppress("UNCHECKED_CAST")
+    public fun <C> ColumnSet<C>.nameContains(regex: Regex): TransformableColumnSet<C> =
+        colsInternal { it.name.contains(regex) } as TransformableColumnSet<C>
 
     public fun SingleColumn<*>.startsWith(prefix: CharSequence): TransformableColumnSet<*> =
-        cols { it.name.startsWith(prefix) }
+        ensureIsColGroup().colsInternal { it.name.startsWith(prefix) }
 
+    @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.startsWith(prefix: CharSequence): TransformableColumnSet<C> =
-        cols { it.name.startsWith(prefix) }
+        colsInternal { it.name.startsWith(prefix) } as TransformableColumnSet<C>
 
     public fun SingleColumn<*>.endsWith(suffix: CharSequence): TransformableColumnSet<*> =
-        cols { it.name.endsWith(suffix) }
+        ensureIsColGroup().colsInternal { it.name.endsWith(suffix) }
 
+    @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.endsWith(suffix: CharSequence): TransformableColumnSet<C> =
-        cols { it.name.endsWith(suffix) }
+        colsInternal { it.name.endsWith(suffix) } as TransformableColumnSet<C>
 
     public fun <C> ColumnSet<C>.except(vararg other: ColumnSet<*>): TransformableColumnSet<*> =
         except(other.toColumnSet())
 
     public fun <C> ColumnSet<C>.except(vararg other: String): TransformableColumnSet<*> = except(other.toColumnSet())
 
+    @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C?>.withoutNulls(): TransformableColumnSet<C> =
         transform { it.filter { !it.hasNulls() } } as TransformableColumnSet<C>
 

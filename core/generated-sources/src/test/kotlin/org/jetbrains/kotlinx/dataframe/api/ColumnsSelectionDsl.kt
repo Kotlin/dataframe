@@ -5,10 +5,12 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value
+import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.samples.api.*
 import org.junit.Test
 import kotlin.reflect.typeOf
@@ -29,6 +31,8 @@ open class ColumnsSelectionDslTests : TestBase() {
         df.select { name.first() }.alsoDebug()
         df.select { first() }.alsoDebug()
 
+        df.select { it["name"].first() }.alsoDebug()
+        df.select { age.first() }.alsoDebug()
 
         listOf(
             df.select { name },
@@ -461,6 +465,7 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select {
                 name.select {
                     cols(this@select.firstName, this@select.lastName)
+                    cols(firstName, lastName)
                 }
             },
 
@@ -686,4 +691,68 @@ open class ColumnsSelectionDslTests : TestBase() {
         df.select { cols(name.firstName, name.lastName, age, name).roots() } shouldBe
             df.select { cols(name, age) }
     }
+
+    @Test
+    fun `select and selectUntyped`() {
+        listOf(
+            df.select {
+                name.firstName and name.lastName
+            },
+
+            df.select {
+                name.select {
+                    firstName and lastName
+                }
+            },
+
+            df.select {
+                "name".select {
+                    colsOf<String>()
+                }
+            },
+
+            df.select {
+                "name".select {
+                    "firstName" and "lastName"
+                }
+            },
+
+            df.select {
+                it["name"].selectUntyped {
+                    colsOf<String>()
+                }
+            },
+            df.select {
+                it["name"].asColumnGroup().select {
+                    colsOf<String>()
+                }
+            },
+
+            df.select {
+                Person::name.select {
+                    firstName and lastName
+                }
+            },
+
+            df.select {
+                "name"<DataRow<Name>>().select {
+                    colsOf<String>()
+                }
+            },
+
+            df.select {
+                colGroup<Name>("name").select {
+                    colsOf<String>()
+                }
+            },
+        ).shouldAllBeEqual()
+
+
+        df.update {
+            "name".select { colsOf<String>() }
+        }.with {
+            "new"
+        }
+    }
+
 }
