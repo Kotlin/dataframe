@@ -1206,7 +1206,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `merge cols with conversion`() {
         val pivoted = typed.groupBy { name }.pivot { city }.count()
-        val res = pivoted.merge { city.colsOf<Int>() }.by { it.filterNotNull().sum() }.into("cities")
+        val res = pivoted.merge { city.asColumnGroup().colsOf<Int>() }.by { it.filterNotNull().sum() }.into("cities")
         val expected = typed.select { name and city }.groupBy { name }.count("cities")
         res shouldBe expected
     }

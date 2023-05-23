@@ -47,21 +47,27 @@ internal fun <C> TransformableSingleColumn<C>.recursivelyImpl(
 
 /**
  * ## Recursively transformer.
- * A [ColumnSetTransformer] implementation around the [ColumnSet.flattenRecursively] function.
+ * A [ColumnsResolverTransformer] implementation around the [ColumnsResolver.flattenRecursively] function.
  * Created only using [recursivelyImpl].
  */
 private class RecursivelyTransformer(
     val includeGroups: Boolean = true,
     val includeTopLevel: Boolean = true,
-) : ColumnSetTransformer {
+) : ColumnsResolverTransformer {
 
-    override fun transform(columnSet: ColumnSet<*>): ColumnSet<*> =
+    override fun transform(columnsResolver: ColumnsResolver<*>): ColumnsResolver<*> =
+        columnsResolver.flattenRecursively(
+            includeGroups = includeGroups,
+            includeTopLevel = includeTopLevel,
+        )
+
+    override fun transformSet(columnSet: ColumnSet<*>): ColumnsResolver<*> =
         columnSet.flattenRecursively(
             includeGroups = includeGroups,
             includeTopLevel = includeTopLevel,
         )
 
-    override fun transformSingle(singleColumn: SingleColumn<*>): ColumnSet<*> =
+    override fun transformSingle(singleColumn: SingleColumn<*>): ColumnsResolver<*> =
         singleColumn.flattenRecursively(
             includeGroups = includeGroups,
             includeTopLevel = includeTopLevel,
@@ -69,19 +75,19 @@ private class RecursivelyTransformer(
 }
 
 /**
- * Flattens a [ColumnSet]/[SingleColumn] recursively.
+ * Flattens a [ColumnsResolver]/[SingleColumn] recursively.
  *
  * If [this] is a [SingleColumn] containing a single [ColumnGroup], the "top-level" is
- * considered to be the [ColumnGroup]'s children, otherwise, if this is a [ColumnSet],
- * the "top-level" is considered to be the columns in the [ColumnSet].
+ * considered to be the [ColumnGroup]'s children, otherwise, if this is a [ColumnsResolver],
+ * the "top-level" is considered to be the columns in the [ColumnsResolver].
  *
  * @param includeGroups Whether to include [ColumnGroup]s in the result.
  * @param includeTopLevel Whether to include the "top-level" columns in the result.
  */
-internal fun ColumnSet<*>.flattenRecursively(
+internal fun ColumnsResolver<*>.flattenRecursively(
     includeGroups: Boolean = true,
     includeTopLevel: Boolean = true,
-): ColumnSet<*> = allColumnsInternal().transform { cols ->
+): ColumnsResolver<*> = allColumnsInternal().transform { cols ->
     if (includeTopLevel) {
         cols.flattenRecursively()
     } else {

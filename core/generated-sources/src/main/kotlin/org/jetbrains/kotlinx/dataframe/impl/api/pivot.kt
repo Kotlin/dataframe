@@ -28,7 +28,7 @@ internal data class PivotChainElement(val column: ColumnWithPath<Any?>, val incl
 internal class PivotChain<C>(val columns: List<PivotChainElement>, lastColumn: ColumnWithPath<C>) :
     ColumnWithPath<C> by lastColumn
 
-internal class PivotChainColumnSet<C>(val first: ColumnSet<C>, val second: ColumnSet<C>) : ColumnSet<C> {
+internal class PivotChainColumnSet<C>(val first: ColumnsResolver<C>, val second: ColumnsResolver<C>) : ColumnSet<C> {
 
     override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> {
         val firstCols = first.resolve(context)

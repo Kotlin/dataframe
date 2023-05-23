@@ -7,6 +7,8 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
+import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
@@ -23,22 +25,26 @@ import kotlin.reflect.KProperty
 
 public interface SortDsl<out T> : ColumnsSelectionDsl<T> {
     public fun <C> ColumnSet<C>.desc(): ColumnSet<C> = addFlag(SortFlag.Reversed)
+    public fun <C> SingleColumn<C>.desc(): SingleColumn<C> = addFlag(SortFlag.Reversed).single()
 
-    public fun String.desc(): ColumnSet<Comparable<*>?> = invoke<Comparable<*>>().desc()
+    public fun String.desc(): SingleColumn<Comparable<*>?> = invoke<Comparable<*>>().desc()
 
-    public fun <C> KProperty<C>.desc(): ColumnSet<C> = toColumnAccessor().desc()
+    public fun <C> KProperty<C>.desc(): SingleColumn<C> = toColumnAccessor().desc()
 
     public fun <C> ColumnSet<C?>.nullsLast(flag: Boolean = true): ColumnSet<C?> =
         if (flag) addFlag(SortFlag.NullsLast) else this
 
-    public fun String.nullsLast(flag: Boolean = true): ColumnSet<Comparable<*>?> =
+    public fun <C> SingleColumn<C?>.nullsLast(flag: Boolean = true): SingleColumn<C?> =
+        if (flag) addFlag(SortFlag.NullsLast).single() else this
+
+    public fun String.nullsLast(flag: Boolean = true): SingleColumn<Comparable<*>?> =
         invoke<Comparable<*>>().nullsLast(flag)
 
-    public fun <C> KProperty<C?>.nullsLast(flag: Boolean = true): ColumnSet<C?> = toColumnAccessor().nullsLast(flag)
+    public fun <C> KProperty<C?>.nullsLast(flag: Boolean = true): SingleColumn<C?> = toColumnAccessor().nullsLast(flag)
 }
 
 /**
- * [SortColumnsSelector] is used to express or select multiple columns to sort by, represented by [ColumnSet]`<C>`,
+ * [SortColumnsSelector] is used to express or select multiple columns to sort by, represented by [ColumnsResolver]`<C>`,
  * using the context of [SortDsl]`<T>` as `this` and `it`.
  *
  * So:
@@ -46,7 +52,7 @@ public interface SortDsl<out T> : ColumnsSelectionDsl<T> {
  * SortDsl<T>.(it: SortDsl<T>) -> ColumnSet<C>
  * ```
  */
-public typealias SortColumnsSelector<T, C> = Selector<SortDsl<T>, ColumnSet<C>>
+public typealias SortColumnsSelector<T, C> = Selector<SortDsl<T>, ColumnsResolver<C>>
 
 // region DataColumn
 

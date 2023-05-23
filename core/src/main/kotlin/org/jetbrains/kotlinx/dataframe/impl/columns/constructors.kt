@@ -152,13 +152,13 @@ internal fun <C> createColumnSet(
 
 internal fun <C> createTransformableColumnSet(
     resolver: (context: ColumnResolutionContext) -> List<ColumnWithPath<C>>,
-    transformResolve: (context: ColumnResolutionContext, transformer: ColumnSetTransformer) -> List<ColumnWithPath<C>>,
+    transformResolve: (context: ColumnResolutionContext, transformer: ColumnsResolverTransformer) -> List<ColumnWithPath<C>>,
 ): TransformableColumnSet<C> = object : TransformableColumnSet<C> {
     override fun resolve(context: ColumnResolutionContext) = resolver(context)
 
     override fun transformResolve(
         context: ColumnResolutionContext,
-        transformer: ColumnSetTransformer,
+        transformer: ColumnsResolverTransformer,
     ): List<ColumnWithPath<C>> = transformResolve(context, transformer)
 }
 
@@ -166,7 +166,7 @@ internal fun <C> createTransformableColumnSet(
 
 // region DSL
 
-internal fun <TD, T : DataFrame<TD>, C> Selector<T, ColumnSet<C>>.toColumnSet(
+internal fun <TD, T : DataFrame<TD>, C> Selector<T, ColumnsResolver<C>>.toColumnSet(
     createReceiver: (ColumnResolutionContext) -> T,
 ): ColumnSet<C> = createColumnSet {
     val receiver = createReceiver(it)

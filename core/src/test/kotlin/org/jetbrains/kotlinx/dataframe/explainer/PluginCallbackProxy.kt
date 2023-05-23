@@ -25,7 +25,7 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
-import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.sessionId
@@ -227,7 +227,7 @@ private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
         is Merge<*, *, *> -> dataframeLike.into("merged").toHTML()
         is Gather<*, *, *, *> -> dataframeLike.into("key", "value").toHTML()
         is Update<*, *> -> dataframeLike.df.let {
-            var it = it.format(dataframeLike.columns as ColumnsSelectionDsl<Any?>.(it: ColumnsSelectionDsl<Any?>) -> ColumnSet<*>)
+            var it = it.format(dataframeLike.columns as ColumnsSelectionDsl<Any?>.(it: ColumnsSelectionDsl<Any?>) -> ColumnsResolver<*>)
             if (dataframeLike.filter != null) {
                 it = it.where(dataframeLike.filter as RowValueFilter<Any?, Any?>)
             }

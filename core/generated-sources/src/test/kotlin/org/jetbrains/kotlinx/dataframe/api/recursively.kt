@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -156,6 +155,5 @@ class Recursively : TestBase() {
         ).map {
             it.sortedBy { it.name }.map { it.name to it.path }
         }.shouldAllBeEqual()
-
     }
 }

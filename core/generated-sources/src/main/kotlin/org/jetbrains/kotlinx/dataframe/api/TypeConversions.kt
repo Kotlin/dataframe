@@ -14,7 +14,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.anyNull
@@ -162,10 +164,18 @@ public fun <T> FrameColumn<T>.toValueColumn(): ValueColumn<DataFrame<T>?> =
 @JvmName("asNumbersAny")
 public fun ColumnSet<Any>.asNumbers(): ColumnSet<Number> = this as ColumnSet<Number>
 
+@JvmName("asNumbersAny")
+public fun SingleColumn<Any>.asNumbers(): SingleColumn<Number> = this as SingleColumn<Number>
+
 @JvmName("asNumbersAnyNullable")
 public fun ColumnSet<Any?>.asNumbers(): ColumnSet<Number?> = this as ColumnSet<Number?>
 
+@JvmName("asNumbersAnyNullable")
+public fun SingleColumn<Any?>.asNumbers(): SingleColumn<Number?> = this as SingleColumn<Number?>
+
 public fun <T> ColumnSet<T>.asComparable(): ColumnSet<Comparable<T>> = this as ColumnSet<Comparable<T>>
+
+public fun <T> SingleColumn<T>.asComparable(): SingleColumn<Comparable<T>> = this as SingleColumn<Comparable<T>>
 
 // endregion
 

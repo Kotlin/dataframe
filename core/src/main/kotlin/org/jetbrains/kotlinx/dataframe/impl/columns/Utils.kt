@@ -93,7 +93,7 @@ internal fun <A> TransformableSingleColumn<A>.performCheck(
 
     override fun transformResolveSingle(
         context: ColumnResolutionContext,
-        transformer: ColumnSetTransformer,
+        transformer: ColumnsResolverTransformer,
     ): ColumnWithPath<A>? =
         this@performCheck.transformResolveSingle(context, transformer).also(check)
 }
@@ -113,7 +113,7 @@ internal fun <A> TransformableColumnSet<A>.performCheck(
 
     override fun transformResolve(
         context: ColumnResolutionContext,
-        transformer: ColumnSetTransformer,
+        transformer: ColumnsResolverTransformer,
     ): List<ColumnWithPath<A>> =
         this@performCheck.transformResolve(context, transformer).also(check)
 }
@@ -140,10 +140,10 @@ internal fun <A, B> SingleColumn<A>.transformSingle(
  * The result can either be used as a normal [ColumnSet]<[B]>,
  * which resolves [this] and then applies [converter] on the result,
  *
- * or it can be used as a [TransformableColumnSet]<[B]>, where a [ColumnSetTransformer] can be injected before
+ * or it can be used as a [TransformableColumnSet]<[B]>, where a [ColumnsResolverTransformer] can be injected before
  * the [converter] is applied.
  */
-internal fun <A, B> ColumnSet<A>.transform(
+internal fun <A, B> ColumnsResolver<A>.transform(
     converter: (List<ColumnWithPath<A>>) -> List<ColumnWithPath<B>>,
 ): TransformableColumnSet<B> = object : TransformableColumnSet<B> {
     override fun resolve(context: ColumnResolutionContext) =
@@ -153,7 +153,7 @@ internal fun <A, B> ColumnSet<A>.transform(
 
     override fun transformResolve(
         context: ColumnResolutionContext,
-        transformer: ColumnSetTransformer,
+        transformer: ColumnsResolverTransformer,
     ): List<ColumnWithPath<B>> =
         transformer.transform(this@transform)
             .resolve(context)
@@ -167,10 +167,10 @@ internal fun <A, B> ColumnSet<A>.transform(
  * The result can either be used as a normal [ColumnSet]<[B]>,
  * which resolves [this] and then applies [converter] on the result,
  *
- * or it can be used as a [TransformableColumnSet]<[B]>, where a [ColumnSetTransformer] can be injected before
+ * or it can be used as a [TransformableColumnSet]<[B]>, where a [ColumnsResolverTransformer] can be injected before
  * the [converter] is applied.
  */
-internal fun <A, B> ColumnSet<A>.transformWithContext(
+internal fun <A, B> ColumnsResolver<A>.transformWithContext(
     converter: ColumnResolutionContext.(List<ColumnWithPath<A>>) -> List<ColumnWithPath<B>>,
 ): TransformableColumnSet<B> = object : TransformableColumnSet<B> {
     override fun resolve(context: ColumnResolutionContext) =
@@ -180,7 +180,7 @@ internal fun <A, B> ColumnSet<A>.transformWithContext(
 
     override fun transformResolve(
         context: ColumnResolutionContext,
-        transformer: ColumnSetTransformer,
+        transformer: ColumnsResolverTransformer,
     ): List<ColumnWithPath<B>> =
         transformer.transform(this@transformWithContext)
             .resolve(context)
@@ -198,19 +198,19 @@ private fun <T> List<ColumnWithPath<T>>.singleImpl(): ColumnWithPath<T> =
     }
 
 /**
- * Converts [this] [ColumnSet] to a [SingleColumn].
+ * Converts [this] [ColumnsResolver] to a [SingleColumn].
  * [resolveSingle] will return the single column of [this] if there is only one, else it will return throw an exception:
- * In case of an empty [ColumnSet], a [NoSuchElementException] will be thrown.
+ * In case of an empty [ColumnsResolver], a [NoSuchElementException] will be thrown.
  * In case of more than one column, a [IllegalArgumentException] will be thrown.
- * If the result used as a [ColumnSet], `null` will be converted to an empty list.
+ * If the result is used as a [ColumnSet], `null` will be converted to an empty list.
  */
-internal fun <T> ColumnSet<T>.singleImpl(): SingleColumn<T> = object : SingleColumn<T> {
+internal fun <T> ColumnsResolver<T>.singleImpl(): SingleColumn<T> = object : SingleColumn<T> {
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T> =
         this@singleImpl.resolve(context).singleImpl()
 }
 
 /**
- * Same as [singleImpl], however, it passes any [ColumnSetTransformer] back to [this] if it is supplied.
+ * Same as [singleImpl], however, it passes any [ColumnsResolverTransformer] back to [this] if it is supplied.
  */
 internal fun <T> TransformableColumnSet<T>.singleWithTransformerImpl(): TransformableSingleColumn<T> =
     object : TransformableSingleColumn<T> {
@@ -219,7 +219,7 @@ internal fun <T> TransformableColumnSet<T>.singleWithTransformerImpl(): Transfor
 
         override fun transformResolveSingle(
             context: ColumnResolutionContext,
-            transformer: ColumnSetTransformer,
+            transformer: ColumnsResolverTransformer,
         ): ColumnWithPath<T> =
             this@singleWithTransformerImpl.transformResolve(
                 context = context,
@@ -228,17 +228,17 @@ internal fun <T> TransformableColumnSet<T>.singleWithTransformerImpl(): Transfor
     }
 
 /**
- * Converts [this] [ColumnSet] to a [SingleColumn].
+ * Converts [this] [ColumnsResolver] to a [SingleColumn].
  * [resolveSingle] will return the single column of [this] if there is only one, else it will return `null`.
  * If the result used as a [ColumnSet], `null` will be converted to an empty list.
  */
-internal fun <T> ColumnSet<T>.singleOrNullImpl(): SingleColumn<T> = object : SingleColumn<T> {
+internal fun <T> ColumnsResolver<T>.singleOrNullImpl(): SingleColumn<T> = object : SingleColumn<T> {
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? =
         this@singleOrNullImpl.resolve(context).singleOrNull()
 }
 
 /**
- * Same as [singleOrNullImpl], however, it passes any [ColumnSetTransformer] back to [this] if it is supplied.
+ * Same as [singleOrNullImpl], however, it passes any [ColumnsResolverTransformer] back to [this] if it is supplied.
  */
 internal fun <T> TransformableColumnSet<T>.singleOrNullWithTransformerImpl(): TransformableSingleColumn<T> =
     object : TransformableSingleColumn<T> {
@@ -247,7 +247,7 @@ internal fun <T> TransformableColumnSet<T>.singleOrNullWithTransformerImpl(): Tr
 
         override fun transformResolveSingle(
             context: ColumnResolutionContext,
-            transformer: ColumnSetTransformer,
+            transformer: ColumnsResolverTransformer,
         ): ColumnWithPath<T>? =
             this@singleOrNullWithTransformerImpl.transformResolve(
                 context = context,
@@ -255,7 +255,7 @@ internal fun <T> TransformableColumnSet<T>.singleOrNullWithTransformerImpl(): Tr
             ).singleOrNull()
     }
 
-internal fun <T> ColumnSet<T>.getAt(index: Int): SingleColumn<T> = object : SingleColumn<T> {
+internal fun <T> ColumnsResolver<T>.getAt(index: Int): SingleColumn<T> = object : SingleColumn<T> {
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T> =
         this@getAt.resolve(context).let {
             try {
@@ -331,7 +331,7 @@ internal fun KType.toColumnKind(): ColumnKind = jvmErasure.let {
     }
 }
 
-internal fun <C> ColumnSet<C>.resolve(
+internal fun <C> ColumnsResolver<C>.resolve(
     df: DataFrame<*>,
     unresolvedColumnsPolicy: UnresolvedColumnsPolicy = UnresolvedColumnsPolicy.Fail,
 ) =

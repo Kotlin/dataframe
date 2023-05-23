@@ -251,9 +251,11 @@ class DataFrameTreeTests : BaseTest() {
         val pivoted = grouped.pivot { city }.groupBy { name }.values("info")
         pivoted.columnsCount() shouldBe 2
 
-        val expected =
-            typed.rows().groupBy { it.name to (it.city ?: "null") }.mapValues { it.value.map { it.age to it.weight } }
-        val dataCols = pivoted.getColumns { col(1).all() }
+        val expected = typed
+            .rows()
+            .groupBy { it.name to (it.city ?: "null") }
+            .mapValues { it.value.map { it.age to it.weight } }
+        val dataCols = pivoted.getColumns { col(1).asColumnGroup().all() }
 
         dataCols.forEach { (it.isColumnGroup() || it.isFrameColumn()) shouldBe true }
 

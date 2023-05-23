@@ -110,7 +110,7 @@ public class ColumnMatch<C>(public val left: ColumnReference<C>, public val righ
     }
 }
 
-public typealias JoinColumnsSelector<A, B> = JoinDsl<A, B>.(ColumnsContainer<A>) -> ColumnSet<*>
+public typealias JoinColumnsSelector<A, B> = JoinDsl<A, B>.(ColumnsContainer<A>) -> ColumnsResolver<*>
 
 public enum class JoinType {
     Left, // all data from left data frame, nulls for mismatches in right data frame

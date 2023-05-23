@@ -4,7 +4,7 @@ import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 
@@ -97,15 +97,15 @@ public typealias ColumnExpression<C, R> = Selector<DataColumn<C>, R>
 public typealias ColumnSelector<T, C> = Selector<ColumnsSelectionDsl<T>, SingleColumn<C>>
 
 /**
- * [ColumnsSelector] is used to express or select multiple columns, represented by [ColumnSet]`<C>`, using the
- * context of [ColumnsSelectionDsl]`<T>` as `this` and `it`.
+ * [ColumnsSelector] is used to express or select one or multiple columns, represented by [ColumnsResolver]`<C>`,
+ * using the context of [ColumnsSelectionDsl]`<T>` as `this` and `it`.
  *
  * Shorthand for:
  * ```kotlin
- * ColumnsSelectionDsl<T>.(it: ColumnsSelectionDsl<T>) -> ColumnSet<C>
+ * ColumnsSelectionDsl<T>.(it: ColumnsSelectionDsl<T>) -> ColumnsResolver<C>
  * ```
  */
-public typealias ColumnsSelector<T, C> = Selector<ColumnsSelectionDsl<T>, ColumnSet<C>>
+public typealias ColumnsSelector<T, C> = Selector<ColumnsSelectionDsl<T>, ColumnsResolver<C>>
 
 // endregion
 

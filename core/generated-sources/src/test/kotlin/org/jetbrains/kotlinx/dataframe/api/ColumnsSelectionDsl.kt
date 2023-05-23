@@ -6,12 +6,16 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value
-import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
-import org.jetbrains.kotlinx.dataframe.samples.api.*
+import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
+import org.jetbrains.kotlinx.dataframe.samples.api.age
+import org.jetbrains.kotlinx.dataframe.samples.api.city
+import org.jetbrains.kotlinx.dataframe.samples.api.firstName
+import org.jetbrains.kotlinx.dataframe.samples.api.isHappy
+import org.jetbrains.kotlinx.dataframe.samples.api.lastName
+import org.jetbrains.kotlinx.dataframe.samples.api.name
+import org.jetbrains.kotlinx.dataframe.samples.api.weight
 import org.junit.Test
 import kotlin.reflect.typeOf
 
@@ -22,17 +26,33 @@ open class ColumnsSelectionDslTests : TestBase() {
         shouldThrow<IllegalArgumentException> {
             df.select { "age".first() }
         }
-        shouldThrow<IllegalArgumentException> {
-            df.select { age.first() }.alsoDebug()
-        }
-        shouldThrow<IllegalArgumentException> {
-            df.select { it["age"].first() }.alsoDebug()
-        }
-        df.select { name.first() }.alsoDebug()
-        df.select { first() }.alsoDebug()
 
-        df.select { it["name"].first() }.alsoDebug()
-        df.select { age.first() }.alsoDebug()
+        // works as usual
+        df.select { first() }
+        // works on ColumnSet<Int>
+        df.select { colsOf<Int>().first() }
+        // recognized as SingleColumn<DataRow<*>>
+        df.select { name.first() }
+        // recognized as impossible to call, because it's a SingleColumn<Int>
+//        df.select { age.first() }
+        // unsafe because of string API, but has runtime check
+        df.select { "name".first() }
+        // unsafe because of string API, but has runtime check
+        df.select { pathOf("name").first() }
+        // recognized as SingleColumn<DataRow<*>>
+        df.select { Person::name.first() }
+        // recognized as SingleColumn<Int>, so impossible to call
+//        df.select { Person::age.first() }
+        // if not recognized correctly (e.g. because of lack of DataRow<> around type), asColumnGroup() can be used
+        shouldThrow<IllegalArgumentException> {
+            df.select { Person::age.asColumnGroup().first() }
+        }
+        // unfortunately impossible to call like this, because of AnyCol type
+//        df.select { it["name"].first() }
+        // but you can use asColumnGroup() to explicitly specify the column type
+        df.select { it["name"].asColumnGroup().first() }
+        // or use the accessor like this
+        df.select { colGroup("name").first() }
 
         listOf(
             df.select { name },
@@ -56,8 +76,8 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select { pathOf("name").first { col -> col.any { it == "Alice" } } },
             df.select { pathOf("name").colsOf<String>(typeOf<String>()).first { col -> col.any { it == "Alice" } } },
 
-            df.select { it["name"].first { col -> col.any { it == "Alice" } } },
-            df.select { it["name"].colsOf<String>(typeOf<String>()).first { col -> col.any { it == "Alice" } } },
+            df.select { it["name"].asColumnGroup().first { col -> col.any { it == "Alice" } } },
+            df.select { it["name"].asColumnGroup().colsOf<String>(typeOf<String>()).first { col -> col.any { it == "Alice" } } },
         ).shouldAllBeEqual()
     }
 
@@ -85,8 +105,8 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select { pathOf("name").last { col -> col.any { it == "Alice" } } },
             df.select { pathOf("name").colsOf<String>(typeOf<String>()).last { col -> col.any { it == "Alice" } } },
 
-            df.select { it["name"].last { col -> col.any { it == "Alice" } } },
-            df.select { it["name"].colsOf<String>(typeOf<String>()).last { col -> col.any { it == "Alice" } } },
+            df.select { it["name"].asColumnGroup().last { col -> col.any { it == "Alice" } } },
+            df.select { it["name"].asColumnGroup().colsOf<String>(typeOf<String>()).last { col -> col.any { it == "Alice" } } },
         ).shouldAllBeEqual()
     }
 
@@ -117,8 +137,8 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select { pathOf("name").single { col -> col.any { it == "Alice" } } },
             df.select { pathOf("name").colsOf<String>(typeOf<String>()).single { col -> col.any { it == "Alice" } } },
 
-            df.select { it["name"].single { col -> col.any { it == "Alice" } } },
-            df.select { it["name"].colsOf<String>(typeOf<String>()).single { col -> col.any { it == "Alice" } } },
+            df.select { it["name"].asColumnGroup().single { col -> col.any { it == "Alice" } } },
+            df.select { it["name"].asColumnGroup().colsOf<String>(typeOf<String>()).single { col -> col.any { it == "Alice" } } },
         ).shouldAllBeEqual()
     }
 
@@ -310,8 +330,8 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select { pathOf("name").cols { "Name" in it.name() } },
             df.select { pathOf("name")[{ "Name" in it.name() }] },
 
-            df.select { it["name"].cols { "Name" in it.name() } },
-            df.select { it["name"][{ "Name" in it.name() }] },
+            df.select { it["name"].asColumnGroup().cols { "Name" in it.name() } },
+//            df.select { it["name"].asColumnGroup()[{ "Name" in it.name() }] },
         ).shouldAllBeEqual()
     }
 
@@ -347,7 +367,7 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select { "name".valueCols { "Name" in it.name() } },
             df.select { Person::name.valueCols { "Name" in it.name() } },
             df.select { pathOf("name").valueCols { "Name" in it.name() } },
-            df.select { it["name"].valueCols { "Name" in it.name() } },
+            df.select { it["name"].asColumnGroup().valueCols { "Name" in it.name() } },
         ).shouldAllBeEqual()
     }
 
@@ -384,7 +404,7 @@ open class ColumnsSelectionDslTests : TestBase() {
             dfGroup.select { "name".colGroups { "Name" in it.name() } },
             dfGroup.select { Person::name.colGroups { "Name" in it.name() } },
             dfGroup.select { pathOf("name").colGroups { "Name" in it.name() } },
-            dfGroup.select { it["name"].colGroups { "Name" in it.name() } },
+            dfGroup.select { it["name"].asColumnGroup().colGroups { "Name" in it.name() } },
         ).shouldAllBeEqual()
     }
 
@@ -421,7 +441,7 @@ open class ColumnsSelectionDslTests : TestBase() {
             dfWithFrames.select { "name".frameCols { "frame" in it.name() } },
             dfWithFrames.select { Person::name.frameCols { "frame" in it.name() } },
             dfWithFrames.select { pathOf("name").frameCols { "frame" in it.name() } },
-            dfWithFrames.select { it["name"].frameCols { "frame" in it.name() } },
+            dfWithFrames.select { it["name"].asColumnGroup().frameCols { "frame" in it.name() } },
         ).shouldAllBeEqual()
     }
 
@@ -465,12 +485,11 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select {
                 name.select {
                     cols(this@select.firstName, this@select.lastName)
-                    cols(firstName, lastName)
                 }
             },
 
             df.select {
-                it["name"].selectUntyped {
+                it["name"].asColumnGroup().select {
                     cols("firstName", "lastName")
                 }
             },
@@ -484,8 +503,8 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select { pathOf("name").cols(firstName, lastName) },
             df.select { pathOf("name")[firstName, lastName] },
 
-            df.select { it["name"].cols(firstName, lastName) },
-            df.select { it["name"][firstName, lastName] },
+            df.select { it["name"].asColumnGroup().cols(firstName, lastName) },
+//            df.select { it["name"].asColumnGroup()[firstName, lastName] },
         ).shouldAllBeEqual()
     }
 
@@ -521,8 +540,8 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select { pathOf("name").cols("firstName", "lastName") },
             df.select { pathOf("name")["firstName", "lastName"] },
 
-            df.select { it["name"].cols("firstName", "lastName") },
-            df.select { it["name"]["firstName", "lastName"] },
+            df.select { it["name"].asColumnGroup().cols("firstName", "lastName") },
+//            df.select { it["name"].asColumnGroup().["firstName", "lastName"] },
         ).shouldAllBeEqual()
     }
 
@@ -570,8 +589,8 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select { pathOf("name").cols(pathOf("firstName"), pathOf("lastName")) },
             df.select { pathOf("name")[pathOf("firstName"), pathOf("lastName")] },
 
-            df.select { it["name"].cols(pathOf("firstName"), pathOf("lastName")) },
-            df.select { it["name"][pathOf("firstName"), pathOf("lastName")] },
+            df.select { it["name"].asColumnGroup().cols(pathOf("firstName"), pathOf("lastName")) },
+//            df.select { it["name"].asColumnGroup()[pathOf("firstName"), pathOf("lastName")] },
         ).shouldAllBeEqual()
     }
 
@@ -606,8 +625,8 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select { pathOf("name").cols(Name::firstName, Name::lastName) },
             df.select { pathOf("name")[Name::firstName, Name::lastName] },
 
-            df.select { it["name"].cols(Name::firstName, Name::lastName) },
-            df.select { it["name"][Name::firstName, Name::lastName] },
+            df.select { it["name"].asColumnGroup().cols(Name::firstName, Name::lastName) },
+            df.select { it["name"].asColumnGroup()[Name::firstName, Name::lastName] },
         ).shouldAllBeEqual()
     }
 
@@ -642,8 +661,8 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select { pathOf("name").cols(0, 1) },
             df.select { pathOf("name")[0, 1] },
 
-            df.select { it["name"].cols(0, 1) },
-//            df.select { it["name"][0, 1] },
+            df.select { it["name"].asColumnGroup().cols(0, 1) },
+//            df.select { it["name"].asColumnGroup()[0, 1] },
         ).shouldAllBeEqual()
     }
 
@@ -678,8 +697,8 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select { pathOf("name").cols(0..1) },
             df.select { pathOf("name")[0..1] },
 
-            df.select { it["name"].cols(0..1) },
-//            df.select { it["name"][0..1] },
+            df.select { it["name"].asColumnGroup().cols(0..1) },
+//            df.select { it["name"].asColumnGroup()[0..1] },
         ).shouldAllBeEqual()
     }
 
@@ -718,7 +737,7 @@ open class ColumnsSelectionDslTests : TestBase() {
             },
 
             df.select {
-                it["name"].selectUntyped {
+                it["name"].asColumnGroup().select {
                     colsOf<String>()
                 }
             },
@@ -746,7 +765,6 @@ open class ColumnsSelectionDslTests : TestBase() {
                 }
             },
         ).shouldAllBeEqual()
-
 
         df.update {
             "name".select { colsOf<String>() }

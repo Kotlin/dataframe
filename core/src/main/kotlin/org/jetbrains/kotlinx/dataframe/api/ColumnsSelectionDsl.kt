@@ -205,7 +205,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`<`[Int][Int]`>().`[first][first]`() }`
      */
     public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
-        allColumnsInternal()
+        (allColumnsInternal() as TransformableColumnSet<C>)
             .transform { listOf(it.first(condition)) }
             .singleOrNullWithTransformerImpl()
 
@@ -219,7 +219,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun SingleColumn<DataRow<*>>.first(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        (ensureIsColGroup() as ColumnSet<DataRow<*>>).first(condition)
+        ensureIsColGroup().asColumnSet().first(condition)
 
     /**
      * @include [CommonFirstDocs]
@@ -234,7 +234,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @arg [CommonFirstDocs.Examples]
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun KProperty<*>.first(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun KProperty<DataRow<*>>.first(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+        colGroup(this).first(condition)
+
+    /**
+     * TODO
+     */
+    public fun ColumnPath.first(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         colGroup(this).first(condition)
 
     // endregion
@@ -269,7 +275,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`<`[Int][Int]`>().`[first][last]`() }`
      */
     public fun <C> ColumnSet<C>.last(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
-        allColumnsInternal()
+        (allColumnsInternal() as TransformableColumnSet<C>)
             .transform { listOf(it.last(condition)) }
             .singleOrNullWithTransformerImpl()
 
@@ -282,8 +288,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun SingleColumn<*>.last(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        (ensureIsColGroup() as ColumnSet<*>).last(condition)
+    public fun SingleColumn<DataRow<*>>.last(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+        ensureIsColGroup().asColumnSet().last(condition)
 
     /**
      * @include [CommonLastDocs]
@@ -298,7 +304,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @arg [CommonLastDocs.Examples]
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun KProperty<*>.last(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun KProperty<DataRow<*>>.last(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+        colGroup(this).last(condition)
+
+    /**
+     * TODO
+     */
+    public fun ColumnPath.last(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         colGroup(this).last(condition)
 
     // endregion
@@ -333,7 +345,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`<`[Int][Int]`>().`[single][single]`() }`
      */
     public fun <C> ColumnSet<C>.single(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
-        allColumnsInternal()
+        (allColumnsInternal() as TransformableColumnSet<C>)
             .transform { listOf(it.single(condition)) }
             .singleOrNullWithTransformerImpl()
 
@@ -346,8 +358,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun SingleColumn<*>.single(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        (ensureIsColGroup() as ColumnSet<*>).single(condition)
+    public fun SingleColumn<DataRow<*>>.single(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+        ensureIsColGroup().asColumnSet().single(condition)
 
     /**
      * @include [CommonSingleDocs]
@@ -362,7 +374,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @arg [CommonSingleDocs.Examples]
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun KProperty<*>.single(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun KProperty<DataRow<*>>.single(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+        colGroup(this).single(condition)
+
+    /**
+     * TODO
+     */
+    public fun ColumnPath.single(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         colGroup(this).single(condition)
 
     // endregion
@@ -484,7 +502,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * @return An empty [ColumnSet].
      */
-    public fun none(): ColumnSet<*> = ColumnsList<Any?>(emptyList())
+    public fun none(): ColumnsResolver<*> = ColumnsList<Any?>(emptyList())
 
     // endregion
 
@@ -667,10 +685,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     private interface SingleColumnColIndexDocs
 
     /** @include [SingleColumnColIndexDocs] */
-    public fun SingleColumn<*>.col(index: Int): SingleColumn<*> = ensureIsColGroup().getChildrenAt(index).singleImpl()
+    public fun SingleColumn<DataRow<*>>.col(index: Int): SingleColumn<*> =
+        ensureIsColGroup().asColumnSet().getChildrenAt(index).singleImpl()
 
     /** @include [SingleColumnColIndexDocs] */
-    public operator fun SingleColumn<*>.get(index: Int): SingleColumn<*> = col(index)
+    public operator fun SingleColumn<DataRow<*>>.get(index: Int): SingleColumn<*> = col(index)
 
     /**
      * @include [CommonColIndexDocs]
@@ -702,11 +721,19 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     private interface KPropertyIndexDocs
 
     /** @include [KPropertyIndexDocs] */
-    public fun KProperty<*>.col(index: Int): SingleColumn<*> = colGroup(this).col(index)
+    public fun KProperty<DataRow<*>>.col(index: Int): SingleColumn<*> = colGroup(this).col(index)
 
     /** @include [KPropertyIndexDocs] */
-    public operator fun KProperty<*>.get(index: Int): SingleColumn<*> = col(index)
+    public operator fun KProperty<DataRow<*>>.get(index: Int): SingleColumn<*> = col(index)
 
+    /** TODO */
+    private interface ColumnPathIndexDocs
+
+    /** @include [ColumnPathIndexDocs] */
+    public fun ColumnPath.col(index: Int): SingleColumn<*> = colGroup(this).col(index)
+
+    /** @include [ColumnPathIndexDocs] */
+    public operator fun ColumnPath.get(index: Int): SingleColumn<*> = col(index)
 
     // endregion
 
@@ -1183,7 +1210,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     private interface SingleColumnAnyRowColsPredicateDocs
 
     /** @include [SingleColumnAnyRowColsPredicateDocs] */
-    public fun SingleColumn<*>.cols(
+    public fun SingleColumn<DataRow<*>>.cols(
         predicate: ColumnFilter<*> = { true },
     ): TransformableColumnSet<*> = ensureIsColGroup().colsInternal(predicate)
 
@@ -1191,7 +1218,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @include [SingleColumnAnyRowColsPredicateDocs]
      * {@comment this function is shadowed by [DataFrame.get]}
      */
-    public operator fun SingleColumn<*>.get(
+    public operator fun SingleColumn<DataRow<*>>.get(
         predicate: ColumnFilter<*> = { true },
     ): TransformableColumnSet<*> = cols(predicate)
 
@@ -1236,12 +1263,25 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     private interface KPropertyColsPredicateDocs
 
     /** @include [KPropertyColsPredicateDocs] */
-    public fun KProperty<*>.cols(
+    public fun KProperty<DataRow<*>>.cols(
         predicate: ColumnFilter<*> = { true },
     ): TransformableColumnSet<*> = colGroup(this).cols(predicate)
 
     /** @include [KPropertyColsPredicateDocs] */
-    public operator fun KProperty<*>.get(
+    public operator fun KProperty<DataRow<*>>.get(
+        predicate: ColumnFilter<*> = { true },
+    ): TransformableColumnSet<*> = cols(predicate)
+
+    /** TODO */
+    private interface ColumnPathPredicateDocs
+
+    /** @include [ColumnPathPredicateDocs] */
+    public fun ColumnPath.cols(
+        predicate: ColumnFilter<*> = { true },
+    ): TransformableColumnSet<*> = colGroup(this).cols(predicate)
+
+    /** @include [ColumnPathPredicateDocs] */
+    public operator fun ColumnPath.get(
         predicate: ColumnFilter<*> = { true },
     ): TransformableColumnSet<*> = cols(predicate)
 
@@ -1303,11 +1343,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     private interface SingleColumnColsVarargColumnReferenceDocs
 
     /** @include [SingleColumnColsVarargColumnReferenceDocs] */
-    public fun <C> SingleColumn<*>.cols(
+    public fun <C> SingleColumn<DataRow<*>>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
     ): ColumnSet<C> = headPlusArray(firstCol, otherCols).let { refs ->
-        ensureIsColGroup().transform {
+        ensureIsColGroup().asColumnSet().transform {
             it.flatMap { col -> refs.mapNotNull { col.getChild(it) } }
         }
     }
@@ -1316,7 +1356,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @include [SingleColumnColsVarargColumnReferenceDocs]
      * {@comment this function is shadowed by [DataFrame.get] for accessors}
      */
-    public operator fun <C> SingleColumn<*>.get(
+    public operator fun <C> SingleColumn<DataRow<*>>.get(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
     ): ColumnSet<C> = cols(firstCol, *otherCols)
@@ -1358,13 +1398,28 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     private interface KPropertyColsVarargColumnReferenceDocs
 
     /** @include [KPropertyColsVarargColumnReferenceDocs] */
-    public fun <C> KProperty<*>.cols(
+    public fun <C> KProperty<DataRow<*>>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
     ): ColumnSet<C> = colGroup(this).cols(firstCol, *otherCols)
 
     /** @include [KPropertyColsVarargColumnReferenceDocs] */
-    public operator fun <C> KProperty<*>.get(
+    public operator fun <C> KProperty<DataRow<*>>.get(
+        firstCol: ColumnReference<C>,
+        vararg otherCols: ColumnReference<C>,
+    ): ColumnSet<C> = cols(firstCol, *otherCols)
+
+    /** TODO */
+    private interface ColumnPathColsVarargColumnReferenceDocs
+
+    /** @include [ColumnPathColsVarargColumnReferenceDocs] */
+    public fun <C> ColumnPath.cols(
+        firstCol: ColumnReference<C>,
+        vararg otherCols: ColumnReference<C>,
+    ): ColumnSet<C> = colGroup(this).cols(firstCol, *otherCols)
+
+    /** @include [ColumnPathColsVarargColumnReferenceDocs] */
+    public operator fun <C> ColumnPath.get(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
     ): ColumnSet<C> = cols(firstCol, *otherCols)
@@ -1420,18 +1475,18 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     private interface SingleColumnColsVarargStringDocs
 
     /** @include [SingleColumnColsVarargStringDocs] */
-    public fun SingleColumn<*>.cols(
+    public fun SingleColumn<DataRow<*>>.cols(
         firstCol: String,
         vararg otherCols: String,
     ): ColumnSet<*> = headPlusArray(firstCol, otherCols).let { names ->
-        ensureIsColGroup().transform { it.flatMap { col -> names.mapNotNull { col.getChild(it) } } }
+        ensureIsColGroup().asColumnSet().transform { it.flatMap { col -> names.mapNotNull { col.getChild(it) } } }
     }
 
     /**
      * @include [SingleColumnColsVarargStringDocs]
      * {@comment this function is shadowed by [DataFrame.get] for accessors}
      */
-    public operator fun SingleColumn<*>.get(
+    public operator fun SingleColumn<DataRow<*>>.get(
         firstCol: String,
         vararg otherCols: String,
     ): ColumnSet<*> = cols(firstCol, *otherCols)
@@ -1469,13 +1524,28 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     private interface KPropertiesColsVarargStringDocs
 
     /** @include [KPropertiesColsVarargStringDocs] */
-    public fun KProperty<*>.cols(
+    public fun KProperty<DataRow<*>>.cols(
         firstCol: String,
         vararg otherCols: String,
     ): ColumnSet<*> = colGroup(this).cols(firstCol, *otherCols)
 
     /** @include [KPropertiesColsVarargStringDocs] */
-    public operator fun KProperty<*>.get(
+    public operator fun KProperty<DataRow<*>>.get(
+        firstCol: String,
+        vararg otherCols: String,
+    ): ColumnSet<*> = cols(firstCol, *otherCols)
+
+    /** TODO */
+    private interface ColumnPathColsVarargStringDocs
+
+    /** @include [ColumnPathColsVarargStringDocs] */
+    public fun ColumnPath.cols(
+        firstCol: String,
+        vararg otherCols: String,
+    ): ColumnSet<*> = colGroup(this).cols(firstCol, *otherCols)
+
+    /** @include [ColumnPathColsVarargStringDocs] */
+    public operator fun ColumnPath.get(
         firstCol: String,
         vararg otherCols: String,
     ): ColumnSet<*> = cols(firstCol, *otherCols)
@@ -1527,15 +1597,15 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     private interface SingleColumnColsVarargKPropertyDocs
 
     /** @include [SingleColumnColsVarargKPropertyDocs] */
-    public fun <C> SingleColumn<*>.cols(
+    public fun <C> SingleColumn<DataRow<*>>.cols(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
     ): ColumnSet<C> = headPlusArray(firstCol, otherCols).let { props ->
-        ensureIsColGroup().transform { it.flatMap { col -> props.mapNotNull { col.getChild(it) } } }
+        ensureIsColGroup().asColumnSet().transform { it.flatMap { col -> props.mapNotNull { col.getChild(it) } } }
     }
 
     /** @include [SingleColumnColsVarargKPropertyDocs] */
-    public operator fun <C> SingleColumn<*>.get(
+    public operator fun <C> SingleColumn<DataRow<*>>.get(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
     ): ColumnSet<C> = cols(firstCol, *otherCols)
@@ -1573,13 +1643,28 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     private interface KPropertyColsVarargKPropertyDocs
 
     /** @include [KPropertyColsVarargKPropertyDocs] */
-    public fun <C> KProperty<*>.cols(
+    public fun <C> KProperty<DataRow<*>>.cols(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
     ): ColumnSet<C> = colGroup(this).cols(firstCol, *otherCols)
 
     /** @include [KPropertyColsVarargKPropertyDocs] */
-    public operator fun <C> KProperty<*>.get(
+    public operator fun <C> KProperty<DataRow<*>>.get(
+        firstCol: KProperty<C>,
+        vararg otherCols: KProperty<C>,
+    ): ColumnSet<C> = cols(firstCol, *otherCols)
+
+    /** TODO */
+    private interface ColumnPathColsVarargKPropertyDocs
+
+    /** @include [ColumnPathColsVarargKPropertyDocs] */
+    public fun <C> ColumnPath.cols(
+        firstCol: KProperty<C>,
+        vararg otherCols: KProperty<C>,
+    ): ColumnSet<C> = colGroup(this).cols(firstCol, *otherCols)
+
+    /** @include [ColumnPathColsVarargKPropertyDocs] */
+    public operator fun <C> ColumnPath.get(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
     ): ColumnSet<C> = cols(firstCol, *otherCols)
@@ -1661,7 +1746,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     private interface SingleColumnColsIndicesDocs
 
     /** @include [SingleColumnColsIndicesDocs] */
-    public fun SingleColumn<*>.cols(
+    public fun SingleColumn<DataRow<*>>.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
     ): ColumnSet<*> = ensureIsColGroup().colsInternal(headPlusArray(firstIndex, otherIndices))
@@ -1670,7 +1755,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * {@comment this function is shadowed by [ColumnGroup.get] for accessors}
      * @include [SingleColumnColsIndicesDocs]
      */
-    public operator fun SingleColumn<*>.get(
+    public operator fun SingleColumn<DataRow<*>>.get(
         firstIndex: Int,
         vararg otherIndices: Int,
     ): ColumnSet<*> = cols(firstIndex, *otherIndices)
@@ -1708,13 +1793,28 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     private interface KPropertyColsIndicesDocs
 
     /** @include [KPropertyColsIndicesDocs] */
-    public fun KProperty<*>.cols(
+    public fun KProperty<DataRow<*>>.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
     ): ColumnSet<*> = colGroup(this).cols(firstIndex, *otherIndices)
 
     /** @include [KPropertyColsIndicesDocs] */
-    public operator fun KProperty<*>.get(
+    public operator fun KProperty<DataRow<*>>.get(
+        firstIndex: Int,
+        vararg otherIndices: Int,
+    ): ColumnSet<*> = cols(firstIndex, *otherIndices)
+
+    /** TODO */
+    private interface ColumnPathColsIndicesDocs
+
+    /** @include [ColumnPathColsIndicesDocs] */
+    public fun ColumnPath.cols(
+        firstIndex: Int,
+        vararg otherIndices: Int,
+    ): ColumnSet<*> = colGroup(this).cols(firstIndex, *otherIndices)
+
+    /** @include [ColumnPathColsIndicesDocs] */
+    public operator fun ColumnPath.get(
         firstIndex: Int,
         vararg otherIndices: Int,
     ): ColumnSet<*> = cols(firstIndex, *otherIndices)
@@ -1736,7 +1836,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnSet.cols]`(1`[..][Int.rangeTo]`3) }`
+     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]`(1`[..][Int.rangeTo]`3) }`
      *
      * `df.`[select][DataFrame.select]` { this`[`[`][ColumnSet.cols]`1`[..][Int.rangeTo]`5`[`]`][ColumnSet.cols]` }`
      *
@@ -1790,13 +1890,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     private interface SingleColumnColsRangeDocs
 
     /** @include [SingleColumnColsRangeDocs] */
-    public fun SingleColumn<*>.cols(range: IntRange): ColumnSet<*> = ensureIsColGroup().colsInternal(range)
+    public fun SingleColumn<DataRow<*>>.cols(range: IntRange): ColumnSet<*> = ensureIsColGroup().colsInternal(range)
 
     /**
      * {@comment this function is shadowed by [ColumnGroup.get] for accessors}
      * @include [SingleColumnColsRangeDocs]
      */
-    public operator fun SingleColumn<*>.get(range: IntRange): ColumnSet<*> = cols(range)
+    public operator fun SingleColumn<DataRow<*>>.get(range: IntRange): ColumnSet<*> = cols(range)
 
     /**
      * @include [CommonColsRangeDocs]
@@ -1825,10 +1925,19 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     private interface KPropertyColsRangeDocs
 
     /** @include [KPropertyColsRangeDocs] */
-    public fun KProperty<*>.cols(range: IntRange): ColumnSet<*> = colGroup(this).cols(range)
+    public fun KProperty<DataRow<*>>.cols(range: IntRange): ColumnSet<*> = colGroup(this).cols(range)
 
     /** @include [KPropertyColsRangeDocs] */
-    public operator fun KProperty<*>.get(range: IntRange): ColumnSet<*> = cols(range)
+    public operator fun KProperty<DataRow<*>>.get(range: IntRange): ColumnSet<*> = cols(range)
+
+    /** TODO */
+    private interface ColumnPathColsRangeDocs
+
+    /** @include [ColumnPathColsRangeDocs] */
+    public fun ColumnPath.cols(range: IntRange): ColumnSet<*> = colGroup(this).cols(range)
+
+    /** @include [ColumnPathColsRangeDocs] */
+    public operator fun ColumnPath.get(range: IntRange): ColumnSet<*> = cols(range)
 
     /**
      * ## Columns by Index Range from List of Columns
@@ -1900,7 +2009,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[valueCols][SingleColumn.valueCols]`().`[recursively][TransformableColumnSet.recursively]`() }`
      */
-    public fun SingleColumn<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
         ensureIsColGroup().valueColumnsInternal(filter)
 
     /**
@@ -1922,7 +2031,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[valueCols][KProperty.valueCols]`() }`
      */
-    public fun KProperty<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
+    public fun KProperty<DataRow<*>>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
+        colGroup(this).valueCols(filter)
+
+    /** TODO */
+    public fun ColumnPath.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
         colGroup(this).valueCols(filter)
 
     // endregion
@@ -1934,7 +2047,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         columnGroupsInternal(filter)
 
     @Deprecated("Use colGroups instead", ReplaceWith("this.colGroups(filter)"))
-    public fun SingleColumn<*>.groups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
+    public fun SingleColumn<DataRow<*>>.groups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
         ensureIsColGroup().columnGroupsInternal(filter)
 
     @Deprecated("Use colGroups instead", ReplaceWith("this.colGroups(filter)"))
@@ -1942,7 +2055,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         colGroup(this).groups(filter)
 
     @Deprecated("Use colGroups instead", ReplaceWith("this.colGroups(filter)"))
-    public fun KProperty<*>.groups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
+    public fun KProperty<DataRow<*>>.groups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
+        colGroup(this).groups(filter)
+
+    @Deprecated("Use colGroups instead", ReplaceWith("this.colGroups(filter)"))
+    public fun ColumnPath.groups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
         colGroup(this).groups(filter)
 
     /**
@@ -2000,7 +2117,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[colGroups][SingleColumn.colGroups]`().`[recursively][TransformableColumnSet.recursively]`() }`
      */
-    public fun SingleColumn<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
+    public fun SingleColumn<DataRow<*>>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
         ensureIsColGroup().columnGroupsInternal(filter)
 
     /**
@@ -2022,7 +2139,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { Type::myColGroup.`[colGroups][KProperty.colGroups]`() }`
      */
-    public fun KProperty<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
+    public fun KProperty<DataRow<*>>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
+        colGroup(this).colGroups(filter)
+
+    /** TODO */
+    public fun ColumnPath.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
         colGroup(this).colGroups(filter)
 
     // endregion
@@ -2084,7 +2205,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[frameCols][SingleColumn.frameCols]`().`[recursively][TransformableColumnSet.recursively]`() }`
      */
-    public fun SingleColumn<*>.frameCols(filter: Predicate<FrameColumn<*>> = { true }): TransformableColumnSet<DataFrame<*>> =
+    public fun SingleColumn<DataRow<*>>.frameCols(filter: Predicate<FrameColumn<*>> = { true }): TransformableColumnSet<DataFrame<*>> =
         ensureIsColGroup().frameColumnsInternal(filter)
 
     /**
@@ -2106,7 +2227,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { Type::myColGroup.`[frameCols][KProperty.frameCols]`() }`
      */
-    public fun KProperty<*>.frameCols(filter: Predicate<FrameColumn<*>> = { true }): TransformableColumnSet<DataFrame<*>> =
+    public fun KProperty<DataRow<*>>.frameCols(filter: Predicate<FrameColumn<*>> = { true }): TransformableColumnSet<DataFrame<*>> =
+        colGroup(this).frameCols(filter)
+
+    /** TODO */
+    public fun ColumnPath.frameCols(filter: Predicate<FrameColumn<*>> = { true }): TransformableColumnSet<DataFrame<*>> =
         colGroup(this).frameCols(filter)
 
     // endregion
@@ -2125,7 +2250,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         )
 
     /** TODO tbd */
-    public fun SingleColumn<*>.colsOfKind(
+    public fun SingleColumn<DataRow<*>>.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,
         predicate: ColumnFilter<*> = { true },
@@ -2144,7 +2269,15 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         colGroup(this).colsOfKind(kind, *others, predicate = predicate)
 
     /** TODO tbd */
-    public fun KProperty<*>.colsOfKind(
+    public fun KProperty<DataRow<*>>.colsOfKind(
+        kind: ColumnKind,
+        vararg others: ColumnKind,
+        predicate: ColumnFilter<*> = { true },
+    ): TransformableColumnSet<*> =
+        colGroup(this).colsOfKind(kind, *others, predicate = predicate)
+
+    /** TODO tbd */
+    public fun ColumnPath.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,
         predicate: ColumnFilter<*> = { true },
@@ -2195,7 +2328,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C, R> SingleColumn<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         selectUntyped(selector as ColumnsSelector<*, R>)
 
-    public fun <R> SingleColumn<*>.selectUntyped(selector: ColumnsSelector<*, R>): ColumnSet<R> =
+    private fun <R> SingleColumn<DataRow<*>>.selectUntyped(selector: ColumnsSelector<*, R>): ColumnSet<R> =
         ensureIsColGroup().let { singleColumn ->
             createColumnSet {
                 singleColumn.resolveSingle(it)?.let { col ->
@@ -2213,22 +2346,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C, R> KProperty<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         colGroup(this).selectUntyped(selector as ColumnsSelector<*, R>)
 
-//    @Deprecated(
-//        message = "While you can use selectUntyped, the typed select is preferred for better type safety.",
-//        replaceWith = ReplaceWith("colGroup<MyType>(this).select(selector)"),
-//        level = DeprecationLevel.WARNING,
-//    )
-    public fun <R> KProperty<*>.selectUntyped(selector: ColumnsSelector<*, R>): ColumnSet<R> =
-        colGroup(this).selectUntyped(selector)
-
-//    @Deprecated(
-//        message = "While you can use selectUntyped, the typed select is preferred for better type safety.",
-//        replaceWith = ReplaceWith("colGroup<MyType>(this).select(selector)"),
-//        level = DeprecationLevel.WARNING,
-//    )
     public fun <R> String.select(selector: ColumnsSelector<*, R>): ColumnSet<R> =
         colGroup(this).selectUntyped(selector)
 
+    public fun <R> ColumnPath.select(selector: ColumnsSelector<*, R>): ColumnSet<R> =
+        colGroup(this).selectUntyped(selector)
 
     @Deprecated(
         message = "Nested select is reserved for ColumnsSelector/ColumnsSelectionDsl behavior. " +
@@ -2236,7 +2358,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         replaceWith = ReplaceWith("this.cols(*columns)"),
         level = DeprecationLevel.ERROR,
     )
-    public fun SingleColumn<*>.select(vararg columns: String): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.select(vararg columns: String): ColumnSet<*> =
         select { columns.toColumnSet() }
 
     @Deprecated(
@@ -2245,7 +2367,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         replaceWith = ReplaceWith("this.cols(*columns)"),
         level = DeprecationLevel.ERROR,
     )
-    public fun <R> SingleColumn<*>.select(vararg columns: ColumnReference<R>): ColumnSet<R> =
+    public fun <R> SingleColumn<DataRow<*>>.select(vararg columns: ColumnReference<R>): ColumnSet<R> =
         select { columns.toColumnSet() }
 
     @Deprecated(
@@ -2254,7 +2376,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         replaceWith = ReplaceWith("this.cols(*columns)"),
         level = DeprecationLevel.ERROR,
     )
-    public fun <R> SingleColumn<*>.select(vararg columns: KProperty<R>): ColumnSet<R> =
+    public fun <R> SingleColumn<DataRow<*>>.select(vararg columns: KProperty<R>): ColumnSet<R> =
         select { columns.toColumnSet() }
 
     // endregion
@@ -2273,8 +2395,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         replaceWith = ReplaceWith("this.cols(predicate).recursively()"),
         level = DeprecationLevel.WARNING,
     )
-    public fun SingleColumn<*>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
-        ensureIsColGroup().dfsInternal(predicate)
+    public fun SingleColumn<DataRow<*>>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
+        ensureIsColGroup().asColumnSet().dfsInternal(predicate)
 
     @Deprecated(
         message = "dfs is deprecated, use recursively instead.",
@@ -2290,6 +2412,14 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         level = DeprecationLevel.WARNING,
     )
     public fun <C> KProperty<C>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
+        colGroup(this).dfs(predicate)
+
+    @Deprecated(
+        message = "dfs is deprecated, use recursively instead.",
+        replaceWith = ReplaceWith("this.cols(predicate).recursively()"),
+        level = DeprecationLevel.WARNING,
+    )
+    public fun ColumnPath.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         colGroup(this).dfs(predicate)
 
     // endregion
@@ -2309,7 +2439,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         replaceWith = ReplaceWith("this.cols { includeGroups || !it.isColumnGroup() }.recursively()"),
         level = DeprecationLevel.WARNING,
     )
-    public fun SingleColumn<*>.allDfs(includeGroups: Boolean = false): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.allDfs(includeGroups: Boolean = false): ColumnSet<*> =
         if (includeGroups) dfs { true } else dfs { !it.isColumnGroup() }
 
     @Deprecated(
@@ -2325,7 +2455,15 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         replaceWith = ReplaceWith("this.cols { includeGroups || !it.isColumnGroup() }.recursively()"),
         level = DeprecationLevel.WARNING,
     )
-    public fun KProperty<*>.allDfs(includeGroups: Boolean = false): ColumnSet<*> =
+    public fun KProperty<DataRow<*>>.allDfs(includeGroups: Boolean = false): ColumnSet<*> =
+        colGroup(this).allDfs(includeGroups)
+
+    @Deprecated(
+        message = "allDfs is deprecated, use recursively instead.",
+        replaceWith = ReplaceWith("this.cols { includeGroups || !it.isColumnGroup() }.recursively()"),
+        level = DeprecationLevel.WARNING,
+    )
+    public fun ColumnPath.allDfs(includeGroups: Boolean = false): ColumnSet<*> =
         colGroup(this).allDfs(includeGroups)
 
     /**
@@ -2334,22 +2472,22 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * Modifies the previous call to run not only on the current column set,
      * but also on all columns inside [column groups][ColumnGroup].
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnSet.colsOf]`<`[String][String]`>() }`
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() }`
      *
      * returns all columns of type [String] in the top-level, as expected. However, what if you want ALL
      * columns of type [String] even if they are inside a nested [column group][ColumnGroup]? Then you can use [recursively]:
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnSet.colsOf]`<`[String][String]`>().`[recursively][recursively]`() }`
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[recursively][recursively]`() }`
      *
      * This will return the columns of type [String] in all levels.
      *
      * More examples:
      *
-     * `df.`[select][DataFrame.select]` { `[first][ColumnSet.first]` { col -> col.`[any][DataColumn.any]` { it == "Alice" } }.`[recursively][recursively]`() }`
+     * `df.`[select][DataFrame.select]` { `[first][SingleColumn.first]` { col -> col.`[any][DataColumn.any]` { it == "Alice" } }.`[recursively][recursively]`() }`
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnSet.cols]` { "name" in it.`[name][ColumnReference.name]` }.`[rec][rec]`() }`
+     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]` { "name" in it.`[name][ColumnReference.name]` }.`[rec][rec]`() }`
      *
-     * `df.`[select][DataFrame.select]` { `[valueCols][ColumnSet.valueCols]`().`[recursively][recursively]`() }`
+     * `df.`[select][DataFrame.select]` { `[valueCols][SingleColumn.valueCols]`().`[recursively][recursively]`() }`
      *
      * #### Examples for this overload:
      *
@@ -2368,11 +2506,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @include [CommonRecursivelyDocs]
      * @arg [CommonRecursivelyDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnSet.colsOf]`<`[String][String]`>().`[recursively][recursively]`() }`
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[recursively][recursively]`() }`
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[all][ColumnSet.all]`().`[rec][rec]`() }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[all][SingleColumn.all]`().`[rec][rec]`() }`
      *
-     * `df.`[select][DataFrame.select]` { `[groups][ColumnSet.groups]`().`[recursively][recursively]`() }`
+     * `df.`[select][DataFrame.select]` { `[groups][SingleColumn.groups]`().`[recursively][recursively]`() }`
      */
     public fun <C> TransformableColumnSet<C>.recursively(): ColumnSet<C> =
         recursivelyImpl(includeTopLevel = true, includeGroups = true)
@@ -2384,9 +2522,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @include [CommonRecursivelyDocs]
      * @arg [CommonRecursivelyDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { `[first][ColumnSet.first]` { col -> col.`[any][DataColumn.any]` { it == "Alice" } }.`[recursively][recursively]`() }`
+     * `df.`[select][DataFrame.select]` { `[first][SingleColumn.first]` { col -> col.`[any][DataColumn.any]` { it == "Alice" } }.`[recursively][recursively]`() }`
      *
-     * `df.`[select][DataFrame.select]` { `[single][ColumnSet.single]` { it.name == "myCol" }.`[rec][rec]`() }`
+     * `df.`[select][DataFrame.select]` { `[single][SingleColumn.single]` { it.name == "myCol" }.`[rec][rec]`() }`
      */
     public fun TransformableSingleColumn<*>.recursively(): SingleColumn<*> =
         recursivelyImpl(includeTopLevel = true, includeGroups = true)
@@ -2428,12 +2566,12 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * If the current [ColumnSet] is a [SingleColumn] and consists of only one [column group][ColumnGroup],
      * then `all` will create a new [ColumnSet] consisting of its children.
      *
-     * This makes the function equivalent to [cols()][ColumnSet.cols].
+     * This makes the function equivalent to [cols()][SingleColumn.cols].
      *
      * #### For example:
-     * `df.`[move][DataFrame.move]` { `[all][ColumnSet.all]`().`[recursively][recursively]`() }.`[under][MoveClause.under]`("info")`
+     * `df.`[move][DataFrame.move]` { `[all][SingleColumn.all]`().`[recursively][recursively]`() }.`[under][MoveClause.under]`("info")`
      *
-     * `df.`[select][DataFrame.select]` { myGroup.`[all][ColumnSet.all]`() }`
+     * `df.`[select][DataFrame.select]` { myGroup.`[all][SingleColumn.all]`() }`
      *
      * #### Examples for this overload:
      *
@@ -2462,7 +2600,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * NOTE: This is an identity call and can be omitted in most cases. However, it can still prove useful
      * for readability or in combination with [recursively][TransformableColumnSet.recursively].
      */
-    public fun <C> ColumnSet<C>.all(): TransformableColumnSet<C> = allColumnsInternal()
+    public fun <C> ColumnSet<C>.all(): TransformableColumnSet<C> = allColumnsInternal() as TransformableColumnSet<C>
 
     /**
      * @include [CommonAllDocs]
@@ -2474,7 +2612,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroup"].`[all][all]`() }`
      */
-    public fun SingleColumn<*>.all(): TransformableColumnSet<*> = ensureIsColGroup().allColumnsInternal()
+    public fun SingleColumn<DataRow<*>>.all(): TransformableColumnSet<*> = ensureIsColGroup().allColumnsInternal()
 
     /**
      * @include [CommonAllDocs]
@@ -2490,7 +2628,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { Type::columnGroup.`[all][all]`() }`
      */
-    public fun KProperty<*>.all(): TransformableColumnSet<*> = colGroup(this).all()
+    public fun KProperty<DataRow<*>>.all(): TransformableColumnSet<*> = colGroup(this).all()
+
+    /** TODO */
+    public fun ColumnPath.all(): TransformableColumnSet<*> = colGroup(this).all()
 
     // endregion
 
@@ -2606,17 +2747,17 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     }
 
     /** @include [SingleColumnAllAfterDocs] {@arg [SingleColumnAllAfterDocs.Arg] "pathTo"["myColumn"]} */
-    public fun SingleColumn<*>.allAfter(column: ColumnPath): ColumnSet<*> =
-        (ensureIsColGroup() as ColumnSet<*>).allAfter(column)
+    public fun SingleColumn<DataRow<*>>.allAfter(column: ColumnPath): ColumnSet<*> =
+        ensureIsColGroup().asColumnSet().allAfter(column)
 
     /** @include [SingleColumnAllAfterDocs] {@arg [SingleColumnAllAfterDocs.Arg] "myColumn"} */
-    public fun SingleColumn<*>.allAfter(column: String): ColumnSet<*> = allAfter(pathOf(column))
+    public fun SingleColumn<DataRow<*>>.allAfter(column: String): ColumnSet<*> = allAfter(pathOf(column))
 
     /** @include [SingleColumnAllAfterDocs] {@arg [SingleColumnAllAfterDocs.Arg] myColumn} */
-    public fun SingleColumn<*>.allAfter(column: AnyColumnReference): ColumnSet<*> = allAfter(column.path())
+    public fun SingleColumn<DataRow<*>>.allAfter(column: AnyColumnReference): ColumnSet<*> = allAfter(column.path())
 
     /** @include [SingleColumnAllAfterDocs] {@arg [SingleColumnAllAfterDocs.Arg] Type::myColumn} */
-    public fun SingleColumn<*>.allAfter(column: KProperty<*>): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.allAfter(column: KProperty<*>): ColumnSet<*> =
         allAfter(column.toColumnAccessor().path())
 
     /**
@@ -2657,18 +2798,41 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     }
 
     /** @include [KPropertyAllAfterDocs] {@arg [KPropertyAllAfterDocs.Arg] "pathTo"["myColumn"]} */
-    public fun KProperty<*>.allAfter(column: ColumnPath): ColumnSet<*> =
+    public fun KProperty<DataRow<*>>.allAfter(column: ColumnPath): ColumnSet<*> =
         colGroup(this).allAfter(column)
 
     /** @include [KPropertyAllAfterDocs] {@arg [KPropertyAllAfterDocs.Arg] "myColumn"} */
-    public fun KProperty<*>.allAfter(column: String): ColumnSet<*> = colGroup(this).allAfter(column)
+    public fun KProperty<DataRow<*>>.allAfter(column: String): ColumnSet<*> = colGroup(this).allAfter(column)
 
     /** @include [KPropertyAllAfterDocs] {@arg [KPropertyAllAfterDocs.Arg] myColumn} */
-    public fun KProperty<*>.allAfter(column: AnyColumnReference): ColumnSet<*> =
+    public fun KProperty<DataRow<*>>.allAfter(column: AnyColumnReference): ColumnSet<*> =
         colGroup(this).allAfter(column)
 
     /** @include [KPropertyAllAfterDocs] {@arg [KPropertyAllAfterDocs.Arg] Type::myColumn} */
-    public fun KProperty<*>.allAfter(column: KProperty<*>): ColumnSet<*> =
+    public fun KProperty<DataRow<*>>.allAfter(column: KProperty<*>): ColumnSet<*> =
+        colGroup(this).allAfter(column)
+
+    /** TODO */
+    private interface ColumnPathAllAfterDocs {
+
+        /** Example argument to use */
+        interface Arg
+    }
+
+    /** @include [ColumnPathAllAfterDocs] {@arg [ColumnPathAllAfterDocs.Arg] "pathTo"["myColumn"]} */
+    public fun ColumnPath.allAfter(column: ColumnPath): ColumnSet<*> =
+        colGroup(this).allAfter(column)
+
+    /** @include [ColumnPathAllAfterDocs] {@arg [ColumnPathAllAfterDocs.Arg] "myColumn"} */
+    public fun ColumnPath.allAfter(column: String): ColumnSet<*> =
+        colGroup(this).allAfter(column)
+
+    /** @include [ColumnPathAllAfterDocs] {@arg [ColumnPathAllAfterDocs.Arg] myColumn} */
+    public fun ColumnPath.allAfter(column: AnyColumnReference): ColumnSet<*> =
+        colGroup(this).allAfter(column)
+
+    /** @include [ColumnPathAllAfterDocs] {@arg [ColumnPathAllAfterDocs.Arg] Type::myColumn} */
+    public fun ColumnPath.allAfter(column: KProperty<*>): ColumnSet<*> =
         colGroup(this).allAfter(column)
 
     // endregion
@@ -2736,17 +2900,17 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     }
 
     /** @include [SingleColumnAllFromDocs] {@arg [SingleColumnAllFromDocs.Arg] "pathTo"["myColumn"]} */
-    public fun SingleColumn<*>.allFrom(column: ColumnPath): ColumnSet<*> =
-        (ensureIsColGroup() as ColumnSet<*>).allFrom(column)
+    public fun SingleColumn<DataRow<*>>.allFrom(column: ColumnPath): ColumnSet<*> =
+        ensureIsColGroup().asColumnSet().allFrom(column)
 
     /** @include [SingleColumnAllFromDocs] {@arg [SingleColumnAllFromDocs.Arg] "myColumn"} */
-    public fun SingleColumn<*>.allFrom(column: String): ColumnSet<*> = allFrom(pathOf(column))
+    public fun SingleColumn<DataRow<*>>.allFrom(column: String): ColumnSet<*> = allFrom(pathOf(column))
 
     /** @include [SingleColumnAllFromDocs] {@arg [SingleColumnAllFromDocs.Arg] myColumn} */
-    public fun SingleColumn<*>.allFrom(column: AnyColumnReference): ColumnSet<*> = allFrom(column.path())
+    public fun SingleColumn<DataRow<*>>.allFrom(column: AnyColumnReference): ColumnSet<*> = allFrom(column.path())
 
     /** @include [SingleColumnAllFromDocs] {@arg [SingleColumnAllFromDocs.Arg] Type::myColumn} */
-    public fun SingleColumn<*>.allFrom(column: KProperty<*>): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.allFrom(column: KProperty<*>): ColumnSet<*> =
         allFrom(column.toColumnAccessor().path())
 
     /**
@@ -2787,19 +2951,38 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     }
 
     /** @include [KPropertyAllFromDocs] {@arg [KPropertyAllFromDocs.Arg] "pathTo"["myColumn"]} */
-    public fun KProperty<*>.allFrom(column: ColumnPath): ColumnSet<*> =
+    public fun KProperty<DataRow<*>>.allFrom(column: ColumnPath): ColumnSet<*> =
         colGroup(this).allFrom(column)
 
     /** @include [KPropertyAllFromDocs] {@arg [KPropertyAllFromDocs.Arg] "myColumn"} */
-    public fun KProperty<*>.allFrom(column: String): ColumnSet<*> = colGroup(this).allFrom(column)
+    public fun KProperty<DataRow<*>>.allFrom(column: String): ColumnSet<*> = colGroup(this).allFrom(column)
 
     /** @include [KPropertyAllFromDocs] {@arg [KPropertyAllFromDocs.Arg] myColumn} */
-    public fun KProperty<*>.allFrom(column: AnyColumnReference): ColumnSet<*> =
+    public fun KProperty<DataRow<*>>.allFrom(column: AnyColumnReference): ColumnSet<*> =
         colGroup(this).allFrom(column)
 
     /** @include [KPropertyAllFromDocs] {@arg [KPropertyAllFromDocs.Arg] Type::myColumn} */
-    public fun KProperty<*>.allFrom(column: KProperty<*>): ColumnSet<*> =
+    public fun KProperty<DataRow<*>>.allFrom(column: KProperty<*>): ColumnSet<*> =
         colGroup(this).allFrom(column)
+
+    /** TODO */
+    private interface ColumnPathAllFromDocs {
+
+        /** Example argument to use */
+        interface Arg
+    }
+
+    /** @include [ColumnPathAllFromDocs] {@arg [ColumnPathAllFromDocs.Arg] "pathTo"["myColumn"]} */
+    public fun ColumnPath.allFrom(column: ColumnPath): ColumnSet<*> = colGroup(this).allFrom(column)
+
+    /** @include [ColumnPathAllFromDocs] {@arg [ColumnPathAllFromDocs.Arg] "myColumn"} */
+    public fun ColumnPath.allFrom(column: String): ColumnSet<*> = colGroup(this).allFrom(column)
+
+    /** @include [ColumnPathAllFromDocs] {@arg [ColumnPathAllFromDocs.Arg] myColumn} */
+    public fun ColumnPath.allFrom(column: AnyColumnReference): ColumnSet<*> = colGroup(this).allFrom(column)
+
+    /** @include [ColumnPathAllFromDocs] {@arg [ColumnPathAllFromDocs.Arg] Type::myColumn} */
+    public fun ColumnPath.allFrom(column: KProperty<*>): ColumnSet<*> = colGroup(this).allFrom(column)
 
     // endregion
 
@@ -2866,17 +3049,17 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     }
 
     /** @include [SingleColumnAllBeforeDocs] {@arg [SingleColumnAllBeforeDocs.Arg] "pathTo"["myColumn"]} */
-    public fun SingleColumn<*>.allBefore(column: ColumnPath): ColumnSet<*> =
-        (ensureIsColGroup() as ColumnSet<*>).allBefore(column)
+    public fun SingleColumn<DataRow<*>>.allBefore(column: ColumnPath): ColumnSet<*> =
+        ensureIsColGroup().asColumnSet().allBefore(column)
 
     /** @include [SingleColumnAllBeforeDocs] {@arg [SingleColumnAllBeforeDocs.Arg] "myColumn"} */
-    public fun SingleColumn<*>.allBefore(column: String): ColumnSet<*> = allBefore(pathOf(column))
+    public fun SingleColumn<DataRow<*>>.allBefore(column: String): ColumnSet<*> = allBefore(pathOf(column))
 
     /** @include [SingleColumnAllBeforeDocs] {@arg [SingleColumnAllBeforeDocs.Arg] myColumn} */
-    public fun SingleColumn<*>.allBefore(column: AnyColumnReference): ColumnSet<*> = allBefore(column.path())
+    public fun SingleColumn<DataRow<*>>.allBefore(column: AnyColumnReference): ColumnSet<*> = allBefore(column.path())
 
     /** @include [SingleColumnAllBeforeDocs] {@arg [SingleColumnAllBeforeDocs.Arg] Type::myColumn} */
-    public fun SingleColumn<*>.allBefore(column: KProperty<*>): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.allBefore(column: KProperty<*>): ColumnSet<*> =
         allBefore(column.toColumnAccessor().path())
 
     /**
@@ -2918,19 +3101,42 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     }
 
     /** @include [KPropertyAllBeforeDocs] {@arg [KPropertyAllBeforeDocs.Arg] "pathTo"["myColumn"]} */
-    public fun KProperty<*>.allBefore(column: ColumnPath): ColumnSet<*> =
+    public fun KProperty<DataRow<*>>.allBefore(column: ColumnPath): ColumnSet<*> =
         colGroup(this).allBefore(column)
 
     /** @include [KPropertyAllBeforeDocs] {@arg [KPropertyAllBeforeDocs.Arg] "myColumn"} */
-    public fun KProperty<*>.allBefore(column: String): ColumnSet<*> =
+    public fun KProperty<DataRow<*>>.allBefore(column: String): ColumnSet<*> =
         colGroup(this).allBefore(column)
 
     /** @include [KPropertyAllBeforeDocs] {@arg [KPropertyAllBeforeDocs.Arg] myColumn} */
-    public fun KProperty<*>.allBefore(column: AnyColumnReference): ColumnSet<*> =
+    public fun KProperty<DataRow<*>>.allBefore(column: AnyColumnReference): ColumnSet<*> =
         colGroup(this).allBefore(column)
 
     /** @include [KPropertyAllBeforeDocs] {@arg [KPropertyAllBeforeDocs.Arg] Type::myColumn} */
-    public fun KProperty<*>.allBefore(column: KProperty<*>): ColumnSet<*> =
+    public fun KProperty<DataRow<*>>.allBefore(column: KProperty<*>): ColumnSet<*> =
+        colGroup(this).allBefore(column)
+
+    /** TODO */
+    private interface ColumnPathAllBeforeDocs {
+
+        /** Example argument to use */
+        interface Arg
+    }
+
+    /** @include [ColumnPathAllBeforeDocs] {@arg [ColumnPathAllBeforeDocs.Arg] "pathTo"["myColumn"]} */
+    public fun ColumnPath.allBefore(column: ColumnPath): ColumnSet<*> =
+        colGroup(this).allBefore(column)
+
+    /** @include [ColumnPathAllBeforeDocs] {@arg [ColumnPathAllBeforeDocs.Arg] "myColumn"} */
+    public fun ColumnPath.allBefore(column: String): ColumnSet<*> =
+        colGroup(this).allBefore(column)
+
+    /** @include [ColumnPathAllBeforeDocs] {@arg [ColumnPathAllBeforeDocs.Arg] myColumn} */
+    public fun ColumnPath.allBefore(column: AnyColumnReference): ColumnSet<*> =
+        colGroup(this).allBefore(column)
+
+    /** @include [ColumnPathAllBeforeDocs] {@arg [ColumnPathAllBeforeDocs.Arg] Type::myColumn} */
+    public fun ColumnPath.allBefore(column: KProperty<*>): ColumnSet<*> =
         colGroup(this).allBefore(column)
 
     // endregion
@@ -2998,17 +3204,17 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     }
 
     /** @include [SingleColumnAllUpToDocs] {@arg [SingleColumnAllUpToDocs.Arg] "pathTo"["myColumn"]} */
-    public fun SingleColumn<*>.allUpTo(column: ColumnPath): ColumnSet<*> =
-        (ensureIsColGroup() as ColumnSet<*>).allUpTo(column)
+    public fun SingleColumn<DataRow<*>>.allUpTo(column: ColumnPath): ColumnSet<*> =
+        ensureIsColGroup().asColumnSet().allUpTo(column)
 
     /** @include [SingleColumnAllUpToDocs] {@arg [SingleColumnAllUpToDocs.Arg] "myColumn"} */
-    public fun SingleColumn<*>.allUpTo(column: String): ColumnSet<*> = allUpTo(pathOf(column))
+    public fun SingleColumn<DataRow<*>>.allUpTo(column: String): ColumnSet<*> = allUpTo(pathOf(column))
 
     /** @include [SingleColumnAllUpToDocs] {@arg [SingleColumnAllUpToDocs.Arg] myColumn} */
-    public fun SingleColumn<*>.allUpTo(column: AnyColumnReference): ColumnSet<*> = allUpTo(column.path())
+    public fun SingleColumn<DataRow<*>>.allUpTo(column: AnyColumnReference): ColumnSet<*> = allUpTo(column.path())
 
     /** @include [SingleColumnAllUpToDocs] {@arg [SingleColumnAllUpToDocs.Arg] Type::myColumn} */
-    public fun SingleColumn<*>.allUpTo(column: KProperty<*>): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.allUpTo(column: KProperty<*>): ColumnSet<*> =
         allUpTo(column.toColumnAccessor().path())
 
     /**
@@ -3049,19 +3255,39 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     }
 
     /** @include [KPropertyAllUpToDocs] {@arg [KPropertyAllUpToDocs.Arg] "pathTo"["myColumn"]} */
-    public fun KProperty<*>.allUpTo(column: ColumnPath): ColumnSet<*> =
+    public fun KProperty<DataRow<*>>.allUpTo(column: ColumnPath): ColumnSet<*> =
         colGroup(this).allUpTo(column)
 
     /** @include [KPropertyAllUpToDocs] {@arg [KPropertyAllUpToDocs.Arg] "myColumn"} */
-    public fun KProperty<*>.allUpTo(column: String): ColumnSet<*> = colGroup(this).allUpTo(column)
+    public fun KProperty<DataRow<*>>.allUpTo(column: String): ColumnSet<*> = colGroup(this).allUpTo(column)
 
     /** @include [KPropertyAllUpToDocs] {@arg [KPropertyAllUpToDocs.Arg] myColumn} */
-    public fun KProperty<*>.allUpTo(column: AnyColumnReference): ColumnSet<*> =
+    public fun KProperty<DataRow<*>>.allUpTo(column: AnyColumnReference): ColumnSet<*> =
         colGroup(this).allUpTo(column)
 
     /** @include [KPropertyAllUpToDocs] {@arg [KPropertyAllUpToDocs.Arg] Type::myColumn} */
-    public fun KProperty<*>.allUpTo(column: KProperty<*>): ColumnSet<*> =
+    public fun KProperty<DataRow<*>>.allUpTo(column: KProperty<*>): ColumnSet<*> =
         colGroup(this).allUpTo(column)
+
+    /** TODO */
+    private interface ColumnPathAllUpToDocs {
+
+        /** Example argument to use */
+        interface Arg
+    }
+
+    /** @include [ColumnPathAllUpToDocs] {@arg [ColumnPathAllUpToDocs.Arg] "pathTo"["myColumn"]} */
+    public fun ColumnPath.allUpTo(column: ColumnPath): ColumnSet<*> =
+        allUpTo(column.toColumnAccessor().path())
+
+    /** @include [ColumnPathAllUpToDocs] {@arg [ColumnPathAllUpToDocs.Arg] "myColumn"} */
+    public fun ColumnPath.allUpTo(column: String): ColumnSet<*> = allUpTo(pathOf(column))
+
+    /** @include [ColumnPathAllUpToDocs] {@arg [ColumnPathAllUpToDocs.Arg] myColumn} */
+    public fun ColumnPath.allUpTo(column: AnyColumnReference): ColumnSet<*> = allUpTo(column.path())
+
+    /** @include [ColumnPathAllUpToDocs] {@arg [ColumnPathAllUpToDocs.Arg] Type::myColumn} */
+    public fun ColumnPath.allUpTo(column: KProperty<*>): ColumnSet<*> = allUpTo(column.toColumnAccessor().path())
 
     // endregion
 
@@ -3074,18 +3300,18 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         transform { it.flatMap { it.children().filter { predicate(it) } } }
 
     // same as cols
-    public fun SingleColumn<*>.children(predicate: ColumnFilter<Any?> = { true }): TransformableColumnSet<*> =
-        (ensureIsColGroup() as ColumnSet<*>).children(predicate)
+    public fun SingleColumn<DataRow<*>>.children(predicate: ColumnFilter<Any?> = { true }): TransformableColumnSet<*> =
+        ensureIsColGroup().asColumnSet().children(predicate)
 
     // endregion
 
-    public fun SingleColumn<*>.take(n: Int): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.take(n: Int): ColumnSet<*> =
         ensureIsColGroup().transformSingle { it.children().take(n) }
-    public fun SingleColumn<*>.takeLast(n: Int): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.takeLast(n: Int): ColumnSet<*> =
         ensureIsColGroup().transformSingle { it.children().takeLast(n) }
-    public fun SingleColumn<*>.drop(n: Int): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.drop(n: Int): ColumnSet<*> =
         ensureIsColGroup().transformSingle { it.children().drop(n) }
-    public fun SingleColumn<*>.dropLast(n: Int = 1): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.dropLast(n: Int = 1): ColumnSet<*> =
         ensureIsColGroup().transformSingle { it.children().dropLast(n) }
 
     public fun <C> ColumnSet<C>.drop(n: Int): ColumnSet<C> = transform { it.drop(n) }
@@ -3112,57 +3338,60 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     /**
      * @include [roots]
      */
-    public fun SingleColumn<*>.roots(): ColumnSet<*> = ensureIsColGroup().rootsInternal()
+    public fun SingleColumn<DataRow<*>>.roots(): ColumnSet<*> = ensureIsColGroup().rootsInternal()
 
     public fun <C> ColumnSet<C>.takeWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
         transform { it.takeWhile(predicate) }
 
-    public fun SingleColumn<*>.takeWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.takeWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
         ensureIsColGroup().transformSingle { it.children().takeWhile(predicate) }
 
     public fun <C> ColumnSet<C>.takeLastWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
         transform { it.takeLastWhile(predicate) }
 
-    public fun SingleColumn<*>.takeLastWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.takeLastWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
         ensureIsColGroup().transformSingle { it.children().takeLastWhile(predicate) }
 
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.filter(predicate: ColumnFilter<C>): TransformableColumnSet<C> =
         colsInternal(predicate as ColumnFilter<*>) as TransformableColumnSet<C>
 
-    public fun SingleColumn<*>.filter(predicate: ColumnFilter<*>): TransformableColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.filter(predicate: ColumnFilter<*>): TransformableColumnSet<*> =
         ensureIsColGroup().colsInternal(predicate)
 
-    public fun SingleColumn<*>.nameContains(text: CharSequence): TransformableColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.nameContains(text: CharSequence): TransformableColumnSet<*> =
         ensureIsColGroup().colsInternal { it.name.contains(text) }
 
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.nameContains(text: CharSequence): TransformableColumnSet<C> =
         colsInternal { it.name.contains(text) } as TransformableColumnSet<C>
 
-    public fun SingleColumn<*>.nameContains(regex: Regex): TransformableColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.nameContains(regex: Regex): TransformableColumnSet<*> =
         ensureIsColGroup().colsInternal { it.name.contains(regex) }
 
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.nameContains(regex: Regex): TransformableColumnSet<C> =
         colsInternal { it.name.contains(regex) } as TransformableColumnSet<C>
 
-    public fun SingleColumn<*>.startsWith(prefix: CharSequence): TransformableColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.startsWith(prefix: CharSequence): TransformableColumnSet<*> =
         ensureIsColGroup().colsInternal { it.name.startsWith(prefix) }
 
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.startsWith(prefix: CharSequence): TransformableColumnSet<C> =
         colsInternal { it.name.startsWith(prefix) } as TransformableColumnSet<C>
 
-    public fun SingleColumn<*>.endsWith(suffix: CharSequence): TransformableColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.endsWith(suffix: CharSequence): TransformableColumnSet<*> =
         ensureIsColGroup().colsInternal { it.name.endsWith(suffix) }
 
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.endsWith(suffix: CharSequence): TransformableColumnSet<C> =
         colsInternal { it.name.endsWith(suffix) } as TransformableColumnSet<C>
 
-    public fun <C> ColumnSet<C>.except(vararg other: ColumnSet<*>): TransformableColumnSet<*> =
+    public fun <C> ColumnSet<C>.except(vararg other: ColumnsResolver<*>): TransformableColumnSet<*> =
         except(other.toColumnSet())
+
+    public fun SingleColumn<DataRow<*>>.except(vararg other: ColumnsResolver<*>): TransformableColumnSet<*> =
+        ensureIsColGroup().asColumnSet().asColumnSet().except(*other)
 
     public fun <C> ColumnSet<C>.except(vararg other: String): TransformableColumnSet<*> = except(other.toColumnSet())
 
@@ -3170,7 +3399,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnSet<C?>.withoutNulls(): TransformableColumnSet<C> =
         transform { it.filter { !it.hasNulls() } } as TransformableColumnSet<C>
 
-    public infix fun <C> ColumnSet<C>.except(other: ColumnSet<*>): TransformableColumnSet<*> =
+    public infix fun <C> ColumnSet<C>.except(other: ColumnsResolver<*>): TransformableColumnSet<*> =
         createTransformableColumnSet(
             resolver = { context ->
                 this@except
@@ -3187,7 +3416,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public infix fun <C> ColumnSet<C>.except(selector: ColumnsSelector<T, *>): TransformableColumnSet<C> =
         except(selector.toColumns()) as TransformableColumnSet<C>
 
-    public operator fun <C> ColumnsSelector<T, C>.invoke(): ColumnSet<C> =
+    public infix fun SingleColumn<DataRow<*>>.except(selector: ColumnsSelector<T, *>): TransformableColumnSet<*> =
+        ensureIsColGroup().except(selector.toColumns())
+
+    public operator fun <C> ColumnsSelector<T, C>.invoke(): ColumnsResolver<C> =
         this(this@ColumnsSelectionDsl, this@ColumnsSelectionDsl)
 
     public infix fun <C> ColumnReference<C>.into(newName: String): ColumnReference<C> = named(newName)
@@ -3227,14 +3459,14 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region String
     public infix fun String.and(other: String): ColumnSet<*> = toColumnAccessor() and other.toColumnAccessor()
-    public infix fun <C> String.and(other: ColumnSet<C>): ColumnSet<*> = toColumnAccessor() and other
+    public infix fun <C> String.and(other: ColumnsResolver<C>): ColumnSet<*> = toColumnAccessor() and other
     public infix fun <C> String.and(other: KProperty<C>): ColumnSet<*> = toColumnAccessor() and other
     public infix fun <C> String.and(other: ColumnsSelector<T, C>): ColumnSet<*> = toColumnAccessor() and other()
 
     // endregion
 
     // region KProperty
-    public infix fun <C> KProperty<C>.and(other: ColumnSet<C>): ColumnSet<C> = toColumnAccessor() and other
+    public infix fun <C> KProperty<C>.and(other: ColumnsResolver<C>): ColumnSet<C> = toColumnAccessor() and other
     public infix fun <C> KProperty<C>.and(other: String): ColumnSet<*> = toColumnAccessor() and other
     public infix fun <C> KProperty<C>.and(other: KProperty<C>): ColumnSet<C> =
         toColumnAccessor() and other.toColumnAccessor()
@@ -3245,10 +3477,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region ColumnSet
 
-    public infix fun <C> ColumnSet<C>.and(other: KProperty<C>): ColumnSet<C> = this and other.toColumnAccessor()
-    public infix fun <C> ColumnSet<C>.and(other: String): ColumnSet<*> = this and other.toColumnAccessor()
-    public infix fun <C> ColumnSet<C>.and(other: ColumnSet<C>): ColumnSet<C> = ColumnsList(this, other)
-    public infix fun <C> ColumnSet<C>.and(other: ColumnsSelector<T, C>): ColumnSet<C> = this and other()
+    public infix fun <C> ColumnsResolver<C>.and(other: KProperty<C>): ColumnSet<C> = this and other.toColumnAccessor()
+    public infix fun <C> ColumnsResolver<C>.and(other: String): ColumnSet<*> = this and other.toColumnAccessor()
+    public infix fun <C> ColumnsResolver<C>.and(other: ColumnsResolver<C>): ColumnSet<C> = ColumnsList(this, other)
+    public infix fun <C> ColumnsResolver<C>.and(other: ColumnsSelector<T, C>): ColumnSet<C> = this and other()
 
     // endregion
 
@@ -3256,7 +3488,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public infix fun <C> ColumnsSelector<T, C>.and(other: KProperty<C>): ColumnSet<C> = this() and other
     public infix fun <C> ColumnsSelector<T, C>.and(other: String): ColumnSet<*> = this() and other
-    public infix fun <C> ColumnsSelector<T, C>.and(other: ColumnSet<C>): ColumnSet<C> = this() and other
+    public infix fun <C> ColumnsSelector<T, C>.and(other: ColumnsResolver<C>): ColumnSet<C> = this() and other
     public infix fun <C> ColumnsSelector<T, C>.and(other: ColumnsSelector<T, C>): ColumnSet<C> = this() and other
 
     // endregion
@@ -3282,7 +3514,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
             "org.jetbrains.kotlinx.dataframe.api.colsOf",
         ),
     )
-    public fun <C> KProperty<*>.dfsOf(type: KType, predicate: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<*> =
+    public fun <C> KProperty<DataRow<*>>.dfsOf(type: KType, predicate: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<*> =
         colGroup(this).dfsOf(type, predicate)
 
     /**
@@ -3312,7 +3544,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @include [CommonColsOfDocs.FilterParam]
      * @include [CommonColsOfDocs.Return]
      */
-    public fun <C> KProperty<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<*> =
+    public fun <C> KProperty<DataRow<*>>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<*> =
+        colGroup(this).colsOf(type, filter)
+
+    /**
+     * TODO
+     */
+    public fun <C> ColumnPath.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<*> =
         colGroup(this).colsOf(type, filter)
 }
 
@@ -3335,21 +3573,25 @@ public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(
     noinline expression: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(name, infer, expression)
 
+public fun <C> SingleColumn<C>.asColumnGroup(): SingleColumn<DataRow<C>> = this as SingleColumn<DataRow<C>>
+
+public fun <C> KProperty<C>.asColumnGroup(): KProperty<DataRow<C>> = this as KProperty<DataRow<C>>
+
 internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) -> Boolean): ColumnsSelector<T, C> =
-    { this@filter(it, it).filter(predicate) }
+    { this@filter(it, it).asColumnSet().filter(predicate) }
 
 /**
- * If this [ColumnSet] is a [SingleColumn], it
+ * If this [ColumnsResolver] is a [SingleColumn], it
  * returns a new [ColumnSet] containing the children of this [SingleColumn] that
  * match the given [predicate].
  *
- * Else, it returns a new [ColumnSet] containing all columns in this [ColumnSet] that
+ * Else, it returns a new [ColumnSet] containing all columns in this [ColumnsResolver] that
  * match the given [predicate].
  */
-internal fun ColumnSet<*>.colsInternal(predicate: ColumnFilter<*>): TransformableColumnSet<*> =
+internal fun ColumnsResolver<*>.colsInternal(predicate: ColumnFilter<*>): TransformableColumnSet<*> =
     allColumnsInternal().transform { it.filter(predicate) }
 
-internal fun ColumnSet<*>.colsInternal(indices: IntArray): TransformableColumnSet<*> =
+internal fun ColumnsResolver<*>.colsInternal(indices: IntArray): TransformableColumnSet<*> =
     allColumnsInternal().transform { cols ->
         indices.map {
             try {
@@ -3360,7 +3602,7 @@ internal fun ColumnSet<*>.colsInternal(indices: IntArray): TransformableColumnSe
         }
     }
 
-internal fun ColumnSet<*>.colsInternal(range: IntRange): TransformableColumnSet<*> =
+internal fun ColumnsResolver<*>.colsInternal(range: IntRange): TransformableColumnSet<*> =
     allColumnsInternal().transform {
         try {
             it.subList(range.first, range.last + 1)
@@ -3369,19 +3611,19 @@ internal fun ColumnSet<*>.colsInternal(range: IntRange): TransformableColumnSet<
         }
     }
 
-internal fun ColumnSet<*>.rootsInternal(): ColumnSet<*> =
+internal fun ColumnsResolver<*>.rootsInternal(): ColumnSet<*> =
     allColumnsInternal().transform { it.roots() }
 
-internal fun ColumnSet<*>.valueColumnsInternal(filter: (ValueColumn<*>) -> Boolean): TransformableColumnSet<*> =
+internal fun ColumnsResolver<*>.valueColumnsInternal(filter: (ValueColumn<*>) -> Boolean): TransformableColumnSet<*> =
     colsInternal { it.isValueColumn() && filter(it.asValueColumn()) }
 
-internal fun ColumnSet<*>.columnGroupsInternal(filter: (ColumnGroup<*>) -> Boolean): TransformableColumnSet<AnyRow> =
+internal fun ColumnsResolver<*>.columnGroupsInternal(filter: (ColumnGroup<*>) -> Boolean): TransformableColumnSet<AnyRow> =
     colsInternal { it.isColumnGroup() && filter(it.asColumnGroup()) } as TransformableColumnSet<AnyRow>
 
-internal fun ColumnSet<*>.frameColumnsInternal(filter: (FrameColumn<*>) -> Boolean): TransformableColumnSet<AnyFrame> =
+internal fun ColumnsResolver<*>.frameColumnsInternal(filter: (FrameColumn<*>) -> Boolean): TransformableColumnSet<AnyFrame> =
     colsInternal { it.isFrameColumn() && filter(it.asFrameColumn()) } as TransformableColumnSet<AnyFrame>
 
-internal fun ColumnSet<*>.columnsOfKindInternal(
+internal fun ColumnsResolver<*>.columnsOfKindInternal(
     kinds: Set<ColumnKind>,
     predicate: ColumnFilter<*>,
 ): TransformableColumnSet<*> = colsInternal {
@@ -3393,18 +3635,14 @@ internal fun ColumnSet<*>.columnsOfKindInternal(
  * returns a [(transformable) ColumnSet][TransformableColumnSet] containing the children of this [ColumnGroup],
  * else it simply returns a [(transformable) ColumnSet][TransformableColumnSet] from [this].
  */
-internal fun <C> ColumnSet<C>.allColumnsInternal(): TransformableColumnSet<C> =
+internal fun ColumnsResolver<*>.allColumnsInternal(): TransformableColumnSet<*> =
     transform {
         if (this.isSingleColumnWithGroup(it)) {
             it.single().children()
         } else {
             it
         }
-    }.cast()
-
-/** @include [allColumnsInternal] */
-internal fun SingleColumn<*>.allColumnsInternal(): TransformableColumnSet<*> =
-    (this as ColumnSet<*>).allColumnsInternal()
+    }
 
 @Deprecated("Replaced with recursively()")
 internal fun ColumnSet<*>.dfsInternal(predicate: (ColumnWithPath<*>) -> Boolean) =
@@ -3429,8 +3667,8 @@ public fun <C> ColumnSet<*>.dfsOf(type: KType, predicate: (ColumnWithPath<C>) ->
         "org.jetbrains.kotlinx.dataframe.api.colsOf",
     ),
 )
-public fun <C> SingleColumn<*>.dfsOf(type: KType, predicate: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<*> =
-    ensureIsColGroup().dfsInternal { it.isSubtypeOf(type) && predicate(it.cast()) }
+public fun <C> SingleColumn<DataRow<*>>.dfsOf(type: KType, predicate: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<*> =
+    ensureIsColGroup().asColumnSet().dfsInternal { it.isSubtypeOf(type) && predicate(it.cast()) }
 
 @Deprecated(
     message = "Use recursively() instead",
@@ -3451,7 +3689,7 @@ public inline fun <reified C> ColumnSet<*>.dfsOf(noinline filter: (ColumnWithPat
         "org.jetbrains.kotlinx.dataframe.api.colsOf",
     ),
 )
-public inline fun <reified C> SingleColumn<*>.dfsOf(noinline filter: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<C> =
+public inline fun <reified C> SingleColumn<DataRow<*>>.dfsOf(noinline filter: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<C> =
     dfsOf(typeOf<C>(), filter) as ColumnSet<C>
 
 /**
@@ -3546,7 +3784,7 @@ public inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: (DataColumn<C
  * @include [CommonColsOfDocs.FilterParam]
  * @include [CommonColsOfDocs.Return]
  */
-public fun <C> SingleColumn<*>.colsOf(
+public fun <C> SingleColumn<DataRow<*>>.colsOf(
     type: KType,
     filter: (DataColumn<C>) -> Boolean = { true },
 ): TransformableColumnSet<C> =
@@ -3566,7 +3804,7 @@ public fun <C> SingleColumn<*>.colsOf(
  * @include [CommonColsOfDocs.FilterParam]
  * @include [CommonColsOfDocs.Return]
  */
-public inline fun <reified C> SingleColumn<*>.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }): TransformableColumnSet<C> =
+public inline fun <reified C> SingleColumn<DataRow<*>>.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }): TransformableColumnSet<C> =
     colsOf(typeOf<C>(), filter)
 
 /**
@@ -3575,7 +3813,7 @@ public inline fun <reified C> SingleColumn<*>.colsOf(noinline filter: (DataColum
  * and throwing an [IllegalArgumentException] if it's not.
  */
 @Suppress("UNCHECKED_CAST")
-internal fun SingleColumn<*>.ensureIsColGroup(): SingleColumn<DataRow<*>> =
+internal fun SingleColumn<DataRow<*>>.ensureIsColGroup(): SingleColumn<DataRow<*>> =
     performCheck { col: ColumnWithPath<*>? ->
         require(col?.isColumnGroup() != false) {
             "Attempted to perform a ColumnGroup operation on ${col?.kind()} ${col?.path}."
@@ -3584,7 +3822,7 @@ internal fun SingleColumn<*>.ensureIsColGroup(): SingleColumn<DataRow<*>> =
 
 /* TODO: [Issue: #325, context receiver support](https://github.com/Kotlin/dataframe/issues/325)
 context(ColumnsSelectionDsl)
-public inline fun <reified C> KProperty<*>.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<*> =
+public inline fun <reified C> KProperty<DataRow<*>>.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<*> =
     colsOf(typeOf<C>(), filter)
 
 context(ColumnsSelectionDsl)
