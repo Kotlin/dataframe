@@ -143,7 +143,7 @@ internal fun <A, B> SingleColumn<A>.transformSingle(
  * or it can be used as a [TransformableColumnSet]<[B]>, where a [ColumnsResolverTransformer] can be injected before
  * the [converter] is applied.
  */
-internal fun <A, B> ColumnSet<A>.transform(
+internal fun <A, B> ColumnsResolver<A>.transform(
     converter: (List<ColumnWithPath<A>>) -> List<ColumnWithPath<B>>,
 ): TransformableColumnSet<B> = object : TransformableColumnSet<B> {
     override fun resolve(context: ColumnResolutionContext) =

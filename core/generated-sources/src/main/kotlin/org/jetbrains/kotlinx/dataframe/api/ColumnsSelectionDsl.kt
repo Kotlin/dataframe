@@ -273,7 +273,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @see [last]
      */
     public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
-        allColumnsInternal()
+        (allColumnsInternal() as TransformableColumnSet<C>)
             .transform { listOf(it.first(condition)) }
             .singleOrNullWithTransformerImpl()
 
@@ -333,7 +333,18 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         colGroup(this).first(condition)
 
     /**
-     * TODO
+     * ## First
+     * Returns the first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
+     * If no column adheres to the given [condition], no column is selected.
+     *
+     * #### For example:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column that adheres to the given [condition].
+     * @throws [NoSuchElementException] if no column adheres to the given [condition].
+     * @see [last]
      */
     public fun ColumnPath.first(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         colGroup(this).first(condition)
@@ -379,7 +390,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @see [first]
      */
     public fun <C> ColumnSet<C>.last(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
-        allColumnsInternal()
+        (allColumnsInternal() as TransformableColumnSet<C>)
             .transform { listOf(it.last(condition)) }
             .singleOrNullWithTransformerImpl()
 
@@ -439,7 +450,18 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         colGroup(this).last(condition)
 
     /**
-     * TODO
+     * ## Last
+     * Returns the last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
+     * If no column adheres to the given [condition], no column is selected.
+     *
+     * #### For example:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column that adheres to the given [condition].
+     * @throws [NoSuchElementException] if no column adheres to the given [condition].
+     * @see [first]
      */
     public fun ColumnPath.last(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         colGroup(this).last(condition)
@@ -485,7 +507,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
      */
     public fun <C> ColumnSet<C>.single(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
-        allColumnsInternal()
+        (allColumnsInternal() as TransformableColumnSet<C>)
             .transform { listOf(it.single(condition)) }
             .singleOrNullWithTransformerImpl()
 
@@ -545,7 +567,18 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         colGroup(this).single(condition)
 
     /**
-     * TODO
+     * ## Single
+     * Returns the single column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
+     * If no column adheres to the given [condition] or multiple columns adhere to it, no column is selected.
+     *
+     * #### For example:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column that adheres to the given [condition].
+     * @throws [NoSuchElementException] if no column adheres to the given [condition].
+     * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
      */
     public fun ColumnPath.single(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         colGroup(this).single(condition)
@@ -1219,8 +1252,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.col]`5`[`]`][SingleColumn.col]` }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[col][SingleColumn.col]`(0) }`
-     *
      * @throws [IndexOutOfBoundsException] If the index is out of bounds.
      * @param [index] The index of the column to retrieve.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] for the column at the given index.
@@ -1250,8 +1281,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.col]`(0) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.col]`5`[`]`][SingleColumn.col]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[col][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.col]`(0) }`
      *
      * @throws [IndexOutOfBoundsException] If the index is out of bounds.
      * @param [index] The index of the column to retrieve.
@@ -1283,8 +1312,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.col]`(0) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.col]`5`[`]`][SingleColumn.col]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[col][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.col]`(0) }`
      *
      * @throws [IndexOutOfBoundsException] If the index is out of bounds.
      * @param [index] The index of the column to retrieve.
@@ -1481,13 +1508,98 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      */
     public operator fun KProperty<DataRow<*>>.get(index: Int): SingleColumn<*> = col(index)
 
-    /** TODO */
+    /**
+     * ## Col: Column by Index
+     *
+     * Retrieves a [column][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] by index.
+     * If the index is out of bounds, an [IndexOutOfBoundsException] will be thrown.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the child found at the
+     * given [index].
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * the function will return the [index]'th column in the set.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][SingleColumn.col]`(3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][SingleColumn.col]`5`[`]`][SingleColumn.col]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[col][String.col]`(0) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[col][ColumnPath.col]`(0) }`
+     *
+     * `// NOTE: There's a `[List.get][List.get]` function that prevents this:`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[col][ColumnPath.col]`(0) }`
+     *
+     * @throws [IndexOutOfBoundsException] If the index is out of bounds.
+     * @param [index] The index of the column to retrieve.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] for the column at the given index.
+     */
     private interface ColumnPathIndexDocs
 
-    /** TODO */
+    /** ## Col: Column by Index
+     *
+     * Retrieves a [column][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] by index.
+     * If the index is out of bounds, an [IndexOutOfBoundsException] will be thrown.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the child found at the
+     * given [index].
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * the function will return the [index]'th column in the set.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][SingleColumn.col]`(3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][SingleColumn.col]`5`[`]`][SingleColumn.col]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[col][String.col]`(0) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[col][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.col]`(0) }`
+     *
+     * `// NOTE: There's a `[List.get][kotlin.collections.List.get]` function that prevents this:`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[col][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.col]`(0) }`
+     *
+     * @throws [IndexOutOfBoundsException] If the index is out of bounds.
+     * @param [index] The index of the column to retrieve.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] for the column at the given index.
+     */
     public fun ColumnPath.col(index: Int): SingleColumn<*> = colGroup(this).col(index)
 
-    /** TODO */
+    /** ## Col: Column by Index
+     *
+     * Retrieves a [column][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] by index.
+     * If the index is out of bounds, an [IndexOutOfBoundsException] will be thrown.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the child found at the
+     * given [index].
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * the function will return the [index]'th column in the set.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][SingleColumn.col]`(3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][SingleColumn.col]`5`[`]`][SingleColumn.col]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[col][String.col]`(0) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[col][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.col]`(0) }`
+     *
+     * `// NOTE: There's a `[List.get][kotlin.collections.List.get]` function that prevents this:`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[col][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.col]`(0) }`
+     *
+     * @throws [IndexOutOfBoundsException] If the index is out of bounds.
+     * @param [index] The index of the column to retrieve.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] for the column at the given index.
+     */
     public operator fun ColumnPath.get(index: Int): SingleColumn<*> = col(index)
 
     // endregion
@@ -2618,12 +2730,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { `[cols][cols]`() } // same as `[all][all]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[cols][cols]` { "e" `[in][String.contains]` it.`[name][ColumnPath.name]`() } }`
-     *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"]`[`[`][cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][cols]` }`
-     *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[cols][cols]`() } // identity call, same as `[all][all]
-     *
      * `// NOTE: there's a `[DataFrame.get]` overload that prevents this:`
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][cols]`{ ... }`[`]`][cols]` }`
@@ -2663,12 +2769,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`.[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "e" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() } // same as `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "e" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"]`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() } // identity call, same as `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
      *
      * `// NOTE: there's a `[DataFrame.get][org.jetbrains.kotlinx.dataframe.DataFrame.get]` overload that prevents this:`
      *
@@ -2710,12 +2810,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`.[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "e" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() } // same as `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "e" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"]`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() } // identity call, same as `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
      *
      * `// NOTE: there's a `[DataFrame.get][org.jetbrains.kotlinx.dataframe.DataFrame.get]` overload that prevents this:`
      *
@@ -2947,15 +3041,103 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         predicate: ColumnFilter<*> = { true },
     ): TransformableColumnSet<*> = cols(predicate)
 
-    /** TODO */
+    /**
+     * ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its children.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] or any of the `vararg` overloads for all
+     * [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.get] operator in most cases.
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[cols][cols]` { "e" `[in][String.contains]` it.`[name][ColumnPath.name]`() } }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"]`[`[`][cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][cols]` }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[cols][cols]`() } // identity call, same as `[all][all]
+     *
+     *
+     * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
+     */
     private interface ColumnPathPredicateDocs
 
-    /** TODO */
+    /** ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its children.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] or any of the `vararg` overloads for all
+     * [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.get] operator in most cases.
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "e" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"]`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() } // identity call, same as `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
+     *
+     *
+     * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
+     */
     public fun ColumnPath.cols(
         predicate: ColumnFilter<*> = { true },
     ): TransformableColumnSet<*> = colGroup(this).cols(predicate)
 
-    /** TODO */
+    /** ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its children.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] or any of the `vararg` overloads for all
+     * [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.get] operator in most cases.
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "e" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"]`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() } // identity call, same as `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
+     *
+     *
+     * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
+     */
     public operator fun ColumnPath.get(
         predicate: ColumnFilter<*> = { true },
     ): TransformableColumnSet<*> = cols(predicate)
@@ -3104,12 +3286,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][cols]`(columnA, columnB) }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][cols]`(columnA, columnB) }`
-     *
-     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
-     *
-     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][cols]`columnA, columnB`[`]`][cols]` }`
-     *
      * `// NOTE: there's a `[DataFrame.get]` overload that prevents this:`
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][cols]`columnA, columnB`[`]`][cols]` }`
@@ -3148,12 +3324,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(columnA, columnB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(columnA, columnB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      * `// NOTE: there's a `[DataFrame.get][org.jetbrains.kotlinx.dataframe.DataFrame.get]` overload that prevents this:`
      *
@@ -3201,12 +3371,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(columnA, columnB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(columnA, columnB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      * `// NOTE: there's a `[DataFrame.get][org.jetbrains.kotlinx.dataframe.DataFrame.get]` overload that prevents this:`
      *
@@ -3435,16 +3599,107 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         vararg otherCols: ColumnReference<C>,
     ): ColumnSet<C> = cols(firstCol, *otherCols)
 
-    /** TODO */
+    /**
+     * ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its children.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] or any of the `vararg` overloads for all
+     * [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.get] operator in most cases.
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][cols]`columnA, columnB`[`]`][cols]` }`
+     *
+     *
+     * @param [firstCol] A [ColumnReference] that points to a column.
+     * @param [otherCols] Optional additional [ColumnReference]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
     private interface ColumnPathColsVarargColumnReferenceDocs
 
-    /** TODO */
+    /** ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its children.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] or any of the `vararg` overloads for all
+     * [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.get] operator in most cases.
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     *
+     *
+     * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
+     * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
     public fun <C> ColumnPath.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
     ): ColumnSet<C> = colGroup(this).cols(firstCol, *otherCols)
 
-    /** TODO */
+    /** ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its children.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] or any of the `vararg` overloads for all
+     * [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.get] operator in most cases.
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     *
+     *
+     * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
+     * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
     public operator fun <C> ColumnPath.get(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
@@ -3584,10 +3839,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][cols]`("columnA", "columnB") }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][cols]`"columnA", "columnB"`[`]`][cols]` }`
-     *
      * `// NOTE: there's a `[DataFrame.get]` overload that prevents this:`
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][cols]`"columnA", "columnB"`[`]`][cols]` }`
@@ -3624,10 +3875,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      * `// NOTE: there's a `[DataFrame.get][org.jetbrains.kotlinx.dataframe.DataFrame.get]` overload that prevents this:`
      *
@@ -3671,10 +3918,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      * `// NOTE: there's a `[DataFrame.get][org.jetbrains.kotlinx.dataframe.DataFrame.get]` overload that prevents this:`
      *
@@ -3891,16 +4134,101 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         vararg otherCols: String,
     ): ColumnSet<*> = cols(firstCol, *otherCols)
 
-    /** TODO */
+    /**
+     * ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its children.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] or any of the `vararg` overloads for all
+     * [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.get] operator in most cases.
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][cols]`"columnA", "columnB"`[`]`][cols]` }`
+     *
+     *
+     * @param [firstCol] A [String] that points to a column.
+     * @param [otherCols] Optional additional [String]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
     private interface ColumnPathColsVarargStringDocs
 
-    /** TODO */
+    /** ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its children.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] or any of the `vararg` overloads for all
+     * [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.get] operator in most cases.
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     *
+     *
+     * @param [firstCol] A [String] that points to a column.
+     * @param [otherCols] Optional additional [String]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
     public fun ColumnPath.cols(
         firstCol: String,
         vararg otherCols: String,
     ): ColumnSet<*> = colGroup(this).cols(firstCol, *otherCols)
 
-    /** TODO */
+    /** ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its children.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] or any of the `vararg` overloads for all
+     * [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.get] operator in most cases.
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     *
+     *
+     * @param [firstCol] A [String] that points to a column.
+     * @param [otherCols] Optional additional [String]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
     public operator fun ColumnPath.get(
         firstCol: String,
         vararg otherCols: String,
@@ -4041,10 +4369,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][cols]`Type::colA, Type::colB`[`]`][cols]` }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][cols]`(Type::colA, Type::colB) }`
-     *
-     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][cols]`Type::colA, Type::colB`[`]`][cols]` }`
-     *
      *
      * @param [firstCol] A [KProperty] that points to a column.
      * @param [otherCols] Optional additional [KProperty]s that point to columns.
@@ -4079,10 +4403,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(Type::colA, Type::colB) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(Type::colA, Type::colB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      *
      * @param [firstCol] A [KProperty] that points to a column.
@@ -4123,10 +4443,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(Type::colA, Type::colB) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(Type::colA, Type::colB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      *
      * @param [firstCol] A [KProperty] that points to a column.
@@ -4338,16 +4654,101 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         vararg otherCols: KProperty<C>,
     ): ColumnSet<C> = cols(firstCol, *otherCols)
 
-    /** TODO */
+    /**
+     * ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its children.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] or any of the `vararg` overloads for all
+     * [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.get] operator in most cases.
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][cols]`(Type::colA, Type::colB) }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][cols]`Type::colA, Type::colB`[`]`][cols]` }`
+     *
+     *
+     * @param [firstCol] A [KProperty] that points to a column.
+     * @param [otherCols] Optional additional [KProperty]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
     private interface ColumnPathColsVarargKPropertyDocs
 
-    /** TODO */
+    /** ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its children.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] or any of the `vararg` overloads for all
+     * [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.get] operator in most cases.
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(Type::colA, Type::colB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     *
+     *
+     * @param [firstCol] A [KProperty] that points to a column.
+     * @param [otherCols] Optional additional [KProperty]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
     public fun <C> ColumnPath.cols(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
     ): ColumnSet<C> = colGroup(this).cols(firstCol, *otherCols)
 
-    /** TODO */
+    /** ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its children.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] or any of the `vararg` overloads for all
+     * [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.get] operator in most cases.
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(Type::colA, Type::colB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     *
+     *
+     * @param [firstCol] A [KProperty] that points to a column.
+     * @param [otherCols] Optional additional [KProperty]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
     public operator fun <C> ColumnPath.get(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
@@ -4516,8 +4917,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { this`[`[`][SingleColumn.cols]`5, 0`[`]`][SingleColumn.cols]` }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[col][SingleColumn.cols]`(0, 1) }`
-     *
      * `// NOTE: There's a `[ColumnGroup.get][ColumnGroup.get]` overload that prevents this from working as expected here:`
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`5, 6`[`]`][SingleColumn.cols]` }`
@@ -4552,8 +4951,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`5, 0`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[col][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(0, 1) }`
      *
      * `// NOTE: There's a `[ColumnGroup.get][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup.get]` overload that prevents this from working as expected here:`
      *
@@ -4594,8 +4991,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`5, 0`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[col][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(0, 1) }`
      *
      * `// NOTE: There's a `[ColumnGroup.get][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup.get]` overload that prevents this from working as expected here:`
      *
@@ -4811,16 +5206,101 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         vararg otherIndices: Int,
     ): ColumnSet<*> = cols(firstIndex, *otherIndices)
 
-    /** TODO */
+    /**
+     * ## Cols: Columns by Indices
+     *
+     * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
+     * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the children found at the
+     * given indices.
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
+     * the given indices in the set.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][SingleColumn.cols]`(1, 3, 2) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][SingleColumn.get]`5, 1, 2`[`]`][SingleColumn.get]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`(0, 2) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[col][ColumnPath.cols]`(0, 1) }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"]`[`[`][ColumnPath.cols]`5, 6`[`]`][ColumnPath.cols]` }`
+     *
+     * @throws [IndexOutOfBoundsException] If any index is out of bounds.
+     * @param [firstIndex] The index of the first column to retrieve.
+     * @param [otherIndices] The other indices of the columns to retrieve.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
+     */
     private interface ColumnPathColsIndicesDocs
 
-    /** TODO */
+    /** ## Cols: Columns by Indices
+     *
+     * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
+     * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the children found at the
+     * given indices.
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
+     * the given indices in the set.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][SingleColumn.cols]`(1, 3, 2) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][SingleColumn.get]`5, 1, 2`[`]`][SingleColumn.get]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`(0, 2) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[col][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`(0, 1) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`5, 6`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     *
+     * @throws [IndexOutOfBoundsException] If any index is out of bounds.
+     * @param [firstIndex] The index of the first column to retrieve.
+     * @param [otherIndices] The other indices of the columns to retrieve.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
+     */
     public fun ColumnPath.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
     ): ColumnSet<*> = colGroup(this).cols(firstIndex, *otherIndices)
 
-    /** TODO */
+    /** ## Cols: Columns by Indices
+     *
+     * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
+     * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the children found at the
+     * given indices.
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
+     * the given indices in the set.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][SingleColumn.cols]`(1, 3, 2) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][SingleColumn.get]`5, 1, 2`[`]`][SingleColumn.get]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`(0, 2) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[col][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`(0, 1) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`5, 6`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     *
+     * @throws [IndexOutOfBoundsException] If any index is out of bounds.
+     * @param [firstIndex] The index of the first column to retrieve.
+     * @param [otherIndices] The other indices of the columns to retrieve.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
+     */
     public operator fun ColumnPath.get(
         firstIndex: Int,
         vararg otherIndices: Int,
@@ -4983,8 +5463,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { this`[`[`][SingleColumn.cols]`0`[..][Int.rangeTo]`5`[`]`][SingleColumn.cols]` }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[col][SingleColumn.cols]`(0`[..][Int.rangeTo]`1) }`
-     *
      * `// NOTE: There's a `[ColumnGroup.get][ColumnGroup.get]` overload that prevents this from working as expected here:`
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`5`[..][Int.rangeTo]`6`[`]`][SingleColumn.cols]` }`
@@ -5019,8 +5497,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[..][Int.rangeTo]`3) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`0`[..][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[col][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(0`[..][Int.rangeTo]`1) }`
      *
      * `// NOTE: There's a `[ColumnGroup.get][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup.get]` overload that prevents this from working as expected here:`
      *
@@ -5058,8 +5534,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[..][Int.rangeTo]`3) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`0`[..][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[col][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(0`[..][Int.rangeTo]`1) }`
      *
      * `// NOTE: There's a `[ColumnGroup.get][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup.get]` overload that prevents this from working as expected here:`
      *
@@ -5260,13 +5734,98 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      */
     public operator fun KProperty<DataRow<*>>.get(range: IntRange): ColumnSet<*> = cols(range)
 
-    /** TODO */
+    /**
+     * ## Cols: Columns by Index Range
+     *
+     * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
+     * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the children found at the
+     * given indices.
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
+     * the given indices in the set.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[..][Int.rangeTo]`3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[..][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[col][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`(0`[..][Int.rangeTo]`2) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[col][ColumnPath.cols]`(0`[..][Int.rangeTo]`1) }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"]`[`[`][ColumnPath.cols]`0`[..][Int.rangeTo]`5`[`]`][ColumnPath.cols]` }`
+     *
+     * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
+     * @throws [IllegalArgumentException] if the [range] is empty.
+     * @param [range] The range of indices to retrieve in the form of an [IntRange].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
+     */
     private interface ColumnPathColsRangeDocs
 
-    /** TODO */
+    /** ## Cols: Columns by Index Range
+     *
+     * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
+     * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the children found at the
+     * given indices.
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
+     * the given indices in the set.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[..][Int.rangeTo]`3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[..][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[col][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`(0`[..][Int.rangeTo]`2) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[col][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`(0`[..][Int.rangeTo]`1) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`0`[..][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     *
+     * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
+     * @throws [IllegalArgumentException] if the [range] is empty.
+     * @param [range] The range of indices to retrieve in the form of an [IntRange].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
+     */
     public fun ColumnPath.cols(range: IntRange): ColumnSet<*> = colGroup(this).cols(range)
 
-    /** TODO */
+    /** ## Cols: Columns by Index Range
+     *
+     * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
+     * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the children found at the
+     * given indices.
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
+     * the given indices in the set.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[..][Int.rangeTo]`3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[..][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[col][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`(0`[..][Int.rangeTo]`2) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[col][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`(0`[..][Int.rangeTo]`1) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`0`[..][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     *
+     * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
+     * @throws [IllegalArgumentException] if the [range] is empty.
+     * @param [range] The range of indices to retrieve in the form of an [IntRange].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
+     */
     public operator fun ColumnPath.get(range: IntRange): ColumnSet<*> = cols(range)
 
     /**
@@ -5374,8 +5933,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { myColGroup.`[valueCols][SingleColumn.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[valueCols][SingleColumn.valueCols]`().`[recursively][TransformableColumnSet.recursively]`() }`
-     *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the value columns by.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn].
      */
@@ -5444,7 +6001,32 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun KProperty<DataRow<*>>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
         colGroup(this).valueCols(filter)
 
-    /** TODO */
+    /**
+     * ## Value Columns
+     * Creates a subset of columns that are [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn] from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
+     * (and thus consists of only one column (or [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup])),
+     * then [valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols] will create a subset of its children.
+     *
+     * You can optionally use a [filter] to only include certain columns.
+     * [valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[valueCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.valueCols]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[valueCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.valueCols]`().`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[valueCols][kotlin.String.valueCols]`() }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[valueCols][ColumnPath.valueCols]`().`[recursively][TransformableColumnSet.recursively]`() }`
+     *
+     * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the value columns by.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn].
+     */
     public fun ColumnPath.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
         colGroup(this).valueCols(filter)
 
@@ -5562,8 +6144,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { myColGroup.`[colGroups][SingleColumn.colGroups]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[colGroups][SingleColumn.colGroups]`().`[recursively][TransformableColumnSet.recursively]`() }`
-     *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the column groups by.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      */
@@ -5632,7 +6212,32 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun KProperty<DataRow<*>>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
         colGroup(this).colGroups(filter)
 
-    /** TODO */
+    /**
+     * ## Column Groups
+     * Creates a subset of columns that are [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
+     * (and thus consists of only one column (or [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup])),
+     * then [colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups] will create a subset of its children.
+     *
+     * You can optionally use a [filter] to only include certain columns.
+     * [colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroups][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colGroups]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroups][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colGroups]`().`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[colGroups][kotlin.String.colGroups]`() }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[colGroups][ColumnPath.colGroups]`().`[recursively][TransformableColumnSet.recursively]`() }`
+     *
+     * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the column groups by.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     */
     public fun ColumnPath.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
         colGroup(this).colGroups(filter)
 
@@ -5730,8 +6335,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { myColGroup.`[frameCols][SingleColumn.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[frameCols][SingleColumn.frameCols]`().`[recursively][TransformableColumnSet.recursively]`() }`
-     *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the frame columns by.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
      */
@@ -5800,7 +6403,32 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun KProperty<DataRow<*>>.frameCols(filter: Predicate<FrameColumn<*>> = { true }): TransformableColumnSet<DataFrame<*>> =
         colGroup(this).frameCols(filter)
 
-    /** TODO */
+    /**
+     * ## Frame Columns
+     * Creates a subset of columns that are [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
+     * (and thus consists of only one column (or [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup])),
+     * then [frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols] will create a subset of its children.
+     *
+     * You can optionally use a [filter] to only include certain columns.
+     * [frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.frameCols]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.frameCols]`().`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[frameCols][kotlin.String.frameCols]`() }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[frameCols][ColumnPath.frameCols]`().`[recursively][TransformableColumnSet.recursively]`() }`
+     *
+     * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the frame columns by.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+     */
     public fun ColumnPath.frameCols(filter: Predicate<FrameColumn<*>> = { true }): TransformableColumnSet<DataFrame<*>> =
         colGroup(this).frameCols(filter)
 
@@ -5865,15 +6493,15 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * any [ColumnGroup]. This is more powerful than [SingleColumn.cols], because all operations of
      * the DSL are at your disposal.
      *
-     * This function comes in the form of [select][SingleColumn.select] and [selectUntyped][SingleColumn.selectUntyped].
-     * [select][SingleColumn.select] is preferred, because it is type-safe, but it's not always possible to use it if
-     * you don't know/have the type of the [ColumnGroup] you want to select from.
-     *
      * #### For example:
      *
      * `df.`[select][DataFrame.select]` { myColGroup.`[select][SingleColumn.select]` { someCol `[and][SingleColumn.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[selectUntyped][SingleColumn.selectUntyped]` { "colA" and "colB" } }`
+     * `df.`[select][DataFrame.select]` { "myGroupCol".`[select][ColumnPath.select]` { "colA" and `[expr][ColumnsSelectionDsl.expr]` { 0 } } }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[select][ColumnPath.select]` { "colA" and "colB" } }`
+     *
+     * `df.`[select][DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][DataColumn.asColumnGroup]`().`[select][ColumnPath.select]` { "colA" and "colB" } }`
      *
      * #### Examples for this overload:
      *
@@ -5896,19 +6524,19 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * any [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]. This is more powerful than [SingleColumn.cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols], because all operations of
      * the DSL are at your disposal.
      *
-     * This function comes in the form of [select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select] and [selectUntyped][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.selectUntyped].
-     * [select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select] is preferred, because it is type-safe, but it's not always possible to use it if
-     * you don't know/have the type of the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] you want to select from.
-     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` { someCol `[and][SingleColumn.and]` `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[selectUntyped][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.selectUntyped]` { "colA" and "colB" } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myGroupCol".`[select][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and `[expr][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.expr]` { 0 } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[select][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and "colB" } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`().`[select][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and "colB" } }`
      *
      * #### Examples for this overload:
      *
-     * TODO
+     * `df.`[select][DataFrame.select]` { myColGroup.`[select][SingleColumn.select]` { someCol `[and][SingleColumn.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
      *
      * @param [selector] The [ColumnsSelector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] to use for the selection.
      * @receiver The [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
@@ -5916,9 +6544,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
      */
     public fun <C, R> SingleColumn<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> =
-        selectUntyped(selector as ColumnsSelector<*, R>)
-
-    private fun <R> SingleColumn<DataRow<*>>.selectUntyped(selector: ColumnsSelector<*, R>): ColumnSet<R> =
         ensureIsColGroup().let { singleColumn ->
             createColumnSet {
                 singleColumn.resolveSingle(it)?.let { col ->
@@ -5926,21 +6551,99 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
                         "Column ${col.path} is not a ColumnGroup and can thus not be selected from."
                     }
 
-                    col.asColumnGroup().getColumnsWithPaths(selector).map {
-                        it.changePath(col.path + it.path)
-                    }
+                    col.asColumnGroup()
+                        .getColumnsWithPaths(selector as ColumnsSelector<*, R>)
+                        .map { it.changePath(col.path + it.path) }
                 } ?: emptyList()
             }
         }
 
+    /**
+     * ## Select from [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     *
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] on
+     * any [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]. This is more powerful than [SingleColumn.cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols], because all operations of
+     * the DSL are at your disposal.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` { someCol `[and][SingleColumn.and]` `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myGroupCol".`[select][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and `[expr][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.expr]` { 0 } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[select][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and "colB" } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`().`[select][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and "colB" } }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[select][SingleColumn.select]` { someCol `[and][SingleColumn.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     *
+     * @param [selector] The [ColumnsSelector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] to use for the selection.
+     * @receiver The [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
+     * @throws [IllegalArgumentException] If [this] is not a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
+     */
     public fun <C, R> KProperty<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> =
-        colGroup(this).selectUntyped(selector as ColumnsSelector<*, R>)
+        colGroup(this).select(selector)
 
+    /**
+     * ## Select from [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     *
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] on
+     * any [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]. This is more powerful than [SingleColumn.cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols], because all operations of
+     * the DSL are at your disposal.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` { someCol `[and][SingleColumn.and]` `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myGroupCol".`[select][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and `[expr][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.expr]` { 0 } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[select][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and "colB" } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`().`[select][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and "colB" } }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "myColGroup".`[select][SingleColumn.select]` { someCol `[and][SingleColumn.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     *
+     * @param [selector] The [ColumnsSelector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] to use for the selection.
+     * @receiver The [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
+     * @throws [IllegalArgumentException] If [this] is not a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
+     */
     public fun <R> String.select(selector: ColumnsSelector<*, R>): ColumnSet<R> =
-        colGroup(this).selectUntyped(selector)
+        colGroup(this).select(selector)
 
+    /**
+     * ## Select from [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     *
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] on
+     * any [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]. This is more powerful than [SingleColumn.cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols], because all operations of
+     * the DSL are at your disposal.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` { someCol `[and][SingleColumn.and]` `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myGroupCol".`[select][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and `[expr][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.expr]` { 0 } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[select][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and "colB" } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`().`[select][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and "colB" } }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[select][SingleColumn.select]` { someCol `[and][SingleColumn.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     *
+     * @param [selector] The [ColumnsSelector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] to use for the selection.
+     * @receiver The [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
+     * @throws [IllegalArgumentException] If [this] is not a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
+     */
     public fun <R> ColumnPath.select(selector: ColumnsSelector<*, R>): ColumnSet<R> =
-        colGroup(this).selectUntyped(selector)
+        colGroup(this).select(selector)
 
     @Deprecated(
         message = "Nested select is reserved for ColumnsSelector/ColumnsSelectionDsl behavior. " +
@@ -6323,7 +7026,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[cols][cols]` { "a" in `[name][ColumnWithPath.name]` }.`[all][all]`() }`
+     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]` { "a" in `[name][ColumnWithPath.name]` }.`[all][ColumnSet.all]`() }`
      * ## ‎
      * NOTE: This is an identity call and can be omitted in most cases. However, it can still prove useful
      * for readability or in combination with [recursively][TransformableColumnSet.recursively].
@@ -6351,7 +7054,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @see [allUpTo]
      * @see [cols]
      */
-    public fun <C> ColumnSet<C>.all(): TransformableColumnSet<C> = allColumnsInternal()
+    public fun <C> ColumnSet<C>.all(): TransformableColumnSet<C> = allColumnsInternal() as TransformableColumnSet<C>
 
     /**
      * ## All
@@ -6370,11 +7073,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[all][all]`() }`
+     * `df.`[select][DataFrame.select]` { `[all][SingleColumn.all]`() }`
      *
-     * `df.`[select][DataFrame.select]` { myGroup.`[all][all]`() }`
-     *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myGroup"].`[all][all]`() }`
+     * `df.`[select][DataFrame.select]` { myGroup.`[all][SingleColumn.all]`() }`
      *
      * #### Flavors of All:
      *
@@ -6418,7 +7119,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "myGroupCol".`[all][all]`() }`
+     * `df.`[select][DataFrame.select]` { "myGroupCol".`[all][String.all]`() }`
      *
      * #### Flavors of All:
      *
@@ -6462,7 +7163,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::columnGroup.`[all][all]`() }`
+     * `df.`[select][DataFrame.select]` { Type::columnGroup.`[all][KProperty.all]`() }`
      *
      * #### Flavors of All:
      *
@@ -6489,7 +7190,48 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      */
     public fun KProperty<DataRow<*>>.all(): TransformableColumnSet<*> = colGroup(this).all()
 
-    /** TODO */
+    /**
+     * ## All
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all columns from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `all` will create a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] consisting of its children.
+     *
+     * This makes the function equivalent to [cols()][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols].
+     *
+     * #### For example:
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`().`[recursively][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.recursively]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`() }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myGroup"].`[all][ColumnPath.all]`() }`
+     *
+     * #### Flavors of All:
+     *
+     * - [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`()`:
+     *     All columns
+     *
+     * - [allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [cols]
+     */
     public fun ColumnPath.all(): TransformableColumnSet<*> = colGroup(this).all()
 
     // endregion
@@ -6887,8 +7629,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`({@includeArg [SingleColumnAllAfterDocs.Arg]}) }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allAfter][SingleColumn.allAfter]`({@includeArg [SingleColumnAllAfterDocs.Arg]}) }`
-     *
      * `df.`[select][DataFrame.select]` { someColumnGroup.`[allAfter][SingleColumn.allAfter]`({@includeArg [SingleColumnAllAfterDocs.Arg]}) }`
      *
      * #### Flavors of All:
@@ -6943,8 +7683,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`("pathTo"["myColumn"]) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`("pathTo"["myColumn"]) }`
-     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`("pathTo"["myColumn"]) }` 
      *
      * #### Flavors of All:
@@ -6996,8 +7734,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`("myColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`("myColumn") }`
-     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`("myColumn") }` 
      *
      * #### Flavors of All:
@@ -7048,8 +7784,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`(myColumn) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`(myColumn) }`
-     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`(myColumn) }` 
      *
      * #### Flavors of All:
@@ -7099,8 +7833,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * #### Examples for this overload:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`(Type::myColumn) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`(Type::myColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`(Type::myColumn) }` 
      *
@@ -7627,26 +8359,252 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun KProperty<DataRow<*>>.allAfter(column: KProperty<*>): ColumnSet<*> =
         colGroup(this).allAfter(column)
 
-    /** TODO */
+    /**
+     * ## All After
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * containing all columns after [column], excluding [column] itself.
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allAfter][ColumnPath.allAfter]`({@includeArg [ColumnPathAllAfterDocs.Arg]}) }`
+     *
+     * #### Flavors of All:
+     *
+     * - [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`()`:
+     *     All columns
+     *
+     * - [allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
+     * @see [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
+     * @param [column] The specified column after which all columns should be taken.
+     */
     private interface ColumnPathAllAfterDocs {
 
         /** Example argument to use */
         interface Arg
     }
 
-    /** TODO */
+    /** ## All After
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * containing all columns after [column], excluding [column] itself.
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allAfter][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allAfter]`("pathTo"["myColumn"]) }` 
+     *
+     * #### Flavors of All:
+     *
+     * - [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`()`:
+     *     All columns
+     *
+     * - [allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
+     * @see [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
+     * @param [column] The specified column after which all columns should be taken.
+     */
     public fun ColumnPath.allAfter(column: ColumnPath): ColumnSet<*> =
         colGroup(this).allAfter(column)
 
-    /** TODO */
+    /** ## All After
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * containing all columns after [column], excluding [column] itself.
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allAfter][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allAfter]`("myColumn") }` 
+     *
+     * #### Flavors of All:
+     *
+     * - [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`()`:
+     *     All columns
+     *
+     * - [allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
+     * @see [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
+     * @param [column] The specified column after which all columns should be taken.
+     */
     public fun ColumnPath.allAfter(column: String): ColumnSet<*> =
         colGroup(this).allAfter(column)
 
-    /** TODO */
+    /** ## All After
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * containing all columns after [column], excluding [column] itself.
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allAfter][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allAfter]`(myColumn) }` 
+     *
+     * #### Flavors of All:
+     *
+     * - [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`()`:
+     *     All columns
+     *
+     * - [allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
+     * @see [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
+     * @param [column] The specified column after which all columns should be taken.
+     */
     public fun ColumnPath.allAfter(column: AnyColumnReference): ColumnSet<*> =
         colGroup(this).allAfter(column)
 
-    /** TODO */
+    /** ## All After
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * containing all columns after [column], excluding [column] itself.
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allAfter][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allAfter]`(Type::myColumn) }` 
+     *
+     * #### Flavors of All:
+     *
+     * - [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`()`:
+     *     All columns
+     *
+     * - [allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
+     * @see [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
+     * @param [column] The specified column after which all columns should be taken.
+     */
     public fun ColumnPath.allAfter(column: KProperty<*>): ColumnSet<*> =
         colGroup(this).allAfter(column)
 
@@ -7981,8 +8939,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`({@includeArg [SingleColumnAllFromDocs.Arg]}) }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allFrom][SingleColumn.allFrom]`({@includeArg [SingleColumnAllFromDocs.Arg]}) }`
-     *
      * `df.`[select][DataFrame.select]` { someColumnGroup.`[allFrom][SingleColumn.allFrom]`({@includeArg [SingleColumnAllFromDocs.Arg]}) }`
      *
      * #### Flavors of All:
@@ -8037,8 +8993,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`("pathTo"["myColumn"]) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`("pathTo"["myColumn"]) }`
-     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`("pathTo"["myColumn"]) }` 
      *
      * #### Flavors of All:
@@ -8090,8 +9044,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`("myColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`("myColumn") }`
-     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`("myColumn") }` 
      *
      * #### Flavors of All:
@@ -8142,8 +9094,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`(myColumn) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`(myColumn) }`
-     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`(myColumn) }` 
      *
      * #### Flavors of All:
@@ -8193,8 +9143,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * #### Examples for this overload:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`(Type::myColumn) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`(Type::myColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`(Type::myColumn) }` 
      *
@@ -8721,23 +9669,249 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun KProperty<DataRow<*>>.allFrom(column: KProperty<*>): ColumnSet<*> =
         colGroup(this).allFrom(column)
 
-    /** TODO */
+    /**
+     * ## All From
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * containing all columns from [column], including [column] itself.
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allFrom][ColumnPath.allFrom]`({@includeArg [ColumnPathAllFromDocs.Arg]}) }`
+     *
+     * #### Flavors of All:
+     *
+     * - [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`()`:
+     *     All columns
+     *
+     * - [allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
+     * @see [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
+     * @param [column] The specified column from which all columns should be taken.
+     */
     private interface ColumnPathAllFromDocs {
 
         /** Example argument to use */
         interface Arg
     }
 
-    /** TODO */
+    /** ## All From
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * containing all columns from [column], including [column] itself.
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allFrom][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allFrom]`("pathTo"["myColumn"]) }` 
+     *
+     * #### Flavors of All:
+     *
+     * - [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`()`:
+     *     All columns
+     *
+     * - [allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
+     * @see [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
+     * @param [column] The specified column from which all columns should be taken.
+     */
     public fun ColumnPath.allFrom(column: ColumnPath): ColumnSet<*> = colGroup(this).allFrom(column)
 
-    /** TODO */
+    /** ## All From
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * containing all columns from [column], including [column] itself.
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allFrom][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allFrom]`("myColumn") }` 
+     *
+     * #### Flavors of All:
+     *
+     * - [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`()`:
+     *     All columns
+     *
+     * - [allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
+     * @see [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
+     * @param [column] The specified column from which all columns should be taken.
+     */
     public fun ColumnPath.allFrom(column: String): ColumnSet<*> = colGroup(this).allFrom(column)
 
-    /** TODO */
+    /** ## All From
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * containing all columns from [column], including [column] itself.
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allFrom][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allFrom]`(myColumn) }` 
+     *
+     * #### Flavors of All:
+     *
+     * - [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`()`:
+     *     All columns
+     *
+     * - [allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
+     * @see [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
+     * @param [column] The specified column from which all columns should be taken.
+     */
     public fun ColumnPath.allFrom(column: AnyColumnReference): ColumnSet<*> = colGroup(this).allFrom(column)
 
-    /** TODO */
+    /** ## All From
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * containing all columns from [column], including [column] itself.
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allFrom][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allFrom]`(Type::myColumn) }` 
+     *
+     * #### Flavors of All:
+     *
+     * - [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`()`:
+     *     All columns
+     *
+     * - [allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
+     * @see [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
+     * @param [column] The specified column from which all columns should be taken.
+     */
     public fun ColumnPath.allFrom(column: KProperty<*>): ColumnSet<*> = colGroup(this).allFrom(column)
 
     // endregion
@@ -9071,8 +10245,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`({@includeArg [SingleColumnAllBeforeDocs.Arg]}) }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allBefore][SingleColumn.allBefore]`({@includeArg [SingleColumnAllBeforeDocs.Arg]}) }`
-     *
      * `df.`[select][DataFrame.select]` { someColumnGroup.`[allBefore][SingleColumn.allBefore]`({@includeArg [SingleColumnAllBeforeDocs.Arg]}) }`
      *
      * #### Flavors of All:
@@ -9127,8 +10299,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`("pathTo"["myColumn"]) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`("pathTo"["myColumn"]) }`
-     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`("pathTo"["myColumn"]) }` 
      *
      * #### Flavors of All:
@@ -9180,8 +10350,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`("myColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`("myColumn") }`
-     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`("myColumn") }` 
      *
      * #### Flavors of All:
@@ -9232,8 +10400,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`(myColumn) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`(myColumn) }`
-     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`(myColumn) }` 
      *
      * #### Flavors of All:
@@ -9283,8 +10449,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * #### Examples for this overload:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`(Type::myColumn) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`(Type::myColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`(Type::myColumn) }` 
      *
@@ -9813,26 +10977,252 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun KProperty<DataRow<*>>.allBefore(column: KProperty<*>): ColumnSet<*> =
         colGroup(this).allBefore(column)
 
-    /** TODO */
+    /**
+     * ## All Before
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * containing all columns before [column], excluding [column] itself.
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allBefore][ColumnPath.allBefore]`({@includeArg [ColumnPathAllBeforeDocs.Arg]}) }`
+     *
+     * #### Flavors of All:
+     *
+     * - [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`()`:
+     *     All columns
+     *
+     * - [allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
+     * @see [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
+     * @param [column] The specified column before which all columns should be taken
+     */
     private interface ColumnPathAllBeforeDocs {
 
         /** Example argument to use */
         interface Arg
     }
 
-    /** TODO */
+    /** ## All Before
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * containing all columns before [column], excluding [column] itself.
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allBefore][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allBefore]`("pathTo"["myColumn"]) }` 
+     *
+     * #### Flavors of All:
+     *
+     * - [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`()`:
+     *     All columns
+     *
+     * - [allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
+     * @see [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
+     * @param [column] The specified column before which all columns should be taken
+     */
     public fun ColumnPath.allBefore(column: ColumnPath): ColumnSet<*> =
         colGroup(this).allBefore(column)
 
-    /** TODO */
+    /** ## All Before
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * containing all columns before [column], excluding [column] itself.
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allBefore][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allBefore]`("myColumn") }` 
+     *
+     * #### Flavors of All:
+     *
+     * - [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`()`:
+     *     All columns
+     *
+     * - [allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
+     * @see [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
+     * @param [column] The specified column before which all columns should be taken
+     */
     public fun ColumnPath.allBefore(column: String): ColumnSet<*> =
         colGroup(this).allBefore(column)
 
-    /** TODO */
+    /** ## All Before
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * containing all columns before [column], excluding [column] itself.
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allBefore][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allBefore]`(myColumn) }` 
+     *
+     * #### Flavors of All:
+     *
+     * - [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`()`:
+     *     All columns
+     *
+     * - [allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
+     * @see [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
+     * @param [column] The specified column before which all columns should be taken
+     */
     public fun ColumnPath.allBefore(column: AnyColumnReference): ColumnSet<*> =
         colGroup(this).allBefore(column)
 
-    /** TODO */
+    /** ## All Before
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * containing all columns before [column], excluding [column] itself.
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allBefore][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allBefore]`(Type::myColumn) }` 
+     *
+     * #### Flavors of All:
+     *
+     * - [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`()`:
+     *     All columns
+     *
+     * - [allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
+     * @see [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
+     * @param [column] The specified column before which all columns should be taken
+     */
     public fun ColumnPath.allBefore(column: KProperty<*>): ColumnSet<*> =
         colGroup(this).allBefore(column)
 
@@ -10167,8 +11557,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`({@includeArg [SingleColumnAllUpToDocs.Arg]}) }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allUpTo][SingleColumn.allUpTo]`({@includeArg [SingleColumnAllUpToDocs.Arg]}) }`
-     *
      * `df.`[select][DataFrame.select]` { someColumnGroup.`[allUpTo][SingleColumn.allUpTo]`({@includeArg [SingleColumnAllUpToDocs.Arg]}) }`
      *
      * #### Flavors of All:
@@ -10223,8 +11611,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`("pathTo"["myColumn"]) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`("pathTo"["myColumn"]) }`
-     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`("pathTo"["myColumn"]) }` 
      *
      * #### Flavors of All:
@@ -10276,8 +11662,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`("myColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`("myColumn") }`
-     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`("myColumn") }` 
      *
      * #### Flavors of All:
@@ -10328,8 +11712,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(myColumn) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(myColumn) }`
-     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(myColumn) }` 
      *
      * #### Flavors of All:
@@ -10379,8 +11761,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * #### Examples for this overload:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(Type::myColumn) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(Type::myColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(Type::myColumn) }` 
      *
@@ -10907,24 +12287,250 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun KProperty<DataRow<*>>.allUpTo(column: KProperty<*>): ColumnSet<*> =
         colGroup(this).allUpTo(column)
 
-    /** TODO */
+    /**
+     * ## All Up To
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * containing all columns up to [column], including [column] itself.
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allUpTo][ColumnPath.allUpTo]`({@includeArg [ColumnPathAllUpToDocs.Arg]}) }`
+     *
+     * #### Flavors of All:
+     *
+     * - [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`()`:
+     *     All columns
+     *
+     * - [allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
+     * @see [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
+     * @param [column] The specified column up to which all columns should be taken.
+     */
     private interface ColumnPathAllUpToDocs {
 
         /** Example argument to use */
         interface Arg
     }
 
-    /** TODO */
+    /** ## All Up To
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * containing all columns up to [column], including [column] itself.
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allUpTo][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allUpTo]`("pathTo"["myColumn"]) }` 
+     *
+     * #### Flavors of All:
+     *
+     * - [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`()`:
+     *     All columns
+     *
+     * - [allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
+     * @see [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
+     * @param [column] The specified column up to which all columns should be taken.
+     */
     public fun ColumnPath.allUpTo(column: ColumnPath): ColumnSet<*> =
         allUpTo(column.toColumnAccessor().path())
 
-    /** TODO */
+    /** ## All Up To
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * containing all columns up to [column], including [column] itself.
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allUpTo][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allUpTo]`("myColumn") }` 
+     *
+     * #### Flavors of All:
+     *
+     * - [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`()`:
+     *     All columns
+     *
+     * - [allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
+     * @see [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
+     * @param [column] The specified column up to which all columns should be taken.
+     */
     public fun ColumnPath.allUpTo(column: String): ColumnSet<*> = allUpTo(pathOf(column))
 
-    /** TODO */
+    /** ## All Up To
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * containing all columns up to [column], including [column] itself.
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allUpTo][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allUpTo]`(myColumn) }` 
+     *
+     * #### Flavors of All:
+     *
+     * - [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`()`:
+     *     All columns
+     *
+     * - [allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
+     * @see [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
+     * @param [column] The specified column up to which all columns should be taken.
+     */
     public fun ColumnPath.allUpTo(column: AnyColumnReference): ColumnSet<*> = allUpTo(column.path())
 
-    /** TODO */
+    /** ## All Up To
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet],
+     * containing all columns up to [column], including [column] itself.
+     *
+     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allUpTo][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allUpTo]`(Type::myColumn) }` 
+     *
+     * #### Flavors of All:
+     *
+     * - [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`()`:
+     *     All columns
+     *
+     * - [allBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [allAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [allFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
+     * @see [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
+     * @param [column] The specified column up to which all columns should be taken.
+     */
     public fun ColumnPath.allUpTo(column: KProperty<*>): ColumnSet<*> = allUpTo(column.toColumnAccessor().path())
 
     // endregion
@@ -10945,10 +12551,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun SingleColumn<DataRow<*>>.take(n: Int): ColumnSet<*> =
         ensureIsColGroup().transformSingle { it.children().take(n) }
+
     public fun SingleColumn<DataRow<*>>.takeLast(n: Int): ColumnSet<*> =
         ensureIsColGroup().transformSingle { it.children().takeLast(n) }
+
     public fun SingleColumn<DataRow<*>>.drop(n: Int): ColumnSet<*> =
         ensureIsColGroup().transformSingle { it.children().drop(n) }
+
     public fun SingleColumn<DataRow<*>>.dropLast(n: Int = 1): ColumnSet<*> =
         ensureIsColGroup().transformSingle { it.children().dropLast(n) }
 
@@ -11160,7 +12769,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
             "org.jetbrains.kotlinx.dataframe.api.colsOf",
         ),
     )
-    public fun <C> KProperty<DataRow<*>>.dfsOf(type: KType, predicate: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<*> =
+    public fun <C> KProperty<DataRow<*>>.dfsOf(
+        type: KType,
+        predicate: (ColumnWithPath<C>) -> Boolean = { true },
+    ): ColumnSet<*> =
         colGroup(this).dfsOf(type, predicate)
 
     /**
@@ -11199,7 +12811,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
      */
-    public fun <C> String.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<*> =
+    public fun <C> String.colsOf(
+        type: KType,
+        filter: (DataColumn<C>) -> Boolean = { true },
+    ): ColumnSet<*> =
         colGroup(this).colsOf(type, filter)
 
     /**
@@ -11238,13 +12853,52 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
      */
-    public fun <C> KProperty<DataRow<*>>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<*> =
+    public fun <C> KProperty<DataRow<*>>.colsOf(
+        type: KType,
+        filter: (DataColumn<C>) -> Boolean = { true },
+    ): ColumnSet<*> =
         colGroup(this).colsOf(type, filter)
 
     /**
-     * TODO
+     * ## Cols Of
+     * Get columns by a given type and an optional filter.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
+     * ## ‎
+     * Alternatively, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also be called on existing columns:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { (Type::myColumnGroup)().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Double][Double]`>() }`
+     * ## ‎
+     * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also take a [KType] argument instead of a reified type.
+     * This is useful when the type is not known at compile time or when the API function cannot be inlined.
+     *
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[Int][Int]`> -> it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
+     * ## This Cols Of Overload
+     * Get sub-columns of the column this [ColumnPath] points to by [type] with or without [filter].
+     * #### For example:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
+     *
+     * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
      */
-    public fun <C> ColumnPath.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<*> =
+    public fun <C> ColumnPath.colsOf(
+        type: KType,
+        filter: (DataColumn<C>) -> Boolean = { true },
+    ): ColumnSet<*> =
         colGroup(this).colsOf(type, filter)
 }
 
@@ -11333,20 +12987,14 @@ internal fun ColumnsResolver<*>.columnsOfKindInternal(
  * returns a [(transformable) ColumnSet][TransformableColumnSet] containing the children of this [ColumnGroup],
  * else it simply returns a [(transformable) ColumnSet][TransformableColumnSet] from [this].
  */
-internal fun <C> ColumnsResolver<C>.allColumnsInternal(): TransformableColumnSet<C> =
-    asColumnSet().transform {
+internal fun ColumnsResolver<*>.allColumnsInternal(): TransformableColumnSet<*> =
+    transform {
         if (this.isSingleColumnWithGroup(it)) {
             it.single().children()
         } else {
             it
         }
-    }.cast()
-
-/** If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a single [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], it
- * returns a [(transformable) ColumnSet][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet] containing the children of this [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
- * else it simply returns a [(transformable) ColumnSet][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet] from [this]. */
-internal fun SingleColumn<DataRow<*>>.allColumnsInternal(): TransformableColumnSet<*> =
-    (this as ColumnsResolver<*>).allColumnsInternal()
+    }
 
 @Deprecated("Replaced with recursively()")
 internal fun ColumnSet<*>.dfsInternal(predicate: (ColumnWithPath<*>) -> Boolean) =
@@ -11371,7 +13019,10 @@ public fun <C> ColumnSet<*>.dfsOf(type: KType, predicate: (ColumnWithPath<C>) ->
         "org.jetbrains.kotlinx.dataframe.api.colsOf",
     ),
 )
-public fun <C> SingleColumn<DataRow<*>>.dfsOf(type: KType, predicate: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<*> =
+public fun <C> SingleColumn<DataRow<*>>.dfsOf(
+    type: KType,
+    predicate: (ColumnWithPath<C>) -> Boolean = { true },
+): ColumnSet<*> =
     ensureIsColGroup().asColumnSet().dfsInternal { it.isSubtypeOf(type) && predicate(it.cast()) }
 
 @Deprecated(

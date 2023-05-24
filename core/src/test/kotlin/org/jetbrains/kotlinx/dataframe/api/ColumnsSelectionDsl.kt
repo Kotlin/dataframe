@@ -712,33 +712,29 @@ open class ColumnsSelectionDslTests : TestBase() {
     }
 
     @Test
-    fun `select and selectUntyped`() {
+    fun `select`() {
         listOf(
             df.select {
                 name.firstName and name.lastName
             },
-
             df.select {
                 name.select {
                     firstName and lastName
                 }
             },
-
             df.select {
                 "name".select {
                     colsOf<String>()
                 }
             },
-
             df.select {
                 "name".select {
                     "firstName" and "lastName"
                 }
             },
-
             df.select {
-                it["name"].asColumnGroup().select {
-                    colsOf<String>()
+                pathOf("name").select {
+                    "firstName" and "lastName"
                 }
             },
             df.select {
@@ -746,31 +742,22 @@ open class ColumnsSelectionDslTests : TestBase() {
                     colsOf<String>()
                 }
             },
-
             df.select {
                 Person::name.select {
                     firstName and lastName
                 }
             },
-
             df.select {
                 "name"<DataRow<Name>>().select {
                     colsOf<String>()
                 }
             },
-
             df.select {
-                colGroup<Name>("name").select {
+                colGroup("name").select {
                     colsOf<String>()
                 }
             },
         ).shouldAllBeEqual()
-
-        df.update {
-            "name".select { colsOf<String>() }
-        }.with {
-            "new"
-        }
     }
 
 }
