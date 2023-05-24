@@ -25,13 +25,13 @@ public data class ColumnPath(val path: List<String>) : List<String> by path, Col
 
     public operator fun plus(name: String): ColumnPath = ColumnPath(path + name)
 
-    public operator fun plus(otherPath: ColumnPath): ColumnPath = ColumnPath(path + otherPath)
+    public operator fun plus(otherPath: ColumnPath): ColumnPath = ColumnPath(path + otherPath.path)
 
     public operator fun plus(otherPath: Iterable<String>): ColumnPath = ColumnPath(path + otherPath)
 
     public fun take(first: Int): ColumnPath = ColumnPath(path.take(first))
 
-    public fun replaceLast(name: String): ColumnPath = ColumnPath(if (size < 2) listOf(name) else dropLast(1) + name)
+    public fun replaceLast(name: String): ColumnPath = ColumnPath(if (path.size < 2) listOf(name) else path.dropLast(1) + name)
 
     public fun takeLast(first: Int): ColumnPath = ColumnPath(path.takeLast(first))
 

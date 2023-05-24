@@ -12547,25 +12547,84 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun SingleColumn<DataRow<*>>.children(predicate: ColumnFilter<Any?> = { true }): TransformableColumnSet<*> =
         ensureIsColGroup().asColumnSet().children(predicate)
 
+    public fun String.children(predicate: ColumnFilter<Any?> = { true }): TransformableColumnSet<*> =
+        colGroup(this).children(predicate)
+
+    public fun KProperty<DataRow<*>>.children(predicate: ColumnFilter<Any?> = { true }): TransformableColumnSet<*> =
+        colGroup(this).children(predicate)
+
+    public fun ColumnPath.children(predicate: ColumnFilter<Any?> = { true }): TransformableColumnSet<*> =
+        colGroup(this).children(predicate)
+
     // endregion
+
+    // region take, drop
+
+    // region take
+    public fun <C> ColumnSet<C>.take(n: Int): ColumnSet<C> = transform { it.take(n) }
 
     public fun SingleColumn<DataRow<*>>.take(n: Int): ColumnSet<*> =
         ensureIsColGroup().transformSingle { it.children().take(n) }
 
-    public fun SingleColumn<DataRow<*>>.takeLast(n: Int): ColumnSet<*> =
+    public fun String.takeChildren(n: Int): ColumnSet<*> = colGroup(this).take(n)
+
+    public fun KProperty<DataRow<*>>.takeChildren(n: Int): ColumnSet<*> = colGroup(this).take(n)
+
+    public fun ColumnPath.takeChildren(n: Int): ColumnSet<*> = colGroup(this).take(n)
+
+    // endregion
+
+    // region takeLast
+
+    public fun <C> ColumnSet<C>.takeLast(n: Int = 1): ColumnSet<C> = transform { it.takeLast(n) }
+
+    public fun SingleColumn<DataRow<*>>.takeLast(n: Int = 1): ColumnSet<*> =
         ensureIsColGroup().transformSingle { it.children().takeLast(n) }
+
+    public fun String.takeLastChildren(n: Int): ColumnSet<*> = colGroup(this).takeLast(n)
+
+    public fun KProperty<DataRow<*>>.takeLastChildren(n: Int): ColumnSet<*> = colGroup(this).takeLast(n)
+
+    public fun ColumnPath.takeLastChildren(n: Int): ColumnSet<*> = colGroup(this).takeLast(n)
+
+    // endregion
+
+    // region drop
+
+    public fun <C> ColumnSet<C>.drop(n: Int): ColumnSet<C> = transform { it.drop(n) }
 
     public fun SingleColumn<DataRow<*>>.drop(n: Int): ColumnSet<*> =
         ensureIsColGroup().transformSingle { it.children().drop(n) }
 
+    public fun String.dropChildren(n: Int): ColumnSet<*> = colGroup(this).drop(n)
+
+    public fun KProperty<DataRow<*>>.dropChildren(n: Int): ColumnSet<*> = colGroup(this).drop(n)
+
+    public fun ColumnPath.dropChildren(n: Int): ColumnSet<*> = colGroup(this).drop(n)
+
+    // endregion
+
+    // region dropLast
+
+    public fun <C> ColumnSet<C>.dropLast(n: Int = 1): ColumnSet<C> = transform { it.dropLast(n) }
+
     public fun SingleColumn<DataRow<*>>.dropLast(n: Int = 1): ColumnSet<*> =
         ensureIsColGroup().transformSingle { it.children().dropLast(n) }
 
-    public fun <C> ColumnSet<C>.drop(n: Int): ColumnSet<C> = transform { it.drop(n) }
-    public fun <C> ColumnSet<C>.take(n: Int): ColumnSet<C> = transform { it.take(n) }
-    public fun <C> ColumnSet<C>.dropLast(n: Int = 1): ColumnSet<C> = transform { it.dropLast(n) }
-    public fun <C> ColumnSet<C>.takeLast(n: Int): ColumnSet<C> = transform { it.takeLast(n) }
+    /**
+     *
+     */
+    public fun String.dropLastChildren(n: Int): ColumnSet<*> = colGroup(this).dropLast(n)
 
+    public fun KProperty<DataRow<*>>.dropLastChildren(n: Int): ColumnSet<*> = colGroup(this).dropLast(n)
+
+    public fun ColumnPath.dropLastChildren(n: Int): ColumnSet<*> = colGroup(this).dropLast(n)
+
+    // endregion
+
+    // endregion
+
+    // region roots
     @Deprecated("Use roots() instead", ReplaceWith("roots()"))
     public fun <C> ColumnSet<C>.top(): ColumnSet<C> = roots()
 
@@ -12579,11 +12638,12 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * If [this] is a [SingleColumn] containing a single [ColumnGroup] it will run on the children of that group,
      * else it simply runs on the columns in the [ColumnSet] itself.
+     *
+     *
      */
     public fun <C> ColumnSet<C>.roots(): ColumnSet<C> = rootsInternal() as ColumnSet<C>
 
-    /**
-     * ## Roots
+    /** ## Roots
      *
      * Returns a sub-set of columns that are roots of the trees of columns.
      *
@@ -12592,8 +12652,52 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a single [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] it will run on the children of that group,
      * else it simply runs on the columns in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
      */
     public fun SingleColumn<DataRow<*>>.roots(): ColumnSet<*> = ensureIsColGroup().rootsInternal()
+
+    /** ## Roots
+     *
+     * Returns a sub-set of columns that are roots of the trees of columns.
+     *
+     * In practice, this means that if a column in [this] is a child of another column in [this],
+     * it will not be included in the result.
+     *
+     * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a single [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] it will run on the children of that group,
+     * else it simply runs on the columns in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
+     */
+    public fun String.roots(): ColumnSet<*> = colGroup(this).roots()
+
+    /** ## Roots
+     *
+     * Returns a sub-set of columns that are roots of the trees of columns.
+     *
+     * In practice, this means that if a column in [this] is a child of another column in [this],
+     * it will not be included in the result.
+     *
+     * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a single [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] it will run on the children of that group,
+     * else it simply runs on the columns in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
+     */
+    public fun KProperty<DataRow<*>>.roots(): ColumnSet<*> = colGroup(this).roots()
+
+    /** ## Roots
+     *
+     * Returns a sub-set of columns that are roots of the trees of columns.
+     *
+     * In practice, this means that if a column in [this] is a child of another column in [this],
+     * it will not be included in the result.
+     *
+     * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a single [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] it will run on the children of that group,
+     * else it simply runs on the columns in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
+     */
+    public fun ColumnPath.roots(): ColumnSet<*> = colGroup(this).roots()
+
+    // endregion
+
+    // region take while
 
     public fun <C> ColumnSet<C>.takeWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
         transform { it.takeWhile(predicate) }
@@ -12607,12 +12711,20 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun SingleColumn<DataRow<*>>.takeLastWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
         ensureIsColGroup().transformSingle { it.children().takeLastWhile(predicate) }
 
+    // endregion
+
+    // region filter
+
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.filter(predicate: ColumnFilter<C>): TransformableColumnSet<C> =
         colsInternal(predicate as ColumnFilter<*>) as TransformableColumnSet<C>
 
     public fun SingleColumn<DataRow<*>>.filter(predicate: ColumnFilter<*>): TransformableColumnSet<*> =
         ensureIsColGroup().colsInternal(predicate)
+
+    // endregion
+
+    // region name filter
 
     public fun SingleColumn<DataRow<*>>.nameContains(text: CharSequence): TransformableColumnSet<*> =
         ensureIsColGroup().colsInternal { it.name.contains(text) }
@@ -12642,6 +12754,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnSet<C>.endsWith(suffix: CharSequence): TransformableColumnSet<C> =
         colsInternal { it.name.endsWith(suffix) } as TransformableColumnSet<C>
 
+    // endregion
+
+    // region except
+
     public fun <C> ColumnSet<C>.except(vararg other: ColumnsResolver<*>): TransformableColumnSet<*> =
         except(other.toColumnSet())
 
@@ -12649,10 +12765,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         ensureIsColGroup().asColumnSet().asColumnSet().except(*other)
 
     public fun <C> ColumnSet<C>.except(vararg other: String): TransformableColumnSet<*> = except(other.toColumnSet())
-
-    @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C?>.withoutNulls(): TransformableColumnSet<C> =
-        transform { it.filter { !it.hasNulls() } } as TransformableColumnSet<C>
 
     public infix fun <C> ColumnSet<C>.except(other: ColumnsResolver<*>): TransformableColumnSet<*> =
         createTransformableColumnSet(
@@ -12673,6 +12785,16 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public infix fun SingleColumn<DataRow<*>>.except(selector: ColumnsSelector<T, *>): TransformableColumnSet<*> =
         ensureIsColGroup().except(selector.toColumns())
+
+    // endregion
+
+    // region without nulls
+
+    @Suppress("UNCHECKED_CAST")
+    public fun <C> ColumnSet<C?>.withoutNulls(): TransformableColumnSet<C> =
+        transform { it.filter { !it.hasNulls() } } as TransformableColumnSet<C>
+
+    // endregion
 
     public operator fun <C> ColumnsSelector<T, C>.invoke(): ColumnsResolver<C> =
         this(this@ColumnsSelectionDsl, this@ColumnsSelectionDsl)
@@ -12745,6 +12867,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public infix fun <C> ColumnsSelector<T, C>.and(other: String): ColumnSet<*> = this() and other
     public infix fun <C> ColumnsSelector<T, C>.and(other: ColumnsResolver<C>): ColumnSet<C> = this() and other
     public infix fun <C> ColumnsSelector<T, C>.and(other: ColumnsSelector<T, C>): ColumnSet<C> = this() and other
+
+    // endregion
 
     // endregion
 
