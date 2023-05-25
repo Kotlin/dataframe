@@ -10,6 +10,9 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.*
  * Entity that can be resolved into a list of [columns][DataColumn].
  *
  * Used as a return type of [ColumnsSelector].
+ *
+ * Implemented by [SingleColumn] and [ColumnSet].
+ *
  * @param C common type of resolved columns
  * @see [SingleColumn]
  * @see [ColumnSet]

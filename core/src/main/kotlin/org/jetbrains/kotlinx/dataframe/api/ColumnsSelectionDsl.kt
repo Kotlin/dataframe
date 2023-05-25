@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.columns.*
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
+import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -2387,6 +2388,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
             }
         }
 
+    /** TODO tbd */
+    public operator fun <C, R> SingleColumn<DataRow<C>>.invoke(selector: ColumnsSelector<C, R>): ColumnSet<R> =
+        select(selector)
+
     /**
      * @include [CommonSelectDocs]
      * @arg [CommonSelectDocs.ExampleArg]
@@ -2395,6 +2400,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      */
     public fun <C, R> KProperty<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         colGroup(this).select(selector)
+
+    /** TODO tbd */
+    public operator fun <C, R> KProperty<DataRow<C>>.invoke(selector: ColumnsSelector<C, R>): ColumnSet<R> =
+        select(selector)
 
     /**
      * @include [CommonSelectDocs]
@@ -2405,6 +2414,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <R> String.select(selector: ColumnsSelector<*, R>): ColumnSet<R> =
         colGroup(this).select(selector)
 
+    /** TODO tbd */
+    public operator fun <R> String.invoke(selector: ColumnsSelector<*, R>): ColumnSet<R> =
+        select(selector)
+
     /**
      * @include [CommonSelectDocs]
      * @arg [CommonSelectDocs.ExampleArg]
@@ -2413,6 +2426,15 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      */
     public fun <R> ColumnPath.select(selector: ColumnsSelector<*, R>): ColumnSet<R> =
         colGroup(this).select(selector)
+
+    /** TODO tbd */
+    public operator fun <R> ColumnPath.invoke(selector: ColumnsSelector<*, R>): ColumnSet<R> =
+        select(selector)
+
+    /** TODO tbd */
+    public fun <R> pathOf(vararg columnNames: String, selector: ColumnsSelector<*, R>): ColumnSet<R> =
+        pathOf(*columnNames).select(selector)
+
 
     @Deprecated(
         message = "Nested select is reserved for ColumnsSelector/ColumnsSelectionDsl behavior. " +
@@ -3711,6 +3733,35 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region and
 
+    /**
+     * ## And Operator
+     * The [and] operator allows you to combine selections of columns or simply select multiple columns at once.
+     * You can even mix and match any {@include [AccessApiLink]}!
+     *
+     * ### Examples:
+     *
+     * `df.`[select][DataFrame.select]` { "colA" `[String.and]` colB }`
+     *
+     * TODO
+     */
+    private interface CommonAndDocs {
+
+    }
+
+    // TODO add docs `this { age } / it { age }`
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("invokeColumnsSelector")
+    public operator fun <C> invoke(selection: ColumnsSelector<T, C>): ColumnsResolver<C> = selection()
+
+    // region ColumnsResolver
+
+    public infix fun <C> ColumnsResolver<C>.and(other: ColumnsResolver<C>): ColumnSet<C> = ColumnsList(this, other)
+    public infix fun <C> ColumnsResolver<C>.and(other: KProperty<C>): ColumnSet<C> = this and other.toColumnAccessor()
+    public infix fun <C> ColumnsResolver<C>.and(other: String): ColumnSet<*> = this and other.toColumnAccessor()
+    public infix fun <C> ColumnsResolver<C>.and(other: ColumnsSelector<T, C>): ColumnSet<C> = this and other()
+
+    // endregion
+
     // region String
     public infix fun String.and(other: String): ColumnSet<*> = toColumnAccessor() and other.toColumnAccessor()
     public infix fun <C> String.and(other: ColumnsResolver<C>): ColumnSet<*> = toColumnAccessor() and other
@@ -3726,15 +3777,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         toColumnAccessor() and other.toColumnAccessor()
 
     public infix fun <C> KProperty<C>.and(other: ColumnsSelector<T, C>): ColumnSet<C> = toColumnAccessor() and other()
-
-    // endregion
-
-    // region ColumnSet
-
-    public infix fun <C> ColumnsResolver<C>.and(other: KProperty<C>): ColumnSet<C> = this and other.toColumnAccessor()
-    public infix fun <C> ColumnsResolver<C>.and(other: String): ColumnSet<*> = this and other.toColumnAccessor()
-    public infix fun <C> ColumnsResolver<C>.and(other: ColumnsResolver<C>): ColumnSet<C> = ColumnsList(this, other)
-    public infix fun <C> ColumnsResolver<C>.and(other: ColumnsSelector<T, C>): ColumnSet<C> = this and other()
 
     // endregion
 
