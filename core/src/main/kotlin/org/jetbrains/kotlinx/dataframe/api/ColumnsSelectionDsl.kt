@@ -1210,8 +1210,12 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `// NOTE: there's a `[DataFrame.get]` overload that prevents this:`
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][cols]`{ ... }`[`]`][cols]` }`
+     * {@include [LineBreak]}
+     * NOTE: On a [SingleColumn], [cols][SingleColumn.cols] behaves exactly the same as
+     * [children][SingleColumn.children].
      *
      * @see [all\]
+     * @see [children\]
      */
     private interface SingleColumnAnyRowColsPredicateDocs
 
@@ -3368,21 +3372,105 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region children
 
-    // takes children of all columns in the column set
-    public fun ColumnSet<*>.children(predicate: ColumnFilter<Any?> = { true }): TransformableColumnSet<*> =
+    /**
+     * ## Children
+     *
+     * [Children][ColumnSet.children] is an interesting operations, since it behaves
+     * slightly differently depending on what you call it on. It will return the "children"
+     * adhering to the given (optional) [predicate\], however what "children" means depends
+     * whether it's called on a [ColumnSet] or a [SingleColumn]:
+     *
+     * ### On a [SingleColumn]:
+     * When called on a [SingleColumn] consisting of a [ColumnGroup], [children][SingleColumn.children] will return the (filtered) children of that
+     * column group. This makes the function behave similarly to [all][SingleColumn.all] and exactly the same as
+     * [cols][SingleColumn.cols].
+     *
+     * #### For example:
+     *
+     * To select some columns or "children" of `myColumnGroup`, you can do both:
+     * - `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]` { it.`[name][DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
+     * - `df.`[select][DataFrame.select]` { myColumnGroup.`[children][SingleColumn.children]` { it.`[name][DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
+     *
+     * Similarly, to select _all_ columns or "children" of a [DataFrame], you can do:
+     * - `df.`[select][DataFrame.select]` { `[all][SingleColumn.all]`() }`
+     * - `df.`[select][DataFrame.select]` { `[children][SingleColumn.children]`() }`
+     * - `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]`() }`
+     *
+     * ### On a [ColumnSet]:
+     * When called on a [ColumnSet], [children][ColumnSet.children] will return the (filtered) children of all [ColumnGroups][ColumnGroup]
+     * in that column set.
+     *
+     * #### For example:
+     *
+     * To get only the children of all column groups in a [DataFrame], you can do:
+     * - `df.`[select][DataFrame.select]` { `[colGroups][SingleColumn.colGroups]`().`[children][ColumnSet.children]`() }`
+     * - `df.`[select][DataFrame.select]` { `[all][SingleColumn.all]`().`[children][ColumnSet.children]`() }`
+     *
+     * Similarly, you can take the children of all [column groups][ColumnGroup] in a [ColumnSet]:
+     * - `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[children][ColumnSet.children]`() }`
+     *
+     * #### Examples of this overload:
+     *
+     * {@includeArg [ChildrenDocs.ExampleArg]}
+     *
+     * @see [cols\]
+     * @see [all\]
+     * @param [predicate\] An optional predicate to filter the children by.
+     * @return A [TransformableColumnSet] containing the (filtered) children.
+     */
+    private interface ChildrenDocs {
+
+        /** Example argument to use */
+        interface ExampleArg
+    }
+
+    /**
+     * @include [ChildrenDocs]
+     * @arg [ChildrenDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]` { .. }.`[children][ColumnSet.children]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[recursively][TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[DataRow][DataRow]`<MyGroupType>>().`[children][ColumnSet.children]`() }`
+     */
+    public fun ColumnSet<*>.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         transform { it.flatMap { it.children().filter { predicate(it) } } }
 
-    // same as cols
-    public fun SingleColumn<DataRow<*>>.children(predicate: ColumnFilter<Any?> = { true }): TransformableColumnSet<*> =
-        ensureIsColGroup().asColumnSet().children(predicate)
+    /**
+     * @include [ChildrenDocs]
+     * @arg [ChildrenDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[children][SingleColumn.children]`().`[recursively][TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { `[children][SingleColumn.children]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     */
+    public fun SingleColumn<DataRow<*>>.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
+        ensureIsColGroup().asColumnSet().colsInternal(predicate)
 
-    public fun String.children(predicate: ColumnFilter<Any?> = { true }): TransformableColumnSet<*> =
+    /**
+     * @include [ChildrenDocs]
+     * @arg [ChildrenDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[children][SingleColumn.children]`().`[recursively][TransformableColumnSet.recursively]`() }`
+     */
+    public fun String.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         colGroup(this).children(predicate)
 
-    public fun KProperty<DataRow<*>>.children(predicate: ColumnFilter<Any?> = { true }): TransformableColumnSet<*> =
+    /**
+     * @include [ChildrenDocs]
+     * @arg [ChildrenDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[children][SingleColumn.children]`().`[recursively][TransformableColumnSet.recursively]`() }`
+     */
+    public fun KProperty<DataRow<*>>.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         colGroup(this).children(predicate)
 
-    public fun ColumnPath.children(predicate: ColumnFilter<Any?> = { true }): TransformableColumnSet<*> =
+        /**
+     * @include [ChildrenDocs]
+     * @arg [ChildrenDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[children][SingleColumn.children]`().`[recursively][TransformableColumnSet.recursively]`() }`
+     */
+    public fun ColumnPath.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         colGroup(this).children(predicate)
 
     // endregion
@@ -3451,6 +3539,22 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // endregion
 
+    // region take while
+
+    public fun <C> ColumnSet<C>.takeWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
+        transform { it.takeWhile(predicate) }
+
+    public fun SingleColumn<DataRow<*>>.takeWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        ensureIsColGroup().transformSingle { it.children().takeWhile(predicate) }
+
+    public fun <C> ColumnSet<C>.takeLastWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
+        transform { it.takeLastWhile(predicate) }
+
+    public fun SingleColumn<DataRow<*>>.takeLastWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        ensureIsColGroup().transformSingle { it.children().takeLastWhile(predicate) }
+
+    // endregion
+
     // endregion
 
     // region roots
@@ -3483,22 +3587,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /** @include [ColumnSet.roots] */
     public fun ColumnPath.roots(): ColumnSet<*> = colGroup(this).roots()
-
-    // endregion
-
-    // region take while
-
-    public fun <C> ColumnSet<C>.takeWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
-        transform { it.takeWhile(predicate) }
-
-    public fun SingleColumn<DataRow<*>>.takeWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        ensureIsColGroup().transformSingle { it.children().takeWhile(predicate) }
-
-    public fun <C> ColumnSet<C>.takeLastWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
-        transform { it.takeLastWhile(predicate) }
-
-    public fun SingleColumn<DataRow<*>>.takeLastWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        ensureIsColGroup().transformSingle { it.children().takeLastWhile(predicate) }
 
     // endregion
 

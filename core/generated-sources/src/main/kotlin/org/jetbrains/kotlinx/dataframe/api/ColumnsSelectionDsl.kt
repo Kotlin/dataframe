@@ -2733,8 +2733,12 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `// NOTE: there's a `[DataFrame.get]` overload that prevents this:`
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][cols]`{ ... }`[`]`][cols]` }`
+     * ## ‎
+     * NOTE: On a [SingleColumn], [cols][SingleColumn.cols] behaves exactly the same as
+     * [children][SingleColumn.children].
      *
      * @see [all]
+     * @see [children]
      *
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
@@ -2773,11 +2777,15 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `// NOTE: there's a `[DataFrame.get][org.jetbrains.kotlinx.dataframe.DataFrame.get]` overload that prevents this:`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`{ ... }`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     * ## ‎
+     * NOTE: On a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols] behaves exactly the same as
+     * [children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children].
      *
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
-     * @see [all] */
+     * @see [all]
+     * @see [children] */
     public fun SingleColumn<DataRow<*>>.cols(
         predicate: ColumnFilter<*> = { true },
     ): TransformableColumnSet<*> = ensureIsColGroup().colsInternal(predicate)
@@ -2814,11 +2822,15 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `// NOTE: there's a `[DataFrame.get][org.jetbrains.kotlinx.dataframe.DataFrame.get]` overload that prevents this:`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`{ ... }`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     * ## ‎
+     * NOTE: On a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols] behaves exactly the same as
+     * [children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children].
      *
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
      * @see [all]
+     * @see [children]
      *
      */
     public operator fun SingleColumn<DataRow<*>>.get(
@@ -12539,21 +12551,305 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region children
 
-    // takes children of all columns in the column set
-    public fun ColumnSet<*>.children(predicate: ColumnFilter<Any?> = { true }): TransformableColumnSet<*> =
+    /**
+     * ## Children
+     *
+     * [Children][ColumnSet.children] is an interesting operations, since it behaves
+     * slightly differently depending on what you call it on. It will return the "children"
+     * adhering to the given (optional) [predicate\], however what "children" means depends
+     * whether it's called on a [ColumnSet] or a [SingleColumn]:
+     *
+     * ### On a [SingleColumn]:
+     * When called on a [SingleColumn] consisting of a [ColumnGroup], [children][SingleColumn.children] will return the (filtered) children of that
+     * column group. This makes the function behave similarly to [all][SingleColumn.all] and exactly the same as
+     * [cols][SingleColumn.cols].
+     *
+     * #### For example:
+     *
+     * To select some columns or "children" of `myColumnGroup`, you can do both:
+     * - `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]` { it.`[name][DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
+     * - `df.`[select][DataFrame.select]` { myColumnGroup.`[children][SingleColumn.children]` { it.`[name][DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
+     *
+     * Similarly, to select _all_ columns or "children" of a [DataFrame], you can do:
+     * - `df.`[select][DataFrame.select]` { `[all][SingleColumn.all]`() }`
+     * - `df.`[select][DataFrame.select]` { `[children][SingleColumn.children]`() }`
+     * - `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]`() }`
+     *
+     * ### On a [ColumnSet]:
+     * When called on a [ColumnSet], [children][ColumnSet.children] will return the (filtered) children of all [ColumnGroups][ColumnGroup]
+     * in that column set.
+     *
+     * #### For example:
+     *
+     * To get only the children of all column groups in a [DataFrame], you can do:
+     * - `df.`[select][DataFrame.select]` { `[colGroups][SingleColumn.colGroups]`().`[children][ColumnSet.children]`() }`
+     * - `df.`[select][DataFrame.select]` { `[all][SingleColumn.all]`().`[children][ColumnSet.children]`() }`
+     *
+     * Similarly, you can take the children of all [column groups][ColumnGroup] in a [ColumnSet]:
+     * - `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[children][ColumnSet.children]`() }`
+     *
+     * #### Examples of this overload:
+     *
+     * {@includeArg [ChildrenDocs.ExampleArg]}
+     *
+     * @see [cols\]
+     * @see [all\]
+     * @param [predicate\] An optional predicate to filter the children by.
+     * @return A [TransformableColumnSet] containing the (filtered) children.
+     */
+    private interface ChildrenDocs {
+
+        /** Example argument to use */
+        interface ExampleArg
+    }
+
+    /**
+     * ## Children
+     *
+     * [Children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children] is an interesting operations, since it behaves
+     * slightly differently depending on what you call it on. It will return the "children"
+     * adhering to the given (optional) [predicate], however what "children" means depends
+     * whether it's called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]:
+     *
+     * ### On a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]:
+     * When called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] consisting of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], [children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children] will return the (filtered) children of that
+     * column group. This makes the function behave similarly to [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all] and exactly the same as
+     * [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols].
+     *
+     * #### For example:
+     *
+     * To select some columns or "children" of `myColumnGroup`, you can do both:
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
+     *
+     * Similarly, to select _all_ columns or "children" of a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`() }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children]`() }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`() }`
+     *
+     * ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * When called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children] will return the (filtered) children of all [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * in that column set.
+     *
+     * #### For example:
+     *
+     * To get only the children of all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroups][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colGroups]`().`[children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children]`() }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`().`[children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children]`() }`
+     *
+     * Similarly, you can take the children of all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children]`() }`
+     *
+     * #### Examples of this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]` { .. }.`[children][ColumnSet.children]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[recursively][TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[DataRow][DataRow]`<MyGroupType>>().`[children][ColumnSet.children]`() }`
+     *
+     * @see [cols]
+     * @see [all]
+     * @param [predicate] An optional predicate to filter the children by.
+     * @return A [TransformableColumnSet][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet] containing the (filtered) children.
+     */
+    public fun ColumnSet<*>.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         transform { it.flatMap { it.children().filter { predicate(it) } } }
 
-    // same as cols
-    public fun SingleColumn<DataRow<*>>.children(predicate: ColumnFilter<Any?> = { true }): TransformableColumnSet<*> =
-        ensureIsColGroup().asColumnSet().children(predicate)
+    /**
+     * ## Children
+     *
+     * [Children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children] is an interesting operations, since it behaves
+     * slightly differently depending on what you call it on. It will return the "children"
+     * adhering to the given (optional) [predicate], however what "children" means depends
+     * whether it's called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]:
+     *
+     * ### On a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]:
+     * When called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] consisting of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], [children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children] will return the (filtered) children of that
+     * column group. This makes the function behave similarly to [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all] and exactly the same as
+     * [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols].
+     *
+     * #### For example:
+     *
+     * To select some columns or "children" of `myColumnGroup`, you can do both:
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
+     *
+     * Similarly, to select _all_ columns or "children" of a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`() }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children]`() }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`() }`
+     *
+     * ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * When called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children] will return the (filtered) children of all [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * in that column set.
+     *
+     * #### For example:
+     *
+     * To get only the children of all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroups][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colGroups]`().`[children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children]`() }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`().`[children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children]`() }`
+     *
+     * Similarly, you can take the children of all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children]`() }`
+     *
+     * #### Examples of this overload:
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[children][SingleColumn.children]`().`[recursively][TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { `[children][SingleColumn.children]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * @see [cols]
+     * @see [all]
+     * @param [predicate] An optional predicate to filter the children by.
+     * @return A [TransformableColumnSet][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet] containing the (filtered) children.
+     */
+    public fun SingleColumn<DataRow<*>>.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
+        ensureIsColGroup().asColumnSet().colsInternal(predicate)
 
-    public fun String.children(predicate: ColumnFilter<Any?> = { true }): TransformableColumnSet<*> =
+    /**
+     * ## Children
+     *
+     * [Children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children] is an interesting operations, since it behaves
+     * slightly differently depending on what you call it on. It will return the "children"
+     * adhering to the given (optional) [predicate], however what "children" means depends
+     * whether it's called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]:
+     *
+     * ### On a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]:
+     * When called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] consisting of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], [children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children] will return the (filtered) children of that
+     * column group. This makes the function behave similarly to [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all] and exactly the same as
+     * [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols].
+     *
+     * #### For example:
+     *
+     * To select some columns or "children" of `myColumnGroup`, you can do both:
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
+     *
+     * Similarly, to select _all_ columns or "children" of a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`() }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children]`() }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`() }`
+     *
+     * ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * When called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children] will return the (filtered) children of all [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * in that column set.
+     *
+     * #### For example:
+     *
+     * To get only the children of all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroups][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colGroups]`().`[children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children]`() }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`().`[children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children]`() }`
+     *
+     * Similarly, you can take the children of all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children]`() }`
+     *
+     * #### Examples of this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[children][SingleColumn.children]`().`[recursively][TransformableColumnSet.recursively]`() }`
+     *
+     * @see [cols]
+     * @see [all]
+     * @param [predicate] An optional predicate to filter the children by.
+     * @return A [TransformableColumnSet][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet] containing the (filtered) children.
+     */
+    public fun String.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         colGroup(this).children(predicate)
 
-    public fun KProperty<DataRow<*>>.children(predicate: ColumnFilter<Any?> = { true }): TransformableColumnSet<*> =
+    /**
+     * ## Children
+     *
+     * [Children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children] is an interesting operations, since it behaves
+     * slightly differently depending on what you call it on. It will return the "children"
+     * adhering to the given (optional) [predicate], however what "children" means depends
+     * whether it's called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]:
+     *
+     * ### On a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]:
+     * When called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] consisting of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], [children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children] will return the (filtered) children of that
+     * column group. This makes the function behave similarly to [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all] and exactly the same as
+     * [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols].
+     *
+     * #### For example:
+     *
+     * To select some columns or "children" of `myColumnGroup`, you can do both:
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
+     *
+     * Similarly, to select _all_ columns or "children" of a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`() }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children]`() }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`() }`
+     *
+     * ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * When called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children] will return the (filtered) children of all [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * in that column set.
+     *
+     * #### For example:
+     *
+     * To get only the children of all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroups][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colGroups]`().`[children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children]`() }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`().`[children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children]`() }`
+     *
+     * Similarly, you can take the children of all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children]`() }`
+     *
+     * #### Examples of this overload:
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[children][SingleColumn.children]`().`[recursively][TransformableColumnSet.recursively]`() }`
+     *
+     * @see [cols]
+     * @see [all]
+     * @param [predicate] An optional predicate to filter the children by.
+     * @return A [TransformableColumnSet][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet] containing the (filtered) children.
+     */
+    public fun KProperty<DataRow<*>>.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         colGroup(this).children(predicate)
 
-    public fun ColumnPath.children(predicate: ColumnFilter<Any?> = { true }): TransformableColumnSet<*> =
+        /**
+         * ## Children
+         *
+         * [Children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children] is an interesting operations, since it behaves
+         * slightly differently depending on what you call it on. It will return the "children"
+         * adhering to the given (optional) [predicate], however what "children" means depends
+         * whether it's called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]:
+         *
+         * ### On a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]:
+         * When called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] consisting of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], [children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children] will return the (filtered) children of that
+         * column group. This makes the function behave similarly to [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all] and exactly the same as
+         * [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols].
+         *
+         * #### For example:
+         *
+         * To select some columns or "children" of `myColumnGroup`, you can do both:
+         * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
+         * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
+         *
+         * Similarly, to select _all_ columns or "children" of a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
+         * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`() }`
+         * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children]`() }`
+         * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`() }`
+         *
+         * ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+         * When called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children] will return the (filtered) children of all [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+         * in that column set.
+         *
+         * #### For example:
+         *
+         * To get only the children of all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
+         * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroups][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colGroups]`().`[children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children]`() }`
+         * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`().`[children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children]`() }`
+         *
+         * Similarly, you can take the children of all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+         * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children]`() }`
+         *
+         * #### Examples of this overload:
+         *
+         * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[children][SingleColumn.children]`().`[recursively][TransformableColumnSet.recursively]`() }`
+         *
+         * @see [cols]
+         * @see [all]
+         * @param [predicate] An optional predicate to filter the children by.
+         * @return A [TransformableColumnSet][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet] containing the (filtered) children.
+         */
+    public fun ColumnPath.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         colGroup(this).children(predicate)
 
     // endregion
@@ -12619,6 +12915,22 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun KProperty<DataRow<*>>.dropLastChildren(n: Int): ColumnSet<*> = colGroup(this).dropLast(n)
 
     public fun ColumnPath.dropLastChildren(n: Int): ColumnSet<*> = colGroup(this).dropLast(n)
+
+    // endregion
+
+    // region take while
+
+    public fun <C> ColumnSet<C>.takeWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
+        transform { it.takeWhile(predicate) }
+
+    public fun SingleColumn<DataRow<*>>.takeWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        ensureIsColGroup().transformSingle { it.children().takeWhile(predicate) }
+
+    public fun <C> ColumnSet<C>.takeLastWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
+        transform { it.takeLastWhile(predicate) }
+
+    public fun SingleColumn<DataRow<*>>.takeLastWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        ensureIsColGroup().transformSingle { it.children().takeLastWhile(predicate) }
 
     // endregion
 
@@ -12694,22 +13006,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      */
     public fun ColumnPath.roots(): ColumnSet<*> = colGroup(this).roots()
-
-    // endregion
-
-    // region take while
-
-    public fun <C> ColumnSet<C>.takeWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
-        transform { it.takeWhile(predicate) }
-
-    public fun SingleColumn<DataRow<*>>.takeWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        ensureIsColGroup().transformSingle { it.children().takeWhile(predicate) }
-
-    public fun <C> ColumnSet<C>.takeLastWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
-        transform { it.takeLastWhile(predicate) }
-
-    public fun SingleColumn<DataRow<*>>.takeLastWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        ensureIsColGroup().transformSingle { it.children().takeLastWhile(predicate) }
 
     // endregion
 

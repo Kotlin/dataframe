@@ -6,8 +6,10 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value
+import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.jetbrains.kotlinx.dataframe.samples.api.age
 import org.jetbrains.kotlinx.dataframe.samples.api.city
@@ -712,7 +714,7 @@ open class ColumnsSelectionDslTests : TestBase() {
     }
 
     @Test
-    fun `select`() {
+    fun select() {
         listOf(
             df.select {
                 name.firstName and name.lastName
@@ -760,4 +762,28 @@ open class ColumnsSelectionDslTests : TestBase() {
         ).shouldAllBeEqual()
     }
 
+    @Test
+    fun children() {
+        listOf(
+            df.select { all() },
+
+            df.select { children() },
+        ).shouldAllBeEqual()
+
+        listOf(
+            df.select { all().rec() },
+
+            df.select { children().rec() },
+        ).shouldAllBeEqual()
+
+        listOf(
+            df.select { name.firstName and name.lastName },
+
+            df.select { all().children() },
+
+            df.select { colGroups().children() },
+
+            df.select { name.children() },
+        ).shouldAllBeEqual()
+    }
 }
