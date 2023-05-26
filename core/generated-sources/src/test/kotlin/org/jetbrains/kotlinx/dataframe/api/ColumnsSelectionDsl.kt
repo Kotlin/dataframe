@@ -4,8 +4,10 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
@@ -719,6 +721,13 @@ open class ColumnsSelectionDslTests : TestBase() {
 
     @Test
     fun select() {
+
+        val intCols: ColumnsSelector<*, Int> = { colsOf<Int>() }
+
+        df.select {
+            intCols and { age / 2.0 named "half age" }
+        }.alsoDebug()
+
         listOf(
             df.select {
                 name.firstName and name.lastName

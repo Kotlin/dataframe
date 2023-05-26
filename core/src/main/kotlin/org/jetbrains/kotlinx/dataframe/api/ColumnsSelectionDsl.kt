@@ -17,6 +17,8 @@ import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.DoubleIndent
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.*
@@ -1144,8 +1146,12 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         /**
          * @include [CommonColsDocs]
          *
+         * {@include [LineBreak]}
+         * NOTE: If used with a [predicate\], `cols` functions exactly like [filter][SingleColumn.filter].
+         *
          * @param [predicate\] A [ColumnFilter function][ColumnFilter] that takes a [ColumnReference] and returns a [Boolean].
          * @return A ([transformable][TransformableColumnSet]) [ColumnSet] containing the columns that match the given [predicate\].
+         * @see [filter\]
          */
         interface Predicate
 
@@ -2343,11 +2349,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * any [ColumnGroup]. This is more powerful than [SingleColumn.cols], because all operations of
      * the DSL are at your disposal.
      *
+     * The [invoke][SingleColumn.invoke] operator is overloaded to work as a shortcut for this method.
+     *
      * #### For example:
      *
      * `df.`[select][DataFrame.select]` { myColGroup.`[select][SingleColumn.select]` { someCol `[and][SingleColumn.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
      *
-     * `df.`[select][DataFrame.select]` { "myGroupCol".`[select][ColumnPath.select]` { "colA" and `[expr][ColumnsSelectionDsl.expr]` { 0 } } }`
+     * `df.`[select][DataFrame.select]` { "myGroupCol" `[{][ColumnPath.select]` "colA" and `[expr][ColumnsSelectionDsl.expr]` { 0 } `[}][ColumnPath.select]` }`
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[select][ColumnPath.select]` { "colA" and "colB" } }`
      *
@@ -2372,6 +2380,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @arg [CommonSelectDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { myColGroup.`[select][SingleColumn.select]` { someCol `[and][SingleColumn.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     *
+     * `df.`[select][DataFrame.select]` { myColGroup `[{][ColumnPath.select]` colA `[and][SingleColumn.and]` colB `[}][ColumnPath.select]` }`
      */
     public fun <C, R> SingleColumn<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         ensureIsColGroup().let { singleColumn ->
@@ -2388,7 +2398,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
             }
         }
 
-    /** TODO tbd */
+    /** @include [SingleColumn.select] */
     public operator fun <C, R> SingleColumn<DataRow<C>>.invoke(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         select(selector)
 
@@ -2397,11 +2407,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @arg [CommonSelectDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { Type::myColGroup.`[select][SingleColumn.select]` { someCol `[and][SingleColumn.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColGroup `[{][ColumnPath.select]` colA `[and][SingleColumn.and]` colB `[}][ColumnPath.select]` }`
      */
     public fun <C, R> KProperty<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         colGroup(this).select(selector)
 
-    /** TODO tbd */
+    /** @include [KProperty.select] */
     public operator fun <C, R> KProperty<DataRow<C>>.invoke(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         select(selector)
 
@@ -2410,11 +2422,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @arg [CommonSelectDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[select][SingleColumn.select]` { someCol `[and][SingleColumn.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     *
+     * `df.`[select][DataFrame.select]` { "myColGroup" `[{][ColumnPath.select]` colA `[and][SingleColumn.and]` colB `[}][ColumnPath.select]` }`
      */
     public fun <R> String.select(selector: ColumnsSelector<*, R>): ColumnSet<R> =
         colGroup(this).select(selector)
 
-    /** TODO tbd */
+    /** @include [String.select] */
     public operator fun <R> String.invoke(selector: ColumnsSelector<*, R>): ColumnSet<R> =
         select(selector)
 
@@ -2423,15 +2437,24 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @arg [CommonSelectDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[select][SingleColumn.select]` { someCol `[and][SingleColumn.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"] `[{][ColumnPath.select]` colA `[and][SingleColumn.and]` colB `[}][ColumnPath.select]` }`
+     *
+     * `df.`[select][DataFrame.select]` { `[pathOf][pathOf]`("pathTo", "myColGroup").`[select][SingleColumn.select]` { someCol `[and][SingleColumn.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     *
+     * `df.`[select][DataFrame.select]` { `[pathOf][pathOf]`("pathTo", "myColGroup") { colA `[and][SingleColumn.and]` colB } }`
      */
     public fun <R> ColumnPath.select(selector: ColumnsSelector<*, R>): ColumnSet<R> =
         colGroup(this).select(selector)
 
-    /** TODO tbd */
+    /** @include [ColumnPath.select] */
     public operator fun <R> ColumnPath.invoke(selector: ColumnsSelector<*, R>): ColumnSet<R> =
         select(selector)
 
-    /** TODO tbd */
+    /**
+     * @include [ColumnPath.select]
+     * {@comment Needed overload to allow for `pathOf("pathTo", "myColGroup") { colA and colB \\\\}` syntax.}
+     */
     public fun <R> pathOf(vararg columnNames: String, selector: ColumnsSelector<*, R>): ColumnSet<R> =
         pathOf(*columnNames).select(selector)
 
@@ -3736,16 +3759,35 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     /**
      * ## And Operator
      * The [and] operator allows you to combine selections of columns or simply select multiple columns at once.
+     *
      * You can even mix and match any {@include [AccessApiLink]}!
      *
      * ### Examples:
      *
-     * `df.`[select][DataFrame.select]` { "colA" `[String.and]` colB }`
+     * `df.`[groupBy][DataFrame.groupBy]` { "colA" `[and][String.and]` colB }`
      *
-     * TODO
+     * `df.`[select][DataFrame.select]` {`
+     *
+     * {@include [Indent]}[colsOf][SingleColumn.colsOf]`<`[String][String]`>() `[and][ColumnSet.and]` {`
+     *
+     * {@include [DoubleIndent]}[cols][SingleColumn.cols]` { "price" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[recursively][TransformableColumnSet.recursively]`()`
+     *
+     * {@include [Indent]}`}`
+     *
+     * `}`
+     *
+     * `df.`[select][DataFrame.select]` { "colC" `[and][String.and]` Type::colB `[and][KProperty.and]` "pathTo"["colC"] `[and][ColumnPath.and]` colD }`
+     *
+     * #### Example for this overload:
+     *
+     * {@includeArg [CommonAndDocs.ExampleArg]}
+     *
+     * @return A [ColumnSet] that contains all the columns from the [ColumnsResolvers][ColumnsResolver] on the left
+     *   and right side of the [and] operator.
      */
     private interface CommonAndDocs {
 
+        interface ExampleArg
     }
 
     // TODO add docs `this { age } / it { age }`
@@ -3755,36 +3797,111 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region ColumnsResolver
 
+    /**
+     * @include [CommonAndDocs]
+     * @arg [CommonAndDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]` { ... } `[and][ColumnsResolver.and] {@includeArg [ColumnsResolverAndDocs.Argument]}` }`
+     */
+    private interface ColumnsResolverAndDocs {
+
+        interface Argument
+    }
+
+    /** @include [ColumnsResolverAndDocs] {@arg [ColumnsResolverAndDocs.Argument] [colsOf][SingleColumn.colsOf]`<`[Int][Int]`>()} */
     public infix fun <C> ColumnsResolver<C>.and(other: ColumnsResolver<C>): ColumnSet<C> = ColumnsList(this, other)
-    public infix fun <C> ColumnsResolver<C>.and(other: KProperty<C>): ColumnSet<C> = this and other.toColumnAccessor()
+
+    /** @include [ColumnsResolverAndDocs] {@arg [ColumnsResolverAndDocs.Argument] "colB"} */
     public infix fun <C> ColumnsResolver<C>.and(other: String): ColumnSet<*> = this and other.toColumnAccessor()
+
+    /** @include [ColumnsResolverAndDocs] {@arg [ColumnsResolverAndDocs.Argument] Type::colB} */
+    public infix fun <C> ColumnsResolver<C>.and(other: KProperty<C>): ColumnSet<C> = this and other.toColumnAccessor()
+
+    /** @include [ColumnsResolverAndDocs] {@arg [ColumnsResolverAndDocs.Argument] `{ colA `[/][DataColumn.div]` 2.0 `[named][ColumnReference.named]` "half colA" } `} */
     public infix fun <C> ColumnsResolver<C>.and(other: ColumnsSelector<T, C>): ColumnSet<C> = this and other()
 
     // endregion
 
     // region String
-    public infix fun String.and(other: String): ColumnSet<*> = toColumnAccessor() and other.toColumnAccessor()
+
+    /**
+     * @include [CommonAndDocs]
+     * @arg [CommonAndDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { "colA" `[and][String.and] {@includeArg [StringAndDocs.Argument]}` }`
+     */
+    private interface StringAndDocs {
+
+        interface Argument
+    }
+
+    /** @include [StringAndDocs] {@arg [StringAndDocs.Argument] [colsOf][SingleColumn.colsOf]`<`[Int][Int]`>()} */
     public infix fun <C> String.and(other: ColumnsResolver<C>): ColumnSet<*> = toColumnAccessor() and other
+
+    /** @include [StringAndDocs] {@arg [StringAndDocs.Argument] "colB"} */
+    public infix fun String.and(other: String): ColumnSet<*> = toColumnAccessor() and other.toColumnAccessor()
+
+    /** @include [StringAndDocs] {@arg [StringAndDocs.Argument] Type::colB} */
     public infix fun <C> String.and(other: KProperty<C>): ColumnSet<*> = toColumnAccessor() and other
+
+    /** @include [StringAndDocs] {@arg [StringAndDocs.Argument] `{ colA `[/][DataColumn.div]` 2.0 `[named][ColumnReference.named]` "half colA" } `} */
     public infix fun <C> String.and(other: ColumnsSelector<T, C>): ColumnSet<*> = toColumnAccessor() and other()
 
     // endregion
 
     // region KProperty
+
+    /**
+     * @include [CommonAndDocs]
+     * @arg [CommonAndDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { Type::colA `[and][KProperty.and] {@includeArg [KPropertyAndDocs.Argument]}` }`
+     */
+    private interface KPropertyAndDocs {
+
+        interface Argument
+    }
+
+    /** @include [KPropertyAndDocs] {@arg [KPropertyAndDocs.Argument] [colsOf][SingleColumn.colsOf]`<`[Int][Int]`>()} */
     public infix fun <C> KProperty<C>.and(other: ColumnsResolver<C>): ColumnSet<C> = toColumnAccessor() and other
+
+    /** @include [KPropertyAndDocs] {@arg [KPropertyAndDocs.Argument] "colB"} */
     public infix fun <C> KProperty<C>.and(other: String): ColumnSet<*> = toColumnAccessor() and other
+
+    /** @include [KPropertyAndDocs] {@arg [KPropertyAndDocs.Argument] Type::colB} */
     public infix fun <C> KProperty<C>.and(other: KProperty<C>): ColumnSet<C> =
         toColumnAccessor() and other.toColumnAccessor()
 
+    /** @include [KPropertyAndDocs] {@arg [KPropertyAndDocs.Argument] `{ colA `[/][DataColumn.div]` 2.0 `[named][ColumnReference.named]` "half colA" } `} */
     public infix fun <C> KProperty<C>.and(other: ColumnsSelector<T, C>): ColumnSet<C> = toColumnAccessor() and other()
 
     // endregion
 
     // region ColumnsSelector
 
-    public infix fun <C> ColumnsSelector<T, C>.and(other: KProperty<C>): ColumnSet<C> = this() and other
-    public infix fun <C> ColumnsSelector<T, C>.and(other: String): ColumnSet<*> = this() and other
+    /**
+     * @include [CommonAndDocs]
+     * @arg [CommonAndDocs.ExampleArg]
+     *
+     * `val intCols: `[ColumnsSelector][ColumnsSelector]`<*, `[Int][Int]`> = { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>() }`
+     *
+     * `df.`[select][DataFrame.select]` { intCols `[and][and] {@includeArg [ColumnsSelectorAndDocs.Argument]}` }`
+     */
+    private interface ColumnsSelectorAndDocs {
+
+        interface Argument
+    }
+
+    /** @include [ColumnsSelectorAndDocs] {@arg [ColumnsSelectorAndDocs.Argument] [colsOf][SingleColumn.colsOf]`<`[Int][Int]`>()} */
     public infix fun <C> ColumnsSelector<T, C>.and(other: ColumnsResolver<C>): ColumnSet<C> = this() and other
+
+    /** @include [ColumnsSelectorAndDocs] {@arg [ColumnsSelectorAndDocs.Argument] "colB"} */
+    public infix fun <C> ColumnsSelector<T, C>.and(other: String): ColumnSet<*> = this() and other
+
+    /** @include [ColumnsSelectorAndDocs] {@arg [ColumnsSelectorAndDocs.Argument] Type::colB} */
+    public infix fun <C> ColumnsSelector<T, C>.and(other: KProperty<C>): ColumnSet<C> = this() and other
+
+    /** @include [ColumnsSelectorAndDocs] {@arg [ColumnsSelectorAndDocs.Argument] `{ colA `[/][DataColumn.div]` 2.0 `[named][ColumnReference.named]` "half colA" } `} */
     public infix fun <C> ColumnsSelector<T, C>.and(other: ColumnsSelector<T, C>): ColumnSet<C> = this() and other
 
     // endregion
