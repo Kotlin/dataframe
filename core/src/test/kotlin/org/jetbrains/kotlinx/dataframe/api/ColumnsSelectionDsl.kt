@@ -838,6 +838,44 @@ open class ColumnsSelectionDslTests : TestBase() {
     }
 
     @Test
+    fun `take and takeLast`() {
+        listOf(
+            df.select { name.firstName},
+            df.select { name.take(1) },
+            df.select { "name".takeChildren(1) },
+            df.select { Person::name.take(1) },
+            df.select { pathOf("name").takeChildren(1) },
+        ).shouldAllBeEqual()
+
+        listOf(
+            df.select { name.lastName },
+            df.select { name.takeLast(1) },
+            df.select { "name".takeLastChildren(1) },
+            df.select { Person::name.takeLast(1) },
+            df.select { pathOf("name").takeLastChildren(1) },
+        ).shouldAllBeEqual()
+    }
+
+    @Test
+    fun `drop and dropLast`() {
+        listOf(
+            df.select { name.lastName },
+            df.select { name.drop(1) },
+            df.select { "name".dropChildren(1) },
+            df.select { Person::name.drop(1) },
+            df.select { pathOf("name").dropChildren(1) },
+        ).shouldAllBeEqual()
+
+        listOf(
+            df.select { name.firstName },
+            df.select { name.dropLast(1) },
+            df.select { "name".dropLastChildren(1) },
+            df.select { Person::name.dropLast(1) },
+            df.select { pathOf("name").dropLastChildren(1) },
+        ).shouldAllBeEqual()
+    }
+
+    @Test
     fun and() {
         df.select {
             age and name.select {

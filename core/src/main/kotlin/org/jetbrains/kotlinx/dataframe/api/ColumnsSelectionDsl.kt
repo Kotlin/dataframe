@@ -3522,64 +3522,280 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region take, drop
 
+    /**
+     * ## {@includeArg [TitleArg]} (Children)
+     * This function {@includeArg [NounArg]}s the {@includeArg [FirstOrLastArg]} [n\] columns of a [ColumnGroup] or [ColumnSet].
+     *
+     * If called on a [SingleColumn] containing a [ColumnGroup],
+     * [{@includeArg [OperationArg]}][SingleColumn.{@includeArg [OperationArg]}] will {@includeArg [NounArg]} the {@includeArg [FirstOrLastArg]} [n\] children of that column group.
+     *
+     * Else, if called on a [ColumnSet], [{@includeArg [OperationArg]}][ColumnSet.{@includeArg [OperationArg]}] will {@includeArg [NounArg]} the {@includeArg [FirstOrLastArg]} [n\] columns of that column set.
+     *
+     * NOTE: To avoid ambiguity, `{@includeArg [CommonTakeAndDropDocs.OperationArg]}` is called `{@includeArg [CommonTakeAndDropDocs.OperationArg]}Children` when called on a [String] or [ColumnPath] resembling
+     * a [ColumnGroup].
+     *
+     * #### Examples:
+     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[{@includeArg [OperationArg]}][ColumnSet.{@includeArg [OperationArg]}]`(5) }`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[{@includeArg [OperationArg]}][SingleColumn.{@includeArg [OperationArg]}]`(1) }`
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[{@includeArg [OperationArg]}Children][String.{@includeArg [OperationArg]}Children]`(1) }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [CommonTakeAndDropDocs.ExampleArg]}
+     *
+     * @param [n\] The number of columns to {@includeArg [NounArg]}.
+     * @return A [ColumnSet] containing the {@includeArg [FirstOrLastArg]} [n\] columns.
+     */
+    private interface CommonTakeAndDropDocs {
+
+        /** Title, like "Take Last" */
+        interface TitleArg
+
+        /** Operation, like "takeLast" */
+        interface OperationArg
+
+        /** Operation, like "take" */
+        interface NounArg
+
+        /** like "first" */
+        interface FirstOrLastArg
+
+        /** Example argument to use */
+        interface ExampleArg
+    }
+
     // region take
+
+    /**
+     * @include [CommonTakeAndDropDocs]
+     * @arg [CommonTakeAndDropDocs.TitleArg] Take
+     * @arg [CommonTakeAndDropDocs.OperationArg] take
+     * @arg [CommonTakeAndDropDocs.NounArg] take
+     * @arg [CommonTakeAndDropDocs.FirstOrLastArg] first
+     */
+    private interface CommonTakeFirstDocs
+
+    /**
+     * @include [CommonTakeFirstDocs]
+     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[take][ColumnSet.take]`(2) }`
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]` { .. }.`[take][ColumnSet.take]`(2) }`
+     *
+     */
     public fun <C> ColumnSet<C>.take(n: Int): ColumnSet<C> = transform { it.take(n) }
 
+    /**
+     * @include [CommonTakeFirstDocs]
+     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[take][SingleColumn.take]`(5) }`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[take][SingleColumn.take]`(1) }`
+     */
     public fun SingleColumn<DataRow<*>>.take(n: Int): ColumnSet<*> =
         ensureIsColGroup().transformSingle { it.children().take(n) }
 
+    /**
+     * @include [CommonTakeFirstDocs]
+     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[takeChildren][String.takeChildren]`(1) }`
+     */
     public fun String.takeChildren(n: Int): ColumnSet<*> = colGroup(this).take(n)
 
-    public fun KProperty<DataRow<*>>.takeChildren(n: Int): ColumnSet<*> = colGroup(this).take(n)
+    /**
+     * @include [CommonTakeFirstDocs]
+     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[take][KProperty.take]`(1) }`
+     */
+    public fun KProperty<DataRow<*>>.take(n: Int): ColumnSet<*> = colGroup(this).take(n)
 
+    /**
+     * @include [CommonTakeFirstDocs]
+     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[takeChildren][ColumnPath.takeChildren]`(1) }`
+     */
     public fun ColumnPath.takeChildren(n: Int): ColumnSet<*> = colGroup(this).take(n)
 
     // endregion
 
     // region takeLast
 
+    /**
+     * @include [CommonTakeAndDropDocs]
+     * @arg [CommonTakeAndDropDocs.TitleArg] Take Last
+     * @arg [CommonTakeAndDropDocs.OperationArg] takeLast
+     * @arg [CommonTakeAndDropDocs.NounArg] take
+     * @arg [CommonTakeAndDropDocs.FirstOrLastArg] last
+     */
+    private interface CommonTakeLastDocs
+
+    /**
+     * @include [CommonTakeLastDocs]
+     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[takeLast][ColumnSet.takeLast]`(2) }`
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]` { .. }.`[takeLast][ColumnSet.takeLast]`(2) }`
+     *
+     */
     public fun <C> ColumnSet<C>.takeLast(n: Int = 1): ColumnSet<C> = transform { it.takeLast(n) }
 
+    /**
+     * @include [CommonTakeLastDocs]
+     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[takeLast][SingleColumn.takeLast]`(5) }`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[takeLast][SingleColumn.takeLast]`(1) }`
+     */
     public fun SingleColumn<DataRow<*>>.takeLast(n: Int = 1): ColumnSet<*> =
         ensureIsColGroup().transformSingle { it.children().takeLast(n) }
 
+    /**
+     * @include [CommonTakeLastDocs]
+     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[takeLastChildren][String.takeLastChildren]`(1) }`
+     */
     public fun String.takeLastChildren(n: Int): ColumnSet<*> = colGroup(this).takeLast(n)
 
-    public fun KProperty<DataRow<*>>.takeLastChildren(n: Int): ColumnSet<*> = colGroup(this).takeLast(n)
+    /**
+     * @include [CommonTakeLastDocs]
+     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[takeLast][KProperty.takeLast]`(1) }`
+     */
+    public fun KProperty<DataRow<*>>.takeLast(n: Int): ColumnSet<*> = colGroup(this).takeLast(n)
 
+    /**
+     * @include [CommonTakeLastDocs]
+     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[takeLastChildren][ColumnPath.takeLastChildren]`(1) }`
+     */
     public fun ColumnPath.takeLastChildren(n: Int): ColumnSet<*> = colGroup(this).takeLast(n)
 
     // endregion
 
     // region drop
 
+    /**
+     * @include [CommonTakeAndDropDocs]
+     * @arg [CommonTakeAndDropDocs.TitleArg] Drop
+     * @arg [CommonTakeAndDropDocs.OperationArg] drop
+     * @arg [CommonTakeAndDropDocs.NounArg] drop
+     * @arg [CommonTakeAndDropDocs.FirstOrLastArg] first
+     */
+    private interface CommonDropFirstDocs
+
+    /**
+     * @include [CommonDropFirstDocs]
+     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[drop][ColumnSet.drop]`(2) }`
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]` { .. }.`[drop][ColumnSet.drop]`(2) }`
+     */
     public fun <C> ColumnSet<C>.drop(n: Int): ColumnSet<C> = transform { it.drop(n) }
 
+    /**
+     * @include [CommonDropFirstDocs]
+     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[drop][SingleColumn.drop]`(5) }`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[drop][SingleColumn.drop]`(1) }`
+     */
     public fun SingleColumn<DataRow<*>>.drop(n: Int): ColumnSet<*> =
         ensureIsColGroup().transformSingle { it.children().drop(n) }
 
+    /**
+     * @include [CommonDropFirstDocs]
+     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropChildren][String.dropChildren]`(1) }`
+     */
     public fun String.dropChildren(n: Int): ColumnSet<*> = colGroup(this).drop(n)
 
-    public fun KProperty<DataRow<*>>.dropChildren(n: Int): ColumnSet<*> = colGroup(this).drop(n)
+    /**
+     * @include [CommonDropFirstDocs]
+     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[drop][KProperty.drop]`(1) }`
+     */
+    public fun KProperty<DataRow<*>>.drop(n: Int): ColumnSet<*> = colGroup(this).drop(n)
 
+    /**
+     * @include [CommonDropFirstDocs]
+     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropChildren][ColumnPath.dropChildren]`(1) }`
+     */
     public fun ColumnPath.dropChildren(n: Int): ColumnSet<*> = colGroup(this).drop(n)
 
     // endregion
 
     // region dropLast
 
+    /**
+     * @include [CommonTakeAndDropDocs]
+     * @arg [CommonTakeAndDropDocs.TitleArg] Drop Last
+     * @arg [CommonTakeAndDropDocs.OperationArg] dropLast
+     * @arg [CommonTakeAndDropDocs.NounArg] drop
+     * @arg [CommonTakeAndDropDocs.FirstOrLastArg] last
+     */
+    private interface CommonDropLastDocs
+
+    /**
+     * @include [CommonDropLastDocs]
+     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[dropLast][ColumnSet.dropLast]`(2) }`
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]` { .. }.`[dropLast][ColumnSet.dropLast]`() }`
+     */
     public fun <C> ColumnSet<C>.dropLast(n: Int = 1): ColumnSet<C> = transform { it.dropLast(n) }
 
+    /**
+     * @include [CommonDropLastDocs]
+     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[dropLast][SingleColumn.dropLast]`(5) }`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropLast][SingleColumn.dropLast]`() }`
+     */
     public fun SingleColumn<DataRow<*>>.dropLast(n: Int = 1): ColumnSet<*> =
         ensureIsColGroup().transformSingle { it.children().dropLast(n) }
 
     /**
-     * {@comment Name change to avoid conflict with [List] and [String]}
+     * @include [CommonDropLastDocs]
+     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropLastChildren][String.dropLastChildren]`(1) }`
      */
     public fun String.dropLastChildren(n: Int): ColumnSet<*> = colGroup(this).dropLast(n)
 
-    public fun KProperty<DataRow<*>>.dropLastChildren(n: Int): ColumnSet<*> = colGroup(this).dropLast(n)
+    /**
+     * @include [CommonDropLastDocs]
+     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[dropLast][KProperty.dropLast]`(1) }`
+     */
+    public fun KProperty<DataRow<*>>.dropLast(n: Int): ColumnSet<*> = colGroup(this).dropLast(n)
 
+    /**
+     * @include [CommonDropLastDocs]
+     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropLastChildren][ColumnPath.dropLastChildren]`(1) }`
+     */
     public fun ColumnPath.dropLastChildren(n: Int): ColumnSet<*> = colGroup(this).dropLast(n)
 
     // endregion
