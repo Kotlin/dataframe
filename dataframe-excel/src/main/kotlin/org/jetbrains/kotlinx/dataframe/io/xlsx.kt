@@ -26,6 +26,7 @@ import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
+import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
@@ -72,7 +73,7 @@ public fun DataFrame.Companion.readExcel(
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
 ): AnyFrame {
     val wb = WorkbookFactory.create(url.openStream())
-    return wb.use { readExcel(wb, sheetName, skipRows, columns, rowsCount) }
+    return wb.use { readExcel(wb, sheetName, skipRows, columns, rowsCount, nameRepairStrategy) }
 }
 
 /**
@@ -92,7 +93,7 @@ public fun DataFrame.Companion.readExcel(
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
 ): AnyFrame {
     val wb = WorkbookFactory.create(file)
-    return wb.use { readExcel(it, sheetName, skipRows, columns, rowsCount) }
+    return wb.use { readExcel(it, sheetName, skipRows, columns, rowsCount, nameRepairStrategy) }
 }
 
 /**
@@ -110,7 +111,7 @@ public fun DataFrame.Companion.readExcel(
     columns: String? = null,
     rowsCount: Int? = null,
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
-): AnyFrame = readExcel(asURL(fileOrUrl), sheetName, skipRows, columns, rowsCount)
+): AnyFrame = readExcel(asURL(fileOrUrl), sheetName, skipRows, columns, rowsCount, nameRepairStrategy)
 
 /**
  * @param sheetName sheet to read. By default, first sheet in the document
@@ -129,7 +130,7 @@ public fun DataFrame.Companion.readExcel(
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
 ): AnyFrame {
     val wb = WorkbookFactory.create(inputStream)
-    return wb.use { readExcel(it, sheetName, skipRows, columns, rowsCount) }
+    return wb.use { readExcel(it, sheetName, skipRows, columns, rowsCount, nameRepairStrategy) }
 }
 
 /**
@@ -151,7 +152,7 @@ public fun DataFrame.Companion.readExcel(
     val sheet: Sheet = sheetName
         ?.let { wb.getSheet(it) ?: error("Sheet with name $sheetName not found") }
         ?: wb.getSheetAt(0)
-    return readExcel(sheet, columns, skipRows, rowsCount)
+    return readExcel(sheet, columns, skipRows, rowsCount, nameRepairStrategy)
 }
 
 /**
@@ -194,14 +195,18 @@ public fun DataFrame.Companion.readExcel(
     val last = rowsCount?.let { first + it - 1 } ?: sheet.lastRowNum
     val valueRowsRange = (first..last)
 
+    val columnNameCounters = mutableMapOf<String, Int>()
     val columns = columnIndexes.map { index ->
         val headerCell = headerRow?.getCell(index)
-        val name = if (headerCell?.cellType == CellType.NUMERIC) {
+        val nameFromCell = if (headerCell?.cellType == CellType.NUMERIC) {
             headerCell.numericCellValue.toString() // Support numeric-named columns
         } else {
             headerCell?.stringCellValue
                 ?: CellReference.convertNumToColString(index) // Use Excel column names if no data
         }
+
+        val name = repairNameIfRequired(nameFromCell, columnNameCounters, nameRepairStrategy)
+        columnNameCounters[name] = columnNameCounters.getOrDefault(name, 0) + 1 // increase the counter for specific column name
 
         val values: List<Any?> = valueRowsRange.map {
             val row: Row? = sheet.getRow(it)
@@ -211,6 +216,24 @@ public fun DataFrame.Companion.readExcel(
         DataColumn.createWithTypeInference(name, values)
     }
     return dataFrameOf(columns)
+}
+
+private fun repairNameIfRequired(nameFromCell: String, columnNameCounters: MutableMap<String, Int>, nameRepairStrategy: NameRepairStrategy): String {
+    return when(nameRepairStrategy) {
+        NameRepairStrategy.NO -> nameFromCell
+        NameRepairStrategy.CHECK_UNIQUE -> if (columnNameCounters.contains(nameFromCell)) throw DuplicateColumnNamesException(columnNameCounters.keys.toList()) else nameFromCell
+        NameRepairStrategy.MAKE_UNIQUE_AND_NOT_EMPTY -> if (nameFromCell.isEmpty()) {
+            val emptyName = "Unknown column"
+            if(columnNameCounters.contains(emptyName)) "${emptyName}_${columnNameCounters[emptyName]}"
+            else emptyName
+        } else {
+            if(columnNameCounters.contains(nameFromCell)){
+                "${nameFromCell}_${columnNameCounters[nameFromCell]}"
+            } else {
+                nameFromCell
+            }
+        }
+    }
 }
 
 private fun Cell?.cellValue(sheetName: String): Any? =
