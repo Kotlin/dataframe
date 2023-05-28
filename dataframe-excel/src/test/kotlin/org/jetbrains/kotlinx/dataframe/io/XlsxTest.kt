@@ -121,6 +121,5 @@ class XlsxTest {
         val df = DataFrame.readExcel(testResource("iris_duplicated_column.xlsx"), nameRepairStrategy = NameRepairStrategy.MAKE_UNIQUE_AND_NOT_EMPTY)
         df.columnNames() shouldBe listOf("Sepal.Length", "Sepal.Width",
             "Petal.Length", "Petal.Width", "Species", "Other.Width", "Species_1")
-
     }
 }
