@@ -60,6 +60,8 @@ private const val readExcel = "readExcel"
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
+ * @param nameRepairStrategy handling of column names.
+ * The default behavior is to ensure column names are [NameRepairStrategy.CHECK_UNIQUE]
  */
 public fun DataFrame.Companion.readExcel(
     url: URL,
@@ -67,6 +69,7 @@ public fun DataFrame.Companion.readExcel(
     skipRows: Int = 0,
     columns: String? = null,
     rowsCount: Int? = null,
+    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
 ): AnyFrame {
     val wb = WorkbookFactory.create(url.openStream())
     return wb.use { readExcel(wb, sheetName, skipRows, columns, rowsCount) }
@@ -77,6 +80,8 @@ public fun DataFrame.Companion.readExcel(
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
+ * @param nameRepairStrategy handling of column names.
+ * The default behavior is to ensure column names are [NameRepairStrategy.CHECK_UNIQUE]
  */
 public fun DataFrame.Companion.readExcel(
     file: File,
@@ -84,6 +89,7 @@ public fun DataFrame.Companion.readExcel(
     skipRows: Int = 0,
     columns: String? = null,
     rowsCount: Int? = null,
+    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
 ): AnyFrame {
     val wb = WorkbookFactory.create(file)
     return wb.use { readExcel(it, sheetName, skipRows, columns, rowsCount) }
@@ -94,6 +100,8 @@ public fun DataFrame.Companion.readExcel(
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
+ * @param nameRepairStrategy handling of column names.
+ * The default behavior is to ensure column names are [NameRepairStrategy.CHECK_UNIQUE]
  */
 public fun DataFrame.Companion.readExcel(
     fileOrUrl: String,
@@ -101,6 +109,7 @@ public fun DataFrame.Companion.readExcel(
     skipRows: Int = 0,
     columns: String? = null,
     rowsCount: Int? = null,
+    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
 ): AnyFrame = readExcel(asURL(fileOrUrl), sheetName, skipRows, columns, rowsCount)
 
 /**
@@ -108,6 +117,8 @@ public fun DataFrame.Companion.readExcel(
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
+ * @param nameRepairStrategy handling of column names.
+ * The default behavior is to ensure column names are [NameRepairStrategy.CHECK_UNIQUE]
  */
 public fun DataFrame.Companion.readExcel(
     inputStream: InputStream,
@@ -115,6 +126,7 @@ public fun DataFrame.Companion.readExcel(
     skipRows: Int = 0,
     columns: String? = null,
     rowsCount: Int? = null,
+    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
 ): AnyFrame {
     val wb = WorkbookFactory.create(inputStream)
     return wb.use { readExcel(it, sheetName, skipRows, columns, rowsCount) }
@@ -125,6 +137,8 @@ public fun DataFrame.Companion.readExcel(
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
+ * @param nameRepairStrategy handling of column names.
+ * The default behavior is to ensure column names are [NameRepairStrategy.CHECK_UNIQUE]
  */
 public fun DataFrame.Companion.readExcel(
     wb: Workbook,
@@ -132,6 +146,7 @@ public fun DataFrame.Companion.readExcel(
     skipRows: Int = 0,
     columns: String? = null,
     rowsCount: Int? = null,
+    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
 ): AnyFrame {
     val sheet: Sheet = sheetName
         ?.let { wb.getSheet(it) ?: error("Sheet with name $sheetName not found") }
@@ -144,12 +159,15 @@ public fun DataFrame.Companion.readExcel(
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
+ * @param nameRepairStrategy handling of column names.
+ * The default behavior is to ensure column names are [NameRepairStrategy.CHECK_UNIQUE]
  */
 public fun DataFrame.Companion.readExcel(
     sheet: Sheet,
     columns: String? = null,
     skipRows: Int = 0,
     rowsCount: Int? = null,
+    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
 ): AnyFrame {
     val columnIndexes: Iterable<Int> = if (columns != null) {
         columns.split(",").flatMap {
