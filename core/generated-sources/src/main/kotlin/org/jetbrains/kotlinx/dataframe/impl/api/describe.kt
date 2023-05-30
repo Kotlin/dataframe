@@ -64,7 +64,7 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
         if (hasLongPaths) {
             ColumnDescription::path from { it.path() }
         }
-        ColumnDescription::type from { it.type.jvmErasure.simpleName }
+        ColumnDescription::type from { buildTypeName(it) }
         ColumnDescription::count from { it.size }
         ColumnDescription::unique from { it.countDistinct() }
         ColumnDescription::nulls from { it.values.count { it == null } }
@@ -90,4 +90,13 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
     }.move(ColumnDescription::freq).after(ColumnDescription::top)
 
     return df.cast()
+}
+
+private fun buildTypeName(it: AnyCol): String {
+    val rawJavaType = it.type.jvmErasure.simpleName.toString()
+    return if (it.type.isMarkedNullable) {
+        "$rawJavaType?"
+    } else {
+        rawJavaType
+    }
 }
