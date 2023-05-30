@@ -627,8 +627,8 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select { "name".cols(Name::firstName, Name::lastName) },
             df.select { "name"[Name::firstName, Name::lastName] },
 
-            df.select { Person::name.cols(Name::firstName, Name::lastName) },
-            df.select { Person::name[Name::firstName, Name::lastName] },
+            df.select { Person::name.asColumnGroup().cols(Name::firstName, Name::lastName) },
+            df.select { Person::name.asColumnGroup()[Name::firstName, Name::lastName] },
 
             df.select { pathOf("name").cols(Name::firstName, Name::lastName) },
             df.select { pathOf("name")[Name::firstName, Name::lastName] },
@@ -770,11 +770,6 @@ open class ColumnsSelectionDslTests : TestBase() {
             },
             df.select {
                 pathOf("name").select {
-                    "firstName" and "lastName"
-                }
-            },
-            df.select {
-                pathOf("name") {
                     "firstName" and "lastName"
                 }
             },
