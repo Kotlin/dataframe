@@ -145,11 +145,11 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      *
      * This is a shorthand for
      *
-     * [get][ColumnsContainer.get]`(MyType::myColumn).`[get][ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
+     * [get][ColumnsContainer.get]`(MyType::myColumnGroup).`[asColumnGroup][KProperty.asColumnGroup]`().`[get][ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
      *
      * and can instead be written as
      *
-     * `MyType::myColumn`[`[`][ColumnsContainer.get]`MyOtherType::myOtherColumn`[`]`][ColumnsContainer.get].
+     * `MyType::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`()`[`[`][ColumnsContainer.get]`MyOtherType::myOtherColumn`[`]`][ColumnsContainer.get].
      *
      * @throws [IllegalArgumentException] if the column is not found.
      */
@@ -160,11 +160,11 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      *
      * This is a shorthand for
      *
-     * [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumn).`[get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
+     * [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
      *
      * and can instead be written as
      *
-     * `MyType::myColumn`[`[`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`MyOtherType::myOtherColumn`[`]`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get].
+     * `MyType::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`()`[`[`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`MyOtherType::myOtherColumn`[`]`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get].
      *
      * @throws [IllegalArgumentException] if the column is not found.
      * @return The [DataColumn] these [KProperty Accessors][KProperty] point to.
@@ -176,11 +176,11 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      *
      * This is a shorthand for
      *
-     * [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumn).`[get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
+     * [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
      *
      * and can instead be written as
      *
-     * `MyType::myColumn`[`[`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`MyOtherType::myOtherColumn`[`]`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get].
+     * `MyType::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`()`[`[`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`MyOtherType::myOtherColumn`[`]`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get].
      *
      * @throws [IllegalArgumentException] if the column is not found.
      * @return The [ColumnGroup] these [KProperty Accessors][KProperty] point to.
@@ -193,11 +193,11 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      *
      * This is a shorthand for
      *
-     * [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumn).`[get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
+     * [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
      *
      * and can instead be written as
      *
-     * `MyType::myColumn`[`[`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`MyOtherType::myOtherColumn`[`]`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get].
+     * `MyType::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`()`[`[`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`MyOtherType::myOtherColumn`[`]`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get].
      *
      * @throws [IllegalArgumentException] if the column is not found.
      * @return The [FrameColumn] these [KProperty Accessors][KProperty] point to.
@@ -325,7 +325,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColumnGroup).`[first][first]`() }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column that adheres to the given [condition].
@@ -442,7 +444,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColumnGroup).`[last][last]`() }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column that adheres to the given [condition].
@@ -559,7 +563,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColumnGroup).`[single][single]`() }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column that adheres to the given [condition].
@@ -1441,9 +1447,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[col][KProperty.col]`(5) }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[col][KProperty.col]`(5) }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[`[`][KProperty.col]`0`[`]`][KProperty.col]` }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColumnGroup)`[`[`][KProperty.col]`0`[`]`][KProperty.col]` }`
      *
      * @throws [IndexOutOfBoundsException] If the index is out of bounds.
      * @param [index] The index of the column to retrieve.
@@ -1471,9 +1477,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][kotlin.reflect.KProperty.col]`(5) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[col][kotlin.reflect.KProperty.col]`(5) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[`[`][kotlin.reflect.KProperty.col]`0`[`]`][kotlin.reflect.KProperty.col]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][kotlin.reflect.KProperty.col]`0`[`]`][kotlin.reflect.KProperty.col]` }`
      *
      * @throws [IndexOutOfBoundsException] If the index is out of bounds.
      * @param [index] The index of the column to retrieve.
@@ -1501,9 +1507,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][kotlin.reflect.KProperty.col]`(5) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[col][kotlin.reflect.KProperty.col]`(5) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[`[`][kotlin.reflect.KProperty.col]`0`[`]`][kotlin.reflect.KProperty.col]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][kotlin.reflect.KProperty.col]`0`[`]`][kotlin.reflect.KProperty.col]` }`
      *
      * @throws [IndexOutOfBoundsException] If the index is out of bounds.
      * @param [index] The index of the column to retrieve.
@@ -3008,13 +3014,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::columnGroup.`[cols][cols]` { "e" `[in][String.contains]` it.`[name][ColumnPath.name]`() } }`
+     * `df.`[select][DataFrame.select]` { Type::columnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[cols][cols]` { "e" `[in][String.contains]` it.`[name][ColumnPath.name]`() } }`
      *
-     * `df.`[select][DataFrame.select]` { Type::columnGroup`[`[`][cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][cols]` }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::columnGroup)`[`[`][cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][cols]` }`
      *
      * `// identity call, same as `[all][all]
      *
-     * `df.`[select][DataFrame.select]` { Type::columnGroup.`[cols][cols]`() }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::columnGroup).`[cols][cols]`() }`
      *
      * @see [all]
      *
@@ -3048,13 +3054,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnGroup.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "e" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "e" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnGroup`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::columnGroup)`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      * `// identity call, same as `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnGroup.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::columnGroup).`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() }`
      *
      *
      * ## ‎
@@ -3088,13 +3094,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnGroup.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "e" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "e" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnGroup`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::columnGroup)`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      * `// identity call, same as `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnGroup.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::columnGroup).`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() }`
      *
      *
      * ## ‎
@@ -3593,11 +3599,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][cols]`(columnA, columnB) }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[cols][cols]`(columnA, columnB) }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColumnGroup).`[cols][cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup`[`[`][cols]`columnA, columnB`[`]`][cols]` }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColumnGroup)`[`[`][cols]`columnA, columnB`[`]`][cols]` }`
      *
      *
      * @param [firstCol] A [ColumnReference] that points to a column.
@@ -3626,11 +3632,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(columnA, columnB) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(columnA, columnB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      *
      * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
@@ -3662,11 +3668,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(columnA, columnB) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(columnA, columnB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      *
      * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
@@ -4134,9 +4140,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][cols]`("columnA", "columnB") }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[cols][cols]`("columnA", "columnB") }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup`[`[`][cols]`"columnA", "columnB"`[`]`][cols]` }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColumnGroup)`[`[`][cols]`"columnA", "columnB"`[`]`][cols]` }`
      *
      *
      * @param [firstCol] A [String] that points to a column.
@@ -4165,9 +4171,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("columnA", "columnB") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("columnA", "columnB") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      *
      * @param [firstCol] A [String] that points to a column.
@@ -4199,9 +4205,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("columnA", "columnB") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("columnA", "columnB") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      *
      * @param [firstCol] A [String] that points to a column.
@@ -4654,9 +4660,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][cols]`(Type::colA, Type::colB) }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[cols][cols]`(Type::colA, Type::colB) }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup`[`[`][cols]`Type::colA, Type::colB`[`]`][cols]` }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColumnGroup)`[`[`][cols]`Type::colA, Type::colB`[`]`][cols]` }`
      *
      *
      * @param [firstCol] A [KProperty] that points to a column.
@@ -4685,9 +4691,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(Type::colA, Type::colB) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(Type::colA, Type::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      *
      * @param [firstCol] A [KProperty] that points to a column.
@@ -4719,9 +4725,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(Type::colA, Type::colB) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(Type::colA, Type::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      *
      * @param [firstCol] A [KProperty] that points to a column.
@@ -5206,9 +5212,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][KProperty.cols]`(5, 4) }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[cols][KProperty.cols]`(5, 4) }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup`[`[`][KProperty.cols]`0, 3`[`]`][KProperty.cols]` }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColumnGroup)`[`[`][KProperty.cols]`0, 3`[`]`][KProperty.cols]` }`
      *
      * @throws [IndexOutOfBoundsException] If any index is out of bounds.
      * @param [firstIndex] The index of the first column to retrieve.
@@ -5237,9 +5243,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`(5, 4) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[cols][kotlin.reflect.KProperty.cols]`(5, 4) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`0, 3`[`]`][kotlin.reflect.KProperty.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][kotlin.reflect.KProperty.cols]`0, 3`[`]`][kotlin.reflect.KProperty.cols]` }`
      *
      * @throws [IndexOutOfBoundsException] If any index is out of bounds.
      * @param [firstIndex] The index of the first column to retrieve.
@@ -5271,9 +5277,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`(5, 4) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[cols][kotlin.reflect.KProperty.cols]`(5, 4) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`0, 3`[`]`][kotlin.reflect.KProperty.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][kotlin.reflect.KProperty.cols]`0, 3`[`]`][kotlin.reflect.KProperty.cols]` }`
      *
      * @throws [IndexOutOfBoundsException] If any index is out of bounds.
      * @param [firstIndex] The index of the first column to retrieve.
@@ -5740,9 +5746,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][KProperty.cols]`(1`[..][Int.rangeTo]`3) }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[cols][KProperty.cols]`(1`[..][Int.rangeTo]`3) }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup`[`[`][KProperty.cols]`0`[..][Int.rangeTo]`5`[`]`][KProperty.cols]` }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColumnGroup)`[`[`][KProperty.cols]`0`[..][Int.rangeTo]`5`[`]`][KProperty.cols]` }`
      *
      * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
      * @throws [IllegalArgumentException] if the [range] is empty.
@@ -5771,9 +5777,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`(1`[..][Int.rangeTo]`3) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[cols][kotlin.reflect.KProperty.cols]`(1`[..][Int.rangeTo]`3) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`0`[..][Int.rangeTo]`5`[`]`][kotlin.reflect.KProperty.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][kotlin.reflect.KProperty.cols]`0`[..][Int.rangeTo]`5`[`]`][kotlin.reflect.KProperty.cols]` }`
      *
      * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
      * @throws [IllegalArgumentException] if the [range] is empty.
@@ -5802,9 +5808,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`(1`[..][Int.rangeTo]`3) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[cols][kotlin.reflect.KProperty.cols]`(1`[..][Int.rangeTo]`3) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`0`[..][Int.rangeTo]`5`[`]`][kotlin.reflect.KProperty.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][kotlin.reflect.KProperty.cols]`0`[..][Int.rangeTo]`5`[`]`][kotlin.reflect.KProperty.cols]` }`
      *
      * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
      * @throws [IllegalArgumentException] if the [range] is empty.
@@ -6070,9 +6076,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[valueCols][KProperty.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColumnGroup).`[valueCols][KProperty.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[valueCols][KProperty.valueCols]`() }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[valueCols][KProperty.valueCols]`() }`
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the value columns by.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn].
@@ -6281,9 +6287,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[colGroups][KProperty.colGroups]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColGroup).`[colGroups][KProperty.colGroups]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[colGroups][KProperty.colGroups]`() }`
+     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[colGroups][KProperty.colGroups]`() }`
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the column groups by.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -6472,9 +6478,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[frameCols][KProperty.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColGroup).`[frameCols][KProperty.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[frameCols][KProperty.frameCols]`() }`
+     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[frameCols][KProperty.frameCols]`() }`
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the frame columns by.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
@@ -6696,9 +6702,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[select][SingleColumn.select]` { someCol `[and][SingleColumn.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColGroup).`[select][SingleColumn.select]` { someCol `[and][SingleColumn.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColGroup `[{][ColumnPath.select]` colA `[and][SingleColumn.and]` colB `[}][ColumnPath.select]` }`
+     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[select][SingleColumn.select]` { colA `[and][SingleColumn.and]` colB } }`
      *
      * @param [selector] The [ColumnsSelector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] to use for the selection.
      * @receiver The [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
@@ -6728,9 +6734,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` { someCol `[and][SingleColumn.and]` `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` { someCol `[and][SingleColumn.and]` `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup `[{][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` colA `[and][SingleColumn.and]` colB `[}][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` { colA `[and][SingleColumn.and]` colB } }`
      *
      * @param [selector] The [ColumnsSelector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] to use for the selection.
      * @receiver The [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
@@ -7435,7 +7441,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::columnGroup.`[all][KProperty.all]`() }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::columnGroup).`[all][KProperty.all]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { Type::columnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[all][KProperty.all]`() }`
      *
      * #### Flavors of All:
      *
@@ -7521,7 +7529,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { `[{@includeArg [FunctionArg]}][SingleColumn.{@includeArg [FunctionArg]}]`("someColumn") }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[{@includeArg [FunctionArg]}][SingleColumn.{@includeArg [FunctionArg]}]`(someColumn) }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColGroup).`[{@includeArg [FunctionArg]}][SingleColumn.{@includeArg [FunctionArg]}]`(someColumn) }`
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[{@includeArg [FunctionArg]}][SingleColumn.{@includeArg [FunctionArg]}]`(Type::someColumn) }`
      *
@@ -7588,7 +7596,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allAfter][SingleColumn.allAfter]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
      *
@@ -7637,7 +7645,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allAfter][SingleColumn.allAfter]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
      *
@@ -7689,7 +7697,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allAfter][SingleColumn.allAfter]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
      *
@@ -7747,7 +7755,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allAfter][SingleColumn.allAfter]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
      *
@@ -7795,7 +7803,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allAfter][SingleColumn.allAfter]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
      *
@@ -7843,7 +7851,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allAfter][SingleColumn.allAfter]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
      *
@@ -7893,7 +7901,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allAfter][SingleColumn.allAfter]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
      *
@@ -7947,7 +7955,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allAfter][SingleColumn.allAfter]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
      *
@@ -7998,7 +8006,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allAfter][SingleColumn.allAfter]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
      *
@@ -8048,7 +8056,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allAfter][SingleColumn.allAfter]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
      *
@@ -8098,7 +8106,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allAfter][SingleColumn.allAfter]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
      *
@@ -8150,7 +8158,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allAfter][SingleColumn.allAfter]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
      *
@@ -8202,7 +8210,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allAfter][SingleColumn.allAfter]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
      *
@@ -8250,7 +8258,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allAfter][SingleColumn.allAfter]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
      *
@@ -8298,7 +8306,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allAfter][SingleColumn.allAfter]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
      *
@@ -8347,7 +8355,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allAfter][SingleColumn.allAfter]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
      *
@@ -8396,13 +8404,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allAfter][SingleColumn.allAfter]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { SomeType::myColGroup.`[allAfter][KProperty.allAfter]`({@includeArg [KPropertyAllAfterDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(SomeType::myColGroup).`[allAfter][KProperty.allAfter]`({@includeArg [KPropertyAllAfterDocs.Arg]}) }`
      *
      * #### Flavors of All:
      *
@@ -8448,13 +8456,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allAfter][SingleColumn.allAfter]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { SomeType::myColGroup.`[allAfter][kotlin.reflect.KProperty.allAfter]`("pathTo"["myColumn"]) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(SomeType::myColGroup).`[allAfter][kotlin.reflect.KProperty.allAfter]`("pathTo"["myColumn"]) }` 
      *
      * #### Flavors of All:
      *
@@ -8497,13 +8505,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allAfter][SingleColumn.allAfter]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { SomeType::myColGroup.`[allAfter][kotlin.reflect.KProperty.allAfter]`("myColumn") }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(SomeType::myColGroup).`[allAfter][kotlin.reflect.KProperty.allAfter]`("myColumn") }` 
      *
      * #### Flavors of All:
      *
@@ -8545,13 +8553,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allAfter][SingleColumn.allAfter]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { SomeType::myColGroup.`[allAfter][kotlin.reflect.KProperty.allAfter]`(myColumn) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(SomeType::myColGroup).`[allAfter][kotlin.reflect.KProperty.allAfter]`(myColumn) }` 
      *
      * #### Flavors of All:
      *
@@ -8594,13 +8602,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allAfter][SingleColumn.allAfter]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { SomeType::myColGroup.`[allAfter][kotlin.reflect.KProperty.allAfter]`(Type::myColumn) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(SomeType::myColGroup).`[allAfter][kotlin.reflect.KProperty.allAfter]`(Type::myColumn) }` 
      *
      * #### Flavors of All:
      *
@@ -8644,7 +8652,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allAfter][SingleColumn.allAfter]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
      *
@@ -8696,7 +8704,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allAfter][SingleColumn.allAfter]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
      *
@@ -8745,7 +8753,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allAfter][SingleColumn.allAfter]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
      *
@@ -8794,7 +8802,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allAfter][SingleColumn.allAfter]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
      *
@@ -8843,7 +8851,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allAfter][SingleColumn.allAfter]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allAfter][SingleColumn.allAfter]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allAfter][SingleColumn.allAfter]`(Type::someColumn) }`
      *
@@ -8898,7 +8906,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allFrom][SingleColumn.allFrom]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
      *
@@ -8947,7 +8955,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allFrom][SingleColumn.allFrom]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
      *
@@ -8999,7 +9007,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allFrom][SingleColumn.allFrom]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
      *
@@ -9057,7 +9065,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allFrom][SingleColumn.allFrom]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
      *
@@ -9105,7 +9113,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allFrom][SingleColumn.allFrom]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
      *
@@ -9153,7 +9161,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allFrom][SingleColumn.allFrom]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
      *
@@ -9203,7 +9211,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allFrom][SingleColumn.allFrom]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
      *
@@ -9257,7 +9265,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allFrom][SingleColumn.allFrom]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
      *
@@ -9308,7 +9316,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allFrom][SingleColumn.allFrom]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
      *
@@ -9358,7 +9366,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allFrom][SingleColumn.allFrom]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
      *
@@ -9408,7 +9416,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allFrom][SingleColumn.allFrom]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
      *
@@ -9460,7 +9468,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allFrom][SingleColumn.allFrom]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
      *
@@ -9512,7 +9520,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allFrom][SingleColumn.allFrom]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
      *
@@ -9560,7 +9568,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allFrom][SingleColumn.allFrom]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
      *
@@ -9608,7 +9616,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allFrom][SingleColumn.allFrom]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
      *
@@ -9657,7 +9665,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allFrom][SingleColumn.allFrom]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
      *
@@ -9706,13 +9714,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allFrom][SingleColumn.allFrom]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { SomeType::someColGroup.`[allFrom][KProperty.allFrom]`({@includeArg [KPropertyAllFromDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(SomeType::someColGroup).`[allFrom][KProperty.allFrom]`({@includeArg [KPropertyAllFromDocs.Arg]}) }`
      *
      * #### Flavors of All:
      *
@@ -9758,13 +9766,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allFrom][SingleColumn.allFrom]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { SomeType::someColGroup.`[allFrom][kotlin.reflect.KProperty.allFrom]`("pathTo"["myColumn"]) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(SomeType::someColGroup).`[allFrom][kotlin.reflect.KProperty.allFrom]`("pathTo"["myColumn"]) }` 
      *
      * #### Flavors of All:
      *
@@ -9807,13 +9815,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allFrom][SingleColumn.allFrom]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { SomeType::someColGroup.`[allFrom][kotlin.reflect.KProperty.allFrom]`("myColumn") }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(SomeType::someColGroup).`[allFrom][kotlin.reflect.KProperty.allFrom]`("myColumn") }` 
      *
      * #### Flavors of All:
      *
@@ -9855,13 +9863,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allFrom][SingleColumn.allFrom]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { SomeType::someColGroup.`[allFrom][kotlin.reflect.KProperty.allFrom]`(myColumn) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(SomeType::someColGroup).`[allFrom][kotlin.reflect.KProperty.allFrom]`(myColumn) }` 
      *
      * #### Flavors of All:
      *
@@ -9904,13 +9912,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allFrom][SingleColumn.allFrom]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { SomeType::someColGroup.`[allFrom][kotlin.reflect.KProperty.allFrom]`(Type::myColumn) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(SomeType::someColGroup).`[allFrom][kotlin.reflect.KProperty.allFrom]`(Type::myColumn) }` 
      *
      * #### Flavors of All:
      *
@@ -9954,7 +9962,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allFrom][SingleColumn.allFrom]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
      *
@@ -10006,7 +10014,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allFrom][SingleColumn.allFrom]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
      *
@@ -10054,7 +10062,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allFrom][SingleColumn.allFrom]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
      *
@@ -10102,7 +10110,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allFrom][SingleColumn.allFrom]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
      *
@@ -10150,7 +10158,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allFrom][SingleColumn.allFrom]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allFrom][SingleColumn.allFrom]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allFrom][SingleColumn.allFrom]`(Type::someColumn) }`
      *
@@ -10204,7 +10212,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allBefore][SingleColumn.allBefore]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
      *
@@ -10253,7 +10261,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allBefore][SingleColumn.allBefore]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
      *
@@ -10305,7 +10313,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allBefore][SingleColumn.allBefore]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
      *
@@ -10363,7 +10371,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allBefore][SingleColumn.allBefore]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
      *
@@ -10411,7 +10419,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allBefore][SingleColumn.allBefore]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
      *
@@ -10459,7 +10467,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allBefore][SingleColumn.allBefore]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
      *
@@ -10509,7 +10517,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allBefore][SingleColumn.allBefore]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
      *
@@ -10563,7 +10571,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allBefore][SingleColumn.allBefore]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
      *
@@ -10614,7 +10622,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allBefore][SingleColumn.allBefore]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
      *
@@ -10664,7 +10672,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allBefore][SingleColumn.allBefore]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
      *
@@ -10714,7 +10722,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allBefore][SingleColumn.allBefore]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
      *
@@ -10766,7 +10774,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allBefore][SingleColumn.allBefore]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
      *
@@ -10818,7 +10826,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allBefore][SingleColumn.allBefore]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
      *
@@ -10866,7 +10874,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allBefore][SingleColumn.allBefore]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
      *
@@ -10914,7 +10922,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allBefore][SingleColumn.allBefore]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
      *
@@ -10963,7 +10971,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allBefore][SingleColumn.allBefore]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
      *
@@ -11013,13 +11021,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allBefore][SingleColumn.allBefore]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { SomeType::someColGroup.`[allBefore][KProperty.allBefore]`({@includeArg [KPropertyAllBeforeDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(SomeType::someColGroup).`[allBefore][KProperty.allBefore]`({@includeArg [KPropertyAllBeforeDocs.Arg]}) }`
      *
      * #### Flavors of All:
      *
@@ -11065,13 +11073,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allBefore][SingleColumn.allBefore]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { SomeType::someColGroup.`[allBefore][kotlin.reflect.KProperty.allBefore]`("pathTo"["myColumn"]) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(SomeType::someColGroup).`[allBefore][kotlin.reflect.KProperty.allBefore]`("pathTo"["myColumn"]) }` 
      *
      * #### Flavors of All:
      *
@@ -11114,13 +11122,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allBefore][SingleColumn.allBefore]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { SomeType::someColGroup.`[allBefore][kotlin.reflect.KProperty.allBefore]`("myColumn") }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(SomeType::someColGroup).`[allBefore][kotlin.reflect.KProperty.allBefore]`("myColumn") }` 
      *
      * #### Flavors of All:
      *
@@ -11163,13 +11171,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allBefore][SingleColumn.allBefore]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { SomeType::someColGroup.`[allBefore][kotlin.reflect.KProperty.allBefore]`(myColumn) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(SomeType::someColGroup).`[allBefore][kotlin.reflect.KProperty.allBefore]`(myColumn) }` 
      *
      * #### Flavors of All:
      *
@@ -11212,13 +11220,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allBefore][SingleColumn.allBefore]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { SomeType::someColGroup.`[allBefore][kotlin.reflect.KProperty.allBefore]`(Type::myColumn) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(SomeType::someColGroup).`[allBefore][kotlin.reflect.KProperty.allBefore]`(Type::myColumn) }` 
      *
      * #### Flavors of All:
      *
@@ -11262,7 +11270,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allBefore][SingleColumn.allBefore]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
      *
@@ -11314,7 +11322,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allBefore][SingleColumn.allBefore]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
      *
@@ -11363,7 +11371,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allBefore][SingleColumn.allBefore]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
      *
@@ -11412,7 +11420,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allBefore][SingleColumn.allBefore]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
      *
@@ -11461,7 +11469,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allBefore][SingleColumn.allBefore]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allBefore][SingleColumn.allBefore]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allBefore][SingleColumn.allBefore]`(Type::someColumn) }`
      *
@@ -11516,7 +11524,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
      *
@@ -11565,7 +11573,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
      *
@@ -11617,7 +11625,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
      *
@@ -11675,7 +11683,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
      *
@@ -11723,7 +11731,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
      *
@@ -11771,7 +11779,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
      *
@@ -11821,7 +11829,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
      *
@@ -11875,7 +11883,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
      *
@@ -11926,7 +11934,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
      *
@@ -11976,7 +11984,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
      *
@@ -12026,7 +12034,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
      *
@@ -12078,7 +12086,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
      *
@@ -12130,7 +12138,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
      *
@@ -12178,7 +12186,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
      *
@@ -12226,7 +12234,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
      *
@@ -12275,7 +12283,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
      *
@@ -12324,13 +12332,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { SomeType::someColGroup.`[allUpTo][KProperty.allUpTo]`({@includeArg [KPropertyAllUpToDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(SomeType::someColGroup).`[allUpTo][KProperty.allUpTo]`({@includeArg [KPropertyAllUpToDocs.Arg]}) }`
      *
      * #### Flavors of All:
      *
@@ -12376,13 +12384,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { SomeType::someColGroup.`[allUpTo][kotlin.reflect.KProperty.allUpTo]`("pathTo"["myColumn"]) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(SomeType::someColGroup).`[allUpTo][kotlin.reflect.KProperty.allUpTo]`("pathTo"["myColumn"]) }` 
      *
      * #### Flavors of All:
      *
@@ -12425,13 +12433,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { SomeType::someColGroup.`[allUpTo][kotlin.reflect.KProperty.allUpTo]`("myColumn") }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(SomeType::someColGroup).`[allUpTo][kotlin.reflect.KProperty.allUpTo]`("myColumn") }` 
      *
      * #### Flavors of All:
      *
@@ -12473,13 +12481,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { SomeType::someColGroup.`[allUpTo][kotlin.reflect.KProperty.allUpTo]`(myColumn) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(SomeType::someColGroup).`[allUpTo][kotlin.reflect.KProperty.allUpTo]`(myColumn) }` 
      *
      * #### Flavors of All:
      *
@@ -12522,13 +12530,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { SomeType::someColGroup.`[allUpTo][kotlin.reflect.KProperty.allUpTo]`(Type::myColumn) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(SomeType::someColGroup).`[allUpTo][kotlin.reflect.KProperty.allUpTo]`(Type::myColumn) }` 
      *
      * #### Flavors of All:
      *
@@ -12572,7 +12580,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
      *
@@ -12624,7 +12632,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
      *
@@ -12673,7 +12681,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
      *
@@ -12721,7 +12729,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
      *
@@ -12769,7 +12777,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`("someColumn") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allUpTo][SingleColumn.allUpTo]`(someColumn) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>().`[allUpTo][SingleColumn.allUpTo]`(Type::someColumn) }`
      *
@@ -13004,7 +13012,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples of this overload:
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[children][SingleColumn.children]`().`[recursively][TransformableColumnSet.recursively]`() }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[children][String.children]`().`[recursively][TransformableColumnSet.recursively]`() }`
      *
      * @see [cols]
      * @see [all]
@@ -13053,7 +13061,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples of this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[children][SingleColumn.children]`().`[recursively][TransformableColumnSet.recursively]`() }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColumnGroup).`[children][SingleColumn.children]`().`[recursively][TransformableColumnSet.recursively]`() }`
      *
      * @see [cols]
      * @see [all]
@@ -13063,52 +13071,52 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun KProperty<DataRow<*>>.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         colGroup(this).children(predicate)
 
-        /**
-         * ## Children
-         *
-         * [Children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children] is an interesting operations, since it behaves
-         * slightly differently depending on what you call it on. It will return the "children"
-         * adhering to the given (optional) [predicate], however what "children" means depends
-         * whether it's called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]:
-         *
-         * ### On a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]:
-         * When called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] consisting of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], [children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children] will return the (filtered) children of that
-         * column group. This makes the function behave similarly to [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all] and exactly the same as
-         * [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols].
-         *
-         * #### For example:
-         *
-         * To select some columns or "children" of `myColumnGroup`, you can do both:
-         * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
-         * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
-         *
-         * Similarly, to select _all_ columns or "children" of a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
-         * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`() }`
-         * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children]`() }`
-         * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`() }`
-         *
-         * ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
-         * When called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children] will return the (filtered) children of all [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-         * in that column set.
-         *
-         * #### For example:
-         *
-         * To get only the children of all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
-         * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroups][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colGroups]`().`[children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children]`() }`
-         * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`().`[children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children]`() }`
-         *
-         * Similarly, you can take the children of all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
-         * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children]`() }`
-         *
-         * #### Examples of this overload:
-         *
-         * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[children][SingleColumn.children]`().`[recursively][TransformableColumnSet.recursively]`() }`
-         *
-         * @see [cols]
-         * @see [all]
-         * @param [predicate] An optional predicate to filter the children by.
-         * @return A [TransformableColumnSet][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet] containing the (filtered) children.
-         */
+    /**
+     * ## Children
+     *
+     * [Children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children] is an interesting operations, since it behaves
+     * slightly differently depending on what you call it on. It will return the "children"
+     * adhering to the given (optional) [predicate], however what "children" means depends
+     * whether it's called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]:
+     *
+     * ### On a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]:
+     * When called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] consisting of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], [children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children] will return the (filtered) children of that
+     * column group. This makes the function behave similarly to [all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all] and exactly the same as
+     * [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols].
+     *
+     * #### For example:
+     *
+     * To select some columns or "children" of `myColumnGroup`, you can do both:
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
+     *
+     * Similarly, to select _all_ columns or "children" of a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`() }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children]`() }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`() }`
+     *
+     * ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * When called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children] will return the (filtered) children of all [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * in that column set.
+     *
+     * #### For example:
+     *
+     * To get only the children of all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroups][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colGroups]`().`[children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children]`() }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`().`[children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children]`() }`
+     *
+     * Similarly, you can take the children of all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[children][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.children]`() }`
+     *
+     * #### Examples of this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[children][ColumnPath.children]`().`[recursively][TransformableColumnSet.recursively]`() }`
+     *
+     * @see [cols]
+     * @see [all]
+     * @param [predicate] An optional predicate to filter the children by.
+     * @return A [TransformableColumnSet][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet] containing the (filtered) children.
+     */
     public fun ColumnPath.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         colGroup(this).children(predicate)
 
@@ -13124,6 +13132,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * [{@includeArg [OperationArg]}][SingleColumn.{@includeArg [OperationArg]}] will {@includeArg [NounArg]} the {@includeArg [FirstOrLastArg]} [n\] children of that column group.
      *
      * Else, if called on a [ColumnSet], [{@includeArg [OperationArg]}][ColumnSet.{@includeArg [OperationArg]}] will {@includeArg [NounArg]} the {@includeArg [FirstOrLastArg]} [n\] columns of that column set.
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `{@includeArg [CommonTakeAndDropDocs.OperationArg]}` is called `{@includeArg [CommonTakeAndDropDocs.OperationArg]}Children` when called on a [String] or [ColumnPath] resembling
      * a [ColumnGroup].
@@ -13171,6 +13181,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [take][ColumnSet.take] will take the first [n] columns of that column set.
      *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
      * NOTE: To avoid ambiguity, `take` is called `takeChildren` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -13198,6 +13210,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * [take][SingleColumn.take] will take the first [n] children of that column group.
      *
      * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [take][ColumnSet.take] will take the first [n] columns of that column set.
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `take` is called `takeChildren` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -13230,6 +13244,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [take][ColumnSet.take] will take the first [n] columns of that column set.
      *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
      * NOTE: To avoid ambiguity, `take` is called `takeChildren` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -13261,6 +13277,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [take][ColumnSet.take] will take the first [n] columns of that column set.
      *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
      * NOTE: To avoid ambiguity, `take` is called `takeChildren` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -13289,6 +13307,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [take][ColumnSet.take] will take the first [n] columns of that column set.
      *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
      * NOTE: To avoid ambiguity, `take` is called `takeChildren` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -13301,7 +13321,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[take][KProperty.take]`(1) }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColumnGroup).`[take][KProperty.take]`(1) }`
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[take][KProperty.take]`(1) }`
      *
      * @param [n] The number of columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
@@ -13316,6 +13338,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * [take][SingleColumn.take] will take the first [n] children of that column group.
      *
      * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [take][ColumnSet.take] will take the first [n] columns of that column set.
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `take` is called `takeChildren` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -13349,6 +13373,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeLast][ColumnSet.takeLast] will take the last [n] columns of that column set.
      *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
      * NOTE: To avoid ambiguity, `takeLast` is called `takeLastChildren` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -13376,6 +13402,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * [takeLast][SingleColumn.takeLast] will take the last [n] children of that column group.
      *
      * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeLast][ColumnSet.takeLast] will take the last [n] columns of that column set.
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `takeLast` is called `takeLastChildren` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -13408,6 +13436,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeLast][ColumnSet.takeLast] will take the last [n] columns of that column set.
      *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
      * NOTE: To avoid ambiguity, `takeLast` is called `takeLastChildren` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -13439,6 +13469,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeLast][ColumnSet.takeLast] will take the last [n] columns of that column set.
      *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
      * NOTE: To avoid ambiguity, `takeLast` is called `takeLastChildren` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -13467,6 +13499,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeLast][ColumnSet.takeLast] will take the last [n] columns of that column set.
      *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
      * NOTE: To avoid ambiguity, `takeLast` is called `takeLastChildren` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -13479,7 +13513,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[takeLast][KProperty.takeLast]`(1) }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColumnGroup).`[takeLast][KProperty.takeLast]`(1) }`
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[takeLast][KProperty.takeLast]`(1) }`
      *
      * @param [n] The number of columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
@@ -13494,6 +13530,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * [takeLast][SingleColumn.takeLast] will take the last [n] children of that column group.
      *
      * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeLast][ColumnSet.takeLast] will take the last [n] columns of that column set.
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `takeLast` is called `takeLastChildren` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -13527,6 +13565,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [drop][ColumnSet.drop] will drop the first [n] columns of that column set.
      *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
      * NOTE: To avoid ambiguity, `drop` is called `dropChildren` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -13554,6 +13594,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * [drop][SingleColumn.drop] will drop the first [n] children of that column group.
      *
      * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [drop][ColumnSet.drop] will drop the first [n] columns of that column set.
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `drop` is called `dropChildren` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -13584,6 +13626,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * [drop][SingleColumn.drop] will drop the first [n] children of that column group.
      *
      * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [drop][ColumnSet.drop] will drop the first [n] columns of that column set.
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `drop` is called `dropChildren` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -13616,6 +13660,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [drop][ColumnSet.drop] will drop the first [n] columns of that column set.
      *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
      * NOTE: To avoid ambiguity, `drop` is called `dropChildren` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -13644,6 +13690,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [drop][ColumnSet.drop] will drop the first [n] columns of that column set.
      *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
      * NOTE: To avoid ambiguity, `drop` is called `dropChildren` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -13656,7 +13704,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[drop][KProperty.drop]`(1) }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColumnGroup).`[drop][KProperty.drop]`(1) }`
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[drop][KProperty.drop]`(1) }`
      *
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
@@ -13671,6 +13721,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * [drop][SingleColumn.drop] will drop the first [n] children of that column group.
      *
      * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [drop][ColumnSet.drop] will drop the first [n] columns of that column set.
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `drop` is called `dropChildren` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -13704,6 +13756,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropLast][ColumnSet.dropLast] will drop the last [n] columns of that column set.
      *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
      * NOTE: To avoid ambiguity, `dropLast` is called `dropLastChildren` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -13731,6 +13785,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * [dropLast][SingleColumn.dropLast] will drop the last [n] children of that column group.
      *
      * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropLast][ColumnSet.dropLast] will drop the last [n] columns of that column set.
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `dropLast` is called `dropLastChildren` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -13761,6 +13817,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * [dropLast][SingleColumn.dropLast] will drop the last [n] children of that column group.
      *
      * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropLast][ColumnSet.dropLast] will drop the last [n] columns of that column set.
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `dropLast` is called `dropLastChildren` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -13793,6 +13851,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropLast][ColumnSet.dropLast] will drop the last [n] columns of that column set.
      *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
      * NOTE: To avoid ambiguity, `dropLast` is called `dropLastChildren` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -13821,6 +13881,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropLast][ColumnSet.dropLast] will drop the last [n] columns of that column set.
      *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
      * NOTE: To avoid ambiguity, `dropLast` is called `dropLastChildren` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -13833,7 +13895,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[dropLast][KProperty.dropLast]`(1) }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColumnGroup).`[dropLast][KProperty.dropLast]`(1) }`
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[dropLast][KProperty.dropLast]`(1) }`
      *
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
@@ -13848,6 +13912,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * [dropLast][SingleColumn.dropLast] will drop the last [n] children of that column group.
      *
      * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropLast][ColumnSet.dropLast] will drop the last [n] columns of that column set.
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `dropLast` is called `dropLastChildren` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -13870,19 +13936,925 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // endregion
 
-    // region take while
+    // endregion
 
+    // region take, drop while
+
+    /**
+     * ## {@includeArg [TitleArg]} (Children) While
+     * This function {@includeArg [NounArg]}s the {@includeArg [FirstOrLastArg]} columns of a [ColumnGroup] or
+     * [ColumnSet] adhering to the given [predicate\].
+     *
+     * If called on a [SingleColumn] containing a [ColumnGroup],
+     * [{@includeArg [OperationArg]}While][SingleColumn.{@includeArg [OperationArg]}While] will {@includeArg [NounArg]} the
+     * {@includeArg [FirstOrLastArg]} children of that column group adhering to the given [predicate\].
+     *
+     * Else, if called on a [ColumnSet], [{@includeArg [OperationArg]}While][ColumnSet.{@includeArg [OperationArg]}While] will
+     * {@includeArg [NounArg]} the {@includeArg [FirstOrLastArg]} columns of that column set adhering to the given [predicate\].
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
+     * NOTE: To avoid ambiguity, `{@includeArg [CommonTakeAndDropWhileDocs.OperationArg]}While` is called
+     * `{@includeArg [CommonTakeAndDropWhileDocs.OperationArg]}ChildrenWhile` when called on a [String] or [ColumnPath] resembling
+     * a [ColumnGroup].
+     *
+     * #### Examples:
+     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[{@includeArg [OperationArg]}While][ColumnSet.{@includeArg [OperationArg]}While]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` } }`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[{@includeArg [OperationArg]}While][SingleColumn.{@includeArg [OperationArg]}While]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[{@includeArg [OperationArg]}ChildrenWhile][String.{@includeArg [OperationArg]}ChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][ColumnKind.Value]` } }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [CommonTakeAndDropWhileDocs.ExampleArg]}
+     *
+     * @param [predicate\] The [ColumnFilter] to control which columns to {@includeArg [NounArg]}.
+     * @return A [ColumnSet] containing the {@includeArg [FirstOrLastArg]} columns adhering to the [predicate\].
+     */
+    private interface CommonTakeAndDropWhileDocs {
+
+        /** Title, like "Take Last" */
+        interface TitleArg
+
+        /** Operation, like "takeLast" */
+        interface OperationArg
+
+        /** Operation, like "take" */
+        interface NounArg
+
+        /** like "last" */
+        interface FirstOrLastArg
+
+        /** Example argument to use */
+        interface ExampleArg
+    }
+
+    // region takeWhile
+
+    /**
+     * ## Take (Children) While
+     * This function takes the first columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * [takeWhile][SingleColumn.takeWhile] will take the
+     * first children of that column group adhering to the given [predicate].
+     *
+     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeWhile][ColumnSet.takeWhile] will
+     * take the first columns of that column set adhering to the given [predicate].
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
+     * NOTE: To avoid ambiguity, `takeWhile` is called
+     * `takeChildrenWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
+     * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### Examples:
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeWhile][ColumnSet.takeWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[takeWhile][SingleColumn.takeWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[takeChildrenWhile][String.takeChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [CommonTakeAndDropWhileDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.CommonTakeAndDropWhileDocs.ExampleArg]}
+     *
+     * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
+     */
+    private interface CommonTakeFirstWhileDocs
+
+    /**
+     * ## Take (Children) While
+     * This function takes the first columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * [takeWhile][SingleColumn.takeWhile] will take the
+     * first children of that column group adhering to the given [predicate].
+     *
+     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeWhile][ColumnSet.takeWhile] will
+     * take the first columns of that column set adhering to the given [predicate].
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
+     * NOTE: To avoid ambiguity, `takeWhile` is called
+     * `takeChildrenWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
+     * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### Examples:
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeWhile][ColumnSet.takeWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[takeWhile][SingleColumn.takeWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[takeChildrenWhile][String.takeChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[takeWhile][ColumnSet.takeWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]` { .. }.`[takeWhile][ColumnSet.takeWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     *
+     * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
+     */
     public fun <C> ColumnSet<C>.takeWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
         transform { it.takeWhile(predicate) }
 
+    /**
+     * ## Take (Children) While
+     * This function takes the first columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * [takeWhile][SingleColumn.takeWhile] will take the
+     * first children of that column group adhering to the given [predicate].
+     *
+     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeWhile][ColumnSet.takeWhile] will
+     * take the first columns of that column set adhering to the given [predicate].
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
+     * NOTE: To avoid ambiguity, `takeWhile` is called
+     * `takeChildrenWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
+     * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### Examples:
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeWhile][ColumnSet.takeWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[takeWhile][SingleColumn.takeWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[takeChildrenWhile][String.takeChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[takeWhile][SingleColumn.takeWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[takeWhile][ColumnSet.takeWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     *
+     * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
+     */
     public fun SingleColumn<DataRow<*>>.takeWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
         ensureIsColGroup().transformSingle { it.children().takeWhile(predicate) }
 
+    /**
+     * ## Take (Children) While
+     * This function takes the first columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * [takeWhile][SingleColumn.takeWhile] will take the
+     * first children of that column group adhering to the given [predicate].
+     *
+     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeWhile][ColumnSet.takeWhile] will
+     * take the first columns of that column set adhering to the given [predicate].
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
+     * NOTE: To avoid ambiguity, `takeWhile` is called
+     * `takeChildrenWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
+     * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### Examples:
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeWhile][ColumnSet.takeWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[takeWhile][SingleColumn.takeWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[takeChildrenWhile][String.takeChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[takeChildrenWhile][String.takeChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     *
+     * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
+     */
+    public fun String.takeChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        colGroup(this).takeWhile(predicate)
+
+    /**
+     * ## Take (Children) While
+     * This function takes the first columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * [takeWhile][SingleColumn.takeWhile] will take the
+     * first children of that column group adhering to the given [predicate].
+     *
+     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeWhile][ColumnSet.takeWhile] will
+     * take the first columns of that column set adhering to the given [predicate].
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
+     * NOTE: To avoid ambiguity, `takeWhile` is called
+     * `takeChildrenWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
+     * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### Examples:
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeWhile][ColumnSet.takeWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[takeWhile][SingleColumn.takeWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[takeChildrenWhile][String.takeChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColumnGroup).`[takeWhile][KProperty.takeWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     *
+     * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
+     */
+    public fun KProperty<DataRow<*>>.takeWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        colGroup(this).takeWhile(predicate)
+
+    /**
+     * ## Take (Children) While
+     * This function takes the first columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * [takeWhile][SingleColumn.takeWhile] will take the
+     * first children of that column group adhering to the given [predicate].
+     *
+     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeWhile][ColumnSet.takeWhile] will
+     * take the first columns of that column set adhering to the given [predicate].
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
+     * NOTE: To avoid ambiguity, `takeWhile` is called
+     * `takeChildrenWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
+     * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### Examples:
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeWhile][ColumnSet.takeWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[takeWhile][SingleColumn.takeWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[takeChildrenWhile][String.takeChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[takeChildrenWhile][ColumnPath.takeChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     *
+     * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
+     */
+    public fun ColumnPath.takeChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        colGroup(this).takeWhile(predicate)
+
+    // endregion
+
+    // region takeLastWhile
+
+    /**
+     * ## Take Last (Children) While
+     * This function takes the last columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * [takeLastWhile][SingleColumn.takeLastWhile] will take the
+     * last children of that column group adhering to the given [predicate].
+     *
+     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeLastWhile][ColumnSet.takeLastWhile] will
+     * take the last columns of that column set adhering to the given [predicate].
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
+     * NOTE: To avoid ambiguity, `takeLastWhile` is called
+     * `takeLastChildrenWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
+     * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### Examples:
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeLastWhile][ColumnSet.takeLastWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[takeLastWhile][SingleColumn.takeLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[takeLastChildrenWhile][String.takeLastChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [CommonTakeAndDropWhileDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.CommonTakeAndDropWhileDocs.ExampleArg]}
+     *
+     * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
+     */
+    private interface CommonTakeLastWhileDocs
+
+    /**
+     * ## Take Last (Children) While
+     * This function takes the last columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * [takeLastWhile][SingleColumn.takeLastWhile] will take the
+     * last children of that column group adhering to the given [predicate].
+     *
+     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeLastWhile][ColumnSet.takeLastWhile] will
+     * take the last columns of that column set adhering to the given [predicate].
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
+     * NOTE: To avoid ambiguity, `takeLastWhile` is called
+     * `takeLastChildrenWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
+     * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### Examples:
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeLastWhile][ColumnSet.takeLastWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[takeLastWhile][SingleColumn.takeLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[takeLastChildrenWhile][String.takeLastChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[takeLastWhile][ColumnSet.takeLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]` { .. }.`[takeLastWhile][ColumnSet.takeLastWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     *
+     * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
+     */
     public fun <C> ColumnSet<C>.takeLastWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
         transform { it.takeLastWhile(predicate) }
 
+    /**
+     * ## Take Last (Children) While
+     * This function takes the last columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * [takeLastWhile][SingleColumn.takeLastWhile] will take the
+     * last children of that column group adhering to the given [predicate].
+     *
+     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeLastWhile][ColumnSet.takeLastWhile] will
+     * take the last columns of that column set adhering to the given [predicate].
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
+     * NOTE: To avoid ambiguity, `takeLastWhile` is called
+     * `takeLastChildrenWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
+     * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### Examples:
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeLastWhile][ColumnSet.takeLastWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[takeLastWhile][SingleColumn.takeLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[takeLastChildrenWhile][String.takeLastChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[takeLastWhile][SingleColumn.takeLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[takeLastWhile][ColumnSet.takeLastWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     *
+     * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
+     */
     public fun SingleColumn<DataRow<*>>.takeLastWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
         ensureIsColGroup().transformSingle { it.children().takeLastWhile(predicate) }
+
+    /**
+     * ## Take Last (Children) While
+     * This function takes the last columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * [takeLastWhile][SingleColumn.takeLastWhile] will take the
+     * last children of that column group adhering to the given [predicate].
+     *
+     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeLastWhile][ColumnSet.takeLastWhile] will
+     * take the last columns of that column set adhering to the given [predicate].
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
+     * NOTE: To avoid ambiguity, `takeLastWhile` is called
+     * `takeLastChildrenWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
+     * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### Examples:
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeLastWhile][ColumnSet.takeLastWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[takeLastWhile][SingleColumn.takeLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[takeLastChildrenWhile][String.takeLastChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[takeLastChildrenWhile][String.takeLastChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     *
+     * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
+     */
+    public fun String.takeLastChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        colGroup(this).takeLastWhile(predicate)
+
+    /**
+     * ## Take Last (Children) While
+     * This function takes the last columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * [takeLastWhile][SingleColumn.takeLastWhile] will take the
+     * last children of that column group adhering to the given [predicate].
+     *
+     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeLastWhile][ColumnSet.takeLastWhile] will
+     * take the last columns of that column set adhering to the given [predicate].
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
+     * NOTE: To avoid ambiguity, `takeLastWhile` is called
+     * `takeLastChildrenWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
+     * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### Examples:
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeLastWhile][ColumnSet.takeLastWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[takeLastWhile][SingleColumn.takeLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[takeLastChildrenWhile][String.takeLastChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColumnGroup).`[takeLastWhile][KProperty.takeLastWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     *
+     * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
+     */
+    public fun KProperty<DataRow<*>>.takeLastWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        colGroup(this).takeLastWhile(predicate)
+
+    /**
+     * ## Take Last (Children) While
+     * This function takes the last columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * [takeLastWhile][SingleColumn.takeLastWhile] will take the
+     * last children of that column group adhering to the given [predicate].
+     *
+     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeLastWhile][ColumnSet.takeLastWhile] will
+     * take the last columns of that column set adhering to the given [predicate].
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
+     * NOTE: To avoid ambiguity, `takeLastWhile` is called
+     * `takeLastChildrenWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
+     * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### Examples:
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeLastWhile][ColumnSet.takeLastWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[takeLastWhile][SingleColumn.takeLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[takeLastChildrenWhile][String.takeLastChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[takeLastChildrenWhile][ColumnPath.takeLastChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     *
+     * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
+     */
+    public fun ColumnPath.takeLastChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        colGroup(this).takeLastWhile(predicate)
+
+    // endregion
+
+    // region dropWhile
+
+    /**
+     * ## Drop (Children) While
+     * This function drops the first columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * [dropWhile][SingleColumn.dropWhile] will drop the
+     * first children of that column group adhering to the given [predicate].
+     *
+     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropWhile][ColumnSet.dropWhile] will
+     * drop the first columns of that column set adhering to the given [predicate].
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
+     * NOTE: To avoid ambiguity, `dropWhile` is called
+     * `dropChildrenWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
+     * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### Examples:
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[dropWhile][ColumnSet.dropWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[dropWhile][SingleColumn.dropWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[dropChildrenWhile][String.dropChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [CommonTakeAndDropWhileDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.CommonTakeAndDropWhileDocs.ExampleArg]}
+     *
+     * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
+     */
+    private interface CommonDropWhileDocs
+
+    /**
+     * ## Drop (Children) While
+     * This function drops the first columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * [dropWhile][SingleColumn.dropWhile] will drop the
+     * first children of that column group adhering to the given [predicate].
+     *
+     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropWhile][ColumnSet.dropWhile] will
+     * drop the first columns of that column set adhering to the given [predicate].
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
+     * NOTE: To avoid ambiguity, `dropWhile` is called
+     * `dropChildrenWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
+     * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### Examples:
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[dropWhile][ColumnSet.dropWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[dropWhile][SingleColumn.dropWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[dropChildrenWhile][String.dropChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[dropWhile][ColumnSet.dropWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]` { .. }.`[dropWhile][ColumnSet.dropWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     *
+     * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
+     */
+    public fun <C> ColumnSet<C>.dropWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
+        transform { it.dropWhile(predicate) }
+
+    /**
+     * ## Drop (Children) While
+     * This function drops the first columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * [dropWhile][SingleColumn.dropWhile] will drop the
+     * first children of that column group adhering to the given [predicate].
+     *
+     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropWhile][ColumnSet.dropWhile] will
+     * drop the first columns of that column set adhering to the given [predicate].
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
+     * NOTE: To avoid ambiguity, `dropWhile` is called
+     * `dropChildrenWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
+     * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### Examples:
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[dropWhile][ColumnSet.dropWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[dropWhile][SingleColumn.dropWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[dropChildrenWhile][String.dropChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[dropWhile][SingleColumn.dropWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropWhile][ColumnSet.dropWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     *
+     * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
+     */
+    public fun SingleColumn<DataRow<*>>.dropWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        ensureIsColGroup().transformSingle { it.children().dropWhile(predicate) }
+
+    /**
+     * ## Drop (Children) While
+     * This function drops the first columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * [dropWhile][SingleColumn.dropWhile] will drop the
+     * first children of that column group adhering to the given [predicate].
+     *
+     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropWhile][ColumnSet.dropWhile] will
+     * drop the first columns of that column set adhering to the given [predicate].
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
+     * NOTE: To avoid ambiguity, `dropWhile` is called
+     * `dropChildrenWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
+     * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### Examples:
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[dropWhile][ColumnSet.dropWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[dropWhile][SingleColumn.dropWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[dropChildrenWhile][String.dropChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropChildrenWhile][String.dropChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     *
+     * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
+     */
+    public fun String.dropChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        colGroup(this).dropWhile(predicate)
+
+    /**
+     * ## Drop (Children) While
+     * This function drops the first columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * [dropWhile][SingleColumn.dropWhile] will drop the
+     * first children of that column group adhering to the given [predicate].
+     *
+     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropWhile][ColumnSet.dropWhile] will
+     * drop the first columns of that column set adhering to the given [predicate].
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
+     * NOTE: To avoid ambiguity, `dropWhile` is called
+     * `dropChildrenWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
+     * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### Examples:
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[dropWhile][ColumnSet.dropWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[dropWhile][SingleColumn.dropWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[dropChildrenWhile][String.dropChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColumnGroup).`[dropWhile][KProperty.dropWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     *
+     * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
+     */
+    public fun KProperty<DataRow<*>>.dropWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        colGroup(this).dropWhile(predicate)
+
+    /**
+     * ## Drop (Children) While
+     * This function drops the first columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * [dropWhile][SingleColumn.dropWhile] will drop the
+     * first children of that column group adhering to the given [predicate].
+     *
+     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropWhile][ColumnSet.dropWhile] will
+     * drop the first columns of that column set adhering to the given [predicate].
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
+     * NOTE: To avoid ambiguity, `dropWhile` is called
+     * `dropChildrenWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
+     * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### Examples:
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[dropWhile][ColumnSet.dropWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[dropWhile][SingleColumn.dropWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[dropChildrenWhile][String.dropChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropChildrenWhile][ColumnPath.dropChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     *
+     * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
+     */
+    public fun ColumnPath.dropChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        colGroup(this).dropWhile(predicate)
+
+    // endregion
+
+    // region dropLastWhile
+
+    /**
+     * ## Drop Last (Children) While
+     * This function drops the last columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * [dropLastWhile][SingleColumn.dropLastWhile] will drop the
+     * last children of that column group adhering to the given [predicate].
+     *
+     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropLastWhile][ColumnSet.dropLastWhile] will
+     * drop the last columns of that column set adhering to the given [predicate].
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
+     * NOTE: To avoid ambiguity, `dropLastWhile` is called
+     * `dropLastChildrenWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
+     * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### Examples:
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[dropLastWhile][ColumnSet.dropLastWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[dropLastWhile][SingleColumn.dropLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[dropLastChildrenWhile][String.dropLastChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [CommonTakeAndDropWhileDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.CommonTakeAndDropWhileDocs.ExampleArg]}
+     *
+     * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
+     */
+    private interface CommonDropLastWhileDocs
+
+    /**
+     * ## Drop Last (Children) While
+     * This function drops the last columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * [dropLastWhile][SingleColumn.dropLastWhile] will drop the
+     * last children of that column group adhering to the given [predicate].
+     *
+     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropLastWhile][ColumnSet.dropLastWhile] will
+     * drop the last columns of that column set adhering to the given [predicate].
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
+     * NOTE: To avoid ambiguity, `dropLastWhile` is called
+     * `dropLastChildrenWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
+     * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### Examples:
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[dropLastWhile][ColumnSet.dropLastWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[dropLastWhile][SingleColumn.dropLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[dropLastChildrenWhile][String.dropLastChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[dropLastWhile][ColumnSet.dropLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]` { .. }.`[dropLastWhile][ColumnSet.dropLastWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     *
+     * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
+     */
+    public fun <C> ColumnSet<C>.dropLastWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
+        transform { it.dropLastWhile(predicate) }
+
+    /**
+     * ## Drop Last (Children) While
+     * This function drops the last columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * [dropLastWhile][SingleColumn.dropLastWhile] will drop the
+     * last children of that column group adhering to the given [predicate].
+     *
+     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropLastWhile][ColumnSet.dropLastWhile] will
+     * drop the last columns of that column set adhering to the given [predicate].
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
+     * NOTE: To avoid ambiguity, `dropLastWhile` is called
+     * `dropLastChildrenWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
+     * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### Examples:
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[dropLastWhile][ColumnSet.dropLastWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[dropLastWhile][SingleColumn.dropLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[dropLastChildrenWhile][String.dropLastChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[dropLastWhile][SingleColumn.dropLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropLastWhile][ColumnSet.dropLastWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     *
+     * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
+     */
+    public fun SingleColumn<DataRow<*>>.dropLastWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        ensureIsColGroup().transformSingle { it.children().dropLastWhile(predicate) }
+
+    /**
+     * ## Drop Last (Children) While
+     * This function drops the last columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * [dropLastWhile][SingleColumn.dropLastWhile] will drop the
+     * last children of that column group adhering to the given [predicate].
+     *
+     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropLastWhile][ColumnSet.dropLastWhile] will
+     * drop the last columns of that column set adhering to the given [predicate].
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
+     * NOTE: To avoid ambiguity, `dropLastWhile` is called
+     * `dropLastChildrenWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
+     * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### Examples:
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[dropLastWhile][ColumnSet.dropLastWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[dropLastWhile][SingleColumn.dropLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[dropLastChildrenWhile][String.dropLastChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropLastChildrenWhile][String.dropLastChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     *
+     * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
+     */
+    public fun String.dropLastChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        colGroup(this).dropLastWhile(predicate)
+
+    /**
+     * ## Drop Last (Children) While
+     * This function drops the last columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * [dropLastWhile][SingleColumn.dropLastWhile] will drop the
+     * last children of that column group adhering to the given [predicate].
+     *
+     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropLastWhile][ColumnSet.dropLastWhile] will
+     * drop the last columns of that column set adhering to the given [predicate].
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
+     * NOTE: To avoid ambiguity, `dropLastWhile` is called
+     * `dropLastChildrenWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
+     * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### Examples:
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[dropLastWhile][ColumnSet.dropLastWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[dropLastWhile][SingleColumn.dropLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[dropLastChildrenWhile][String.dropLastChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColumnGroup).`[dropLastWhile][KProperty.dropLastWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     *
+     * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
+     */
+    public fun KProperty<DataRow<*>>.dropLastWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        colGroup(this).dropLastWhile(predicate)
+
+    /**
+     * ## Drop Last (Children) While
+     * This function drops the last columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * [dropLastWhile][SingleColumn.dropLastWhile] will drop the
+     * last children of that column group adhering to the given [predicate].
+     *
+     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropLastWhile][ColumnSet.dropLastWhile] will
+     * drop the last columns of that column set adhering to the given [predicate].
+     *
+     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     *
+     * NOTE: To avoid ambiguity, `dropLastWhile` is called
+     * `dropLastChildrenWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
+     * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * #### Examples:
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[dropLastWhile][ColumnSet.dropLastWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[dropLastWhile][SingleColumn.dropLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[dropLastChildrenWhile][String.dropLastChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropLastChildrenWhile][ColumnPath.dropLastChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     *
+     * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
+     */
+    public fun ColumnPath.dropLastChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        colGroup(this).dropLastWhile(predicate)
 
     // endregion
 
@@ -14864,9 +15836,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * Get sub-columns of the column this [KProperty Accessor][KProperty] points to by [type] with or without [filter].
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColumnGroup).`[colsOf][colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
      *
      * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
@@ -14946,6 +15918,9 @@ public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(
 public fun <C> SingleColumn<C>.asColumnGroup(): SingleColumn<DataRow<C>> = this as SingleColumn<DataRow<C>>
 
 public fun <C> KProperty<C>.asColumnGroup(): KProperty<DataRow<C>> = this as KProperty<DataRow<C>>
+
+@JvmName("columnGroupAsColumnGroup")
+public fun <C> KProperty<DataRow<C>>.asColumnGroup(): KProperty<DataRow<C>> = this
 
 internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) -> Boolean): ColumnsSelector<T, C> =
     { this@filter(it, it).asColumnSet().filter(predicate) }

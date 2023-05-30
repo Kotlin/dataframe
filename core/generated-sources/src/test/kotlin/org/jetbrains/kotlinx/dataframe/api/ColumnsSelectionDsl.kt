@@ -72,7 +72,7 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select { "name".first { col -> col.any { it == "Alice" } } },
             df.select { "name".colsOf<String>(typeOf<String>()).first { col -> col.any { it == "Alice" } } },
 
-            df.select { Person::name.first { col -> col.any { it == "Alice" } } },
+            df.select { Person::name.asColumnGroup().first { col -> col.any { it == "Alice" } } },
             df.select { Person::name.colsOf<String>(typeOf<String>()).first { col -> col.any { it == "Alice" } } },
 
             df.select { pathOf("name").first { col -> col.any { it == "Alice" } } },
@@ -749,6 +749,16 @@ open class ColumnsSelectionDslTests : TestBase() {
                 }
             },
             df.select {
+                colGroup("name").select {
+                    colsOf<String>()
+                }
+            },
+            df.select {
+                colGroup<Name>("name").select {
+                    colsOf<String>()
+                }
+            },
+            df.select {
                 "name".select {
                     "firstName" and "lastName"
                 }
@@ -840,7 +850,7 @@ open class ColumnsSelectionDslTests : TestBase() {
     @Test
     fun `take and takeLast`() {
         listOf(
-            df.select { name.firstName},
+            df.select { name.firstName },
             df.select { name.take(1) },
             df.select { "name".takeChildren(1) },
             df.select { Person::name.take(1) },
@@ -884,9 +894,15 @@ open class ColumnsSelectionDslTests : TestBase() {
         }
 
         df.select {
-            age and(
+            age and (
                 name
                 )
+        }
+
+        df.select {
+            age and colGroup(Person::name).select {
+                firstName and lastName
+            }
         }
 
         df.select {
