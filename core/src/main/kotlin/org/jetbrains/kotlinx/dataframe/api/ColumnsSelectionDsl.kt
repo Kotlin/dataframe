@@ -1195,7 +1195,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `// although these can be shortened to just the `[colsOf][SingleColumn.colsOf]` call`
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[cols][ColumnSet.colsOf]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[cols][ColumnSet.cols]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>()`[`[`][ColumnSet.cols]`{ it.`[any\][ColumnWithPath.any\]` { it == "Alice" } }`[`]`][ColumnSet.cols]` }`
      *
@@ -3465,18 +3465,20 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * ### On a [SingleColumn]:
      * When called on a [SingleColumn] consisting of a [ColumnGroup], [children][SingleColumn.children] will return the (filtered) children of that
      * column group. This makes the function behave similarly to [all][SingleColumn.all] and exactly the same as
-     * [cols][SingleColumn.cols].
+     * [cols][SingleColumn.cols] and [filter][SingleColumn.filter].
      *
      * #### For example:
      *
-     * To select some columns or "children" of `myColumnGroup`, you can do both:
+     * To select some columns or "children" of `myColumnGroup`, you can do:
      * - `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]` { it.`[name][DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
+     * - `df.`[select][DataFrame.select]` { myColumnGroup.`[filter][SingleColumn.filter]` { it.`[name][DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
      * - `df.`[select][DataFrame.select]` { myColumnGroup.`[children][SingleColumn.children]` { it.`[name][DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
      *
      * Similarly, to select _all_ columns or "children" of a [DataFrame], you can do:
      * - `df.`[select][DataFrame.select]` { `[all][SingleColumn.all]`() }`
-     * - `df.`[select][DataFrame.select]` { `[children][SingleColumn.children]`() }`
      * - `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]`() }`
+     * - `df.`[select][DataFrame.select]` { `[filter][SingleColumn.filter]` { true } }`
+     * - `df.`[select][DataFrame.select]` { `[children][SingleColumn.children]`() }`
      *
      * ### On a [ColumnSet]:
      * When called on a [ColumnSet], [children][ColumnSet.children] will return the (filtered) children of all [ColumnGroups][ColumnGroup]
@@ -3496,6 +3498,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * {@includeArg [ChildrenDocs.ExampleArg]}
      *
      * @see [cols\]
+     * @see [filter\]
      * @see [all\]
      * @param [predicate\] An optional predicate to filter the children by.
      * @return A [TransformableColumnSet] containing the (filtered) children.
@@ -4222,7 +4225,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[remove][DataFrame.remove]` { `[filter][SingleColumn.filter]` { it.`[hasNulls][DataColumn.hasNulls]`() } }`
      *
-     * `// although this can be shortened to just the `[colsOf][colsOf]` call`
+     * `// and although this can be shortened to just the `[colsOf][colsOf]` call:`
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`<`[String][String]`>().`[filter][ColumnSet.filter]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
      *
@@ -4245,19 +4248,74 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     }
 
+    /**
+     * @include [CommonFilterDocs]
+     * @arg [CommonFilterDocs.ExampleArg]
+     *
+     * `// although these can be shortened to just the `[colsOf][SingleColumn.colsOf]` call:`
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[filter][ColumnSet.filter]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>()`[`[`][ColumnSet.cols]`{ it.`[any\][ColumnWithPath.any\]` { it == "Alice" } }`[`]`][ColumnSet.cols]` }`
+     */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.filter(predicate: ColumnFilter<C>): TransformableColumnSet<C> =
         colsInternal(predicate as ColumnFilter<*>) as TransformableColumnSet<C>
 
+    /**
+     * @include [CommonFilterDocs]
+     * @arg [CommonFilterDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[filter][SingleColumn.filter]` { "e" `[in][String.contains]` it.`[name][ColumnPath.name]`() }.`[recursively][TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { this`[`[`][SingleColumn.filter]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][SingleColumn.filter]` }`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup`.[filter][SingleColumn.filter]` { "e" `[in][String.contains]` it.`[name][ColumnPath.name]`() } }`
+     *
+     * `// NOTE: there's a `[DataFrame.get]` overload that prevents this:`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`{ ... }`[`]`][SingleColumn.cols]` }`
+     * {@include [LineBreak]}
+     * NOTE: On a [SingleColumn], [filter][SingleColumn.filter] behaves exactly the same as
+     * [children][SingleColumn.children].
+     *
+     * @see [children\]
+     */
     public fun SingleColumn<DataRow<*>>.filter(predicate: ColumnFilter<*>): TransformableColumnSet<*> =
         ensureIsColGroup().colsInternal(predicate)
 
+    /**
+     * @include [CommonFilterDocs]
+     * @arg [CommonFilterDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { "myGroupCol".`[filterChildren][String.filterChildren]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
+     *
+     * `df.`[select][DataFrame.select]` { "myGroupCol"`[`[`][String.filterChildren]`{ it.`[any\][ColumnWithPath.any\]` { it == "Alice" } }`[`]`][String.filterChildren]` }`
+     */
     public fun String.filterChildren(predicate: ColumnFilter<*>): TransformableColumnSet<*> =
         colGroup(this).filter(predicate)
 
+    /**
+     * @include [CommonFilterDocs]
+     * @arg [CommonFilterDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { Type::columnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[filter][SingleColumn.filter]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::columnGroup)`[`[`][SingleColumn.filter]`{ it.`[any\][ColumnWithPath.any\]` { it == "Alice" } }`[`]`][SingleColumn.cols]` }`
+     *
+     * `df.`[select][DataFrame.select]` { DataSchemaType::columnGroup.`[filter][KProperty.filter]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
+     */
     public fun KProperty<DataRow<*>>.filter(predicate: ColumnFilter<*>): TransformableColumnSet<*> =
         colGroup(this).filter(predicate)
 
+    /**
+     * @include [CommonFilterDocs]
+     * @arg [CommonFilterDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[filterChildren][ColumnPath.filterChildren]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"]`[`[`][ColumnPath.cols]`{ it.`[any\][ColumnWithPath.any\]` { it == "Alice" } }`[`]`][ColumnPath.cols]` }`
+     */
     public fun ColumnPath.filterChildren(predicate: ColumnFilter<*>): TransformableColumnSet<*> =
         colGroup(this).filter(predicate)
 
@@ -4266,45 +4324,113 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region name filter
 
-    public fun SingleColumn<DataRow<*>>.nameContains(text: CharSequence): TransformableColumnSet<*> =
-        ensureIsColGroup().colsInternal { it.name.contains(text) }
+    // region nameContains
 
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.nameContains(text: CharSequence): TransformableColumnSet<C> =
         colsInternal { it.name.contains(text) } as TransformableColumnSet<C>
 
-    public fun SingleColumn<DataRow<*>>.nameContains(regex: Regex): TransformableColumnSet<*> =
-        ensureIsColGroup().colsInternal { it.name.contains(regex) }
+    public fun SingleColumn<DataRow<*>>.nameContains(text: CharSequence): TransformableColumnSet<*> =
+        ensureIsColGroup().colsInternal { it.name.contains(text) }
+
+    public fun String.nameContains(text: CharSequence): TransformableColumnSet<*> =
+        colGroup(this).nameContains(text)
+
+    public fun KProperty<DataRow<*>>.nameContains(text: CharSequence): TransformableColumnSet<*> =
+        colGroup(this).nameContains(text)
+
+    public fun ColumnPath.nameContains(text: CharSequence): TransformableColumnSet<*> =
+        colGroup(this).nameContains(text)
 
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.nameContains(regex: Regex): TransformableColumnSet<C> =
         colsInternal { it.name.contains(regex) } as TransformableColumnSet<C>
 
-    public fun SingleColumn<DataRow<*>>.startsWith(prefix: CharSequence): TransformableColumnSet<*> =
-        ensureIsColGroup().colsInternal { it.name.startsWith(prefix) }
+    public fun SingleColumn<DataRow<*>>.nameContains(regex: Regex): TransformableColumnSet<*> =
+        ensureIsColGroup().colsInternal { it.name.contains(regex) }
 
+    public fun String.nameContains(regex: Regex): TransformableColumnSet<*> =
+        colGroup(this).nameContains(regex)
+
+    public fun KProperty<DataRow<*>>.nameContains(regex: Regex): TransformableColumnSet<*> =
+        colGroup(this).nameContains(regex)
+
+    public fun ColumnPath.nameContains(regex: Regex): TransformableColumnSet<*> =
+        colGroup(this).nameContains(regex)
+
+    // endregion
+
+    // region nameStartsWith
+
+    @Deprecated("Use nameStartsWith instead", ReplaceWith("this.nameStartsWith(prefix)"))
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.startsWith(prefix: CharSequence): TransformableColumnSet<C> =
+        nameStartsWith(prefix)
+
+    @Deprecated("Use nameStartsWith instead", ReplaceWith("this.nameStartsWith(prefix)"))
+    public fun SingleColumn<DataRow<*>>.startsWith(prefix: CharSequence): TransformableColumnSet<*> =
+        nameStartsWith(prefix)
+
+    @Suppress("UNCHECKED_CAST")
+    public fun <C> ColumnSet<C>.nameStartsWith(prefix: CharSequence): TransformableColumnSet<C> =
         colsInternal { it.name.startsWith(prefix) } as TransformableColumnSet<C>
 
-    public fun SingleColumn<DataRow<*>>.endsWith(suffix: CharSequence): TransformableColumnSet<*> =
-        ensureIsColGroup().colsInternal { it.name.endsWith(suffix) }
+    public fun SingleColumn<DataRow<*>>.nameStartsWith(prefix: CharSequence): TransformableColumnSet<*> =
+        ensureIsColGroup().colsInternal { it.name.startsWith(prefix) }
 
+    public fun String.nameStartsWith(prefix: CharSequence): TransformableColumnSet<*> =
+        colGroup(this).nameStartsWith(prefix)
+
+    public fun KProperty<DataRow<*>>.nameStartsWith(prefix: CharSequence): TransformableColumnSet<*> =
+        colGroup(this).nameStartsWith(prefix)
+
+    public fun ColumnPath.nameStartsWith(prefix: CharSequence): TransformableColumnSet<*> =
+        colGroup(this).nameStartsWith(prefix)
+
+    // endregion
+
+    // region nameEndsWith
+
+    @Deprecated("Use nameEndsWith instead", ReplaceWith("this.nameEndsWith(suffix)"))
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.endsWith(suffix: CharSequence): TransformableColumnSet<C> =
         colsInternal { it.name.endsWith(suffix) } as TransformableColumnSet<C>
+
+    @Deprecated("Use nameEndsWith instead", ReplaceWith("this.nameEndsWith(suffix)"))
+    public fun SingleColumn<DataRow<*>>.endsWith(suffix: CharSequence): TransformableColumnSet<*> =
+        ensureIsColGroup().colsInternal { it.name.endsWith(suffix) }
+
+    public fun <C> ColumnSet<C>.nameEndsWith(suffix: CharSequence): TransformableColumnSet<C> =
+        colsInternal { it.name.endsWith(suffix) } as TransformableColumnSet<C>
+
+    public fun SingleColumn<DataRow<*>>.nameEndsWith(suffix: CharSequence): TransformableColumnSet<*> =
+        ensureIsColGroup().colsInternal { it.name.endsWith(suffix) }
+
+    public fun String.nameEndsWith(suffix: CharSequence): TransformableColumnSet<*> =
+        colGroup(this).nameEndsWith(suffix)
+
+    public fun KProperty<DataRow<*>>.nameEndsWith(suffix: CharSequence): TransformableColumnSet<*> =
+        colGroup(this).nameEndsWith(suffix)
+
+    public fun ColumnPath.nameEndsWith(suffix: CharSequence): TransformableColumnSet<*> =
+        colGroup(this).nameEndsWith(suffix)
+
+    // endregion
 
     // endregion
 
     // region except
 
+    // TODO Same as cols but then inverted
+
     public fun <C> ColumnSet<C>.except(vararg other: ColumnsResolver<*>): TransformableColumnSet<*> =
         except(other.toColumnSet())
 
     public fun SingleColumn<DataRow<*>>.except(vararg other: ColumnsResolver<*>): TransformableColumnSet<*> =
-        ensureIsColGroup().asColumnSet().asColumnSet().except(*other)
+        ensureIsColGroup().asColumnSet().except(*other)
 
-    public fun <C> ColumnSet<C>.except(vararg other: String): TransformableColumnSet<*> = except(other.toColumnSet())
+    public fun <C> ColumnSet<C>.except(vararg other: String): TransformableColumnSet<*> =
+        except(other.toColumnSet())
 
     public infix fun <C> ColumnSet<C>.except(other: ColumnsResolver<*>): TransformableColumnSet<*> =
         createTransformableColumnSet(
@@ -4340,10 +4466,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         this(this@ColumnsSelectionDsl, this@ColumnsSelectionDsl)
 
     public infix fun <C> ColumnReference<C>.into(newName: String): ColumnReference<C> = named(newName)
+
     public infix fun <C> ColumnReference<C>.into(column: ColumnAccessor<*>): ColumnReference<C> = into(column.name())
+
     public infix fun <C> ColumnReference<C>.into(column: KProperty<*>): ColumnReference<C> = named(column.columnName)
 
     public infix fun String.into(newName: String): ColumnReference<Any?> = toColumnAccessor().into(newName)
+
     public infix fun String.into(column: ColumnAccessor<*>): ColumnReference<Any?> =
         toColumnAccessor().into(column.name())
 
@@ -4351,6 +4480,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         toColumnAccessor().into(column.columnName)
 
     public infix fun <C> ColumnReference<C>.named(newName: String): ColumnReference<C> = renamedReference(newName)
+
     public infix fun <C> ColumnReference<C>.named(nameFrom: ColumnReference<*>): ColumnReference<C> =
         named(nameFrom.name)
 
@@ -4358,6 +4488,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         named(nameFrom.columnName)
 
     public infix fun String.named(newName: String): ColumnReference<Any?> = toColumnAccessor().named(newName)
+
     public infix fun String.named(nameFrom: ColumnReference<*>): ColumnReference<Any?> =
         toColumnAccessor().named(nameFrom.name)
 
@@ -4550,8 +4681,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> KProperty<DataRow<*>>.dfsOf(
         type: KType,
         predicate: (ColumnWithPath<C>) -> Boolean = { true },
-    ): ColumnSet<*> =
-        colGroup(this).dfsOf(type, predicate)
+    ): ColumnSet<*> = colGroup(this).dfsOf(type, predicate)
 
     /**
      * @include [CommonColsOfDocs]
@@ -4568,8 +4698,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> String.colsOf(
         type: KType,
         filter: (DataColumn<C>) -> Boolean = { true },
-    ): ColumnSet<*> =
-        colGroup(this).colsOf(type, filter)
+    ): ColumnSet<*> = colGroup(this).colsOf(type, filter)
 
     /**
      * @include [CommonColsOfDocs]
@@ -4588,8 +4717,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> KProperty<DataRow<*>>.colsOf(
         type: KType,
         filter: (DataColumn<C>) -> Boolean = { true },
-    ): ColumnSet<*> =
-        colGroup(this).colsOf(type, filter)
+    ): ColumnSet<*> = colGroup(this).colsOf(type, filter)
 
     /**
      * @include [CommonColsOfDocs]
@@ -4606,8 +4734,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnPath.colsOf(
         type: KType,
         filter: (DataColumn<C>) -> Boolean = { true },
-    ): ColumnSet<*> =
-        colGroup(this).colsOf(type, filter)
+    ): ColumnSet<*> = colGroup(this).colsOf(type, filter)
 }
 
 /**

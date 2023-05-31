@@ -1,6 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
-/** ## ‎ */
+/**
+ *
+ * {@include [Indent]}
+ *
+ */
 internal interface LineBreak
 
 /** &nbsp;&nbsp;&nbsp;&nbsp; */

@@ -881,6 +881,44 @@ open class ColumnsSelectionDslTests : TestBase() {
     }
 
     @Test
+    fun `takeWhile and takeLastWhile`() {
+        listOf(
+            df.select { name.firstName },
+            df.select { name.takeWhile { it.name == "firstName" } },
+            df.select { "name".takeChildrenWhile { it.name == "firstName" } },
+            df.select { Person::name.takeWhile { it.name == "firstName" } },
+            df.select { pathOf("name").takeChildrenWhile { it.name == "firstName" } },
+        ).shouldAllBeEqual()
+
+        listOf(
+            df.select { name.lastName },
+            df.select { name.takeLastWhile { it.name == "lastName" } },
+            df.select { "name".takeLastChildrenWhile { it.name == "lastName" } },
+            df.select { Person::name.takeLastWhile { it.name == "lastName" } },
+            df.select { pathOf("name").takeLastChildrenWhile { it.name == "lastName" } },
+        ).shouldAllBeEqual()
+    }
+
+    @Test
+    fun `dropWhile and dropLastWhile`() {
+        listOf(
+            df.select { name.lastName },
+            df.select { name.dropWhile { it.name == "firstName" } },
+            df.select { "name".dropChildrenWhile { it.name == "firstName" } },
+            df.select { Person::name.dropWhile { it.name == "firstName" } },
+            df.select { pathOf("name").dropChildrenWhile { it.name == "firstName" } },
+        ).shouldAllBeEqual()
+
+        listOf(
+            df.select { name.firstName },
+            df.select { name.dropLastWhile { it.name == "lastName" } },
+            df.select { "name".dropLastChildrenWhile { it.name == "lastName" } },
+            df.select { Person::name.dropLastWhile { it.name == "lastName" } },
+            df.select { pathOf("name").dropLastChildrenWhile { it.name == "lastName" } },
+        ).shouldAllBeEqual()
+    }
+
+    @Test
     fun and() {
         df.select {
             age and name.select {
