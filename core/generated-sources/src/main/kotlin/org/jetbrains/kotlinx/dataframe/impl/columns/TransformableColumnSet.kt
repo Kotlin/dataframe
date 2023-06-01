@@ -14,7 +14,8 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
  * This is especially useful for calls like
  * [cols { }][ColumnsSelectionDsl.cols].[recursively()][ColumnsSelectionDsl.recursively],
  * where [recursively][ColumnsSelectionDsl.recursively] modifies the [ColumnSet][ColumnsResolver]
- * that [cols { }][ColumnsSelectionDsl.cols] operates on before it's evaluated.
+ * that [cols { }][ColumnsSelectionDsl.cols] operates on to include ALL columns, including those inside
+ * column groups, before it's evaluated.
  *
  * @see [ColumnsResolver]
  * @see [TransformableSingleColumn]
@@ -33,8 +34,9 @@ public interface TransformableColumnSet<out C> : ColumnSet<C> {
  *
  * This is especially useful for calls like
  * [first { }][ColumnsSelectionDsl.first].[recursively()][ColumnsSelectionDsl.recursively],
- * where [recursively][ColumnsSelectionDsl.recursively] modifies the [ColumnSet][ColumnsResolver]
- * that [first { }][ColumnsSelectionDsl.first] operates on before it's evaluated.
+ * where [recursively][ColumnsSelectionDsl.recursively] modifies the [SingleColumn]
+ * that [first { }][ColumnsSelectionDsl.first] operates on to include ALL columns, including those inside
+ * column groups, before it's evaluated.
  *
  * @see [SingleColumn]
  * @see [TransformableColumnSet]

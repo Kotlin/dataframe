@@ -4,10 +4,8 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
@@ -26,7 +24,7 @@ open class ColumnsSelectionDslTests : TestBase() {
     @Test
     fun first() {
         shouldThrow<IllegalArgumentException> {
-            df.select { "age".first() }
+            df.select { "age".firstChild() }
         }
 
         // works as usual
@@ -38,9 +36,9 @@ open class ColumnsSelectionDslTests : TestBase() {
         // recognized as impossible to call, because it's a SingleColumn<Int>
 //        df.select { age.first() }
         // unsafe because of string API, but has runtime check
-        df.select { "name".first() }
+        df.select { "name".firstChild() }
         // unsafe because of string API, but has runtime check
-        df.select { pathOf("name").first() }
+        df.select { pathOf("name").firstChild() }
         // recognized as SingleColumn<DataRow<*>>
         df.select { Person::name.first() }
         // recognized as SingleColumn<Int>, so impossible to call
@@ -69,13 +67,13 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select { name.first { col -> col.any { it == "Alice" } } },
             df.select { name.colsOf<String>().first { col -> col.any { it == "Alice" } } },
 
-            df.select { "name".first { col -> col.any { it == "Alice" } } },
+            df.select { "name".firstChild { col -> col.any { it == "Alice" } } },
             df.select { "name".colsOf<String>(typeOf<String>()).first { col -> col.any { it == "Alice" } } },
 
             df.select { Person::name.asColumnGroup().first { col -> col.any { it == "Alice" } } },
             df.select { Person::name.colsOf<String>(typeOf<String>()).first { col -> col.any { it == "Alice" } } },
 
-            df.select { pathOf("name").first { col -> col.any { it == "Alice" } } },
+            df.select { pathOf("name").firstChild { col -> col.any { it == "Alice" } } },
             df.select { pathOf("name").colsOf<String>(typeOf<String>()).first { col -> col.any { it == "Alice" } } },
 
             df.select { it["name"].asColumnGroup().first { col -> col.any { it == "Alice" } } },
@@ -100,13 +98,13 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select { name.last { col -> col.any { it == "Alice" } } },
             df.select { name.colsOf<String>().last { col -> col.any { it == "Alice" } } },
 
-            df.select { "name".last { col -> col.any { it == "Alice" } } },
+            df.select { "name".lastChild { col -> col.any { it == "Alice" } } },
             df.select { "name".colsOf<String>(typeOf<String>()).last { col -> col.any { it == "Alice" } } },
 
             df.select { Person::name.last { col -> col.any { it == "Alice" } } },
             df.select { Person::name.colsOf<String>(typeOf<String>()).last { col -> col.any { it == "Alice" } } },
 
-            df.select { pathOf("name").last { col -> col.any { it == "Alice" } } },
+            df.select { pathOf("name").lastChild { col -> col.any { it == "Alice" } } },
             df.select { pathOf("name").colsOf<String>(typeOf<String>()).last { col -> col.any { it == "Alice" } } },
 
             df.select { it["name"].asColumnGroup().last { col -> col.any { it == "Alice" } } },
@@ -134,13 +132,13 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select { name.single { col -> col.any { it == "Alice" } } },
             df.select { name.colsOf<String>().single { col -> col.any { it == "Alice" } } },
 
-            df.select { "name".single { col -> col.any { it == "Alice" } } },
+            df.select { "name".singleChild { col -> col.any { it == "Alice" } } },
             df.select { "name".colsOf<String>(typeOf<String>()).single { col -> col.any { it == "Alice" } } },
 
             df.select { Person::name.single { col -> col.any { it == "Alice" } } },
             df.select { Person::name.colsOf<String>(typeOf<String>()).single { col -> col.any { it == "Alice" } } },
 
-            df.select { pathOf("name").single { col -> col.any { it == "Alice" } } },
+            df.select { pathOf("name").singleChild { col -> col.any { it == "Alice" } } },
             df.select { pathOf("name").colsOf<String>(typeOf<String>()).single { col -> col.any { it == "Alice" } } },
 
             df.select { it["name"].asColumnGroup().single { col -> col.any { it == "Alice" } } },

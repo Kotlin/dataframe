@@ -181,16 +181,25 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     // region first
 
     /**
-     * ## First
-     * Returns the first column in this [ColumnSet] or [ColumnGroup] that adheres to the given [condition\].
+     * ## First (Child)
+     * Returns the ([transformable][TransformableSingleColumn]) first column in this [ColumnSet] or [ColumnGroup] that adheres to the given [condition\].
      * If no column adheres to the given [condition\], no column is selected.
      *
-     * #### For example:
+     * NOTE: For [String] and [ColumnPath], `first` is named `firstChild` instead to avoid
+     * clashes with [String.first] and [List.first].
+     *
+     * #### Examples:
+     *
+     * `df.`[select][DataFrame.select]` { `[first][SingleColumn.first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[firstChild][String.firstChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") }.`[recursively][TransformableSingleColumn.recursively]`() }`
+     *
+     * #### Examples for this overload:
      *
      * {@includeArg [Examples]}
      *
      * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
-     * @return A [SingleColumn] containing the first column that adheres to the given [condition\].
+     * @return A ([transformable][TransformableSingleColumn]) [SingleColumn] containing the first column that adheres to the given [condition\].
      * @throws [NoSuchElementException\] if no column adheres to the given [condition\].
      * @see [last\]
      */
@@ -218,8 +227,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][DataFrame.select]` { `[first][SingleColumn.first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[first][SingleColumn.first]`() }`
-     *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[first][ColumnPath.first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun SingleColumn<DataRow<*>>.first(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         ensureIsColGroup().asColumnSet().first(condition)
@@ -227,9 +234,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     /**
      * @include [CommonFirstDocs]
      * @arg [CommonFirstDocs.Examples]
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[first][String.first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[firstChild][String.firstChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun String.first(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun String.firstChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         colGroup(this).first(condition)
 
     /**
@@ -247,9 +254,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     /**
      * @include [CommonFirstDocs]
      * @arg [CommonFirstDocs.Examples]
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[first][ColumnPath.first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[firstChild][ColumnPath.firstChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun ColumnPath.first(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun ColumnPath.firstChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         colGroup(this).first(condition)
 
     // endregion
@@ -257,16 +264,25 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     // region last
 
     /**
-     * ## Last
-     * Returns the last column in this [ColumnSet] or [ColumnGroup] that adheres to the given [condition\].
+     * ## Last (Child)
+     * Returns the ([transformable][TransformableSingleColumn]) last column in this [ColumnSet] or [ColumnGroup] that adheres to the given [condition\].
      * If no column adheres to the given [condition\], no column is selected.
      *
-     * #### For example:
+     * NOTE: For [String] and [ColumnPath], `last` is named `lastChild` instead to avoid
+     * clashes with [String.last] and [List.last].
+     *
+     * #### Examples:
+     *
+     * `df.`[select][DataFrame.select]` { `[last][SingleColumn.last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[lastChild][String.lastChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[recursively][TransformableSingleColumn.recursively]`() }`
+     *
+     * #### Examples for this overload:
      *
      * {@includeArg [Examples]}
      *
      * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
-     * @return A [SingleColumn] containing the last column that adheres to the given [condition\].
+     * @return A ([transformable][TransformableSingleColumn]) [SingleColumn] containing the last column that adheres to the given [condition\].
      * @throws [NoSuchElementException\] if no column adheres to the given [condition\].
      * @see [first\]
      */
@@ -294,8 +310,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][DataFrame.select]` { `[last][SingleColumn.last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[last][SingleColumn.last]`() }`
-     *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[last][ColumnPath.last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun SingleColumn<DataRow<*>>.last(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         ensureIsColGroup().asColumnSet().last(condition)
@@ -303,9 +317,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     /**
      * @include [CommonLastDocs]
      * @arg [CommonLastDocs.Examples]
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[last][String.last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[lastChild][String.lastChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun String.last(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun String.lastChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         colGroup(this).last(condition)
 
     /**
@@ -323,9 +337,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     /**
      * @include [CommonLastDocs]
      * @arg [CommonLastDocs.Examples]
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[last][ColumnPath.last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[lastChild][ColumnPath.lastChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun ColumnPath.last(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun ColumnPath.lastChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         colGroup(this).last(condition)
 
     // endregion
@@ -333,16 +347,25 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     // region single
 
     /**
-     * ## Single
-     * Returns the single column in this [ColumnSet] or [ColumnGroup] that adheres to the given [condition\].
+     * ## Single (Child)
+     * Returns ([transformable][TransformableSingleColumn]) the single column in this [ColumnSet] or [ColumnGroup] that adheres to the given [condition\].
      * If no column adheres to the given [condition\] or multiple columns adhere to it, no column is selected.
      *
-     * #### For example:
+     * NOTE: For [String] and [ColumnPath], `single` is named `singleChild` instead to avoid
+     * clashes with [String.single] and [List.single].
+     *
+     * #### Examples:
+     *
+     * `df.`[select][DataFrame.select]` { `[single][SingleColumn.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[singleChild][String.singleChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[recursively][TransformableSingleColumn.recursively]`() }`
+     *
+     * #### Examples for this overload:
      *
      * {@includeArg [Examples]}
      *
      * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
-     * @return A [SingleColumn] containing the single column that adheres to the given [condition\].
+     * @return A ([transformable][TransformableSingleColumn]) [SingleColumn] containing the single column that adheres to the given [condition\].
      * @throws [NoSuchElementException\] if no column adheres to the given [condition\].
      * @throws [IllegalArgumentException\] if more than one column adheres to the given [condition\].
      */
@@ -370,8 +393,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][DataFrame.select]` { `[single][SingleColumn.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[single][SingleColumn.single]`() }`
-     *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[single][ColumnPath.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun SingleColumn<DataRow<*>>.single(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         ensureIsColGroup().asColumnSet().single(condition)
@@ -379,9 +400,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     /**
      * @include [CommonSingleDocs]
      * @arg [CommonSingleDocs.Examples]
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[single][String.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[singleChild][String.singleChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun String.single(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun String.singleChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         colGroup(this).single(condition)
 
     /**
@@ -399,9 +420,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     /**
      * @include [CommonSingleDocs]
      * @arg [CommonSingleDocs.Examples]
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[single][ColumnPath.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[singleChild][ColumnPath.singleChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun ColumnPath.single(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun ColumnPath.singleChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         colGroup(this).single(condition)
 
     // endregion
@@ -4554,6 +4575,12 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // TODO Same as cols but then inverted
 
+    public infix fun <C> ColumnSet<C>.except(selector: ColumnsSelector<T, *>): TransformableColumnSet<C> =
+        except(selector.toColumns()) as TransformableColumnSet<C>
+
+    public infix fun SingleColumn<DataRow<*>>.except(selector: ColumnsSelector<T, *>): TransformableColumnSet<*> =
+        ensureIsColGroup().except(selector.toColumns())
+
     public fun <C> ColumnSet<C>.except(vararg other: ColumnsResolver<*>): TransformableColumnSet<*> =
         except(other.toColumnSet())
 
@@ -4577,11 +4604,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
             },
         )
 
-    public infix fun <C> ColumnSet<C>.except(selector: ColumnsSelector<T, *>): TransformableColumnSet<C> =
-        except(selector.toColumns()) as TransformableColumnSet<C>
 
-    public infix fun SingleColumn<DataRow<*>>.except(selector: ColumnsSelector<T, *>): TransformableColumnSet<*> =
-        ensureIsColGroup().except(selector.toColumns())
 
     // endregion
 

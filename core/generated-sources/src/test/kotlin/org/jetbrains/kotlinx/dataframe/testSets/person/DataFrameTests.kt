@@ -2199,6 +2199,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `except in columns selector`() {
         typed.select { except { age and weight } } shouldBe typed.select { name and city }
+        typed.select { allExcept { age and weight } } shouldBe typed.select { name and city }
 
         typed.group { age and weight }.into("info")
             .select { dropLast(1) except { "info"["age"] } } shouldBe typed.select { name and weight }
