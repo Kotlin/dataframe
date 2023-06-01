@@ -941,7 +941,7 @@ class Access : TestBase() {
         df.select { cols { !it.isColumnGroup() }.rec().filter { it.name().startsWith("year") } }
 
         // exclude columns from column set
-        df.select { cols { !it.isColumnGroup() }.rec() except { age } }
+        df.select { cols { !it.isColumnGroup() }.rec().except { age } }
 
         // keep only unique columns
         df.select { (colsOf<Int>() and age).distinct() }

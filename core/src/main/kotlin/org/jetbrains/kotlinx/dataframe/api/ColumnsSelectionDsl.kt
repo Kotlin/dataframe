@@ -2418,10 +2418,15 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * {@includeArg [CommonSelectDocs.ExampleArg]}
      *
+     * {@include [LineBreak]}
+     *
+     * See also [except][SingleColumn.except] for the inverted operation of this function.
+     *
      * @param [selector\] The [ColumnsSelector] to use for the selection.
      * @receiver The [ColumnGroup] to select from.
      * @throws [IllegalArgumentException\] If [this\] is not a [ColumnGroup].
      * @return A [ColumnSet] containing the columns selected by [selector\].
+     * @see [SingleColumn.except\]
      */
     private interface CommonSelectDocs {
 
@@ -2438,19 +2443,18 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      */
     @Suppress("UNCHECKED_CAST")
     public fun <C, R> SingleColumn<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> =
-        ensureIsColGroup().let { singleColumn ->
-            createColumnSet {
-                singleColumn.resolveSingle(it)?.let { col ->
-                    require(col.isColumnGroup()) {
-                        "Column ${col.path} is not a ColumnGroup and can thus not be selected from."
-                    }
+        createColumnSet { context ->
+            this.ensureIsColGroup().resolveSingle(context)?.let { col ->
+                require(col.isColumnGroup()) {
+                    "Column ${col.path} is not a ColumnGroup and can thus not be selected from."
+                }
 
-                    col.asColumnGroup()
-                        .getColumnsWithPaths(selector as ColumnsSelector<*, R>)
-                        .map { it.changePath(col.path + it.path) }
-                } ?: emptyList()
-            }
+                col.asColumnGroup()
+                    .getColumnsWithPaths(selector as ColumnsSelector<*, R>)
+                    .map { it.changePath(col.path + it.path) }
+            } ?: emptyList()
         }
+
 
     /** @include [SingleColumn.select] */
     public operator fun <C, R> SingleColumn<DataRow<C>>.invoke(selector: ColumnsSelector<C, R>): ColumnSet<R> =
@@ -4573,38 +4577,204 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region except
 
-    // TODO Same as cols but then inverted
+    /** TODO tbd */
+    public fun <C> ColumnSet<C>.colsExcept(predicate: ColumnFilter<C>): TransformableColumnSet<C> =
+        cols { !predicate(it) }
 
-    public infix fun <C> ColumnSet<C>.except(selector: ColumnsSelector<T, *>): TransformableColumnSet<C> =
-        except(selector.toColumns()) as TransformableColumnSet<C>
+    /** TODO tbd */
+    public fun SingleColumn<DataRow<*>>.colsExcept(predicate: ColumnFilter<*>): TransformableColumnSet<*> =
+        cols { !predicate(it) }
 
-    public infix fun SingleColumn<DataRow<*>>.except(selector: ColumnsSelector<T, *>): TransformableColumnSet<*> =
-        ensureIsColGroup().except(selector.toColumns())
+    // TODO Same as select and cols but then inverted
 
-    public fun <C> ColumnSet<C>.except(vararg other: ColumnsResolver<*>): TransformableColumnSet<*> =
+    // region ColumnsSelector
+
+    public fun <C> ColumnSet<C>.except(selector: ColumnsSelector<T, *>): ColumnSet<C> =
+        except(selector.toColumns()) as ColumnSet<C>
+
+    @Deprecated("Use allExcept instead", ReplaceWith("this.allExcept(selector)"))
+    public fun <C> SingleColumn<DataRow<C>>.except(selector: ColumnsSelector<C, *>): ColumnSet<*> =
+        allExcept(selector)
+
+    public fun <C> SingleColumn<DataRow<C>>.allExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
+        createColumnSet { context ->
+            this.ensureIsColGroup().resolveSingle(context)?.let { col ->
+                require(col.isColumnGroup()) {
+                    "Column ${col.path} is not a ColumnGroup and can thus not be excepted from."
+                }
+
+                val columnsToExcept = col.asColumnGroup()
+                    .getColumnsWithPaths(selector as ColumnsSelector<*, *>)
+                    .map { it.changePath(col.path + it.path) }
+
+                listOf(col).allColumnsExcept(columnsToExcept)
+            } ?: emptyList()
+        }
+
+    public fun String.allExcept(selector: ColumnsSelector<*, *>): ColumnSet<*> =
+        colGroup(this).allExcept(selector)
+
+    public fun <C> KProperty<DataRow<C>>.allExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
+        colGroup(this).allExcept(selector)
+
+    public fun ColumnPath.allExcept(selector: ColumnsSelector<*, *>): ColumnSet<*> =
+        colGroup(this).allExcept(selector)
+
+
+
+    /** TODO tbd */
+    public operator fun <C> SingleColumn<DataRow<C>>.minus(selector: ColumnsSelector<C, *>): ColumnSet<*> =
+        allExcept(selector)
+
+    // endregion
+
+    // region ColumnsResolver
+
+    public infix fun <C> ColumnSet<C>.except(other: ColumnsResolver<*>): ColumnSet<*> =
+        createColumnSet { context ->
+            this@except
+                .resolve(context)
+                .allColumnsExcept(other.resolve(context))
+        }
+
+    public fun <C> ColumnSet<C>.except(vararg other: ColumnsResolver<*>): ColumnSet<*> =
         except(other.toColumnSet())
 
-    public fun SingleColumn<DataRow<*>>.except(vararg other: ColumnsResolver<*>): TransformableColumnSet<*> =
-        ensureIsColGroup().asColumnSet().except(*other)
+    @Deprecated("Use allExcept instead", ReplaceWith("this.allExcept(other)"))
+    public fun SingleColumn<DataRow<*>>.except(vararg other: ColumnsResolver<*>): ColumnSet<*> =
+        allExcept(*other)
 
-    public fun <C> ColumnSet<C>.except(vararg other: String): TransformableColumnSet<*> =
-        except(other.toColumnSet())
+    public infix fun SingleColumn<DataRow<*>>.allExcept(other: ColumnsResolver<*>): ColumnSet<*> =
+        ensureIsColGroup().all().except(other)
 
-    public infix fun <C> ColumnSet<C>.except(other: ColumnsResolver<*>): TransformableColumnSet<*> =
-        createTransformableColumnSet(
-            resolver = { context ->
-                this@except
-                    .resolve(context)
-                    .allColumnsExcept(other.resolve(context))
-            },
-            transformResolve = { context, transformer ->
-                transformer.transform(this@except)
-                    .resolve(context)
-                    .allColumnsExcept(other.resolve(context))
-            },
-        )
+    public fun SingleColumn<DataRow<*>>.allExcept(vararg other: ColumnsResolver<*>): ColumnSet<*> =
+        allExcept(other.toColumnSet())
 
+    /** TODO tbd */
+    public operator fun SingleColumn<DataRow<*>>.minus(other: ColumnsResolver<*>): ColumnSet<*> =
+        allExcept(other)
 
+    public infix fun String.allExcept(other: ColumnsResolver<*>): ColumnSet<*> =
+        colGroup(this).allExcept(other)
+
+    public fun String.allExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
+        allExcept(others.toColumnSet())
+
+    public infix fun KProperty<DataRow<*>>.allExcept(other: ColumnsResolver<*>): ColumnSet<*> =
+        colGroup(this).allExcept(other)
+
+    public fun KProperty<DataRow<*>>.allExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
+        allExcept(others.toColumnSet())
+
+    public infix fun ColumnPath.allExcept(other: ColumnsResolver<*>): ColumnSet<*> =
+        colGroup(this).allExcept(other)
+
+    public fun ColumnPath.allExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
+        allExcept(others.toColumnSet())
+
+    // endregion
+
+    // region String
+
+    public infix fun <C> ColumnSet<C>.except(other: String): ColumnSet<*> =
+        except(col(other))
+
+    public fun <C> ColumnSet<C>.except(vararg others: String): ColumnSet<*> =
+        except(others.toColumnSet())
+
+    public infix fun SingleColumn<DataRow<*>>.allExcept(other: String): ColumnSet<*> =
+        allExcept(col(other))
+
+    public fun SingleColumn<DataRow<*>>.allExcept(vararg others: String): ColumnSet<*> =
+        allExcept(others.toColumnSet())
+
+    public fun String.allExcept(other: String): ColumnSet<*> =
+        colGroup(this).allExcept(other)
+
+    public fun String.allExcept(vararg others: String): ColumnSet<*> =
+        allExcept(others.toColumnSet())
+
+    public infix fun KProperty<DataRow<*>>.allExcept(other: String): ColumnSet<*> =
+        colGroup(this).allExcept(other)
+
+    public fun KProperty<DataRow<*>>.allExcept(vararg others: String): ColumnSet<*> =
+        allExcept(others.toColumnSet())
+
+    public infix fun ColumnPath.allExcept(other: String): ColumnSet<*> =
+        colGroup(this).allExcept(other)
+
+    public fun ColumnPath.allExcept(vararg others: String): ColumnSet<*> =
+        allExcept(others.toColumnSet())
+
+    // endregion
+
+    // region KProperty
+
+    public infix fun <C> ColumnSet<C>.except(other: KProperty<C>): ColumnSet<*> =
+        except(col(other))
+
+    public fun <C> ColumnSet<C>.except(vararg others: KProperty<C>): ColumnSet<*> =
+        except(others.toColumnSet())
+
+    public infix fun SingleColumn<DataRow<*>>.allExcept(other: KProperty<*>): ColumnSet<*> =
+        allExcept(col(other))
+
+    public fun SingleColumn<DataRow<*>>.allExcept(vararg others: KProperty<*>): ColumnSet<*> =
+        allExcept(others.toColumnSet())
+
+    public fun String.allExcept(other: KProperty<*>): ColumnSet<*> =
+        colGroup(this).allExcept(other)
+
+    public fun String.allExcept(vararg others: KProperty<*>): ColumnSet<*> =
+        allExcept(others.toColumnSet())
+
+    public infix fun KProperty<DataRow<*>>.allExcept(other: KProperty<*>): ColumnSet<*> =
+        colGroup(this).allExcept(other)
+
+    public fun KProperty<DataRow<*>>.allExcept(vararg others: KProperty<*>): ColumnSet<*> =
+        allExcept(others.toColumnSet())
+
+    public infix fun ColumnPath.allExcept(other: KProperty<*>): ColumnSet<*> =
+        colGroup(this).allExcept(other)
+
+    public fun ColumnPath.allExcept(vararg others: KProperty<*>): ColumnSet<*> =
+        allExcept(others.toColumnSet())
+
+    // endregion
+
+    // region ColumnPath
+
+    public infix fun <C> ColumnSet<C>.except(other: ColumnPath): ColumnSet<*> =
+        except(col(other))
+
+    public fun <C> ColumnSet<C>.except(vararg others: ColumnPath): ColumnSet<*> =
+        except(others.toColumnSet())
+
+    public infix fun SingleColumn<DataRow<*>>.allExcept(other: ColumnPath): ColumnSet<*> =
+        allExcept(col(other))
+
+    public fun SingleColumn<DataRow<*>>.allExcept(vararg others: ColumnPath): ColumnSet<*> =
+        allExcept(others.toColumnSet())
+
+    public fun String.allExcept(other: ColumnPath): ColumnSet<*> =
+        colGroup(this).allExcept(other)
+
+    public fun String.allExcept(vararg others: ColumnPath): ColumnSet<*> =
+        allExcept(others.toColumnSet())
+
+    public infix fun KProperty<DataRow<*>>.allExcept(other: ColumnPath): ColumnSet<*> =
+        colGroup(this).allExcept(other)
+
+    public fun KProperty<DataRow<*>>.allExcept(vararg others: ColumnPath): ColumnSet<*> =
+        allExcept(others.toColumnSet())
+
+    public infix fun ColumnPath.allExcept(other: ColumnPath): ColumnSet<*> =
+        colGroup(this).allExcept(other)
+
+    public fun ColumnPath.allExcept(vararg others: ColumnPath): ColumnSet<*> =
+        allExcept(others.toColumnSet())
+
+    // endregion
 
     // endregion
 

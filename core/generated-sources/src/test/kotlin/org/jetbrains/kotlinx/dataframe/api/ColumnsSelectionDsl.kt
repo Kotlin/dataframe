@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value
+import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.jetbrains.kotlinx.dataframe.samples.api.age
 import org.jetbrains.kotlinx.dataframe.samples.api.city
@@ -840,6 +841,35 @@ open class ColumnsSelectionDslTests : TestBase() {
                 colGroup("name")() {
                     colsOf<String>()
                 }
+            },
+        ).shouldAllBeEqual()
+    }
+
+    @Test
+    fun `allExcept with selector`() {
+        listOf(
+            df.select {
+                name.firstName
+            },
+
+            df.select {
+                name.select { firstName }
+            },
+            df.select {
+                name { firstName }
+            },
+            df.select {
+                name.allExcept { lastName }
+            },
+            df.select {
+                name - { lastName }
+            },
+
+            df.select {
+                name.except(name.lastName)
+            },
+            df.select {
+                name - (name.lastName and name.lastName)
             },
         ).shouldAllBeEqual()
     }
