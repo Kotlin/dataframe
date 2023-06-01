@@ -6674,7 +6674,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[select][ColumnPath.select]` { "colA" and "colB" } }`
      *
-     * `df.`[select][DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][DataColumn.asColumnGroup]`().`[select][SingleColumn.select]` { "colA" and "colB" } }`
+     * `df.`[select][DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][DataColumn.asColumnGroup]`()`[() {][SingleColumn.select]` "colA" and "colB" `[}][SingleColumn.select]` }`
      *
      * #### Examples for this overload:
      *
@@ -6707,7 +6707,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[select][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and "colB" } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`().`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` { "colA" and "colB" } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`()`[() {][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` "colA" and "colB" `[}][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` }`
      *
      * #### Examples for this overload:
      *
@@ -6720,6 +6720,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @throws [IllegalArgumentException] If [this] is not a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
      */
+    @Suppress("UNCHECKED_CAST")
     public fun <C, R> SingleColumn<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         ensureIsColGroup().let { singleColumn ->
             createColumnSet {
@@ -6751,7 +6752,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[select][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and "colB" } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`().`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` { "colA" and "colB" } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`()`[() {][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` "colA" and "colB" `[}][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` }`
      *
      * #### Examples for this overload:
      *
@@ -6784,15 +6785,19 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[select][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and "colB" } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`().`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` { "colA" and "colB" } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`()`[() {][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` "colA" and "colB" `[}][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` }`
      *
      * #### Examples for this overload:
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColGroup).`[select][SingleColumn.select]` { someCol `[and][SingleColumn.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
      *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColGroup)`[() `{`][SingleColumn.select]` colA `[and][SingleColumn.and]` colB `[`}`][SingleColumn.select]` }`
+     *
      * `df.`[select][DataFrame.select]` { Type::myColGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[select][SingleColumn.select]` { colA `[and][SingleColumn.and]` colB } }`
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup.`[select][KProperty.select]` { colA `[and][SingleColumn.and]` colB } }`
+     *
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup `[`{`][KProperty.select]` colA `[and][SingleColumn.and]` colB `[`}`][KProperty.select]` }`
      *
      * @param [selector] The [ColumnsSelector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] to use for the selection.
      * @receiver The [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
@@ -6818,15 +6823,19 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[select][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and "colB" } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`().`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` { "colA" and "colB" } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`()`[() {][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` "colA" and "colB" `[}][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` }`
      *
      * #### Examples for this overload:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` { someCol `[and][SingleColumn.and]` `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() } }`
      *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup)`[() `{`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` colA `[and][SingleColumn.and]` colB `[`}`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` }`
+     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` { colA `[and][SingleColumn.and]` colB } }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColGroup.`[select][kotlin.reflect.KProperty.select]` { colA `[and][SingleColumn.and]` colB } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColGroup `[`{`][kotlin.reflect.KProperty.select]` colA `[and][SingleColumn.and]` colB `[`}`][kotlin.reflect.KProperty.select]` }`
      *
      * @param [selector] The [ColumnsSelector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] to use for the selection.
      * @receiver The [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
@@ -6853,7 +6862,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[select][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and "colB" } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`().`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` { "colA" and "colB" } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`()`[() {][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` "colA" and "colB" `[}][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` }`
      *
      * #### Examples for this overload:
      *
@@ -6885,7 +6894,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[select][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and "colB" } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`().`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` { "colA" and "colB" } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`()`[() {][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` "colA" and "colB" `[}][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` }`
      *
      * #### Examples for this overload:
      *
@@ -6918,7 +6927,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[select][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and "colB" } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`().`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` { "colA" and "colB" } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`()`[() {][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` "colA" and "colB" `[}][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` }`
      *
      * #### Examples for this overload:
      *
@@ -6927,6 +6936,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"] `[{][ColumnPath.select]` colA `[and][SingleColumn.and]` colB `[}][ColumnPath.select]` }`
      *
      * `df.`[select][DataFrame.select]` { `[pathOf][pathOf]`("pathTo", "myColGroup").`[select][ColumnPath.select]` { someCol `[and][SingleColumn.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     *
+     * `df.`[select][DataFrame.select]` { `[pathOf][pathOf]`("pathTo", "myColGroup")`[() {][ColumnPath.select]` someCol `[and][SingleColumn.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() `[}][ColumnPath.select]` }`
      *
      * @param [selector] The [ColumnsSelector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] to use for the selection.
      * @receiver The [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
@@ -6952,7 +6963,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[select][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and "colB" } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`().`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` { "colA" and "colB" } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`()`[() {][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` "colA" and "colB" `[}][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` }`
      *
      * #### Examples for this overload:
      *
@@ -6961,6 +6972,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"] `[{][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` colA `[and][SingleColumn.and]` colB `[}][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[pathOf][org.jetbrains.kotlinx.dataframe.api.pathOf]`("pathTo", "myColGroup").`[select][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { someCol `[and][SingleColumn.and]` `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[pathOf][org.jetbrains.kotlinx.dataframe.api.pathOf]`("pathTo", "myColGroup")`[() {][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` someCol `[and][SingleColumn.and]` `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[}][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` }`
      *
      * @param [selector] The [ColumnsSelector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] to use for the selection.
      * @receiver The [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
@@ -15328,35 +15341,405 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region nameContains
 
+    /**
+     * ## Name Contains
+     * Returns a ([transformable][TransformableColumnSet]) [ColumnSet] containing
+     * all columns containing {@includeArg [CommonNameContainsDocs.ArgumentArg]} in their name.
+     *
+     * If [this\] is a [SingleColumn] containing a [ColumnGroup], the function runs on the children of the [ColumnGroup].
+     * Else, if [this\] is a [ColumnSet], the function runs on the [ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][SingleColumn.cols]` { `{@includeArg [ArgumentArg]}{@includeArg [ArgumentArg]}` `[in][String.contains]` it.`[name][DataColumn.name]` }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][DataFrame.select]` { `[nameContains][SingleColumn.nameContains]`("my").`[recursively][TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { "someGroupCol".`[nameContains][String.nameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::someGroupCol).`[nameContains][SingleColumn.nameContains]`("my") }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [ExampleArg]}
+     *
+     * @param {@includeArg [ArgumentArg]} what the column name should contain to be included in the result.
+     * @return A ([transformable][TransformableColumnSet]) [ColumnSet] containing
+     *   all columns containing {@includeArg [CommonNameContainsDocs.ArgumentArg]} in their name.
+     */
+    private interface CommonNameContainsDocs {
+        interface ExampleArg
+
+        /** [text\] or [regex\] */
+        interface ArgumentArg
+    }
+
+    /**
+     * ## Name Contains
+     * Returns a ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     * all columns containing [text] in their name.
+     *
+     * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function runs on the children of the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * Else, if [this] is a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function runs on the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { `[text][text]` `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.nameContains]`("my").`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.nameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.nameContains]`("my") }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.CommonNameContainsDocs.ExampleArg]}
+     *
+     * @param [text] what the column name should contain to be included in the result.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     *   all columns containing [text] in their name.
+     */
+    private interface NameContainsTextDocs
+
+    /**
+     * ## Name Contains
+     * Returns a ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     * all columns containing [text] in their name.
+     *
+     * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function runs on the children of the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * Else, if [this] is a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function runs on the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { `[text][text]` `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.nameContains]`("my").`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.nameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.nameContains]`("my") }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]` { .. }.`[nameContains][ColumnSet.nameContains]`("my") }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameContains][ColumnSet.nameContains]`("my") }`
+     *
+     * @param [text] what the column name should contain to be included in the result.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     *   all columns containing [text] in their name.
+     */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.nameContains(text: CharSequence): TransformableColumnSet<C> =
         colsInternal { it.name.contains(text) } as TransformableColumnSet<C>
 
+    /**
+     * ## Name Contains
+     * Returns a ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     * all columns containing [text] in their name.
+     *
+     * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function runs on the children of the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * Else, if [this] is a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function runs on the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { `[text][text]` `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.nameContains]`("my").`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.nameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.nameContains]`("my") }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { someGroupCol.`[nameContains][SingleColumn.nameContains]`("my").`[rec][TransformableColumnSet.rec]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { `[nameContains][SingleColumn.nameContains]`("my") }`
+     *
+     * @param [text] what the column name should contain to be included in the result.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     *   all columns containing [text] in their name.
+     */
     public fun SingleColumn<DataRow<*>>.nameContains(text: CharSequence): TransformableColumnSet<*> =
         ensureIsColGroup().colsInternal { it.name.contains(text) }
 
+    /**
+     * ## Name Contains
+     * Returns a ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     * all columns containing [text] in their name.
+     *
+     * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function runs on the children of the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * Else, if [this] is a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function runs on the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { `[text][text]` `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.nameContains]`("my").`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.nameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.nameContains]`("my") }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "someGroupCol".`[nameContains][String.nameContains]`("my").`[rec][TransformableColumnSet.rec]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { "someGroupCol".`[nameContains][String.nameContains]`("my") }`
+     *
+     *
+     * @param [text] what the column name should contain to be included in the result.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     *   all columns containing [text] in their name.
+     */
     public fun String.nameContains(text: CharSequence): TransformableColumnSet<*> =
         colGroup(this).nameContains(text)
 
+    /**
+     * ## Name Contains
+     * Returns a ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     * all columns containing [text] in their name.
+     *
+     * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function runs on the children of the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * Else, if [this] is a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function runs on the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { `[text][text]` `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.nameContains]`("my").`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.nameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.nameContains]`("my") }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::someGroupCol).`[nameContains][SingleColumn.nameContains]`("my") }`
+     *
+     * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[nameContains][KProperty.nameContains]`("my").`[rec][TransformableColumnSet.rec]`() }`
+     *
+     * @param [text] what the column name should contain to be included in the result.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     *   all columns containing [text] in their name.
+     */
     public fun KProperty<DataRow<*>>.nameContains(text: CharSequence): TransformableColumnSet<*> =
         colGroup(this).nameContains(text)
 
+    /**
+     * ## Name Contains
+     * Returns a ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     * all columns containing [text] in their name.
+     *
+     * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function runs on the children of the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * Else, if [this] is a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function runs on the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { `[text][text]` `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.nameContains]`("my").`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.nameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.nameContains]`("my") }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[nameContains][ColumnPath.nameContains]`("my") }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[nameContains][ColumnPath.nameContains]`("my").`[rec][TransformableColumnSet.rec]`() }`
+     *
+     * @param [text] what the column name should contain to be included in the result.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     *   all columns containing [text] in their name.
+     */
     public fun ColumnPath.nameContains(text: CharSequence): TransformableColumnSet<*> =
         colGroup(this).nameContains(text)
 
+    /**
+     * ## Name Contains
+     * Returns a ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     * all columns containing [regex] in their name.
+     *
+     * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function runs on the children of the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * Else, if [this] is a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function runs on the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { `[regex][regex]` `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.nameContains]`("my").`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.nameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.nameContains]`("my") }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.CommonNameContainsDocs.ExampleArg]}
+     *
+     * @param [regex] what the column name should contain to be included in the result.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     *   all columns containing [regex] in their name.
+     */
+    private interface NameContainsRegexDocs
+
+    /**
+     * ## Name Contains
+     * Returns a ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     * all columns containing [regex] in their name.
+     *
+     * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function runs on the children of the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * Else, if [this] is a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function runs on the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { `[regex][regex]` `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.nameContains]`("my").`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.nameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.nameContains]`("my") }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]` { .. }.`[nameContains][ColumnSet.nameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameContains][ColumnSet.nameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
+     *
+     * @param [regex] what the column name should contain to be included in the result.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     *   all columns containing [regex] in their name.
+     */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.nameContains(regex: Regex): TransformableColumnSet<C> =
         colsInternal { it.name.contains(regex) } as TransformableColumnSet<C>
 
+    /**
+     * ## Name Contains
+     * Returns a ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     * all columns containing [regex] in their name.
+     *
+     * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function runs on the children of the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * Else, if [this] is a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function runs on the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { `[regex][regex]` `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.nameContains]`("my").`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.nameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.nameContains]`("my") }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { someGroupCol.`[nameContains][SingleColumn.nameContains]`(`[Regex][Regex]`("order-[0-9]+")).`[rec][TransformableColumnSet.rec]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { `[nameContains][SingleColumn.nameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
+     *
+     * @param [regex] what the column name should contain to be included in the result.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     *   all columns containing [regex] in their name.
+     */
     public fun SingleColumn<DataRow<*>>.nameContains(regex: Regex): TransformableColumnSet<*> =
         ensureIsColGroup().colsInternal { it.name.contains(regex) }
 
+    /**
+     * ## Name Contains
+     * Returns a ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     * all columns containing [regex] in their name.
+     *
+     * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function runs on the children of the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * Else, if [this] is a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function runs on the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { `[regex][regex]` `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.nameContains]`("my").`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.nameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.nameContains]`("my") }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "someGroupCol".`[nameContains][String.nameContains]`(`[Regex][Regex]`("order-[0-9]+")).`[rec][TransformableColumnSet.rec]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { "someGroupCol".`[nameContains][String.nameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
+     *
+     * @param [regex] what the column name should contain to be included in the result.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     *   all columns containing [regex] in their name.
+     */
     public fun String.nameContains(regex: Regex): TransformableColumnSet<*> =
         colGroup(this).nameContains(regex)
 
+    /**
+     * ## Name Contains
+     * Returns a ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     * all columns containing [regex] in their name.
+     *
+     * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function runs on the children of the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * Else, if [this] is a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function runs on the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { `[regex][regex]` `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.nameContains]`("my").`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.nameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.nameContains]`("my") }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::someGroupCol).`[nameContains][SingleColumn.nameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
+     *
+     * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[nameContains][KProperty.nameContains]`(`[Regex][Regex]`("order-[0-9]+")).`[rec][TransformableColumnSet.rec]`() }`
+     *
+     * @param [regex] what the column name should contain to be included in the result.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     *   all columns containing [regex] in their name.
+     */
     public fun KProperty<DataRow<*>>.nameContains(regex: Regex): TransformableColumnSet<*> =
         colGroup(this).nameContains(regex)
 
+    /**
+     * ## Name Contains
+     * Returns a ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     * all columns containing [regex] in their name.
+     *
+     * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function runs on the children of the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * Else, if [this] is a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function runs on the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { `[regex][regex]` `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.nameContains]`("my").`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.nameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.nameContains]`("my") }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[nameContains][ColumnPath.nameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[nameContains][ColumnPath.nameContains]`(`[Regex][Regex]`("order-[0-9]+")).`[rec][TransformableColumnSet.rec]`() }`
+     *
+     * @param [regex] what the column name should contain to be included in the result.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     *   all columns containing [regex] in their name.
+     */
     public fun ColumnPath.nameContains(regex: Regex): TransformableColumnSet<*> =
         colGroup(this).nameContains(regex)
 
@@ -15453,9 +15836,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public infix fun SingleColumn<DataRow<*>>.except(selector: ColumnsSelector<T, *>): TransformableColumnSet<*> =
         ensureIsColGroup().except(selector.toColumns())
-
-    public infix fun String.except(other: ColumnsResolver<*>): TransformableColumnSet<*> =
-        colGroup(this).except(other)
 
     // endregion
 

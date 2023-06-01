@@ -184,6 +184,7 @@ val processKDocsMain by creatingProcessDocTask(
     arguments += INCLUDE_ARG_DOC_PROCESSOR_LOG_NOT_FOUND to false
 
     task {
+        group = "KDocs"
         doLast {
             // ensure generated sources are added to git
             addGeneratedSourcesToGit.executeCommand()

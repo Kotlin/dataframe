@@ -2391,7 +2391,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[select][ColumnPath.select]` { "colA" and "colB" } }`
      *
-     * `df.`[select][DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][DataColumn.asColumnGroup]`().`[select][SingleColumn.select]` { "colA" and "colB" } }`
+     * `df.`[select][DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][DataColumn.asColumnGroup]`()`[() {][SingleColumn.select]` "colA" and "colB" `[}][SingleColumn.select]` }`
      *
      * #### Examples for this overload:
      *
@@ -2415,6 +2415,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { myColGroup `[{][SingleColumn.select]` colA `[and][SingleColumn.and]` colB `[}][SingleColumn.select]` }`
      */
+    @Suppress("UNCHECKED_CAST")
     public fun <C, R> SingleColumn<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         ensureIsColGroup().let { singleColumn ->
             createColumnSet {
@@ -2440,9 +2441,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColGroup).`[select][SingleColumn.select]` { someCol `[and][SingleColumn.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
      *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColGroup)`[() `{`][SingleColumn.select]` colA `[and][SingleColumn.and]` colB `[`}`][SingleColumn.select]` }`
+     *
      * `df.`[select][DataFrame.select]` { Type::myColGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[select][SingleColumn.select]` { colA `[and][SingleColumn.and]` colB } }`
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup.`[select][KProperty.select]` { colA `[and][SingleColumn.and]` colB } }`
+     *
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup `[`{`][KProperty.select]` colA `[and][SingleColumn.and]` colB `[`}`][KProperty.select]` }`
      */
     public fun <C, R> KProperty<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         colGroup(this).select(selector)
@@ -2475,6 +2480,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"] `[{][ColumnPath.select]` colA `[and][SingleColumn.and]` colB `[}][ColumnPath.select]` }`
      *
      * `df.`[select][DataFrame.select]` { `[pathOf][pathOf]`("pathTo", "myColGroup").`[select][ColumnPath.select]` { someCol `[and][SingleColumn.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     *
+     * `df.`[select][DataFrame.select]` { `[pathOf][pathOf]`("pathTo", "myColGroup")`[() {][ColumnPath.select]` someCol `[and][SingleColumn.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() `[}][ColumnPath.select]` }`
      */
     public fun <R> ColumnPath.select(selector: ColumnsSelector<*, R>): ColumnSet<R> =
         colGroup(this).select(selector)
@@ -4326,35 +4333,159 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region nameContains
 
+    /**
+     * ## Name Contains
+     * Returns a ([transformable][TransformableColumnSet]) [ColumnSet] containing
+     * all columns containing {@includeArg [CommonNameContainsDocs.ArgumentArg]} in their name.
+     *
+     * If [this\] is a [SingleColumn] containing a [ColumnGroup], the function runs on the children of the [ColumnGroup].
+     * Else, if [this\] is a [ColumnSet], the function runs on the [ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][SingleColumn.cols]` { `{@includeArg [ArgumentArg]}{@includeArg [ArgumentArg]}` `[in][String.contains]` it.`[name][DataColumn.name]` }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][DataFrame.select]` { `[nameContains][SingleColumn.nameContains]`("my").`[recursively][TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { "someGroupCol".`[nameContains][String.nameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::someGroupCol).`[nameContains][SingleColumn.nameContains]`("my") }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [ExampleArg]}
+     *
+     * @param {@includeArg [ArgumentArg]} what the column name should contain to be included in the result.
+     * @return A ([transformable][TransformableColumnSet]) [ColumnSet] containing
+     *   all columns containing {@includeArg [CommonNameContainsDocs.ArgumentArg]} in their name.
+     */
+    private interface CommonNameContainsDocs {
+        interface ExampleArg
+
+        /** [text\] or [regex\] */
+        interface ArgumentArg
+    }
+
+    /**
+     * @include [CommonNameContainsDocs]
+     * @arg [CommonNameContainsDocs.ArgumentArg] [text\] */
+    private interface NameContainsTextDocs
+
+    /**
+     * @include [NameContainsTextDocs]
+     * @arg [CommonNameContainsDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]` { .. }.`[nameContains][ColumnSet.nameContains]`("my") }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameContains][ColumnSet.nameContains]`("my") }`
+     */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.nameContains(text: CharSequence): TransformableColumnSet<C> =
         colsInternal { it.name.contains(text) } as TransformableColumnSet<C>
 
+    /**
+     * @include [NameContainsTextDocs]
+     * @arg [CommonNameContainsDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { someGroupCol.`[nameContains][SingleColumn.nameContains]`("my").`[rec][TransformableColumnSet.rec]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { `[nameContains][SingleColumn.nameContains]`("my") }`
+     */
     public fun SingleColumn<DataRow<*>>.nameContains(text: CharSequence): TransformableColumnSet<*> =
         ensureIsColGroup().colsInternal { it.name.contains(text) }
 
+    /**
+     * @include [NameContainsTextDocs]
+     * @arg [CommonNameContainsDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { "someGroupCol".`[nameContains][String.nameContains]`("my").`[rec][TransformableColumnSet.rec]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { "someGroupCol".`[nameContains][String.nameContains]`("my") }`
+     *
+     */
     public fun String.nameContains(text: CharSequence): TransformableColumnSet<*> =
         colGroup(this).nameContains(text)
 
+    /**
+     * @include [NameContainsTextDocs]
+     * @arg [CommonNameContainsDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::someGroupCol).`[nameContains][SingleColumn.nameContains]`("my") }`
+     *
+     * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[nameContains][KProperty.nameContains]`("my").`[rec][TransformableColumnSet.rec]`() }`
+     */
     public fun KProperty<DataRow<*>>.nameContains(text: CharSequence): TransformableColumnSet<*> =
         colGroup(this).nameContains(text)
 
+    /**
+     * @include [NameContainsTextDocs]
+     * @arg [CommonNameContainsDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[nameContains][ColumnPath.nameContains]`("my") }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[nameContains][ColumnPath.nameContains]`("my").`[rec][TransformableColumnSet.rec]`() }`
+     */
     public fun ColumnPath.nameContains(text: CharSequence): TransformableColumnSet<*> =
         colGroup(this).nameContains(text)
 
+    /**
+     * @include [CommonNameContainsDocs]
+     * @arg [CommonNameContainsDocs.ArgumentArg] [regex\] */
+    private interface NameContainsRegexDocs
+
+    /**
+     * @include [NameContainsRegexDocs]
+     * @arg [CommonNameContainsDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]` { .. }.`[nameContains][ColumnSet.nameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameContains][ColumnSet.nameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
+     */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.nameContains(regex: Regex): TransformableColumnSet<C> =
         colsInternal { it.name.contains(regex) } as TransformableColumnSet<C>
 
+    /**
+     * @include [NameContainsRegexDocs]
+     * @arg [CommonNameContainsDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { someGroupCol.`[nameContains][SingleColumn.nameContains]`(`[Regex][Regex]`("order-[0-9]+")).`[rec][TransformableColumnSet.rec]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { `[nameContains][SingleColumn.nameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
+     */
     public fun SingleColumn<DataRow<*>>.nameContains(regex: Regex): TransformableColumnSet<*> =
         ensureIsColGroup().colsInternal { it.name.contains(regex) }
 
+    /**
+     * @include [NameContainsRegexDocs]
+     * @arg [CommonNameContainsDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { "someGroupCol".`[nameContains][String.nameContains]`(`[Regex][Regex]`("order-[0-9]+")).`[rec][TransformableColumnSet.rec]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { "someGroupCol".`[nameContains][String.nameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
+     */
     public fun String.nameContains(regex: Regex): TransformableColumnSet<*> =
         colGroup(this).nameContains(regex)
 
+    /**
+     * @include [NameContainsRegexDocs]
+     * @arg [CommonNameContainsDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::someGroupCol).`[nameContains][SingleColumn.nameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
+     *
+     * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[nameContains][KProperty.nameContains]`(`[Regex][Regex]`("order-[0-9]+")).`[rec][TransformableColumnSet.rec]`() }`
+     */
     public fun KProperty<DataRow<*>>.nameContains(regex: Regex): TransformableColumnSet<*> =
         colGroup(this).nameContains(regex)
 
+    /**
+     * @include [NameContainsRegexDocs]
+     * @arg [CommonNameContainsDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[nameContains][ColumnPath.nameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[nameContains][ColumnPath.nameContains]`(`[Regex][Regex]`("order-[0-9]+")).`[rec][TransformableColumnSet.rec]`() }`
+     */
     public fun ColumnPath.nameContains(regex: Regex): TransformableColumnSet<*> =
         colGroup(this).nameContains(regex)
 

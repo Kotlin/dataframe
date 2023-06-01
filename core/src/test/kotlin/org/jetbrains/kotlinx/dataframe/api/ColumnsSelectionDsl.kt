@@ -294,29 +294,35 @@ open class ColumnsSelectionDslTests : TestBase() {
     }
 
     @Test
-    fun `cols and get with predicate`() {
+    fun `cols, filter and get with predicate`() {
         listOf(
             df.select { cols(name, age, city, weight, isHappy) },
             df.select { all().cols() },
             df.select { cols() },
             df.select { all() },
+            df.select { filter { true } },
         ).shouldAllBeEqual()
 
         listOf(
             df.select { name },
             df.select { name }.select { all() },
             df.select { name }.select { cols() },
+            df.select { name }.select { filter { true } },
             df.select { name }.select { cols().all() },
+            df.select { name }.select { filter { true }.all() },
             df.select { name }.select { all().cols() },
+            df.select { name }.select { all().filter { true } },
         ).shouldAllBeEqual()
 
         listOf(
             df.select { cols(name, age, weight) },
 
             df.select { cols { "e" in it.name() } },
+            df.select { filter { "e" in it.name() } },
 //            df.select { this[{ "e" in it.name() }] },
 
             df.select { all().cols { "e" in it.name() } },
+            df.select { all().filter { "e" in it.name() } },
             df.select { all()[{ "e" in it.name() }] },
         ).shouldAllBeEqual()
 
@@ -324,21 +330,27 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select { name.firstName and name.lastName },
 
             df.select { name.cols { "Name" in it.name() } },
+            df.select { name.filter { "Name" in it.name() } },
 //            df.select { name[{ "Name" in it.name() }] },
 
             df.select { name.colsOf<String>().cols { "Name" in it.name() } },
+            df.select { name.colsOf<String>().filter { "Name" in it.name() } },
             df.select { name.colsOf<String>()[{ "Name" in it.name() }] },
 
             df.select { "name".cols { "Name" in it.name() } },
+            df.select { "name".filterChildren { "Name" in it.name() } },
             df.select { "name"[{ "Name" in it.name() }] },
 
             df.select { Person::name.cols { "Name" in it.name() } },
+            df.select { Person::name.filter { "Name" in it.name() } },
             df.select { Person::name[{ "Name" in it.name() }] },
 
             df.select { pathOf("name").cols { "Name" in it.name() } },
+            df.select { pathOf("name").filterChildren { "Name" in it.name() } },
             df.select { pathOf("name")[{ "Name" in it.name() }] },
 
             df.select { it["name"].asColumnGroup().cols { "Name" in it.name() } },
+            df.select { it["name"].asColumnGroup().filter { "Name" in it.name() } },
 //            df.select { it["name"].asColumnGroup()[{ "Name" in it.name() }] },
         ).shouldAllBeEqual()
     }
@@ -721,13 +733,6 @@ open class ColumnsSelectionDslTests : TestBase() {
 
     @Test
     fun select() {
-
-        val intCols: ColumnsSelector<*, Int> = { colsOf<Int>() }
-
-        df.select {
-            intCols and { age / 2.0 named "half age" }
-        }.alsoDebug()
-
         listOf(
             df.select {
                 name.firstName and name.lastName
@@ -759,6 +764,16 @@ open class ColumnsSelectionDslTests : TestBase() {
                 }
             },
             df.select {
+                (colGroup<Name>("name")) {
+                    colsOf<String>()
+                }
+            },
+            df.select {
+                colGroup<Name>("name")() {
+                    colsOf<String>()
+                }
+            },
+            df.select {
                 "name".select {
                     "firstName" and "lastName"
                 }
@@ -774,13 +789,27 @@ open class ColumnsSelectionDslTests : TestBase() {
                 }
             },
             df.select {
+                pathOf("name")() {
+                    "firstName" and "lastName"
+                }
+            },
+            df.select {
                 it["name"].asColumnGroup().select {
                     colsOf<String>()
                 }
             },
-
             df.select {
-                it["name"].asColumnGroup().invoke {
+                it["name"].asColumnGroup()() {
+                    colsOf<String>()
+                }
+            },
+            df.select {
+                name {
+                    colsOf<String>()
+                }
+            },
+            df.select {
+                (it["name"].asColumnGroup()) {
                     colsOf<String>()
                 }
             },
@@ -800,7 +829,7 @@ open class ColumnsSelectionDslTests : TestBase() {
                 }
             },
             df.select {
-                "name"<DataRow<Name>>().invoke {
+                "name"<DataRow<Name>>()() {
                     colsOf<String>()
                 }
             },
@@ -810,7 +839,7 @@ open class ColumnsSelectionDslTests : TestBase() {
                 }
             },
             df.select {
-                colGroup("name").invoke {
+                colGroup("name")() {
                     colsOf<String>()
                 }
             },
@@ -823,12 +852,20 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select { all() },
 
             df.select { children() },
+
+            df.select { cols() },
+
+            df.select { filter { true } }
         ).shouldAllBeEqual()
 
         listOf(
             df.select { all().rec() },
 
             df.select { children().rec() },
+
+            df.select { cols().rec() },
+
+            df.select { filter { true }.rec() }
         ).shouldAllBeEqual()
 
         listOf(
@@ -915,6 +952,44 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select { "name".dropLastChildrenWhile { it.name == "lastName" } },
             df.select { Person::name.dropLastWhile { it.name == "lastName" } },
             df.select { pathOf("name").dropLastChildrenWhile { it.name == "lastName" } },
+        ).shouldAllBeEqual()
+    }
+
+    @Test
+    fun nameContains() {
+        listOf(
+            df.select { name.firstName },
+            df.select { name.nameContains("first") },
+            df.select { "name".nameContains("first") },
+            df.select { Person::name.nameContains("first") },
+            df.select { pathOf("name").nameContains("first") },
+        ).shouldAllBeEqual()
+
+        listOf(
+            df.select { name.lastName },
+            df.select { name.nameContains(Regex("last")) },
+            df.select { "name".nameContains(Regex("last")) },
+            df.select { Person::name.nameContains(Regex("last")) },
+            df.select { pathOf("name").nameContains(Regex("last")) },
+        ).shouldAllBeEqual()
+    }
+
+    @Test
+    fun `nameStartsWith and nameEndsWith`() {
+        listOf(
+            df.select { name.firstName },
+            df.select { name.nameStartsWith("first") },
+            df.select { "name".nameStartsWith("first") },
+            df.select { Person::name.nameStartsWith("first") },
+            df.select { pathOf("name").nameStartsWith("first") },
+        ).shouldAllBeEqual()
+
+        listOf(
+            df.select { name.firstName and name.lastName },
+            df.select { name.nameEndsWith("Name") },
+            df.select { "name".nameEndsWith("Name") },
+            df.select { Person::name.nameEndsWith("Name") },
+            df.select { pathOf("name").nameEndsWith("Name") },
         ).shouldAllBeEqual()
     }
 
