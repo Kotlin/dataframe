@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.CommonRenameDocs
 import org.jetbrains.kotlinx.dataframe.columns.*
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
@@ -5014,43 +5015,251 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public operator fun <C> ColumnsSelector<T, C>.invoke(): ColumnsResolver<C> =
         this(this@ColumnsSelectionDsl, this@ColumnsSelectionDsl)
 
-    public infix fun <C> ColumnReference<C>.into(newName: String): ColumnReference<C> = named(newName)
+    // region rename
 
-    public infix fun <C> ColumnReference<C>.into(column: ColumnAccessor<*>): ColumnReference<C> = into(column.name())
+    /**
+     * ## Rename: `named` / `into`
+     * Renaming a column in the [ColumnsSelectionDsl] is done by calling the `infix` functions
+     * [named][ColumnReference.named] or [into][ColumnReference.into]. They behave exactly the same,
+     * so it's up to contextual preference which one to use. Any combination of {@include [AccessApiLink]} can be
+     * used to specify the column to rename and which name should be used instead.
+     *
+     * #### For Example:
+     *
+     * `df.`[select][DataFrame.select]` { name `[named][ColumnReference.named]` "Full Name" }`
+     *
+     * `df.`[select][DataFrame.select]` { `[expr][expr]` { 0 } `[into][ColumnReference.into]` "zeroes" }`
+     *
+     * `df.`[select][DataFrame.select]` { "colA" `[named][String.named]` Type::colB }`
+     *
+     * #### Example for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { {@includeArg [CommonRenameDocs.ReceiverArg]} `[{@includeArg [CommonRenameDocs.FunctionNameArg]}][{@includeArg [CommonRenameDocs.ReceiverTypeArg]}.{@includeArg [CommonRenameDocs.FunctionNameArg]}]` {@includeArg [CommonRenameDocs.ParamArg]} }`
+     *
+     * @receiver The [{@includeArg [ReceiverTypeArg]}] referencing the column to rename.
+     * @param [{@includeArg [ParamNameArg]}\] A [{@includeArg [ParamTypeArg]}\] used to specify the new name of the column.
+     * @return A [ColumnReference] to the renamed column.
+     */
+    private interface CommonRenameDocs {
 
-    public infix fun <C> ColumnReference<C>.into(column: KProperty<*>): ColumnReference<C> = named(column.columnName)
+        interface ReceiverArg
 
-    public infix fun String.into(newName: String): ColumnReference<Any?> = toColumnAccessor().into(newName)
+        interface ReceiverTypeArg
 
-    public infix fun String.into(column: ColumnAccessor<*>): ColumnReference<Any?> =
-        toColumnAccessor().into(column.name())
+        /** "named" or "into" */
+        interface FunctionNameArg
 
-    public infix fun String.into(column: KProperty<*>): ColumnReference<Any?> =
-        toColumnAccessor().into(column.columnName)
+        /** "newName" or "nameOf" */
+        interface ParamNameArg
+        interface ParamArg
 
+        interface ParamTypeArg
+
+        /**
+         * @arg [ReceiverArg] columnA
+         * @arg [ReceiverTypeArg] ColumnReference
+         */
+        interface ColumnReferenceReceiver
+
+        /**
+         * @arg [ReceiverArg] "columnA"
+         * @arg [ReceiverTypeArg] String
+         */
+        interface StringReceiver
+
+        /**
+         * @arg [ReceiverArg] Type::columnA
+         * @arg [ReceiverTypeArg] KProperty
+         */
+        interface KPropertyReceiver
+
+        /**
+         * @arg [ParamArg] columnB
+         * @arg [ParamNameArg] nameOf
+         * @arg [ParamTypeArg] ColumnReference
+         */
+        interface ColumnReferenceParam
+
+        /**
+         * @arg [ParamArg] "columnB"
+         * @arg [ParamNameArg] newName
+         * @arg [ParamTypeArg] String
+         */
+        interface StringParam
+
+        /**
+         * @arg [ParamArg] Type::columnB
+         * @arg [ParamNameArg] nameOf
+         * @arg [ParamTypeArg] KProperty
+         */
+        interface KPropertyParam
+
+        /** @arg [CommonRenameDocs.FunctionNameArg] named */
+        interface NamedFunctionName
+
+        /** @arg [CommonRenameDocs.FunctionNameArg] into */
+        interface IntoFunctionName
+    }
+
+    // region named
+
+    /**
+     * @include [CommonRenameDocs]
+     * @include [CommonRenameDocs.NamedFunctionName]
+     * @include [CommonRenameDocs.ColumnReferenceReceiver]
+     * @include [CommonRenameDocs.StringParam]
+     */
     public infix fun <C> ColumnReference<C>.named(newName: String): ColumnReference<C> = renamedReference(newName)
 
-    public infix fun <C> ColumnReference<C>.named(nameFrom: ColumnReference<*>): ColumnReference<C> =
-        named(nameFrom.name)
+    /**
+     * @include [CommonRenameDocs]
+     * @include [CommonRenameDocs.NamedFunctionName]
+     * @include [CommonRenameDocs.ColumnReferenceReceiver]
+     * @include [CommonRenameDocs.ColumnReferenceParam]
+     */
+    public infix fun <C> ColumnReference<C>.named(nameOf: ColumnReference<*>): ColumnReference<C> =
+        named(nameOf.name)
 
-    public infix fun <C> ColumnReference<C>.named(nameFrom: KProperty<*>): ColumnReference<C> =
-        named(nameFrom.columnName)
+    /**
+     * @include [CommonRenameDocs]
+     * @include [CommonRenameDocs.NamedFunctionName]
+     * @include [CommonRenameDocs.ColumnReferenceReceiver]
+     * @include [CommonRenameDocs.KPropertyParam]
+     */
+    public infix fun <C> ColumnReference<C>.named(nameOf: KProperty<*>): ColumnReference<C> =
+        named(nameOf.columnName)
 
-    public infix fun String.named(newName: String): ColumnReference<Any?> = toColumnAccessor().named(newName)
+    /**
+     * @include [CommonRenameDocs]
+     * @include [CommonRenameDocs.NamedFunctionName]
+     * @include [CommonRenameDocs.StringReceiver]
+     * @include [CommonRenameDocs.StringParam]
+     */
+    public infix fun String.named(newName: String): ColumnReference<*> = toColumnAccessor().named(newName)
 
-    public infix fun String.named(nameFrom: ColumnReference<*>): ColumnReference<Any?> =
-        toColumnAccessor().named(nameFrom.name)
+    /**
+     * @include [CommonRenameDocs]
+     * @include [CommonRenameDocs.NamedFunctionName]
+     * @include [CommonRenameDocs.StringReceiver]
+     * @include [CommonRenameDocs.ColumnReferenceParam]
+     */
+    public infix fun String.named(nameOf: ColumnReference<*>): ColumnReference<*> =
+        toColumnAccessor().named(nameOf.name)
 
-    public infix fun String.named(nameFrom: KProperty<*>): ColumnReference<Any?> =
-        toColumnAccessor().named(nameFrom.columnName)
+    /**
+     * @include [CommonRenameDocs]
+     * @include [CommonRenameDocs.NamedFunctionName]
+     * @include [CommonRenameDocs.StringReceiver]
+     * @include [CommonRenameDocs.KPropertyParam]
+     */
+    public infix fun String.named(nameOf: KProperty<*>): ColumnReference<*> =
+        toColumnAccessor().named(nameOf.columnName)
 
+    /**
+     * @include [CommonRenameDocs]
+     * @include [CommonRenameDocs.NamedFunctionName]
+     * @include [CommonRenameDocs.KPropertyReceiver]
+     * @include [CommonRenameDocs.StringParam]
+     */
     public infix fun <C> KProperty<C>.named(newName: String): ColumnReference<C> = toColumnAccessor().named(newName)
 
-    public infix fun <C> KProperty<C>.named(nameFrom: ColumnReference<*>): ColumnReference<C> =
-        toColumnAccessor().named(nameFrom.name)
+    /**
+     * @include [CommonRenameDocs]
+     * @include [CommonRenameDocs.NamedFunctionName]
+     * @include [CommonRenameDocs.KPropertyReceiver]
+     * @include [CommonRenameDocs.ColumnReferenceParam]
+     */
+    public infix fun <C> KProperty<C>.named(nameOf: ColumnReference<*>): ColumnReference<C> =
+        toColumnAccessor().named(nameOf.name)
 
-    public infix fun <C> KProperty<C>.named(nameFrom: KProperty<*>): ColumnReference<C> =
-        toColumnAccessor().named(nameFrom.columnName)
+    /**
+     * @include [CommonRenameDocs]
+     * @include [CommonRenameDocs.NamedFunctionName]
+     * @include [CommonRenameDocs.KPropertyReceiver]
+     * @include [CommonRenameDocs.KPropertyParam]
+     */
+    public infix fun <C> KProperty<C>.named(nameOf: KProperty<*>): ColumnReference<C> =
+        toColumnAccessor().named(nameOf.columnName)
+
+    // endregion
+
+    // region into
+
+    /**
+     * @include [CommonRenameDocs]
+     * @include [CommonRenameDocs.IntoFunctionName]
+     * @include [CommonRenameDocs.ColumnReferenceReceiver]
+     * @include [CommonRenameDocs.StringParam]
+     */
+    public infix fun <C> ColumnReference<C>.into(newName: String): ColumnReference<C> = named(newName)
+
+    /**
+     * @include [CommonRenameDocs]
+     * @include [CommonRenameDocs.IntoFunctionName]
+     * @include [CommonRenameDocs.ColumnReferenceReceiver]
+     * @include [CommonRenameDocs.ColumnReferenceParam]
+     */
+    public infix fun <C> ColumnReference<C>.into(nameOf: ColumnReference<*>): ColumnReference<C> = named(nameOf)
+
+    /**
+     * @include [CommonRenameDocs]
+     * @include [CommonRenameDocs.IntoFunctionName]
+     * @include [CommonRenameDocs.ColumnReferenceReceiver]
+     * @include [CommonRenameDocs.KPropertyParam]
+     */
+    public infix fun <C> ColumnReference<C>.into(nameOf: KProperty<*>): ColumnReference<C> = named(nameOf)
+
+    /**
+     * @include [CommonRenameDocs]
+     * @include [CommonRenameDocs.IntoFunctionName]
+     * @include [CommonRenameDocs.StringReceiver]
+     * @include [CommonRenameDocs.StringParam]
+     */
+    public infix fun String.into(newName: String): ColumnReference<*> = named(newName)
+
+    /**
+     * @include [CommonRenameDocs]
+     * @include [CommonRenameDocs.IntoFunctionName]
+     * @include [CommonRenameDocs.StringReceiver]
+     * @include [CommonRenameDocs.ColumnReferenceParam]
+     */
+    public infix fun String.into(nameOf: ColumnReference<*>): ColumnReference<*> = named(nameOf)
+
+    /**
+     * @include [CommonRenameDocs]
+     * @include [CommonRenameDocs.IntoFunctionName]
+     * @include [CommonRenameDocs.StringReceiver]
+     * @include [CommonRenameDocs.KPropertyParam]
+     */
+    public infix fun String.into(nameOf: KProperty<*>): ColumnReference<*> = named(nameOf)
+
+    /**
+     * @include [CommonRenameDocs]
+     * @include [CommonRenameDocs.IntoFunctionName]
+     * @include [CommonRenameDocs.KPropertyReceiver]
+     * @include [CommonRenameDocs.StringParam]
+     */
+    public infix fun <C> KProperty<C>.into(newName: String): ColumnReference<C> = named(newName)
+
+    /**
+     * @include [CommonRenameDocs]
+     * @include [CommonRenameDocs.IntoFunctionName]
+     * @include [CommonRenameDocs.KPropertyReceiver]
+     * @include [CommonRenameDocs.ColumnReferenceParam]
+     */
+    public infix fun <C> KProperty<C>.into(nameOf: ColumnReference<*>): ColumnReference<C> = named(nameOf)
+
+    /**
+     * @include [CommonRenameDocs]
+     * @include [CommonRenameDocs.IntoFunctionName]
+     * @include [CommonRenameDocs.KPropertyReceiver]
+     * @include [CommonRenameDocs.KPropertyParam]
+     */
+    public infix fun <C> KProperty<C>.into(nameOf: KProperty<*>): ColumnReference<C> = named(nameOf)
+
+    // endregion
+
+    // endregion
 
     // region and
 
