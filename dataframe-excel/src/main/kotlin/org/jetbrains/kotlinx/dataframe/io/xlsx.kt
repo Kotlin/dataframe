@@ -206,7 +206,7 @@ public fun DataFrame.Companion.readExcel(
         }
 
         val name = repairNameIfRequired(nameFromCell, columnNameCounters, nameRepairStrategy)
-        columnNameCounters[name] = columnNameCounters.getOrDefault(name, 0) + 1 // increase the counter for specific column name
+        columnNameCounters[nameFromCell] = columnNameCounters.getOrDefault(nameFromCell, 0) + 1 // increase the counter for specific column name
 
         val values: List<Any?> = valueRowsRange.map {
             val row: Row? = sheet.getRow(it)
@@ -218,11 +218,16 @@ public fun DataFrame.Companion.readExcel(
     return dataFrameOf(columns)
 }
 
+/**
+ * This is a universal function for name repairing
+ * and should be moved to the API module later,
+ * when the functionality will be enabled for all IO sources.
+ */
 private fun repairNameIfRequired(nameFromCell: String, columnNameCounters: MutableMap<String, Int>, nameRepairStrategy: NameRepairStrategy): String {
     return when(nameRepairStrategy) {
         NameRepairStrategy.NO -> nameFromCell
         NameRepairStrategy.CHECK_UNIQUE -> if (columnNameCounters.contains(nameFromCell)) throw DuplicateColumnNamesException(columnNameCounters.keys.toList()) else nameFromCell
-        NameRepairStrategy.MAKE_UNIQUE_AND_NOT_EMPTY -> if (nameFromCell.isEmpty()) {
+        NameRepairStrategy.MAKE_UNIQUE -> if (nameFromCell.isEmpty()) { // probably it's never empty because of filling empty column names earlier
             val emptyName = "Unknown column"
             if(columnNameCounters.contains(emptyName)) "${emptyName}_${columnNameCounters[emptyName]}"
             else emptyName

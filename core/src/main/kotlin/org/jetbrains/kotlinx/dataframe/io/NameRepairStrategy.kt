@@ -1,5 +1,16 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+/**
+ * This strategy defines how the repeatable name column will be handled
+ * during the creation new dataframe from the IO sources.
+ */
 public enum class NameRepairStrategy {
-    NO, CHECK_UNIQUE, MAKE_UNIQUE_AND_NOT_EMPTY
+    /** No actions, keep as is. */
+    NO,
+
+    /** Check the uniqueness of the column names without any actions. */
+    CHECK_UNIQUE,
+
+    /** Check the uniqueness of the column names and repair it. */
+    MAKE_UNIQUE
 }

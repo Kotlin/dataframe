@@ -117,9 +117,8 @@ class XlsxTest {
             DataFrame.readExcel(testResource("iris_duplicated_column.xlsx"))
         }
 
-        // TODO: add test for a few empty columns and a few repeated columns
-        val df = DataFrame.readExcel(testResource("iris_duplicated_column.xlsx"), nameRepairStrategy = NameRepairStrategy.MAKE_UNIQUE_AND_NOT_EMPTY)
-        df.columnNames() shouldBe listOf("Sepal.Length", "Sepal.Width",
-            "Petal.Length", "Petal.Width", "Species", "Other.Width", "Species_1")
+        val df = DataFrame.readExcel(testResource("iris_duplicated_column.xlsx"), nameRepairStrategy = NameRepairStrategy.MAKE_UNIQUE)
+        df.columnNames() shouldBe listOf("Sepal.Length", "Sepal.Width", "C",
+            "Petal.Length", "Petal.Width", "Species", "Other.Width", "Species_1", "I", "Other.Width_1", "Species_2")
     }
 }
