@@ -6,9 +6,11 @@ import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.pathOf
+import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.columns.*
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
@@ -317,6 +319,24 @@ internal fun List<ColumnWithPath<*>>.allColumnsExcept(columns: Iterable<ColumnWi
         while (node != null) {
             node.data = null
             node = node.parent
+        }
+    }
+    val subtrees = fullTree.topmostChildren { it.data != null }
+    return subtrees.map { it.data!!.addPath(it.pathFromRoot()) }
+}
+
+internal fun List<ColumnWithPath<*>>.allColumnsExceptKeepingStructure(columns: Iterable<ColumnWithPath<*>>): List<ColumnWithPath<*>> {
+    if (isEmpty()) return emptyList()
+    val fullTree = collectTree()
+    columns.forEach {
+        val node = fullTree.getOrPut(it.path).asNullable()
+        if (node != null) {
+            node.allChildren().forEach { it.data = null }
+            node.data = null
+            node.parent?.let {
+                val current = it.data as ColumnGroup<*>? ?: return@let
+                it.data = current.remove(node.name).asColumnGroup(current.name).addPath(current.path())
+            }
         }
     }
     val subtrees = fullTree.topmostChildren { it.data != null }

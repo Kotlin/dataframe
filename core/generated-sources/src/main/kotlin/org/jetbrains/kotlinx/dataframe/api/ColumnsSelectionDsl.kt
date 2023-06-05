@@ -15963,7 +15963,99 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // endregion
 
+    /**
+     * ## Name {@includeArg [CommonNameStartsEndsDocs.CapitalTitle]} With
+     * Returns a ([transformable][TransformableColumnSet]) [ColumnSet] containing
+     * all columns {@includeArg [CommonNameStartsEndsDocs.Noun]} with {@includeArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name.
+     *
+     * If [this\] is a [SingleColumn] containing a [ColumnGroup], the function runs on the children of the [ColumnGroup].
+     * Else, if [this\] is a [ColumnSet], the function runs on the [ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][SingleColumn.cols]` { it.`[name][DataColumn.name]`.`[{@includeArg [OperationName]}][String.{@includeArg [OperationName]}]`(`{@includeArg [ArgumentArg]}{@includeArg [ArgumentArg]}`) }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][DataFrame.select]` { `[{@includeArg [NameOperationName]}][SingleColumn.{@includeArg [NameOperationName]}]`("order").`[recursively][TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { "someGroupCol".`[{@includeArg [NameOperationName]}][String.{@includeArg [NameOperationName]}]`("b") }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::someGroupCol).`[{@includeArg [NameOperationName]}][SingleColumn.{@includeArg [NameOperationName]}]`("a") }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [ExampleArg]}
+     *
+     * @param {@includeArg [ArgumentArg]} Columns {@includeArg [CommonNameStartsEndsDocs.Noun]} with this {@includeArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name will be returned.
+     * @return A ([transformable][TransformableColumnSet]) [ColumnSet] containing
+     *   all columns {@includeArg [CommonNameStartsEndsDocs.Noun]} with {@includeArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name.
+     */
+    private interface CommonNameStartsEndsDocs {
+
+        /** "Starts" or "Ends" */
+        interface CapitalTitle
+
+        /** "starting" or "ending" */
+        interface Noun
+
+        /** "startsWith" or "endsWith" */
+        interface OperationName
+
+        /** "nameStartsWith" or "nameEndsWith" */
+        interface NameOperationName
+
+        /** [prefix\] or [suffix\] */
+        interface ArgumentArg
+
+        interface ExampleArg
+    }
+
     // region nameStartsWith
+
+    /**
+     * ## Name Starts With
+     * Returns a ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     * all columns starting with [prefix]
+     *
+     * @see [nameEndsWith]
+     * @see [nameContains] in their name.
+     *
+     * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function runs on the children of the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * Else, if [this] is a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function runs on the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`(`[prefix]
+     *
+     * @see [nameEndsWith]
+     * @see [nameContains][prefix]
+     *
+     * @see [nameEndsWith]
+     * @see [nameContains]`) }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameStartsWith][SingleColumn.nameStartsWith]`("order").`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameStartsWith][String.nameStartsWith]`("b") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameStartsWith][SingleColumn.nameStartsWith]`("a") }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.CommonNameStartsEndsDocs.ExampleArg]}
+     *
+     * @param [prefix]
+     *
+     * @see [nameEndsWith]
+     * @see [nameContains] Columns starting with this [prefix]
+     *
+     * @see [nameEndsWith]
+     * @see [nameContains] in their name will be returned.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     *   all columns starting with [prefix]
+     *
+     * @see [nameEndsWith]
+     * @see [nameContains] in their name.
+     */
+    private interface CommonNameStartsWithDocs
 
     @Deprecated("Use nameStartsWith instead", ReplaceWith("this.nameStartsWith(prefix)"))
     @Suppress("UNCHECKED_CAST")
@@ -15974,25 +16066,215 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun SingleColumn<DataRow<*>>.startsWith(prefix: CharSequence): TransformableColumnSet<*> =
         nameStartsWith(prefix)
 
+    /**
+     * ## Name Starts With
+     * Returns a ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     * all columns starting with [prefix] in their name.
+     *
+     * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function runs on the children of the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * Else, if [this] is a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function runs on the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`(`[prefix][prefix]`) }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameStartsWith][SingleColumn.nameStartsWith]`("order").`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameStartsWith][String.nameStartsWith]`("b") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameStartsWith][SingleColumn.nameStartsWith]`("a") }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameStartsWith][ColumnSet.nameStartsWith]`("order-") }`
+     *
+     * @param [prefix] Columns starting with this [prefix] in their name will be returned.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     *   all columns starting with [prefix] in their name.
+     * @see [nameEndsWith]
+     * @see [nameContains]
+     */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.nameStartsWith(prefix: CharSequence): TransformableColumnSet<C> =
         colsInternal { it.name.startsWith(prefix) } as TransformableColumnSet<C>
 
+    /**
+     * ## Name Starts With
+     * Returns a ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     * all columns starting with [prefix] in their name.
+     *
+     * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function runs on the children of the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * Else, if [this] is a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function runs on the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`(`[prefix][prefix]`) }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameStartsWith][SingleColumn.nameStartsWith]`("order").`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameStartsWith][String.nameStartsWith]`("b") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameStartsWith][SingleColumn.nameStartsWith]`("a") }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[nameStartsWith][SingleColumn.nameStartsWith]`("order-") }`
+     *
+     * `df.`[select][DataFrame.select]` { someGroupCol.`[nameStartsWith][SingleColumn.nameStartsWith]`("order-") }`
+     *
+     * @param [prefix] Columns starting with this [prefix] in their name will be returned.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     *   all columns starting with [prefix] in their name.
+     * @see [nameEndsWith]
+     * @see [nameContains]
+     */
     public fun SingleColumn<DataRow<*>>.nameStartsWith(prefix: CharSequence): TransformableColumnSet<*> =
         ensureIsColGroup().colsInternal { it.name.startsWith(prefix) }
 
+    /**
+     * ## Name Starts With
+     * Returns a ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     * all columns starting with [prefix] in their name.
+     *
+     * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function runs on the children of the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * Else, if [this] is a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function runs on the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`(`[prefix][prefix]`) }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameStartsWith][SingleColumn.nameStartsWith]`("order").`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameStartsWith][String.nameStartsWith]`("b") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameStartsWith][SingleColumn.nameStartsWith]`("a") }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "someGroupCol".`[nameStartsWith][String.nameStartsWith]`("order-") }`
+     *
+     * @param [prefix] Columns starting with this [prefix] in their name will be returned.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     *   all columns starting with [prefix] in their name.
+     * @see [nameEndsWith]
+     * @see [nameContains]
+     */
     public fun String.nameStartsWith(prefix: CharSequence): TransformableColumnSet<*> =
         colGroup(this).nameStartsWith(prefix)
 
+    /**
+     * ## Name Starts With
+     * Returns a ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     * all columns starting with [prefix] in their name.
+     *
+     * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function runs on the children of the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * Else, if [this] is a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function runs on the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`(`[prefix][prefix]`) }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameStartsWith][SingleColumn.nameStartsWith]`("order").`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameStartsWith][String.nameStartsWith]`("b") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameStartsWith][SingleColumn.nameStartsWith]`("a") }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::someGroupCol).`[nameStartsWith][SingleColumn.nameStartsWith]`("order-") }`
+     *
+     * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[nameStartsWith][KProperty.nameStartsWith]`("order-") }`
+     *
+     * @param [prefix] Columns starting with this [prefix] in their name will be returned.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     *   all columns starting with [prefix] in their name.
+     * @see [nameEndsWith]
+     * @see [nameContains]
+     */
     public fun KProperty<DataRow<*>>.nameStartsWith(prefix: CharSequence): TransformableColumnSet<*> =
         colGroup(this).nameStartsWith(prefix)
 
+    /**
+     * ## Name Starts With
+     * Returns a ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     * all columns starting with [prefix] in their name.
+     *
+     * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function runs on the children of the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * Else, if [this] is a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function runs on the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`(`[prefix][prefix]`) }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameStartsWith][SingleColumn.nameStartsWith]`("order").`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameStartsWith][String.nameStartsWith]`("b") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameStartsWith][SingleColumn.nameStartsWith]`("a") }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::someGroupCol).`[nameStartsWith][ColumnPath.nameStartsWith]`("order-") }`
+     *
+     * @param [prefix] Columns starting with this [prefix] in their name will be returned.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     *   all columns starting with [prefix] in their name.
+     * @see [nameEndsWith]
+     * @see [nameContains]
+     */
     public fun ColumnPath.nameStartsWith(prefix: CharSequence): TransformableColumnSet<*> =
         colGroup(this).nameStartsWith(prefix)
 
     // endregion
 
     // region nameEndsWith
+
+    /**
+     * ## Name Ends With
+     * Returns a ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     * all columns ending with [suffix]
+     *
+     * @see [nameStartsWith]
+     * @see [nameContains] in their name.
+     *
+     * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function runs on the children of the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * Else, if [this] is a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function runs on the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[endsWith][String.endsWith]`(`[suffix]
+     *
+     * @see [nameStartsWith]
+     * @see [nameContains][suffix]
+     *
+     * @see [nameStartsWith]
+     * @see [nameContains]`) }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameEndsWith][SingleColumn.nameEndsWith]`("order").`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameEndsWith][String.nameEndsWith]`("b") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameEndsWith][SingleColumn.nameEndsWith]`("a") }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.CommonNameStartsEndsDocs.ExampleArg]}
+     *
+     * @param [suffix]
+     *
+     * @see [nameStartsWith]
+     * @see [nameContains] Columns ending with this [suffix]
+     *
+     * @see [nameStartsWith]
+     * @see [nameContains] in their name will be returned.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     *   all columns ending with [suffix]
+     *
+     * @see [nameStartsWith]
+     * @see [nameContains] in their name.
+     */
+    private interface CommonNameEndsWithDocs
 
     @Deprecated("Use nameEndsWith instead", ReplaceWith("this.nameEndsWith(suffix)"))
     @Suppress("UNCHECKED_CAST")
@@ -16003,18 +16285,162 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun SingleColumn<DataRow<*>>.endsWith(suffix: CharSequence): TransformableColumnSet<*> =
         ensureIsColGroup().colsInternal { it.name.endsWith(suffix) }
 
+    /**
+     * ## Name Ends With
+     * Returns a ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     * all columns ending with [suffix] in their name.
+     *
+     * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function runs on the children of the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * Else, if [this] is a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function runs on the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[endsWith][String.endsWith]`(`[suffix][suffix]`) }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameEndsWith][SingleColumn.nameEndsWith]`("order").`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameEndsWith][String.nameEndsWith]`("b") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameEndsWith][SingleColumn.nameEndsWith]`("a") }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameEndsWith][ColumnSet.nameEndsWith]`("-order") }`
+     *
+     * @param [suffix] Columns ending with this [suffix] in their name will be returned.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     *   all columns ending with [suffix] in their name.
+     * @see [nameStartsWith]
+     * @see [nameContains]
+     */
     public fun <C> ColumnSet<C>.nameEndsWith(suffix: CharSequence): TransformableColumnSet<C> =
         colsInternal { it.name.endsWith(suffix) } as TransformableColumnSet<C>
 
+    /**
+     * ## Name Ends With
+     * Returns a ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     * all columns ending with [suffix] in their name.
+     *
+     * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function runs on the children of the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * Else, if [this] is a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function runs on the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[endsWith][String.endsWith]`(`[suffix][suffix]`) }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameEndsWith][SingleColumn.nameEndsWith]`("order").`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameEndsWith][String.nameEndsWith]`("b") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameEndsWith][SingleColumn.nameEndsWith]`("a") }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[nameEndsWith][SingleColumn.nameEndsWith]`("-order") }`
+     *
+     * `df.`[select][DataFrame.select]` { someGroupCol.`[nameEndsWith][SingleColumn.nameEndsWith]`("-order") }`
+     *
+     * @param [suffix] Columns ending with this [suffix] in their name will be returned.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     *   all columns ending with [suffix] in their name.
+     * @see [nameStartsWith]
+     * @see [nameContains]
+     */
     public fun SingleColumn<DataRow<*>>.nameEndsWith(suffix: CharSequence): TransformableColumnSet<*> =
         ensureIsColGroup().colsInternal { it.name.endsWith(suffix) }
 
+    /**
+     * ## Name Ends With
+     * Returns a ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     * all columns ending with [suffix] in their name.
+     *
+     * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function runs on the children of the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * Else, if [this] is a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function runs on the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[endsWith][String.endsWith]`(`[suffix][suffix]`) }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameEndsWith][SingleColumn.nameEndsWith]`("order").`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameEndsWith][String.nameEndsWith]`("b") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameEndsWith][SingleColumn.nameEndsWith]`("a") }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "someGroupCol".`[nameEndsWith][String.nameEndsWith]`("-order") }`
+     *
+     * @param [suffix] Columns ending with this [suffix] in their name will be returned.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     *   all columns ending with [suffix] in their name.
+     * @see [nameStartsWith]
+     * @see [nameContains]
+     */
     public fun String.nameEndsWith(suffix: CharSequence): TransformableColumnSet<*> =
         colGroup(this).nameEndsWith(suffix)
 
+    /**
+     * ## Name Ends With
+     * Returns a ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     * all columns ending with [suffix] in their name.
+     *
+     * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function runs on the children of the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * Else, if [this] is a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function runs on the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[endsWith][String.endsWith]`(`[suffix][suffix]`) }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameEndsWith][SingleColumn.nameEndsWith]`("order").`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameEndsWith][String.nameEndsWith]`("b") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameEndsWith][SingleColumn.nameEndsWith]`("a") }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::someGroupCol).`[nameEndsWith][SingleColumn.nameEndsWith]`("-order") }`
+     *
+     * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[nameEndsWith][KProperty.nameEndsWith]`("-order") }`
+     *
+     * @param [suffix] Columns ending with this [suffix] in their name will be returned.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     *   all columns ending with [suffix] in their name.
+     * @see [nameStartsWith]
+     * @see [nameContains]
+     */
     public fun KProperty<DataRow<*>>.nameEndsWith(suffix: CharSequence): TransformableColumnSet<*> =
         colGroup(this).nameEndsWith(suffix)
 
+    /**
+     * ## Name Ends With
+     * Returns a ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     * all columns ending with [suffix] in their name.
+     *
+     * If [this] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function runs on the children of the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * Else, if [this] is a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function runs on the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[endsWith][String.endsWith]`(`[suffix][suffix]`) }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameEndsWith][SingleColumn.nameEndsWith]`("order").`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameEndsWith][String.nameEndsWith]`("b") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameEndsWith][SingleColumn.nameEndsWith]`("a") }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::someGroupCol).`[nameEndsWith][ColumnPath.nameEndsWith]`("-order") }`
+     *
+     * @param [suffix] Columns ending with this [suffix] in their name will be returned.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
+     *   all columns ending with [suffix] in their name.
+     * @see [nameStartsWith]
+     * @see [nameContains]
+     */
     public fun ColumnPath.nameEndsWith(suffix: CharSequence): TransformableColumnSet<*> =
         colGroup(this).nameEndsWith(suffix)
 
@@ -16039,9 +16465,20 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnSet<C>.except(selector: ColumnsSelector<T, *>): ColumnSet<C> =
         except(selector.toColumns()) as ColumnSet<C>
 
-    @Deprecated("Use allExcept instead", ReplaceWith("this.allExcept(selector)"))
+    // TODO TBD
+    @Deprecated("Use allExcept instead", ReplaceWith("this.allExcept(selector)"), DeprecationLevel.WARNING)
     public fun <C> SingleColumn<DataRow<C>>.except(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         allExcept(selector)
+
+    public fun <C> SingleColumn<DataRow<C>>.exceptNew(selector: ColumnsSelector<C, *>): SingleColumn<DataRow<*>> =
+        ensureIsColGroup().transformWithContext {
+            val singleCol = it.single()
+            val columnsToExcept = singleCol.select(selector).resolve(this)
+
+            val newCols = singleCol.children().allColumnsExcept(columnsToExcept)
+
+            listOf(dataFrameOf(newCols).asColumnGroup(singleCol.name).addPath(singleCol.path))
+        }.single()
 
     public fun <C> SingleColumn<DataRow<C>>.allExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         createColumnSet { context ->
@@ -16050,11 +16487,14 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
                     "Column ${col.path} is not a ColumnGroup and can thus not be excepted from."
                 }
 
+                val allCols = col.asColumnGroup()
+                    .getColumnsWithPaths { all() }
+                    .map { it.changePath(col.path + it.path) }
                 val columnsToExcept = col.asColumnGroup()
                     .getColumnsWithPaths(selector as ColumnsSelector<*, *>)
                     .map { it.changePath(col.path + it.path) }
 
-                listOf(col).allColumnsExcept(columnsToExcept)
+                allCols.allColumnsExceptKeepingStructure(columnsToExcept)
             } ?: emptyList()
         }
 
@@ -16066,7 +16506,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun ColumnPath.allExcept(selector: ColumnsSelector<*, *>): ColumnSet<*> =
         colGroup(this).allExcept(selector)
-
 
 
     /** TODO tbd */
@@ -16081,7 +16520,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         createColumnSet { context ->
             this@except
                 .resolve(context)
-                .allColumnsExcept(other.resolve(context))
+                .allColumnsExceptKeepingStructure(other.resolve(context))
         }
 
     public fun <C> ColumnSet<C>.except(vararg other: ColumnsResolver<*>): ColumnSet<*> =
@@ -16227,9 +16666,152 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region without nulls
 
+    /**
+     * ## Without Nulls
+     * Returns a new [ColumnSet] that contains only columns that do not have `null` values.
+     *
+     * If called on a [SingleColumn] containing just a [ColumnGroup], [withoutNulls][SingleColumn.withoutNulls]
+     * returns a [ColumnSet] containing all columns in the [ColumnGroup]'s children that do not contain `null`s.
+     *
+     * #### For Example:
+     *
+     * `df.`[select][DataFrame.select]` { `[all][SingleColumn.all]`().`[nameContains][ColumnSet.nameContains]`("middleName").`[withoutNulls][ColumnSet.withoutNulls]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { `[withoutNulls][SingleColumn.withoutNulls]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::userData).`[withoutNulls][SingleColumn.withoutNulls]`() }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [CommonWithoutNullsDocs.ExampleArg]]}
+     *
+     * @return A [ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
+     */
+    private interface CommonWithoutNullsDocs {
+
+        interface ExampleArg
+    }
+
+    /**
+     * ## Without Nulls
+     * Returns a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains only columns that do not have `null` values.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing just a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], [withoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.withoutNulls]
+     * returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]'s children that do not contain `null`s.
+     *
+     * #### For Example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`().`[nameContains][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.nameContains]`("middleName").`[withoutNulls][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.withoutNulls]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[withoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.withoutNulls]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::userData).`[withoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.withoutNulls]`() }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [CommonWithoutNullsDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.CommonWithoutNullsDocs.ExampleArg]]}
+     *
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
+     */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C?>.withoutNulls(): TransformableColumnSet<C> =
-        transform { it.filter { !it.hasNulls() } } as TransformableColumnSet<C>
+    public fun <C> ColumnSet<C?>.withoutNulls(): ColumnSet<C & Any> =
+        transform { it.filter { !it.hasNulls() } } as ColumnSet<C & Any>
+
+    /**
+     * ## Without Nulls
+     * Returns a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains only columns that do not have `null` values.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing just a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], [withoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.withoutNulls]
+     * returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]'s children that do not contain `null`s.
+     *
+     * #### For Example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`().`[nameContains][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.nameContains]`("middleName").`[withoutNulls][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.withoutNulls]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[withoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.withoutNulls]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::userData).`[withoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.withoutNulls]`() }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [CommonWithoutNullsDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.CommonWithoutNullsDocs.ExampleArg]]}
+     *
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
+     */
+    public fun SingleColumn<DataRow<*>>.withoutNulls(): ColumnSet<Any> =
+        ensureIsColGroup().allColumnsInternal().withoutNulls()
+
+    /**
+     * ## Without Nulls
+     * Returns a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains only columns that do not have `null` values.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing just a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], [withoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.withoutNulls]
+     * returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]'s children that do not contain `null`s.
+     *
+     * #### For Example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`().`[nameContains][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.nameContains]`("middleName").`[withoutNulls][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.withoutNulls]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[withoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.withoutNulls]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::userData).`[withoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.withoutNulls]`() }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [CommonWithoutNullsDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.CommonWithoutNullsDocs.ExampleArg]]}
+     *
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
+     */
+    public fun String.withoutNulls(): ColumnSet<Any> =
+        colGroup(this).withoutNulls()
+
+    /**
+     * ## Without Nulls
+     * Returns a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains only columns that do not have `null` values.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing just a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], [withoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.withoutNulls]
+     * returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]'s children that do not contain `null`s.
+     *
+     * #### For Example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`().`[nameContains][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.nameContains]`("middleName").`[withoutNulls][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.withoutNulls]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[withoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.withoutNulls]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::userData).`[withoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.withoutNulls]`() }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [CommonWithoutNullsDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.CommonWithoutNullsDocs.ExampleArg]]}
+     *
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
+     */
+    public fun KProperty<DataRow<*>>.withoutNulls(): ColumnSet<Any> =
+        colGroup(this).withoutNulls()
+
+    /**
+     * ## Without Nulls
+     * Returns a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains only columns that do not have `null` values.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing just a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], [withoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.withoutNulls]
+     * returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]'s children that do not contain `null`s.
+     *
+     * #### For Example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`().`[nameContains][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.nameContains]`("middleName").`[withoutNulls][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.withoutNulls]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[withoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.withoutNulls]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::userData).`[withoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.withoutNulls]`() }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [CommonWithoutNullsDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.CommonWithoutNullsDocs.ExampleArg]]}
+     *
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
+     */
+    public fun ColumnPath.withoutNulls(): ColumnSet<Any> =
+        colGroup(this).withoutNulls()
 
     // endregion
 
@@ -16960,6 +17542,18 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // endregion
 
+    /**
+     * ## Distinct
+     * Returns a new [ColumnSet] from [this] containing only distinct columns (by path).
+     * This is useful when you've selected the same column multiple times.
+     *
+     * #### For Example:
+     * `df.`[select][DataFrame.select]` { (`[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>() `[and][ColumnSet.and]` age).`[distinct][ColumnSet.distinct]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { `[all][SingleColumn.all]`().`[nameStartsWith][ColumnSet.nameStartsWith]`("order").`[recursively][TransformableColumnSet.recursively]`().`[distinct][ColumnSet.distinct]`() }`
+     *
+     * @return A new [ColumnSet] containing only distinct columns (by path).
+     */
     public fun <C> ColumnSet<C>.distinct(): ColumnSet<C> = DistinctColumnSet(this)
 
     @Deprecated(
@@ -17532,12 +18126,12 @@ public inline fun <reified C> SingleColumn<DataRow<*>>.colsOf(noinline filter: (
  * and throwing an [IllegalArgumentException] if it's not.
  */
 @Suppress("UNCHECKED_CAST")
-internal fun SingleColumn<DataRow<*>>.ensureIsColGroup(): SingleColumn<DataRow<*>> =
+internal fun <C> SingleColumn<DataRow<C>>.ensureIsColGroup(): SingleColumn<DataRow<C>> =
     performCheck { col: ColumnWithPath<*>? ->
         require(col?.isColumnGroup() != false) {
             "Attempted to perform a ColumnGroup operation on ${col?.kind()} ${col?.path}."
         }
-    } as SingleColumn<DataRow<*>>
+    } as SingleColumn<DataRow<C>>
 
 /* TODO: [Issue: #325, context receiver support](https://github.com/Kotlin/dataframe/issues/325)
 context(ColumnsSelectionDsl)

@@ -4516,7 +4516,66 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // endregion
 
+    /**
+     * ## Name {@includeArg [CommonNameStartsEndsDocs.CapitalTitle]} With
+     * Returns a ([transformable][TransformableColumnSet]) [ColumnSet] containing
+     * all columns {@includeArg [CommonNameStartsEndsDocs.Noun]} with {@includeArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name.
+     *
+     * If [this\] is a [SingleColumn] containing a [ColumnGroup], the function runs on the children of the [ColumnGroup].
+     * Else, if [this\] is a [ColumnSet], the function runs on the [ColumnSet] itself.
+     *
+     * This function is a shorthand for [cols][SingleColumn.cols]` { it.`[name][DataColumn.name]`.`[{@includeArg [OperationName]}][String.{@includeArg [OperationName]}]`(`{@includeArg [ArgumentArg]}{@includeArg [ArgumentArg]}`) }`.
+     *
+     * #### For example:
+     *
+     * `df.`[select][DataFrame.select]` { `[{@includeArg [NameOperationName]}][SingleColumn.{@includeArg [NameOperationName]}]`("order").`[recursively][TransformableColumnSet.recursively]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { "someGroupCol".`[{@includeArg [NameOperationName]}][String.{@includeArg [NameOperationName]}]`("b") }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::someGroupCol).`[{@includeArg [NameOperationName]}][SingleColumn.{@includeArg [NameOperationName]}]`("a") }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [ExampleArg]}
+     *
+     * @param {@includeArg [ArgumentArg]} Columns {@includeArg [CommonNameStartsEndsDocs.Noun]} with this {@includeArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name will be returned.
+     * @return A ([transformable][TransformableColumnSet]) [ColumnSet] containing
+     *   all columns {@includeArg [CommonNameStartsEndsDocs.Noun]} with {@includeArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name.
+     */
+    private interface CommonNameStartsEndsDocs {
+
+        /** "Starts" or "Ends" */
+        interface CapitalTitle
+
+        /** "starting" or "ending" */
+        interface Noun
+
+        /** "startsWith" or "endsWith" */
+        interface OperationName
+
+        /** "nameStartsWith" or "nameEndsWith" */
+        interface NameOperationName
+
+        /** [prefix\] or [suffix\] */
+        interface ArgumentArg
+
+        interface ExampleArg
+    }
+
     // region nameStartsWith
+
+    /**
+     * @include [CommonNameStartsEndsDocs]
+     * @arg [CommonNameStartsEndsDocs.CapitalTitle] Starts
+     * @arg [CommonNameStartsEndsDocs.Noun] starting
+     * @arg [CommonNameStartsEndsDocs.OperationName] startsWith
+     * @arg [CommonNameStartsEndsDocs.NameOperationName] nameStartsWith
+     * @arg [CommonNameStartsEndsDocs.ArgumentArg] [prefix\]
+     *
+     * @see [nameEndsWith\]
+     * @see [nameContains\]
+     */
+    private interface CommonNameStartsWithDocs
 
     @Deprecated("Use nameStartsWith instead", ReplaceWith("this.nameStartsWith(prefix)"))
     @Suppress("UNCHECKED_CAST")
@@ -4527,25 +4586,72 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun SingleColumn<DataRow<*>>.startsWith(prefix: CharSequence): TransformableColumnSet<*> =
         nameStartsWith(prefix)
 
+    /**
+     * @include [CommonNameStartsWithDocs]
+     * @arg [CommonNameStartsEndsDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameStartsWith][ColumnSet.nameStartsWith]`("order-") }`
+     */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.nameStartsWith(prefix: CharSequence): TransformableColumnSet<C> =
         colsInternal { it.name.startsWith(prefix) } as TransformableColumnSet<C>
 
+    /**
+     * @include [CommonNameStartsWithDocs]
+     * @arg [CommonNameStartsEndsDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[nameStartsWith][SingleColumn.nameStartsWith]`("order-") }`
+     *
+     * `df.`[select][DataFrame.select]` { someGroupCol.`[nameStartsWith][SingleColumn.nameStartsWith]`("order-") }`
+     */
     public fun SingleColumn<DataRow<*>>.nameStartsWith(prefix: CharSequence): TransformableColumnSet<*> =
         ensureIsColGroup().colsInternal { it.name.startsWith(prefix) }
 
+    /**
+     * @include [CommonNameStartsWithDocs]
+     * @arg [CommonNameStartsEndsDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { "someGroupCol".`[nameStartsWith][String.nameStartsWith]`("order-") }`
+     */
     public fun String.nameStartsWith(prefix: CharSequence): TransformableColumnSet<*> =
         colGroup(this).nameStartsWith(prefix)
 
+    /**
+     * @include [CommonNameStartsWithDocs]
+     * @arg [CommonNameStartsEndsDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::someGroupCol).`[nameStartsWith][SingleColumn.nameStartsWith]`("order-") }`
+     *
+     * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[nameStartsWith][KProperty.nameStartsWith]`("order-") }`
+     */
     public fun KProperty<DataRow<*>>.nameStartsWith(prefix: CharSequence): TransformableColumnSet<*> =
         colGroup(this).nameStartsWith(prefix)
 
+    /**
+     * @include [CommonNameStartsWithDocs]
+     * @arg [CommonNameStartsEndsDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::someGroupCol).`[nameStartsWith][ColumnPath.nameStartsWith]`("order-") }`
+     */
     public fun ColumnPath.nameStartsWith(prefix: CharSequence): TransformableColumnSet<*> =
         colGroup(this).nameStartsWith(prefix)
 
     // endregion
 
     // region nameEndsWith
+
+    /**
+     * @include [CommonNameStartsEndsDocs]
+     * @arg [CommonNameStartsEndsDocs.CapitalTitle] Ends
+     * @arg [CommonNameStartsEndsDocs.Noun] ending
+     * @arg [CommonNameStartsEndsDocs.OperationName] endsWith
+     * @arg [CommonNameStartsEndsDocs.NameOperationName] nameEndsWith
+     * @arg [CommonNameStartsEndsDocs.ArgumentArg] [suffix\]
+     *
+     * @see [nameStartsWith\]
+     * @see [nameContains\]
+     */
+    private interface CommonNameEndsWithDocs
 
     @Deprecated("Use nameEndsWith instead", ReplaceWith("this.nameEndsWith(suffix)"))
     @Suppress("UNCHECKED_CAST")
@@ -4556,18 +4662,52 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun SingleColumn<DataRow<*>>.endsWith(suffix: CharSequence): TransformableColumnSet<*> =
         ensureIsColGroup().colsInternal { it.name.endsWith(suffix) }
 
+    /**
+     * @include [CommonNameEndsWithDocs]
+     * @arg [CommonNameStartsEndsDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameEndsWith][ColumnSet.nameEndsWith]`("-order") }`
+     */
     public fun <C> ColumnSet<C>.nameEndsWith(suffix: CharSequence): TransformableColumnSet<C> =
         colsInternal { it.name.endsWith(suffix) } as TransformableColumnSet<C>
 
+    /**
+     * @include [CommonNameEndsWithDocs]
+     * @arg [CommonNameStartsEndsDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[nameEndsWith][SingleColumn.nameEndsWith]`("-order") }`
+     *
+     * `df.`[select][DataFrame.select]` { someGroupCol.`[nameEndsWith][SingleColumn.nameEndsWith]`("-order") }`
+     */
     public fun SingleColumn<DataRow<*>>.nameEndsWith(suffix: CharSequence): TransformableColumnSet<*> =
         ensureIsColGroup().colsInternal { it.name.endsWith(suffix) }
 
+    /**
+     * @include [CommonNameEndsWithDocs]
+     * @arg [CommonNameStartsEndsDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { "someGroupCol".`[nameEndsWith][String.nameEndsWith]`("-order") }`
+     */
     public fun String.nameEndsWith(suffix: CharSequence): TransformableColumnSet<*> =
         colGroup(this).nameEndsWith(suffix)
 
+    /**
+     * @include [CommonNameEndsWithDocs]
+     * @arg [CommonNameStartsEndsDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::someGroupCol).`[nameEndsWith][SingleColumn.nameEndsWith]`("-order") }`
+     *
+     * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[nameEndsWith][KProperty.nameEndsWith]`("-order") }`
+     */
     public fun KProperty<DataRow<*>>.nameEndsWith(suffix: CharSequence): TransformableColumnSet<*> =
         colGroup(this).nameEndsWith(suffix)
 
+    /**
+     * @include [CommonNameEndsWithDocs]
+     * @arg [CommonNameStartsEndsDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::someGroupCol).`[nameEndsWith][ColumnPath.nameEndsWith]`("-order") }`
+     */
     public fun ColumnPath.nameEndsWith(suffix: CharSequence): TransformableColumnSet<*> =
         colGroup(this).nameEndsWith(suffix)
 
@@ -4592,9 +4732,20 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnSet<C>.except(selector: ColumnsSelector<T, *>): ColumnSet<C> =
         except(selector.toColumns()) as ColumnSet<C>
 
-    @Deprecated("Use allExcept instead", ReplaceWith("this.allExcept(selector)"))
+    // TODO TBD
+    @Deprecated("Use allExcept instead", ReplaceWith("this.allExcept(selector)"), DeprecationLevel.WARNING)
     public fun <C> SingleColumn<DataRow<C>>.except(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         allExcept(selector)
+
+    public fun <C> SingleColumn<DataRow<C>>.exceptNew(selector: ColumnsSelector<C, *>): SingleColumn<DataRow<*>> =
+        ensureIsColGroup().transformWithContext {
+            val singleCol = it.single()
+            val columnsToExcept = singleCol.select(selector).resolve(this)
+
+            val newCols = singleCol.children().allColumnsExcept(columnsToExcept)
+
+            listOf(dataFrameOf(newCols).asColumnGroup(singleCol.name).addPath(singleCol.path))
+        }.single()
 
     public fun <C> SingleColumn<DataRow<C>>.allExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         createColumnSet { context ->
@@ -4603,11 +4754,14 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
                     "Column ${col.path} is not a ColumnGroup and can thus not be excepted from."
                 }
 
+                val allCols = col.asColumnGroup()
+                    .getColumnsWithPaths { all() }
+                    .map { it.changePath(col.path + it.path) }
                 val columnsToExcept = col.asColumnGroup()
                     .getColumnsWithPaths(selector as ColumnsSelector<*, *>)
                     .map { it.changePath(col.path + it.path) }
 
-                listOf(col).allColumnsExcept(columnsToExcept)
+                allCols.allColumnsExceptKeepingStructure(columnsToExcept)
             } ?: emptyList()
         }
 
@@ -4619,7 +4773,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun ColumnPath.allExcept(selector: ColumnsSelector<*, *>): ColumnSet<*> =
         colGroup(this).allExcept(selector)
-
 
 
     /** TODO tbd */
@@ -4634,7 +4787,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         createColumnSet { context ->
             this@except
                 .resolve(context)
-                .allColumnsExcept(other.resolve(context))
+                .allColumnsExceptKeepingStructure(other.resolve(context))
         }
 
     public fun <C> ColumnSet<C>.except(vararg other: ColumnsResolver<*>): ColumnSet<*> =
@@ -4780,9 +4933,81 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region without nulls
 
+    /**
+     * ## Without Nulls
+     * Returns a new [ColumnSet] that contains only columns that do not have `null` values.
+     *
+     * If called on a [SingleColumn] containing just a [ColumnGroup], [withoutNulls][SingleColumn.withoutNulls]
+     * returns a [ColumnSet] containing all columns in the [ColumnGroup]'s children that do not contain `null`s.
+     *
+     * #### For Example:
+     *
+     * `df.`[select][DataFrame.select]` { `[all][SingleColumn.all]`().`[nameContains][ColumnSet.nameContains]`("middleName").`[withoutNulls][ColumnSet.withoutNulls]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { `[withoutNulls][SingleColumn.withoutNulls]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::userData).`[withoutNulls][SingleColumn.withoutNulls]`() }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [CommonWithoutNullsDocs.ExampleArg]]}
+     *
+     * @return A [ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
+     */
+    private interface CommonWithoutNullsDocs {
+
+        interface ExampleArg
+    }
+
+    /**
+     * @include [CommonWithoutNullsDocs]
+     * @arg [CommonWithoutNullsDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]` { .. }.`[withoutNulls][ColumnSet.withoutNulls]`() }`
+     */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C?>.withoutNulls(): TransformableColumnSet<C> =
-        transform { it.filter { !it.hasNulls() } } as TransformableColumnSet<C>
+    public fun <C> ColumnSet<C?>.withoutNulls(): ColumnSet<C & Any> =
+        transform { it.filter { !it.hasNulls() } } as ColumnSet<C & Any>
+
+    /**
+     * @include [CommonWithoutNullsDocs]
+     * @arg [CommonWithoutNullsDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[withoutNulls][SingleColumn.withoutNulls]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { `[withoutNulls][SingleColumn.withoutNulls]`() }`
+     */
+    public fun SingleColumn<DataRow<*>>.withoutNulls(): ColumnSet<Any> =
+        ensureIsColGroup().allColumnsInternal().withoutNulls()
+
+    /**
+     * @include [CommonWithoutNullsDocs]
+     * @arg [CommonWithoutNullsDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[withoutNulls][String.withoutNulls]`() }`
+     */
+    public fun String.withoutNulls(): ColumnSet<Any> =
+        colGroup(this).withoutNulls()
+
+    /**
+     * @include [CommonWithoutNullsDocs]
+     * @arg [CommonWithoutNullsDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColumnGroup).`[withoutNulls][SingleColumn.withoutNulls]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[withoutNulls][KProperty.withoutNulls]`() }`
+     */
+    public fun KProperty<DataRow<*>>.withoutNulls(): ColumnSet<Any> =
+        colGroup(this).withoutNulls()
+
+    /**
+     * @include [CommonWithoutNullsDocs]
+     * @arg [CommonWithoutNullsDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[withoutNulls][ColumnPath.withoutNulls]`() }`
+     */
+    public fun ColumnPath.withoutNulls(): ColumnSet<Any> =
+        colGroup(this).withoutNulls()
 
     // endregion
 
@@ -4981,6 +5206,18 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // endregion
 
+    /**
+     * ## Distinct
+     * Returns a new [ColumnSet] from [this] containing only distinct columns (by path).
+     * This is useful when you've selected the same column multiple times.
+     *
+     * #### For Example:
+     * `df.`[select][DataFrame.select]` { (`[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>() `[and][ColumnSet.and]` age).`[distinct][ColumnSet.distinct]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { `[all][SingleColumn.all]`().`[nameStartsWith][ColumnSet.nameStartsWith]`("order").`[recursively][TransformableColumnSet.recursively]`().`[distinct][ColumnSet.distinct]`() }`
+     *
+     * @return A new [ColumnSet] containing only distinct columns (by path).
+     */
     public fun <C> ColumnSet<C>.distinct(): ColumnSet<C> = DistinctColumnSet(this)
 
     @Deprecated(
@@ -5322,12 +5559,12 @@ public inline fun <reified C> SingleColumn<DataRow<*>>.colsOf(noinline filter: (
  * and throwing an [IllegalArgumentException] if it's not.
  */
 @Suppress("UNCHECKED_CAST")
-internal fun SingleColumn<DataRow<*>>.ensureIsColGroup(): SingleColumn<DataRow<*>> =
+internal fun <C> SingleColumn<DataRow<C>>.ensureIsColGroup(): SingleColumn<DataRow<C>> =
     performCheck { col: ColumnWithPath<*>? ->
         require(col?.isColumnGroup() != false) {
             "Attempted to perform a ColumnGroup operation on ${col?.kind()} ${col?.path}."
         }
-    } as SingleColumn<DataRow<*>>
+    } as SingleColumn<DataRow<C>>
 
 /* TODO: [Issue: #325, context receiver support](https://github.com/Kotlin/dataframe/issues/325)
 context(ColumnsSelectionDsl)

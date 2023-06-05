@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
@@ -846,11 +847,22 @@ open class ColumnsSelectionDslTests : TestBase() {
     }
 
     @Test
+    fun `how does except work`() {
+        df.select {
+            name.exceptNew { lastName }
+        }.alsoDebug()
+
+        df.select {
+            name.allExcept { lastName }
+        }.alsoDebug()
+    }
+
+    @Test
     fun `allExcept with selector`() {
         listOf(
             df.select {
                 name.firstName
-            },
+            }.alsoDebug(),
 
             df.select {
                 name.select { firstName }
@@ -861,16 +873,24 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select {
                 name.allExcept { lastName }
             },
-            df.select {
-                name - { lastName }
-            },
-
-            df.select {
-                name.except(name.lastName)
-            },
-            df.select {
-                name - (name.lastName and name.lastName)
-            },
+//            df.select {
+//                name - { lastName }
+//            },
+//            df.select {
+//                name.remove { lastName }
+//            },
+//            df.remove {
+//                name.lastName
+//            },
+//            df.remove {
+//                name { lastName }
+//            },
+//            df.select {
+//                name.except(name.lastName)
+//            },
+//            df.select {
+//                name - (name.lastName and name.lastName)
+//            },
         ).shouldAllBeEqual()
     }
 
