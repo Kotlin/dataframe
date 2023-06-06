@@ -62,7 +62,7 @@ private const val readExcel = "readExcel"
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
  * @param nameRepairStrategy handling of column names.
- * The default behavior is to ensure column names are [NameRepairStrategy.CHECK_UNIQUE]
+ * The default behavior is [NameRepairStrategy.CHECK_UNIQUE]
  */
 public fun DataFrame.Companion.readExcel(
     url: URL,
@@ -82,7 +82,7 @@ public fun DataFrame.Companion.readExcel(
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
  * @param nameRepairStrategy handling of column names.
- * The default behavior is to ensure column names are [NameRepairStrategy.CHECK_UNIQUE]
+ * The default behavior is [NameRepairStrategy.CHECK_UNIQUE]
  */
 public fun DataFrame.Companion.readExcel(
     file: File,
@@ -102,7 +102,7 @@ public fun DataFrame.Companion.readExcel(
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
  * @param nameRepairStrategy handling of column names.
- * The default behavior is to ensure column names are [NameRepairStrategy.CHECK_UNIQUE]
+ * The default behavior is [NameRepairStrategy.CHECK_UNIQUE]
  */
 public fun DataFrame.Companion.readExcel(
     fileOrUrl: String,
@@ -119,7 +119,7 @@ public fun DataFrame.Companion.readExcel(
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
  * @param nameRepairStrategy handling of column names.
- * The default behavior is to ensure column names are [NameRepairStrategy.CHECK_UNIQUE]
+ * The default behavior is [NameRepairStrategy.CHECK_UNIQUE]
  */
 public fun DataFrame.Companion.readExcel(
     inputStream: InputStream,
@@ -139,7 +139,7 @@ public fun DataFrame.Companion.readExcel(
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
  * @param nameRepairStrategy handling of column names.
- * The default behavior is to ensure column names are [NameRepairStrategy.CHECK_UNIQUE]
+ * The default behavior is [NameRepairStrategy.CHECK_UNIQUE]
  */
 public fun DataFrame.Companion.readExcel(
     wb: Workbook,
@@ -161,7 +161,7 @@ public fun DataFrame.Companion.readExcel(
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
  * @param nameRepairStrategy handling of column names.
- * The default behavior is to ensure column names are [NameRepairStrategy.CHECK_UNIQUE]
+ * The default behavior is [NameRepairStrategy.CHECK_UNIQUE]
  */
 public fun DataFrame.Companion.readExcel(
     sheet: Sheet,
@@ -222,18 +222,20 @@ public fun DataFrame.Companion.readExcel(
  * This is a universal function for name repairing
  * and should be moved to the API module later,
  * when the functionality will be enabled for all IO sources.
+ *
+ * TODO: https://github.com/Kotlin/dataframe/issues/387
  */
 private fun repairNameIfRequired(nameFromCell: String, columnNameCounters: MutableMap<String, Int>, nameRepairStrategy: NameRepairStrategy): String {
-    return when(nameRepairStrategy) {
-        NameRepairStrategy.NO -> nameFromCell
+    return when (nameRepairStrategy) {
+        NameRepairStrategy.DO_NOTHING -> nameFromCell
         NameRepairStrategy.CHECK_UNIQUE -> if (columnNameCounters.contains(nameFromCell)) throw DuplicateColumnNamesException(columnNameCounters.keys.toList()) else nameFromCell
         NameRepairStrategy.MAKE_UNIQUE -> if (nameFromCell.isEmpty()) { // probably it's never empty because of filling empty column names earlier
             val emptyName = "Unknown column"
-            if(columnNameCounters.contains(emptyName)) "${emptyName}_${columnNameCounters[emptyName]}"
+            if (columnNameCounters.contains(emptyName)) "${emptyName}${columnNameCounters[emptyName]}"
             else emptyName
         } else {
-            if(columnNameCounters.contains(nameFromCell)){
-                "${nameFromCell}_${columnNameCounters[nameFromCell]}"
+            if (columnNameCounters.contains(nameFromCell)) {
+                "${nameFromCell}${columnNameCounters[nameFromCell]}"
             } else {
                 nameFromCell
             }

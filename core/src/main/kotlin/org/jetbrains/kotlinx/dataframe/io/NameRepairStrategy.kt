@@ -6,7 +6,7 @@ package org.jetbrains.kotlinx.dataframe.io
  */
 public enum class NameRepairStrategy {
     /** No actions, keep as is. */
-    NO,
+    DO_NOTHING,
 
     /** Check the uniqueness of the column names without any actions. */
     CHECK_UNIQUE,
