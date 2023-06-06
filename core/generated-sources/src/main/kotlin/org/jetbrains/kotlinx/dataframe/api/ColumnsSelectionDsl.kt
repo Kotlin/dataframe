@@ -17,12 +17,31 @@ import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.DoubleIndent
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.columnName
-import org.jetbrains.kotlinx.dataframe.impl.columns.*
+import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
+import org.jetbrains.kotlinx.dataframe.impl.columns.DistinctColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
+import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExcept
+import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExceptKeepingStructure
+import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
+import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
+import org.jetbrains.kotlinx.dataframe.impl.columns.getChildrenAt
+import org.jetbrains.kotlinx.dataframe.impl.columns.getColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.performCheck
+import org.jetbrains.kotlinx.dataframe.impl.columns.recursivelyImpl
+import org.jetbrains.kotlinx.dataframe.impl.columns.roots
+import org.jetbrains.kotlinx.dataframe.impl.columns.singleImpl
+import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
+import org.jetbrains.kotlinx.dataframe.impl.columns.transform
+import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
+import org.jetbrains.kotlinx.dataframe.impl.columns.transformWithContext
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.flattenRecursively
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import kotlin.reflect.KProperty
@@ -380,6 +399,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [last]
      */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("firstKPropertyDataRow")
     public fun KProperty<DataRow<*>>.first(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         colGroup(this).first(condition)
 
@@ -18239,12 +18260,118 @@ public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(
     noinline expression: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(name, infer, expression)
 
+/**
+ * ## SingleColumn As ColumnGroup
+ * Casts [this][this\] [SingleColumn][SingleColumn]`<`[C][C\]`>` to a [SingleColumn][SingleColumn]`<`[DataRow][DataRow]`<`[C][C\]`>>`.
+ * This is especially useful when you want to use `ColumnGroup` functions in the [ColumnsSelectionDsl] but your column
+ * type is not recognized as a `ColumnGroup`.
+ * If you're not sure whether a column is recognized or not, you can always call [asColumnGroup][SingleColumn.asColumnGroup]
+ * and it will return the same type if it is already a `ColumnGroup`.
+ *
+ * For example:
+ *
+ * `df.`[select][DataFrame.select]` { it`[`[`][ColumnsContainer.get]`"myColumn"`[`]`][ColumnsContainer.get]`.`[asColumnGroup][SingleColumn.asColumnGroup]`().`[first][ColumnsSelectionDsl.first]`() }`
+ *
+ * @receiver The [SingleColumn] to cast to a [SingleColumn]`<`[DataRow][DataRow]`<`[C][C\]`>>`.
+ * @param [C\] The type of the (group) column.
+ * @return A [SingleColumn]`<`[DataRow][DataRow]`<`[C][C\]`>>`.
+ */
+private interface SingleColumnAsColumnGroupDocs
+
+/** ## SingleColumn As ColumnGroup
+ * Casts [this][this] [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[C][C]`>` to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ * This is especially useful when you want to use `ColumnGroup` functions in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] but your column
+ * type is not recognized as a `ColumnGroup`.
+ * If you're not sure whether a column is recognized or not, you can always call [asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]
+ * and it will return the same type if it is already a `ColumnGroup`.
+ *
+ * For example:
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it`[`[`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`"myColumn"`[`]`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`.`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`() }`
+ *
+ * @receiver The [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ * @param [C] The type of the (group) column.
+ * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`. */
 public fun <C> SingleColumn<C>.asColumnGroup(): SingleColumn<DataRow<C>> = this as SingleColumn<DataRow<C>>
 
-public fun <C> KProperty<C>.asColumnGroup(): ColumnAccessor<DataRow<C>> = columnGroup(this)
+/** ## SingleColumn As ColumnGroup
+ * Casts [this][this] [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[C][C]`>` to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ * This is especially useful when you want to use `ColumnGroup` functions in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] but your column
+ * type is not recognized as a `ColumnGroup`.
+ * If you're not sure whether a column is recognized or not, you can always call [asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]
+ * and it will return the same type if it is already a `ColumnGroup`.
+ *
+ * For example:
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it`[`[`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`"myColumn"`[`]`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`.`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`() }`
+ *
+ * @receiver The [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ * @param [C] The type of the (group) column.
+ * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`. */
+@JvmName("asColumnGroupDataRow")
+public fun <C> SingleColumn<DataRow<C>>.asColumnGroup(): SingleColumn<DataRow<C>> = this
 
-@JvmName("columnGroupAsColumnGroup")
-public fun <C> KProperty<DataRow<C>>.asColumnGroup(): ColumnAccessor<DataRow<C>> = columnGroup(this)
+/**
+ * ## As ColumnGroup
+ *
+ * Creates a [ColumnAccessor][ColumnAccessor]`<`[DataRow][DataRow]`<`[C][C]`>>` from [this][this].
+ * It can both be typed and untyped and is just a shortcut to [columnGroup][columnGroup]`(`[this][this]`)`
+ *
+ * @return A [ColumnAccessor]`<`[DataRow][DataRow]`>`.
+ */
+private interface AsColumnGroupDocs
+
+/** ## As ColumnGroup
+ *
+ * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>` from [this][this].
+ * It can both be typed and untyped and is just a shortcut to [columnGroup][org.jetbrains.kotlinx.dataframe.api.columnGroup]`(`[this][this]`)`
+ *
+ * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`>`. */
+public fun <C> KProperty<C>.asColumnGroup(): ColumnAccessor<DataRow<C>> = columnGroup<C>(this)
+
+/** ## As ColumnGroup
+ *
+ * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>` from [this][this].
+ * It can both be typed and untyped and is just a shortcut to [columnGroup][org.jetbrains.kotlinx.dataframe.api.columnGroup]`(`[this][this]`)`
+ *
+ * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`>`. */
+@JvmName("asColumnGroupDataRowKProperty")
+public fun <C> KProperty<DataRow<C>>.asColumnGroup(): ColumnAccessor<DataRow<C>> = columnGroup<C>(this)
+
+/** ## As ColumnGroup
+ *
+ * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>` from [this][this].
+ * It can both be typed and untyped and is just a shortcut to [columnGroup][org.jetbrains.kotlinx.dataframe.api.columnGroup]`(`[this][this]`)`
+ *
+ * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`>`. */
+@JvmName("asColumnGroupTyped")
+public fun <C> String.asColumnGroup(): ColumnAccessor<DataRow<C>> = columnGroup<C>(this)
+
+/** ## As ColumnGroup
+ *
+ * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>` from [this][this].
+ * It can both be typed and untyped and is just a shortcut to [columnGroup][org.jetbrains.kotlinx.dataframe.api.columnGroup]`(`[this][this]`)`
+ *
+ * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`>`. */
+public fun String.asColumnGroup(): ColumnAccessor<DataRow<*>> = columnGroup<Any?>(this)
+
+/** ## As ColumnGroup
+ *
+ * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>` from [this][this].
+ * It can both be typed and untyped and is just a shortcut to [columnGroup][org.jetbrains.kotlinx.dataframe.api.columnGroup]`(`[this][this]`)`
+ *
+ * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`>`. */
+@JvmName("asColumnGroupTyped")
+public fun <C> ColumnPath.asColumnGroup(): ColumnAccessor<DataRow<C>> = columnGroup<C>(this)
+
+/** ## As ColumnGroup
+ *
+ * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>` from [this][this].
+ * It can both be typed and untyped and is just a shortcut to [columnGroup][org.jetbrains.kotlinx.dataframe.api.columnGroup]`(`[this][this]`)`
+ *
+ * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`>`. */
+public fun ColumnPath.asColumnGroup(): ColumnAccessor<DataRow<*>> = columnGroup<Any?>(this)
+
 
 internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) -> Boolean): ColumnsSelector<T, C> =
     { this@filter(it, it).asColumnSet().filter(predicate) }

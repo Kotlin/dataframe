@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value
@@ -43,6 +44,10 @@ open class ColumnsSelectionDslTests : TestBase() {
         df.select { pathOf("name").firstChild() }
         // recognized as SingleColumn<DataRow<*>>
         df.select { Person::name.first() }
+//        shouldThrow<IllegalArgumentException> {
+//            df.select { Person::age.first() }
+//        }
+//        df.select { Person::name.asColumnGroup().first() }
         // recognized as SingleColumn<Int>, so impossible to call
 //        df.select { Person::age.first() }
         // if not recognized correctly (e.g. because of lack of DataRow<> around type), asColumnGroup() can be used
