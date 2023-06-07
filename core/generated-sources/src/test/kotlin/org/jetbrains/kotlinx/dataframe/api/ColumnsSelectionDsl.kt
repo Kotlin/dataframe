@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.samples.api.firstName
 import org.jetbrains.kotlinx.dataframe.samples.api.isHappy
 import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
+import org.jetbrains.kotlinx.dataframe.samples.api.secondName
 import org.jetbrains.kotlinx.dataframe.samples.api.weight
 import org.junit.Test
 import kotlin.reflect.typeOf
@@ -853,12 +854,16 @@ open class ColumnsSelectionDslTests : TestBase() {
 
     @Test
     fun `how does except work`() {
-        df.select {
-            name.exceptNew { lastName }
+        dfGroup.select {
+            age and name.exceptNew {
+                firstName.secondName
+            }
         }.alsoDebug()
 
-        df.select {
-            name.allExcept { lastName }
+        dfGroup.select {
+            age and name.allExcept {
+                firstName.secondName
+            }
         }.alsoDebug()
     }
 

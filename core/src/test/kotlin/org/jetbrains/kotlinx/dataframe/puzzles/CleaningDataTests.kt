@@ -77,7 +77,7 @@ class CleaningDataTests {
 
         df
             .split { "From_To"<String>() }.by('_').into("From", "To")["From", "To"]
-            .update { "From"<String>() and "To"() }
+            .update { "From"<String>() and "To"<_>() }
             .with { it.lowercase().replaceFirstChar(Char::uppercase) } shouldBe expected
     }
 

@@ -171,7 +171,8 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
         invoke()[column]
 
     /**
-     * Retrieves the value of the column with this name from the [DataFrame].
+     * Retrieves the value of the column with this name from the [DataFrame]. This can be
+     * both typed and untyped.
      * This is a shorthand for [get][ColumnsContainer.get]`("myColumnName")` and can be
      * written as `"myColumnName"<MyColumnType>()` instead.
      *
@@ -179,6 +180,19 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * @return The [DataColumn] with this name.
      */
     public operator fun <C> String.invoke(): DataColumn<C> = getColumn(this).cast()
+
+    /**
+     * Retrieves the value of the column with this name from the [DataFrame]. This can be
+     * both typed and untyped.
+     * This is a shorthand for [get][ColumnsContainer.get]`("myColumnName")` and can be
+     * written as `"myColumnName"()` instead.
+     *
+     * @throws [IllegalArgumentException] if there is no column with this name.
+     * @return The [DataColumn] with this name.
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("stringInvokeUntyped")
+    public operator fun String.invoke(): DataColumn<*> = getColumn(this)
 
     /**
      * Creates a [ColumnPath] from the receiver and the given column name [column].
@@ -4751,22 +4765,23 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region ColumnsSelector
 
-    public fun <C> ColumnSet<C>.except(selector: ColumnsSelector<T, *>): ColumnSet<C> =
+    public infix fun <C> ColumnSet<C>.except(selector: ColumnsSelector<T, *>): ColumnSet<C> =
         except(selector.toColumns()) as ColumnSet<C>
 
     // TODO TBD
     @Deprecated("Use allExcept instead", ReplaceWith("this.allExcept(selector)"), DeprecationLevel.WARNING)
-    public fun <C> SingleColumn<DataRow<C>>.except(selector: ColumnsSelector<C, *>): ColumnSet<*> =
+    public infix fun <C> SingleColumn<DataRow<C>>.except(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         allExcept(selector)
 
-    public fun <C> SingleColumn<DataRow<C>>.exceptNew(selector: ColumnsSelector<C, *>): SingleColumn<DataRow<*>> =
-        ensureIsColGroup().transformWithContext {
-            val singleCol = it.single()
-            val columnsToExcept = singleCol.select(selector).resolve(this)
+    public infix fun <C> SingleColumn<DataRow<C>>.exceptNew(selector: ColumnsSelector<C, *>): SingleColumn<DataRow<*>> =
+        ensureIsColGroup().transformSingle { singleCol ->
 
-            val newCols = singleCol.children().allColumnsExcept(columnsToExcept)
+            val columnsToExcept = singleCol.asColumnGroup().getColumnsWithPaths(selector)
+                .map { it.changePath(singleCol.path + it.path) }
 
-            listOf(dataFrameOf(newCols).asColumnGroup(singleCol.name).addPath(singleCol.path))
+            val newCols = listOf(singleCol).allColumnsExceptKeepingStructure(columnsToExcept)
+
+            newCols as List<ColumnWithPath<DataRow<*>>>
         }.single()
 
     public fun <C> SingleColumn<DataRow<C>>.allExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
@@ -4778,12 +4793,12 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
                 val allCols = col.asColumnGroup()
                     .getColumnsWithPaths { all() }
-                    .map { it.changePath(col.path + it.path) }
+
                 val columnsToExcept = col.asColumnGroup()
                     .getColumnsWithPaths(selector as ColumnsSelector<*, *>)
-                    .map { it.changePath(col.path + it.path) }
 
                 allCols.allColumnsExceptKeepingStructure(columnsToExcept)
+                    .map { it.changePath(col.path + it.path) }
             } ?: emptyList()
         }
 

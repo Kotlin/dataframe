@@ -11,6 +11,8 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.remove
+import org.jetbrains.kotlinx.dataframe.api.replace
+import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
@@ -326,6 +328,12 @@ internal fun <T> List<ColumnWithPath<T>>.roots(): List<ColumnWithPath<T>> {
     return emptyRoot.topmostChildren { it.data != null }.map { it.data!! }
 }
 
+/**
+ * Returns a new list of column paths, except the ones inside [columns].
+ * NOTE: The structure is not kept the same; if a column is removed, its parent will be removed as well, and
+ * all its siblings will be lifted out of the group. This also happens if a column is "removed" that does
+ * not exist in [this].
+ */
 internal fun List<ColumnWithPath<*>>.allColumnsExcept(columns: Iterable<ColumnWithPath<*>>): List<ColumnWithPath<*>> {
     if (isEmpty()) return emptyList()
     val fullTree = collectTree()
@@ -341,17 +349,47 @@ internal fun List<ColumnWithPath<*>>.allColumnsExcept(columns: Iterable<ColumnWi
     return subtrees.map { it.data!!.addPath(it.pathFromRoot()) }
 }
 
+/**
+ * Returns a new list of column paths, except the ones inside [columns].
+ * NOTE: ColumnGroups are adapted to keep their structure. If a column inside a column group is excepted, it will
+ *   be removed from the group.
+ */
 internal fun List<ColumnWithPath<*>>.allColumnsExceptKeepingStructure(columns: Iterable<ColumnWithPath<*>>): List<ColumnWithPath<*>> {
     if (isEmpty()) return emptyList()
     val fullTree = collectTree()
-    columns.forEach {
-        val node = fullTree.getOrPut(it.path).asNullable()
-        if (node != null) {
-            node.allChildren().forEach { it.data = null }
-            node.data = null
-            node.parent?.let {
-                val current = it.data as ColumnGroup<*>? ?: return@let
-                it.data = current.remove(node.name).asColumnGroup(current.name).addPath(current.path())
+    for (columnToExcept in columns) {
+
+        // grab the node representing the column from the tree
+        val nodeToExcept = fullTree.getOrPut(columnToExcept.path).asNullable()
+        if (nodeToExcept != null) {
+            // remove the children from the node (if it's a column group) and remove its data (the column itself)
+            nodeToExcept.allChildren().forEach { it.data = null }
+            nodeToExcept.data = null
+
+            // we need to update the data of the parent node(s) to reflect the removal of the column
+            if (nodeToExcept.parent != null) {
+                // we grab the data of the parent node, which should be a column group
+                // treat it as a DF to remove the column to except from it and
+                // convert it back to a column group
+                val current = nodeToExcept.parent.data as ColumnGroup<*>? ?: continue
+                nodeToExcept.parent.data = current
+                    .remove(nodeToExcept.name)
+                    .asColumnGroup(current.name)
+                    .addPath(current.path())
+
+                // now we update the parent's parents recursively with new column group instances
+                var parent = nodeToExcept.parent.parent
+                var currentNode = nodeToExcept.parent!!
+                while (parent != null) {
+                    val parentData = parent.data as ColumnGroup<*>? ?: break
+                    parent.data = parentData
+                        .replace(currentNode.name).with { currentNode.data!! }
+                        .asColumnGroup(parentData.name)
+                        .addPath(parentData.path())
+
+                    currentNode = parent
+                    parent = parent.parent
+                }
             }
         }
     }
