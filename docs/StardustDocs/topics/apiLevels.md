@@ -128,6 +128,8 @@ df.add("lastName") { name.split(",").last() }
 
 </tabs>
 
+The `titanic.csv` file could be found [here](https://github.com/Kotlin/dataframe/blob/master/data/titanic.csv).
+
 # Comparing the APIs
 
 The [String API](stringApi.md) is the simplest and unsafest of them all. The main advantage of it is that it can be
