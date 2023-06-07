@@ -26,6 +26,8 @@ df.add("lastName") { name.split(",").last() }
 
 <!---END-->
 
+The `titanic.csv` file could be found [here](https://github.com/Kotlin/dataframe/blob/master/data/titanic.csv).
+
 In notebooks, extension properties are generated for [`DataSchema`](schemas.md) that is extracted from [`DataFrame`](DataFrame.md) 
 instance after REPL line execution. 
 After that [`DataFrame`](DataFrame.md)  variable is typed with its own [`DataSchema`](schemas.md), so only valid extension properties corresponding to actual columns in DataFrame will be allowed by the compiler and suggested by completion.

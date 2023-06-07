@@ -64,6 +64,8 @@ df.groupBy { pclass }.aggregate {
 }
 ```
 
+The `titanic.csv` file could be found [here](https://github.com/Kotlin/dataframe/blob/master/data/titanic.csv).
+
 **Create:**
 ```kotlin
 // create columns

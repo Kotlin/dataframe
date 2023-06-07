@@ -48,3 +48,5 @@ val passengers = DataFrame.read("titanic.csv")
 ```
 
 <!---END-->
+
+The `titanic.csv` file could be found [here](https://github.com/Kotlin/dataframe/blob/master/data/titanic.csv).
