@@ -77,9 +77,8 @@ import org.jetbrains.kotlinx.dataframe.api.*
 
 ## Import data
 
-Download and save our file to the root directory of your project:
+Download the file `movies.csv` from [here](https://github.com/Kotlin/dataframe/blob/master/data/movies.csv) to the root directory of your project:
 
-<res resource-id="movie-sample-data"/>
 
 Delete the `println()` functions and comments from your main function in `Main.kt`.
 
