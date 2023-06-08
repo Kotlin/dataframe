@@ -19,11 +19,11 @@ and generate extension properties.
 
 Here's a list of the most popular use cases with Data Schemas.
 
-* [**DataSchema workflow in Jupyter**](schemasJupyter.md) <br/>
-  The most popular use case with an explanation.
-
 * [**Data Schemas in Gradle projects**](schemasGradle.md) <br/>
   If you are developing a server application and building it with Gradle.
+
+* [**DataSchema workflow in Jupyter**](schemasJupyter.md) <br/>
+  If you prefer Notebooks.
 
 * [**Schema inheritance**](schemasInheritance.md) <br/>
   It's worth knowing how to reuse Data Schemas generated earlier.
@@ -35,6 +35,9 @@ Here's a list of the most popular use cases with Data Schemas.
   Sometimes it is convenient to extract reusable code from Jupyter Notebook into the Kotlin JVM library.
   Schema interfaces should also be extracted if this code uses Custom Data Schemas.
 
+* [**Import OpenAPI Schemas in Gradle project**](schemasImportOpenApiGradle.md) <br/>
+  When you need to take data from the endpoint with OpenAPI Schema.
+
 * [**Import Data Schemas, e.g. from OpenAPI, in Jupyter**](schemasImportOpenApiJupyter.md) <br/>
-  Similar to [importing OpenAPI Data Schemas in Gradle projects](schemasGradle.md#openapi-schemas), 
+  Similar to [importing OpenAPI Data Schemas in Gradle projects](schemasImportOpenApiGradle.md), 
   you can also do this in Jupyter Notebooks.
