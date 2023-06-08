@@ -94,6 +94,16 @@ or specific version:
   * `ColumnGroup` — contains columns
   * `FrameColumn` — contains dataframes
 
+
+## Kotlin, Kotlin Jupyter, OpenAPI, Arrow and JDK versions
+
+This table shows the mapping between main library components versions and minimum supported Java versions.
+
+| Kotlin DataFrame Version | Minimum Java Version | Kotlin Version | Kotlin Jupyter Version | OpenAPI version | Apache Arrow version |
+|--------------------------|----------------------|----------------|------------------------|-----------------|----------------------|
+| 0.10.0                   | 8                    |1.8.20          | 0.11.0-358             |2.1.13           | 11.0.0               |
+| 0.10.1                   | 8                    |1.8.20          | 0.11.0-358             |2.1.13           | 11.0.0               |
+
 ## Usage example
 
 **Create:**
