@@ -3,9 +3,7 @@ package org.jetbrains.kotlinx.dataframe.columns
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
-import org.jetbrains.kotlinx.dataframe.impl.columns.transform
+import org.jetbrains.kotlinx.dataframe.impl.columns.*
 
 /**
  * ## ColumnsResolver

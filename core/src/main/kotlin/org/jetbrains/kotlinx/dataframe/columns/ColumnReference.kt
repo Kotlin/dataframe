@@ -10,7 +10,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.RenamedColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.getColumn
-import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.KProperty
 
 /**

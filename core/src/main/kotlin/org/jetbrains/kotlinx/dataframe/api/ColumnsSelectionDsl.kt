@@ -11,7 +11,6 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
-import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.CommonRenameDocs
 import org.jetbrains.kotlinx.dataframe.columns.*
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
@@ -27,7 +26,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.DistinctColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
-import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExcept
 import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExceptKeepingStructure
 import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
@@ -2491,7 +2489,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
             } ?: emptyList()
         }
 
-
     /** @include [SingleColumn.select] */
     public operator fun <C, R> SingleColumn<DataRow<C>>.invoke(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         select(selector)
@@ -2550,7 +2547,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     /** @include [ColumnPath.select] */
     public operator fun <R> ColumnPath.invoke(selector: ColumnsSelector<*, R>): ColumnSet<R> =
         select(selector)
-
 
     @Deprecated(
         message = "Nested select is reserved for ColumnsSelector/ColumnsSelectionDsl behavior. " +
@@ -4313,7 +4309,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     private interface CommonFilterDocs {
 
         interface ExampleArg
-
     }
 
     /**
@@ -4386,7 +4381,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      */
     public fun ColumnPath.filterChildren(predicate: ColumnFilter<*>): TransformableColumnSet<*> =
         colGroup(this).filter(predicate)
-
 
     // endregion
 
@@ -4810,7 +4804,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun ColumnPath.allExcept(selector: ColumnsSelector<*, *>): ColumnSet<*> =
         colGroup(this).allExcept(selector)
-
 
     /** TODO tbd */
     public operator fun <C> SingleColumn<DataRow<C>>.minus(selector: ColumnsSelector<C, *>): ColumnSet<*> =
@@ -5617,7 +5610,6 @@ public fun <C> ColumnPath.asColumnGroup(): ColumnAccessor<DataRow<C>> = columnGr
 
 /** @include [AsColumnGroupDocs] */
 public fun ColumnPath.asColumnGroup(): ColumnAccessor<DataRow<*>> = columnGroup<Any?>(this)
-
 
 internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) -> Boolean): ColumnsSelector<T, C> =
     { this@filter(it, it).asColumnSet().filter(predicate) }

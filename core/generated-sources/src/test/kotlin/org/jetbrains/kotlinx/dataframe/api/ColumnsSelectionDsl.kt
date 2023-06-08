@@ -6,11 +6,9 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value
-import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.jetbrains.kotlinx.dataframe.samples.api.age
 import org.jetbrains.kotlinx.dataframe.samples.api.city
@@ -181,7 +179,6 @@ open class ColumnsSelectionDslTests : TestBase() {
 
             df.select { colGroup("name").col(Name::firstName) },
         ).shouldAllBeEqual()
-
 
         listOf(
             df.select { col(0) },
@@ -1085,6 +1082,5 @@ open class ColumnsSelectionDslTests : TestBase() {
 
             select { this { age } }
         }
-
     }
 }

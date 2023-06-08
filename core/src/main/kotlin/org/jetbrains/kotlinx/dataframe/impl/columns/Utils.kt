@@ -358,7 +358,6 @@ internal fun List<ColumnWithPath<*>>.allColumnsExceptKeepingStructure(columns: I
     if (isEmpty()) return emptyList()
     val fullTree = collectTree()
     for (columnToExcept in columns) {
-
         // grab the node representing the column from the tree
         val nodeToExcept = fullTree.getOrPut(columnToExcept.path).asNullable()
         if (nodeToExcept != null) {

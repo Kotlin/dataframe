@@ -52,7 +52,6 @@ public data class ColumnPath(val path: List<String>) : List<String> by path, Col
 
     public fun replaceLast(name: String): ColumnPath = ColumnPath(if (path.size < 2) listOf(name) else path.dropLast(1) + name)
 
-
     /**
      * Returns a shortened [ColumnPath] containing just the last [last] elements.
      *
