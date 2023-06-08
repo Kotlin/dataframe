@@ -69,7 +69,7 @@ val df2 = df.add("c") { a + b }
 
 <tip>
 
-To enable extension properties generation you should use [dataframe plugin](gradle.md) 
+To enable extension properties generation you should use [dataframe plugin](schemasGradle.md) 
 for Gradle or [Kotlin jupyter kernel](installation.md)
 
 </tip>

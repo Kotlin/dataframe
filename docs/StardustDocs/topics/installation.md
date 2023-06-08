@@ -156,7 +156,7 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
 </tabs>
 
 Note that it's better to use the same version for a library and plugin to avoid unpredictable errors.
-After plugin configuration you can try it out with [example](gradle.md#annotation-processing).
+After plugin configuration you can try it out with [example](schemasGradle.md#annotation-processing).
 
 ### Custom configuration
 
