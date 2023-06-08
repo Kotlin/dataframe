@@ -2,9 +2,10 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Schemas-->
 
-Sometimes it is convenient to extract reusable code from Jupyter notebook into Kotlin JVM library. If this code
-uses [Custom data schemas](#custom-data-schemas), schema interfaces should also be extracted. In order to enable support
-them in Jupyter, you should register them in
+Sometimes it is convenient to extract reusable code from Jupyter Notebook into the Kotlin JVM library.
+Schema interfaces should also be extracted if this code uses [Custom Data Schemas](schemasCustom.md). 
+
+In order to enable support them in Jupyter, you should register them in
 library [integration class](https://github.com/Kotlin/kotlin-jupyter/blob/master/docs/libraries.md) with `useSchema`
 function:
 

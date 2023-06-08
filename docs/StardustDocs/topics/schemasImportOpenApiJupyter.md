@@ -2,8 +2,10 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Schemas-->
 
-Similar to [importing OpenAPI data schemas in Gradle projects](gradle.md#openapi-schemas), you can also
-do this in Jupyter notebooks. There is only a slight difference in notation:
+Similar to [importing OpenAPI Data Schemas in Gradle projects](schemasGradle.md#openapi-schemas),
+you can also do this in Jupyter Notebooks. 
+
+There is only a slight difference in notation:
 
 Import the schema using any path (`String`), `URL`, or `File`:
 

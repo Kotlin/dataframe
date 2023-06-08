@@ -11,5 +11,30 @@ It ignores order of columns in [`DataFrame`](DataFrame.md), but tracks column hi
 
 In Jupyter environment compile-time [`DataFrame`](DataFrame.md) schema is synchronized with real-time data after every cell execution.
 
-In IDEA projects, you can use the [Gradle plugin](gradle.md#configuration) to extract schema from the dataset
+In IDEA projects, you can use the [Gradle plugin](schemasGradle.md#configuration) to extract schema from the dataset
 and generate extension properties.
+
+
+## Popular use cases with Data Schemas
+
+Here's a list of the most popular use cases with Data Schemas.
+
+* [**DataSchema workflow in Jupyter**](schemasJupyter.md) <br/>
+  The most popular use case with an explanation.
+
+* [**Data Schemas in Gradle projects**](schemasGradle.md) <br/>
+  If you are developing a server application and building it with Gradle.
+
+* [**Schema inheritance**](schemasInheritance.md) <br/>
+  It's worth knowing how to reuse Data Schemas generated earlier.
+
+* [**Custom Data Schemas**](schemasCustom.md) <br/> 
+  Sometimes it is necessary to create your own scheme.
+
+* [**Use external Data Schemas in Jupyter**](schemasExternalJupyter.md) <br/>
+  Sometimes it is convenient to extract reusable code from Jupyter Notebook into the Kotlin JVM library.
+  Schema interfaces should also be extracted if this code uses Custom Data Schemas.
+
+* [**Import Data Schemas, e.g. from OpenAPI, in Jupyter**](schemasImportOpenApiJupyter.md) <br/>
+  Similar to [importing OpenAPI Data Schemas in Gradle projects](schemasGradle.md#openapi-schemas), 
+  you can also do this in Jupyter Notebooks.

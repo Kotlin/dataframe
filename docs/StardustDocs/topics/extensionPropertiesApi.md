@@ -30,7 +30,7 @@ In notebooks, extension properties are generated for [`DataSchema`](schemas.md) 
 instance after REPL line execution. 
 After that [`DataFrame`](DataFrame.md)  variable is typed with its own [`DataSchema`](schemas.md), so only valid extension properties corresponding to actual columns in DataFrame will be allowed by the compiler and suggested by completion.
 
-Extension properties can be generated in IntelliJ IDEA using the [Kotlin Dataframe Gradle plugin](gradle.md#configuration).
+Extension properties can be generated in IntelliJ IDEA using the [Kotlin Dataframe Gradle plugin](schemasGradle.md#configuration).
 
 <warning>
 In notebooks generated properties won't appear and be updated until the cell has been executed. It often means that you have to introduce new variable frequently to sync extension properties with actual schema
