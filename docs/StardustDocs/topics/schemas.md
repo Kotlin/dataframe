@@ -20,25 +20,25 @@ and generate extension properties.
 
 Here's a list of the most popular use cases for Data Schemas.
 
-* [**Data Schemas in Gradle projects**](schemasGradle.md) <br/>
+* [**Data Schemas in Gradle projects**](schemasGradle.md)<br/>
   If you are developing a server application and building it with Gradle.
 
-* [**DataSchema workflow in Jupyter**](schemasJupyter.md) <br/>
+* [**DataSchema workflow in Jupyter**](schemasJupyter.md)<br/>
   If you prefer Notebooks.
 
-* [**Schema inheritance**](schemasInheritance.md) <br/>
+* [**Schema inheritance**](schemasInheritance.md)<br/>
   It's worth knowing how to reuse Data Schemas generated earlier.
 
-* [**Custom Data Schemas**](schemasCustom.md) <br/> 
+* [**Custom Data Schemas**](schemasCustom.md)<br/>
   Sometimes it is necessary to create your own schema.
 
-* [**Use external Data Schemas in Jupyter Notebook**](schemasExternalJupyter.md) <br/>
+* [**Use external Data Schemas in Jupyter Notebook**](schemasExternalJupyter.md)<br/>
   Sometimes it is convenient to extract reusable code from Jupyter Notebook into the Kotlin JVM library.
   Schema interfaces should also be extracted if this code uses custom Data Schemas.
 
-* [**Import OpenAPI Schemas in a Gradle project**](schemasImportOpenApiGradle.md) <br/>
+* [**Import OpenAPI Schemas in a Gradle project**](schemasImportOpenApiGradle.md)<br/>
   When you are using a JSON API that provides an OpenAPI schema.
 
-* [**Import Data Schemas, e.g., from OpenAPI, in Jupyter**](schemasImportOpenApiJupyter.md) <br/>
-  Similar to [importing OpenAPI Data Schemas in Gradle projects](schemasImportOpenApiGradle.md), 
+* [**Import Data Schemas, e.g., from OpenAPI, in Jupyter**](schemasImportOpenApiJupyter.md)<br/>
+  Similar to [importing OpenAPI Data Schemas in Gradle projects](schemasImportOpenApiGradle.md),
   you can also do this in Jupyter Notebooks.

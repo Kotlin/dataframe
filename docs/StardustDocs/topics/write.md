@@ -156,15 +156,16 @@ val featherByteArray: ByteArray = df.saveArrowFeatherToByteArray()
 ```
 
 <!---END-->
-(creating byte array). Nested frames and columns with mixed or unsupported types will be saved as String.
+(Creating a byte array). Nested frames and columns with mixed or unsupported types will be saved as String.
 
-The second approach is a bit more tricky. You have to specify schema itself and casting behavior mode as `ArrowWriter` parameters.
+The second approach is a bit more tricky.
+You have to specify the schema itself and casting behavior mode as `ArrowWriter` parameters.
 Behavior `Mode` has four independent switchers: `restrictWidening`, `restrictNarrowing`, `strictType`, `strictNullable`.
 You can use `Mode.STRICT` (this is default), `Mode.LOYAL` or any combination you want.
 The `ArrowWriter` object should be closed after using because Arrow uses random access buffers not managed by Java GC.
 Finally, you can specify a callback to be invoked if some data is lost or can not be saved according to your schema.
 
-Here is full example:
+Here is a full example:
 <!---FUN writeArrowPerSchema-->
 
 ```kotlin
@@ -196,7 +197,7 @@ df.arrowWriter(
 ```
 
 <!---END-->
-On executing you should get two warnings:
+On executing, you should get two warnings:
 >Column "city" contains nulls but expected not nullable
 
 and

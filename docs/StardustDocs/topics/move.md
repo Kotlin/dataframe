@@ -13,7 +13,7 @@ pathSelector: DataFrame.(DataColumn) -> ColumnPath
 
 See [Column Selectors](ColumnSelectors.md)
 
-Can be used to change columns hierarchy by providing `ColumnPath` for every moved column
+It can be used to change column hierarchy by providing `ColumnPath` for every moved column
 
 <!---FUN move-->
 

@@ -38,7 +38,8 @@ val initialData = interestingRepos
 
 <!---END-->
 
-Using unfold you can convert `response` to a [`ColumnGroup`](DataColumn.md#columngroup) and use rich [modify](modify.md) capabilities.
+Using unfold, you can convert `response` to a [`ColumnGroup`](DataColumn.md#columngroup)
+and use rich [modify](modify.md) capabilities.
 
 <!---FUN convertToColumnGroup-->
 

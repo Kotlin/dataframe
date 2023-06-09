@@ -4,7 +4,7 @@
 
 Data transformation pipeline usually consists of several modification operations, such as filtering, sorting, grouping, pivoting, adding/removing columns etc.
 The Kotlin DataFrame API is designed in functional style so that the whole processing pipeline can be represented as a single statement with a sequential chain of operations.
-[`DataFrame`](DataFrame.md) object is immutable and all operations return a new [`DataFrame`](DataFrame.md) instance reusing underlying data structures as much as possible.
+[`DataFrame`](DataFrame.md) object is immutable, and all operations return a new [`DataFrame`](DataFrame.md) instance reusing underlying data structures as much as possible.
 
 <!---FUN multiCallOperations-->
 
@@ -20,7 +20,8 @@ df.update { age }.where { city == "Paris" }.with { it - 5 }
 
 <tip>
 
-You can play with "people" dataset that is used in present guide [here](https://datalore.jetbrains.com/view/notebook/aOTioEClQQrsZZBKeUPAQj)
+You can play with the "people"
+dataset that is used in a present guide [here](https://datalore.jetbrains.com/view/notebook/aOTioEClQQrsZZBKeUPAQj)
 
 </tip>
 
@@ -42,7 +43,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [add](add.md) — add columns
 * [addId](add.md#addid) — add `id` column
 * [append](append.md) — add rows
-* [columns](columns.md) / [columnNames](columnNames.md) / [columnTypes](columnTypes.md) — get list of top-level columns, column names or column types
+* [columns](columns.md) / [columnNames](columnNames.md) / [columnTypes](columnTypes.md) — get a list of top-level columns, column names or column types
 * [columnsCount](columnsCount.md) — number of top-level columns
 * [concat](concat.md) — union rows from several [`DataFrames`](DataFrame.md)
 * [convert](convert.md) — change column values and/or column types
@@ -66,8 +67,8 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [group](group.md) — group columns into [`ColumnGroup`](DataColumn.md#columngroup)
 * [groupBy](groupBy.md) — group rows by key columns
 * [head](head.md) — get first 5 rows of [`DataFrames`](DataFrame.md)
-* [implode](implode.md) — collapse column values into lists grouping by other columns
-* [inferType](inferType.md) — infer column type from column values
+* [implode](implode.md) — collapse column values into lists grouped by other columns
+* [inferType](inferType.md) — infer a column type from column values
 * [insert](insert.md) — insert column
 * [join](join.md) — join [`DataFrames`](DataFrame.md) by key columns
 * [last](last.md) / [lastOrNull](last.md#lastornull) — find last row by condition 
@@ -87,7 +88,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [reverse](reverse.md) — reverse rows 
 * [rows](rows.md) / [rowsReversed](rows.md#rowsreversed) — get rows in direct or reversed order
 * [rowsCount](rowsCount.md) — number of rows
-* [schema](schema.md) — schema of columns: names, types and hierarchy
+* [schema](schema.md) — schema of columns: names, types, and hierarchy
 * [select](select.md) — select subset of columns
 * [shuffle](shuffle.md) — reorder rows randomly 
 * [single](single.md) / [singleOrNull](single.md#singleornull) — get single row by condition

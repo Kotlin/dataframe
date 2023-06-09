@@ -2,9 +2,9 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 
-Computes the mean of values.
+Compute the means of values.
 
-Is available for numeric columns. Computed value has type `Double`. Use `skipNA` flag to skip `null` and `NaN` values.
+Is available for numeric columns. Computed value has a type `Double`. Use a `skipNA` flag to skip `null` and `NaN` values.
 
 <!---FUN meanModes-->
 
