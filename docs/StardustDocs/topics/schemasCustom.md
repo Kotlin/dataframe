@@ -3,7 +3,7 @@
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Schemas-->
 
 You can define your own [`DataSchema`](schema.md) interfaces and use them in functions and classes to represent [`DataFrame`](DataFrame.md) with
-specific set of columns:
+a specific set of columns:
 
 ```kotlin
 @DataSchema
@@ -34,7 +34,7 @@ val df = dataFrameOf("name", "age", "weight")(
 
 <!---END-->
 
-Schema of `df` is compatible with `Person`, so auto-generated schema interface will inherit from it:
+Schema of `df` is compatible with `Person`, so the auto-generated schema interface will inherit from it:
 
 ```kotlin
 @DataSchema(isOpen = false)

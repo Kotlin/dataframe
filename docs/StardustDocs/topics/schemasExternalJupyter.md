@@ -5,7 +5,7 @@
 Sometimes it is convenient to extract reusable code from Jupyter Notebook into the Kotlin JVM library.
 Schema interfaces should also be extracted if this code uses [Custom Data Schemas](schemasCustom.md). 
 
-In order to enable support them in Jupyter, you should register them in
+In order to enable to support them in Jupyter, you should register them in
 library [integration class](https://github.com/Kotlin/kotlin-jupyter/blob/master/docs/libraries.md) with `useSchema`
 function:
 
