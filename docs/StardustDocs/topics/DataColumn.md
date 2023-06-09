@@ -7,9 +7,9 @@ See [how to create columns](createColumn.md)
 
 ### Properties
 * `name: String` — name of the column, should be unique within containing dataframe
-* `path: ColumnPath` — path to the column, depends on the way column was retrieved from dataframe
+* `path: ColumnPath` — path to the column, depends on the way column was retrieved from the dataframe
 * `type: KType` — type of elements in the column
-* `hasNulls: Boolean` — flag indicating whether column contains `null` values
+* `hasNulls: Boolean` — flag indicating whether a column contains `null` values
 * `values: Iterable<T>` — column data
 * `size: Int` — number of elements in the column
 
@@ -24,7 +24,7 @@ It can store values of primitive (integers, strings, decimals etc.) or reference
 
 #### ColumnGroup
 
-Container for nested columns. Is used to create column hierarchy. 
+Container for nested columns. It is used to create column hierarchy. 
 
 #### FrameColumn
 
@@ -36,7 +36,11 @@ Special case of [`ValueColumn`](#valuecolumn) that stores other [`DataFrames`](D
 
 ## Column accessors
 
-`ColumnAccessors` are used for [typed data access](columnAccessorsApi.md) in [`DataFrame`](DataFrame.md). `ColumnAccessor` stores column [`name`](#properties) (for top-level columns) or column path (for nested columns), has type argument that corresponds to [`type`](#properties) of thep column, but it doesn't contain any actual data.
+`ColumnAccessors` are used for [typed data access](columnAccessorsApi.md) in [`DataFrame`](DataFrame.md).
+`ColumnAccessor`
+stores column [`name`](#properties) (for top-level columns) or column path (for nested columns),
+has type argument that corresponds to [`type`](#properties) of the column,
+but it doesn't contain any actual data.
 
 <!---FUN columnAccessorsUsage-->
 
@@ -45,11 +49,11 @@ val age by column<Int>()
 
 // Access fourth cell in the "age" column of dataframe `df`.
 // This expression returns `Int` because variable `age` has `ColumnAccessor<Int>` type.
-// If dataframe `df` has no column "age" or column "age" has type which is incompatible with `Int`,
-// runtime exception will be thrown.
+// If dataframe `df` has no column "age" or column "age" has a type which is incompatible with `Int`,
+//  a runtime exception will be thrown.
 df[age][3] + 5
 
-// Access first cell in the "age" column of dataframe `df`.
+// Access the first cell in the "age" column of dataframe `df`.
 df[0][age] * 2
 
 // Returns new dataframe sorted by age column (ascending)
@@ -74,7 +78,7 @@ val name by column<String>()
 
 <!---END-->
 
-To assign column name explicitly, pass it as an argument.
+To assign a column name explicitly, pass it as an argument.
 
 <!---FUN createColumnAccessorRenamed-->
 
@@ -106,7 +110,7 @@ val firstName by name.column<String>()
 
 <!---END-->
 
-You can also create virtual accessor that doesn't point to a real column but computes some expression on every data access:
+You can also create a virtual accessor that doesn't point to a real column but computes some expression on every data access:
 
 <!---FUN columnAccessorComputed-->
 <tabs>

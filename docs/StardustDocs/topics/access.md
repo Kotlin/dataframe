@@ -18,5 +18,5 @@ df.values() // Sequence<Any?>
 **Learn how to:**
 * [Access data by index](indexing.md)
 * [Iterate over data](iterate.md)
-* [Get single row](getRow.md)
+* [Get a single row](getRow.md)
 * [Get single column](getColumns.md)

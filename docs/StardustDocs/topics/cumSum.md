@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 
-Computes cumulative sum of values in selected columns.
+Computes a cumulative sum of values in selected columns.
 
 ```text
 cumSum(skipNA = true) [ { columns } ]

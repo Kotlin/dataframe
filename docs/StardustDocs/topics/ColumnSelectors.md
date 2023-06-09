@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
-[`DataFrame`](DataFrame.md) provides DSL for selecting arbitrary set of columns.
+[`DataFrame`](DataFrame.md) provides a DSL for selecting an arbitrary set of columns.
 
 Column selectors are used in many operations:
 
@@ -187,19 +187,19 @@ df.select {
     Person::name.single { it.name().startsWith("first") }
 }
 
-// recursive traversal of all columns, excluding ColumnGroups from result
+// recursive traversal of all columns, excluding ColumnGroups from a result
 df.select { cols { !it.isColumnGroup() }.recursively() }
 
-// depth-first-search traversal of all columns, including ColumnGroups in result
+// depth-first-search traversal of all columns, including ColumnGroups in a result
 df.select { all().recursively() }
 
 // recursive traversal with condition
 df.select { cols { it.name().contains(":") }.recursively() }
 
-// recursive traversal of columns of given type
+// recursive traversal of columns of a given type
 df.select { colsOf<String>().rec() }
 
-// all columns except given column set
+// all columns except a given column set
 df.select { except { colsOf<String>() } }
 
 // union of column sets

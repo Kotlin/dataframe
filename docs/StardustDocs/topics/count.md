@@ -12,7 +12,7 @@ df.count()
 
 <!---END-->
 
-Pass [row condition](DataRow.md#row-conditions) to count number of rows that satisfy to that condition:
+Pass [row condition](DataRow.md#row-conditions) to count the number of rows that satisfy that condition:
 
 <!---FUN countCondition-->
 

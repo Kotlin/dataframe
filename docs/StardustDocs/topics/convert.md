@@ -1,7 +1,7 @@
 [//]: # (title: convert)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Returns [`DataFrame`](DataFrame.md) with changed values in some columns. Allows to change column types.
+Returns [`DataFrame`](DataFrame.md) with changed values in some columns. Allows changing column types.
 
 ```text
 convert { columnsSelector }

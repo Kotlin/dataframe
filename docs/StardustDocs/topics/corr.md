@@ -21,6 +21,6 @@ If [`ColumnGroup`](DataColumn.md#columngroup) is passed as target column for cor
 
 Resulting [`DataFrame`](DataFrame.md) will have `n1` rows and `n2+1` columns, where `n1` and `n2` are numbers of columns in `columns1` and `columns2` correspondingly.
 
-First column will have the name "column" and will contain names of columns in `column1`. Other columns will have the same names as in `columns2` and will contain computed correlation coefficients.
+The first column will have the name "column" and will contain names of columns in `column1`. Other columns will have the same names as in `columns2` and will contain computed correlation coefficients.
 
-If exactly one [`ColumnGroup`](DataColumn.md#columngroup) is passed in `columns1`, first column in output will have its name. 
+If exactly one [`ColumnGroup`](DataColumn.md#columngroup) is passed in `columns1`, the first column in output will have its name. 

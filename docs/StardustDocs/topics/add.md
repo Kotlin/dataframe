@@ -5,7 +5,7 @@
 Returns [`DataFrame`](DataFrame.md) which contains all columns from original [`DataFrame`](DataFrame.md) followed by newly added columns. 
 Original [`DataFrame`](DataFrame.md) is not modified.
 
-## Create new column and add it to [`DataFrame`](DataFrame.md)
+## Create a new column and add it to [`DataFrame`](DataFrame.md)
 
 ```text
 add(columnName: String) { rowExpression }
@@ -44,7 +44,8 @@ df.add("year of birth") { 2021 - "age"<Int>() }
 
 See [row expressions](DataRow.md#row-expressions)
 
-You can use `newValue()` function to access value that was already calculated for preceding row. It is helpful for recurrent computations:
+You can use `newValue()` function to access value that was already calculated for the preceding row.
+It is helpful for recurrent computations:
 
 <!---FUN addRecurrent-->
 
@@ -223,7 +224,9 @@ df.add(df1, df2)
 
 ## addId
 
-Adds column with sequential values 0, 1, 2,... New column will be added in the beginning of columns list and will become the first column in [`DataFrame`](DataFrame.md).
+Adds column with sequential values 0, 1, 2,...
+New column will be added in the beginning of a column list
+and will become the first column in [`DataFrame`](DataFrame.md).
 
 ```
 addId(name: String = "id")

@@ -5,7 +5,9 @@ This section describes ways to create [`DataColumn`](DataColumn.md).
 
 ### columnOf
 
-Returns new column with given elements. Column [`type`](DataColumn.md#properties) is deduced from compile-time type of elements, column [`name`](DataColumn.md#properties) is taken from the name of the variable.
+Returns new column with given elements.
+Column [`type`](DataColumn.md#properties) is deduced from a compile-time type of elements,
+column [`name`](DataColumn.md#properties) is taken from the name of the variable.
 
 <!---FUN createValueByColumnOf-->
 
@@ -66,9 +68,9 @@ listOf("Alice", "Bob").toColumn("name")
 
 <!---END-->
 
-To compute column type at runtime by scanning through actual values, set `Infer.Type` option. 
+To compute a column type at runtime by scanning through actual values, set `Infer.Type` option. 
 
-To inspect values only for nullability set `Infer.Nulls` option.
+To inspect values only for a nullability set `Infer.Nulls` an option.
 
 <!---FUN createValueColumnInferred-->
 
@@ -84,7 +86,7 @@ values.toColumn("data", Infer.Nulls) // type: Any
 
 ### toColumnOf
 
-Converts [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of values into column of given type
+Converts [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of values into column of a given type
 
 <!---FUN createValueColumnOfType-->
 
