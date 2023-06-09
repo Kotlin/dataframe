@@ -44,7 +44,7 @@ df.add("year of birth") { 2021 - "age"<Int>() }
 
 See [row expressions](DataRow.md#row-expressions)
 
-You can use `newValue()` function to access value that was already calculated for the preceding row.
+You can use the `newValue()` function to access value that was already calculated for the preceding row.
 It is helpful for recurrent computations:
 
 <!---FUN addRecurrent-->
@@ -224,8 +224,8 @@ df.add(df1, df2)
 
 ## addId
 
-Adds column with sequential values 0, 1, 2,...
-New column will be added in the beginning of a column list
+Adds a column with sequential values 0, 1, 2,...
+The new column will be added in the beginning of the column list
 and will become the first column in [`DataFrame`](DataFrame.md).
 
 ```

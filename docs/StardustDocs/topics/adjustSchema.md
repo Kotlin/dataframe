@@ -1,6 +1,6 @@
 [//]: # (title: Adjust schema)
 
-[`DataFrame`](DataFrame.md) interface has type argument `T` that doesn't affect the contents of [`DataFrame`](DataFrame.md), 
+The [`DataFrame`](DataFrame.md) interface has type argument `T` that doesn't affect the contents of [`DataFrame`](DataFrame.md), 
 but marks [`DataFrame`](DataFrame.md) with a type that represents the data schema that this [`DataFrame`](DataFrame.md) is supposed to have.
 This argument is used to generate [extension properties](extensionPropertiesApi.md) for typed data access.
 

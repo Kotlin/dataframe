@@ -1,7 +1,7 @@
 [//]: # (title: cast)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Changes type argument of [`DataFrame`](DataFrame.md) without changing its contents.
+Changes the type argument of the [`DataFrame`](DataFrame.md) instance without changing its contents.
 
 ```kotlin
 cast<T>(verify = false)
@@ -9,10 +9,10 @@ cast<T>(verify = false)
 
 **Parameters:**
 * `verify: Boolean = false` —
-  when `true`, throws exception if [`DataFrame`](DataFrame.md) doesn't match the given schema. 
-Otherwise, just change a format type without actual data check.
+  when `true`, the function throws an exception if the [`DataFrame`](DataFrame.md) instance doesn't match the given schema. 
+Otherwise, it just changes the format type without actual data checks.
 
-Use this operation to change a formal type of [`DataFrame`](DataFrame.md)
+Use this operation to change the formal type of a [`DataFrame`](DataFrame.md) instance
 to match the expected schema and enable generated [extension properties](extensionPropertiesApi.md) for it.
 
 ```kotlin

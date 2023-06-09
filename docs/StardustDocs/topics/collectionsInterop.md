@@ -8,7 +8,7 @@ _Kotlin DataFrame_ and _Kotlin Collection_ represent two different approaches to
 * `Collection` stores data by records/rows
 
 Although [`DataFrame`](DataFrame.md)
-doesn't implement [`Collection`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/#kotlin.collections.Collection)
+doesn't implement the [`Collection`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/#kotlin.collections.Collection)
 or [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/)
 interface, it has many similar operations,
 such as [`filter`](filter.md), [`take`](sliceRows.md#take),
@@ -77,12 +77,12 @@ val df2 = df.add("c") { a + b }
 
 <tip>
 
-To enable extension properties generation you should use [dataframe plugin](schemasGradle.md) 
-for Gradle or [Kotlin jupyter kernel](installation.md)
+To enable extension properties generation, you should use the [DataFrame plugin](schemasGradle.md) 
+for Gradle or the [Kotlin Jupyter kernel](installation.md)
 
 </tip>
 
-After data is transformed, [`DataFrame`](DataFrame.md) can be exported 
+After your data is transformed, [`DataFrame`](DataFrame.md) instances can be exported 
 into [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/) of another data class using [toList](toList.md) or [toListOf](toList.md#tolistof) extensions:
 
 <!---FUN listInterop4-->
