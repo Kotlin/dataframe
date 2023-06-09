@@ -16546,14 +16546,14 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region ColumnsResolver
 
-    public infix fun <C> ColumnSet<C>.except(other: ColumnsResolver<*>): ColumnSet<*> =
+    public infix fun <C> ColumnSet<C>.except(other: ColumnsResolver<*>): ColumnSet<C> =
         createColumnSet { context ->
             this@except
                 .resolve(context)
                 .allColumnsExceptKeepingStructure(other.resolve(context))
-        }
+        } as ColumnSet<C>
 
-    public fun <C> ColumnSet<C>.except(vararg other: ColumnsResolver<*>): ColumnSet<*> =
+    public fun <C> ColumnSet<C>.except(vararg other: ColumnsResolver<*>): ColumnSet<C> =
         except(other.toColumnSet())
 
     @Deprecated("Use allExcept instead", ReplaceWith("this.allExcept(other)"))
@@ -16592,10 +16592,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region String
 
-    public infix fun <C> ColumnSet<C>.except(other: String): ColumnSet<*> =
+    public infix fun <C> ColumnSet<C>.except(other: String): ColumnSet<C> =
         except(col(other))
 
-    public fun <C> ColumnSet<C>.except(vararg others: String): ColumnSet<*> =
+    public fun <C> ColumnSet<C>.except(vararg others: String): ColumnSet<C> =
         except(others.toColumnSet())
 
     public infix fun SingleColumn<DataRow<*>>.allExcept(other: String): ColumnSet<*> =
@@ -16626,10 +16626,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region KProperty
 
-    public infix fun <C> ColumnSet<C>.except(other: KProperty<C>): ColumnSet<*> =
+    public infix fun <C> ColumnSet<C>.except(other: KProperty<C>): ColumnSet<C> =
         except(col(other))
 
-    public fun <C> ColumnSet<C>.except(vararg others: KProperty<C>): ColumnSet<*> =
+    public fun <C> ColumnSet<C>.except(vararg others: KProperty<C>): ColumnSet<C> =
         except(others.toColumnSet())
 
     public infix fun SingleColumn<DataRow<*>>.allExcept(other: KProperty<*>): ColumnSet<*> =
@@ -16660,10 +16660,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     // region ColumnPath
 
-    public infix fun <C> ColumnSet<C>.except(other: ColumnPath): ColumnSet<*> =
+    public infix fun <C> ColumnSet<C>.except(other: ColumnPath): ColumnSet<C> =
         except(col(other))
 
-    public fun <C> ColumnSet<C>.except(vararg others: ColumnPath): ColumnSet<*> =
+    public fun <C> ColumnSet<C>.except(vararg others: ColumnPath): ColumnSet<C> =
         except(others.toColumnSet())
 
     public infix fun SingleColumn<DataRow<*>>.allExcept(other: ColumnPath): ColumnSet<*> =
