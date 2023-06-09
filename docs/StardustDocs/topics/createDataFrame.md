@@ -136,7 +136,7 @@ map.toDataFrame()
 
 [`DataFrame`](DataFrame.md) from [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of [basic types](https://kotlinlang.org/docs/basic-types.html) (except arrays):
 
-Return type of these overloads is a typed DataFrame. Its data schema defines column that can be used right after conversion for additional computations
+The return type of these overloads is a typed DataFrame. Its data schema defines column that can be used right after conversion for additional computations
 
 <!---FUN readDataFrameFromValues-->
 
@@ -162,7 +162,7 @@ val df = persons.toDataFrame()
 
 <!---END-->
 
-Scans object properties using reflection and creates [ValueColumn](DataColumn.md#valuecolumn) for every property. 
+Scans object properties using reflection and creates a [ValueColumn](DataColumn.md#valuecolumn) for every property. 
 Scope of properties for scanning is defined at compile-time by formal types of objects in [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/), so properties of implementation classes will not be scanned.
 
 Specify `depth` parameter to perform deep object graph traversal and convert nested objects into [ColumnGroups](DataColumn.md#columngroup) and [FrameColumns](DataColumn.md#framecolumn):
@@ -184,7 +184,7 @@ val df = students.toDataFrame(maxDepth = 1)
 
 <!---END-->
 
-For detailed control over object graph transformation use configuration DSL. It allows you to exclude particular properties or classes from object graph traversal, compute additional columns and configure column grouping.
+For detailed control over object graph transformation, use configuration DSL. It allows you to exclude particular properties or classes from object graph traversal, compute additional columns and configure column grouping.
 
 <!---FUN readDataFrameFromDeepObjectWithExclude-->
 
@@ -199,7 +199,7 @@ val df = students.toDataFrame {
         preserve<Name>() // `Name` objects will be stored as-is without transformation into DataFrame
     }
 
-    // add column group
+    // add a column group
     "summary" {
         "max score" from { it.scores.maxOf { it.value } }
         "min score" from { it.scores.minOf { it.value } }

@@ -7,4 +7,4 @@ There are several ways to create [`dataframes`](DataFrame.md) from the data that
 * create and initialize [`DataFrame`](DataFrame.md) directly from values using `vararg` variants of the [corresponding functions](createDataFrame.md) .
 * [convert Kotlin objects](createDataFrame.md#todataframe) into [`DataFrame`](DataFrame.md) 
 
-To learn how to read dataframes from files and URLs go to [the next section](read.md).
+To learn how to read dataframes from files and URLs, go to [the next section](read.md).

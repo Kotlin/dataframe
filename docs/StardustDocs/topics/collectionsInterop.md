@@ -7,8 +7,12 @@ _Kotlin DataFrame_ and _Kotlin Collection_ represent two different approaches to
 * [`DataFrame`](DataFrame.md) stores data by fields/columns
 * `Collection` stores data by records/rows
 
-Although [`DataFrame`](DataFrame.md) doesn't implement [`Collection`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/#kotlin.collections.Collection) or [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) interface, it has many similar operations, 
-such as [`filter`](filter.md), [`take`](sliceRows.md#take), [`first`](first.md), [`map`](map.md), [`groupBy`](groupBy.md) etc.
+Although [`DataFrame`](DataFrame.md)
+doesn't implement [`Collection`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/#kotlin.collections.Collection)
+or [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/)
+interface, it has many similar operations,
+such as [`filter`](filter.md), [`take`](sliceRows.md#take),
+[`first`](first.md), [`map`](map.md), [`groupBy`](groupBy.md) etc.
 
 [`DataFrame`](DataFrame.md) has two-way compatibility with [`Map`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/) and [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/):
 * `List<T>` -> `DataFrame<T>`: [toDataFrame](createDataFrame.md#todataframe)
@@ -16,7 +20,10 @@ such as [`filter`](filter.md), [`take`](sliceRows.md#take), [`first`](first.md),
 * `Map<String, List<*>>` -> `DataFrame<*>`: [toDataFrame](createDataFrame.md#todataframe)
 * `DataFrame<*>` -> `Map<String, List<*>>`: [toMap](toMap.md)
 
-Columns, rows and values of [`DataFrame`](DataFrame.md) can be accessed as [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/), [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) and [`Sequence`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/-sequence/) accordingly:
+Columns, rows, and values of [`DataFrame`](DataFrame.md)
+can be accessed as [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/),
+[`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/)
+and [`Sequence`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/-sequence/) accordingly:
 
 <!---FUN getRowsColumns-->
 
@@ -54,7 +61,8 @@ val df = list.toDataFrame()
 
 <!---END-->
 
-Mark original data class with [`DataSchema`](schemas.md) annotation to get [extension properties](extensionPropertiesApi.md) and perform data transformations.
+Mark the original data class with [`DataSchema`](schemas.md)
+annotation to get [extension properties](extensionPropertiesApi.md) and perform data transformations.
 
 <!---FUN listInterop3-->
 
@@ -87,6 +95,6 @@ val result = df2.toListOf<Output>()
 
 <!---END-->
 
-### Converting columns with objects instances to ColumnGroup
+### Converting columns with object instances to ColumnGroup
 
 [unfold](unfold.md) can be used as [`toDataFrame()`](createDataFrame.md#todataframe) analogue for specific columns inside existing dataframes

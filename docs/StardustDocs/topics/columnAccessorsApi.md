@@ -7,7 +7,7 @@ For frequently accessed columns type casting can be reduced by [Column Accessors
 <!---FUN accessors1-->
 
 ```kotlin
-val survived by column<Boolean>() // accessor for Boolean column with name 'survived'
+val survived by column<Boolean>() // accessor for Boolean column with the name 'survived'
 val home by column<String>()
 val age by column<Int?>()
 val name by column<String>()
@@ -29,7 +29,7 @@ DataFrame.read("titanic.csv")
 
 <!---END-->
 
-The `titanic.csv` file could be found [here](https://github.com/Kotlin/dataframe/blob/master/data/titanic.csv).
+The `titanic.csv` file can be found [here](https://github.com/Kotlin/dataframe/blob/master/data/titanic.csv).
 
 <warning>
 Note that it still doesn’t solve the problem of whether the column actually exists in a data frame, but reduces type casting.
