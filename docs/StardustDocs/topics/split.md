@@ -7,7 +7,7 @@ Splits every value in the given columns into several values and optionally sprea
 ```text
 df.split { columns }
     [.cast<Type>()]
-    [.by(delimeters) | .by { splitter } | .match(regex)] // how to split cell value
+    [.by(delimiters) | .by { splitter } | .match(regex)] // how to split cell value
     [.default(value)] // how to fill nulls
     .into(columnNames) [ { columnNamesGenerator } ] | .inward(columnNames) [ { columnNamesGenerator } | .inplace() | .intoRows() | .intoColumns() ] // where to store results
 
@@ -102,7 +102,8 @@ df.split { "name"["lastName"] }.by(" ").default("").inward { "word$it" }
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.split.html"/>
 <!---END-->
 
-`String` columns can also be split into group matches of [`Regex`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/-regex/) pattern:
+`String` columns can also be split into group matches
+of a [`Regex`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/-regex/) pattern:
 
 <!---FUN splitRegex-->
 

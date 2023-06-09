@@ -25,7 +25,8 @@ df.values { age and weight }
 
 ## values in aggregation
 
-In [`groupBy`](groupBy.md#aggregation) and [`pivot`](pivot.md#aggregation) aggregations `values` function yields list of column values for every aggregated data group. 
+In [`groupBy`](groupBy.md#aggregation) and [`pivot`](pivot.md#aggregation) 
+aggregations `values` function yields a list of column values for every aggregated data group. 
 
 ```kotlin
 df.groupBy { A }.values { B }

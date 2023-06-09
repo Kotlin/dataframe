@@ -21,7 +21,7 @@ fun DataFrame<Person>.splitName() = split { name }.by(",").into("firstName", "la
 fun DataFrame<Person>.adults() = filter { age > 18 }
 ```
 
-In Jupyter these functions will work automatically for any [`DataFrame`](DataFrame.md) that matches `Person` schema:
+In Jupyter Notebook, these functions will work automatically for any [`DataFrame`](DataFrame.md) that matches `Person` schema:
 
 <!---FUN extendedDf-->
 

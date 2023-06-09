@@ -40,7 +40,7 @@ When statistics `x` is applied to several columns, it can be computed in several
 * `xOf { rowExpression }: Value` computes single value across results of [row expression](DataRow.md#row-expressions) evaluated for every row
 
 [min](minmax.md) and [max](minmax.md) statistics have additional mode `by`:
-* `minBy { rowExpression }: DataRow` finds a row with minimal result of [expression](DataRow.md#row-expressions)
+* `minBy { rowExpression }: DataRow` finds a row with a minimal result of [expression](DataRow.md#row-expressions)
 
 <!---FUN statisticModes-->
 
@@ -55,9 +55,10 @@ df.sumOf { (weight ?: 0) / age } // sum of expression evaluated for every row
 
 ### groupBy statistics
 
-When statistics is applied to [`GroupBy DataFrame`](groupBy.md#transformation), it is computed for every data group. 
+When statistics are applied to [`GroupBy DataFrame`](groupBy.md#transformation), it is computed for every data group. 
 
-If statistic is applied in a mode that returns a single value for every data group, it will be stored in a single column named by statistic name.
+If a statistic is applied in a mode that returns a single value for every data group,
+it will be stored in a single column named by statistic name.
 
 <!---FUN statisticGroupBySingle-->
 
@@ -81,7 +82,8 @@ df.groupBy { city }.meanOf("custom") { age / 2 } // [`city`, `custom`]
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticGroupBySingleNamed.html"/>
 <!---END-->
 
-If statistic is applied in a mode that returns separate value per every column in data group, aggregated values will be stored in columns with original column names.
+If statistic is applied in a mode that returns separate value per every column in a data group,
+aggregated values will be stored in columns with original column names.
 
 <!---FUN statisticGroupByMany-->
 
@@ -95,7 +97,7 @@ df.groupBy { city }.mean() // [`city`, `age`, `weight`, ...]
 
 ### pivot statistics
 
-When statistics is applied to `Pivot` or `PivotGroupBy`, it is computed for every data group.
+When statistics are applied to `Pivot` or `PivotGroupBy`, it is computed for every data group.
 
 If statistic is applied in a mode that returns a single value for every data group, it will be stored in matrix cell without any name.
 
@@ -133,8 +135,8 @@ df.groupBy("city").pivot { "name"["lastName"] }.meanOf { "age"<Int>() / 2.0 }
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticPivotSingle.html"/>
 <!---END-->
 
-If statistic is applied in such a way that it returns separate value per every column in data group, 
-every cell in matrix will contain [`DataRow`](DataRow.md) with values for every aggregated column.
+If a statistic is applied in such a way that it returns a separate value per every column in a data group,
+every cell in the matrix will contain [`DataRow`](DataRow.md) with values for every aggregated column.
 
 <!---FUN statisticPivotMany-->
 
@@ -146,7 +148,7 @@ df.groupBy { city }.pivot { name.lastName }.mean()
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticPivotMany.html"/>
 <!---END-->
 
-To group columns in aggregation results not by pivoted values, but by aggregated columns, apply `separate` flag:
+To group columns in aggregation results not by pivoted values, but by aggregated columns, apply a `separate` flag:
 
 <!---FUN statisticPivotManySeparate-->
 

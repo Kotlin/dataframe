@@ -25,7 +25,7 @@ df.parse { age and weight }
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.parseSome.html"/>
 <!---END-->
 
-`parse` tries to parse every`String` column into one of supported types in the following order:
+`parse` tries to parse every `String` column into one of the supported types in the following order:
 * `Int`
 * `Long`
 * `LocalDateTime`
