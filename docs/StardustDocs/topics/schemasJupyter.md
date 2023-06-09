@@ -49,7 +49,7 @@ val temp = df
 val df = temp.cast<DataFrameType>()
 ```
 
-> _Note, that object instance after casting remains the same. See [cast](cast.md).
+> _Note that object instance after casting remains the same. See [cast](cast.md).
 
 To log all these additional code executions, use cell magic
 
