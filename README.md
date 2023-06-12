@@ -5,12 +5,12 @@
 [![Maven Central](https://img.shields.io/maven-central/v/org.jetbrains.kotlinx/dataframe?color=blue&label=Maven%20Central)](https://search.maven.org/artifact/org.jetbrains.kotlinx/dataframe)
 [![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 
-Kotlin Dataframe aims to reconcile Kotlin static typing with dynamic nature of data by utilizing both the full power of Kotlin language and opportunities provided by intermittent code execution in Jupyter notebooks and REPL.   
+Kotlin Dataframe aims to reconcile Kotlin static typing with the dynamic nature of data by utilizing both the full power of Kotlin language and opportunities provided by intermittent code execution in Jupyter notebooks and REPL.   
 
 * **Hierarchical** — represents hierarchical data structures, such as JSON or a tree of JVM objects.
 * **Functional** — data processing pipeline is organized in a chain of `DataFrame` transformation operations. Every operation returns a new instance of `DataFrame` reusing underlying storage wherever it's possible.
 * **Readable** — data transformation operations are defined in DSL close to natural language.
-* **Practical** — provides simple solutions for common problems and ability to perform complex tasks.
+* **Practical** — provides simple solutions for common problems and the ability to perform complex tasks.
 * **Minimalistic** — simple, yet powerful data model of three column kinds.
 * **Interoperable** — convertable with Kotlin data classes and collections.
 * **Generic** — can store objects of any type, not only numbers or strings.
@@ -23,12 +23,14 @@ Explore [**documentation**](https://kotlin.github.io/dataframe/overview.html) fo
 
 ## Setup
 
-### Gradle
-```kotlin
+### Gradle for Server-side
+```groovy
+// build.gradle
+
 plugins {
     // Optional Gradle plugin for enhanced type safety and schema generation
     // https://kotlin.github.io/dataframe/gradle.html
-    id("org.jetbrains.kotlinx.dataframe") version "0.10.0"
+    id 'org.jetbrains.kotlinx.dataframe' version '0.10.1'
 }
 
 repositories {
@@ -36,10 +38,79 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:dataframe:0.10.0")
+    implementation 'org.jetbrains.kotlinx:dataframe:0.10.1'
+}
+```
+
+```kotlin
+// build.gradle.kts
+
+plugins {
+    id("org.jetbrains.kotlinx.dataframe") version "0.10.1"
 }
 
-// Below only applies to Android projects
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("org.jetbrains.kotlinx:dataframe:0.10.1")
+}
+```
+
+### Gradle for Android
+```groovy
+// build.gradle
+
+plugins {
+    id 'org.jetbrains.kotlinx.dataframe' version '0.10.1'
+}
+
+dependencies {
+    implementation 'org.jetbrains.kotlinx:dataframe:0.10.1'
+}
+
+android {
+    defaultConfig {
+        minSdk 26 // Android O+
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    packagingOptions {
+        resources {
+            pickFirsts = ["META-INF/AL2.0",
+                          "META-INF/LGPL2.1",
+                          "META-INF/ASL-2.0.txt",
+                          "META-INF/LICENSE.md",
+                          "META-INF/NOTICE.md",
+                          "META-INF/LGPL-3.0.txt"]
+            excludes = ["META-INF/kotlin-jupyter-libraries/libraries.json",
+                        "META-INF/{INDEX.LIST,DEPENDENCIES}",
+                        "{draftv3,draftv4}/schema",
+                        "arrow-git.properties"]
+        }
+    }
+}
+
+
+```
+
+```kotlin
+// build.gradle.kts
+
+plugins {
+    id("org.jetbrains.kotlinx.dataframe") version "0.10.1"
+}
+
+dependencies {
+    implementation("org.jetbrains.kotlinx:dataframe:0.10.1")
+}
+
 android {
     defaultConfig {
         minSdk = 26 // Android O+
@@ -70,10 +141,11 @@ android {
         }
     }
 }
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> { 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
 }
 ```
+
 ### Jupyter Notebook
 
 Install [Kotlin kernel](https://github.com/Kotlin/kotlin-jupyter) for [Jupyter](https://jupyter.org/)
@@ -97,7 +169,7 @@ or specific version:
 
 ## Kotlin, Kotlin Jupyter, OpenAPI, Arrow and JDK versions
 
-This table shows the mapping between main library components versions and minimum supported Java versions.
+This table shows the mapping between main library component versions and minimum supported Java versions.
 
 | Kotlin DataFrame Version | Minimum Java Version | Kotlin Version | Kotlin Jupyter Version | OpenAPI version | Apache Arrow version |
 |--------------------------|----------------------|----------------|------------------------|-----------------|----------------------|
@@ -114,8 +186,11 @@ val flightNumber by columnOf(10045.0, Double.NaN, 10065.0, Double.NaN, 10085.0)
 val recentDelays by columnOf("23,47", null, "24, 43, 87", "13", "67, 32")
 val airline by columnOf("KLM(!)", "{Air France} (12)", "(British Airways. )", "12. Air France", "'Swiss Air'")
 
-// create dataframe
+// create the dataframe
 val df = dataFrameOf(fromTo, flightNumber, recentDelays, airline)
+
+// print the dataframe
+df.print()
 ```
 
 **Clean:**
@@ -155,7 +230,7 @@ val clean = df
 clean
     // group by the flight origin renamed into "from"
     .groupBy { origin named "from" }.aggregate {
-        // we are in the context of single data group
+        // we are in the context of a single data group
 
         // total number of flights from origin
         count() into "count"
