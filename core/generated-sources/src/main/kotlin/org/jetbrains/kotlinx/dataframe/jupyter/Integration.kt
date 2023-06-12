@@ -45,6 +45,96 @@ internal class Integration(
 
     val version = options["v"]
 
+    private fun KotlinKernelHost.execute(codeWithConverter: CodeWithConverter, argument: String): VariableName? {
+        val code = codeWithConverter.with(argument)
+        return if (code.isNotBlank()) {
+            val result = execute(code)
+            if (codeWithConverter.hasConverter) {
+                result.name
+            } else null
+        } else null
+    }
+
+    private fun KotlinKernelHost.execute(
+        codeWithConverter: CodeWithConverter,
+        property: KProperty<*>,
+        type: String,
+    ): VariableName? {
+        val variableName = "(${property.name}${if (property.returnType.isMarkedNullable) "!!" else ""} as $type)"
+        return execute(codeWithConverter, variableName)
+    }
+
+    private fun KotlinKernelHost.updateImportDataSchemaVariable(
+        importDataSchema: ImportDataSchema,
+        property: KProperty<*>,
+    ): VariableName? {
+        val formats = supportedFormats.filterIsInstance<SupportedCodeGenerationFormat>()
+        val name = property.name + "DataSchema"
+        return when (
+            val codeGenResult = CodeGenerator.urlCodeGenReader(importDataSchema.url, name, formats, true)
+        ) {
+            is CodeGenerationReadResult.Success -> {
+                val readDfMethod = codeGenResult.getReadDfMethod(importDataSchema.url.toExternalForm())
+                val code = readDfMethod.additionalImports.joinToString("\n") +
+                    "\n" +
+                    codeGenResult.code
+
+                execute(code)
+                execute("""DISPLAY("Data schema successfully imported as ${property.name}: $name")""")
+
+                name
+            }
+
+            is CodeGenerationReadResult.Error -> {
+                execute("""DISPLAY("Failed to read data schema from ${importDataSchema.url}: ${codeGenResult.reason}")""")
+                null
+            }
+        }
+    }
+
+    private fun KotlinKernelHost.updateAnyFrameVariable(
+        df: AnyFrame,
+        property: KProperty<*>,
+        codeGen: ReplCodeGenerator,
+    ): VariableName? = execute(
+        codeWithConverter = codeGen.process(df, property),
+        property = property,
+        type = "AnyFrame",
+    )
+
+    private fun KotlinKernelHost.updateAnyRowVariable(
+        row: AnyRow,
+        property: KProperty<*>,
+        codeGen: ReplCodeGenerator,
+    ): VariableName? = execute(
+        codeWithConverter = codeGen.process(row, property),
+        property = property,
+        type = "AnyRow",
+    )
+
+    private fun KotlinKernelHost.updateColumnGroupVariable(
+        col: ColumnGroup<*>,
+        property: KProperty<*>,
+        codeGen: ReplCodeGenerator,
+    ): VariableName? = execute(
+        codeWithConverter = codeGen.process(col.asDataFrame(), property),
+        property = property,
+        type = "ColumnGroup<*>",
+    )
+
+    private fun KotlinKernelHost.updateAnyColVariable(
+        col: AnyCol,
+        property: KProperty<*>,
+        codeGen: ReplCodeGenerator,
+    ): VariableName? = if (col.isColumnGroup()) {
+        val codeWithConverter = codeGen.process(col.asColumnGroup().asDataFrame(), property).let { c ->
+            CodeWithConverter(c.declarations) { c.converter("$it.asColumnGroup()") }
+        }
+        execute(codeWithConverter = codeWithConverter, property = property, type = "AnyCol")
+    } else {
+        null
+    }
+
     override fun Builder.onLoaded() {
         if (version != null) {
             dependencies(
@@ -152,63 +242,15 @@ internal class Integration(
         import("org.jetbrains.kotlinx.dataframe.dataTypes.*")
         import("org.jetbrains.kotlinx.dataframe.impl.codeGen.urlCodeGenReader")
 
-        fun KotlinKernelHost.execute(codeWithConverter: CodeWithConverter, argument: String): VariableName? {
-            val code = codeWithConverter.with(argument)
-            return if (code.isNotBlank()) {
-                val result = execute(code)
-                if (codeWithConverter.hasConverter) {
-                    result.name
-                } else null
-            } else null
-        }
-
-        fun KotlinKernelHost.execute(codeWithConverter: CodeWithConverter, property: KProperty<*>): VariableName? {
-            val variableName = property.name + if (property.returnType.isMarkedNullable) "!!" else ""
-            return execute(codeWithConverter, variableName)
-        }
-
-        updateVariable<ImportDataSchema> { importDataSchema, property ->
-            val formats = supportedFormats.filterIsInstance<SupportedCodeGenerationFormat>()
-            val name = property.name + "DataSchema"
-            when (val codeGenResult = CodeGenerator.urlCodeGenReader(importDataSchema.url, name, formats, true)) {
-                is CodeGenerationReadResult.Success -> {
-                    val readDfMethod = codeGenResult.getReadDfMethod(importDataSchema.url.toExternalForm())
-                    val code = readDfMethod.additionalImports.joinToString("\n") +
-                        "\n" +
-                        codeGenResult.code
-
-                    execute(code)
-                    execute("""DISPLAY("Data schema successfully imported as ${property.name}: $name")""")
-
-                    name
-                }
-
-                is CodeGenerationReadResult.Error -> {
-                    execute("""DISPLAY("Failed to read data schema from ${importDataSchema.url}: ${codeGenResult.reason}")""")
-                    null
-                }
+        updateVariable<Any> { instance, property ->
+            when (instance) {
+                is AnyCol -> updateAnyColVariable(instance, property, codeGen)
+                is ColumnGroup<*> -> updateColumnGroupVariable(instance, property, codeGen)
+                is AnyRow -> updateAnyRowVariable(instance, property, codeGen)
+                is AnyFrame -> updateAnyFrameVariable(instance, property, codeGen)
+                is ImportDataSchema -> updateImportDataSchemaVariable(instance, property)
+                else -> null
             }
-        }
-
-        updateVariable<AnyFrame> { df, property ->
-            execute(codeGen.process(df, property), property)
-        }
-
-        updateVariable<AnyRow> { row, property ->
-            execute(codeGen.process(row, property), property)
-        }
-
-        updateVariable<ColumnGroup<*>> { col, property ->
-            execute(codeGen.process(col.asDataFrame(), property), property)
-        }
-
-        updateVariable<AnyCol> { col, property ->
-            if (col.isColumnGroup()) {
-                val codeWithConverter = codeGen.process(col.asColumnGroup().asDataFrame(), property).let { c ->
-                    CodeWithConverter(c.declarations) { c.converter("$it.asColumnGroup()") }
-                }
-                execute(codeWithConverter, property)
-            } else null
         }
 
         fun KotlinKernelHost.addDataSchemas(classes: List<KClass<*>>) {
