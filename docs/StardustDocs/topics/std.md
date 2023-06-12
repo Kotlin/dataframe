@@ -4,7 +4,7 @@
 
 Computes the standard deviation of values.
 
-Is available for numeric columns. Computed value has a type `Double`.
+Is available for numeric columns. Computed value has type `Double`.
 
 <!---FUN stdModes-->
 

@@ -2,8 +2,8 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels-->
 
-When [`DataFrame`](DataFrame.md) is used within Jupyter Notebooks or Datalore with Kotlin Kernel,
-after every cell execution all new global variables of type DataFrame are analyzed and replaced
+When [`DataFrame`](DataFrame.md) is used within Jupyter Notebooks or Datalore with Kotlin Kernel, 
+after every cell execution all new global variables of type DataFrame are analyzed and replaced 
 with typed [`DataFrame`](DataFrame.md) wrapper with auto-generated extension properties for data access:
 
 <!---FUN extensionProperties1-->
@@ -26,14 +26,11 @@ df.add("lastName") { name.split(",").last() }
 
 <!---END-->
 
-The `titanic.csv` file can be found [here](https://github.com/Kotlin/dataframe/blob/master/data/titanic.csv).
+The `titanic.csv` file could be found [here](https://github.com/Kotlin/dataframe/blob/master/data/titanic.csv).
 
-In notebooks, extension properties are generated for [`DataSchema`](schemas.md)
-that is extracted from [`DataFrame`](DataFrame.md)
+In notebooks, extension properties are generated for [`DataSchema`](schemas.md) that is extracted from [`DataFrame`](DataFrame.md) 
 instance after REPL line execution. 
-After that [`DataFrame`](DataFrame.md) variable is typed with its own [`DataSchema`](schemas.md),
-so only valid extension properties corresponding to actual columns in DataFrame will be allowed by the compiler
-and suggested by completion.
+After that [`DataFrame`](DataFrame.md)  variable is typed with its own [`DataSchema`](schemas.md), so only valid extension properties corresponding to actual columns in DataFrame will be allowed by the compiler and suggested by completion.
 
 Extension properties can be generated in IntelliJ IDEA using the [Kotlin Dataframe Gradle plugin](schemasGradle.md#configuration).
 

@@ -61,4 +61,4 @@ You can also always ctrl+click on the `PetStore.Pet` type to see all the generat
 If you experience any issues with the OpenAPI support (since there are many gotchas and edge-cases when converting
 something as
 type-fluid as JSON to a strongly typed language), please open an issue on
-the [GitHub repo](https://github.com/Kotlin/dataframe/issues).
+the [Github repo](https://github.com/Kotlin/dataframe/issues).

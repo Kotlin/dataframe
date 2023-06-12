@@ -13,7 +13,7 @@ df[2]
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.getRowByIndex.html"/>
 <!---END-->
 
-Get a single [`DataRow`](DataRow.md) by [row condition](DataRow.md#row-conditions):
+Get single [`DataRow`](DataRow.md) by [row condition](DataRow.md#row-conditions):
 
 <!---FUN getRowByCondition-->
 <tabs>

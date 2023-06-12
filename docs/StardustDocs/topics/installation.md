@@ -1,7 +1,7 @@
 [//]: # (title: Installation)
 
 You can use the Kotlin DataFrame library in different environments — as any other JVM library.
-The following sections will show how to use the Kotlin DataFrame library in [Jupyter](#jupyter-notebook), [Datalore,](#datalore) and in a [Gradle project](#gradle).
+The following sections will show how to use the Kotlin DataFrame library in [Jupyter](#jupyter-notebook), [Datalore](#datalore) and in a [Gradle project](#gradle).
 
 ## Jupyter Notebook
 
@@ -13,13 +13,13 @@ the command line, for example:
 jupyter notebook
 ```
 
-In the notebook, you only have to write a single line to start using the Kotlin DataFrame library:
+In the notebook you only have to write single line to start using the Kotlin DataFrame library:
 
 ```text
 %use dataframe
 ```
 
-In this case, the version which is bundled with the kernel will be used.
+In this case the version which is bundled with the kernel, will be used.
 If you want to always use the latest version, add another magic before `%use dataframe`:
 
 ```text
@@ -27,7 +27,7 @@ If you want to always use the latest version, add another magic before `%use dat
 %use dataframe
 ```
 
-If you want to use a specific version of the Kotlin DataFrame library, you can specify it in brackets:
+If you want to use specific version of the Kotlin DataFrame library, you can specify it in brackets:
 
 ```text
 %use dataframe(%dataFrameVersion%)
@@ -156,11 +156,11 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
 </tabs>
 
 Note that it's better to use the same version for a library and plugin to avoid unpredictable errors.
-After plugin configuration, you can try it out, for [example](schemasGradle.md#annotation-processing).
+After plugin configuration you can try it out with [example](schemasGradle.md#annotation-processing).
 
 ### Custom configuration
 
-If you want to avoid adding unnecessary dependencies, you can choose from the following artifacts:
+If you want to avoid adding unnecessary dependency, you can choose from following artifacts:
 
 <tabs>
 <tab title="Kotlin DSL">
@@ -197,7 +197,7 @@ dependencies {
 
 #### Linter configuration
 
-We provide a Gradle plugin that generates interfaces based on your data structure.
+We provide a Gradle plugin that generates interfaces by your data.
 Use this configuration to prevent linter from complaining about formatting in the generated sources.
 
 <tabs>
@@ -236,6 +236,5 @@ tasks.withType(org.jmailen.gradle.kotlinter.tasks.LintTask).all {
 
 ## Other build systems
 
-If you are using Maven, Ivy, or Bazel to configure your build,
-you can still use the Kotlin DataFrame library in your project.
+If you are using Maven, Ivy or Bazel to configure your build, you can still use the Kotlin DataFrame library in your project.
 Just follow the instructions for your build system on [this page](https://search.maven.org/artifact/org.jetbrains.kotlinx/dataframe/0.8.1/jar).

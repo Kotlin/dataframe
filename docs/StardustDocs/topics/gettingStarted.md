@@ -14,7 +14,7 @@ To use the Kotlin DataFrame library with Jupyter notebooks or Datalore, follow t
 Kotlin is included in each IntelliJ IDEA release.
 Download and install [IntelliJ IDEA](https://www.jetbrains.com/idea/download/) to start using Kotlin.
 
-## Create a Kotlin project
+## Create Kotlin project
 
 1. In IntelliJ IDEA, select **File** | **New** | **Project**.
 2. In the panel on the left, select **New Project**.
@@ -82,8 +82,7 @@ Download the file `movies.csv` from [here](https://github.com/Kotlin/dataframe/b
 
 Delete the `println()` functions and comments from your main function in `Main.kt`.
 
-To import the movie sample data into a data frame and print it inside your main function in `Main.kt`,
-add the following code:
+To import the movie sample data into a data frame and print it, inside your main function in `Main.kt`, add the following code:
 
 ```kotlin
     // Import your data to a data frame
@@ -105,7 +104,7 @@ To print some information about your data frame and sort your data, add the foll
     // Sort your data alphabetically by title
     df = df.sortBy("title")
 
-    // Filter your data so that only comedy films remain and print
+    // Filter your data so that only comedy films remain, and print
     df = df.filter { "genres"<String>().contains("Comedy") }
     df.print()
 ```
@@ -151,7 +150,7 @@ movieId                                    title                       genres
 3 9b30aff7943f44579e92c261f3adc193                    Women in Black (1997)   Fantasy|Suspenseful|Comedy
 </code-block>
 
-Congratulations! You have successfully used the Kotlin DataFrame library to import, manipulate, and export data.
+Congratulations! You have successfully used the Kotlin DataFrame library to import, manipulate and export data.
 
 ## Next steps
 * Learn more about how to [import and export data](io.md)

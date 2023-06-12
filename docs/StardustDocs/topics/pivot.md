@@ -2,8 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 
-Splits the rows of [`DataFrame`](DataFrame.md)
-and groups them horizontally into new columns based on values from one or several columns of original [`DataFrame`](DataFrame.md).
+Splits the rows of [`DataFrame`](DataFrame.md) and groups them horizontally into new columns based on values from one or several columns of original [`DataFrame`](DataFrame.md).
 
 ```text
 pivot (inward = true) { pivotColumns }
@@ -18,7 +17,7 @@ aggregator = .count() | .matches() | .frames() | .with { rowExpression } | .valu
 ```
 
 **Parameters:**
-* `inward` — if `true` generated columns are nested inside the original column, otherwise they will be top-level
+* `inward` — if `true` generated columns will be nested inside original column, otherwise they will be top-level
 * `pivotColumns` — columns with values for horizontal data grouping and generation of new columns
 * `indexColumns` — columns with values for vertical data grouping
 * `defaultValue` — value to fill mismatched pivot-index column pairs
@@ -52,7 +51,7 @@ df.pivot("city")
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivot.html"/>
 <!---END-->
 
-To pivot several columns at once, you can combine them using `and` or `then` infix function:
+To pivot several columns at once you can combine them using `and` or `then` infix function:
 * `and` will pivot columns independently
 * `then` will create column hierarchy from combinations of values from pivoted columns
 
@@ -91,8 +90,7 @@ df.pivot { "city" then "name"["firstName"] }
 
 ## pivot + groupBy
 
-To create a matrix table that is expanded both horizontally and vertically,
-apply [`groupBy`](groupBy.md) transformation passing the columns for vertical grouping. 
+To create matrix table that is expanded both horizontally and vertically, apply [`groupBy`](groupBy.md) transformation passing the columns for vertical grouping. 
 Reversed order of [`pivot`](pivot.md) and [`groupBy`](groupBy.md) will produce the same result.
 
 <!---FUN pivotGroupBy-->
@@ -257,11 +255,11 @@ df.groupBy("name").pivot("city").median("age")
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotCommonAggregations.html"/>
 <!---END-->
 
-By default, when aggregation function produces several values for a single data group,
-column hierarchy in the resulting [`DataFrame`](DataFrame.md)
+By default, when aggregation function produces several values for single data group, 
+column hierarchy in resulting [`DataFrame`](DataFrame.md) 
 will be indexed first by pivot keys and then by the names of aggregated values.
 To reverse this order so that resulting columns will be indexed first by names of aggregated values and then by pivot keys, 
-use a `separate=true` flag that is available in multi-result aggregation operations, such as `aggregate` or `<stat>For`:
+use `separate=true` flag that is available in multi-result aggregation operations, such as `aggregate` or `<stat>For`:
 
 <!---FUN pivotSeparate-->
 <tabs>
@@ -306,10 +304,8 @@ df.pivot("city").aggregate(separate = true) {
 
 <dataFrame src="pivotSeparate.html"/>
 
-By default, any aggregation function will result in `null` value for those matrix cells, 
-where intersection of column and row keys produces an empty data group.
-You can specify a default value for any aggregation by `default` infix function. 
-This value will replace all `null` results of aggregation function over non-empty data groups as well.
+By default, any aggregation function will result in `null` value for those matrix cells, where intersection of column and row keys produced an empty data group.
+You can specify default value for any aggregation by `default` infix function. This value will replace all `null` results of aggregation function over non-empty data groups as well.
 To use one default value for all aggregation functions, use `default()` before aggregation.
 
 <!---FUN pivotDefault-->
@@ -388,8 +384,8 @@ df.pivot("city").groupBy("name").aggregate {
 
 ### Pivot inside aggregate
 
-Pivot transformation can be used inside [`aggregate`](groupBy.md#aggregation) function of [`groupBy`](groupBy.md). 
-This allows combining column pivoting with other [`groupBy`](groupBy.md) aggregations:
+pivot transformation can be used inside [`aggregate`](groupBy.md#aggregation) function of [`groupBy`](groupBy.md). 
+This allows to combine column pivoting with other [`groupBy`](groupBy.md) aggregations:
 
 <!---FUN pivotInAggregate-->
 <tabs>

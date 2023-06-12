@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Insert a new column at a specific position in [`DataFrame`](DataFrame.md). 
+Inserts new column at specific position in [`DataFrame`](DataFrame.md). 
 
 ```text
 insert 
@@ -14,7 +14,7 @@ rowExpression: DataRow.(DataRow) -> Value
 
 Similar to [add](add.md), but supports column positioning.
 
-Create a new column based on existing columns and insert it into [`DataFrame`](DataFrame.md):
+Create new column based on existing columns and insert it into [`DataFrame`](DataFrame.md):
 
 <!---FUN insert-->
 <tabs>

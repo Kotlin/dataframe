@@ -10,12 +10,12 @@
 * `next(): DataRow?` — next row (`null` for the last row)
 * `diff { rowExpression }: T` — difference between results of [row expression](#row-expressions) calculated for current and previous rows
 * `values(): List<Any?>` — list of all cell values from the current row
-* `valuesOf<T>(): List<T>` — list of values of a given type 
+* `valuesOf<T>(): List<T>` — list of values of given type 
 * `columnsCount(): Int` — number of columns
 * `columnNames(): List<String>` — list of all column names
 * `columnTypes(): List<KType>` — list of all column types 
 * `namedValues(): List<NameValuePair<Any?>>` — list of name-value pairs where `name` is a column name and `value` is cell value
-* `namedValuesOf<T>(): List<NameValuePair<T>>` — list of name-value pairs where value has given a type 
+* `namedValuesOf<T>(): List<NameValuePair<T>>` — list of name-value pairs where value has given type 
 * `transpose(): DataFrame<NameValuePair<*>>` — dataframe of two columns: `name: String` is column names and `value: Any?` is cell values
 * `transposeTo<T>(): DataFrame<NameValuePair<T>>`— dataframe of two columns: `name: String` is column names and `value: T` is cell values
 * `getRow(Int): DataRow` — row from [`DataFrame`](DataFrame.md) by row index
@@ -54,7 +54,7 @@ Row condition is a special case of [row expression](#row-expressions) that retur
 // Row condition is used to filter rows by index
 df.filter { index() % 5 == 0 }
 
-// Row condition is used to drop rows where `age` is the same as in the previous row
+// Row condition is used to drop rows where `age` is the same as in previous row
 df.drop { diff { age } == 0 }
 
 // Row condition is used to filter rows for value update
@@ -76,11 +76,10 @@ The following [statistics](summaryStatistics.md) are available for `DataRow`:
 * `rowStd`
 * `rowMedian`
 
-These statistics will be applied only to values of appropriate types, and incompatible values will be ignored.
-For example, if [`DataFrame`](DataFrame.md) has columns of a type `String` and `Int`,
-`rowSum()` will successfully compute a sum of `Int` values in a row and ignore `String` values.
+These statistics will be applied only to values of appropriate types and incompatible values will be ignored.
+For example, if [`DataFrame`](DataFrame.md) has columns of type `String` and `Int`, `rowSum()` will successfully compute sum of `Int` values in a row and ignore `String` values.
 
-To apply statistics only to values of a particular type, use `-Of` versions:
+To apply statistics only to values of particular type use `-Of` versions:
 * `rowMaxOf<T>`
 * `rowMinOf<T>`
 * `rowSumOf<T>`

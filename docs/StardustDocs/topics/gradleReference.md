@@ -10,7 +10,7 @@ dataframes {
     }
 }
 ```
-Note the name of the file and the interface are normalized: split by '_' and ' ' and joined to camel case.
+Note than name of the file and the interface are normalized: split by '_' and ' ' and joined to camel case.
 You can set parsing options for CSV:
 ```kotlin
 dataframes {
@@ -23,8 +23,8 @@ dataframes {
     }
 }
 ```
-In this case, the output path will depend on your directory structure. For project with package `org.example` a path will be `build/generated/dataframe/main/kotlin/org/example/dataframe/Securities.Generated.kt
-`. Note that the name of the Kotlin file is derived from the name of the data file with the suffix `.Generated` and the package
+In this case output path will depend on your directory structure. For project with package `org.example` path will be `build/generated/dataframe/main/kotlin/org/example/dataframe/Securities.Generated.kt
+`. Note that name of the Kotlin file is derived from the name of the data file with the suffix `.Generated` and the package 
 is derived from the directory structure with child directory `dataframe`. The name of the **data schema** itself is `Securities`. You could specify it explicitly:
 ```kotlin
 schema {
@@ -33,7 +33,7 @@ schema {
     name = "MyName"
 }
 ```
-If you want to change the default package for all schemas:
+If you want to change default package for all schemas:
 ```kotlin
 dataframes {
     packageName = "org.example"
@@ -60,8 +60,7 @@ dataframes {
     }
 }
 ```
-By default, the plugin will generate output in a specified source set.
-Source set could be specified for all schemas or for specific schema:
+By default, plugin will generate output in specified source set. Source set could be specified for all schemas or for specific schema:
 ```kotlin
 dataframes {
     packageName = "org.example"
@@ -77,7 +76,7 @@ dataframes {
     }
 }
 ```
-But if you need generated files in another directory, set `src`:
+But if you need generated files in other directory, set `src`:
 ```kotlin
 dataframes {
     // output: schemas/org/example/test/OtherName.Generated.kt
@@ -91,7 +90,7 @@ dataframes {
 
 ## DSL reference
 Inside `dataframes` you can configure parameters that will apply to all schemas. Configuration inside `schema` will override these defaults for specific schema.
-Here is the full DSL for declaring data schemas:
+Here is full DSL for declaring data schemas:
 
 ```kotlin
 dataframes {
@@ -102,10 +101,10 @@ dataframes {
     // KOTLIN SCRIPT: DataSchemaVisibility.INTERNAL DataSchemaVisibility.IMPLICIT_PUBLIC, DataSchemaVisibility.EXPLICIT_PUBLIC
     // GROOVY SCRIPT: 'internal', 'implicit_public', 'explicit_public'
         
-    withoutDefaultPath() // disable a default path for all schemas
-    // i.e., plugin won't copy "data" property of the schemas to generated companion objects
+    withoutDefaultPath() // disable default path for all schemas
+    // i.e. plugin won't copy "data" property of the schemas to generated companion objects
 
-    // split property names by delimiters (arguments of this method), lowercase parts, and join to camel case
+    // split property names by delimiters (arguments of this method), lowercase parts and join to camel case
     // enabled by default
     withNormalizationBy('_') // [optional: default: ['\t', '_', ' ']]
     withoutNormalization() // disable property names normalization
@@ -126,8 +125,8 @@ dataframes {
         withNormalizationBy('_') // enable property names normalization for this schema and use these delimiters
         withoutNormalization() // disable property names normalization for this schema
         
-        withoutDefaultPath() // disable a default path for this schema
-        withDefaultPath() // enable a default path for this schema
+        withoutDefaultPath() // disable default path for this schema
+        withDefaultPath() // enable default path for this schema
     }
 }
 ```

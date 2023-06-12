@@ -3,7 +3,7 @@
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Schemas-->
 
 You can define your own [`DataSchema`](schema.md) interfaces and use them in functions and classes to represent [`DataFrame`](DataFrame.md) with
-a specific set of columns:
+specific set of columns:
 
 ```kotlin
 @DataSchema
@@ -21,7 +21,7 @@ fun DataFrame<Person>.splitName() = split { name }.by(",").into("firstName", "la
 fun DataFrame<Person>.adults() = filter { age > 18 }
 ```
 
-In Jupyter Notebook, these functions will work automatically for any [`DataFrame`](DataFrame.md) that matches `Person` schema:
+In Jupyter these functions will work automatically for any [`DataFrame`](DataFrame.md) that matches `Person` schema:
 
 <!---FUN extendedDf-->
 
@@ -34,7 +34,7 @@ val df = dataFrameOf("name", "age", "weight")(
 
 <!---END-->
 
-Schema of `df` is compatible with `Person`, so the auto-generated schema interface will inherit from it:
+Schema of `df` is compatible with `Person`, so auto-generated schema interface will inherit from it:
 
 ```kotlin
 @DataSchema(isOpen = false)
