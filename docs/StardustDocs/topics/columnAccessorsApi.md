@@ -7,7 +7,7 @@ For frequently accessed columns type casting can be reduced by [Column Accessors
 <!---FUN accessors1-->
 
 ```kotlin
-val survived by column<Boolean>() // accessor for Boolean column with the name 'survived'
+val survived by column<Boolean>() // accessor for Boolean column with name 'survived'
 val home by column<String>()
 val age by column<Int?>()
 val name by column<String>()
