@@ -204,7 +204,7 @@ val df = students.toDataFrame {
         preserve<Name>() // `Name` objects will be stored as-is without transformation into DataFrame
     }
 
-    // add a column group
+    // add column group
     "summary" {
         "max score" from { it.scores.maxOf { it.value } }
         "min score" from { it.scores.minOf { it.value } }

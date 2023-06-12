@@ -187,19 +187,19 @@ df.select {
     Person::name.single { it.name().startsWith("first") }
 }
 
-// recursive traversal of all columns, excluding ColumnGroups from a result
+// recursive traversal of all columns, excluding ColumnGroups from result
 df.select { cols { !it.isColumnGroup() }.recursively() }
 
-// depth-first-search traversal of all columns, including ColumnGroups in a result
+// depth-first-search traversal of all columns, including ColumnGroups in result
 df.select { all().recursively() }
 
 // recursive traversal with condition
 df.select { cols { it.name().contains(":") }.recursively() }
 
-// recursive traversal of columns of a given type
+// recursive traversal of columns of given type
 df.select { colsOf<String>().rec() }
 
-// all columns except a given column set
+// all columns except given column set
 df.select { except { colsOf<String>() } }
 
 // union of column sets
