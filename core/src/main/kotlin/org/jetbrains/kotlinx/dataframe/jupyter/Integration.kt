@@ -253,26 +253,6 @@ internal class Integration(
             }
         }
 
-        updateVariable<ImportDataSchema> { instance, property ->
-            updateImportDataSchemaVariable(instance, property)
-        }
-
-        updateVariable<AnyFrame> { instance, property ->
-            updateAnyFrameVariable(instance, property, codeGen)
-        }
-
-        updateVariable<AnyRow> { instance, property ->
-            updateAnyRowVariable(instance, property, codeGen)
-        }
-
-        updateVariable<ColumnGroup<*>> { instance, property ->
-            updateColumnGroupVariable(instance, property, codeGen)
-        }
-
-        updateVariable<AnyCol> { instance, property ->
-            updateAnyColVariable(instance, property, codeGen)
-        }
-
         fun KotlinKernelHost.addDataSchemas(classes: List<KClass<*>>) {
             val code = classes.joinToString("\n") {
                 codeGen.process(it)
