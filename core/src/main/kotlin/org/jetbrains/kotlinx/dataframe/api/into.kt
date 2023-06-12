@@ -15,7 +15,7 @@ import kotlin.reflect.typeOf
 
 public fun <T, G> GroupBy<T, G>.into(column: String): DataFrame<T> = toDataFrame(column)
 
-public fun <T> GroupBy<T, *>.into(column: ColumnAccessor<AnyFrame>): DataFrame<T> = toDataFrame(column.name())
+public fun <T> GroupBy<T, *>.into(column: ColumnAccessor<out AnyFrame>): DataFrame<T> = toDataFrame(column.name())
 
 public fun <T> GroupBy<T, *>.into(column: KProperty<AnyFrame>): DataFrame<T> = toDataFrame(column.columnName)
 

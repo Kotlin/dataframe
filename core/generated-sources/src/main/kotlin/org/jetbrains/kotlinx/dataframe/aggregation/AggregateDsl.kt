@@ -14,7 +14,7 @@ public abstract class AggregateDsl<out T> : DataFrame<T>, ColumnSelectionDsl<T> 
 
     public inline infix fun <reified R> R.into(name: String): NamedValue = internal().yield(pathOf(name), this, typeOf<R>())
 
-    public inline infix fun <reified R> R.into(column: ColumnAccessor<R>): NamedValue = internal().yield(pathOf(column.name()), this, typeOf<R>())
+    public inline infix fun <reified R> R.into(column: ColumnAccessor<out R>): NamedValue = internal().yield(pathOf(column.name()), this, typeOf<R>())
 
     public inline infix fun <reified R> R.into(column: KProperty<R>): NamedValue = internal().yield(pathOf(column.columnName), this, typeOf<R>())
 

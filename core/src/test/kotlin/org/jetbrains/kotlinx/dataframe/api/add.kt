@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.junit.Test
 import kotlin.reflect.typeOf
 
@@ -32,5 +33,21 @@ class AddTests {
     fun `add with generic function`() {
         val df = dataFrameOf("a")(1).addValue(2)
         df["value"].type() shouldBe typeOf<List<Any?>>()
+    }
+
+    @DataSchema
+    data class Row(val x: Int, val y: String)
+
+    @Test
+    fun `add with limited type`() {
+        val df = listOf(Row(1, "a"), Row(2, "b"), Row(3, "c")).toDataFrame()
+
+        val stringColumn = column<String>("stringColumn")
+
+        df.add(stringColumn) { y }
+//        df.add(stringColumn) { x }
+
+//        df.add<Any, Row>(Row::y) { x }
+//        df.add<Int, Row>(Row::x) { x }
     }
 }

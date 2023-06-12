@@ -90,7 +90,7 @@ public fun <T, C> RenameClause<T, C>.toCamelCase(): DataFrame<T> =
 
 public fun <T, C : ColumnReference<T>> C.rename(column: KProperty<T>): C = rename(column.columnName) as C
 
-public fun <T, C : ColumnReference<T>> C.rename(column: ColumnAccessor<T>): C = rename(column.name()) as C
+public fun <T, C : ColumnReference<T>> C.rename(column: ColumnAccessor<out T>): C = rename(column.name()) as C
 
 // endregion
 

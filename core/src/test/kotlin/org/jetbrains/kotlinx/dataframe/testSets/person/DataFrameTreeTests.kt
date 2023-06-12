@@ -646,7 +646,7 @@ class DataFrameTreeTests : BaseTest() {
         val group by frameColumn<GroupedPerson>()
 
         typed2
-            .groupBy { expr { age > 30 } into "isOld" }.into(group)
+            .groupBy<GroupedPerson> { expr { age > 30 } into "isOld" }.into(group)
             .aggregate {
                 group().maxBy { rowsCount() }.weight.median() into "m"
             }["m"] shouldBe 61
