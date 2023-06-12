@@ -2,8 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
-Return column by column name or [column selector](ColumnSelectors.md) as [`DataColumn`](DataColumn.md). 
-Throw exception if the requested column doesn't exist.
+Return column by column name or [column selector](ColumnSelectors.md) as [`DataColumn`](DataColumn.md). Throws exception if requested column doesn't exist.
 
 <!---FUN getColumn-->
 <tabs>
@@ -65,8 +64,7 @@ df.getColumnOrNull("age")
 
 ## getColumnGroup
 
-Return top-level column by column name or [column selector](ColumnSelectors.md) as [`ColumnGroup`](DataColumn.md#columngroup). 
-Throws exception if the requested column doesn't exist or is not a `ColumnGroup`.
+Return top-level column by column name or [column selector](ColumnSelectors.md) as [`ColumnGroup`](DataColumn.md#columngroup). Throws exception if requested column doesn't exist or is not a `ColumnGroup`.
 
 <!---FUN getColumnGroup-->
 <tabs>
@@ -97,7 +95,7 @@ df.getColumnGroup("name")
 
 ## getColumns
 
-Return a list of selected columns.
+Return list of selected columns.
 
 <!---FUN getColumns-->
 <tabs>

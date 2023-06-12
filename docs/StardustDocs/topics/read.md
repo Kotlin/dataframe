@@ -3,7 +3,7 @@
 
 The Kotlin DataFrame library supports CSV, TSV, JSON, XLS and XLSX, Apache Arrow input formats.
 
-`read` method automatically detects an input format based on a file extension and content
+`read` method automatically detects input format based on file extension and content
 
 ```kotlin
 DataFrame.read("input.csv")
@@ -25,7 +25,7 @@ DataFrame.readCSV(URL("https://raw.githubusercontent.com/Kotlin/dataframe/master
 ```
 
 All `readCSV` overloads support different options.
-For example, you can specify a custom delimiter if it differs from `,`, charset
+For example, you can specify custom delimiter if it differs from `,`, charset
 and column names if your CSV is missing them
 
 <!---FUN readCsvCustom-->
@@ -60,7 +60,7 @@ C: Double
 D: Boolean?
 ```
 
-[`DataFrame`](DataFrame.md) will try to parse columns as JSON, so when reading the following table a with JSON object in column D:
+[`DataFrame`](DataFrame.md) will try to parse columns as JSON, so when reading following table with JSON object in column D:
 
 <table>
 <tr><th>A</th><th>D</th></tr>
@@ -92,7 +92,7 @@ G: *
     D: Int
 ```
 
-### Dealing with locale-specific numbers
+### Dealing with locale specific numbers
 
 Sometimes columns in your CSV can be interpreted differently depending on your system locale.
 
@@ -118,7 +118,7 @@ val df = DataFrame.readCSV(
 
 <!---END-->
 
-2) Disable type inference for a specific column and convert it yourself
+2) Disable type inference for specific column and convert it yourself
 
 <!---FUN readNumbersWithColType-->
 
@@ -134,7 +134,7 @@ val df = DataFrame.readCSV(
 
 ## Reading JSON
 
-The basics for reading JSONs are the same: you can read from file or from remote URL.
+Basics for reading JSONs are the same: you can read from file or from remote URL.
 
 ```kotlin
 DataFrame.readJson("https://covid.ourworldindata.org/data/owid-covid-data.json")
@@ -143,8 +143,8 @@ DataFrame.readJson("https://covid.ourworldindata.org/data/owid-covid-data.json")
 Note that after reading a JSON with a complex structure, you can get hierarchical
 [`DataFrame`](DataFrame.md): [`DataFrame`](DataFrame.md) with `ColumnGroup`s and [`FrameColumn`](DataColumn.md#framecolumn)s.
 
-Also note that the type inferring process for JSON is much simpler than for CSV.
-JSON string literals are always supposed to have a String type, number literals
+Also note that type inferring process for JSON is much simpler than for CSV.
+JSON string literals are always supposed to have String type, number literals
 take different `Number` kinds, boolean literals are converted to `Boolean`.
 
 Let's take a look at the following JSON:
@@ -178,7 +178,7 @@ Let's take a look at the following JSON:
 ]
 ```
 
-We can read it from the file
+We can read it from file
 
 <!---FUN readJson-->
 
@@ -197,8 +197,8 @@ C: Number
 D: Boolean?
 ```
 
-Column A has a `String` type because all values are string literals, no implicit conversion is performed.
-Column C has a `Number` type because it's the least common type for `Int` and `Double`.
+Column A has `String` type because all values are string literals, no implicit conversion is performed. Column C
+has `Number` type because it's the least common type for `Int` and `Double`.
 
 ### JSON Reading Options: Type Clash Tactic
 
@@ -210,7 +210,7 @@ any number of object properties:
 If the json element is an object, then each property will spread out to its own column in the group, else these columns
 will be `null`.
 
-In this case, `typeClashTactic = JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS`.
+In this case `typeClashTactic = JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS`.
 
 For example:
 
@@ -280,8 +280,8 @@ If you have some JSON looking like
 }
 ```
 
-You will get a column for each dog, which becomes an issue when you have a lot of dogs.
-This issue is especially noticeable when generating data schemas from the JSON, as you might have run out of memory
+you will get a column for each dog, which becomes an issue when you have a lot of dogs.
+This issue is especially noticeable when generating data schemas from the JSON, as you might even run out of memory
 when doing that due to the sheer number of generated interfaces.\
 Instead, you can use `keyValuePaths` to specify paths to the objects that should be read as key value frame columns.
 
@@ -337,9 +337,8 @@ DataFrame.readJsonStr(
 ```
 
 Note: For the KSP plugin, the `JsonPath` class is not available, so you will have to use the `String` version of the
-paths instead.
-For example, `jsonOptions = JsonOptions(keyValuePaths = ["""$""", """$[*]["versions"]"""])`.
-Only the bracket notation of a json path is supported, as well as just double quotes, arrays, and wildcards.
+paths instead. For example: `jsonOptions = JsonOptions(keyValuePaths = ["""$""", """$[*]["versions"]"""])`.
+Only the bracket notation of json path is supported, as well as just double quotes, arrays, and wildcards.
 
 For more examples, see the "examples/json" module.
 
@@ -358,7 +357,7 @@ You can read from file or URL.
 Cells representing dates will be read as `kotlinx.datetime.LocalDateTime`.
 Cells with number values, including whole numbers such as "100", or calculated formulas will be read as `Double`
 
-Sometimes cells can have the wrong format in Excel file — for example, you expect to read column of String:
+Sometimes cells can have wrong format in Excel file, for example you expect to read column of String:
 
 ```text
 IDS
@@ -368,7 +367,7 @@ B100
 C100
 ```
 
-You will get a column of Serializable instead (common parent for Double & String)
+You will get column of Serializable instead (common parent for Double & String)
 
 You can fix it using convert:
 

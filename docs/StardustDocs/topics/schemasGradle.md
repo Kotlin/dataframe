@@ -10,8 +10,7 @@ In Gradle projects, the Kotlin DataFrame library provides
 
 ### Configuration
 
-To use the [extension properties API](extensionPropertiesApi.md) in a Gradle project,
-add the `dataframe` plugin as follows:
+To use the [extension properties API](extensionPropertiesApi.md) in Gradle project add the `dataframe` plugin as follows:
 
 <tabs>
 <tab title="Kotlin DSL">
@@ -59,7 +58,7 @@ interface Person {
 }
 ```
 
-#### Execute an `assemble` task to generate type-safe accessors for schemas:
+#### Execute assemble task to generate type-safe accessors for schemas:
 
 <!---FUN useProperties-->
 
@@ -77,7 +76,7 @@ teens.print()
 
 ### Schema inference
 
-Specify the schema with preferred method and execute the `assemble` task.
+Specify schema with preferred method and execute the `assemble` task.
 
 <tabs>
 <tab title="Method 1. Annotation processing">
@@ -86,7 +85,7 @@ Specify the schema with preferred method and execute the `assemble` task.
 You can import schemas from a URL or from the relative path of a file.
 Relative path by default is resolved to the project root directory.
 You can configure it by [passing](https://kotlinlang.org/docs/ksp-quickstart.html#pass-options-to-processors) `dataframe.resolutionDir`
-an option to preprocessor.
+option to preprocessor.
 For example:
 
 ```kotlin
@@ -99,7 +98,7 @@ ksp {
 from the previous invocation, at least one character.**
 
 For the following configuration, file `Repository.Generated.kt` will be generated to `build/generated/ksp/` folder in
-the same package as the file containing the annotation.
+the same package as file containing the annotation.
 
 ```kotlin
 @file:ImportDataSchema(
@@ -207,4 +206,4 @@ You can also always ctrl+click on the `PetStore.Pet` type to see all the generat
 If you experience any issues with the OpenAPI support (since there are many gotchas and edge-cases when converting
 something as
 type-fluid as JSON to a strongly typed language), please open an issue on
-the [GitHub repo](https://github.com/Kotlin/dataframe/issues).
+the [Github repo](https://github.com/Kotlin/dataframe/issues).

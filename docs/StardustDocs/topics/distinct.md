@@ -14,7 +14,7 @@ df.distinct()
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.distinct.html"/>
 <!---END-->
 
-If columns are specified, the resulting [`DataFrame`](DataFrame.md) will have only given columns with distinct values.
+If columns are specified, resulting [`DataFrame`](DataFrame.md) will have only given columns with distinct values.
 
 <!---FUN distinctColumns-->
 <tabs>
