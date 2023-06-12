@@ -101,8 +101,8 @@ This table shows the mapping between main library components versions and minimu
 
 | Kotlin DataFrame Version | Minimum Java Version | Kotlin Version | Kotlin Jupyter Version | OpenAPI version | Apache Arrow version |
 |--------------------------|----------------------|----------------|------------------------|-----------------|----------------------|
-| 0.10.0                   | 8                    |1.8.20          | 0.11.0-358             |2.1.13           | 11.0.0               |
-| 0.10.1                   | 8                    |1.8.20          | 0.11.0-358             |2.1.13           | 11.0.0               |
+| 0.10.0                   | 8                    |1.8.20          | 0.11.0-358             | 3.0.0           | 11.0.0               |
+| 0.10.1                   | 8                    |1.8.20          | 0.11.0-358             | 3.0.0           | 11.0.0               |
 
 ## Usage example
 

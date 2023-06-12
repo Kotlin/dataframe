@@ -1,7 +1,7 @@
 [//]: # (title: convert)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Returns [`DataFrame`](DataFrame.md) with changed values in some columns. Allows to change column types.
+Returns [`DataFrame`](DataFrame.md) with changed values in some columns. Allows changing column types.
 
 ```text
 convert { columnsSelector }
@@ -49,7 +49,7 @@ df.convert { weight }.toFloat()
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertTo.html"/>
 <!---END-->
 
-Automatic conversion from `String` into enum class is also supported:
+Automatic conversion from `String` to enum classes is also supported:
 
 ```kotlin
 enum class Direction { NORTH, SOUTH, WEST, EAST }
