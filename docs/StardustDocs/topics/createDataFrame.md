@@ -1,11 +1,11 @@
 [//]: # (title: Create DataFrame)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Create-->
 
-This section describes ways to create [`DataFrame`](DataFrame.md).
+This section describes ways to create a [`DataFrame`](DataFrame.md) instance.
 
 ### emptyDataFrame
 
-Returns [`DataFrame`](DataFrame.md) with no rows and no columns.
+Returns a [`DataFrame`](DataFrame.md) with no rows and no columns.
 
 <!---FUN createEmptyDataFrame-->
 
@@ -17,7 +17,7 @@ val df = emptyDataFrame<Any>()
 
 ### dataFrameOf
 
-Returns [`DataFrame`](DataFrame.md) with given column names and values.
+Returns a [`DataFrame`](DataFrame.md) with given column names and values.
 
 <!---FUN createDataFrameOf-->
 
@@ -108,7 +108,7 @@ val df = dataFrameOf(names).fill(15, true)
 
 ### toDataFrame
 
-[`DataFrame`](DataFrame.md) from `Iterable<DataColumn>`:
+Creates a [`DataFrame`](DataFrame.md) from an `Iterable<DataColumn>`:
 
 <!---FUN createDataFrameFromIterable-->
 
@@ -134,9 +134,10 @@ map.toDataFrame()
 
 <!---END-->
 
-[`DataFrame`](DataFrame.md) from [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of [basic types](https://kotlinlang.org/docs/basic-types.html) (except arrays):
+Creates a [`DataFrame`](DataFrame.md) from an [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of [basic types](https://kotlinlang.org/docs/basic-types.html) (except arrays):
 
-The return type of these overloads is a typed DataFrame. Its data schema defines column that can be used right after conversion for additional computations
+The return type of these overloads is a typed [`DataFrame`](DataFrame.md).
+Its data schema defines the column that can be used right after the conversion for additional computations.
 
 <!---FUN readDataFrameFromValues-->
 
@@ -148,7 +149,7 @@ df.add("length") { value.length }
 
 <!---END-->
 
-[`DataFrame`](DataFrame.md) from [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of objects:
+Creates a [`DataFrame`](DataFrame.md) from an [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of objects:
 
 <!---FUN readDataFrameFromObject-->
 
@@ -163,9 +164,11 @@ val df = persons.toDataFrame()
 <!---END-->
 
 Scans object properties using reflection and creates a [ValueColumn](DataColumn.md#valuecolumn) for every property. 
-Scope of properties for scanning is defined at compile-time by formal types of objects in [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/), so properties of implementation classes will not be scanned.
+The scope of properties for scanning is defined at compile-time by the formal types of the objects in the [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/),
+so the properties of implementation classes will not be scanned.
 
-Specify `depth` parameter to perform deep object graph traversal and convert nested objects into [ColumnGroups](DataColumn.md#columngroup) and [FrameColumns](DataColumn.md#framecolumn):
+Specify the `depth` parameter to perform deep object graph traversal
+and convert nested objects into [ColumnGroups](DataColumn.md#columngroup) and [FrameColumns](DataColumn.md#framecolumn):
 
 <!---FUN readDataFrameFromDeepObject-->
 
@@ -184,7 +187,9 @@ val df = students.toDataFrame(maxDepth = 1)
 
 <!---END-->
 
-For detailed control over object graph transformation, use configuration DSL. It allows you to exclude particular properties or classes from object graph traversal, compute additional columns and configure column grouping.
+For detailed control over object graph transformations, use the configuration DSL.
+It allows you to exclude particular properties or classes from the object graph traversal,
+compute additional columns, and configure column grouping.
 
 <!---FUN readDataFrameFromDeepObjectWithExclude-->
 
