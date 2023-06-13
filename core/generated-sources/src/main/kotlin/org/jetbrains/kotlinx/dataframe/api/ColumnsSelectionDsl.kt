@@ -1743,7 +1743,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[col][ColumnPath.col]`(0) }`
      *
      * `// NOTE: There's a `[List.get][List.get]` function that prevents this:`
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[col][ColumnPath.col]`(0) }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"]`[`[`][ColumnPath.col]`0`[`]`][ColumnPath.col]` }`
      *
      * @throws [IndexOutOfBoundsException] If the index is out of bounds.
      * @param [index] The index of the column to retrieve.
@@ -1774,7 +1774,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[col][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.col]`(0) }`
      *
      * `// NOTE: There's a `[List.get][kotlin.collections.List.get]` function that prevents this:`
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[col][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.col]`(0) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.col]`0`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.col]` }`
      *
      * @throws [IndexOutOfBoundsException] If the index is out of bounds.
      * @param [index] The index of the column to retrieve.
@@ -1805,7 +1805,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[col][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.col]`(0) }`
      *
      * `// NOTE: There's a `[List.get][kotlin.collections.List.get]` function that prevents this:`
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[col][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.col]`(0) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.col]`0`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.col]` }`
      *
      * @throws [IndexOutOfBoundsException] If the index is out of bounds.
      * @param [index] The index of the column to retrieve.
