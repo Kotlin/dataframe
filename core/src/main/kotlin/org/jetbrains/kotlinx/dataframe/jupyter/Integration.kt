@@ -5,9 +5,33 @@ import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.api.Convert
+import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
+import org.jetbrains.kotlinx.dataframe.api.Gather
+import org.jetbrains.kotlinx.dataframe.api.GroupBy
+import org.jetbrains.kotlinx.dataframe.api.Merge
+import org.jetbrains.kotlinx.dataframe.api.Pivot
+import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
+import org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy
+import org.jetbrains.kotlinx.dataframe.api.ReducedPivot
+import org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy
+import org.jetbrains.kotlinx.dataframe.api.Split
+import org.jetbrains.kotlinx.dataframe.api.SplitWithTransform
+import org.jetbrains.kotlinx.dataframe.api.Update
+import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.asDataFrame
+import org.jetbrains.kotlinx.dataframe.api.columnsCount
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.frames
+import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.name
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -31,6 +55,7 @@ import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 import org.jetbrains.kotlinx.jupyter.api.libraries.resources
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
+import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 
 /** Users will get an error if their Kotlin Jupyter kernel is older than this version. */
@@ -58,7 +83,7 @@ internal class Integration(
     private fun KotlinKernelHost.execute(
         codeWithConverter: CodeWithConverter,
         property: KProperty<*>,
-        type: String,
+        type: KType,
     ): VariableName? {
         val variableName = "(${property.name}${if (property.returnType.isMarkedNullable) "!!" else ""} as $type)"
         return execute(codeWithConverter, variableName)
@@ -99,7 +124,8 @@ internal class Integration(
     ): VariableName? = execute(
         codeWithConverter = codeGen.process(df, property),
         property = property,
-        type = "AnyFrame",
+        type = DataFrame::class.createStarProjectedType(false),
+
     )
 
     private fun KotlinKernelHost.updateAnyRowVariable(
@@ -109,7 +135,7 @@ internal class Integration(
     ): VariableName? = execute(
         codeWithConverter = codeGen.process(row, property),
         property = property,
-        type = "AnyRow",
+        type = DataRow::class.createStarProjectedType(false),
     )
 
     private fun KotlinKernelHost.updateColumnGroupVariable(
@@ -119,7 +145,7 @@ internal class Integration(
     ): VariableName? = execute(
         codeWithConverter = codeGen.process(col.asDataFrame(), property),
         property = property,
-        type = "ColumnGroup<*>",
+        type = ColumnGroup::class.createStarProjectedType(false),
     )
 
     private fun KotlinKernelHost.updateAnyColVariable(
@@ -130,7 +156,11 @@ internal class Integration(
         val codeWithConverter = codeGen.process(col.asColumnGroup().asDataFrame(), property).let { c ->
             CodeWithConverter(c.declarations) { c.converter("$it.asColumnGroup()") }
         }
-        execute(codeWithConverter = codeWithConverter, property = property, type = "AnyCol")
+        execute(
+            codeWithConverter = codeWithConverter,
+            property = property,
+            type = DataColumn::class.createStarProjectedType(false),
+        )
     } else {
         null
     }

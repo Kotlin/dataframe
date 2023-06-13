@@ -1,6 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
 import org.intellij.lang.annotations.Language
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.jupyter.api.Code
 import org.junit.Test
 
