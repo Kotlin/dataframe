@@ -54,11 +54,11 @@ Row condition is a special case of [row expression](#row-expressions) that retur
 // Row condition is used to filter rows by index
 df.filter { index() % 5 == 0 }
 
-// Row condition is used to drop rows where `age` is the same as in previous row
+// Row condition is used to drop rows where `age` is the same as in the previous row
 df.drop { diff { age } == 0 }
 
 // Row condition is used to filter rows for value update
-df.update { weight }.where { index() > 4 && city != "Paris" }.withValue(50)
+df.update { weight }.where { index() > 4 && city != "Paris" }.with { 50 }
 ```
 
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.DataRowApi.conditions.html"/>
