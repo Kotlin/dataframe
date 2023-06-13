@@ -55,4 +55,11 @@ class RenameTests {
             }
         }
     }
+
+    @Test
+    fun `rename to camelCase`() {
+        val dfWithUpperCaseColumnNames = dataFrameOf("First_Column", "second_column", "ThirdColumn")(1, 2, 3)
+        val df = dfWithUpperCaseColumnNames.renameToCamelCase()
+        df.columnNames() shouldBe listOf("firstColumn", "secondColumn", "thirdColumn")
+    }
 }

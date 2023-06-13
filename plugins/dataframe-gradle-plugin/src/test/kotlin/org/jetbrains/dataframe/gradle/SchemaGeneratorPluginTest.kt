@@ -5,6 +5,7 @@ import io.kotest.inspectors.forOne
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.gradle.testkit.runner.TaskOutcome
+import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.junit.Test
 import java.io.File
@@ -19,6 +20,7 @@ internal class SchemaGeneratorPluginTest {
     @Test
     fun `plugin configured via configure`() {
         val (_, result) = runGradleBuild(":generateDataFrameTest") {
+            // language=kts
             """
             import java.net.URL
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
@@ -47,6 +49,7 @@ internal class SchemaGeneratorPluginTest {
     @Test
     fun `plugin configured via extension DSL`() {
         val (_, result) = runGradleBuild(":generateDataFrameTest") {
+            // language=kts
             """
             import java.net.URL
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
@@ -77,6 +80,7 @@ internal class SchemaGeneratorPluginTest {
         val buildDir = Files.createTempDirectory("test").toFile()
         val buildFile = File(buildDir, "build.gradle")
         buildFile.writeText(
+            // language=groovy
             """
                 import java.net.URL
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
@@ -108,6 +112,7 @@ internal class SchemaGeneratorPluginTest {
         val buildDir = Files.createTempDirectory("test").toFile()
         val buildFile = File(buildDir, "build.gradle")
         buildFile.writeText(
+            // language=groovy
             """
                 import java.net.URL
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
@@ -138,6 +143,7 @@ internal class SchemaGeneratorPluginTest {
     @Test
     fun `plugin configure multiple schemas from URLs via extension`() {
         val (_, result) = runGradleBuild(":generateDataFrames") {
+            // language=kts
             """
             import java.net.URL
             
@@ -178,6 +184,7 @@ internal class SchemaGeneratorPluginTest {
                 File(it, TestData.csvName).writeText(TestData.csvSample)
                 File(it, TestData.jsonName).writeText(TestData.jsonSample)
             }
+            // language=kts
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
@@ -213,6 +220,7 @@ internal class SchemaGeneratorPluginTest {
         val (_, result) = runGradleBuild(":generateDataFrameTest") { buildDir ->
             val dataDir = File(buildDir, "data").also { it.mkdirs() }
             File(dataDir, TestData.jsonName).writeText(TestData.jsonSample)
+            // language=kts
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
@@ -243,6 +251,7 @@ internal class SchemaGeneratorPluginTest {
             val dataDir = File(buildDir, "data").also { it.mkdirs() }
             val file = File(dataDir, TestData.jsonName).also { it.writeText(TestData.jsonSample) }
             val absolutePath = file.absolutePath.replace(File.separatorChar, '/')
+            // language=kts
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
@@ -271,6 +280,7 @@ internal class SchemaGeneratorPluginTest {
     fun `data is string and url`() {
         val (_, result) = runGradleBuild(":generateDataFrameTest") { buildDir ->
             println("Build dir: $buildDir")
+            // language=kts
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
@@ -299,6 +309,7 @@ internal class SchemaGeneratorPluginTest {
     fun `data is OpenApi string and url`() {
         val (_, result) = runGradleBuild(":generateDataFrameTest") { buildDir ->
             println("Build dir: $buildDir")
+            // language=kts
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
@@ -334,6 +345,7 @@ internal class SchemaGeneratorPluginTest {
                 1;2;3
                 """.trimIndent()
             )
+            // language=kts
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                

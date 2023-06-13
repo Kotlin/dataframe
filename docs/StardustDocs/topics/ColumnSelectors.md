@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
-[`DataFrame`](DataFrame.md) provides DSL for selecting arbitrary set of columns.
+[`DataFrame`](DataFrame.md) provides a DSL for selecting an arbitrary set of columns.
 
 Column selectors are used in many operations:
 

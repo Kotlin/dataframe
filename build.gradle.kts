@@ -76,14 +76,14 @@ group = "org.jetbrains.kotlinx"
 fun detectVersion(): String {
     val buildNumber = rootProject.findProperty("build.number") as String?
     val versionProp = property("version") as String
-    return if (buildNumber != null) {
+    return if (hasProperty("release")) {
+        versionProp
+    } else if (buildNumber != null) {
         if (rootProject.findProperty("build.number.detection") == "true") {
             "$versionProp-dev-$buildNumber"
         } else {
-            buildNumber
+            error("use build.number + build.number.detection = true or release build")
         }
-    } else if (hasProperty("release")) {
-        versionProp
     } else {
         "$versionProp-dev"
     }

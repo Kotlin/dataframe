@@ -2331,6 +2331,18 @@ class DataFrameTests : BaseTest() {
     fun describe() {
         val desc = typed.group { age and weight }.into("info").groupBy { city }.toDataFrame().describe()
         desc.nrow shouldBe typed.ncol + 1
+        desc["type"][0] shouldBe "String?"
+        desc["path"][1] shouldBe listOf("group", "name")
+        desc["name"][0] shouldBe "city"
+        desc["count"][3] shouldBe 7
+        desc["unique"][4] shouldBe 6
+        desc["nulls"][3] shouldBe 2
+        desc["top"][0] shouldBe "London"
+        desc["mean"][2] shouldBe 28.571428571428573
+        desc["std"][2] shouldBe 11.073348527841414
+        desc["min"][2] shouldBe 15
+        desc["median"][2] shouldBe 30
+        desc["max"][2] shouldBe 45
         desc.print()
     }
 
