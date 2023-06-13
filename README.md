@@ -5,7 +5,7 @@
 [![Maven Central](https://img.shields.io/maven-central/v/org.jetbrains.kotlinx/dataframe?color=blue&label=Maven%20Central)](https://search.maven.org/artifact/org.jetbrains.kotlinx/dataframe)
 [![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 
-Kotlin Dataframe aims to reconcile Kotlin static typing with the dynamic nature of data by utilizing both the full power of Kotlin language and opportunities provided by intermittent code execution in Jupyter notebooks and REPL.   
+Kotlin Dataframe aims to reconcile Kotlin's static typing with the dynamic nature of data by utilizing both the full power of the Kotlin language and the opportunities provided by intermittent code execution in Jupyter notebooks and REPL.   
 
 * **Hierarchical** — represents hierarchical data structures, such as JSON or a tree of JVM objects.
 * **Functional** — data processing pipeline is organized in a chain of `DataFrame` transformation operations. Every operation returns a new instance of `DataFrame` reusing underlying storage wherever it's possible.
@@ -23,7 +23,7 @@ Explore [**documentation**](https://kotlin.github.io/dataframe/overview.html) fo
 
 ## Setup
 
-### Gradle for Server-side
+### Gradle for JVM
 ```groovy
 // build.gradle
 
@@ -46,6 +46,8 @@ dependencies {
 // build.gradle.kts
 
 plugins {
+    // Optional Gradle plugin for enhanced type safety and schema generation
+    // https://kotlin.github.io/dataframe/gradle.html
     id("org.jetbrains.kotlinx.dataframe") version "0.10.1"
 }
 
@@ -63,6 +65,8 @@ dependencies {
 // build.gradle
 
 plugins {
+    // Optional Gradle plugin for enhanced type safety and schema generation
+    // https://kotlin.github.io/dataframe/gradle.html
     id 'org.jetbrains.kotlinx.dataframe' version '0.10.1'
 }
 
@@ -104,6 +108,8 @@ android {
 // build.gradle.kts
 
 plugins {
+    // Optional Gradle plugin for enhanced type safety and schema generation
+    // https://kotlin.github.io/dataframe/gradle.html
     id("org.jetbrains.kotlinx.dataframe") version "0.10.1"
 }
 
@@ -186,10 +192,10 @@ val flightNumber by columnOf(10045.0, Double.NaN, 10065.0, Double.NaN, 10085.0)
 val recentDelays by columnOf("23,47", null, "24, 43, 87", "13", "67, 32")
 val airline by columnOf("KLM(!)", "{Air France} (12)", "(British Airways. )", "12. Air France", "'Swiss Air'")
 
-// create the dataframe
+// create dataframe
 val df = dataFrameOf(fromTo, flightNumber, recentDelays, airline)
 
-// print the dataframe
+// print dataframe
 df.print()
 ```
 
