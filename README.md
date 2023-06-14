@@ -101,7 +101,12 @@ android {
     }
 }
 
-
+// optional, could be required for KSP
+tasks.withType(KotlinCompile).configureEach {
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
 ```
 
 ```kotlin
@@ -147,6 +152,8 @@ android {
         }
     }
 }
+
+// required for KSP
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
 }
