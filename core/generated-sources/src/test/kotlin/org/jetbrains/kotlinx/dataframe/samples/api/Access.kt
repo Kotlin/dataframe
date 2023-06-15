@@ -897,12 +897,12 @@ class Access : TestBase() {
 
         // find the last column inside a column group satisfying the condition
         df.select {
-            colGroup("name").last { it.name().endsWith("Name") }
+            colGroup("name").lastChild { it.name().endsWith("Name") }
         }
 
         // find the single column inside a column group satisfying the condition
         df.select {
-            Person::name.single { it.name().startsWith("first") }
+            Person::name.singleChild { it.name().startsWith("first") }
         }
 
         // recursive traversal of all columns, excluding ColumnGroups from result

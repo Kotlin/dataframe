@@ -36,7 +36,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.performCheck
 import org.jetbrains.kotlinx.dataframe.impl.columns.recursivelyImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.roots
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleImpl
-import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformWithContext
@@ -276,540 +275,12 @@ internal fun <T> ColumnsSelectionDsl<T>.asSingleColumn(): SingleColumn<DataRow<T
  * Can be safely cast to [SingleColumn] across the library. It does not directly
  * implement it for DSL purposes.
  */
-public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>/*, SingleColumn<DataRow<T>> */ {
+public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>,
+    FirstColumnsSelectionDsl,
+    LastColumnsSelectionDsl,
+    SingleColumnsSelectionDsl
+    /*, SingleColumn<DataRow<T>> */ {
 
-    // region first
-
-    /**
-     * ## First (Child)
-     * Returns the ([transformable][TransformableSingleColumn]) first column in this [ColumnSet] or [ColumnGroup] that adheres to the given [condition\].
-     * If no column adheres to the given [condition\], no column is selected.
-     *
-     * NOTE: For [String] and [ColumnPath], `first` is named `firstChild` instead to avoid
-     * clashes with [String.first] and [List.first].
-     *
-     * #### Examples:
-     *
-     * `df.`[select][DataFrame.select]` { `[first][SingleColumn.first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
-     *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[firstChild][String.firstChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") }.`[recursively][TransformableSingleColumn.recursively]`() }`
-     *
-     * #### Examples for this overload:
-     *
-     * {@includeArg [Examples]}
-     *
-     * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][TransformableSingleColumn]) [SingleColumn] containing the first column that adheres to the given [condition\].
-     * @throws [NoSuchElementException\] if no column adheres to the given [condition\].
-     * @see [last\]
-     */
-    private interface CommonFirstDocs {
-
-        /** Examples key */
-        interface Examples
-    }
-
-    /**
-     * ## First (Child)
-     * Returns the ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
-     * If no column adheres to the given [condition], no column is selected.
-     *
-     * NOTE: For [String] and [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], `first` is named `firstChild` instead to avoid
-     * clashes with [String.first] and [List.first].
-     *
-     * #### Examples:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstChild][kotlin.String.firstChild]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") }.`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn.recursively]`() }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[first][ColumnSet.first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[first][ColumnSet.first]`() }`
-     *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column that adheres to the given [condition].
-     * @throws [NoSuchElementException] if no column adheres to the given [condition].
-     * @see [last]
-     */
-    public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
-        (allColumnsInternal() as TransformableColumnSet<C>)
-            .transform { listOf(it.first(condition)) }
-            .singleOrNullWithTransformerImpl()
-
-    /**
-     * ## First (Child)
-     * Returns the ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
-     * If no column adheres to the given [condition], no column is selected.
-     *
-     * NOTE: For [String] and [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], `first` is named `firstChild` instead to avoid
-     * clashes with [String.first] and [List.first].
-     *
-     * #### Examples:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstChild][kotlin.String.firstChild]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") }.`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn.recursively]`() }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][DataFrame.select]` { `[first][SingleColumn.first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[first][SingleColumn.first]`() }`
-     *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column that adheres to the given [condition].
-     * @throws [NoSuchElementException] if no column adheres to the given [condition].
-     * @see [last]
-     */
-    public fun SingleColumn<DataRow<*>>.first(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        ensureIsColGroup().asColumnSet().first(condition)
-
-    /** TODO */
-    public fun ColumnsSelectionDsl<*>.first(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        this.asSingleColumn().first(condition)
-
-    /**
-     * ## First (Child)
-     * Returns the ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
-     * If no column adheres to the given [condition], no column is selected.
-     *
-     * NOTE: For [String] and [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], `first` is named `firstChild` instead to avoid
-     * clashes with [String.first] and [List.first].
-     *
-     * #### Examples:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstChild][kotlin.String.firstChild]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") }.`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn.recursively]`() }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[firstChild][String.firstChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column that adheres to the given [condition].
-     * @throws [NoSuchElementException] if no column adheres to the given [condition].
-     * @see [last]
-     */
-    public fun String.firstChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        colGroup(this).first(condition)
-
-    /**
-     * ## First (Child)
-     * Returns the ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
-     * If no column adheres to the given [condition], no column is selected.
-     *
-     * NOTE: For [String] and [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], `first` is named `firstChild` instead to avoid
-     * clashes with [String.first] and [List.first].
-     *
-     * #### Examples:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstChild][kotlin.String.firstChild]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") }.`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn.recursively]`() }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[first][SingleColumn.first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     *
-     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColumnGroup).`[first][SingleColumn.first]`() }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[first][KProperty.first]`() }`
-     *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column that adheres to the given [condition].
-     * @throws [NoSuchElementException] if no column adheres to the given [condition].
-     * @see [last]
-     */
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("firstKPropertyDataRow")
-    public fun KProperty<DataRow<*>>.first(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        colGroup(this).first(condition)
-
-    /**
-     * ## First (Child)
-     * Returns the ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
-     * If no column adheres to the given [condition], no column is selected.
-     *
-     * NOTE: For [String] and [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], `first` is named `firstChild` instead to avoid
-     * clashes with [String.first] and [List.first].
-     *
-     * #### Examples:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstChild][kotlin.String.firstChild]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") }.`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn.recursively]`() }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[firstChild][ColumnPath.firstChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column that adheres to the given [condition].
-     * @throws [NoSuchElementException] if no column adheres to the given [condition].
-     * @see [last]
-     */
-    public fun ColumnPath.firstChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        colGroup(this).first(condition)
-
-    // endregion
-
-    // region last
-
-    /**
-     * ## Last (Child)
-     * Returns the ([transformable][TransformableSingleColumn]) last column in this [ColumnSet] or [ColumnGroup] that adheres to the given [condition\].
-     * If no column adheres to the given [condition\], no column is selected.
-     *
-     * NOTE: For [String] and [ColumnPath], `last` is named `lastChild` instead to avoid
-     * clashes with [String.last] and [List.last].
-     *
-     * #### Examples:
-     *
-     * `df.`[select][DataFrame.select]` { `[last][SingleColumn.last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
-     *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[lastChild][String.lastChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[recursively][TransformableSingleColumn.recursively]`() }`
-     *
-     * #### Examples for this overload:
-     *
-     * {@includeArg [Examples]}
-     *
-     * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][TransformableSingleColumn]) [SingleColumn] containing the last column that adheres to the given [condition\].
-     * @throws [NoSuchElementException\] if no column adheres to the given [condition\].
-     * @see [first\]
-     */
-    private interface CommonLastDocs {
-
-        /** Examples key */
-        interface Examples
-    }
-
-    /**
-     * ## Last (Child)
-     * Returns the ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
-     * If no column adheres to the given [condition], no column is selected.
-     *
-     * NOTE: For [String] and [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], `last` is named `lastChild` instead to avoid
-     * clashes with [String.last] and [List.last][kotlin.collections.List.last].
-     *
-     * #### Examples:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[last][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.last]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[lastChild][kotlin.String.lastChild]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn.recursively]`() }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[last][ColumnSet.last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[last][ColumnSet.last]`() }`
-     *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column that adheres to the given [condition].
-     * @throws [NoSuchElementException] if no column adheres to the given [condition].
-     * @see [first]
-     */
-    public fun <C> ColumnSet<C>.last(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
-        (allColumnsInternal() as TransformableColumnSet<C>)
-            .transform { listOf(it.last(condition)) }
-            .singleOrNullWithTransformerImpl()
-
-    /**
-     * ## Last (Child)
-     * Returns the ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
-     * If no column adheres to the given [condition], no column is selected.
-     *
-     * NOTE: For [String] and [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], `last` is named `lastChild` instead to avoid
-     * clashes with [String.last] and [List.last][kotlin.collections.List.last].
-     *
-     * #### Examples:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[last][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.last]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[lastChild][kotlin.String.lastChild]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn.recursively]`() }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][DataFrame.select]` { `[last][SingleColumn.last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[last][SingleColumn.last]`() }`
-     *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column that adheres to the given [condition].
-     * @throws [NoSuchElementException] if no column adheres to the given [condition].
-     * @see [first]
-     */
-    public fun SingleColumn<DataRow<*>>.last(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        ensureIsColGroup().asColumnSet().last(condition)
-
-    /** TODO */
-    public fun ColumnsSelectionDsl<*>.last(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        this.asSingleColumn().last(condition)
-
-    /**
-     * ## Last (Child)
-     * Returns the ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
-     * If no column adheres to the given [condition], no column is selected.
-     *
-     * NOTE: For [String] and [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], `last` is named `lastChild` instead to avoid
-     * clashes with [String.last] and [List.last][kotlin.collections.List.last].
-     *
-     * #### Examples:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[last][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.last]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[lastChild][kotlin.String.lastChild]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn.recursively]`() }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[lastChild][String.lastChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column that adheres to the given [condition].
-     * @throws [NoSuchElementException] if no column adheres to the given [condition].
-     * @see [first]
-     */
-    public fun String.lastChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        colGroup(this).last(condition)
-
-    /**
-     * ## Last (Child)
-     * Returns the ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
-     * If no column adheres to the given [condition], no column is selected.
-     *
-     * NOTE: For [String] and [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], `last` is named `lastChild` instead to avoid
-     * clashes with [String.last] and [List.last][kotlin.collections.List.last].
-     *
-     * #### Examples:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[last][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.last]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[lastChild][kotlin.String.lastChild]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn.recursively]`() }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[last][SingleColumn.last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     *
-     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColumnGroup).`[last][SingleColumn.last]`() }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[last][KProperty.last]`() }`
-     *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column that adheres to the given [condition].
-     * @throws [NoSuchElementException] if no column adheres to the given [condition].
-     * @see [first]
-     */
-    public fun KProperty<DataRow<*>>.last(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        colGroup(this).last(condition)
-
-    /**
-     * ## Last (Child)
-     * Returns the ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
-     * If no column adheres to the given [condition], no column is selected.
-     *
-     * NOTE: For [String] and [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], `last` is named `lastChild` instead to avoid
-     * clashes with [String.last] and [List.last][kotlin.collections.List.last].
-     *
-     * #### Examples:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[last][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.last]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[lastChild][kotlin.String.lastChild]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn.recursively]`() }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[lastChild][ColumnPath.lastChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column that adheres to the given [condition].
-     * @throws [NoSuchElementException] if no column adheres to the given [condition].
-     * @see [first]
-     */
-    public fun ColumnPath.lastChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        colGroup(this).last(condition)
-
-    // endregion
-
-    // region single
-
-    /**
-     * ## Single (Child)
-     * Returns ([transformable][TransformableSingleColumn]) the single column in this [ColumnSet] or [ColumnGroup] that adheres to the given [condition\].
-     * If no column adheres to the given [condition\] or multiple columns adhere to it, no column is selected.
-     *
-     * NOTE: For [String] and [ColumnPath], `single` is named `singleChild` instead to avoid
-     * clashes with [String.single] and [List.single].
-     *
-     * #### Examples:
-     *
-     * `df.`[select][DataFrame.select]` { `[single][SingleColumn.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
-     *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[singleChild][String.singleChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[recursively][TransformableSingleColumn.recursively]`() }`
-     *
-     * #### Examples for this overload:
-     *
-     * {@includeArg [Examples]}
-     *
-     * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][TransformableSingleColumn]) [SingleColumn] containing the single column that adheres to the given [condition\].
-     * @throws [NoSuchElementException\] if no column adheres to the given [condition\].
-     * @throws [IllegalArgumentException\] if more than one column adheres to the given [condition\].
-     */
-    private interface CommonSingleDocs {
-
-        /** Examples key */
-        interface Examples
-    }
-
-    /**
-     * ## Single (Child)
-     * Returns ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) the single column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
-     * If no column adheres to the given [condition] or multiple columns adhere to it, no column is selected.
-     *
-     * NOTE: For [String] and [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], `single` is named `singleChild` instead to avoid
-     * clashes with [String.single] and [List.single].
-     *
-     * #### Examples:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[single][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.single]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[singleChild][kotlin.String.singleChild]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn.recursively]`() }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[single][ColumnSet.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[single][ColumnSet.single]`() }`
-     *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column that adheres to the given [condition].
-     * @throws [NoSuchElementException] if no column adheres to the given [condition].
-     * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
-     */
-    public fun <C> ColumnSet<C>.single(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
-        (allColumnsInternal() as TransformableColumnSet<C>)
-            .transform { listOf(it.single(condition)) }
-            .singleOrNullWithTransformerImpl()
-
-    /**
-     * ## Single (Child)
-     * Returns ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) the single column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
-     * If no column adheres to the given [condition] or multiple columns adhere to it, no column is selected.
-     *
-     * NOTE: For [String] and [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], `single` is named `singleChild` instead to avoid
-     * clashes with [String.single] and [List.single].
-     *
-     * #### Examples:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[single][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.single]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[singleChild][kotlin.String.singleChild]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn.recursively]`() }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][DataFrame.select]` { `[single][SingleColumn.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[single][SingleColumn.single]`() }`
-     *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column that adheres to the given [condition].
-     * @throws [NoSuchElementException] if no column adheres to the given [condition].
-     * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
-     */
-    public fun SingleColumn<DataRow<*>>.single(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        ensureIsColGroup().asColumnSet().single(condition)
-
-    /** TODO */
-    public fun ColumnsSelectionDsl<*>.single(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        this.asColumnSet().single(condition)
-
-    /**
-     * ## Single (Child)
-     * Returns ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) the single column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
-     * If no column adheres to the given [condition] or multiple columns adhere to it, no column is selected.
-     *
-     * NOTE: For [String] and [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], `single` is named `singleChild` instead to avoid
-     * clashes with [String.single] and [List.single].
-     *
-     * #### Examples:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[single][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.single]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[singleChild][kotlin.String.singleChild]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn.recursively]`() }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[singleChild][String.singleChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column that adheres to the given [condition].
-     * @throws [NoSuchElementException] if no column adheres to the given [condition].
-     * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
-     */
-    public fun String.singleChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        colGroup(this).single(condition)
-
-    /**
-     * ## Single (Child)
-     * Returns ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) the single column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
-     * If no column adheres to the given [condition] or multiple columns adhere to it, no column is selected.
-     *
-     * NOTE: For [String] and [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], `single` is named `singleChild` instead to avoid
-     * clashes with [String.single] and [List.single].
-     *
-     * #### Examples:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[single][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.single]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[singleChild][kotlin.String.singleChild]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn.recursively]`() }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[single][SingleColumn.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     *
-     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(Type::myColumnGroup).`[single][SingleColumn.single]`() }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[single][KProperty.single]`() }`
-     *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column that adheres to the given [condition].
-     * @throws [NoSuchElementException] if no column adheres to the given [condition].
-     * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
-     */
-    public fun KProperty<DataRow<*>>.single(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        colGroup(this).single(condition)
-
-    /**
-     * ## Single (Child)
-     * Returns ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) the single column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
-     * If no column adheres to the given [condition] or multiple columns adhere to it, no column is selected.
-     *
-     * NOTE: For [String] and [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], `single` is named `singleChild` instead to avoid
-     * clashes with [String.single] and [List.single].
-     *
-     * #### Examples:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[single][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.single]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[singleChild][kotlin.String.singleChild]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn.recursively]`() }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[singleChild][ColumnPath.singleChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column that adheres to the given [condition].
-     * @throws [NoSuchElementException] if no column adheres to the given [condition].
-     * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
-     */
-    public fun ColumnPath.singleChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        colGroup(this).single(condition)
-
-    // endregion
 
     // region subset
 
@@ -7562,7 +7033,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>/*, SingleCol
      *
      * More examples:
      *
-     * `df.`[select][DataFrame.select]` { `[first][SingleColumn.first]` { col -> col.`[any][DataColumn.any]` { it == "Alice" } }.`[recursively][TransformableSingleColumn.recursively]`() }`
+     * `df.`[select][DataFrame.select]` { `[first][SingleColumn.firstChild]` { col -> col.`[any][DataColumn.any]` { it == "Alice" } }.`[recursively][TransformableSingleColumn.recursively]`() }`
      *
      * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]` { "name" in it.`[name][ColumnReference.name]` }.`[rec][TransformableColumnSet.rec]`() }`
      *
@@ -7598,7 +7069,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>/*, SingleCol
      *
      * More examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.first]` { col -> col.`[any][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }.`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.firstChild]` { col -> col.`[any][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }.`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "name" in it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]` }.`[rec][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.rec]`() }`
      *
@@ -7635,7 +7106,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>/*, SingleCol
      *
      * More examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.first]` { col -> col.`[any][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }.`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.firstChild]` { col -> col.`[any][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }.`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "name" in it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]` }.`[rec][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.rec]`() }`
      *
@@ -7671,7 +7142,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>/*, SingleCol
      *
      * More examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.first]` { col -> col.`[any][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }.`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.firstChild]` { col -> col.`[any][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }.`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "name" in it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]` }.`[rec][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.rec]`() }`
      *
@@ -7679,9 +7150,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>/*, SingleCol
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[first][SingleColumn.first]` { col -> col.`[any][DataColumn.any]` { it == "Alice" } }.`[recursively][TransformableSingleColumn.recursively]`() }`
+     * `df.`[select][DataFrame.select]` { `[first][SingleColumn.firstChild]` { col -> col.`[any][DataColumn.any]` { it == "Alice" } }.`[recursively][TransformableSingleColumn.recursively]`() }`
      *
-     * `df.`[select][DataFrame.select]` { `[single][SingleColumn.single]` { it.name == "myCol" }.`[rec][TransformableSingleColumn.rec]`() }`
+     * `df.`[select][DataFrame.select]` { `[single][SingleColumn.singleChild]` { it.name == "myCol" }.`[rec][TransformableSingleColumn.rec]`() }`
      *
      * @param [includeTopLevel] Whether to include the top-level columns in the result. `true` by default.
      * @see [DataFrame.flatten]
@@ -7705,7 +7176,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>/*, SingleCol
      *
      * More examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.first]` { col -> col.`[any][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }.`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.firstChild]` { col -> col.`[any][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }.`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "name" in it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]` }.`[rec][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.rec]`() }`
      *
@@ -7713,9 +7184,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>/*, SingleCol
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.first]` { col -> col.`[any][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }.`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.firstChild]` { col -> col.`[any][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }.`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn.recursively]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[single][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.single]` { it.name == "myCol" }.`[rec][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn.rec]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[single][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.singleChild]` { it.name == "myCol" }.`[rec][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn.rec]`() }`
      *
      * @param [includeTopLevel] Whether to include the top-level columns in the result. `true` by default.
      * @see [DataFrame.flatten][org.jetbrains.kotlinx.dataframe.DataFrame.flatten]
@@ -18589,7 +18060,7 @@ public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(
  *
  * For example:
  *
- * `df.`[select][DataFrame.select]` { it`[`[`][ColumnsContainer.get]`"myColumn"`[`]`][ColumnsContainer.get]`.`[asColumnGroup][SingleColumn.asColumnGroup]`().`[first][ColumnsSelectionDsl.first]`() }`
+ * `df.`[select][DataFrame.select]` { it`[`[`][ColumnsContainer.get]`"myColumn"`[`]`][ColumnsContainer.get]`.`[asColumnGroup][SingleColumn.asColumnGroup]`().`[first][ColumnsSelectionDsl.firstChild]`() }`
  *
  * @receiver The [SingleColumn] to cast to a [SingleColumn]`<`[DataRow][DataRow]`<`[C][C\]`>>`.
  * @param [C\] The type of the (group) column.
@@ -18606,7 +18077,7 @@ private interface SingleColumnAsColumnGroupDocs
  *
  * For example:
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it`[`[`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`"myColumn"`[`]`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`.`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`() }`
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it`[`[`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`"myColumn"`[`]`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`.`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[first][ColumnsSelectionDsl.firstChild]`() }`
  *
  * @receiver The [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
  * @param [C] The type of the (group) column.
@@ -18622,7 +18093,7 @@ public fun <C> SingleColumn<C>.asColumnGroup(): SingleColumn<DataRow<C>> = this 
  *
  * For example:
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it`[`[`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`"myColumn"`[`]`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`.`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`() }`
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it`[`[`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`"myColumn"`[`]`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`.`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[first][ColumnsSelectionDsl.firstChild]`() }`
  *
  * @receiver The [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
  * @param [C] The type of the (group) column.

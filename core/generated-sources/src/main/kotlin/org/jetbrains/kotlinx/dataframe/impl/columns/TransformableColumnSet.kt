@@ -33,9 +33,9 @@ public interface TransformableColumnSet<out C> : ColumnSet<C> {
  * This type of [SingleColumn] can be [transformed][transformResolveSingle] before being resolved.
  *
  * This is especially useful for calls like
- * [first { }][ColumnsSelectionDsl.first].[recursively()][ColumnsSelectionDsl.recursively],
+ * [first { }][ColumnsSelectionDsl.firstChild].[recursively()][ColumnsSelectionDsl.recursively],
  * where [recursively][ColumnsSelectionDsl.recursively] modifies the [SingleColumn]
- * that [first { }][ColumnsSelectionDsl.first] operates on to include ALL columns, including those inside
+ * that [first { }][ColumnsSelectionDsl.firstChild] operates on to include ALL columns, including those inside
  * column groups, before it's evaluated.
  *
  * @see [SingleColumn]

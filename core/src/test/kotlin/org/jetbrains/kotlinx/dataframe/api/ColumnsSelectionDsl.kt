@@ -34,7 +34,7 @@ open class ColumnsSelectionDslTests : TestBase() {
         // works on ColumnSet<Int>
         df.select { colsOf<Int>().first() }
         // recognized as SingleColumn<DataRow<*>>
-        df.select { name.first() }
+        df.select { name.firstChild() }
         // recognized as impossible to call, because it's a SingleColumn<Int>
 //        df.select { age.first() }
         // unsafe because of string API, but has runtime check
@@ -42,7 +42,7 @@ open class ColumnsSelectionDslTests : TestBase() {
         // unsafe because of string API, but has runtime check
         df.select { pathOf("name").firstChild() }
         // recognized as SingleColumn<DataRow<*>>
-        df.select { Person::name.first() }
+        df.select { Person::name.firstChild() }
 //        shouldThrow<IllegalArgumentException> {
 //            df.select { Person::age.first() }
 //        }
@@ -51,14 +51,14 @@ open class ColumnsSelectionDslTests : TestBase() {
 //        df.select { Person::age.first() }
         // if not recognized correctly (e.g. because of lack of DataRow<> around type), asColumnGroup() can be used
         shouldThrow<IllegalArgumentException> {
-            df.select { Person::age.asColumnGroup().first() }
+            df.select { Person::age.asColumnGroup().firstChild() }
         }
         // unfortunately impossible to call like this, because of AnyCol type
 //        df.select { it["name"].first() }
         // but you can use asColumnGroup() to explicitly specify the column type
-        df.select { it["name"].asColumnGroup().first() }
+        df.select { it["name"].asColumnGroup().firstChild() }
         // or use the accessor like this
-        df.select { colGroup("name").first() }
+        df.select { colGroup("name").firstChild() }
 
         listOf(
             df.select { name },
@@ -70,19 +70,19 @@ open class ColumnsSelectionDslTests : TestBase() {
         listOf(
             df.select { name.firstName },
 
-            df.select { name.first { col -> col.any { it == "Alice" } } },
+            df.select { name.firstChild { col -> col.any { it == "Alice" } } },
             df.select { name.colsOf<String>().first { col -> col.any { it == "Alice" } } },
 
             df.select { "name".firstChild { col -> col.any { it == "Alice" } } },
             df.select { "name".colsOf<String>(typeOf<String>()).first { col -> col.any { it == "Alice" } } },
 
-            df.select { Person::name.asColumnGroup().first { col -> col.any { it == "Alice" } } },
+            df.select { Person::name.asColumnGroup().firstChild { col -> col.any { it == "Alice" } } },
             df.select { Person::name.colsOf<String>(typeOf<String>()).first { col -> col.any { it == "Alice" } } },
 
             df.select { pathOf("name").firstChild { col -> col.any { it == "Alice" } } },
             df.select { pathOf("name").colsOf<String>(typeOf<String>()).first { col -> col.any { it == "Alice" } } },
 
-            df.select { it["name"].asColumnGroup().first { col -> col.any { it == "Alice" } } },
+            df.select { it["name"].asColumnGroup().firstChild { col -> col.any { it == "Alice" } } },
             df.select {
                 it["name"].asColumnGroup().colsOf<String>(typeOf<String>()).first { col -> col.any { it == "Alice" } }
             },
@@ -101,19 +101,19 @@ open class ColumnsSelectionDslTests : TestBase() {
         listOf(
             df.select { name.firstName },
 
-            df.select { name.last { col -> col.any { it == "Alice" } } },
+            df.select { name.lastChild { col -> col.any { it == "Alice" } } },
             df.select { name.colsOf<String>().last { col -> col.any { it == "Alice" } } },
 
             df.select { "name".lastChild { col -> col.any { it == "Alice" } } },
             df.select { "name".colsOf<String>(typeOf<String>()).last { col -> col.any { it == "Alice" } } },
 
-            df.select { Person::name.last { col -> col.any { it == "Alice" } } },
+            df.select { Person::name.lastChild { col -> col.any { it == "Alice" } } },
             df.select { Person::name.colsOf<String>(typeOf<String>()).last { col -> col.any { it == "Alice" } } },
 
             df.select { pathOf("name").lastChild { col -> col.any { it == "Alice" } } },
             df.select { pathOf("name").colsOf<String>(typeOf<String>()).last { col -> col.any { it == "Alice" } } },
 
-            df.select { it["name"].asColumnGroup().last { col -> col.any { it == "Alice" } } },
+            df.select { it["name"].asColumnGroup().lastChild { col -> col.any { it == "Alice" } } },
             df.select {
                 it["name"].asColumnGroup().colsOf<String>(typeOf<String>()).last { col -> col.any { it == "Alice" } }
             },
@@ -135,19 +135,19 @@ open class ColumnsSelectionDslTests : TestBase() {
         listOf(
             df.select { name.firstName },
 
-            df.select { name.single { col -> col.any { it == "Alice" } } },
+            df.select { name.singleChild { col -> col.any { it == "Alice" } } },
             df.select { name.colsOf<String>().single { col -> col.any { it == "Alice" } } },
 
             df.select { "name".singleChild { col -> col.any { it == "Alice" } } },
             df.select { "name".colsOf<String>(typeOf<String>()).single { col -> col.any { it == "Alice" } } },
 
-            df.select { Person::name.single { col -> col.any { it == "Alice" } } },
+            df.select { Person::name.singleChild { col -> col.any { it == "Alice" } } },
             df.select { Person::name.colsOf<String>(typeOf<String>()).single { col -> col.any { it == "Alice" } } },
 
             df.select { pathOf("name").singleChild { col -> col.any { it == "Alice" } } },
             df.select { pathOf("name").colsOf<String>(typeOf<String>()).single { col -> col.any { it == "Alice" } } },
 
-            df.select { it["name"].asColumnGroup().single { col -> col.any { it == "Alice" } } },
+            df.select { it["name"].asColumnGroup().singleChild { col -> col.any { it == "Alice" } } },
             df.select {
                 it["name"].asColumnGroup().colsOf<String>(typeOf<String>()).single { col -> col.any { it == "Alice" } }
             },
