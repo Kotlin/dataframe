@@ -84,6 +84,7 @@ internal fun Iterable<ColumnWithPath<*>>.flattenRecursively(): List<ColumnWithPa
                 flattenRecursively(
                     it.data.asColumnGroup()
                         .columns()
+                        // TODO make path modification optional
                         .map { it.addPath(path + it.name()) }
                 )
             }

@@ -1,6 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.columns
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
+import org.jetbrains.kotlinx.dataframe.api.asSingleColumn
 
 /**
  * ## ColumnSet
@@ -18,3 +21,6 @@ internal fun <C> ColumnsResolver<C>.asColumnSet(): ColumnSet<C> =
 
 internal fun <C> SingleColumn<C>.asColumnSet(): ColumnSet<C> =
     object : ColumnSet<C>, SingleColumn<C> by this {}
+
+internal fun <C> ColumnsSelectionDsl<C>.asColumnSet(): ColumnSet<DataRow<C>> =
+    asSingleColumn().asColumnSet()

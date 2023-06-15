@@ -60,7 +60,7 @@ class Recursively : TestBase() {
 
     @Test
     fun children() {
-        dfGroup.getColumnsWithPaths { children().recursively() }.print()
+//        dfGroup.getColumnsWithPaths { children().recursively() }.print()
         dfGroup.getColumnsWithPaths { name.children() }.print()
     }
 

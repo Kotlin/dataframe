@@ -303,16 +303,16 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select { all().cols() },
             df.select { cols() },
             df.select { all() },
-            df.select { filter { true } },
+//            df.select { filter { true } },
         ).shouldAllBeEqual()
 
         listOf(
             df.select { name },
             df.select { name }.select { all() },
             df.select { name }.select { cols() },
-            df.select { name }.select { filter { true } },
+//            df.select { name }.select { filter { true } },
             df.select { name }.select { cols().all() },
-            df.select { name }.select { filter { true }.all() },
+//            df.select { name }.select { filter { true }.all() },
             df.select { name }.select { all().cols() },
             df.select { name }.select { all().filter { true } },
         ).shouldAllBeEqual()
@@ -321,7 +321,7 @@ open class ColumnsSelectionDslTests : TestBase() {
             df.select { cols(name, age, weight) },
 
             df.select { cols { "e" in it.name() } },
-            df.select { filter { "e" in it.name() } },
+//            df.select { filter { "e" in it.name() } },
 //            df.select { this[{ "e" in it.name() }] },
 
             df.select { all().cols { "e" in it.name() } },
@@ -906,21 +906,21 @@ open class ColumnsSelectionDslTests : TestBase() {
         listOf(
             df.select { all() },
 
-            df.select { children() },
+//            df.select { children() },
 
             df.select { cols() },
 
-            df.select { filter { true } }
+//            df.select { filter { true } }
         ).shouldAllBeEqual()
 
         listOf(
             df.select { all().rec() },
 
-            df.select { children().rec() },
+//            df.select { children().rec() },
 
             df.select { cols().rec() },
 
-            df.select { filter { true }.rec() }
+//            df.select { filter { true }.rec() }
         ).shouldAllBeEqual()
 
         listOf(
@@ -1080,7 +1080,7 @@ open class ColumnsSelectionDslTests : TestBase() {
         df.select {
             "age"<Int>() and name.firstName
 
-            select { this { age } }
+//            select { this { age } }
         }
     }
 }
