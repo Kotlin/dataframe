@@ -1,55 +1,13 @@
 [//]: # (title: Installation)
 
 You can use the Kotlin DataFrame library in different environments — as any other JVM library.
-The following sections will show how to use the Kotlin DataFrame library in [Jupyter](#jupyter-notebook), [Datalore](#datalore) and in a [Gradle project](#gradle).
-
-## Jupyter Notebook
-
-You can use the Kotlin DataFrame library in Jupyter Notebook and in Jupyter Lab.
-To start, install the latest version of [Kotlin kernel](https://github.com/Kotlin/kotlin-jupyter#installation) and start your favorite Jupyter client from
-the command line, for example:
-
-```shell
-jupyter notebook
-```
-
-In the notebook you only have to write single line to start using the Kotlin DataFrame library:
-
-```text
-%use dataframe
-```
-
-In this case the version which is bundled with the kernel, will be used.
-If you want to always use the latest version, add another magic before `%use dataframe`:
-
-```text
-%useLatestDescriptors
-%use dataframe
-```
-
-If you want to use specific version of the Kotlin DataFrame library, you can specify it in brackets:
-
-```text
-%use dataframe(%dataFrameVersion%)
-```
-
-After loading, all essential types will be already imported, so you can start using the Kotlin DataFrame library. Enjoy!
-
-## Datalore
-
-To start with the Kotlin DataFrame library in Datalore, create a Kotlin notebook first:
-
-![Installation to Datalore](datalore-1.png)
-
-As the Notebook you've created is actually a Jupyter notebook, you can follow the instructions 
-in the [previous section](#jupyter-notebook) to turn the Kotlin DataFrame library on. 
-The simplest way of doing this is shown on screenshot:
-
-![Datalore notebook](datalore-2.png)
+The following sections will show how to use the Kotlin DataFrame library in [Jupyter](#jupyter-notebook),
+[Datalore](#datalore), and a [Gradle project](#gradle).
 
 ## Gradle
 
-The Kotlin DataFrame library is published to Maven Central, so you can simply add the following line to your Kotlin DSL
+The Kotlin DataFrame library is published to Maven Central,
+so you can add the following line to your Kotlin DSL
 buildscript to depend on it:
 
 ### General configuration
@@ -156,11 +114,11 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
 </tabs>
 
 Note that it's better to use the same version for a library and plugin to avoid unpredictable errors.
-After plugin configuration you can try it out with [example](schemasGradle.md#annotation-processing).
+After plugin configuration, you can try it out, for [example](schemasGradle.md#annotation-processing).
 
 ### Custom configuration
 
-If you want to avoid adding unnecessary dependency, you can choose from following artifacts:
+If you want to avoid adding unnecessary dependencies, you can choose from the following artifacts:
 
 <tabs>
 <tab title="Kotlin DSL">
@@ -197,7 +155,7 @@ dependencies {
 
 #### Linter configuration
 
-We provide a Gradle plugin that generates interfaces by your data.
+We provide a Gradle plugin that generates interfaces with your data.
 Use this configuration to prevent linter from complaining about formatting in the generated sources.
 
 <tabs>
@@ -234,7 +192,54 @@ tasks.withType(org.jmailen.gradle.kotlinter.tasks.LintTask).all {
 
 </tabs>
 
+## Jupyter Notebook
+
+You can use the Kotlin DataFrame library in Jupyter Notebook and in Jupyter Lab.
+To start,
+install the latest version of [Kotlin kernel](https://github.com/Kotlin/kotlin-jupyter#installation)
+and start your favorite Jupyter client from
+the command line, for example:
+
+```shell
+jupyter notebook
+```
+
+In the notebook, you only have to write a single line to start using the Kotlin DataFrame library:
+
+```text
+%use dataframe
+```
+
+In this case, the version bundled with the kernel will be used.
+If you want always to use the latest version, add another magic before `%use dataframe`:
+
+```text
+%useLatestDescriptors
+%use dataframe
+```
+
+If you want to use a specific version of the Kotlin DataFrame library, you can specify it in brackets:
+
+```text
+%use dataframe(%dataFrameVersion%)
+```
+
+After loading, all essential types will be already imported, so you can start using the Kotlin DataFrame library. Enjoy!
+
+## Datalore
+
+To start with the Kotlin DataFrame library in Datalore, create a Kotlin notebook first:
+
+![Installation to Datalore](datalore-1.png)
+
+As the Notebook you've created is a Jupyter notebook, you can follow the instructions
+in the [previous section](#jupyter-notebook) to turn the Kotlin DataFrame library on.
+The simplest way of doing this is shown in the screenshot:
+
+![Datalore notebook](datalore-2.png)
+
 ## Other build systems
 
-If you are using Maven, Ivy or Bazel to configure your build, you can still use the Kotlin DataFrame library in your project.
-Just follow the instructions for your build system on [this page](https://search.maven.org/artifact/org.jetbrains.kotlinx/dataframe/0.8.1/jar).
+If you are using Maven, Ivy, or Bazel to configure your build,
+you can still use the Kotlin DataFrame library in your project.
+Just follow the instructions for your build system on [this page](https://central.sonatype.com/artifact/org.jetbrains.kotlinx/dataframe/0.10.1/jar).
