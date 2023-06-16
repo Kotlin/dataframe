@@ -1,8 +1,4 @@
-[//]: # (title: Installation)
-
-You can use the Kotlin DataFrame library in different environments — as any other JVM library.
-The following sections will show how to use the Kotlin DataFrame library in [Jupyter](#jupyter-notebook),
-[Datalore](#datalore), and a [Gradle project](#gradle).
+[//]: # (title: Get started with Kotlin DataFrame on Gradle with custom configuration)
 
 ## Gradle
 
@@ -191,55 +187,3 @@ tasks.withType(org.jmailen.gradle.kotlinter.tasks.LintTask).all {
 </tab>
 
 </tabs>
-
-## Jupyter Notebook
-
-You can use the Kotlin DataFrame library in Jupyter Notebook and in Jupyter Lab.
-To start,
-install the latest version of [Kotlin kernel](https://github.com/Kotlin/kotlin-jupyter#installation)
-and start your favorite Jupyter client from
-the command line, for example:
-
-```shell
-jupyter notebook
-```
-
-In the notebook, you only have to write a single line to start using the Kotlin DataFrame library:
-
-```text
-%use dataframe
-```
-
-In this case, the version bundled with the kernel will be used.
-If you want always to use the latest version, add another magic before `%use dataframe`:
-
-```text
-%useLatestDescriptors
-%use dataframe
-```
-
-If you want to use a specific version of the Kotlin DataFrame library, you can specify it in brackets:
-
-```text
-%use dataframe(%dataFrameVersion%)
-```
-
-After loading, all essential types will be already imported, so you can start using the Kotlin DataFrame library. Enjoy!
-
-## Datalore
-
-To start with the Kotlin DataFrame library in Datalore, create a Kotlin notebook first:
-
-![Installation to Datalore](datalore-1.png)
-
-As the Notebook you've created is a Jupyter notebook, you can follow the instructions
-in the [previous section](#jupyter-notebook) to turn the Kotlin DataFrame library on.
-The simplest way of doing this is shown in the screenshot:
-
-![Datalore notebook](datalore-2.png)
-
-## Other build systems
-
-If you are using Maven, Ivy, or Bazel to configure your build,
-you can still use the Kotlin DataFrame library in your project.
-Just follow the instructions for your build system on [this page](https://central.sonatype.com/artifact/org.jetbrains.kotlinx/dataframe/0.10.1/jar).
