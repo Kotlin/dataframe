@@ -37,6 +37,10 @@ In your Gradle build file (`build.gradle.kts`), add the Kotlin DataFrame library
 <tab title="Kotlin DSL">
 
 ```kotlin
+plugins {
+    id("org.jetbrains.kotlinx.dataframe") version "%dataFrameVersion%"
+}
+
 dependencies {
     implementation("org.jetbrains.kotlinx:dataframe:%dataFrameVersion%")
 }
@@ -46,7 +50,11 @@ dependencies {
 
 <tab title="Groovy DSL">
 
-```kotlin
+```groovy
+plugins {
+    id "org.jetbrains.kotlinx.dataframe" version "%dataFrameVersion%"
+}
+
 dependencies {
     implementation 'org.jetbrains.kotlinx:dataframe:%dataFrameVersion%'
 }
