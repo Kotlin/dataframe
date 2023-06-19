@@ -147,3 +147,5 @@ You can also contact us in the [#datascience](https://kotlinlang.slack.com/archi
 For more information on how to contribute, see our [Contributing guidelines](https://github.com/Kotlin/dataframe/blob/master/CONTRIBUTING.md).
 
 Good luck!
+
+<meta name="google-site-verification" content="Lffz_ab-_S5cmA07ZXVbucHVklaRsnk8gEt8frHKjMk" />
