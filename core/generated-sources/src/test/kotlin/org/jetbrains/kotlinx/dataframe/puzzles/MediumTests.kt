@@ -1,10 +1,32 @@
 package org.jetbrains.kotlinx.dataframe.puzzles
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.columnOf
+import org.jetbrains.kotlinx.dataframe.api.convert
+import org.jetbrains.kotlinx.dataframe.api.countDistinct
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.diffOrNull
+import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.groupBy
+import org.jetbrains.kotlinx.dataframe.api.isNaN
+import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.mapToColumn
+import org.jetbrains.kotlinx.dataframe.api.minBy
+import org.jetbrains.kotlinx.dataframe.api.name
+import org.jetbrains.kotlinx.dataframe.api.named
+import org.jetbrains.kotlinx.dataframe.api.namedValuesOf
+import org.jetbrains.kotlinx.dataframe.api.prev
+import org.jetbrains.kotlinx.dataframe.api.rowMean
+import org.jetbrains.kotlinx.dataframe.api.sortBy
+import org.jetbrains.kotlinx.dataframe.api.sortDesc
+import org.jetbrains.kotlinx.dataframe.api.sum
+import org.jetbrains.kotlinx.dataframe.api.take
+import org.jetbrains.kotlinx.dataframe.api.transpose
+import org.jetbrains.kotlinx.dataframe.api.transposeTo
+import org.jetbrains.kotlinx.dataframe.api.value
+import org.jetbrains.kotlinx.dataframe.api.with
 import org.junit.Test
 import kotlin.math.roundToInt
 import kotlin.random.Random
@@ -24,8 +46,8 @@ class MediumTests {
         df.filter { prev()?.get(a) != a() } shouldBe expected
         df.filter { prev()?.get("A") != "A"() } shouldBe expected
 
-        df.filter { diff { a() } != 0 } shouldBe expected
-        df.filter { diff { "A"<Int>() } != 0 } shouldBe expected
+        df.filter { diffOrNull { a() } != 0 } shouldBe expected
+        df.filter { diffOrNull { "A"<Int>() } != 0 } shouldBe expected
     }
 
     @Test
