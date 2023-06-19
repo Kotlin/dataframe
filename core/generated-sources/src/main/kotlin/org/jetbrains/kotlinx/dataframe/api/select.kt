@@ -43,3 +43,10 @@ public fun <T> DataFrame<T>.select(columns: Iterable<AnyColumnReference>): DataF
     select { columns.toColumnSet() }
 
 // endregion
+
+// region ColumnsSelectionDsl
+// TODO probably provide all overloads, similar to DataFrame.select in this file
+// TODO explore parallels with except {}
+// TODO cannot be moved out ColumnsSelectionDsl due to String.invoke conflict
+public interface SelectColumnsSelectionDsl
+// endregion
