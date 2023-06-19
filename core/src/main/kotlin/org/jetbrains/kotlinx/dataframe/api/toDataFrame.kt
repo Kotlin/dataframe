@@ -34,7 +34,7 @@ public inline fun <reified T> Iterable<T>.toDataFrame(vararg props: KProperty<*>
         properties(roots = props, maxDepth = maxDepth)
     }
 
-@Deprecated(DF_READ_DEPRECATION_MESSAGE, ReplaceWith(DF_READ_REPLACE_MESSAGE), DeprecationLevel.ERROR)
+@Deprecated(DF_READ_DEPRECATION_MESSAGE, ReplaceWith("this.unfold(columns)"), DeprecationLevel.ERROR)
 public fun <T> DataFrame<T>.read(columns: ColumnsSelector<T, *>): DataFrame<T> = unfold(columns)
 
 @Deprecated(DF_READ_DEPRECATION_MESSAGE, ReplaceWith(DF_READ_REPLACE_MESSAGE), DeprecationLevel.ERROR)
