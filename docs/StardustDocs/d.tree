@@ -6,7 +6,7 @@
                  name="Dataframe"
                  status="release"
                  start-page="overview.md">
-    <toc-element topic="gettingStarted.md">
+    <toc-element topic="gettingStarted.md" accepts-web-file-names="installation.html">
         <toc-element topic="gettingStartedGradle.md"/>
         <toc-element topic="gettingStartedJupyterNotebook.md"/>
         <toc-element topic="gettingStartedDatalore.md"/>
