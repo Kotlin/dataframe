@@ -21,7 +21,7 @@ df.update { colsOf<Int?>() }.where { it == null }.with { -1 }
 
 ## fillNaNs
 
-Replaces `Double.NaN` and `Float.NaN` values with given value or expression.
+Replaces [`NaN` values](nanAndNa.md#nan) (`Double.NaN` and `Float.NaN`) with given value or expression.
 
 <!---FUN fillNaNs-->
 
@@ -34,7 +34,7 @@ df.fillNaNs { colsOf<Double>() }.withZero()
 
 ## fillNA
 
-Replaces `null`, `Double.NaN` and `Float.NaN` values with given value or expression.
+Replaces [`NA` values](nanAndNa.md#na) (`null`, `Double.NaN`, and `Float.NaN`) with given value or expression.
 
 <!---FUN fillNA-->
 
