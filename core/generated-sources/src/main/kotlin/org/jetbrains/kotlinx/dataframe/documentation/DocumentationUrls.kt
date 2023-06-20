@@ -19,6 +19,17 @@ internal interface DocumentationUrls {
         interface RowConditions
     }
 
+    /** [See `NaN` and `NA` on the documentation website.](https://kotlin.github.io/dataframe/nanAndNa.html) */
+    interface NanAndNa {
+
+        /** [See `NaN` on the documentation website.](https://kotlin.github.io/dataframe/nanAndNa.html#nan) */
+        interface NaN
+
+        /** [See `NA` on the documentation website.](https://kotlin.github.io/dataframe/nanAndNa.html#na) */
+
+        interface NA
+    }
+
     /** [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) */
     interface Update
 
