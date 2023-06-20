@@ -155,6 +155,7 @@
             <toc-element topic="statisticalRelationship.md">
                 <toc-element topic="corr.md"/>
             </toc-element>
+            <toc-element topic="rowStats.md"/>
         </toc-element>
         <toc-element topic="multipleDataFrames.md">
             <toc-element topic="addDf.md"/>
