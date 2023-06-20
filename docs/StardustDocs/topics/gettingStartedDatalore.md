@@ -4,10 +4,10 @@
 
 To start with the Kotlin DataFrame library in Datalore, create a Kotlin notebook first:
 
-![Installation to Datalore](datalore-1.png)
+![Installation in Datalore](datalore-1.png)
 
-As the Notebook you've created is a Jupyter notebook, you can follow the instructions
-in the [previous section](gettingStartedJupyterNotebook.md) to turn the Kotlin DataFrame library on.
+As the notebook you've created is a Jupyter Notebook, you can follow the instructions
+in the [previous section](gettingStartedJupyterNotebook.md) to use the Kotlin DataFrame library.
 The simplest way of doing this is shown in the screenshot:
 
 ![Datalore notebook](datalore-2.png)
