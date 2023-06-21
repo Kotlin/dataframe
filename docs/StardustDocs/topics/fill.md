@@ -39,7 +39,7 @@ Replaces [`NA` values](nanAndNa.md#na) (`null`, `Double.NaN`, and `Float.NaN`) w
 <!---FUN fillNA-->
 
 ```kotlin
-df.fillNA { weight }.withValue(-1)
+df.fillNA { weight }.with { -1 }
 ```
 
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.fillNA.html"/>

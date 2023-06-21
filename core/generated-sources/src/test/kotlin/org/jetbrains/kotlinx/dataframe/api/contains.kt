@@ -17,7 +17,7 @@ class ContainsTests {
         val df = dataFrameOf("a", "b")(1, 2, 3, 4)
         val col = df.asColumnGroup("col")
         col.contains(df[0]) shouldBe true
-        col.contains(df.update("b").withValue(0)[0]) shouldBe false
+        col.contains(df.update("b").with { 0 }[0]) shouldBe false
     }
 
     @Test

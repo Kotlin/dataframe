@@ -35,7 +35,6 @@ internal interface FillNulls {
      *   | .`[notNull][org.jetbrains.kotlinx.dataframe.api.Update.notNull]` { `[rowExpression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpression.WithExample]` }
      *   | .`[perCol][org.jetbrains.kotlinx.dataframe.api.Update.perCol]` { `[colExpression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenColumn.ColumnExpression.WithExample]` }
      *   | .`[perRowCol][org.jetbrains.kotlinx.dataframe.api.Update.perRowCol]` { `[rowColExpression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]` }
-     *   | .`[withValue][org.jetbrains.kotlinx.dataframe.api.Update.withValue]`(value)
      *   | .`[withNull][org.jetbrains.kotlinx.dataframe.api.Update.withNull]`()
      *   | .`[withZero][org.jetbrains.kotlinx.dataframe.api.Update.withZero]`()
      *   | .`[asFrame][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]` { `[dataFrameExpression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression.WithExample]` }`
@@ -239,7 +238,6 @@ internal interface FillNaNs {
      *   | .`[notNull][org.jetbrains.kotlinx.dataframe.api.Update.notNull]` { `[rowExpression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpression.WithExample]` }
      *   | .`[perCol][org.jetbrains.kotlinx.dataframe.api.Update.perCol]` { `[colExpression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenColumn.ColumnExpression.WithExample]` }
      *   | .`[perRowCol][org.jetbrains.kotlinx.dataframe.api.Update.perRowCol]` { `[rowColExpression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]` }
-     *   | .`[withValue][org.jetbrains.kotlinx.dataframe.api.Update.withValue]`(value)
      *   | .`[withNull][org.jetbrains.kotlinx.dataframe.api.Update.withNull]`()
      *   | .`[withZero][org.jetbrains.kotlinx.dataframe.api.Update.withZero]`()
      *   | .`[asFrame][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]` { `[dataFrameExpression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression.WithExample]` }`
@@ -413,7 +411,6 @@ internal interface FillNA {
      *   | .`[notNull][org.jetbrains.kotlinx.dataframe.api.Update.notNull]` { `[rowExpression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpression.WithExample]` }
      *   | .`[perCol][org.jetbrains.kotlinx.dataframe.api.Update.perCol]` { `[colExpression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenColumn.ColumnExpression.WithExample]` }
      *   | .`[perRowCol][org.jetbrains.kotlinx.dataframe.api.Update.perRowCol]` { `[rowColExpression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]` }
-     *   | .`[withValue][org.jetbrains.kotlinx.dataframe.api.Update.withValue]`(value)
      *   | .`[withNull][org.jetbrains.kotlinx.dataframe.api.Update.withNull]`()
      *   | .`[withZero][org.jetbrains.kotlinx.dataframe.api.Update.withZero]`()
      *   | .`[asFrame][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]` { `[dataFrameExpression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression.WithExample]` }`

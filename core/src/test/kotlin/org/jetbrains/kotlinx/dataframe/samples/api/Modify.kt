@@ -95,7 +95,6 @@ import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withNull
-import org.jetbrains.kotlinx.dataframe.api.withValue
 import org.jetbrains.kotlinx.dataframe.api.withZero
 import org.jetbrains.kotlinx.dataframe.explainer.PluginCallbackProxy
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
@@ -137,7 +136,7 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun updateWithConst() {
         // SampleStart
-        df.update { city }.where { name.firstName == "Alice" }.withValue("Paris")
+        df.update { city }.where { name.firstName == "Alice" }.with { "Paris" }
         // SampleEnd
     }
 
@@ -304,7 +303,7 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun fillNA() {
         // SampleStart
-        df.fillNA { weight }.withValue(-1)
+        df.fillNA { weight }.with { -1 }
         // SampleEnd
     }
 
