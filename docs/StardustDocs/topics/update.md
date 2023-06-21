@@ -8,7 +8,7 @@ Returns [`DataFrame`](DataFrame.md) with changed values in some cells. Column ty
 update { columns }
     [.where { rowCondition } ]
     [.at(rowIndices) ] 
-     .with { rowExpression } | .notNull { rowExpression } | .perCol { colExpression } | .perRowCol { rowColExpression } | .withValue(value) | .withNull() | .withZero() | .asFrame { frameExpression } 
+     .with { rowExpression } | .notNull { rowExpression } | .perCol { colExpression } | .perRowCol { rowColExpression } | .withNull() | .withZero() | .asFrame { frameExpression } 
 
 rowCondition: DataRow.(OldValue) -> Boolean
 rowExpression: DataRow.(OldValue) -> NewValue
@@ -36,7 +36,7 @@ Update with constant value:
 <!---FUN updateWithConst-->
 
 ```kotlin
-df.update { city }.where { name.firstName == "Alice" }.withValue("Paris")
+df.update { city }.where { name.firstName == "Alice" }.with { "Paris" }
 ```
 
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.updateWithConst.html"/>
