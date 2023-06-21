@@ -17,5 +17,9 @@
         <generate-sitemap-url-prefix>https://kotlin.github.io/dataframe/</generate-sitemap-url-prefix>
         <analytics-head-script-file>resize-iframes.js</analytics-head-script-file>
     </variables>
-    <build-profile instance="d"/>
+    <build-profile instance="d">
+        <variables>
+            <noindex-content>false</noindex-content>
+        </variables>
+    </build-profile>
 </buildprofiles>

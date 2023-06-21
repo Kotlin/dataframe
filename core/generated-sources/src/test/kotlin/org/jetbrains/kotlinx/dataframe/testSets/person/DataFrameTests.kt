@@ -238,14 +238,14 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `update cells by index`() {
-        val res = typed.update { age }.at(2, 4).withValue(100)
+        val res = typed.update { age }.at(2, 4).with { 100 }
         val expected = typed.rows().map { if (it.index == 2 || it.index == 4) 100 else it.age }
         res.age.toList() shouldBe expected
     }
 
     @Test
     fun `update cells by index range`() {
-        val res = typed.update { age }.at(2..4).withValue(100)
+        val res = typed.update { age }.at(2..4).with { 100 }
         val expected = typed.rows().map { if (it.index in 2..4) 100 else it.age }
         res.age.toList() shouldBe expected
     }
@@ -257,13 +257,13 @@ class DataFrameTests : BaseTest() {
             this["weight"].toList() shouldBe expected
         }
 
-        typed.fillNulls { weight }.withValue(0).check()
-        typed.fillNulls(typed.weight).withValue(0).check()
+        typed.fillNulls { weight }.with { 0 }.check()
+        typed.fillNulls(typed.weight).with { 0 }.check()
 
-        df.fillNulls { weight }.withValue(0).check()
-        df.fillNulls(weight).withValue(0).check()
+        df.fillNulls { weight }.with { 0 }.check()
+        df.fillNulls(weight).with { 0 }.check()
 
-        df.fillNulls("weight").withValue(0).check()
+        df.fillNulls("weight").with { 0 }.check()
 
         typed.fillNulls { weight }.withZero().check()
         typed.fillNulls { weight }.withZero().check()
@@ -1337,7 +1337,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun corr() {
-        val fixed = typed.fillNulls { weight }.withValue(60)
+        val fixed = typed.fillNulls { weight }.with { 60 }
         val res = fixed.corr()
         res.ncol shouldBe 3
         res.nrow shouldBe 2
@@ -1526,7 +1526,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `update nullable column with not null`() {
         val df = dataFrameOf("name", "value")("Alice", 1, null, 2)
-        df.update("name").at(0).withValue("ALICE")
+        df.update("name").at(0).with { "ALICE" }
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -1905,7 +1905,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `find the longest string`() {
         val longestCityName = "Taumatawhakatangihangakoauauotamateaturipukakapikimaungahoronukupokaiwhenuakitanatahu"
-        val updated = typed.update { city }.where { it == "Dubai" }.withValue(longestCityName)
+        val updated = typed.update { city }.where { it == "Dubai" }.with { longestCityName }
         updated.valuesNotNull { colsOf<String?>() }.maxByOrNull { it.length } shouldBe longestCityName
     }
 

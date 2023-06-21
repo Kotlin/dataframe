@@ -4,7 +4,7 @@
 
 Computes the sum of values.
 
-`null` and `NaN` values are ignored.
+[`NA` values](nanAndNa.md#na) (`null` and `NaN`) are ignored.
 
 <!---FUN statisticModes-->
 

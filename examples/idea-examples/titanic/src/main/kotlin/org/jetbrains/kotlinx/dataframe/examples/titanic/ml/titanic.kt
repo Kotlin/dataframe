@@ -38,7 +38,7 @@ fun main() {
     val (train, test) = df
         // imputing
         .fillNulls { sibsp and parch and age and fare }.perCol { it.mean() }
-        .fillNulls { sex }.withValue("female")
+        .fillNulls { sex }.with { "female" }
         // one hot encoding
         .pivotMatches { pclass and sex }
         // feature extraction
