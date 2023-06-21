@@ -26,7 +26,6 @@ internal interface DocumentationUrls {
         interface NaN
 
         /** [See `NA` on the documentation website.](https://kotlin.github.io/dataframe/nanAndNa.html#na) */
-
         interface NA
     }
 
