@@ -11,7 +11,7 @@ cumSum(skipNA = true) [ { columns } ]
 Returns a [`DataFrame`](DataFrame.md) or [`DataColumn`](DataColumn.md) containing the cumulative sum.
 
 **Parameters:**
-* `skipNA` — when `true`, ignores `NA` (`null` or `NaN`) values. 
+* `skipNA` — when `true`, ignores [`NA` values](nanAndNa.md#na) (`null` or `NaN`). 
   When `false`, all values after first `NA` will be `NaN` (for `Double` and `Float` columns) or `null` (for integer columns).
 
 **Available for:**
