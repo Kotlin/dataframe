@@ -26,6 +26,8 @@ class JupyterCodegenTests : JupyterReplTestCase() {
             """.trimIndent()
         )
         res1 shouldBe Unit
+
+        @Language("kts")
         val res2 = execRaw("df") as AnyFrame
 
         res2["value"].type shouldBe typeOf<List<Any?>>()
@@ -126,6 +128,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         )
         res1 shouldBe Unit
 
+        @Language("kts")
         val res2 = execRaw("df.`1`")
         res2.shouldBeInstanceOf<ValueColumn<*>>()
     }
@@ -141,6 +144,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         )
         res1.shouldBeInstanceOf<MimeTypedResult>()
 
+        @Language("kts")
         val res2 = exec(
             """listOf(df.`{a}`[0], df.`(b)`[0], df.`{c}`[0])"""
         )
@@ -157,6 +161,8 @@ class JupyterCodegenTests : JupyterReplTestCase() {
             """.trimIndent()
         )
         res1.shouldBeInstanceOf<MimeTypedResult>()
+
+        @Language("kts")
         val res2 = exec(
             "listOf(df.`\$id`[0])"
         )
@@ -174,6 +180,8 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         )
         res1.shouldBeInstanceOf<MimeTypedResult>()
         println(res1.entries.joinToString())
+
+        @Language("kts")
         val res2 = exec(
             "listOf(df.`Day's`[0])"
         )
@@ -193,6 +201,8 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         )
         res1.shouldBeInstanceOf<MimeTypedResult>()
         println(res1.entries.joinToString())
+
+        @Language("kts")
         val res2 = exec(
             "listOf(df.`Test `[0])"
         )
@@ -212,6 +222,8 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         )
         res1.shouldBeInstanceOf<MimeTypedResult>()
         println(res1.entries.joinToString())
+
+        @Language("kts")
         val res2 = exec(
             "listOf(df.`Test `[0])"
         )
@@ -220,6 +232,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
 
     @Test
     fun `generic interface`() {
+        @Language("kts")
         val res1 = exec(
             """
             @DataSchema
@@ -229,6 +242,8 @@ class JupyterCodegenTests : JupyterReplTestCase() {
             """.trimIndent()
         )
         res1.shouldBeInstanceOf<Unit>()
+
+        @Language("kts")
         val res2 = exec(
             """
                 val <T> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
@@ -240,6 +255,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
 
     @Test
     fun `generic interface with upper bound`() {
+        @Language("kts")
         val res1 = exec(
             """
                 @DataSchema
@@ -249,6 +265,8 @@ class JupyterCodegenTests : JupyterReplTestCase() {
             """.trimIndent()
         )
         res1.shouldBeInstanceOf<Unit>()
+
+        @Language("kts")
         val res2 = exec(
             """
                 val <T : String> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
@@ -260,6 +278,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
 
     @Test
     fun `generic interface with variance and user type in type parameters`() {
+        @Language("kts")
         val res1 = exec(
             """
                 interface UpperBound
@@ -271,6 +290,8 @@ class JupyterCodegenTests : JupyterReplTestCase() {
             """.trimIndent()
         )
         res1.shouldBeInstanceOf<Unit>()
+
+        @Language("kts")
         val res2 = exec(
             """
                 val <T : UpperBound> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
@@ -282,7 +303,8 @@ class JupyterCodegenTests : JupyterReplTestCase() {
 
     @Test
     fun `generate a new marker when dataframe marker is not a data schema so that columns are accessible with extensions`() {
-        exec(
+        @Language("kts")
+        val a = exec(
             """
             enum class State {
                 Idle, Productive, Maintenance
@@ -305,7 +327,8 @@ class JupyterCodegenTests : JupyterReplTestCase() {
             """.trimIndent()
         )
         shouldNotThrowAny {
-            exec(
+            @Language("kts")
+            val b = exec(
                 """
                 events.toolId
                 events.state
