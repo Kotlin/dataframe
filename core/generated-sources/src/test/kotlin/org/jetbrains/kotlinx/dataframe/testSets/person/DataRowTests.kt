@@ -5,7 +5,7 @@ import org.jetbrains.kotlinx.dataframe.api.by
 import org.jetbrains.kotlinx.dataframe.api.columnNames
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.diff
+import org.jetbrains.kotlinx.dataframe.api.diffOrNull
 import org.jetbrains.kotlinx.dataframe.api.drop
 import org.jetbrains.kotlinx.dataframe.api.dropLast
 import org.jetbrains.kotlinx.dataframe.api.first
@@ -40,7 +40,7 @@ class DataRowTests : BaseTest() {
 
     @Test
     fun diff() {
-        typed.update { age }.with { diff { age } }.age.drop(1).values() shouldBe typed.age.values()
+        typed.update { age }.with { diffOrNull { age } }.age.drop(1).values() shouldBe typed.age.values()
             .zipWithNext { curr, next -> next - curr }
     }
 

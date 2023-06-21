@@ -91,7 +91,7 @@ df.pivot { "city" then "name"["firstName"] }
 ## pivot + groupBy
 
 To create matrix table that is expanded both horizontally and vertically, apply [`groupBy`](groupBy.md) transformation passing the columns for vertical grouping. 
-Reversed order of [`pivot`](pivot.md) and [`groupBy`](groupBy.md) will produce the same result.
+Reversed order of `pivot` and [`groupBy`](groupBy.md) will produce the same result.
 
 <!---FUN pivotGroupBy-->
 <tabs>
@@ -301,8 +301,6 @@ df.pivot("city").aggregate(separate = true) {
 
 </tab></tabs>
 <!---END-->
-
-<dataFrame src="pivotSeparate.html"/>
 
 By default, any aggregation function will result in `null` value for those matrix cells, where intersection of column and row keys produced an empty data group.
 You can specify default value for any aggregation by `default` infix function. This value will replace all `null` results of aggregation function over non-empty data groups as well.
