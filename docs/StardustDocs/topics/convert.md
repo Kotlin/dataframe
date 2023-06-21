@@ -5,7 +5,7 @@ Returns [`DataFrame`](DataFrame.md) with changed values in some columns. Allows 
 
 ```text
 convert { columnsSelector }
-    .with { rowExpression } | .perRowCol { rowColExpression } | .withValue(value)  | to<Type>() | to { colExpression }
+    .with { rowExpression } | .perRowCol { rowColExpression } | to<Type>() | to { colExpression }
 
 rowExpression = DataRow.(OldValue) -> NewValue
 rowColExpression = (DataRow, DataColumn) -> NewValue

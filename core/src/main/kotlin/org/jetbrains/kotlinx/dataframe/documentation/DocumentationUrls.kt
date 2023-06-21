@@ -19,6 +19,16 @@ internal interface DocumentationUrls {
         interface RowConditions
     }
 
+    /** [{@include [Text]}{@arg [NameArg] `NaN` and `NA`}]({@include [Url]}/nanAndNa.html) */
+    interface NanAndNa {
+
+        /** [{@include [Text]}{@arg [NameArg] `NaN`}]({@include [Url]}/nanAndNa.html#nan) */
+        interface NaN
+
+        /** [{@include [Text]}{@arg [NameArg] `NA`}]({@include [Url]}/nanAndNa.html#na) */
+        interface NA
+    }
+
     /** [{@include [Text]}{@arg [NameArg] `update`}]({@include [Url]}/update.html) */
     interface Update
 
