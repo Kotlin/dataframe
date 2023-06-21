@@ -31,7 +31,7 @@ public data class ColumnPath(val path: List<String>) : List<String> by path, Col
     /**
      * Returns a shortened [ColumnPath] without the first [size] elements.
      *
-     * NOTE: If called from the [ColumnsSelectionDsl], you might be looking for [ColumnsSelectionDsl.drop]
+     * NOTE: If called from the [ColumnsSelectionDsl], you might be looking for [ColumnsSelectionDsl.dropChildren]
      * instead.
      */
     public fun dropFirst(size: Int = 1): ColumnPath = ColumnPath(path.drop(size))

@@ -957,17 +957,17 @@ open class ColumnsSelectionDslTests : TestBase() {
     fun `drop and dropLast`() {
         listOf(
             df.select { name.lastName },
-            df.select { name.drop(1) },
+            df.select { name.dropChildren(1) },
             df.select { "name".dropChildren(1) },
-            df.select { Person::name.drop(1) },
+            df.select { Person::name.dropChildren(1) },
             df.select { pathOf("name").dropChildren(1) },
         ).shouldAllBeEqual()
 
         listOf(
             df.select { name.firstName },
-            df.select { name.dropLast(1) },
+            df.select { name.dropLastChildren(1) },
             df.select { "name".dropLastChildren(1) },
-            df.select { Person::name.dropLast(1) },
+            df.select { Person::name.dropLastChildren(1) },
             df.select { pathOf("name").dropLastChildren(1) },
         ).shouldAllBeEqual()
     }
@@ -995,17 +995,17 @@ open class ColumnsSelectionDslTests : TestBase() {
     fun `dropWhile and dropLastWhile`() {
         listOf(
             df.select { name.lastName },
-            df.select { name.dropWhile { it.name == "firstName" } },
+            df.select { name.dropChildrenWhile { it.name == "firstName" } },
             df.select { "name".dropChildrenWhile { it.name == "firstName" } },
-            df.select { Person::name.dropWhile { it.name == "firstName" } },
+            df.select { Person::name.dropChildrenWhile { it.name == "firstName" } },
             df.select { pathOf("name").dropChildrenWhile { it.name == "firstName" } },
         ).shouldAllBeEqual()
 
         listOf(
             df.select { name.firstName },
-            df.select { name.dropLastWhile { it.name == "lastName" } },
+            df.select { name.dropLastChildrenWhile { it.name == "lastName" } },
             df.select { "name".dropLastChildrenWhile { it.name == "lastName" } },
-            df.select { Person::name.dropLastWhile { it.name == "lastName" } },
+            df.select { Person::name.dropLastChildrenWhile { it.name == "lastName" } },
             df.select { pathOf("name").dropLastChildrenWhile { it.name == "lastName" } },
         ).shouldAllBeEqual()
     }

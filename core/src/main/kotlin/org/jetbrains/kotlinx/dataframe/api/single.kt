@@ -123,7 +123,6 @@ public interface SingleColumnsSelectionDsl {
      */
     public fun ColumnPath.singleChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         columnGroup(this).singleChild(condition)
-
 }
 
 // endregion

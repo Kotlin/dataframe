@@ -94,7 +94,7 @@ public interface RecursivelyColumnsSelectionDsl {
     public fun TransformableSingleColumn<*>.rec(): SingleColumn<*> = recursively()
 
     // endregion
-    
+
     // region dfs
 
     @Deprecated(
@@ -195,9 +195,9 @@ public interface RecursivelyColumnsSelectionDsl {
     )
     public fun ColumnPath.allDfs(includeGroups: Boolean = false): ColumnSet<*> =
         columnGroup(this).allDfs(includeGroups)
-    
+
     // endregion
-    
+
     // region dfsOf
     @Deprecated(
         message = "Use recursively() instead",

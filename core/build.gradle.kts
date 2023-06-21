@@ -274,7 +274,8 @@ kotlinter {
         "filename",
         "comment-spacing",
         "curly-spacing",
-        "experimental:annotation-spacing"
+        "experimental:annotation-spacing",
+        "no-unused-imports",
     )
 }
 
