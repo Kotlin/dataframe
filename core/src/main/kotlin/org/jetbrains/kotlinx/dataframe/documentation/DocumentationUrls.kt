@@ -26,7 +26,6 @@ internal interface DocumentationUrls {
         interface NaN
 
         /** [{@include [Text]}{@arg [NameArg] `NA`}]({@include [Url]}/nanAndNa.html#na) */
-
         interface NA
     }
 

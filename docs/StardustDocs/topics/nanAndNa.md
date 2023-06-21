@@ -12,7 +12,6 @@ result of such an operation can only be described as "**N**ot **a** **N**umber".
 This is different from `null`, which means that a value is missing and, in Kotlin, can only occur
 for `Float?` and `Double?` types.
 
-
 You can use [fillNaNs](fill.md#fillnans) to replace `NaNs` in certain columns with a given value or expression
 or [dropNaNs](drop.md#dropnans) to drop rows with `NaNs` in them.
 
