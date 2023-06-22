@@ -37,6 +37,14 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * `into` defines column names for storing operation results. Used in [`move`](move.md), [`group`](group.md), [`split`](split.md), [`merge`](merge.md), [`gather`](gather.md), [`groupBy`](groupBy.md), [`rename`](rename.md).
 * `with` defines row-wise data transformation with [`row expression`](DataRow.md#row-expressions). Used in [`update`](update.md), [`convert`](convert.md), [`replace`](replace.md), [`pivot`](pivot.md).
 
+## List of DataRow operations
+
+<include from="DataRow.md" element-id="rowFunctions"/>
+
+## List of DataRow statistics
+
+<include from="DataRow.md" element-id="rowStatistics"/>
+
 ## List of DataFrame operations
 
 * [add](add.md) — add columns
