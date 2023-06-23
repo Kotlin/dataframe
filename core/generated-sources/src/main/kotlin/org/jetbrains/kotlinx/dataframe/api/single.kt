@@ -91,9 +91,7 @@ public interface SingleColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
      */
     public fun <C> ColumnSet<C>.single(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
-        (allColumnsInternal() as TransformableColumnSet<C>)
-            .transform { listOf(it.single(condition)) }
-            .singleOrNullWithTransformerImpl()
+        singleInternal(condition)
 
     /**
      * ## Single (Child)
@@ -224,5 +222,10 @@ public interface SingleColumnsSelectionDsl {
     public fun ColumnPath.singleChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         columnGroup(this).singleChild(condition)
 }
+
+internal fun <C> ColumnSet<C>.singleInternal(condition: ColumnFilter<C> = { true }) =
+    (allColumnsInternal() as TransformableColumnSet<C>)
+        .transform { listOf(it.single(condition)) }
+        .singleOrNullWithTransformerImpl()
 
 // endregion

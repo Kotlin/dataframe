@@ -938,17 +938,17 @@ open class ColumnsSelectionDslTests : TestBase() {
     fun `take and takeLast`() {
         listOf(
             df.select { name.firstName },
-            df.select { name.take(1) },
+            df.select { name.takeChildren(1) },
             df.select { "name".takeChildren(1) },
-            df.select { Person::name.take(1) },
+            df.select { Person::name.takeChildren(1) },
             df.select { pathOf("name").takeChildren(1) },
         ).shouldAllBeEqual()
 
         listOf(
             df.select { name.lastName },
-            df.select { name.takeLast(1) },
+            df.select { name.takeLastChildren(1) },
             df.select { "name".takeLastChildren(1) },
-            df.select { Person::name.takeLast(1) },
+            df.select { Person::name.takeLastChildren(1) },
             df.select { pathOf("name").takeLastChildren(1) },
         ).shouldAllBeEqual()
     }
@@ -976,17 +976,17 @@ open class ColumnsSelectionDslTests : TestBase() {
     fun `takeWhile and takeLastWhile`() {
         listOf(
             df.select { name.firstName },
-            df.select { name.takeWhile { it.name == "firstName" } },
+            df.select { name.takeChildrenWhile { it.name == "firstName" } },
             df.select { "name".takeChildrenWhile { it.name == "firstName" } },
-            df.select { Person::name.takeWhile { it.name == "firstName" } },
+            df.select { Person::name.takeChildrenWhile { it.name == "firstName" } },
             df.select { pathOf("name").takeChildrenWhile { it.name == "firstName" } },
         ).shouldAllBeEqual()
 
         listOf(
             df.select { name.lastName },
-            df.select { name.takeLastWhile { it.name == "lastName" } },
+            df.select { name.takeLastChildrenWhile { it.name == "lastName" } },
             df.select { "name".takeLastChildrenWhile { it.name == "lastName" } },
-            df.select { Person::name.takeLastWhile { it.name == "lastName" } },
+            df.select { Person::name.takeLastChildrenWhile { it.name == "lastName" } },
             df.select { pathOf("name").takeLastChildrenWhile { it.name == "lastName" } },
         ).shouldAllBeEqual()
     }
@@ -1014,18 +1014,18 @@ open class ColumnsSelectionDslTests : TestBase() {
     fun nameContains() {
         listOf(
             df.select { name.firstName },
-            df.select { name.nameContains("first") },
-            df.select { "name".nameContains("first") },
-            df.select { Person::name.nameContains("first") },
-            df.select { pathOf("name").nameContains("first") },
+            df.select { name.childrenNameContains("first") },
+            df.select { "name".childrenNameContains("first") },
+            df.select { Person::name.childrenNameContains("first") },
+            df.select { pathOf("name").childrenNameContains("first") },
         ).shouldAllBeEqual()
 
         listOf(
             df.select { name.lastName },
-            df.select { name.nameContains(Regex("last")) },
-            df.select { "name".nameContains(Regex("last")) },
-            df.select { Person::name.nameContains(Regex("last")) },
-            df.select { pathOf("name").nameContains(Regex("last")) },
+            df.select { name.childrenNameContains(Regex("last")) },
+            df.select { "name".childrenNameContains(Regex("last")) },
+            df.select { Person::name.childrenNameContains(Regex("last")) },
+            df.select { pathOf("name").childrenNameContains(Regex("last")) },
         ).shouldAllBeEqual()
     }
 
@@ -1033,18 +1033,18 @@ open class ColumnsSelectionDslTests : TestBase() {
     fun `nameStartsWith and nameEndsWith`() {
         listOf(
             df.select { name.firstName },
-            df.select { name.nameStartsWith("first") },
-            df.select { "name".nameStartsWith("first") },
-            df.select { Person::name.nameStartsWith("first") },
-            df.select { pathOf("name").nameStartsWith("first") },
+            df.select { name.childrenNameStartsWith("first") },
+            df.select { "name".childrenNameStartsWith("first") },
+            df.select { Person::name.childrenNameStartsWith("first") },
+            df.select { pathOf("name").childrenNameStartsWith("first") },
         ).shouldAllBeEqual()
 
         listOf(
             df.select { name.firstName and name.lastName },
-            df.select { name.nameEndsWith("Name") },
-            df.select { "name".nameEndsWith("Name") },
-            df.select { Person::name.nameEndsWith("Name") },
-            df.select { pathOf("name").nameEndsWith("Name") },
+            df.select { name.childrenNameEndsWith("Name") },
+            df.select { "name".childrenNameEndsWith("Name") },
+            df.select { Person::name.childrenNameEndsWith("Name") },
+            df.select { pathOf("name").childrenNameEndsWith("Name") },
         ).shouldAllBeEqual()
     }
 

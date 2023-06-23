@@ -73,7 +73,7 @@ public interface LastColumnsSelectionDsl {
      * Returns the ([transformable][TransformableSingleColumn]) last column in this [ColumnSet] or [ColumnGroup] that adheres to the given [condition\].
      * If no column adheres to the given [condition\], no column is selected.
      *
-     * NOTE: For [column groups][ColumnGroup], `last` is named `lastChild` instead to avoid confusion
+     * NOTE: For [column groups][ColumnGroup], `last` is named `lastChild` instead to avoid confusion.
      *
      * #### Examples:
      *
@@ -101,7 +101,7 @@ public interface LastColumnsSelectionDsl {
      * Returns the ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
      * If no column adheres to the given [condition], no column is selected.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastChild` instead to avoid confusion
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastChild` instead to avoid confusion.
      *
      * #### Examples:
      *
@@ -130,7 +130,7 @@ public interface LastColumnsSelectionDsl {
      * Returns the ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
      * If no column adheres to the given [condition], no column is selected.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastChild` instead to avoid confusion
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastChild` instead to avoid confusion.
      *
      * #### Examples:
      *
@@ -155,7 +155,7 @@ public interface LastColumnsSelectionDsl {
      * Returns the ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
      * If no column adheres to the given [condition], no column is selected.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastChild` instead to avoid confusion
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastChild` instead to avoid confusion.
      *
      * #### Examples:
      *
@@ -180,7 +180,7 @@ public interface LastColumnsSelectionDsl {
      * Returns the ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
      * If no column adheres to the given [condition], no column is selected.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastChild` instead to avoid confusion
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastChild` instead to avoid confusion.
      *
      * #### Examples:
      *
@@ -205,7 +205,7 @@ public interface LastColumnsSelectionDsl {
      * Returns the ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
      * If no column adheres to the given [condition], no column is selected.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastChild` instead to avoid confusion
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastChild` instead to avoid confusion.
      *
      * #### Examples:
      *
@@ -234,7 +234,7 @@ public interface LastColumnsSelectionDsl {
      * Returns the ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
      * If no column adheres to the given [condition], no column is selected.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastChild` instead to avoid confusion
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastChild` instead to avoid confusion.
      *
      * #### Examples:
      *

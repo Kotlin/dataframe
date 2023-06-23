@@ -73,7 +73,7 @@ public interface LastColumnsSelectionDsl {
      * Returns the ([transformable][TransformableSingleColumn]) last column in this [ColumnSet] or [ColumnGroup] that adheres to the given [condition\].
      * If no column adheres to the given [condition\], no column is selected.
      *
-     * NOTE: For [column groups][ColumnGroup], `last` is named `lastChild` instead to avoid confusion
+     * NOTE: For [column groups][ColumnGroup], `last` is named `lastChild` instead to avoid confusion.
      *
      * #### Examples:
      *
