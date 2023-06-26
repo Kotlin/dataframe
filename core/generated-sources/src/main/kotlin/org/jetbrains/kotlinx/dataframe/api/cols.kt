@@ -22,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import kotlin.reflect.KProperty
 
 // TODO remove most overloads for ColumnSet, since we could use filter {} and except instead
+// TODO rename cols overloads to children?
 public interface ColsColumnsSelectionDsl {
 
     /**

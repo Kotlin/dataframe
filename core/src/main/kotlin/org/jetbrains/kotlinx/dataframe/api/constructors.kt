@@ -14,7 +14,10 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
@@ -24,6 +27,9 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.createComputedColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columns.forceResolve
+import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
+import org.jetbrains.kotlinx.dataframe.impl.columns.getChildrenAt
+import org.jetbrains.kotlinx.dataframe.impl.columns.singleImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.unbox
 import org.jetbrains.kotlinx.dataframe.size
 import kotlin.random.Random
@@ -205,6 +211,67 @@ public fun <T> ColumnGroupReference.frameColumn(property: KProperty<DataFrame<T>
 
 public fun <T> ColumnGroupReference.frameColumn(property: KProperty<List<T>>): ColumnAccessor<DataFrame<T>> =
     ColumnAccessorImpl(this.path() + property.name)
+
+// endregion
+
+// region asColumnGroup
+
+/**
+ * ## SingleColumn As ColumnGroup
+ * Casts [this][this\] [SingleColumn][SingleColumn]`<`[C][C\]`>` to a [SingleColumn][SingleColumn]`<`[DataRow][DataRow]`<`[C][C\]`>>`.
+ * This is especially useful when you want to use `ColumnGroup` functions in the [ColumnsSelectionDsl] but your column
+ * type is not recognized as a `ColumnGroup`.
+ * If you're not sure whether a column is recognized or not, you can always call [asColumnGroup][SingleColumn.asColumnGroup]
+ * and it will return the same type if it is already a `ColumnGroup`.
+ *
+ * For example:
+ *
+ * `df.`[select][DataFrame.select]` { it`[`[`][ColumnsContainer.get]`"myColumn"`[`]`][ColumnsContainer.get]`.`[asColumnGroup][SingleColumn.asColumnGroup]`().`[first][ColumnsSelectionDsl.firstChild]`() }`
+ *
+ * @receiver The [SingleColumn] to cast to a [SingleColumn]`<`[DataRow][DataRow]`<`[C][C\]`>>`.
+ * @param [C\] The type of the (group) column.
+ * @return A [SingleColumn]`<`[DataRow][DataRow]`<`[C][C\]`>>`.
+ */
+private interface SingleColumnAsColumnGroupDocs
+
+/** @include [SingleColumnAsColumnGroupDocs] */
+@Suppress("UNCHECKED_CAST")
+public fun <C> SingleColumn<C>.asColumnGroup(): SingleColumn<DataRow<C>> = this as SingleColumn<DataRow<C>>
+
+/** @include [SingleColumnAsColumnGroupDocs] */
+@JvmName("asColumnGroupDataRow")
+public fun <C> SingleColumn<DataRow<C>>.asColumnGroup(): SingleColumn<DataRow<C>> = this
+
+/**
+ * ## As ColumnGroup
+ *
+ * Creates a [ColumnAccessor][ColumnAccessor]`<`[DataRow][DataRow]`<`[C][C\]`>>` from [this][this\].
+ * It can both be typed and untyped and is just a shortcut to [columnGroup][columnGroup]`(`[this][this\]`)`
+ *
+ * @return A [ColumnAccessor]`<`[DataRow][DataRow]`>`.
+ */
+private interface AsColumnGroupDocs
+
+/** @include [AsColumnGroupDocs] */
+public fun <C> KProperty<C>.asColumnGroup(): ColumnAccessor<DataRow<C>> = columnGroup<C>(this)
+
+/** @include [AsColumnGroupDocs] */
+@JvmName("asColumnGroupDataRowKProperty")
+public fun <C> KProperty<DataRow<C>>.asColumnGroup(): ColumnAccessor<DataRow<C>> = columnGroup<C>(this)
+
+/** @include [AsColumnGroupDocs] */
+@JvmName("asColumnGroupTyped")
+public fun <C> String.asColumnGroup(): ColumnAccessor<DataRow<C>> = columnGroup<C>(this)
+
+/** @include [AsColumnGroupDocs] */
+public fun String.asColumnGroup(): ColumnAccessor<DataRow<*>> = columnGroup<Any?>(this)
+
+/** @include [AsColumnGroupDocs] */
+@JvmName("asColumnGroupTyped")
+public fun <C> ColumnPath.asColumnGroup(): ColumnAccessor<DataRow<C>> = columnGroup<C>(this)
+
+/** @include [AsColumnGroupDocs] */
+public fun ColumnPath.asColumnGroup(): ColumnAccessor<DataRow<*>> = columnGroup<Any?>(this)
 
 // endregion
 
@@ -521,6 +588,147 @@ public interface ConstructorsColumnsSelectionDsl {
      * @receiver The [ColumnGroupReference] to get the column from.
      */
     public fun <C> ColumnGroupReference.col(property: KProperty<C>): ColumnAccessor<C> = column(property)
+
+    // endregion
+
+    // region colIndex
+
+    /**
+     * ## Col: Column by Index
+     *
+     * Retrieves a [column][SingleColumn] by index.
+     * If the index is out of bounds, an [IndexOutOfBoundsException] will be thrown.
+     *
+     * If called on a [SingleColumn], [ColumnGroup], or [DataFrame], the function will take the child column found at the
+     * given [index\].
+     * Else, if called on a normal [ColumnSet],
+     * the function will return the [index\]'th column in the set.
+     *
+     * #### For example:
+     *
+     * `df.`[select][DataFrame.select]` { `[col][ColumnsSelectionDsl.col]`(3) }`
+     *
+     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.col]`5`[`]`][ColumnsSelectionDsl.col]` }`
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[col][String.col]`(0) }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@includeArg [CommonColIndexDocs.ExampleArg]}
+     *
+     * @throws [IndexOutOfBoundsException] If the index is out of bounds.
+     * @param [index\] The index of the column to retrieve.
+     * @return A [SingleColumn] for the column at the given index.
+     */
+    private interface CommonColIndexDocs {
+
+        /** Example argument */
+        interface ExampleArg
+    }
+
+    /**
+     * @include [CommonColIndexDocs]
+     * @arg [CommonColIndexDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[col][ColumnSet.col]`(0) }`
+     *
+     * `df.`[select][DataFrame.select]` { `[all][ColumnsSelectionDsl.all]`()`[`[`][ColumnSet.col]`5`[`]`][ColumnSet.col]` }`
+     */
+    private interface ColumnSetColIndexDocs
+
+    /** @include [ColumnSetColIndexDocs] */
+    public fun <C> ColumnSet<C>.col(index: Int): SingleColumn<C> = getAt(index)
+
+    /** @include [ColumnSetColIndexDocs] */
+    public operator fun <C> ColumnSet<C>.get(index: Int): SingleColumn<C> = col(index)
+
+    /**
+     * @include [CommonColIndexDocs]
+     * @arg [CommonColIndexDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[col][ColumnsSelectionDsl.col]`(0) }`
+     *
+     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.col]`5`[`]`][ColumnsSelectionDsl.col]` }`
+     */
+    private interface ColumnsSelectionDslColIndexDocs
+
+    /** @include [ColumnsSelectionDslColIndexDocs] */
+    public fun ColumnsSelectionDsl<*>.col(index: Int): SingleColumn<*> =
+        asSingleColumn().col(index)
+
+    /** @include [ColumnsSelectionDslColIndexDocs] */
+    public operator fun ColumnsSelectionDsl<*>.get(index: Int): SingleColumn<*> = col(index)
+
+    /**
+     * @include [CommonColIndexDocs]
+     * @arg [CommonColIndexDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[col][SingleColumn.col]`(0) }`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.col]`5`[`]`][SingleColumn.col]` }`
+     */
+    private interface SingleColumnColIndexDocs
+
+    /** @include [SingleColumnColIndexDocs] */
+    public fun SingleColumn<DataRow<*>>.col(index: Int): SingleColumn<*> =
+        ensureIsColGroup().asColumnSet().getChildrenAt(index).singleImpl()
+
+    /** @include [SingleColumnColIndexDocs] */
+    public operator fun SingleColumn<DataRow<*>>.get(index: Int): SingleColumn<*> = col(index)
+
+    /**
+     * @include [CommonColIndexDocs]
+     * @arg [CommonColIndexDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[col][String.col]`(5) }`
+     *
+     * `// NOTE: There's a `[String.get][String.get]` function that prevents this:`
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup"[0] }`
+     */
+    private interface StringIndexDocs
+
+    /** @include [StringIndexDocs] */
+    public fun String.col(index: Int): SingleColumn<*> = columnGroup(this).col(index)
+
+    /** @include [StringIndexDocs]
+     * {@comment this function is shadowed by [String.get]} */
+    public operator fun String.get(index: Int): SingleColumn<*> = col(index)
+
+    /**
+     * @include [CommonColIndexDocs]
+     * @arg [CommonColIndexDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[col][SingleColumn.col]`(5) }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][SingleColumn.col]`0`[`]`][SingleColumn.col]` }`
+     *
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[col][KProperty.col]`(5) }`
+     */
+    private interface KPropertyIndexDocs
+
+    /** @include [KPropertyIndexDocs] */
+    public fun KProperty<DataRow<*>>.col(index: Int): SingleColumn<*> = columnGroup(this).col(index)
+
+    /** @include [KPropertyIndexDocs] */
+    public operator fun KProperty<DataRow<*>>.get(index: Int): SingleColumn<*> = col(index)
+
+    /**
+     * @include [CommonColIndexDocs]
+     * @arg [CommonColIndexDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[col][ColumnPath.col]`(0) }`
+     *
+     * `// NOTE: There's a `[List.get][List.get]` function that prevents this:`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"]`[`[`][ColumnPath.col]`0`[`]`][ColumnPath.col]` }`
+     */
+    private interface ColumnPathIndexDocs
+
+    /** @include [ColumnPathIndexDocs] */
+    public fun ColumnPath.col(index: Int): SingleColumn<*> = columnGroup(this).col(index)
+
+    /** @include [ColumnPathIndexDocs] */
+    public operator fun ColumnPath.get(index: Int): SingleColumn<*> = col(index)
 
     // endregion
 

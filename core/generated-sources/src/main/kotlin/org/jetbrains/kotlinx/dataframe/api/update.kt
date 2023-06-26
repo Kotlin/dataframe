@@ -125,7 +125,7 @@ private interface UpdateWithNote
  *
  * For example:
  *
- * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]` { length `[and][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.and]` age }`
+ * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]` { length `[and][ColumnsSelectionDsl.and]` age }`
  *
  * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *

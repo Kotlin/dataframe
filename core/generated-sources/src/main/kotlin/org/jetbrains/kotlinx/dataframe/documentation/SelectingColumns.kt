@@ -26,7 +26,7 @@ internal interface SelectingColumnsLink
  *
  * For example:
  *
- * `df.`operation` { length `[and][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.and]` age }`
+ * `df.`operation` { length `[and][ColumnsSelectionDsl.and]` age }`
  *
  * `df.`operation` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *

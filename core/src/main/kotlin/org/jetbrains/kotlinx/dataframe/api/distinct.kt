@@ -3,7 +3,10 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.columns.DistinctColumnSet
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.util.ITERABLE_COLUMNS_DEPRECATION_MESSAGE
 import kotlin.reflect.KProperty
@@ -82,4 +85,24 @@ public fun <T, C> DataFrame<T>.distinctBy(columns: ColumnsSelector<T, C>): DataF
     return this[distinctIndices]
 }
 
+// endregion
+
+// region ColumnsSelectionDsl
+// TODO: add distinctChildren() methods?
+public interface DistinctColumnsSelectionDsl {
+
+    /**
+     * ## Distinct
+     * Returns a new [ColumnSet] from [this] containing only distinct columns (by path).
+     * This is useful when you've selected the same column multiple times.
+     *
+     * #### For Example:
+     * `df.`[select][DataFrame.select]` { (`[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>() `[and][ColumnsSelectionDsl.and]` age).`[distinct][ColumnSet.distinct]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { `[all][ColumnsSelectionDsl.all]`().`[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order").`[recursively][ColumnsSelectionDsl.recursively]`().`[distinct][ColumnSet.distinct]`() }`
+     *
+     * @return A new [ColumnSet] containing only distinct columns (by path).
+     */
+    public fun <C> ColumnSet<C>.distinct(): ColumnSet<C> = DistinctColumnSet(this)
+}
 // endregion

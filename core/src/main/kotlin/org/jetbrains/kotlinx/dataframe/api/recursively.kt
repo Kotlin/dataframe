@@ -21,7 +21,7 @@ import kotlin.reflect.typeOf
 
 // region ColumnsSelectionDsl
 // TODO make path modification optional
-// TODO rename to inclNestCols or includingNestedColumns
+// TODO rename to atAllDepths()?
 // TODO explore scoping function
 public interface RecursivelyColumnsSelectionDsl {
 

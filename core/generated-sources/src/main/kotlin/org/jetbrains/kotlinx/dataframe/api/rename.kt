@@ -6,7 +6,9 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
+import org.jetbrains.kotlinx.dataframe.columns.renamedReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.impl.DELIMITED_STRING_REGEX
 import org.jetbrains.kotlinx.dataframe.impl.DELIMITERS_REGEX
 import org.jetbrains.kotlinx.dataframe.impl.columnName
@@ -88,18 +90,557 @@ public fun <T, C> RenameClause<T, C>.toCamelCase(): DataFrame<T> =
 
 // region DataColumn
 
+@Suppress("UNCHECKED_CAST")
 public fun <T, C : ColumnReference<T>> C.rename(column: KProperty<T>): C = rename(column.columnName) as C
 
+@Suppress("UNCHECKED_CAST")
 public fun <T, C : ColumnReference<T>> C.rename(column: ColumnAccessor<T>): C = rename(column.name()) as C
 
 // endregion
 
 // region named
 
+@Suppress("UNCHECKED_CAST")
 public infix fun <T, C : ColumnReference<T>> C.named(name: String): C = rename(name) as C
 
 public infix fun <T, C : ColumnReference<T>> C.named(name: KProperty<*>): C = rename(name)
 
 public infix fun <T, C : ColumnReference<T>> C.named(name: ColumnAccessor<*>): C = rename(name)
 
+// endregion
+
+// region ColumnsSelectionDsl
+public interface RenameColumnsSelectionDsl {
+
+    /**
+     * ## Rename: `named` / `into`
+     * Renaming a column in the [ColumnsSelectionDsl] is done by calling the `infix` functions
+     * [named][ColumnReference.named] or [into][ColumnReference.into]. They behave exactly the same,
+     * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
+     * used to specify the column to rename and which name should be used instead.
+     *
+     * #### For Example:
+     *
+     * `df.`[select][DataFrame.select]` { name `[named][ColumnReference.named]` "Full Name" }`
+     *
+     * `df.`[select][DataFrame.select]` { `[expr][expr]` { 0 } `[into][ColumnReference.into]` "zeroes" }`
+     *
+     * `df.`[select][DataFrame.select]` { "colA" `[named][String.named]` Type::colB }`
+     *
+     * #### Example for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { {@includeArg [CommonRenameDocs.ReceiverArg]} `[{@includeArg [CommonRenameDocs.FunctionNameArg]}][{@includeArg [CommonRenameDocs.ReceiverTypeArg]}.{@includeArg [CommonRenameDocs.FunctionNameArg]}]` {@includeArg [CommonRenameDocs.ParamArg]} }`
+     *
+     * @receiver The [{@includeArg [ReceiverTypeArg]}] referencing the column to rename.
+     * @param [{@includeArg [ParamNameArg]}\] A [{@includeArg [ParamTypeArg]}\] used to specify the new name of the column.
+     * @return A [ColumnReference] to the renamed column.
+     */
+    private interface CommonRenameDocs {
+
+        interface ReceiverArg
+
+        interface ReceiverTypeArg
+
+        /** "named" or "into" */
+        interface FunctionNameArg
+
+        /** "newName" or "nameOf" */
+        interface ParamNameArg
+        interface ParamArg
+
+        interface ParamTypeArg
+
+        /**
+         */
+        interface ColumnReferenceReceiver
+
+        /**
+         */
+        interface StringReceiver
+
+        /**
+         */
+        interface KPropertyReceiver
+
+        /**
+         */
+        interface ColumnReferenceParam
+
+        /**
+         */
+        interface StringParam
+
+        /**
+         */
+        interface KPropertyParam
+
+        interface NamedFunctionName
+
+        interface IntoFunctionName
+    }
+
+    // region named
+
+    /**
+     * ## Rename: `named` / `into`
+     * Renaming a column in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] is done by calling the `infix` functions
+     * [named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named] or [into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]. They behave exactly the same,
+     * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
+     * used to specify the column to rename and which name should be used instead.
+     *
+     * #### For Example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     *
+     * #### Example for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { columnA `[named][ColumnReference.named]` "columnB" }`
+     *
+     * @receiver The [ColumnReference] referencing the column to rename.
+     * @param [newName] A [String] used to specify the new name of the column.
+     * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
+     */
+    public infix fun <C> ColumnReference<C>.named(newName: String): ColumnReference<C> = renamedReference(newName)
+
+    /**
+     * ## Rename: `named` / `into`
+     * Renaming a column in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] is done by calling the `infix` functions
+     * [named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named] or [into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]. They behave exactly the same,
+     * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
+     * used to specify the column to rename and which name should be used instead.
+     *
+     * #### For Example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     *
+     * #### Example for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { columnA `[named][ColumnReference.named]` columnB }`
+     *
+     * @receiver The [ColumnReference] referencing the column to rename.
+     * @param [nameOf] A [ColumnReference] used to specify the new name of the column.
+     * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
+     */
+    public infix fun <C> ColumnReference<C>.named(nameOf: ColumnReference<*>): ColumnReference<C> =
+        named(nameOf.name)
+
+    /**
+     * ## Rename: `named` / `into`
+     * Renaming a column in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] is done by calling the `infix` functions
+     * [named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named] or [into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]. They behave exactly the same,
+     * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
+     * used to specify the column to rename and which name should be used instead.
+     *
+     * #### For Example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     *
+     * #### Example for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { columnA `[named][ColumnReference.named]` Type::columnB }`
+     *
+     * @receiver The [ColumnReference] referencing the column to rename.
+     * @param [nameOf] A [KProperty] used to specify the new name of the column.
+     * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
+     */
+    public infix fun <C> ColumnReference<C>.named(nameOf: KProperty<*>): ColumnReference<C> =
+        named(nameOf.columnName)
+
+    /**
+     * ## Rename: `named` / `into`
+     * Renaming a column in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] is done by calling the `infix` functions
+     * [named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named] or [into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]. They behave exactly the same,
+     * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
+     * used to specify the column to rename and which name should be used instead.
+     *
+     * #### For Example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     *
+     * #### Example for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnA" `[named][String.named]` "columnB" }`
+     *
+     * @receiver The [String] referencing the column to rename.
+     * @param [newName] A [String] used to specify the new name of the column.
+     * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
+     */
+    public infix fun String.named(newName: String): ColumnReference<*> = toColumnAccessor().named(newName)
+
+    /**
+     * ## Rename: `named` / `into`
+     * Renaming a column in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] is done by calling the `infix` functions
+     * [named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named] or [into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]. They behave exactly the same,
+     * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
+     * used to specify the column to rename and which name should be used instead.
+     *
+     * #### For Example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     *
+     * #### Example for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnA" `[named][String.named]` columnB }`
+     *
+     * @receiver The [String] referencing the column to rename.
+     * @param [nameOf] A [ColumnReference] used to specify the new name of the column.
+     * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
+     */
+    public infix fun String.named(nameOf: ColumnReference<*>): ColumnReference<*> =
+        toColumnAccessor().named(nameOf.name)
+
+    /**
+     * ## Rename: `named` / `into`
+     * Renaming a column in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] is done by calling the `infix` functions
+     * [named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named] or [into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]. They behave exactly the same,
+     * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
+     * used to specify the column to rename and which name should be used instead.
+     *
+     * #### For Example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     *
+     * #### Example for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnA" `[named][String.named]` Type::columnB }`
+     *
+     * @receiver The [String] referencing the column to rename.
+     * @param [nameOf] A [KProperty] used to specify the new name of the column.
+     * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
+     */
+    public infix fun String.named(nameOf: KProperty<*>): ColumnReference<*> =
+        toColumnAccessor().named(nameOf.columnName)
+
+    /**
+     * ## Rename: `named` / `into`
+     * Renaming a column in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] is done by calling the `infix` functions
+     * [named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named] or [into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]. They behave exactly the same,
+     * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
+     * used to specify the column to rename and which name should be used instead.
+     *
+     * #### For Example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     *
+     * #### Example for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnA `[named][KProperty.named]` "columnB" }`
+     *
+     * @receiver The [KProperty] referencing the column to rename.
+     * @param [newName] A [String] used to specify the new name of the column.
+     * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
+     */
+    public infix fun <C> KProperty<C>.named(newName: String): ColumnReference<C> = toColumnAccessor().named(newName)
+
+    /**
+     * ## Rename: `named` / `into`
+     * Renaming a column in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] is done by calling the `infix` functions
+     * [named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named] or [into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]. They behave exactly the same,
+     * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
+     * used to specify the column to rename and which name should be used instead.
+     *
+     * #### For Example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     *
+     * #### Example for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnA `[named][KProperty.named]` columnB }`
+     *
+     * @receiver The [KProperty] referencing the column to rename.
+     * @param [nameOf] A [ColumnReference] used to specify the new name of the column.
+     * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
+     */
+    public infix fun <C> KProperty<C>.named(nameOf: ColumnReference<*>): ColumnReference<C> =
+        toColumnAccessor().named(nameOf.name)
+
+    /**
+     * ## Rename: `named` / `into`
+     * Renaming a column in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] is done by calling the `infix` functions
+     * [named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named] or [into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]. They behave exactly the same,
+     * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
+     * used to specify the column to rename and which name should be used instead.
+     *
+     * #### For Example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     *
+     * #### Example for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnA `[named][KProperty.named]` Type::columnB }`
+     *
+     * @receiver The [KProperty] referencing the column to rename.
+     * @param [nameOf] A [KProperty] used to specify the new name of the column.
+     * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
+     */
+    public infix fun <C> KProperty<C>.named(nameOf: KProperty<*>): ColumnReference<C> =
+        toColumnAccessor().named(nameOf.columnName)
+
+    // endregion
+
+    // region into
+
+    /**
+     * ## Rename: `named` / `into`
+     * Renaming a column in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] is done by calling the `infix` functions
+     * [named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named] or [into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]. They behave exactly the same,
+     * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
+     * used to specify the column to rename and which name should be used instead.
+     *
+     * #### For Example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     *
+     * #### Example for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { columnA `[into][ColumnReference.into]` "columnB" }`
+     *
+     * @receiver The [ColumnReference] referencing the column to rename.
+     * @param [newName] A [String] used to specify the new name of the column.
+     * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
+     */
+    public infix fun <C> ColumnReference<C>.into(newName: String): ColumnReference<C> = named(newName)
+
+    /**
+     * ## Rename: `named` / `into`
+     * Renaming a column in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] is done by calling the `infix` functions
+     * [named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named] or [into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]. They behave exactly the same,
+     * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
+     * used to specify the column to rename and which name should be used instead.
+     *
+     * #### For Example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     *
+     * #### Example for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { columnA `[into][ColumnReference.into]` columnB }`
+     *
+     * @receiver The [ColumnReference] referencing the column to rename.
+     * @param [nameOf] A [ColumnReference] used to specify the new name of the column.
+     * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
+     */
+    public infix fun <C> ColumnReference<C>.into(nameOf: ColumnReference<*>): ColumnReference<C> = named(nameOf)
+
+    /**
+     * ## Rename: `named` / `into`
+     * Renaming a column in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] is done by calling the `infix` functions
+     * [named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named] or [into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]. They behave exactly the same,
+     * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
+     * used to specify the column to rename and which name should be used instead.
+     *
+     * #### For Example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     *
+     * #### Example for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { columnA `[into][ColumnReference.into]` Type::columnB }`
+     *
+     * @receiver The [ColumnReference] referencing the column to rename.
+     * @param [nameOf] A [KProperty] used to specify the new name of the column.
+     * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
+     */
+    public infix fun <C> ColumnReference<C>.into(nameOf: KProperty<*>): ColumnReference<C> = named(nameOf)
+
+    /**
+     * ## Rename: `named` / `into`
+     * Renaming a column in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] is done by calling the `infix` functions
+     * [named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named] or [into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]. They behave exactly the same,
+     * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
+     * used to specify the column to rename and which name should be used instead.
+     *
+     * #### For Example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     *
+     * #### Example for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnA" `[into][String.into]` "columnB" }`
+     *
+     * @receiver The [String] referencing the column to rename.
+     * @param [newName] A [String] used to specify the new name of the column.
+     * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
+     */
+    public infix fun String.into(newName: String): ColumnReference<*> = named(newName)
+
+    /**
+     * ## Rename: `named` / `into`
+     * Renaming a column in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] is done by calling the `infix` functions
+     * [named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named] or [into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]. They behave exactly the same,
+     * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
+     * used to specify the column to rename and which name should be used instead.
+     *
+     * #### For Example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     *
+     * #### Example for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnA" `[into][String.into]` columnB }`
+     *
+     * @receiver The [String] referencing the column to rename.
+     * @param [nameOf] A [ColumnReference] used to specify the new name of the column.
+     * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
+     */
+    public infix fun String.into(nameOf: ColumnReference<*>): ColumnReference<*> = named(nameOf)
+
+    /**
+     * ## Rename: `named` / `into`
+     * Renaming a column in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] is done by calling the `infix` functions
+     * [named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named] or [into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]. They behave exactly the same,
+     * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
+     * used to specify the column to rename and which name should be used instead.
+     *
+     * #### For Example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     *
+     * #### Example for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnA" `[into][String.into]` Type::columnB }`
+     *
+     * @receiver The [String] referencing the column to rename.
+     * @param [nameOf] A [KProperty] used to specify the new name of the column.
+     * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
+     */
+    public infix fun String.into(nameOf: KProperty<*>): ColumnReference<*> = named(nameOf)
+
+    /**
+     * ## Rename: `named` / `into`
+     * Renaming a column in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] is done by calling the `infix` functions
+     * [named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named] or [into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]. They behave exactly the same,
+     * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
+     * used to specify the column to rename and which name should be used instead.
+     *
+     * #### For Example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     *
+     * #### Example for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnA `[into][KProperty.into]` "columnB" }`
+     *
+     * @receiver The [KProperty] referencing the column to rename.
+     * @param [newName] A [String] used to specify the new name of the column.
+     * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
+     */
+    public infix fun <C> KProperty<C>.into(newName: String): ColumnReference<C> = named(newName)
+
+    /**
+     * ## Rename: `named` / `into`
+     * Renaming a column in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] is done by calling the `infix` functions
+     * [named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named] or [into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]. They behave exactly the same,
+     * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
+     * used to specify the column to rename and which name should be used instead.
+     *
+     * #### For Example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     *
+     * #### Example for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnA `[into][KProperty.into]` columnB }`
+     *
+     * @receiver The [KProperty] referencing the column to rename.
+     * @param [nameOf] A [ColumnReference] used to specify the new name of the column.
+     * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
+     */
+    public infix fun <C> KProperty<C>.into(nameOf: ColumnReference<*>): ColumnReference<C> = named(nameOf)
+
+    /**
+     * ## Rename: `named` / `into`
+     * Renaming a column in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] is done by calling the `infix` functions
+     * [named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named] or [into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]. They behave exactly the same,
+     * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
+     * used to specify the column to rename and which name should be used instead.
+     *
+     * #### For Example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     *
+     * #### Example for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnA `[into][KProperty.into]` Type::columnB }`
+     *
+     * @receiver The [KProperty] referencing the column to rename.
+     * @param [nameOf] A [KProperty] used to specify the new name of the column.
+     * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
+     */
+    public infix fun <C> KProperty<C>.into(nameOf: KProperty<*>): ColumnReference<C> = named(nameOf)
+
+    // endregion
+}
 // endregion

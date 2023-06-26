@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
@@ -74,4 +75,12 @@ public interface ColsOfKindColumnsSelectionDsl {
 
     // endregion
 }
+
+internal fun ColumnsResolver<*>.columnsOfKindInternal(
+    kinds: Set<ColumnKind>,
+    predicate: ColumnFilter<*>,
+): TransformableColumnSet<*> = colsInternal {
+    it.kind() in kinds && predicate(it)
+}
+
 // endregion
