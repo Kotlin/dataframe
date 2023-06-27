@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.symbols.impl.ConeClassLikeLookupTagImpl
 import org.jetbrains.kotlin.fir.types.ConeClassLikeType
+import org.jetbrains.kotlin.fir.types.ConeFlexibleType
 import org.jetbrains.kotlin.fir.types.ConeKotlinType
 import org.jetbrains.kotlin.fir.types.ConeKotlinTypeProjectionIn
 import org.jetbrains.kotlin.fir.types.ConeKotlinTypeProjectionOut
@@ -10,7 +11,6 @@ import org.jetbrains.kotlin.fir.types.ConeNullability
 import org.jetbrains.kotlin.fir.types.ConeStarProjection
 import org.jetbrains.kotlin.fir.types.ConeTypeProjection
 import org.jetbrains.kotlin.fir.types.constructClassLikeType
-import org.jetbrains.kotlin.fir.types.constructType
 import org.jetbrains.kotlin.fir.types.impl.ConeClassLikeTypeImpl
 import org.jetbrains.kotlin.fir.types.isNullable
 import org.jetbrains.kotlin.fir.types.typeContext
@@ -135,7 +135,18 @@ private fun String.collectionsId() = ClassId(StandardClassIds.BASE_COLLECTIONS_P
 
 class KotlinTypeFacadeImpl(override val session: FirSession) : KotlinTypeFacade
 
-class Marker(internal val type: ConeKotlinType) {
+class Marker private constructor(internal val type: ConeKotlinType) {
+    companion object {
+        operator fun invoke(type: ConeKotlinType): Marker {
+            val type = if (type is ConeFlexibleType) {
+                type.lowerBound
+            } else {
+                type
+            }
+            return Marker(type)
+        }
+    }
+
     override fun toString(): String {
         return "Marker(type=$type (${type::class}))"
     }
