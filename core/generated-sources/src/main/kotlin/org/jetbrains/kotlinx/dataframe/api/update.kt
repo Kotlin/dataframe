@@ -50,7 +50,6 @@ public data class Update<T, C>(
      *   | .`[notNull][Update.notNull]` { `[rowExpression][ExpressionsGivenRow.RowValueExpression.WithExample]` }
      *   | .`[perCol][Update.perCol]` { `[colExpression][ExpressionsGivenColumn.ColumnExpression.WithExample]` }
      *   | .`[perRowCol][Update.perRowCol]` { `[rowColExpression][ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]` }
-     *   | .`[withValue][Update.withValue]`(value)
      *   | .`[withNull][Update.withNull]`()
      *   | .`[withZero][Update.withZero]`()
      *   | .`[asFrame][Update.asFrame]` { `[dataFrameExpression][ExpressionsGivenDataFrame.DataFrameExpression.WithExample]` }`
@@ -780,4 +779,5 @@ public fun <T, C> Update<T, C>.withZero(): DataFrame<T> = updateWithValuePerColu
  *
  * @param [value] The value to set the selected rows to. In contrast to [with][Update.with], this must be the same exact type.
  */
+@Deprecated("Use with { value } instead", ReplaceWith("this.with { value }"))
 public fun <T, C> Update<T, C>.withValue(value: C): DataFrame<T> = with { value }

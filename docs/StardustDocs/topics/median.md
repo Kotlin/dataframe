@@ -4,7 +4,7 @@
 
 Computes the median of values.
 
-Is available for `Comparable` columns. `null` and `NaN` values are ignored.
+Is available for `Comparable` columns. [`NA` values](nanAndNa.md#na) (`null` and `NaN`) are ignored.
 
 <!---FUN medianModes-->
 

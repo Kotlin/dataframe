@@ -15,6 +15,9 @@ import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
+import org.jetbrains.kotlinx.dataframe.util.DIFF_DEPRECATION_MESSAGE
+import org.jetbrains.kotlinx.dataframe.util.DIFF_OR_NULL_IMPORT
+import org.jetbrains.kotlinx.dataframe.util.DIFF_REPLACE_MESSAGE
 import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -74,17 +77,106 @@ public operator fun AnyRow.contains(column: KProperty<*>): Boolean = containsKey
 
 // endregion
 
+/**
+ * Calculates the difference between the results of a row expression computed on the current and previous DataRow.
+ *
+ * @return [firstRowValue] for the first row; difference between expression computed for current and previous row for the following rows
+ */
+internal interface DiffDocs
+
+/**
+ * Calculates the difference between the results of a row expression computed on the current and previous DataRow.
+ *
+ * @return null for the first row; difference between expression computed for current and previous row for the following rows
+ */
+internal interface DiffOrNullDocs
+
 @OptIn(ExperimentalTypeInference::class)
 @OverloadResolutionByLambdaReturnType
+/**
+ * @include [DiffDocs]
+ */
+public fun <T> DataRow<T>.diff(firstRowResult: Double, expression: RowExpression<T, Double>): Double =
+    prev()?.let { p -> expression(this, this) - expression(p, p) } ?: firstRowResult
+
+// required to resolve `diff(0) { intValue }`
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+/**
+ * @include [DiffDocs]
+ */
+public fun <T> DataRow<T>.diff(firstRowResult: Int, expression: RowExpression<T, Int>): Int =
+    prev()?.let { p -> expression(this, this) - expression(p, p) } ?: firstRowResult
+
+/**
+ * @include [DiffDocs]
+ */
+public fun <T> DataRow<T>.diff(firstRowResult: Long, expression: RowExpression<T, Long>): Long =
+    prev()?.let { p -> expression(this, this) - expression(p, p) } ?: firstRowResult
+
+/**
+ * @include [DiffDocs]
+ */
+public fun <T> DataRow<T>.diff(firstRowResult: Float, expression: RowExpression<T, Float>): Float =
+    prev()?.let { p -> expression(this, this) - expression(p, p) } ?: firstRowResult
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+/**
+ * @include [DiffOrNullDocs]
+ */
+public fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Double>): Double? =
+    prev()?.let { p -> expression(this, this) - expression(p, p) }
+
+/**
+ * @include [DiffOrNullDocs]
+ */
+public fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Int>): Int? =
+    prev()?.let { p -> expression(this, this) - expression(p, p) }
+
+/**
+ * @include [DiffOrNullDocs]
+ */
+public fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Long>): Long? =
+    prev()?.let { p -> expression(this, this) - expression(p, p) }
+
+/**
+ * @include [DiffOrNullDocs]
+ */
+public fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Float>): Float? =
+    prev()?.let { p -> expression(this, this) - expression(p, p) }
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+@Deprecated(
+    DIFF_DEPRECATION_MESSAGE,
+    ReplaceWith(DIFF_REPLACE_MESSAGE, DIFF_OR_NULL_IMPORT),
+    DeprecationLevel.WARNING
+)
 public fun <T> DataRow<T>.diff(expression: RowExpression<T, Double>): Double? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
+@Deprecated(
+    DIFF_DEPRECATION_MESSAGE,
+    ReplaceWith(DIFF_REPLACE_MESSAGE, DIFF_OR_NULL_IMPORT),
+    DeprecationLevel.WARNING
+)
 public fun <T> DataRow<T>.diff(expression: RowExpression<T, Int>): Int? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
+@Deprecated(
+    DIFF_DEPRECATION_MESSAGE,
+    ReplaceWith(DIFF_REPLACE_MESSAGE, DIFF_OR_NULL_IMPORT),
+    DeprecationLevel.WARNING
+)
 public fun <T> DataRow<T>.diff(expression: RowExpression<T, Long>): Long? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
+@Deprecated(
+    DIFF_DEPRECATION_MESSAGE,
+    ReplaceWith(DIFF_REPLACE_MESSAGE, DIFF_OR_NULL_IMPORT),
+    DeprecationLevel.WARNING
+)
 public fun <T> DataRow<T>.diff(expression: RowExpression<T, Float>): Float? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 

@@ -8,8 +8,8 @@ import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.transpose
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.value
+import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withNull
-import org.jetbrains.kotlinx.dataframe.api.withValue
 import org.junit.Test
 import kotlin.reflect.typeOf
 
@@ -38,7 +38,7 @@ class AnimalsTests {
 
     @Test
     fun `mean of empty`() {
-        val cleared = df.update { age }.withValue(Double.NaN).update { visits }.withNull()
+        val cleared = df.update { age }.with { Double.NaN }.update { visits }.withNull()
         val mean = cleared.mean()
         mean[age] shouldBe Double.NaN
         (mean[visits.name()] as Double).isNaN() shouldBe true

@@ -4,7 +4,8 @@
 
 Computes the mean of values.
 
-Is available for numeric columns. Computed value has type `Double`. Use `skipNA` flag to skip `null` and `NaN` values.
+Is available for numeric columns. Computed value has type `Double`.
+Use `skipNA` flag to skip [`NA` values](nanAndNa.md#na) (`null` and `NaN`).
 
 <!---FUN meanModes-->
 

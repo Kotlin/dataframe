@@ -5,12 +5,14 @@
 
 ## Row functions
 
+<snippet id="rowFunctions">
+
 * `index(): Int` — sequential row number in [`DataFrame`](DataFrame.md), starts from 0
 * `prev(): DataRow?` — previous row (`null` for the first row)
 * `next(): DataRow?` — next row (`null` for the last row)
-* `diff { rowExpression }: T` — difference between results of [row expression](#row-expressions) calculated for current and previous rows
+* `diff(T) { rowExpression }: T / diffOrNull { rowExpression }: T?` — difference between the results of a [row expression](DataRow.md#row-expressions) calculated for current and previous rows
 * `values(): List<Any?>` — list of all cell values from the current row
-* `valuesOf<T>(): List<T>` — list of values of given type 
+* `valuesOf<T>(): List<T>` — list of values of the given type 
 * `columnsCount(): Int` — number of columns
 * `columnNames(): List<String>` — list of all column names
 * `columnTypes(): List<KType>` — list of all column types 
@@ -23,6 +25,8 @@
 * `relative(Iterable<Int>): DataFrame` — dataframe with subset of rows selected by relative row index: `relative(-1..1)` will return previous, current and next row. Requested indices will be coerced to the valid range and invalid indices will be skipped
 * `get(column): T` — cell value by this row and given `column`
 * `df()` — [`DataFrame`](DataFrame.md) that current row belongs to
+
+</snippet>
 
 ## Row expressions
 Row expressions provide a value for every row of [`DataFrame`](DataFrame.md) and are used in [add](add.md), [filter](filter.md), [forEach](iterate.md), [update](update.md) and other operations.
@@ -54,11 +58,11 @@ Row condition is a special case of [row expression](#row-expressions) that retur
 // Row condition is used to filter rows by index
 df.filter { index() % 5 == 0 }
 
-// Row condition is used to drop rows where `age` is the same as in previous row
-df.drop { diff { age } == 0 }
+// Row condition is used to drop rows where `age` is the same as in the previous row
+df.drop { diffOrNull { age } == 0 }
 
 // Row condition is used to filter rows for value update
-df.update { weight }.where { index() > 4 && city != "Paris" }.withValue(50)
+df.update { weight }.where { index() > 4 && city != "Paris" }.with { 50 }
 ```
 
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.DataRowApi.conditions.html"/>
@@ -66,7 +70,11 @@ df.update { weight }.where { index() > 4 && city != "Paris" }.withValue(50)
 
 Row condition signature: ```DataRow.(DataRow) -> Boolean```
 
+
+
 ## Row statistics
+
+<snippet id="rowStatistics">
 
 The following [statistics](summaryStatistics.md) are available for `DataRow`:
 * `rowMax`
@@ -85,3 +93,5 @@ To apply statistics only to values of particular type use `-Of` versions:
 * `rowSumOf<T>`
 * `rowMeanOf<T>`
 * `rowMedianOf<T>`
+
+</snippet>
