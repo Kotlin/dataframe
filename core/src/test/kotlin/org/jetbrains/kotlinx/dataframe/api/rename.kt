@@ -3,14 +3,82 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.assertions.asClue
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
 import org.junit.Test
 
+
 class RenameTests {
+    companion object {
+        val simpleDf = dataFrameOf("a", "b", "c")(
+            1, 2, 3,
+            4, 5, 6,
+        )
+        val groupedDf = simpleDf.group { "a" and "b" }.into("group")
+
+        val doubleGroupedDf = groupedDf.group { "group"["a"] }.into { "group"["aGroup"] }
+    }
+
+    @Test
+    fun `simple rename`() {
+        val renamedDf = dataFrameOf("a_renamed", "b_renamed", "c_renamed")(
+            1, 2, 3,
+            4, 5, 6,
+        )
+
+        simpleDf.rename { all() }.into { it.name + "_renamed" } shouldBe renamedDf
+        simpleDf.rename { all() }.into("a_renamed", "b_renamed", "c_renamed") shouldBe renamedDf
+    }
+
+    @Test
+    fun `partial grouped rename`() {
+        val renamedDf = dataFrameOf("a_renamed", "b", "c")(
+            1, 2, 3,
+            4, 5, 6,
+        ).group { "a_renamed" and "b" }.into("group_renamed")
+
+        groupedDf
+            .rename { "group" and "group"["a"] }
+            .into { it.name + "_renamed" } shouldBe renamedDf
+    }
+
+    @Test
+    fun `grouped rename`() {
+        val renamedDf = dataFrameOf("a_renamed", "b_renamed", "c_renamed")(
+            1, 2, 3,
+            4, 5, 6,
+        ).group { "a_renamed" and "b_renamed" }.into("group_renamed")
+
+        groupedDf
+            .rename { all().recursively() }
+            .into { it.name + "_renamed" } shouldBe renamedDf
+    }
+
+    @Test
+    fun `double grouped rename in 3 steps`() {
+        val renamedDf = dataFrameOf("a_renamed", "b_renamed", "c_renamed")(
+            1, 2, 3,
+            4, 5, 6,
+        ).group { "a_renamed" and "b_renamed" }.into("group_renamed")
+            .group { "group_renamed"["a_renamed"] }.into { "group_renamed"["aGroup_renamed"] }
+
+        doubleGroupedDf
+            .rename { all().recursively() }
+            .into { it.name + "_renamed" } shouldBe renamedDf
+    }
+}
+
+class RenameToCamelCaseTests {
     companion object {
         val nestedDf = dataFrameOf("test_name")(dataFrameOf("another_name")(1))
         val nestedColumnGroup = dataFrameOf("test_name")(
             dataFrameOf("another_name")(1).first()
+        )
+        val doublyNestedColumnGroup = dataFrameOf("test_name")(
+            dataFrameOf("another_name")(
+                dataFrameOf("third_name")(1).first()
+            ).first()
         )
         val deeplyNestedDf = kotlin.run {
             val df = dataFrameOf("another_name")(1)
@@ -34,6 +102,20 @@ class RenameTests {
         val df = nestedColumnGroup.renameToCamelCase()
         df.columnNames() shouldBe listOf("testName")
         df.getColumnGroup("testName").columnNames() shouldBe listOf("anotherName")
+    }
+
+    @Test
+    fun `doubly nested row`() {
+        val doublyNestedColumnGroup = dataFrameOf("test_name")(
+            dataFrameOf("another_name")(
+                dataFrameOf("third_name")(1).first()
+            ).first()
+        )
+
+        val df = doublyNestedColumnGroup.renameToCamelCase()//.alsoDebug()
+        df.columnNames() shouldBe listOf("testName")
+        df["testName"].asColumnGroup().columnNames() shouldBe listOf("anotherName")
+        df["testName"]["anotherName"].asColumnGroup().columnNames() shouldBe listOf("thirdName")
     }
 
     @Test
