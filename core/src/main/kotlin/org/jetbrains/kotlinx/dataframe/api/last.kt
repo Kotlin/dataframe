@@ -66,12 +66,14 @@ public fun <T> PivotGroupBy<T>.last(predicate: RowFilter<T>): ReducedPivotGroupB
 // endregion
 
 // region ColumnsSelectionDsl
+
 public interface LastColumnsSelectionDsl {
 
     /**
      * ## Last (Child)
-     * Returns the ([transformable][TransformableSingleColumn]) last column in this [ColumnSet] or [ColumnGroup] that adheres to the given [condition\].
-     * If no column adheres to the given [condition\], no column is selected.
+     * Returns the last ([transformable][TransformableSingleColumn]) column in this [ColumnSet] or [ColumnGroup]
+     * that adheres to the given [condition\].
+     * If no column adheres to the given [condition\], [NoSuchElementException] is thrown.
      *
      * NOTE: For [column groups][ColumnGroup], `last` is named `lastChild` instead to avoid confusion.
      *
@@ -86,9 +88,10 @@ public interface LastColumnsSelectionDsl {
      * {@includeArg [Examples]}
      *
      * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][TransformableSingleColumn]) [SingleColumn] containing the last column that adheres to the given [condition\].
+     * @return A ([transformable][TransformableSingleColumn]) [SingleColumn] containing the last column
+     *   that adheres to the given [condition\].
      * @throws [NoSuchElementException\] if no column adheres to the given [condition\].
-     * @see [first\]
+     * @see [ColumnsSelectionDsl.first\]
      */
     private interface CommonLastDocs {
 
@@ -103,6 +106,7 @@ public interface LastColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[last][ColumnSet.last]`() }`
      */
+    @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.last(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
         (allColumnsInternal() as TransformableColumnSet<C>)
             .transform { listOf(it.last(condition)) }
@@ -143,6 +147,20 @@ public interface LastColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[lastChild][KProperty.lastChild]`() }`
      */
+    public fun KProperty<*>.lastChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+        columnGroup(this).lastChild(condition)
+
+    /**
+     * @include [CommonLastDocs]
+     * @arg [CommonLastDocs.Examples]
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[lastChild][SingleColumn.lastChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[lastChild][SingleColumn.lastChild]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[lastChild][KProperty.lastChild]`() }`
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("lastKPropertyDataRow")
     public fun KProperty<DataRow<*>>.lastChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         columnGroup(this).lastChild(condition)
 
@@ -154,4 +172,5 @@ public interface LastColumnsSelectionDsl {
     public fun ColumnPath.lastChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         columnGroup(this).lastChild(condition)
 }
+
 // endregion

@@ -72,6 +72,14 @@ public open class TestBase {
         val isHappy: Boolean
     }
 
+    interface NonDataSchemaPerson {
+        val age: Int
+        val city: String?
+        val name: Name
+        val weight: Int?
+        val isHappy: Boolean
+    }
+
     @DataSchema
     interface FirstNames {
         val firstName: String

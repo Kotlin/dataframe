@@ -66,12 +66,14 @@ public fun <T> PivotGroupBy<T>.last(predicate: RowFilter<T>): ReducedPivotGroupB
 // endregion
 
 // region ColumnsSelectionDsl
+
 public interface LastColumnsSelectionDsl {
 
     /**
      * ## Last (Child)
-     * Returns the ([transformable][TransformableSingleColumn]) last column in this [ColumnSet] or [ColumnGroup] that adheres to the given [condition\].
-     * If no column adheres to the given [condition\], no column is selected.
+     * Returns the last ([transformable][TransformableSingleColumn]) column in this [ColumnSet] or [ColumnGroup]
+     * that adheres to the given [condition\].
+     * If no column adheres to the given [condition\], [NoSuchElementException] is thrown.
      *
      * NOTE: For [column groups][ColumnGroup], `last` is named `lastChild` instead to avoid confusion.
      *
@@ -86,9 +88,10 @@ public interface LastColumnsSelectionDsl {
      * {@includeArg [Examples]}
      *
      * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][TransformableSingleColumn]) [SingleColumn] containing the last column that adheres to the given [condition\].
+     * @return A ([transformable][TransformableSingleColumn]) [SingleColumn] containing the last column
+     *   that adheres to the given [condition\].
      * @throws [NoSuchElementException\] if no column adheres to the given [condition\].
-     * @see [first\]
+     * @see [ColumnsSelectionDsl.first\]
      */
     private interface CommonLastDocs {
 
@@ -98,8 +101,9 @@ public interface LastColumnsSelectionDsl {
 
     /**
      * ## Last (Child)
-     * Returns the ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
-     * If no column adheres to the given [condition], no column is selected.
+     * Returns the last ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * that adheres to the given [condition].
+     * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastChild` instead to avoid confusion.
      *
@@ -116,10 +120,12 @@ public interface LastColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[last][ColumnSet.last]`() }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column that adheres to the given [condition].
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
+     *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
-     * @see [first]
+     * @see [ColumnsSelectionDsl.first]
      */
+    @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.last(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
         (allColumnsInternal() as TransformableColumnSet<C>)
             .transform { listOf(it.last(condition)) }
@@ -127,8 +133,9 @@ public interface LastColumnsSelectionDsl {
 
     /**
      * ## Last (Child)
-     * Returns the ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
-     * If no column adheres to the given [condition], no column is selected.
+     * Returns the last ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * that adheres to the given [condition].
+     * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastChild` instead to avoid confusion.
      *
@@ -143,17 +150,19 @@ public interface LastColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { `[last][ColumnsSelectionDsl.last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column that adheres to the given [condition].
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
+     *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
-     * @see [first]
+     * @see [ColumnsSelectionDsl.first]
      */
     public fun ColumnsSelectionDsl<*>.last(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         asSingleColumn().lastChild(condition)
 
     /**
      * ## Last (Child)
-     * Returns the ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
-     * If no column adheres to the given [condition], no column is selected.
+     * Returns the last ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * that adheres to the given [condition].
+     * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastChild` instead to avoid confusion.
      *
@@ -168,17 +177,19 @@ public interface LastColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[lastChild][SingleColumn.lastChild]`() }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column that adheres to the given [condition].
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
+     *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
-     * @see [first]
+     * @see [ColumnsSelectionDsl.first]
      */
     public fun SingleColumn<DataRow<*>>.lastChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         ensureIsColGroup().asColumnSet().last(condition)
 
     /**
      * ## Last (Child)
-     * Returns the ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
-     * If no column adheres to the given [condition], no column is selected.
+     * Returns the last ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * that adheres to the given [condition].
+     * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastChild` instead to avoid confusion.
      *
@@ -193,17 +204,19 @@ public interface LastColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[lastChild][String.lastChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column that adheres to the given [condition].
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
+     *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
-     * @see [first]
+     * @see [ColumnsSelectionDsl.first]
      */
     public fun String.lastChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         columnGroup(this).lastChild(condition)
 
     /**
      * ## Last (Child)
-     * Returns the ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
-     * If no column adheres to the given [condition], no column is selected.
+     * Returns the last ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * that adheres to the given [condition].
+     * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastChild` instead to avoid confusion.
      *
@@ -222,17 +235,52 @@ public interface LastColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[lastChild][KProperty.lastChild]`() }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column that adheres to the given [condition].
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
+     *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
-     * @see [first]
+     * @see [ColumnsSelectionDsl.first]
      */
+    public fun KProperty<*>.lastChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+        columnGroup(this).lastChild(condition)
+
+    /**
+     * ## Last (Child)
+     * Returns the last ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * that adheres to the given [condition].
+     * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
+     *
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastChild` instead to avoid confusion.
+     *
+     * #### Examples:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[last][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[lastChild][kotlin.String.lastChild]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[lastChild][SingleColumn.lastChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[lastChild][SingleColumn.lastChild]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[lastChild][KProperty.lastChild]`() }`
+     *
+     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
+     *   that adheres to the given [condition].
+     * @throws [NoSuchElementException] if no column adheres to the given [condition].
+     * @see [ColumnsSelectionDsl.first]
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("lastKPropertyDataRow")
     public fun KProperty<DataRow<*>>.lastChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         columnGroup(this).lastChild(condition)
 
     /**
      * ## Last (Child)
-     * Returns the ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] that adheres to the given [condition].
-     * If no column adheres to the given [condition], no column is selected.
+     * Returns the last ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * that adheres to the given [condition].
+     * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastChild` instead to avoid confusion.
      *
@@ -247,11 +295,13 @@ public interface LastColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[lastChild][ColumnPath.lastChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column that adheres to the given [condition].
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
+     *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
-     * @see [first]
+     * @see [ColumnsSelectionDsl.first]
      */
     public fun ColumnPath.lastChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         columnGroup(this).lastChild(condition)
 }
+
 // endregion

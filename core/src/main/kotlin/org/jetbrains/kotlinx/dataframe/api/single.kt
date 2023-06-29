@@ -36,12 +36,15 @@ public fun <T> DataFrame<T>.singleOrNull(predicate: RowExpression<T, Boolean>): 
 // endregion
 
 // region ColumnsSelectionDsl
+
 public interface SingleColumnsSelectionDsl {
 
     /**
      * ## Single (Child)
-     * Returns ([transformable][TransformableSingleColumn]) the single column in this [ColumnSet] or [ColumnGroup] that adheres to the given [condition\].
-     * If no column adheres to the given [condition\] or multiple columns adhere to it, no column is selected.
+     * Returns the single ([transformable][TransformableSingleColumn]) column in this [ColumnSet] or [ColumnGroup]
+     * that adheres to the given [condition\].
+     * If no column adheres to the given [condition\], [NoSuchElementException] is thrown.
+     * If multiple columns adhere to it, [IllegalArgumentException] is thrown.
      *
      * NOTE: For [column groups][ColumnsSelectionDsl], `single` is named `singleChild` instead to avoid confusion.
      *
@@ -111,6 +114,20 @@ public interface SingleColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[singleChild][KProperty.singleChild]`() }`
      */
+    public fun KProperty<*>.singleChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+        columnGroup(this).singleChild(condition)
+
+    /**
+     * @include [CommonSingleDocs]
+     * @arg [CommonSingleDocs.Examples]
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[singleChild][SingleColumn.singleChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[singleChild][SingleColumn.singleChild]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[singleChild][KProperty.singleChild]`() }`
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("singleKPropertyDataRow")
     public fun KProperty<DataRow<*>>.singleChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         columnGroup(this).singleChild(condition)
 
@@ -123,6 +140,7 @@ public interface SingleColumnsSelectionDsl {
         columnGroup(this).singleChild(condition)
 }
 
+@Suppress("UNCHECKED_CAST")
 internal fun <C> ColumnSet<C>.singleInternal(condition: ColumnFilter<C> = { true }) =
     (allColumnsInternal() as TransformableColumnSet<C>)
         .transform { listOf(it.single(condition)) }

@@ -80,7 +80,7 @@ private class RecursivelyTransformer(
 }
 
 /**
- * Flattens a [ColumnsResolver]/[SingleColumn] recursively.
+ * Flattens a [ColumnsResolver] recursively.
  *
  * If [this] is a [SingleColumn] containing a single [ColumnGroup], the "top-level" is
  * considered to be the [ColumnGroup]'s children, otherwise, if this is a [ColumnsResolver],
