@@ -109,7 +109,7 @@ class RenameToCamelCaseTests {
             ).first()
         )
 
-        val df = doublyNestedColumnGroup.renameToCamelCase()//.alsoDebug()
+        val df = doublyNestedColumnGroup.renameToCamelCase()
         df.columnNames() shouldBe listOf("testName")
         df["testName"].asColumnGroup().columnNames() shouldBe listOf("anotherName")
         df["testName"]["anotherName"].asColumnGroup().columnNames() shouldBe listOf("thirdName")
