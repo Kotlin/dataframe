@@ -12,12 +12,10 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.tree.allChildrenNotNull
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.collectTree
 import org.jetbrains.kotlinx.dataframe.kind
 
-
 internal fun <T, C> RenameClause<T, C>.renameImpl(newNames: Array<out String>): DataFrame<T> {
     var i = 0
     return renameImpl { newNames[i++] }
 }
-
 
 internal fun <T, C> RenameClause<T, C>.renameImpl(transform: (ColumnWithPath<C>) -> String): DataFrame<T> {
     val selectedColumns = df.getColumnsWithPaths(columns)

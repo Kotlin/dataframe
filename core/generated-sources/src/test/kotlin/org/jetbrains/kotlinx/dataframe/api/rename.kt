@@ -3,11 +3,8 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.assertions.asClue
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
 import org.junit.Test
-
 
 class RenameTests {
     companion object {
