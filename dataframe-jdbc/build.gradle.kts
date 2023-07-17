@@ -12,7 +12,7 @@ repositories {
 
 dependencies {
     api(project(":core"))
-
+    implementation(libs.mariadb)
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")

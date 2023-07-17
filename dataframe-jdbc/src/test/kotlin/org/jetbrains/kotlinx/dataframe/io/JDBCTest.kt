@@ -1,20 +1,39 @@
 package org.jetbrains.kotlinx.dataframe.io
 
-import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.matchers.shouldBe
-import kotlinx.datetime.LocalDateTime
-import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.concat
-import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.toColumn
-import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
-import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
-import org.jetbrains.kotlinx.dataframe.size
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.print
 import org.junit.Test
-import java.net.URL
-import java.nio.file.Files
-import kotlin.reflect.typeOf
+import java.sql.DriverManager
+import java.util.*
+
+
+const val URL = "jdbc:mariadb://localhost:3306/imdb"
+const val USER_NAME = "root"
+const val PASSWORD = "pass"
+
+@DataSchema
+interface ActorKDF {
+    val id: Int
+    val firstName: String
+    val lastName: String
+    val gender: String
+}
 
 class JDBCTest {
+    @Test
+    fun `setup connection and select` () {
+        val props = Properties()
+        props.setProperty("user", USER_NAME)
+        props.setProperty("password", PASSWORD)
+
+        // generate kdf schemas by database metadata (as interfaces or extensions)
+        // for gradle or as classes under the hood in KNB
+
+        DriverManager.getConnection(URL, props).use { connection ->
+            val df = DataFrame.readFromDB(connection, "actors").cast<ActorKDF>()
+            df.print()
+        }
+    }
 }
