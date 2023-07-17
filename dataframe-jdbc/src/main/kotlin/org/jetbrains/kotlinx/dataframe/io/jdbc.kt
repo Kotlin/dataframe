@@ -10,6 +10,7 @@ import java.io.InputStream
 import java.sql.Connection
 import java.sql.DatabaseMetaData
 import java.sql.ResultSet
+import java.sql.ResultSetMetaData
 
 // JDBC is not a file format, we need a hierarchy here
 public class JDBC : SupportedDataFrameFormat {
@@ -44,36 +45,28 @@ public data class JDBCColumn(val name: String, val type: String, val size: Int)
 
 public fun DataFrame.Companion.readFromDBViaSQLQuery(connection: Connection, sqlQuery: String): AnyFrame {
     connection.createStatement().use { st ->
-        val dbMetaData: DatabaseMetaData = connection.metaData
-        val columns: ResultSet = dbMetaData.getColumns("imdb", null, tableName, null)
-        val tableColumns = mutableMapOf<String, JDBCColumn>()
+        st.executeQuery(sqlQuery).use { rs ->
+            val metaData: ResultSetMetaData = rs.metaData
+            val numberOfColumns: Int = metaData.columnCount
 
-        while (columns.next()) {
-            val name = columns.getString("COLUMN_NAME")
-            val type = columns.getString("TYPE_NAME")
-            val size = columns.getInt("COLUMN_SIZE")
-            tableColumns += Pair(name, JDBCColumn(name, type, size))
-        }
+            val tableColumns = mutableMapOf<String, JDBCColumn>()
 
-        // map<columnName; columndata>
-        val data = mutableMapOf<String, MutableList<Any?>>()
-        // init data
-        tableColumns.forEach { (columnName, _) ->
-            data[columnName] = mutableListOf()
-        }
+            for (i in 1 until numberOfColumns + 1) {
+                val name = metaData.getColumnName(i)
+                val size = metaData.getColumnDisplaySize(i)
+                val type = metaData.getColumnTypeName(i)
 
-        // TODO: dynamic SQL names - no protection from SQL injection
-        // What if just try to match it before to the known SQL table names and if not to reject
-        // What if check the name on the SQL commands and ;; commas to reject and throw exception
+                tableColumns += Pair(name, JDBCColumn(name, type, size))
+            }
 
+            // map<columnName; columndata>
+            val data = mutableMapOf<String, MutableList<Any?>>()
+            // init data
+            tableColumns.forEach { (columnName, _) ->
+                data[columnName] = mutableListOf()
+            }
 
-        // LIMIT 1000 because is very slow to copy into dataframe the whole table (do we need a fetch here? or limit)
-        // or progress bar
-        var counter = 0
-        // ask the COUNT(*) for full table
-        st.executeQuery("SELECT * FROM $tableName "
-            + "LIMIT 1000" // TODO: work with limits correctly
-        ).use { rs ->
+            var counter = 0
             while (rs.next()) {
                 tableColumns.forEach { (columnName, jdbcColumn) ->
                     data[columnName] = (data[columnName]!! + getData(rs, jdbcColumn)).toMutableList()
@@ -81,12 +74,11 @@ public fun DataFrame.Companion.readFromDBViaSQLQuery(connection: Connection, sql
                 counter++
                 if (counter % 1000 == 0) println("Loaded yet 1000, percentage = $counter")
             }
-        }
 
-        return data.toDataFrame()
+            return data.toDataFrame()
+        }
     }
 }
-
 
 public fun DataFrame.Companion.readFromDB(connection: Connection, tableName: String): AnyFrame {
     connection.createStatement().use { st ->
@@ -141,6 +133,8 @@ private fun getData(rs: ResultSet, jdbcColumn: JDBCColumn): Any? {
     return when (jdbcColumn.type) {
         "INT" -> rs.getInt(jdbcColumn.name)
         "VARCHAR" -> rs.getString(jdbcColumn.name)
+        "FLOAT" -> rs.getFloat(jdbcColumn.name)
+        "MEDIUMTEXT" -> rs.getString(jdbcColumn.name)
         else -> null
     }
 }
