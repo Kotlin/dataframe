@@ -21,9 +21,17 @@ interface ActorKDF {
     val gender: String
 }
 
+@DataSchema
+interface RankedMoviesWithGenres {
+    val name: String
+    val year: Int
+    val rank: Int
+    val genres: String
+}
+
 class JDBCTest {
     @Test
-    fun `setup connection and select` () {
+    fun `setup connection and select from one table` () {
         val props = Properties()
         props.setProperty("user", USER_NAME)
         props.setProperty("password", PASSWORD)
@@ -33,6 +41,28 @@ class JDBCTest {
 
         DriverManager.getConnection(URL, props).use { connection ->
             val df = DataFrame.readFromDB(connection, "actors").cast<ActorKDF>()
+            df.print()
+        }
+    }
+
+    @Test
+    fun `convert result of SQL-query` () {
+
+        val sqlQuery = "use imdb;\n" +
+            "select name, year, rank\n" +
+            "from movies join movies_directors on  movie_id = movies.id\n" +
+            "     join directors on directors.id=director_id\n" +
+            "where directors.first_name = \"Quentin\" and directors.last_name = \"Tarantino\"\n" +
+            "order by year"
+        val props = Properties()
+        props.setProperty("user", USER_NAME)
+        props.setProperty("password", PASSWORD)
+
+        // generate kdf schemas by database metadata (as interfaces or extensions)
+        // for gradle or as classes under the hood in KNB
+
+        DriverManager.getConnection(URL, props).use { connection ->
+            val df = DataFrame.readFromDBViaSQLQuery(connection, sqlQuery = sqlQuery).cast<RankedMoviesWithGenres>()
             df.print()
         }
     }
