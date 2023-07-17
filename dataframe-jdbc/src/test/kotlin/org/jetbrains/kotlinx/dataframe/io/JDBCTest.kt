@@ -65,7 +65,7 @@ class JDBCTest {
 
         DriverManager.getConnection(URL, props).use { connection ->
             val df = DataFrame.readFromDBViaSQLQuery(connection, sqlQuery = sqlQuery).cast<RankedMoviesWithGenres>()
-            df.filter { year > 2000 }.print()
+            //df.filter { year > 2000 }.print()
             df.print()
         }
     }

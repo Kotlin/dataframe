@@ -129,6 +129,7 @@ public fun DataFrame.Companion.readFromDB(connection: Connection, tableName: Str
 // also better to manipulate whole row instead of asking by column, need to go to the rowset
 // be sure that all the stuff is closed
 
+// TODO: parser https://docs.oracle.com/javase/8/docs/api/java/sql/JDBCType.html
 private fun getData(rs: ResultSet, jdbcColumn: JDBCColumn): Any? {
     return when (jdbcColumn.type) {
         "INT" -> rs.getInt(jdbcColumn.name)
