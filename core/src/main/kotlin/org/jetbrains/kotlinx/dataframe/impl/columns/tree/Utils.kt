@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns.tree
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -59,6 +60,16 @@ internal fun <T> TreeNode<T>.topmostChildrenExcluding(excludeRoot: TreeNode<*>):
     }
     doDfs(this, excludeRoot)
     return result
+}
+
+/**
+ * Mapping function for [ReadonlyTreeNodes][ReadonlyTreeNode] (like [TreeNode])
+ * which can convert the tree-structure (depth-first) to any other tree-type structure (e.g. [DataFrame]).
+ */
+@Suppress("UNCHECKED_CAST")
+internal fun <T : ReadonlyTreeNode<*>, R> T.map(operation: (node: T, children: List<R>) -> R): R {
+    val children = children.map { (it as T).map(operation) }
+    return operation(this, children)
 }
 
 internal fun <T> TreeNode<T?>.allChildrenNotNull(): List<TreeNode<T>> =
