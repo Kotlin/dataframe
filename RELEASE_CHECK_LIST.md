@@ -28,3 +28,4 @@
 16. Prepare and publish the Release Notes 
 17. Create Release from the release tag on GitHub 
 18. Update a KDF version in the [Kotlin Jupyter Descriptor](https://github.com/Kotlin/kotlin-jupyter-libraries/blob/master/dataframe.json). Now the Renovate bot doing this 
+19. Update DataFrame version in gradle.properties file for next release cycle (i.e. 0.10.0 -> 0.11.0)
