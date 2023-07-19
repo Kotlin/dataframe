@@ -14,7 +14,11 @@ dependencies {
     api(project(":core"))
     implementation(libs.mariadb)
     // https://mvnrepository.com/artifact/ch.vorburger.mariaDB4j/mariaDB4j
-    testImplementation(libs.mariadbtesting)
+    //testImplementation(libs.mariadbtesting)
+    /*{
+        exclude("org.springframework", "spring-core")
+    }*/
+    testImplementation ("org.testcontainers:mariadb:1.18.3")
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")

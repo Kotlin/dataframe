@@ -1,14 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.io
 
-import ch.vorburger.mariadb4j.DB
-import ch.vorburger.mariadb4j.DBConfigurationBuilder
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.junit.AfterClass
 import org.junit.BeforeClass
+import org.junit.ClassRule
 import org.junit.Test
+import org.testcontainers.containers.MariaDBContainer
 import java.sql.DriverManager
 import java.util.*
 
@@ -34,8 +34,6 @@ interface RankedMoviesWithGenres {
 }
 
 class JDBCTest {
-
-
     @Test
     fun `setup connection and select from one table` () {
         val props = Properties()
@@ -53,7 +51,6 @@ class JDBCTest {
 
     @Test
     fun `convert result of SQL-query` () {
-
         val sqlQuery = "select name, year, rank,\n" +
             "GROUP_CONCAT (genre) as \"genres\"\n" +
             "from movies join movies_directors on  movie_id = movies.id\n" +
@@ -82,31 +79,44 @@ class JDBCTest {
 
     @Test
     fun `run simple test on the embedded database`() {
-        val conn = DriverManager.getConnection(db.getConfiguration().getURL(dbName), "root", "");
+        assert(1+1 == 2)
+        val url: String = underTest!!.jdbcUrl
+        DriverManager.getConnection(url).use { connection ->
+            println(connection.schema)
+        }
+       // val conn = DriverManager.getConnection(db?.configuration!!.getURL(dbName), "root", "")
+        //println(conn.clientInfo)
     }
 
     companion object {
-        var db:DB? = null
 
+        @JvmField
+        @ClassRule
+        var underTest: MariaDBContainer<*>? = null
+        //var db:DB? = null
+       // val dbName = "imdbtest"
         @JvmStatic
         @BeforeClass
         fun setupDB(): Unit {
-            val config = DBConfigurationBuilder.newBuilder()
+            underTest = MariaDBContainer()
+            underTest!!.start()
+           /* val config = DBConfigurationBuilder.newBuilder()
             config.setPort(0) // looking for a free port
 
             val db = DB.newEmbeddedDB(config.build())
             db.start()
 
-            val dbName = "imdbtest" // or just "test"
-            db.createDB(dbName)
-            db.source("ch/vorburger/mariadb4j/testSourceFile.sql", "root", null, dbName);
+          // or just "test"
+            //db.createDB(dbName)
+            //db.source("ch/vorburger/mariadb4j/testSourceFile.sql", "root", null, dbName);*/
 
         }
 
         @JvmStatic
         @AfterClass
         fun closeDB(): Unit {
-            db?.stop()
+            /*db?.stop()*/
+            underTest!!.stop()
         }
     }
 }
