@@ -70,18 +70,18 @@ public fun <T> PivotGroupBy<T>.last(predicate: RowFilter<T>): ReducedPivotGroupB
 public interface LastColumnsSelectionDsl {
 
     /**
-     * ## Last (Child)
+     * ## Last (Col)
      * Returns the last ([transformable][TransformableSingleColumn]) column in this [ColumnSet] or [ColumnGroup]
      * that adheres to the given [condition\].
      * If no column adheres to the given [condition\], [NoSuchElementException] is thrown.
      *
-     * NOTE: For [column groups][ColumnGroup], `last` is named `lastChild` instead to avoid confusion.
+     * NOTE: For [column groups][ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
      *
      * #### Examples:
      *
      * `df.`[select][DataFrame.select]` { `[last][ColumnsSelectionDsl.last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[lastChild][String.lastChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[lastCol][String.lastCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[recursively][ColumnsSelectionDsl.recursively]`() }`
      *
      * #### Examples for this overload:
      *
@@ -119,58 +119,58 @@ public interface LastColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { `[last][ColumnsSelectionDsl.last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun ColumnsSelectionDsl<*>.last(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        asSingleColumn().lastChild(condition)
+        asSingleColumn().lastCol(condition)
 
     /**
      * @include [CommonLastDocs]
      * @arg [CommonLastDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[lastChild][SingleColumn.lastChild]`() }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[lastCol][SingleColumn.lastCol]`() }`
      */
-    public fun SingleColumn<DataRow<*>>.lastChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun SingleColumn<DataRow<*>>.lastCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         ensureIsColGroup().asColumnSet().last(condition)
 
     /**
      * @include [CommonLastDocs]
      * @arg [CommonLastDocs.Examples]
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[lastChild][String.lastChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[lastCol][String.lastCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun String.lastChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        columnGroup(this).lastChild(condition)
+    public fun String.lastCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+        columnGroup(this).lastCol(condition)
 
     /**
      * @include [CommonLastDocs]
      * @arg [CommonLastDocs.Examples]
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[lastChild][SingleColumn.lastChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[lastCol][SingleColumn.lastCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[lastChild][SingleColumn.lastChild]`() }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[lastCol][SingleColumn.lastCol]`() }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[lastChild][KProperty.lastChild]`() }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[lastCol][KProperty.lastCol]`() }`
      */
-    public fun KProperty<*>.lastChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        columnGroup(this).lastChild(condition)
+    public fun KProperty<*>.lastCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+        columnGroup(this).lastCol(condition)
 
     /**
      * @include [CommonLastDocs]
      * @arg [CommonLastDocs.Examples]
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[lastChild][SingleColumn.lastChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[lastCol][SingleColumn.lastCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[lastChild][SingleColumn.lastChild]`() }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[lastCol][SingleColumn.lastCol]`() }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[lastChild][KProperty.lastChild]`() }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[lastCol][KProperty.lastCol]`() }`
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("lastKPropertyDataRow")
-    public fun KProperty<DataRow<*>>.lastChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        columnGroup(this).lastChild(condition)
+    public fun KProperty<DataRow<*>>.lastCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+        columnGroup(this).lastCol(condition)
 
     /**
      * @include [CommonLastDocs]
      * @arg [CommonLastDocs.Examples]
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[lastChild][ColumnPath.lastChild]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[lastCol][ColumnPath.lastCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun ColumnPath.lastChild(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        columnGroup(this).lastChild(condition)
+    public fun ColumnPath.lastCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+        columnGroup(this).lastCol(condition)
 }
 
 // endregion

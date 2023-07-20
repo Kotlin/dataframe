@@ -10,13 +10,13 @@ class LastTests : ColumnsSelectionDslTests() {
     @Test
     fun `ColumnsSelectionDsl last`() {
         shouldThrow<IllegalArgumentException> {
-            df.select { "age".lastChild() }
+            df.select { "age".lastCol() }
         }
         shouldThrow<IllegalArgumentException> {
-            df.select { Person::age.asColumnGroup().lastChild() }
+            df.select { Person::age.asColumnGroup().lastCol() }
         }
         shouldThrow<IllegalArgumentException> {
-            df.select { Person::age.lastChild() }
+            df.select { Person::age.lastCol() }
         }
         shouldThrow<NoSuchElementException> {
             df.select { last { false } }
@@ -32,12 +32,12 @@ class LastTests : ColumnsSelectionDslTests() {
         listOf(
             df.select { name.firstName },
             df.select { name.colsOf<String>().last { col -> col.any { it == "Alice" } } },
-            df.select { name.lastChild { col -> col.any { it == "Alice" } } },
-            df.select { "name".lastChild { col -> col.any { it == "Alice" } } },
-            df.select { Person::name.lastChild { col -> col.any { it == "Alice" } } },
-            df.select { NonDataSchemaPerson::name.lastChild { col -> col.any { it == "Alice" } } },
-            df.select { pathOf("name").lastChild { col -> col.any { it == "Alice" } } },
-            df.select { it["name"].asColumnGroup().lastChild { col -> col.any { it == "Alice" } } },
+            df.select { name.lastCol { col -> col.any { it == "Alice" } } },
+            df.select { "name".lastCol { col -> col.any { it == "Alice" } } },
+            df.select { Person::name.lastCol { col -> col.any { it == "Alice" } } },
+            df.select { NonDataSchemaPerson::name.lastCol { col -> col.any { it == "Alice" } } },
+            df.select { pathOf("name").lastCol { col -> col.any { it == "Alice" } } },
+            df.select { it["name"].asColumnGroup().lastCol { col -> col.any { it == "Alice" } } },
         ).shouldAllBeEqual()
     }
 }

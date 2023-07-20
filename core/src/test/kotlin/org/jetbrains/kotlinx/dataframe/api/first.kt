@@ -10,13 +10,13 @@ class FirstTests : ColumnsSelectionDslTests() {
     @Test
     fun `ColumnsSelectionDsl first`() {
         shouldThrow<IllegalArgumentException> {
-            df.select { "age".firstChild() }
+            df.select { "age".firstCol() }
         }
         shouldThrow<IllegalArgumentException> {
-            df.select { Person::age.asColumnGroup().firstChild() }
+            df.select { Person::age.asColumnGroup().firstCol() }
         }
         shouldThrow<IllegalArgumentException> {
-            df.select { Person::age.firstChild() }
+            df.select { Person::age.firstCol() }
         }
         shouldThrow<NoSuchElementException> {
             df.select { first { false } }
@@ -32,12 +32,12 @@ class FirstTests : ColumnsSelectionDslTests() {
         listOf(
             df.select { name.firstName },
             df.select { name.colsOf<String>().first { col -> col.any { it == "Alice" } } },
-            df.select { name.firstChild { col -> col.any { it == "Alice" } } },
-            df.select { "name".firstChild { col -> col.any { it == "Alice" } } },
-            df.select { Person::name.firstChild { col -> col.any { it == "Alice" } } },
-            df.select { NonDataSchemaPerson::name.firstChild { col -> col.any { it == "Alice" } } },
-            df.select { pathOf("name").firstChild { col -> col.any { it == "Alice" } } },
-            df.select { it["name"].asColumnGroup().firstChild { col -> col.any { it == "Alice" } } },
+            df.select { name.firstCol { col -> col.any { it == "Alice" } } },
+            df.select { "name".firstCol { col -> col.any { it == "Alice" } } },
+            df.select { Person::name.firstCol { col -> col.any { it == "Alice" } } },
+            df.select { NonDataSchemaPerson::name.firstCol { col -> col.any { it == "Alice" } } },
+            df.select { pathOf("name").firstCol { col -> col.any { it == "Alice" } } },
+            df.select { it["name"].asColumnGroup().firstCol { col -> col.any { it == "Alice" } } },
         ).shouldAllBeEqual()
     }
 }

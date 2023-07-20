@@ -10,13 +10,13 @@ class SingleTests : ColumnsSelectionDslTests() {
     @Test
     fun `ColumnsSelectionDsl single`() {
         shouldThrow<IllegalArgumentException> {
-            df.select { "age".singleChild() }
+            df.select { "age".singleCol() }
         }
         shouldThrow<IllegalArgumentException> {
-            df.select { Person::age.asColumnGroup().singleChild() }
+            df.select { Person::age.asColumnGroup().singleCol() }
         }
         shouldThrow<IllegalArgumentException> {
-            df.select { Person::age.singleChild() }
+            df.select { Person::age.singleCol() }
         }
         shouldThrow<NoSuchElementException> {
             df.select { single { false } }
@@ -38,12 +38,12 @@ class SingleTests : ColumnsSelectionDslTests() {
         listOf(
             df.select { name.firstName },
             df.select { name.colsOf<String>().single { col -> col.any { it == "Alice" } } },
-            df.select { name.singleChild { col -> col.any { it == "Alice" } } },
-            df.select { "name".singleChild { col -> col.any { it == "Alice" } } },
-            df.select { Person::name.singleChild { col -> col.any { it == "Alice" } } },
-            df.select { NonDataSchemaPerson::name.singleChild { col -> col.any { it == "Alice" } } },
-            df.select { pathOf("name").singleChild { col -> col.any { it == "Alice" } } },
-            df.select { it["name"].asColumnGroup().singleChild { col -> col.any { it == "Alice" } } },
+            df.select { name.singleCol { col -> col.any { it == "Alice" } } },
+            df.select { "name".singleCol { col -> col.any { it == "Alice" } } },
+            df.select { Person::name.singleCol { col -> col.any { it == "Alice" } } },
+            df.select { NonDataSchemaPerson::name.singleCol { col -> col.any { it == "Alice" } } },
+            df.select { pathOf("name").singleCol { col -> col.any { it == "Alice" } } },
+            df.select { it["name"].asColumnGroup().singleCol { col -> col.any { it == "Alice" } } },
         ).shouldAllBeEqual()
     }
 }

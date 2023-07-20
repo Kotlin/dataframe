@@ -462,7 +462,7 @@ summary {
                         <br>
                         <details>
                         <summary>df.select {
-            colGroup(&quot;name&quot;).last { it.name().endsWith(&quot;Name&quot;) }
+            colGroup(&quot;name&quot;).lastCol { it.name().endsWith(&quot;Name&quot;) }
         }</summary>
                         
                                     <details>
@@ -481,7 +481,7 @@ summary {
                         <br>
                         <details>
                         <summary>df.select {
-            Person::name.single { it.name().startsWith(&quot;first&quot;) }
+            Person::name.singleCol { it.name().startsWith(&quot;first&quot;) }
         }</summary>
                         
                                     <details>

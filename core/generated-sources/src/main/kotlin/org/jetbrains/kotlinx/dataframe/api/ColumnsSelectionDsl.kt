@@ -55,11 +55,11 @@ internal fun <T> ColumnsSelectionDsl<T>.asSingleColumn(): SingleColumn<DataRow<T
 public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     ColumnSelectionDsl<T>,
 
-    // first {}, firstChild()
+    // first {}, firstCol()
     FirstColumnsSelectionDsl,
-    // last {}, lastChild()
+    // last {}, lastCol()
     LastColumnsSelectionDsl,
-    // single {}, singleChild()
+    // single {}, singleCol()
     SingleColumnsSelectionDsl,
     // col(name), col(5), valueCol(name), colGroup(name), frameCol(name), .asColumnGroup()
     ConstructorsColumnsSelectionDsl,

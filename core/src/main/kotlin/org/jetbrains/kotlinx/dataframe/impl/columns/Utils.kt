@@ -98,6 +98,12 @@ internal fun <T> DataColumn<T>.assertIsComparable(): DataColumn<T> {
     return this
 }
 
+/**
+ * Helper function to perform runtime checks on a [SingleColumn].
+ *
+ * One use case is to check that a column is actually a [ColumnGroup], which is handled by
+ * [org.jetbrains.kotlinx.dataframe.api.ensureIsColGroup].
+ */
 internal fun <A> SingleColumn<A>.performCheck(
     check: (ColumnWithPath<A>?) -> Unit,
 ): SingleColumn<A> = object : SingleColumn<A> {

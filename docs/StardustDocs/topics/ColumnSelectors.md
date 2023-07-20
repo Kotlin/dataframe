@@ -50,7 +50,7 @@ df.select { name and age }
 // range of columns
 df.select { name..age }
 
-// all children of ColumnGroup
+// all columns of ColumnGroup
 df.select { name.all() }
 
 // recursive traversal of all children columns excluding ColumnGroups
@@ -86,7 +86,7 @@ df.select { name and age }
 // range of columns
 df.select { name..age }
 
-// all children of ColumnGroup
+// all columns of ColumnGroup
 df.select { name.all() }
 
 // recursive traversal of all children columns excluding ColumnGroups
@@ -119,7 +119,7 @@ df.select { "name" and "age" }
 // by range of names
 df.select { "name".."age" }
 
-// all children of ColumnGroup
+// all columns of ColumnGroup
 df.select { "name".all() }
 
 // recursive traversal of all children columns excluding groups
@@ -179,12 +179,12 @@ df.select { first { it.name.startsWith("year") } }
 
 // find the last column inside a column group satisfying the condition
 df.select {
-    colGroup("name").last { it.name().endsWith("Name") }
+    colGroup("name").lastCol { it.name().endsWith("Name") }
 }
 
 // find the single column inside a column group satisfying the condition
 df.select {
-    Person::name.single { it.name().startsWith("first") }
+    Person::name.singleCol { it.name().startsWith("first") }
 }
 
 // recursive traversal of all columns, excluding ColumnGroups from result
@@ -226,7 +226,7 @@ df.select { cols { !it.isColumnGroup() }.recursively().dropLast(3) }
 df.select { cols { !it.isColumnGroup() }.rec().filter { it.name().startsWith("year") } }
 
 // exclude columns from column set
-df.select { cols { !it.isColumnGroup() }.rec() except { age } }
+df.select { cols { !it.isColumnGroup() }.rec().except { age } }
 
 // keep only unique columns
 df.select { (colsOf<Int>() and age).distinct() }

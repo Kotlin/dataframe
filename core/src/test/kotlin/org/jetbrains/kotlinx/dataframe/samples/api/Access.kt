@@ -736,7 +736,7 @@ class Access : TestBase() {
         // range of columns
         df.select { name..age }
 
-        // all children of ColumnGroup
+        // all columns of ColumnGroup
         df.select { name.all() }
 
         // recursive traversal of all children columns excluding ColumnGroups
@@ -774,7 +774,7 @@ class Access : TestBase() {
         // range of columns
         df.select { name..age }
 
-        // all children of ColumnGroup
+        // all columns of ColumnGroup
         df.select { name.all() }
 
         // recursive traversal of all children columns excluding ColumnGroups
@@ -809,7 +809,7 @@ class Access : TestBase() {
         // range of columns
         df.select { Person::name..Person::age }
 
-        // all children of ColumnGroup
+        // all columns of ColumnGroup
         df.select { Person::name.all() }
 
         // recursive traversal of all children columns excluding groups
@@ -843,7 +843,7 @@ class Access : TestBase() {
         // by range of names
         df.select { "name".."age" }
 
-        // all children of ColumnGroup
+        // all columns of ColumnGroup
         df.select { "name".all() }
 
         // recursive traversal of all children columns excluding groups
@@ -897,12 +897,12 @@ class Access : TestBase() {
 
         // find the last column inside a column group satisfying the condition
         df.select {
-            colGroup("name").lastChild { it.name().endsWith("Name") }
+            colGroup("name").lastCol { it.name().endsWith("Name") }
         }
 
         // find the single column inside a column group satisfying the condition
         df.select {
-            Person::name.singleChild { it.name().startsWith("first") }
+            Person::name.singleCol { it.name().startsWith("first") }
         }
 
         // recursive traversal of all columns, excluding ColumnGroups from result
