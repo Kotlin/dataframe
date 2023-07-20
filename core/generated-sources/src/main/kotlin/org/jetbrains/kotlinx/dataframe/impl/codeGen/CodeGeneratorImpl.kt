@@ -226,8 +226,6 @@ internal open class ExtensionsCodeGeneratorImpl(
 
     private fun String.removeQuotes() = this.removeSurrounding("`")
 
-    private fun generateExtensionProperties(markers: List<Marker>) = markers.map { generateExtensionProperties(it) }
-
     private fun generatePropertyCode(
         marker: IsolatedMarker,
         shortMarkerName: String,
@@ -430,11 +428,6 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
         return CodeGenResult(code, context.generatedMarkers)
     }
 
-    private fun generateInterfaces(
-        schemas: List<Marker>,
-        fields: Boolean,
-    ) = schemas.map { generateInterface(it, fields) }
-
     private fun generateInterface(
         marker: Marker,
         fields: Boolean,
@@ -483,7 +476,7 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
                 append("\n}")
             }
         } else {
-            ""
+            " { }"
         }
         resultDeclarations.add(header + baseInterfacesDeclaration + body)
         return resultDeclarations.join()
