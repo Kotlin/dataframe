@@ -51,4 +51,14 @@ class CodeGenerationTests : DataFrameJupyterTest() {
             row.a
         """.checkCompilation()
     }
+
+    @Test
+    fun `interface without body compiled correctly`() {
+        """
+            val a = dataFrameOf("a")(1, 2, 3)
+            val b = dataFrameOf("b")(1, 2, 3)
+            val ab = dataFrameOf("a", "b")(1, 2)
+            ab.a
+        """.checkCompilation()
+    }
 }
