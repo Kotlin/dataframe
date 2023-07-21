@@ -80,10 +80,10 @@ public fun DataFrame.Companion.readFromDBViaSQLQuery(connection: Connection, sql
     }
 }
 
-public fun DataFrame.Companion.readFromDB(connection: Connection, tableName: String): AnyFrame {
+public fun DataFrame.Companion.readFromDB(connection: Connection, catalogName: String, tableName: String): AnyFrame {
     connection.createStatement().use { st ->
         val dbMetaData: DatabaseMetaData = connection.metaData
-        val columns: ResultSet = dbMetaData.getColumns("imdb", null, tableName, null)
+        val columns: ResultSet = dbMetaData.getColumns(null, null, tableName, null)
         val tableColumns = mutableMapOf<String, JDBCColumn>()
 
         while (columns.next()) {
@@ -130,11 +130,13 @@ public fun DataFrame.Companion.readFromDB(connection: Connection, tableName: Str
 // be sure that all the stuff is closed
 
 // TODO: parser https://docs.oracle.com/javase/8/docs/api/java/sql/JDBCType.html
+
+// TODO: different types for different databases
 private fun getData(rs: ResultSet, jdbcColumn: JDBCColumn): Any? {
     return when (jdbcColumn.type) {
-        "INT" -> rs.getInt(jdbcColumn.name)
-        "VARCHAR" -> rs.getString(jdbcColumn.name)
-        "FLOAT" -> rs.getFloat(jdbcColumn.name)
+        "INT", "INTEGER" -> rs.getInt(jdbcColumn.name)
+        "VARCHAR", "CHARACTER VARYING"  -> rs.getString(jdbcColumn.name)
+        "FLOAT", "REAL", "NUMERIC" -> rs.getFloat(jdbcColumn.name)
         "MEDIUMTEXT" -> rs.getString(jdbcColumn.name)
         else -> null
     }
