@@ -97,7 +97,7 @@ public interface DataColumn<out T> : BaseColumn<T> {
         public fun empty(name: String = ""): AnyCol = createValueColumn(name, emptyList<Unit>(), typeOf<Unit>())
     }
 
-    public fun hasNulls(): Boolean = type().isMarkedNullable
+    public fun hasNulls(): Boolean = values().any { it == null }
 
     override fun distinct(): DataColumn<T>
 
