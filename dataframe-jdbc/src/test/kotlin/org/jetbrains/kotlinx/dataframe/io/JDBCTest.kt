@@ -53,7 +53,6 @@ interface CustomerSales {
     val totalSalesAmount: Double
 }
 
-
 class JDBCTest {
     companion object {
         private lateinit var connection: Connection

@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
@@ -11,6 +12,8 @@ import java.sql.Connection
 import java.sql.DatabaseMetaData
 import java.sql.ResultSet
 import java.sql.ResultSetMetaData
+
+private val logger = KotlinLogging.logger {}
 
 // JDBC is not a file format, we need a hierarchy here
 public class JDBC : SupportedDataFrameFormat {
@@ -81,7 +84,11 @@ public fun DataFrame.Companion.readFromDBViaSQLQuery(connection: Connection, sql
 }
 
 public fun DataFrame.Companion.readFromDB(connection: Connection, catalogName: String, tableName: String): AnyFrame {
+    val preparedQuery = ("SELECT * FROM $tableName "
+        + "LIMIT 1000")
+
     connection.createStatement().use { st ->
+        logger.debug { "Connection with url:${connection.metaData.url} is established successfully." }
         val dbMetaData: DatabaseMetaData = connection.metaData
         val columns: ResultSet = dbMetaData.getColumns(null, null, tableName, null)
         val tableColumns = mutableMapOf<String, JDBCColumn>()
@@ -109,15 +116,16 @@ public fun DataFrame.Companion.readFromDB(connection: Connection, catalogName: S
         // or progress bar
         var counter = 0
         // ask the COUNT(*) for full table
-        st.executeQuery("SELECT * FROM $tableName "
-             + "LIMIT 1000" // TODO: work with limits correctly
+        st.executeQuery(
+            preparedQuery // TODO: work with limits correctly
         ).use { rs ->
+            logger.debug {  }
             while (rs.next()) {
                 tableColumns.forEach { (columnName, jdbcColumn) ->
                     data[columnName] = (data[columnName]!! + getData(rs, jdbcColumn)).toMutableList()
                 }
                 counter++
-                if (counter % 1000 == 0) println("Loaded yet 1000, percentage = $counter")
+                if (counter % 1000 == 0) logger.debug { "Loaded yet 1000, percentage = $counter" }
             }
         }
 
