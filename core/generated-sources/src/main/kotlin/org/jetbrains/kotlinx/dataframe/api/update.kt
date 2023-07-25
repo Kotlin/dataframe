@@ -12,6 +12,10 @@ import org.jetbrains.kotlinx.dataframe.impl.api.updateImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateWithValuePerColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.util.ITERABLE_COLUMNS_DEPRECATION_MESSAGE
+import org.jetbrains.kotlinx.dataframe.util.UPDATE_AS_NULLABLE_MESSAGE
+import org.jetbrains.kotlinx.dataframe.util.UPDATE_AS_NULLABLE_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.UPDATE_WITH_VALUE
+import org.jetbrains.kotlinx.dataframe.util.UPDATE_WITH_VALUE_REPLACE
 import kotlin.reflect.KProperty
 
 /**
@@ -403,8 +407,9 @@ public fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameExpressi
     asFrameImpl(expression)
 
 @Deprecated(
-    "Useless unless in combination with `withValue(null)`, but then users can just use `with { null }`...",
-    ReplaceWith("this as Update<T, C?>")
+    UPDATE_AS_NULLABLE_MESSAGE,
+    ReplaceWith(UPDATE_AS_NULLABLE_REPLACE),
+    DeprecationLevel.WARNING,
 )
 public fun <T, C> Update<T, C>.asNullable(): Update<T, C?> = this as Update<T, C?>
 
@@ -752,7 +757,7 @@ public fun <T, C> Update<T, C>.withNull(): DataFrame<T> = with { null }
 public fun <T, C> Update<T, C>.withZero(): DataFrame<T> = updateWithValuePerColumnImpl { 0 as C }
 
 /**
- * ## With Value
+ * ## With Value (Deprecated)
  * Specific version of [with][org.jetbrains.kotlinx.dataframe.api.with] that simply sets the value of each selected row to [value].
  *
  * For example:
@@ -763,5 +768,5 @@ public fun <T, C> Update<T, C>.withZero(): DataFrame<T> = updateWithValuePerColu
  *
  * @param [value] The value to set the selected rows to. In contrast to [with][Update.with], this must be the same exact type.
  */
-@Deprecated("Use with { value } instead", ReplaceWith("this.with { value }"))
+@Deprecated(UPDATE_WITH_VALUE, ReplaceWith(UPDATE_WITH_VALUE_REPLACE), DeprecationLevel.WARNING)
 public fun <T, C> Update<T, C>.withValue(value: C): DataFrame<T> = with { value }
