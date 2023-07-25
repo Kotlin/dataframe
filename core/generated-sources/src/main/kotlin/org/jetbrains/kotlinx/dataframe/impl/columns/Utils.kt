@@ -359,6 +359,8 @@ internal fun List<ColumnWithPath<*>>.allColumnsExcept(columns: Iterable<ColumnWi
  * Returns a new list of column paths, except the ones inside [columns].
  * NOTE: ColumnGroups are adapted to keep their structure. If a column inside a column group is excepted, it will
  *   be removed from the group.
+ *
+ * TODO remove column group when it's empty
  */
 internal fun List<ColumnWithPath<*>>.allColumnsExceptKeepingStructure(columns: Iterable<ColumnWithPath<*>>): List<ColumnWithPath<*>> {
     if (isEmpty()) return emptyList()
