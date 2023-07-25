@@ -6,11 +6,13 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.renamedReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.impl.DELIMITED_STRING_REGEX
 import org.jetbrains.kotlinx.dataframe.impl.DELIMITERS_REGEX
+import org.jetbrains.kotlinx.dataframe.impl.api.renameImpl
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
 import org.jetbrains.kotlinx.dataframe.util.ITERABLE_COLUMNS_DEPRECATION_MESSAGE
@@ -44,15 +46,17 @@ public fun <T, C> DataFrame<T>.rename(cols: Iterable<ColumnReference<C>>): Renam
 
 public data class RenameClause<T, C>(val df: DataFrame<T>, val columns: ColumnsSelector<T, C>)
 
+/**
+ * ## Rename to camelCase
+ *
+ * This function renames all columns to `camelCase` by replacing all [delimiters][DELIMITERS_REGEX]
+ * and converting the first char to lowercase.
+ * Even [DataFrames][DataFrame] inside [FrameColumns][FrameColumn] are traversed recursively.
+ */
 public fun <T> DataFrame<T>.renameToCamelCase(): DataFrame<T> = this
-    // recursively rename all column groups to camel case
+    // recursively rename all columns written with delimiters or starting with a capital to camel case
     .rename {
-        groups { it.name() matches DELIMITED_STRING_REGEX }.recursively()
-    }.toCamelCase()
-
-    // recursively rename all other columns to camel case
-    .rename {
-        cols { !it.isColumnGroup() && it.name() matches DELIMITED_STRING_REGEX }.recursively()
+        cols { it.name() matches DELIMITED_STRING_REGEX || it.name[0].isUpperCase() }.recursively()
     }.toCamelCase()
 
     // take all frame columns recursively and call renameToCamelCase() on all dataframes inside
@@ -60,31 +64,29 @@ public fun <T> DataFrame<T>.renameToCamelCase(): DataFrame<T> = this
         colsOf<AnyFrame>().recursively()
     }.with { it.renameToCamelCase() }
 
-    // convert all first chars of all columns to the lowercase
-    .rename {
-        cols { !it.isColumnGroup() }.recursively()
-    }.into {
-        it.name.replaceFirstChar { it.lowercaseChar() }
-    }
-
 public fun <T, C> RenameClause<T, C>.into(vararg newColumns: ColumnReference<*>): DataFrame<T> =
     into(*newColumns.map { it.name() }.toTypedArray())
 
 public fun <T, C> RenameClause<T, C>.into(vararg newNames: String): DataFrame<T> =
-    df.move(columns).intoIndexed { col, index ->
-        col.path.dropLast(1) + newNames[index]
-    }
+    renameImpl(newNames)
 
 public fun <T, C> RenameClause<T, C>.into(vararg newNames: KProperty<*>): DataFrame<T> =
     into(*newNames.map { it.name }.toTypedArray())
 
 public fun <T, C> RenameClause<T, C>.into(transform: (ColumnWithPath<C>) -> String): DataFrame<T> =
-    df.move(columns).into {
-        it.path.dropLast(1) + transform(it)
-    }
+    renameImpl(transform)
 
-public fun <T, C> RenameClause<T, C>.toCamelCase(): DataFrame<T> =
-    into { it.name().toCamelCaseByDelimiters(DELIMITERS_REGEX) }
+/**
+ * ## Rename to camelCase
+ *
+ * Renames the selected columns to `camelCase` by replacing all [delimiters][DELIMITERS_REGEX]
+ * and converting the first char to lowercase.
+ */
+public fun <T, C> RenameClause<T, C>.toCamelCase(): DataFrame<T> = into {
+    it.name()
+        .toCamelCaseByDelimiters(DELIMITERS_REGEX)
+        .replaceFirstChar { it.lowercaseChar() }
+}
 
 // endregion
 
