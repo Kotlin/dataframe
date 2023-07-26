@@ -170,7 +170,12 @@ class JDBCTest {
     }
 
     @Test
-    fun `sql native types mapping to JDBC types` () {
+    fun `h2 sql native types mapping to JDBC types` () {
         // TODO: need to add test with very diverse table with all different column and fake data with conversion to JDBC and DataFrame types
+    }
+
+    @Test
+    fun `sqlite native types mapping to JDBC types` () {
+        // TODO: add a small SQLite database in resources and connect to it (important for the future android users)
     }
 }

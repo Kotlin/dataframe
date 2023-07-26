@@ -10,6 +10,7 @@ import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchemaVisibility
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+import org.jetbrains.kotlinx.dataframe.annotations.JdbcOptions
 import org.jetbrains.kotlinx.dataframe.annotations.JsonOptions
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
@@ -52,6 +53,7 @@ class DataSchemaGenerator(
         val withDefaultPath: Boolean,
         val csvOptions: CsvOptions,
         val jsonOptions: JsonOptions,
+        val jdbcOptions: JdbcOptions,
     )
 
     class CodeGeneratorDataSource(val pathRepresentation: String, val data: URL)
@@ -100,6 +102,7 @@ class DataSchemaGenerator(
             withDefaultPath = withDefaultPath,
             csvOptions = csvOptions,
             jsonOptions = jsonOptions,
+            jdbcOptions = jdbcOptions,
         )
     }
 
