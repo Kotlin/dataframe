@@ -54,6 +54,7 @@ class DataSchemaGenerator(
         val csvOptions: CsvOptions,
         val jsonOptions: JsonOptions,
         val jdbcOptions: JdbcOptions,
+        val isJdbc: Boolean = false,
     )
 
     class CodeGeneratorDataSource(val pathRepresentation: String, val data: URL)
@@ -74,6 +75,21 @@ class DataSchemaGenerator(
                 return null
             }
         } else {
+            if(path.startsWith("jdbc")) {
+                return ImportDataSchemaStatement(
+                    origin = file,
+                    name = name,
+                    dataSource = CodeGeneratorDataSource(this.path, URL("http://example.com/pages/")), // URL better to make nullable or make hierarchy here
+                    visibility = visibility.toMarkerVisibility(),
+                    normalizationDelimiters = normalizationDelimiters.toList(),
+                    withDefaultPath = withDefaultPath,
+                    csvOptions = csvOptions,
+                    jsonOptions = jsonOptions,
+                    jdbcOptions = jdbcOptions,
+                    isJdbc = true
+                )
+            }
+
             val resolutionDir: String = resolutionDir ?: run {
                 reportMissingKspArgument(file)
                 return null
@@ -140,6 +156,10 @@ class DataSchemaGenerator(
             ArrowFeather(),
             OpenApi(),
         )
+
+        if (importStatement.isJdbc) {
+
+        }
 
         // first try without creating dataframe
         when (val codeGenResult =

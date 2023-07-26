@@ -39,6 +39,9 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
     abstract val jsonOptions: Property<JsonOptionsDsl>
 
     @get:Input
+    abstract val jdbcOptions: Property<JdbcOptionsDsl>
+
+    @get:Input
     abstract val src: Property<File>
 
     @get:Input
@@ -67,6 +70,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
     fun generate() {
         val csvOptions = csvOptions.get()
         val jsonOptions = jsonOptions.get()
+        val jdbcOptions = jdbcOptions.get()
         val url = urlOf(data.get())
         val schemaFile = dataSchema.get()
         val escapedPackageName = escapePackageName(packageName.get())

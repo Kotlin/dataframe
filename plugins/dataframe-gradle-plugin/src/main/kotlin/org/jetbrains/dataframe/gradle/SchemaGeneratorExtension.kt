@@ -61,6 +61,7 @@ class Schema(
     internal var withNormalizationBy: Set<Char>? = null,
     val csvOptions: CsvOptionsDsl = CsvOptionsDsl(),
     val jsonOptions: JsonOptionsDsl = JsonOptionsDsl(),
+    val jdbcOptions: JdbcOptionsDsl = JdbcOptionsDsl(),
 ) {
     fun setData(file: File) {
         data = file
@@ -88,6 +89,14 @@ class Schema(
 
     fun jsonOptions(config: Closure<*>) {
         project.configure(jsonOptions, config)
+    }
+
+    fun jdbcOptions(config: JdbcOptionsDsl.() -> Unit) {
+        jdbcOptions.apply(config)
+    }
+
+    fun jdbcOptions(config: Closure<*>) {
+        project.configure(jdbcOptions, config)
     }
 
     fun withoutDefaultPath() {
@@ -121,4 +130,9 @@ data class CsvOptionsDsl(
 data class JsonOptionsDsl(
     var typeClashTactic: JSON.TypeClashTactic = JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS,
     var keyValuePaths: List<JsonPath> = emptyList(),
+) : Serializable
+
+data class JdbcOptionsDsl(
+    var user: String = "", // TODO: I'm not sure about the default parameters
+    var password: String = "", // TODO: I'm not sure about the default parameters
 ) : Serializable

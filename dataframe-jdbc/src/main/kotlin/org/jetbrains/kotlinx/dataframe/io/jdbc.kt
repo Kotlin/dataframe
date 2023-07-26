@@ -28,7 +28,7 @@ public class JDBC : SupportedDataFrameFormat {
     override val testOrder: Int = 40000
 
     override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod {
-        return DefaultReadExcelMethod(pathRepresentation)
+        return DefaultReadJdbcMethod(pathRepresentation)
     }
 }
 
@@ -40,7 +40,7 @@ private fun DataFrame.Companion.readJDBC(stream: InputStream): DataFrame<*> {
     TODO("Not yet implemented")
 }
 
-internal class DefaultReadExcelMethod(path: String?) : AbstractDefaultReadMethod(path, MethodArguments.EMPTY, readJDBC)
+internal class DefaultReadJdbcMethod(path: String?) : AbstractDefaultReadMethod(path, MethodArguments.EMPTY, readJDBC)
 
 private const val readJDBC = "readJDBC"
 

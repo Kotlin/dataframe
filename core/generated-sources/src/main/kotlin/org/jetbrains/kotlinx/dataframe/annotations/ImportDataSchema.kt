@@ -8,21 +8,24 @@ import org.jetbrains.kotlinx.dataframe.io.JSON
 
 /**
  * Annotation preprocessing will generate a DataSchema interface from the data at `path`.
- * Data must be of supported format: CSV, JSON, Apache Arrow, Excel, OpenAPI (Swagger) in YAML/JSON.
+ * Data must be of supported format: CSV, JSON, Apache Arrow, Excel, OpenAPI (Swagger) in YAML/JSON, JDBC.
  * Generated data schema has properties inferred from data and a companion object with `read method`.
  * `read method` is either `readCSV` or `readJson` that returns `DataFrame<name>`
  *
  * @param name name of the generated interface
  * @param path URL or relative path to data.
- * if path starts with protocol (http, https, ftp), it's considered a URL. Otherwise, it's treated as relative path.
+ * If a path starts with protocol (http, https, ftp, jdbc), it's considered a URL.
+ * Otherwise, it's treated as a relative path.
  * By default, it will be resolved relatively to project dir, i.e. File(projectDir, path)
- * You can configure it by passing `dataframe.resolutionDir` option to preprocessor, see https://kotlinlang.org/docs/ksp-quickstart.html#pass-options-to-processors
+ * You can configure it by passing `dataframe.resolutionDir` option to preprocessor,
+ * see https://kotlinlang.org/docs/ksp-quickstart.html#pass-options-to-processors
  * @param visibility visibility of the generated interface.
  * @param normalizationDelimiters if not empty, split property names by delimiters,
  * lowercase parts and join to camel case. Set empty list to disable normalization
  * @param withDefaultPath if `true`, generate `defaultPath` property to the data schema's companion object and make it default argument for a `read method`
  * @param csvOptions options to parse CSV data. Not used when data is not Csv
  * @param jsonOptions options to parse JSON data. Not used when data is not Json
+ * @param jdbcOptions options to parse data from a database via JDBC. Not used when data is not stored in the database
  */
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.FILE)
@@ -35,6 +38,7 @@ public annotation class ImportDataSchema(
     val withDefaultPath: Boolean = true,
     val csvOptions: CsvOptions = CsvOptions(','),
     val jsonOptions: JsonOptions = JsonOptions(),
+    val jdbcOptions: JdbcOptions = JdbcOptions(),
 )
 
 public enum class DataSchemaVisibility {
@@ -43,6 +47,11 @@ public enum class DataSchemaVisibility {
 
 public annotation class CsvOptions(
     public val delimiter: Char,
+)
+
+public annotation class JdbcOptions(
+    public val user: String = "", // TODO: I'm not sure about the default parameters
+    public val password: String = "", // TODO: I'm not sure about the default parameters
 )
 
 public annotation class JsonOptions(

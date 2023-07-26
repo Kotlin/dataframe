@@ -49,7 +49,7 @@ public fun <T> List<List<T>>.toDataFrame(containsColumns: Boolean = false): AnyF
     }
 }
 
-public fun isURL(path: String): Boolean = listOf("http:", "https:", "ftp:", "jdbc:").any { path.startsWith(it) }
+public fun isURL(path: String): Boolean = listOf("http:", "https:", "ftp:").any { path.startsWith(it) }
 
 public fun isFile(url: URL): Boolean = url.protocol == "file"
 
@@ -57,4 +57,4 @@ public fun asFileOrNull(url: URL): File? = if (isFile(url)) File(url.path) else 
 
 public fun urlAsFile(url: URL): File = File(url.toURI())
 
-public fun isProtocolSupported(url: URL): Boolean = url.protocol in setOf("http", "https", "ftp", "jdbc")
+public fun isProtocolSupported(url: URL): Boolean = url.protocol in setOf("http", "https", "ftp")

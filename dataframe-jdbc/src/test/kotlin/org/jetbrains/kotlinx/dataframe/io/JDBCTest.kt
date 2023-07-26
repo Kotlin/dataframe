@@ -60,10 +60,9 @@ class JDBCTest {
         @BeforeClass
         @JvmStatic
         fun setUpClass() {
-            // Подключение к тестовой базе данных H2 в памяти
             connection = DriverManager.getConnection("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false")
 
-            // Создание таблицы Customer
+            // Crate table Customer
             connection.createStatement().execute("""
                 CREATE TABLE Customer (
                     id INT PRIMARY KEY,
@@ -72,7 +71,7 @@ class JDBCTest {
                 )
             """.trimIndent())
 
-            // Создание таблицы Sale
+            // Create table Sale
             connection.createStatement().execute("""
                 CREATE TABLE Sale (
                     id INT PRIMARY KEY,
@@ -99,7 +98,6 @@ class JDBCTest {
             try {
                 connection.close()
             } catch (e: SQLException) {
-                // Обработка ошибок закрытия соединения
                 e.printStackTrace()
             }
         }
