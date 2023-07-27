@@ -1,8 +1,10 @@
 name: Build docs
 
 on:
+  # Specify to run a workflow manually from the Actions tab on GitHub.
   workflow_dispatch:
 
+# Gives the workflow permissions to clone the repo and create a page deployment
 permissions:
   id-token: write
   pages: write
@@ -20,15 +22,31 @@ env:
 jobs:
   build-job:
     runs-on: ubuntu-latest
+    container: registry.jetbrains.team/p/writerside/builder/writerside-builder:2.1.1481-p3872-df
+    outputs:
+      artifact: ${{ steps.generate-artifact.outputs.artifact }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Build Writerside docs using Docker
-        uses: ./.github/writerside-build
-      - name: Upload artifact
+      - name: Prepare for build
+        run: |
+          apt-get update
+          apt-get install -y zip
+          mkdir -p artifacts
+      - name: Build docs and include sitemap.xml
+        run: |
+          export DISPLAY=:99
+          Xvfb :99 &
+          /opt/builder/bin/idea.sh helpbuilderinspect -source-dir . -product $PRODUCT --runner github -output-dir artifacts/ || true
+          test -e artifacts/$ARTIFACT && echo $ARTIFACT exists
+          cp docs/StardustDocs/sitemap.xml artifacts/sitemap.xml
+          cd artifacts
+          zip -r $ARTIFACT sitemap.xml
+        working-directory: ${{ github.workspace }}
+      - name: Upload modified documentation artifact
         uses: actions/upload-artifact@v3
         with:
-          name: artifact
+          name: help
           path: artifacts/${{ env.ARTIFACT }}
           retention-days: 7
       - name: Upload algolia-indexes
@@ -42,13 +60,14 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    # Requires the build-job results
     needs: build-job
     runs-on: ubuntu-latest
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
-          name: artifact
+          name: help
       - name: Unzip artifact
         uses: montudor/action-zip@v1
         with:
