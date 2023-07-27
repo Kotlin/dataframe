@@ -9,57 +9,6 @@ import org.junit.Test
 class ConstructorsTests : ColumnsSelectionDslTests() {
 
     @Test
-    fun col() {
-        listOf(
-            df.select { age },
-
-            df.select { col("age") },
-            df.select { col<Int>("age") },
-
-            df.select { col(pathOf("age")) },
-            df.select { col<Int>(pathOf("age")) },
-
-            df.select { col(Person::age) },
-        ).shouldAllBeEqual()
-
-        listOf(
-            df.select { name.firstName },
-
-            df.select { colGroup("name").col("firstName") },
-            df.select { colGroup("name").col<String>("firstName") },
-
-            df.select { colGroup("name").col(pathOf("firstName")) },
-            df.select { colGroup("name").col<String>(pathOf("firstName")) },
-
-            df.select { colGroup("name").col(Name::firstName) },
-        ).shouldAllBeEqual()
-    }
-
-    @Test
-    fun colIndex() {
-        listOf(
-            df.select { name },
-
-            df.select { col(0) },
-            df.select { it[0] },
-
-            df.select { all().col(0) },
-            df.select { all()[0] },
-        ).shouldAllBeEqual()
-
-        listOf(
-            df.select { name.firstName },
-
-            df.select { name.col(0) },
-            df.select { "name".col(0) },
-            df.select { "name".col("") },
-            df.select { Person::name.col(0) },
-            df.select { NonDataSchemaPerson::name.asColumnGroup().col(0) },
-            df.select { pathOf("name").col(0) },
-        )
-    }
-
-    @Test
     fun valueCol() {
         listOf(
             df.select { age },

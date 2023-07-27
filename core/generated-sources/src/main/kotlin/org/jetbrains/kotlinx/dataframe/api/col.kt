@@ -237,8 +237,10 @@ public interface ColColumnsSelectionDsl {
     public fun <C> SingleColumn<DataRow<*>>.col(col: ColumnAccessor<C>): SingleColumn<C> =
         ensureIsColGroup()
             .transformSingle {
-                listOf(it.getChild(col)?.cast<C>()
-                    ?: error("Column '${col.path()}' not found in column group '${it.path}'"))
+                it.getChild(col)
+                    ?.cast<C>()
+                    ?.let(::listOf)
+                    ?: error("Column '${col.path()}' not found in column group '${it.path}'")
             }.singleImpl()
 
     /**
@@ -735,7 +737,10 @@ public interface ColColumnsSelectionDsl {
     public fun <C> SingleColumn<DataRow<*>>.col(name: String): SingleColumn<C> =
         ensureIsColGroup()
             .transformSingle {
-                listOf(it.getChild(name)?.cast<C>() ?: error("Column '$name' not found in column group '${it.path}'"))
+                it.getChild(name)
+                    ?.cast<C>()
+                    ?.let(::listOf)
+                    ?: error("Column '$name' not found in column group '${it.path}'")
             }.singleImpl()
 
     /**
@@ -1497,8 +1502,10 @@ public interface ColColumnsSelectionDsl {
     public fun <C> SingleColumn<DataRow<*>>.col(path: ColumnPath): SingleColumn<C> =
         ensureIsColGroup()
             .transformSingle {
-                listOf(it.getChild(path)?.cast<C>()
-                    ?: error("Column '$path' not found in column group '${it.path}'"))
+                it.getChild(path)
+                    ?.cast<C>()
+                    ?.let(::listOf)
+                    ?: error("Column '$path' not found in column group '${it.path}'")
             }.singleImpl()
 
     /**
@@ -2399,7 +2406,6 @@ public interface ColColumnsSelectionDsl {
      */
     private interface ColIndexDocs
 
-
     /**
      * ## Col
      *
@@ -2707,7 +2713,10 @@ public interface ColColumnsSelectionDsl {
      * @param [C] The type of the column.
      */
     public fun <C> SingleColumn<DataRow<*>>.col(index: Int): SingleColumn<C> =
-        ensureIsColGroup().getAt(index).cast()
+        ensureIsColGroup()
+            .allColumnsInternal()
+            .getAt(index)
+            .cast()
 
     /**
      * ## Col
