@@ -2707,7 +2707,10 @@ public interface ColColumnsSelectionDsl {
      * @param [C] The type of the column.
      */
     public fun <C> SingleColumn<DataRow<*>>.col(index: Int): SingleColumn<C> =
-        ensureIsColGroup().getAt(index).cast()
+        ensureIsColGroup()
+            .allColumnsInternal()
+            .getAt(index)
+            .cast()
 
     /**
      * ## Col

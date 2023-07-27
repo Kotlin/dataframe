@@ -503,7 +503,10 @@ public interface ColColumnsSelectionDsl {
      * @include [CommonColDocs.ColumnTypeParam]
      */
     public fun <C> SingleColumn<DataRow<*>>.col(index: Int): SingleColumn<C> =
-        ensureIsColGroup().getAt(index).cast()
+        ensureIsColGroup()
+            .allColumnsInternal()
+            .getAt(index)
+            .cast()
 
     /**
      * @include [ColIndexDocs] {@arg [CommonColDocs.ReceiverArg] "myColumnGroup".}
