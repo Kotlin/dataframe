@@ -14,10 +14,8 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
@@ -27,11 +25,10 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.createComputedColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columns.forceResolve
-import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
-import org.jetbrains.kotlinx.dataframe.impl.columns.getChildrenAt
-import org.jetbrains.kotlinx.dataframe.impl.columns.singleImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.unbox
 import org.jetbrains.kotlinx.dataframe.size
+import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_GROUP
+import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_GROUP_REPLACE
 import kotlin.random.Random
 import kotlin.random.nextInt
 import kotlin.reflect.KProperty
@@ -105,7 +102,8 @@ public fun ColumnGroupReference.valueColumn(name: String): ColumnAccessor<Any?> 
 public fun <T> ColumnGroupReference.valueColumn(name: String): ColumnAccessor<T> =
     ColumnAccessorImpl(path() + name)
 
-public fun ColumnGroupReference.valueColumn(path: ColumnPath): ColumnAccessor<Any?> = ColumnAccessorImpl(this.path() + path)
+public fun ColumnGroupReference.valueColumn(path: ColumnPath): ColumnAccessor<Any?> =
+    ColumnAccessorImpl(this.path() + path)
 
 @JvmName("valueColumnTyped")
 public fun <T> ColumnGroupReference.valueColumn(path: ColumnPath): ColumnAccessor<T> =
@@ -477,260 +475,8 @@ public fun pathOf(vararg columnNames: String): ColumnPath = ColumnPath(columnNam
 // endregion
 
 // section ColumnsSelectionDsl
+
 public interface ConstructorsColumnsSelectionDsl {
-    // region colAccessor
-
-    /**
-     * ## Col: Column Accessor
-     *
-     * Creates a [ColumnAccessor] for a column with the given argument.
-     * This is a shorthand for [column] and can be both typed and untyped.
-     * The function can also be called on [ColumnGroupReferences][ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup].
-     *
-     * {@includeArg [CommonColAccessorDocs.Note]}
-     *
-     * #### For example:
-     *
-     * `df.`[select][DataFrame.select]` { `[col][col]`({@includeArg [CommonColAccessorDocs.Arg]}) }`
-     *
-     * `df.`[select][DataFrame.select]` { myColGroup.`[col][col]`<SomeType>({@includeArg [CommonColAccessorDocs.Arg]}) }`
-     *
-     * @return A [ColumnAccessor] for the column with the given argument.
-     * @see [column\]
-     * @see [colGroup\]
-     * @see [frameCol\]
-     * {@arg [CommonColAccessorDocs.Note]}
-     */
-    private interface CommonColAccessorDocs {
-
-        /** Example argument */
-        interface Arg
-
-        /** Optional note */
-        interface Note
-    }
-
-    /**
-     * @include [CommonColAccessorDocs] {@arg [CommonColAccessorDocs.Arg] "columnName"}
-     * @param [name] The name of the column.
-     */
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("colUnTyped")
-    public fun col(name: String): ColumnAccessor<*> = column<Any?>(name)
-
-    /**
-     * @include [CommonColAccessorDocs] {@arg [CommonColAccessorDocs.Arg] "columnName"}
-     * @param [name] The name of the column.
-     * @param [C] The type of the column.
-     */
-    public fun <C> col(name: String): ColumnAccessor<C> = column(name)
-
-    /**
-     * @include [CommonColAccessorDocs] {@arg [CommonColAccessorDocs.Arg] "columnGroup"["columnName"]}
-     * {@arg [CommonColAccessorDocs.Note] NOTE: For column paths, this is an identity function and can be removed.}
-     * @param [path] The [ColumnPath] pointing to the column.
-     */
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("colUnTyped")
-    public fun col(path: ColumnPath): ColumnAccessor<*> = column<Any?>(path)
-
-    /**
-     * @include [CommonColAccessorDocs] {@arg [CommonColAccessorDocs.Arg] "columnGroup"["columnName"]}
-     * @param [path] The [ColumnPath] pointing to the column.
-     * @param [C] The type of the column.
-     */
-    public fun <C> col(path: ColumnPath): ColumnAccessor<C> = column(path)
-
-    /**
-     * @include [CommonColAccessorDocs] {@arg [CommonColAccessorDocs.Arg] Type::columnName}
-     * @param [property] The [KProperty] pointing to the column.
-     */
-    public fun <C> col(property: KProperty<C>): ColumnAccessor<C> = column(property)
-
-    /**
-     * @include [CommonColAccessorDocs] {@arg [CommonColAccessorDocs.Arg] "columnName"}
-     * @param [name] The name of the column.
-     * @receiver The [ColumnGroupReference] to get the column from.
-     */
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("colUnTyped")
-    public fun ColumnGroupReference.col(name: String): ColumnAccessor<*> = column<Any?>(name)
-
-    /**
-     * @include [CommonColAccessorDocs] {@arg [CommonColAccessorDocs.Arg] "columnName"}
-     * @param [name] The name of the column.
-     * @receiver The [ColumnGroupReference] to get the column from.
-     * @param [C] The type of the column.
-     */
-    public fun <C> ColumnGroupReference.col(name: String): ColumnAccessor<C> = column(name)
-
-    /**
-     * @include [CommonColAccessorDocs] {@arg [CommonColAccessorDocs.Arg] "columnGroup"["columnName"]}
-     * @param [path] The [ColumnPath] pointing to the column.
-     * @receiver The [ColumnGroupReference] to get the column from.
-     */
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("colUnTyped")
-    public fun ColumnGroupReference.col(path: ColumnPath): ColumnAccessor<*> = column<Any?>(path)
-
-    /**
-     * @include [CommonColAccessorDocs] {@arg [CommonColAccessorDocs.Arg] "columnGroup"["columnName"]}
-     * @param [path] The [ColumnPath] pointing to the column.
-     * @receiver The [ColumnGroupReference] to get the column from.
-     * @param [C] The type of the column.
-     */
-    public fun <C> ColumnGroupReference.col(path: ColumnPath): ColumnAccessor<C> = column(path)
-
-    /**
-     * @include [CommonColAccessorDocs] {@arg [CommonColAccessorDocs.Arg] Type::columnName}
-     * @param [property] The [KProperty] pointing to the column.
-     * @receiver The [ColumnGroupReference] to get the column from.
-     */
-    public fun <C> ColumnGroupReference.col(property: KProperty<C>): ColumnAccessor<C> = column(property)
-
-    // endregion
-
-    // region colIndex
-
-    /**
-     * ## Col: Column by Index
-     *
-     * Retrieves a [column][SingleColumn] by index.
-     * If the index is out of bounds, an [IndexOutOfBoundsException] will be thrown.
-     *
-     * If called on a [SingleColumn], [ColumnGroup], or [DataFrame], the function will take the child column found at the
-     * given [index\].
-     * Else, if called on a normal [ColumnSet],
-     * the function will return the [index\]'th column in the set.
-     *
-     * #### For example:
-     *
-     * `df.`[select][DataFrame.select]` { `[col][ColumnsSelectionDsl.col]`(3) }`
-     *
-     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.col]`5`[`]`][ColumnsSelectionDsl.col]` }`
-     *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[col][String.col]`(0) }`
-     *
-     * #### Examples for this overload:
-     *
-     * {@includeArg [CommonColIndexDocs.ExampleArg]}
-     *
-     * @throws [IndexOutOfBoundsException] If the index is out of bounds.
-     * @param [index\] The index of the column to retrieve.
-     * @return A [SingleColumn] for the column at the given index.
-     */
-    private interface CommonColIndexDocs {
-
-        /** Example argument */
-        interface ExampleArg
-    }
-
-    /**
-     * @include [CommonColIndexDocs]
-     * @arg [CommonColIndexDocs.ExampleArg]
-     *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[col][ColumnSet.col]`(0) }`
-     *
-     * `df.`[select][DataFrame.select]` { `[all][ColumnsSelectionDsl.all]`()`[`[`][ColumnSet.col]`5`[`]`][ColumnSet.col]` }`
-     */
-    private interface ColumnSetColIndexDocs
-
-    /** @include [ColumnSetColIndexDocs] */
-    public fun <C> ColumnSet<C>.col(index: Int): SingleColumn<C> = getAt(index)
-
-    /** @include [ColumnSetColIndexDocs] */
-    public operator fun <C> ColumnSet<C>.get(index: Int): SingleColumn<C> = col(index)
-
-    /**
-     * @include [CommonColIndexDocs]
-     * @arg [CommonColIndexDocs.ExampleArg]
-     *
-     * `df.`[select][DataFrame.select]` { `[col][ColumnsSelectionDsl.col]`(0) }`
-     *
-     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.col]`5`[`]`][ColumnsSelectionDsl.col]` }`
-     */
-    private interface ColumnsSelectionDslColIndexDocs
-
-    /** @include [ColumnsSelectionDslColIndexDocs] */
-    public fun ColumnsSelectionDsl<*>.col(index: Int): SingleColumn<*> =
-        asSingleColumn().col(index)
-
-    /** @include [ColumnsSelectionDslColIndexDocs] */
-    public operator fun ColumnsSelectionDsl<*>.get(index: Int): SingleColumn<*> = col(index)
-
-    /**
-     * @include [CommonColIndexDocs]
-     * @arg [CommonColIndexDocs.ExampleArg]
-     *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[col][SingleColumn.col]`(0) }`
-     *
-     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.col]`5`[`]`][SingleColumn.col]` }`
-     */
-    private interface SingleColumnColIndexDocs
-
-    /** @include [SingleColumnColIndexDocs] */
-    public fun SingleColumn<DataRow<*>>.col(index: Int): SingleColumn<*> =
-        ensureIsColGroup().asColumnSet().getChildrenAt(index).singleImpl()
-
-    /** @include [SingleColumnColIndexDocs] */
-    public operator fun SingleColumn<DataRow<*>>.get(index: Int): SingleColumn<*> = col(index)
-
-    /**
-     * @include [CommonColIndexDocs]
-     * @arg [CommonColIndexDocs.ExampleArg]
-     *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[col][String.col]`(5) }`
-     *
-     * `// NOTE: There's a `[String.get][String.get]` function that prevents this:`
-     *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup"[0] }`
-     */
-    private interface StringIndexDocs
-
-    /** @include [StringIndexDocs] */
-    public fun String.col(index: Int): SingleColumn<*> = columnGroup(this).col(index)
-
-    /** @include [StringIndexDocs]
-     * {@comment this function is shadowed by [String.get]} */
-    public operator fun String.get(index: Int): SingleColumn<*> = col(index)
-
-    /**
-     * @include [CommonColIndexDocs]
-     * @arg [CommonColIndexDocs.ExampleArg]
-     *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[col][SingleColumn.col]`(5) }`
-     *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][SingleColumn.col]`0`[`]`][SingleColumn.col]` }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[col][KProperty.col]`(5) }`
-     */
-    private interface KPropertyIndexDocs
-
-    /** @include [KPropertyIndexDocs] */
-    public fun KProperty<DataRow<*>>.col(index: Int): SingleColumn<*> = columnGroup(this).col(index)
-
-    /** @include [KPropertyIndexDocs] */
-    public operator fun KProperty<DataRow<*>>.get(index: Int): SingleColumn<*> = col(index)
-
-    /**
-     * @include [CommonColIndexDocs]
-     * @arg [CommonColIndexDocs.ExampleArg]
-     *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[col][ColumnPath.col]`(0) }`
-     *
-     * `// NOTE: There's a `[List.get][List.get]` function that prevents this:`
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"]`[`[`][ColumnPath.col]`0`[`]`][ColumnPath.col]` }`
-     */
-    private interface ColumnPathIndexDocs
-
-    /** @include [ColumnPathIndexDocs] */
-    public fun ColumnPath.col(index: Int): SingleColumn<*> = columnGroup(this).col(index)
-
-    /** @include [ColumnPathIndexDocs] */
-    public operator fun ColumnPath.get(index: Int): SingleColumn<*> = col(index)
-
-    // endregion
 
     // region valueCol
 
@@ -864,7 +610,7 @@ public interface ConstructorsColumnsSelectionDsl {
         interface Arg
     }
 
-    @Deprecated("Use colGroup() instead.", ReplaceWith("this.colGroup(name)"))
+    @Deprecated(COL_SELECT_DSL_GROUP, ReplaceWith(COL_SELECT_DSL_GROUP_REPLACE))
     public fun ColumnsContainer<*>.group(name: String): ColumnGroupReference = name.toColumnOf()
 
     /**
@@ -1093,4 +839,5 @@ public interface ConstructorsColumnsSelectionDsl {
 
     // endregion
 }
+
 // endregion

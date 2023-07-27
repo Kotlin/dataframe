@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -61,6 +62,9 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     LastColumnsSelectionDsl,
     // single {}, singleCol()
     SingleColumnsSelectionDsl,
+
+    ColColumnsSelectionDsl,
+
     // col(name), col(5), valueCol(name), colGroup(name), frameCol(name), .asColumnGroup()
     ConstructorsColumnsSelectionDsl,
     // cols {}, cols(), cols(colA, colB), cols(1, 5), cols(1..5)
@@ -572,3 +576,9 @@ internal fun <C> SingleColumn<DataRow<C>>.ensureIsColGroup(): SingleColumn<DataR
             "Attempted to perform a ColumnGroup operation on ${col?.kind()} ${col?.path}."
         }
     }
+
+/** Checks the validity of this [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn],
+ * by adding a check to see it's a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] (so, a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]<[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]<*>>)
+ * and throwing an [IllegalArgumentException] if it's not. */
+internal fun <C> ColumnAccessor<DataRow<C>>.ensureIsColGroup(): ColumnAccessor<DataRow<C>> =
+    also { (it as SingleColumn<DataRow<C>>).ensureIsColGroup() }

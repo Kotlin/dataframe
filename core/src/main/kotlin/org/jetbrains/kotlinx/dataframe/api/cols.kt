@@ -38,7 +38,7 @@ public interface ColsColumnsSelectionDsl {
      * Aside from calling [cols] directly, you can also use the [get][ColumnSet.get] operator in most cases.
      *
      * #### For example:
-     * `df.`[remove][DataFrame.remove]` { `[cols][SingleColumn.cols]` { it.`[hasNulls][DataColumn.hasNulls]`() } }`
+     * `df.`[remove][DataFrame.remove]` { `[cols][ColumnsSelectionDsl.cols]` { it.`[hasNulls][DataColumn.hasNulls]`() } }`
      *
      * `df.`[select][DataFrame.select]` { myGroupCol.`[cols][SingleColumn.cols]`(columnA, columnB) }`
      *

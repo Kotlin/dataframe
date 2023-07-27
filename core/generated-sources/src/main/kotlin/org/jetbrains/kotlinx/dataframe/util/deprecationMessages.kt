@@ -32,10 +32,21 @@ internal const val UPDATE_AS_NULLABLE_REPLACE = "this as Update<T, C?>"
 internal const val UPDATE_WITH_VALUE = "Replaced in favor of `with { value }`. $message_0_12_0"
 internal const val UPDATE_WITH_VALUE_REPLACE = "this.with { value }"
 
+internal const val COL_SELECT_DSL_GROUP = "Use `colGroup()` instead. $message_0_12_0"
+internal const val COL_SELECT_DSL_GROUP_REPLACE = "this.colGroup(name)"
+
 // endregion
 
 // region WARNING in 0.12.0, ERROR in 0.13.0
 
 private const val message_0_13_0 = "Will be removed in 0.13.0."
+
+// endregion
+
+// region keep across releases
+
+internal const val IDENTITY_FUNCTION = "This overload is an identity function and can be omitted."
+
+internal const val COL_REPLACE = "col"
 
 // endregion
