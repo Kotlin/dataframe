@@ -183,7 +183,7 @@ public fun <T> DataFrame<T>.html(): String = toStandaloneHTML().toString()
 public fun <T> DataFrame<T>.toStandaloneHTML(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
     cellRenderer: CellRenderer = org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer,
-    getFooter: (DataFrame<T>) -> String = { "DataFrame [${it.size}]" },
+    getFooter: (DataFrame<T>) -> String? = { "DataFrame [${it.size}]" },
 ): DataFrameHtmlData = toHTML(configuration, cellRenderer, getFooter).withTableDefinitions()
 
 /**
@@ -192,25 +192,31 @@ public fun <T> DataFrame<T>.toStandaloneHTML(
 public fun <T> DataFrame<T>.toHTML(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
     cellRenderer: CellRenderer = org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer,
-    getFooter: (DataFrame<T>) -> String = { "DataFrame [${it.size}]" },
+    getFooter: (DataFrame<T>) -> String? = { "DataFrame [${it.size}]" },
 ): DataFrameHtmlData {
     val limit = configuration.rowsLimit ?: Int.MAX_VALUE
 
     val footer = getFooter(this)
-    val bodyFooter = buildString {
-        val openPTag = "<p class=\"dataframe_description\">"
-        if (limit < nrow) {
+    val bodyFooter = footer?.let {
+        buildString {
+            val openPTag = "<p class=\"dataframe_description\">"
+            if (limit < nrow) {
+                append(openPTag)
+                append("... showing only top $limit of $nrow rows</p>")
+            }
             append(openPTag)
-            append("... showing only top $limit of $nrow rows</p>")
+            append(footer)
+            append("</p>")
         }
-        append(openPTag)
-        append(footer)
-        append("</p>")
     }
 
-    val tableHtml = toHtmlData(configuration, cellRenderer)
+    var tableHtml = toHtmlData(configuration, cellRenderer)
 
-    return tableHtml + DataFrameHtmlData("", bodyFooter, "")
+    if (bodyFooter != null) {
+        tableHtml += DataFrameHtmlData("", bodyFooter, "")
+    }
+
+    return tableHtml
 }
 
 /**
