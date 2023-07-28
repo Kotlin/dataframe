@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
 import org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression
@@ -63,9 +64,12 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     // single {}, singleCol()
     SingleColumnsSelectionDsl,
 
+    // col(name), col(5)
     ColColumnsSelectionDsl,
+    // valueCol(name), valueCol(5)
+    ValueColColumnsSelectionDsl,
 
-    // col(name), col(5), valueCol(name), colGroup(name), frameCol(name), .asColumnGroup()
+    // colGroup(name), frameCol(name), .asColumnGroup()
     ConstructorsColumnsSelectionDsl,
     // cols {}, cols(), cols(colA, colB), cols(1, 5), cols(1..5)
     ColsColumnsSelectionDsl,
@@ -582,3 +586,22 @@ internal fun <C> SingleColumn<DataRow<C>>.ensureIsColGroup(): SingleColumn<DataR
  * and throwing an [IllegalArgumentException] if it's not. */
 internal fun <C> ColumnAccessor<DataRow<C>>.ensureIsColGroup(): ColumnAccessor<DataRow<C>> =
     also { (it as SingleColumn<DataRow<C>>).ensureIsColGroup() }
+
+/**
+ * Checks the validity of this [SingleColumn],
+ * by adding a check to see it's a [ValueColumn] (so, a [SingleColumn]<*>)
+ * and throwing an [IllegalArgumentException] if it's not.
+ */
+@Suppress("UNCHECKED_CAST")
+internal fun <C> SingleColumn<C>.ensureIsValueColumn(): SingleColumn<C> =
+    performCheck { col: ColumnWithPath<*>? ->
+        require(col?.isValueColumn() != false) {
+            "Attempted to perform a ValueColumn operation on ${col?.kind()} ${col?.path}."
+        }
+    }
+
+/** Checks the validity of this [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn],
+ * by adding a check to see it's a [ValueColumn][org.jetbrains.kotlinx.dataframe.columns.ValueColumn] (so, a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]<*>)
+ * and throwing an [IllegalArgumentException] if it's not. */
+internal fun <C> ColumnAccessor<C>.ensureIsValueColumn(): ColumnAccessor<C> =
+    also { (it as SingleColumn<C>).ensureIsValueColumn() }
