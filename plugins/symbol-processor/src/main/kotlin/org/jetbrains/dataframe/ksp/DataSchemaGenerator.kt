@@ -7,12 +7,15 @@ import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.symbol.KSFile
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchemaVisibility
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.JdbcOptions
 import org.jetbrains.kotlinx.dataframe.annotations.JsonOptions
+import org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl
+import org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
@@ -29,12 +32,15 @@ import org.jetbrains.kotlinx.dataframe.io.JDBC
 import org.jetbrains.kotlinx.dataframe.io.JSON
 import org.jetbrains.kotlinx.dataframe.io.OpenApi
 import org.jetbrains.kotlinx.dataframe.io.TSV
+import org.jetbrains.kotlinx.dataframe.io.convertDataRowsWithOpenApi
 import org.jetbrains.kotlinx.dataframe.io.databaseCodeGenReader
 import org.jetbrains.kotlinx.dataframe.io.isURL
+import org.jetbrains.kotlinx.dataframe.io.readSchemaFromDB
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.io.File
 import java.net.MalformedURLException
 import java.net.URL
+import java.sql.DriverManager
 
 @OptIn(KspExperimental::class)
 class DataSchemaGenerator(
@@ -163,26 +169,38 @@ class DataSchemaGenerator(
 
 
         if (importStatement.isJdbc) {
-            val readDfMethod =
-                parsedDf.getReadDfMethod(importStatement.dataSource.pathRepresentation.takeIf { importStatement.withDefaultPath })
-            val codeGenerator = CodeGenerator.create(useFqNames = false)
+            val url = importStatement.dataSource.pathRepresentation
+            val connection = DriverManager.getConnection(url)
+            connection.use {
+                val schema = DataFrame.readSchemaFromDB(connection, "", importStatement.name)
+                // TODO: check if schema exists and add a test here
 
-            // DataFrameSchema.createEmptyDataFrame() createEmptyColumn
+                val codeGenerator = CodeGenerator.create(useFqNames = false)
 
-            val codeGenResult = codeGenerator.generate(
-                schema = schema,
-                name = name,
-                fields = true,
-                extensionProperties = false,
-                isOpen = true,
-                visibility = importStatement.visibility,
-                knownMarkers = emptyList(),
-                readDfMethod = readDfMethod,
-                fieldNameNormalizer = NameNormalizer.from(importStatement.normalizationDelimiters.toSet())
-            )
-            val code = codeGenResult.toStandaloneSnippet(packageName, readDfMethod.additionalImports)
-            schemaFile.bufferedWriter().use {
-                it.write(code)
+                // DataFrameSchema.createEmptyDataFrame() createEmptyColumn
+
+                val additionalImports: List<String> =  listOf(
+                    /*"import org.jetbrains.kotlinx.dataframe.io.readJson",
+                    "import org.jetbrains.kotlinx.dataframe.io.readJsonStr",
+                    "import org.jetbrains.kotlinx.dataframe.api.convertTo",
+                    "import org.jetbrains.kotlinx.dataframe.api.first",*/
+                )
+
+                val codeGenResult = codeGenerator.generate(
+                    schema = schema,
+                    name = name,
+                    fields = true,
+                    extensionProperties = false,
+                    isOpen = true,
+                    visibility = importStatement.visibility,
+                    knownMarkers = emptyList(),
+                    readDfMethod = null,
+                    fieldNameNormalizer = NameNormalizer.from(importStatement.normalizationDelimiters.toSet())
+                )
+                val code = codeGenResult.toStandaloneSnippet(packageName, additionalImports)
+                schemaFile.bufferedWriter().use {
+                    it.write(code)
+                }
             }
         }
 

@@ -6,6 +6,9 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
+import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
+import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.jupyter.api.Code
 import java.io.File
 import java.io.InputStream
@@ -13,6 +16,8 @@ import java.sql.Connection
 import java.sql.DatabaseMetaData
 import java.sql.ResultSet
 import java.sql.ResultSetMetaData
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 private val logger = KotlinLogging.logger {}
 
@@ -63,7 +68,17 @@ internal class DefaultReadJdbcMethod(path: String?) : AbstractDefaultReadMethod(
 
 private const val readJDBC = "readJDBC"
 
-public data class JDBCColumn(val name: String, val type: String, val size: Int)
+public data class JDBCColumn(val name: String, val type: String, val size: Int) {
+    public fun toColumnSchema(): ColumnSchema {
+        return when (type) {
+            "INT", "INTEGER" -> ColumnSchema.Value(typeOf<Int>())
+            "VARCHAR", "CHARACTER VARYING"  -> ColumnSchema.Value(typeOf<String>())
+            "FLOAT", "REAL", "NUMERIC" -> ColumnSchema.Value(typeOf<Float>())
+            "MEDIUMTEXT" -> ColumnSchema.Value(typeOf<String>())
+            else -> ColumnSchema.Value(typeOf<Any>())
+        }
+    }
+}
 
 public fun DataFrame.Companion.readFromDBViaSQLQuery(connection: Connection, sqlQuery: String): AnyFrame {
     connection.createStatement().use { st ->
@@ -108,16 +123,7 @@ public fun DataFrame.Companion.readFromDB(connection: Connection, catalogName: S
 
     connection.createStatement().use { st ->
         logger.debug { "Connection with url:${connection.metaData.url} is established successfully." }
-        val dbMetaData: DatabaseMetaData = connection.metaData
-        val columns: ResultSet = dbMetaData.getColumns(null, null, tableName, null)
-        val tableColumns = mutableMapOf<String, JDBCColumn>()
-
-        while (columns.next()) {
-            val name = columns.getString("COLUMN_NAME")
-            val type = columns.getString("TYPE_NAME")
-            val size = columns.getInt("COLUMN_SIZE")
-            tableColumns += Pair(name, JDBCColumn(name, type, size))
-        }
+        val tableColumns = getTableColumns(connection, tableName)
 
         // map<columnName; columndata>
         val data = mutableMapOf<String, MutableList<Any?>>()
@@ -150,6 +156,42 @@ public fun DataFrame.Companion.readFromDB(connection: Connection, catalogName: S
 
         return data.toDataFrame()
     }
+}
+
+public fun DataFrame.Companion.readSchemaFromDB(connection: Connection, catalogName: String, tableName: String): DataFrameSchema {
+    connection.createStatement().use { st ->
+        logger.debug { "Connection with url:${connection.metaData.url} is established successfully." }
+
+        val tableColumns = getTableColumns(connection, tableName)
+        val schemaColumns = tableColumns.map {
+            Pair(it.key, it.value.toColumnSchema())
+        }.toMap()
+
+        val dataSchema = DataFrameSchemaImpl(
+            columns = schemaColumns
+        )
+
+        return dataSchema
+    }
+}
+
+
+
+private fun getTableColumns(
+    connection: Connection,
+    tableName: String
+): MutableMap<String, JDBCColumn> {
+    val dbMetaData: DatabaseMetaData = connection.metaData
+    val columns: ResultSet = dbMetaData.getColumns(null, null, tableName, null)
+    val tableColumns = mutableMapOf<String, JDBCColumn>()
+
+    while (columns.next()) {
+        val name = columns.getString("COLUMN_NAME")
+        val type = columns.getString("TYPE_NAME")
+        val size = columns.getInt("COLUMN_SIZE")
+        tableColumns += Pair(name, JDBCColumn(name, type, size))
+    }
+    return tableColumns
 }
 
 // TODO: slow solution could be optimized with batches control and fetching
