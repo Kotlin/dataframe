@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
+import org.jetbrains.kotlinx.jupyter.api.Code
 import java.io.File
 import java.io.InputStream
 import java.sql.Connection
@@ -15,11 +16,29 @@ import java.sql.ResultSetMetaData
 
 private val logger = KotlinLogging.logger {}
 
-// JDBC is not a file format, we need a hierarchy here
-public class JDBC : SupportedDataFrameFormat {
-    override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readJDBC(stream)
 
-    override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readJDBC(file)
+//TODO: what if read the whole database schema and generate all the classes and extensions like in the open API
+
+// JDBC is not a file format, we need a hierarchy here
+public class JDBC : SupportedCodeGenerationFormat, SupportedDataFrameFormat {
+    public override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readJDBC(stream)
+
+    public override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readJDBC(file)
+    override fun readCodeForGeneration(
+        stream: InputStream,
+        name: String,
+        generateHelperCompanionObject: Boolean
+    ): Code {
+        TODO("Not yet implemented")
+    }
+
+    override fun readCodeForGeneration(
+        file: File,
+        name: String,
+        generateHelperCompanionObject: Boolean
+    ): Code {
+        TODO("Not yet implemented")
+    }
 
     override fun acceptsExtension(ext: String): Boolean = ext == "jdbc"
 

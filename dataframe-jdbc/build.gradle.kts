@@ -2,12 +2,16 @@ plugins {
     kotlin("jvm")
     kotlin("libs.publisher")
     id("org.jetbrains.kotlinx.kover")
+    kotlin("jupyter.api")
 }
 
 group = "org.jetbrains.kotlinx"
 
+val jupyterApiTCRepo: String by project
+
 repositories {
     mavenCentral()
+    maven(jupyterApiTCRepo)
 }
 
 dependencies {

@@ -8,6 +8,7 @@ import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.symbol.KSFile
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchemaVisibility
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.JdbcOptions
@@ -24,10 +25,13 @@ import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlDfReader
 import org.jetbrains.kotlinx.dataframe.io.ArrowFeather
 import org.jetbrains.kotlinx.dataframe.io.CSV
 import org.jetbrains.kotlinx.dataframe.io.Excel
+import org.jetbrains.kotlinx.dataframe.io.JDBC
 import org.jetbrains.kotlinx.dataframe.io.JSON
 import org.jetbrains.kotlinx.dataframe.io.OpenApi
 import org.jetbrains.kotlinx.dataframe.io.TSV
+import org.jetbrains.kotlinx.dataframe.io.databaseCodeGenReader
 import org.jetbrains.kotlinx.dataframe.io.isURL
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.io.File
 import java.net.MalformedURLException
 import java.net.URL
@@ -157,13 +161,38 @@ class DataSchemaGenerator(
             OpenApi(),
         )
 
-        if (importStatement.isJdbc) {
 
+        if (importStatement.isJdbc) {
+            val readDfMethod =
+                parsedDf.getReadDfMethod(importStatement.dataSource.pathRepresentation.takeIf { importStatement.withDefaultPath })
+            val codeGenerator = CodeGenerator.create(useFqNames = false)
+
+            // DataFrameSchema.createEmptyDataFrame() createEmptyColumn
+
+            val codeGenResult = codeGenerator.generate(
+                schema = schema,
+                name = name,
+                fields = true,
+                extensionProperties = false,
+                isOpen = true,
+                visibility = importStatement.visibility,
+                knownMarkers = emptyList(),
+                readDfMethod = readDfMethod,
+                fieldNameNormalizer = NameNormalizer.from(importStatement.normalizationDelimiters.toSet())
+            )
+            val code = codeGenResult.toStandaloneSnippet(packageName, readDfMethod.additionalImports)
+            schemaFile.bufferedWriter().use {
+                it.write(code)
+            }
         }
 
+        // works for JDBC and OpenAPI only
         // first try without creating dataframe
-        when (val codeGenResult =
-            CodeGenerator.urlCodeGenReader(importStatement.dataSource.data, name, formats, false)) {
+        when (val codeGenResult = if (importStatement.isJdbc) {
+            CodeGenerator.databaseCodeGenReader(importStatement.dataSource.data, name)
+        } else {
+            CodeGenerator.urlCodeGenReader(importStatement.dataSource.data, name, formats, false)
+        }) {
             is CodeGenerationReadResult.Success -> {
                 val readDfMethod = codeGenResult.getReadDfMethod(
                     pathRepresentation = importStatement
@@ -187,6 +216,7 @@ class DataSchemaGenerator(
             }
         }
 
+        // Usually works for others
         // on error, try with reading dataframe first
         val parsedDf = when (val readResult = CodeGenerator.urlDfReader(importStatement.dataSource.data, formats)) {
             is DfReadResult.Error -> {
@@ -218,3 +248,4 @@ class DataSchemaGenerator(
         }
     }
 }
+
