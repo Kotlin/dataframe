@@ -14,9 +14,11 @@ import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
+import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -107,6 +109,28 @@ internal fun <T> DataColumn<T>.assertIsComparable(): DataColumn<T> {
 internal fun <A> SingleColumn<A>.performCheck(
     check: (ColumnWithPath<A>?) -> Unit,
 ): SingleColumn<A> = object : SingleColumn<A> {
+    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<A>? =
+        this@performCheck.resolveSingle(context).also(check)
+}
+
+/**
+ * Helper function to perform runtime checks on a [ColumnAccessor].
+ *
+ * One use case is to check that a column is actually a [ValueColumn], which is handled by
+ * [org.jetbrains.kotlinx.dataframe.api.ensureIsValueColumn].
+ */
+internal fun <A> ColumnAccessor<A>.performCheck(
+    check: (ColumnWithPath<*>?) -> Unit,
+): ColumnAccessor<A> = object : ColumnAccessor<A> {
+    override fun <C> get(column: ColumnReference<C>): ColumnAccessor<C> =
+        this@performCheck.get(column).performCheck(check)
+
+    override fun rename(newName: String): ColumnAccessor<A> =
+        this@performCheck.rename(newName).performCheck(check)
+
+    override fun name(): String =
+        this@performCheck.name()
+
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<A>? =
         this@performCheck.resolveSingle(context).also(check)
 }

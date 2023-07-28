@@ -585,7 +585,11 @@ internal fun <C> SingleColumn<DataRow<C>>.ensureIsColGroup(): SingleColumn<DataR
  * by adding a check to see it's a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] (so, a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]<[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]<*>>)
  * and throwing an [IllegalArgumentException] if it's not. */
 internal fun <C> ColumnAccessor<DataRow<C>>.ensureIsColGroup(): ColumnAccessor<DataRow<C>> =
-    also { (it as SingleColumn<DataRow<C>>).ensureIsColGroup() }
+    performCheck { col: ColumnWithPath<*>? ->
+        require(col?.isColumnGroup() != false) {
+            "Attempted to perform a ColumnGroup operation on ${col?.kind()} ${col?.path}."
+        }
+    }
 
 /**
  * Checks the validity of this [SingleColumn],
@@ -604,4 +608,8 @@ internal fun <C> SingleColumn<C>.ensureIsValueColumn(): SingleColumn<C> =
  * by adding a check to see it's a [ValueColumn][org.jetbrains.kotlinx.dataframe.columns.ValueColumn] (so, a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]<*>)
  * and throwing an [IllegalArgumentException] if it's not. */
 internal fun <C> ColumnAccessor<C>.ensureIsValueColumn(): ColumnAccessor<C> =
-    also { (it as SingleColumn<C>).ensureIsValueColumn() }
+    performCheck { col: ColumnWithPath<*>? ->
+        require(col?.isValueColumn() != false) {
+            "Attempted to perform a ValueColumn operation on ${col?.kind()} ${col?.path}."
+        }
+    }

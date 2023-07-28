@@ -52,7 +52,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn].
-     * @throws [NoSuchElementException\] if the column with the given argument does not exist.
+     * @throws [IllegalStateException\] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException\] if the column with the given argument is not a value column.
      *
      * @see [valueColumn\]
@@ -126,7 +126,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -174,7 +174,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -222,7 +222,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -242,7 +242,7 @@ public interface ValueColColumnsSelectionDsl {
                     ?.cast<C>()
                     ?.also { it.data.ensureIsValueColumn() }
                     ?.let(::listOf)
-                    ?: throw NoSuchElementException("ValueColumn '${valueCol.path()}' not found in column group '${it.path}'")
+                    ?: throw IllegalStateException("ValueColumn '${valueCol.path()}' not found in column group '${it.path}'")
             }.singleImpl()
 
     /**
@@ -278,7 +278,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -327,7 +327,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -376,7 +376,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -425,7 +425,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -476,7 +476,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -531,7 +531,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -580,7 +580,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -631,7 +631,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -681,7 +681,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -733,7 +733,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -753,7 +753,7 @@ public interface ValueColColumnsSelectionDsl {
                     ?.cast<C>()
                     ?.also { it.data.ensureIsValueColumn() }
                     ?.let(::listOf)
-                    ?: throw NoSuchElementException("Value column '$name' not found in column group '${it.path}'")
+                    ?: throw IllegalStateException("Value column '$name' not found in column group '${it.path}'")
             }.singleImpl()
 
     /**
@@ -791,7 +791,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -843,7 +843,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -894,7 +894,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -946,7 +946,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -997,7 +997,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -1049,7 +1049,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -1100,7 +1100,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -1152,7 +1152,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -1205,7 +1205,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -1257,7 +1257,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -1312,7 +1312,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -1361,7 +1361,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -1412,7 +1412,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -1462,7 +1462,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -1514,7 +1514,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -1534,7 +1534,7 @@ public interface ValueColColumnsSelectionDsl {
                     ?.cast<C>()
                     ?.also { it.data.ensureIsValueColumn() }
                     ?.let(::listOf)
-                    ?: throw NoSuchElementException("Value column '$path' not found in column group '${it.path}'")
+                    ?: throw IllegalStateException("Value column '$path' not found in column group '${it.path}'")
             }.singleImpl()
 
     /**
@@ -1572,7 +1572,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -1624,7 +1624,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -1675,7 +1675,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -1727,7 +1727,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -1778,7 +1778,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -1830,7 +1830,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -1881,7 +1881,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -1933,7 +1933,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -1986,7 +1986,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -2038,7 +2038,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -2091,7 +2091,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -2139,7 +2139,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -2187,7 +2187,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -2236,7 +2236,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -2285,7 +2285,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -2334,7 +2334,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -2383,7 +2383,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -2438,7 +2438,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -2486,7 +2486,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -2538,7 +2538,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -2591,7 +2591,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -2643,7 +2643,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -2696,7 +2696,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -2753,7 +2753,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -2806,7 +2806,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -2858,7 +2858,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -2911,7 +2911,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -2963,7 +2963,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -3016,7 +3016,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -3070,7 +3070,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]
@@ -3123,7 +3123,7 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [NoSuchElementException] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
      * @see [valueColumn]

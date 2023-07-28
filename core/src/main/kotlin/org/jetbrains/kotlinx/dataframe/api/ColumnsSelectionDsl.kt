@@ -307,7 +307,11 @@ internal fun <C> SingleColumn<DataRow<C>>.ensureIsColGroup(): SingleColumn<DataR
 
 /** @include [SingleColumn.ensureIsColGroup] */
 internal fun <C> ColumnAccessor<DataRow<C>>.ensureIsColGroup(): ColumnAccessor<DataRow<C>> =
-    also { (it as SingleColumn<DataRow<C>>).ensureIsColGroup() }
+    performCheck { col: ColumnWithPath<*>? ->
+        require(col?.isColumnGroup() != false) {
+            "Attempted to perform a ColumnGroup operation on ${col?.kind()} ${col?.path}."
+        }
+    }
 
 /**
  * Checks the validity of this [SingleColumn],
@@ -324,4 +328,8 @@ internal fun <C> SingleColumn<C>.ensureIsValueColumn(): SingleColumn<C> =
 
 /** @include [SingleColumn.ensureIsValueColumn] */
 internal fun <C> ColumnAccessor<C>.ensureIsValueColumn(): ColumnAccessor<C> =
-    also { (it as SingleColumn<C>).ensureIsValueColumn() }
+    performCheck { col: ColumnWithPath<*>? ->
+        require(col?.isValueColumn() != false) {
+            "Attempted to perform a ValueColumn operation on ${col?.kind()} ${col?.path}."
+        }
+    }
