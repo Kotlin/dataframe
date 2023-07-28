@@ -16,7 +16,6 @@ import java.sql.Connection
 import java.sql.DatabaseMetaData
 import java.sql.ResultSet
 import java.sql.ResultSetMetaData
-import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 private val logger = KotlinLogging.logger {}

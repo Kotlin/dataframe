@@ -180,10 +180,8 @@ class DataSchemaGenerator(
                 // DataFrameSchema.createEmptyDataFrame() createEmptyColumn
 
                 val additionalImports: List<String> =  listOf(
-                    /*"import org.jetbrains.kotlinx.dataframe.io.readJson",
-                    "import org.jetbrains.kotlinx.dataframe.io.readJsonStr",
-                    "import org.jetbrains.kotlinx.dataframe.api.convertTo",
-                    "import org.jetbrains.kotlinx.dataframe.api.first",*/
+                    //"import org.jetbrains.kotlinx.dataframe.DataFrame",
+                    //"import org.jetbrains.kotlinx.dataframe.api.cast"
                 )
 
                 val codeGenResult = codeGenerator.generate(
@@ -201,6 +199,7 @@ class DataSchemaGenerator(
                 schemaFile.bufferedWriter().use {
                     it.write(code)
                 }
+                return
             }
         }
 

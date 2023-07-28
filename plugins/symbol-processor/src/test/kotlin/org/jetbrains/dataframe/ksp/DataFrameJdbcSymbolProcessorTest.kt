@@ -177,9 +177,12 @@ class DataFrameJdbcSymbolProcessorTest {
                 
                 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
                 import org.jetbrains.kotlinx.dataframe.api.filter
+                import org.jetbrains.kotlinx.dataframe.DataFrame
+                import org.jetbrains.kotlinx.dataframe.api.cast
                 import java.sql.Connection
                 import java.sql.DriverManager
                 import java.sql.SQLException
+                import org.jetbrains.kotlinx.dataframe.io.readFromDB
                 
                 fun main() {    
                     DriverManager.getConnection("$connectionUrl").use { connection ->
