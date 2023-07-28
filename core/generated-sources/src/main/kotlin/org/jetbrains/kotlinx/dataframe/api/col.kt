@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.util.IDENTITY_FUNCTION
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
+
 public interface ColColumnsSelectionDsl {
 
     /**
@@ -56,9 +57,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException\] if the column with the given argument does not exist.
      *
      * @see [column\]
-     * @see [colGroup\]
-     * @see [frameCol\]
-     * @see [valueCol\]
+     * @see [ColumnsSelectionDsl.colGroup\]
+     * @see [ColumnsSelectionDsl.frameCol\]
+     * @see [ColumnsSelectionDsl.valueCol\]
      *
      */
     private interface CommonColDocs {
@@ -121,7 +122,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@includeArg [CommonColDocs.ReceiverArg]}`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(columnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -129,9 +130,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -168,7 +169,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(columnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -176,9 +177,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -217,7 +218,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(columnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -225,9 +226,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -240,7 +241,7 @@ public interface ColColumnsSelectionDsl {
                 it.getChild(col)
                     ?.cast<C>()
                     ?.let(::listOf)
-                    ?: error("Column '${col.path()}' not found in column group '${it.path}'")
+                    ?: throw IllegalStateException("Column '${col.path()}' not found in column group '${it.path}'")
             }.singleImpl()
 
     /**
@@ -271,7 +272,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(columnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -279,9 +280,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -319,7 +320,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(columnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -327,9 +328,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -367,7 +368,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(columnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -375,9 +376,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -415,7 +416,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(columnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -423,9 +424,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -465,7 +466,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(columnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -473,9 +474,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -519,7 +520,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@includeArg [CommonColDocs.ReceiverArg]}`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -527,9 +528,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -567,7 +568,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -575,9 +576,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -617,7 +618,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -625,9 +626,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -666,7 +667,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -674,9 +675,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -717,7 +718,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -725,9 +726,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -740,7 +741,7 @@ public interface ColColumnsSelectionDsl {
                 it.getChild(name)
                     ?.cast<C>()
                     ?.let(::listOf)
-                    ?: error("Column '$name' not found in column group '${it.path}'")
+                    ?: throw IllegalStateException("Column '$name' not found in column group '${it.path}'")
             }.singleImpl()
 
     /**
@@ -773,7 +774,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -781,9 +782,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -824,7 +825,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -832,9 +833,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -874,7 +875,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -882,9 +883,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -925,7 +926,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -933,9 +934,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -943,7 +944,9 @@ public interface ColColumnsSelectionDsl {
      * @param [C] The type of the column.
      */
     public fun <C> String.col(name: String): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().column(name)
+        asColumnGroup()
+            .ensureIsColGroup()
+            .column(name)
 
     /**
      * ## Col
@@ -975,7 +978,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -983,9 +986,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -1026,7 +1029,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -1034,9 +1037,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -1076,7 +1079,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -1084,9 +1087,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -1127,7 +1130,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -1135,9 +1138,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -1179,7 +1182,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -1187,9 +1190,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -1230,7 +1233,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -1238,9 +1241,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -1284,7 +1287,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@includeArg [CommonColDocs.ReceiverArg]}`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -1292,9 +1295,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -1332,7 +1335,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -1340,9 +1343,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -1382,7 +1385,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -1390,9 +1393,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -1431,7 +1434,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -1439,9 +1442,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -1482,7 +1485,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -1490,9 +1493,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -1505,7 +1508,7 @@ public interface ColColumnsSelectionDsl {
                 it.getChild(path)
                     ?.cast<C>()
                     ?.let(::listOf)
-                    ?: error("Column '$path' not found in column group '${it.path}'")
+                    ?: throw IllegalStateException("Column '$path' not found in column group '${it.path}'")
             }.singleImpl()
 
     /**
@@ -1538,7 +1541,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -1546,9 +1549,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -1589,7 +1592,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -1597,9 +1600,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -1639,7 +1642,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -1647,9 +1650,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -1690,7 +1693,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -1698,9 +1701,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -1740,7 +1743,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -1748,9 +1751,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -1791,7 +1794,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -1799,9 +1802,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -1841,7 +1844,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -1849,9 +1852,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -1892,7 +1895,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -1900,9 +1903,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -1944,7 +1947,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -1952,9 +1955,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -1995,7 +1998,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -2003,9 +2006,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -2047,7 +2050,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@includeArg [CommonColDocs.ReceiverArg]}`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(Type::columnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -2055,9 +2058,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -2094,7 +2097,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(Type::columnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -2102,9 +2105,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -2141,7 +2144,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(Type::columnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -2149,9 +2152,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -2189,7 +2192,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(Type::columnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -2197,9 +2200,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -2237,7 +2240,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(Type::columnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -2245,9 +2248,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -2285,7 +2288,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(Type::columnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -2293,9 +2296,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -2333,7 +2336,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(Type::columnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -2341,9 +2344,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -2387,7 +2390,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@includeArg [CommonColDocs.ReceiverArg]}`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -2395,9 +2398,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -2436,7 +2439,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][col]`1`[`]`][col]` }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -2444,9 +2447,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -2488,7 +2491,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][col]`1`[`]`][col]` }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -2496,9 +2499,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -2539,7 +2542,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -2547,9 +2550,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -2591,7 +2594,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -2599,9 +2602,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -2642,7 +2645,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -2650,9 +2653,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -2694,7 +2697,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -2702,9 +2705,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -2748,7 +2751,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -2756,9 +2759,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -2800,7 +2803,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -2808,9 +2811,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -2851,7 +2854,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -2859,9 +2862,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -2903,7 +2906,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -2911,9 +2914,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -2954,7 +2957,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -2962,9 +2965,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -3006,7 +3009,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -3014,9 +3017,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -3059,7 +3062,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -3067,9 +3070,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -3111,7 +3114,7 @@ public interface ColColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
@@ -3119,9 +3122,9 @@ public interface ColColumnsSelectionDsl {
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
-     * @see [colGroup]
-     * @see [frameCol]
-     * @see [valueCol]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      *
      *
@@ -3134,4 +3137,5 @@ public interface ColColumnsSelectionDsl {
 
     // endregion
 }
+
 // endregion

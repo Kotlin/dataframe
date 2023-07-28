@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.assertions.throwables.shouldThrow
 import org.jetbrains.kotlinx.dataframe.samples.api.age
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
@@ -8,7 +9,23 @@ import org.junit.Test
 class ColTests : ColumnsSelectionDslTests() {
 
     @Test
-    fun `col by accessor`() {
+    fun `col exceptions`() {
+        shouldThrow<IllegalStateException> {
+            df.select { col("nonExisting") }
+        }
+        shouldThrow<IllegalStateException> {
+            df.select { name.col("nonExisting") }
+        }
+        shouldThrow<IllegalStateException> {
+            df.select { "age".col("test") }
+        }
+        shouldThrow<IndexOutOfBoundsException> {
+            df.select { col(100) }
+        }
+    }
+
+    @Test
+    fun `col at top-level`() {
         val ageAccessor = column<Int>("age")
         listOf(
             df.select { age },
@@ -29,7 +46,10 @@ class ColTests : ColumnsSelectionDslTests() {
             df.select { col(1) },
             df.select { col<Int>(1) },
         ).shouldAllBeEqual()
+    }
 
+    @Test
+    fun `col at lower level`() {
         val firstNameAccessor = column<String>("firstName")
         listOf(
             df.select { name.firstName },
