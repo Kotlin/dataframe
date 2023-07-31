@@ -10,7 +10,9 @@ public fun <A, B> DataFrame<A>.join(
     other: DataFrame<B>,
     type: JoinType = JoinType.Inner,
     selector: JoinColumnsSelector<A, B>? = null
-): DataFrame<A> = joinImpl(other, type, true, selector)
+): DataFrame<A> {
+    return joinImpl(other, type, addNewColumns = type.addNewColumns, selector)
+}
 
 public fun <A, B> DataFrame<A>.join(
     other: DataFrame<B>,
@@ -116,9 +118,19 @@ public enum class JoinType {
     Left, // all data from left data frame, nulls for mismatches in right data frame
     Right, // all data from right data frame, nulls for mismatches in left data frame
     Inner, // only matched data from right and left data frame
+    Filter, // only matched data from left data frame
     Full, // all data from left and from right data frame, nulls for any mismatches
     Exclude // mismatched rows from left data frame
 }
+
+internal val JoinType.addNewColumns: Boolean
+    get() {
+        val addNewColumns = when (this) {
+            JoinType.Filter, JoinType.Exclude -> false
+            JoinType.Left, JoinType.Right, JoinType.Inner, JoinType.Full -> true
+        }
+        return addNewColumns
+    }
 
 public val JoinType.allowLeftNulls: Boolean get() = this == JoinType.Right || this == JoinType.Full
 
