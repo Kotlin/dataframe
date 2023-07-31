@@ -64,6 +64,8 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     ColColumnsSelectionDsl,
     // valueCol(name), valueCol(5)
     ValueColColumnsSelectionDsl,
+    // frameCol(name), frameCol(5)
+    FrameColColumnsSelectionDsl,
 
     // colGroup(name), frameCol(name), .asColumnGroup()
     ConstructorsColumnsSelectionDsl,
@@ -310,26 +312,5 @@ internal fun <C> ColumnAccessor<DataRow<C>>.ensureIsColGroup(): ColumnAccessor<D
     performCheck { col: ColumnWithPath<*>? ->
         require(col?.isColumnGroup() != false) {
             "Attempted to perform a ColumnGroup operation on ${col?.kind()} ${col?.path}."
-        }
-    }
-
-/**
- * Checks the validity of this [SingleColumn],
- * by adding a check to see it's a [ValueColumn] (so, a [SingleColumn]<*>)
- * and throwing an [IllegalArgumentException] if it's not.
- */
-@Suppress("UNCHECKED_CAST")
-internal fun <C> SingleColumn<C>.ensureIsValueColumn(): SingleColumn<C> =
-    performCheck { col: ColumnWithPath<*>? ->
-        require(col?.isValueColumn() != false) {
-            "Attempted to perform a ValueColumn operation on ${col?.kind()} ${col?.path}."
-        }
-    }
-
-/** @include [SingleColumn.ensureIsValueColumn] */
-internal fun <C> ColumnAccessor<C>.ensureIsValueColumn(): ColumnAccessor<C> =
-    performCheck { col: ColumnWithPath<*>? ->
-        require(col?.isValueColumn() != false) {
-            "Attempted to perform a ValueColumn operation on ${col?.kind()} ${col?.path}."
         }
     }

@@ -8,9 +8,12 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
+import org.jetbrains.kotlinx.dataframe.impl.columns.performCheck
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import kotlin.reflect.KProperty
@@ -500,7 +503,6 @@ public interface ValueColColumnsSelectionDsl {
             .ensureIsValueColumn()
             .cast()
 
-
     /**
      * @include [ValueColIndexDocs] {@arg [CommonValueColDocs.ReceiverArg] "myColumnGroup".}
      */
@@ -565,5 +567,25 @@ public interface ValueColColumnsSelectionDsl {
 
     // endregion
 }
+
+/**
+ * Checks the validity of this [SingleColumn],
+ * by adding a check to see it's a [ValueColumn] (so, a [SingleColumn]<*>)
+ * and throwing an [IllegalArgumentException] if it's not.
+ */
+internal fun <C> SingleColumn<C>.ensureIsValueColumn(): SingleColumn<C> =
+    performCheck { col: ColumnWithPath<*>? ->
+        require(col?.isValueColumn() != false) {
+            "Attempted to perform a ValueColumn operation on ${col?.kind()} ${col?.path}."
+        }
+    }
+
+/** @include [SingleColumn.ensureIsValueColumn] */
+internal fun <C> ColumnAccessor<C>.ensureIsValueColumn(): ColumnAccessor<C> =
+    performCheck { col: ColumnWithPath<*>? ->
+        require(col?.isValueColumn() != false) {
+            "Attempted to perform a ValueColumn operation on ${col?.kind()} ${col?.path}."
+        }
+    }
 
 // endregion
