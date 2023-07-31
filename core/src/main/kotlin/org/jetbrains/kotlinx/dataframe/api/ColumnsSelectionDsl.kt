@@ -66,9 +66,9 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     ValueColColumnsSelectionDsl,
     // frameCol(name), frameCol(5)
     FrameColColumnsSelectionDsl,
+    // colGroup(name), colGroup(5)
+    ColGroupColumnsSelectionDsl,
 
-    // colGroup(name), frameCol(name), .asColumnGroup()
-    ConstructorsColumnsSelectionDsl,
     // cols {}, cols(), cols(colA, colB), cols(1, 5), cols(1..5)
     ColsColumnsSelectionDsl,
     // colA.."colB"

@@ -48,16 +48,8 @@ class FrameColTests : ColumnsSelectionDslTests() {
         ).shouldAllBeEqual()
     }
 
-    fun <T : DataFrame<*>> T.alsoDebug(println: String? = null, rowsLimit: Int = 20): T = apply {
-        println?.let { println(it) }
-        print(borders = true, title = true, columnTypes = true, valueLimit = -1, rowsLimit = rowsLimit)
-        schema().print()
-    }
-
     @Test
     fun `frameCol at lower level`() {
-        dfWithFrames.alsoDebug()
-
         val frameColAccessor = frameCol
         listOf(
             dfWithFrames.select { name[frameCol] },

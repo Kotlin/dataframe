@@ -50,7 +50,7 @@ public interface FrameColColumnsSelectionDsl {
      * To create a [ColumnAccessor] for another kind of column, take a look at the functions
      * [col][ColumnsSelectionDsl.col],
      * [colGroup][ColumnsSelectionDsl.colGroup],
-     * and [frameCol][ColumnsSelectionDsl.frameCol].
+     * and [valueCol][ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn].
      * @throws [IllegalStateException\] if the column with the given argument does not exist.

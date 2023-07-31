@@ -49,7 +49,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[withoutNulls][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::userData).`[childrenWithoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenWithoutNulls]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::userData).`[childrenWithoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenWithoutNulls]`() }`
      *
      * #### Examples for this overload:
      *
@@ -73,7 +73,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[withoutNulls][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::userData).`[childrenWithoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenWithoutNulls]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::userData).`[childrenWithoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenWithoutNulls]`() }`
      *
      * #### Examples for this overload:
      *
@@ -96,7 +96,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[withoutNulls][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::userData).`[childrenWithoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenWithoutNulls]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::userData).`[childrenWithoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenWithoutNulls]`() }`
      *
      * #### Examples for this overload:
      *
@@ -119,7 +119,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[withoutNulls][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::userData).`[childrenWithoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenWithoutNulls]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::userData).`[childrenWithoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenWithoutNulls]`() }`
      *
      * #### Examples for this overload:
      *
@@ -142,7 +142,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[withoutNulls][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::userData).`[childrenWithoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenWithoutNulls]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::userData).`[childrenWithoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenWithoutNulls]`() }`
      *
      * #### Examples for this overload:
      *
@@ -165,7 +165,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[withoutNulls][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::userData).`[childrenWithoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenWithoutNulls]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::userData).`[childrenWithoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenWithoutNulls]`() }`
      *
      * #### Examples for this overload:
      *

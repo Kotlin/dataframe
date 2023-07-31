@@ -61,7 +61,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
      *
      * #### Examples for this overload:
      *
@@ -88,7 +88,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
      *
      * #### Examples for this overload:
      *
@@ -119,7 +119,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
      *
      * #### Examples for this overload:
      *
@@ -147,7 +147,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
      *
      * #### Examples for this overload:
      *
@@ -175,7 +175,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
      *
      * #### Examples for this overload:
      *
@@ -206,7 +206,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
      *
      * #### Examples for this overload:
      *
@@ -236,7 +236,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
      *
      * #### Examples for this overload:
      *
@@ -266,7 +266,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
      *
      * #### Examples for this overload:
      *
@@ -293,7 +293,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
      *
      * #### Examples for this overload:
      *
@@ -324,7 +324,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
      *
      * #### Examples for this overload:
      *
@@ -352,7 +352,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
      *
      * #### Examples for this overload:
      *
@@ -380,7 +380,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
      *
      * #### Examples for this overload:
      *
@@ -410,7 +410,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
      *
      * #### Examples for this overload:
      *
@@ -440,7 +440,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my") }`
      *
      * #### Examples for this overload:
      *
@@ -533,7 +533,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameStartsWith][String.childrenNameStartsWith]`("b") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameStartsWith][SingleColumn.childrenNameStartsWith]`("a") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameStartsWith][SingleColumn.childrenNameStartsWith]`("a") }`
      *
      * #### Examples for this overload:
      *
@@ -582,7 +582,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameStartsWith][String.childrenNameStartsWith]`("b") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameStartsWith][SingleColumn.childrenNameStartsWith]`("a") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameStartsWith][SingleColumn.childrenNameStartsWith]`("a") }`
      *
      * #### Examples for this overload:
      *
@@ -614,7 +614,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameStartsWith][String.childrenNameStartsWith]`("b") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameStartsWith][SingleColumn.childrenNameStartsWith]`("a") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameStartsWith][SingleColumn.childrenNameStartsWith]`("a") }`
      *
      * #### Examples for this overload:
      *
@@ -645,7 +645,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameStartsWith][String.childrenNameStartsWith]`("b") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameStartsWith][SingleColumn.childrenNameStartsWith]`("a") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameStartsWith][SingleColumn.childrenNameStartsWith]`("a") }`
      *
      * #### Examples for this overload:
      *
@@ -676,7 +676,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameStartsWith][String.childrenNameStartsWith]`("b") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameStartsWith][SingleColumn.childrenNameStartsWith]`("a") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameStartsWith][SingleColumn.childrenNameStartsWith]`("a") }`
      *
      * #### Examples for this overload:
      *
@@ -707,7 +707,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameStartsWith][String.childrenNameStartsWith]`("b") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameStartsWith][SingleColumn.childrenNameStartsWith]`("a") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameStartsWith][SingleColumn.childrenNameStartsWith]`("a") }`
      *
      * #### Examples for this overload:
      *
@@ -740,7 +740,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameStartsWith][String.childrenNameStartsWith]`("b") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameStartsWith][SingleColumn.childrenNameStartsWith]`("a") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameStartsWith][SingleColumn.childrenNameStartsWith]`("a") }`
      *
      * #### Examples for this overload:
      *
@@ -784,7 +784,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameEndsWith][String.childrenNameEndsWith]`("b") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameEndsWith][SingleColumn.childrenNameEndsWith]`("a") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameEndsWith][SingleColumn.childrenNameEndsWith]`("a") }`
      *
      * #### Examples for this overload:
      *
@@ -834,7 +834,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameEndsWith][String.childrenNameEndsWith]`("b") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameEndsWith][SingleColumn.childrenNameEndsWith]`("a") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameEndsWith][SingleColumn.childrenNameEndsWith]`("a") }`
      *
      * #### Examples for this overload:
      *
@@ -866,7 +866,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameEndsWith][String.childrenNameEndsWith]`("b") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameEndsWith][SingleColumn.childrenNameEndsWith]`("a") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameEndsWith][SingleColumn.childrenNameEndsWith]`("a") }`
      *
      * #### Examples for this overload:
      *
@@ -897,7 +897,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameEndsWith][String.childrenNameEndsWith]`("b") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameEndsWith][SingleColumn.childrenNameEndsWith]`("a") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameEndsWith][SingleColumn.childrenNameEndsWith]`("a") }`
      *
      * #### Examples for this overload:
      *
@@ -928,7 +928,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameEndsWith][String.childrenNameEndsWith]`("b") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameEndsWith][SingleColumn.childrenNameEndsWith]`("a") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameEndsWith][SingleColumn.childrenNameEndsWith]`("a") }`
      *
      * #### Examples for this overload:
      *
@@ -959,7 +959,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameEndsWith][String.childrenNameEndsWith]`("b") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameEndsWith][SingleColumn.childrenNameEndsWith]`("a") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameEndsWith][SingleColumn.childrenNameEndsWith]`("a") }`
      *
      * #### Examples for this overload:
      *
@@ -992,7 +992,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameEndsWith][String.childrenNameEndsWith]`("b") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameEndsWith][SingleColumn.childrenNameEndsWith]`("a") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameEndsWith][SingleColumn.childrenNameEndsWith]`("a") }`
      *
      * #### Examples for this overload:
      *
