@@ -46,7 +46,7 @@ public interface ColColumnsSelectionDsl {
      *
      * {@includeArg [CommonColDocs.ExampleArg]}
      *
-     * To create a [ColumnAccessor] for a specific kind of column, take a look at the functions
+     * To create a [ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
      * [valueCol][ColumnsSelectionDsl.valueCol],
      * [colGroup][ColumnsSelectionDsl.colGroup],
      * and [frameCol][ColumnsSelectionDsl.frameCol].

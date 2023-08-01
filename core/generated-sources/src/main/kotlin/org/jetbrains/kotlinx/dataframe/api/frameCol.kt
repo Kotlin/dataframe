@@ -29,7 +29,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath], [KProperty], or [ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup].
      *
@@ -103,7 +104,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -151,7 +153,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -200,7 +203,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -256,7 +260,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -305,7 +310,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -354,7 +360,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -403,7 +410,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -454,7 +462,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -507,7 +516,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -556,7 +566,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -607,7 +618,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -657,7 +669,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -709,7 +722,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -767,7 +781,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -819,7 +834,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -870,7 +886,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -922,7 +939,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -973,7 +991,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -1025,7 +1044,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -1076,7 +1096,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -1128,7 +1149,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -1181,7 +1203,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -1233,7 +1256,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -1288,7 +1312,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -1337,7 +1362,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -1388,7 +1414,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -1438,7 +1465,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -1490,7 +1518,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -1548,7 +1577,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -1600,7 +1630,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -1651,7 +1682,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -1703,7 +1735,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -1754,7 +1787,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -1806,7 +1840,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -1857,7 +1892,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -1909,7 +1945,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -1962,7 +1999,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -2014,7 +2052,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -2069,7 +2108,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -2117,7 +2157,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -2168,7 +2209,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -2217,7 +2259,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -2268,7 +2311,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -2317,7 +2361,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -2368,7 +2413,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -2417,7 +2463,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -2468,7 +2515,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -2517,7 +2565,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -2568,7 +2617,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -2617,7 +2667,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -2668,7 +2719,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -2721,7 +2773,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -2771,7 +2824,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -2824,7 +2878,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -2875,7 +2930,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -2928,7 +2984,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -2980,7 +3037,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -3033,7 +3091,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -3089,7 +3148,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -3142,7 +3202,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -3194,7 +3255,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -3247,7 +3309,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -3299,7 +3362,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -3352,7 +3416,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -3406,7 +3471,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
@@ -3459,7 +3525,8 @@ public interface FrameColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]).
      *
      * This is a DSL-shorthand for [frameColumn][org.jetbrains.kotlinx.dataframe.api.frameColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a frame column.
      * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
      * an accessor for a frame column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *

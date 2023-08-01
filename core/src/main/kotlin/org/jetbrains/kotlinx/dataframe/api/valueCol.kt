@@ -29,7 +29,8 @@ public interface ValueColColumnsSelectionDsl {
      * an index ([Int]) or a reference to a column ([String], [ColumnPath], [KProperty], or [ColumnAccessor]).
      *
      * This is a DSL-shorthand for [valueColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index).
+     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
+     * you specify is actually a value column.
      * The function can also be called on [ColumnGroups][ColumnGroupReference] to create
      * an accessor for a value column inside a [ColumnGroup].
      * {@include [LineBreak]}

@@ -5,7 +5,6 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
-import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -27,8 +26,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.createComputedColumnReferenc
 import org.jetbrains.kotlinx.dataframe.impl.columns.forceResolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.unbox
 import org.jetbrains.kotlinx.dataframe.size
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_GROUP
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_GROUP_REPLACE
 import kotlin.random.Random
 import kotlin.random.nextInt
 import kotlin.reflect.KProperty
@@ -215,116 +212,314 @@ public fun <T> ColumnGroupReference.frameColumn(property: KProperty<List<T>>): C
 // region asColumnGroup
 
 /**
- * ## SingleColumn As ColumnGroup
- * Casts [this][this\] [SingleColumn][SingleColumn]`<`[C][C\]`>` to a [SingleColumn][SingleColumn]`<`[DataRow][DataRow]`<`[C][C\]`>>`.
- * This is especially useful when you want to use `ColumnGroup` functions in the [ColumnsSelectionDsl] but your column
- * type is not recognized as a `ColumnGroup`.
- * If you're not sure whether a column is recognized or not, you can always call [asColumnGroup][SingleColumn.asColumnGroup]
- * and it will return the same type if it is already a `ColumnGroup`.
+ * ## As ColumnGroup
  *
- * For example:
+ * Creates a [ColumnAccessor][ColumnAccessor]`<`[DataRow][DataRow]`<`[C][C\]`>>` from [this][this\].
+ * This is especially useful when you want to use [ColumnGroup] functions in the [ColumnsSelectionDsl] but your column
+ * type is not recognized as a [ColumnGroup].
+ * If you're not sure whether a column is recognized as [ColumnGroup] or not, you can always call [asColumnGroup][asColumnGroup\]
+ * and it will return the same type if it is already a [ColumnGroup].
  *
- * `df.`[select][DataFrame.select]` { it`[`[`][ColumnsContainer.get]`"myColumn"`[`]`][ColumnsContainer.get]`.`[asColumnGroup][SingleColumn.asColumnGroup]`().`[first][ColumnsSelectionDsl.firstChild]`() }`
+ * The function can be both typed and untyped if called on a [String] or [ColumnPath].
  *
- * @receiver The [SingleColumn] to cast to a [SingleColumn]`<`[DataRow][DataRow]`<`[C][C\]`>>`.
+ * NOTE: This does not check whether the column is actually a [ColumnGroup] or not. It just casts it.
+ *
+ * #### For example:
+ *
+ * {@includeArg [AsColumnGroupDocs.ExampleArg]}
+ *
+ * @receiver The column reference to cast to a [SingleColumn]`<`[DataRow][DataRow]`<`[C][C\]`>>`.
  * @param [C\] The type of the (group) column.
  * @return A [SingleColumn]`<`[DataRow][DataRow]`<`[C][C\]`>>`.
  */
+private interface AsColumnGroupDocs {
+
+    interface ExampleArg
+}
+
+/**
+ * ## As ColumnGroup
+ *
+ * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>` from [this][this].
+ * This is especially useful when you want to use [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] functions in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] but your column
+ * type is not recognized as a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ * If you're not sure whether a column is recognized as [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not, you can always call [asColumnGroup][asColumnGroup]
+ * and it will return the same type if it is already a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ *
+ * The function can be both typed and untyped if called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath].
+ *
+ * NOTE: This does not check whether the column is actually a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not. It just casts it.
+ *
+ * #### For example:
+ *
+ * `df.`[select][DataFrame.select]` { `[first][ColumnsSelectionDsl.first]`().`[asColumnGroup][SingleColumn.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
+ *
+ * @receiver The column reference to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ * @param [C] The type of the (group) column.
+ * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ */
 private interface SingleColumnAsColumnGroupDocs
 
-/** ## SingleColumn As ColumnGroup
- * Casts [this][this] [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[C][C]`>` to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
- * This is especially useful when you want to use `ColumnGroup` functions in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] but your column
- * type is not recognized as a `ColumnGroup`.
- * If you're not sure whether a column is recognized or not, you can always call [asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]
- * and it will return the same type if it is already a `ColumnGroup`.
+/** ## As ColumnGroup
  *
- * For example:
+ * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>` from [this][this].
+ * This is especially useful when you want to use [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] functions in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] but your column
+ * type is not recognized as a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ * If you're not sure whether a column is recognized as [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not, you can always call [asColumnGroup][asColumnGroup]
+ * and it will return the same type if it is already a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it`[`[`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`"myColumn"`[`]`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`.`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[first][ColumnsSelectionDsl.firstChild]`() }`
+ * The function can be both typed and untyped if called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath].
  *
- * @receiver The [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ * NOTE: This does not check whether the column is actually a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not. It just casts it.
+ *
+ * #### For example:
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`().`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
+ *
+ * @receiver The column reference to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
  * @param [C] The type of the (group) column.
- * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`. */
+ * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ */
 @Suppress("UNCHECKED_CAST")
 public fun <C> SingleColumn<C>.asColumnGroup(): SingleColumn<DataRow<C>> = this as SingleColumn<DataRow<C>>
 
-/** ## SingleColumn As ColumnGroup
- * Casts [this][this] [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[C][C]`>` to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
- * This is especially useful when you want to use `ColumnGroup` functions in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] but your column
- * type is not recognized as a `ColumnGroup`.
- * If you're not sure whether a column is recognized or not, you can always call [asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]
- * and it will return the same type if it is already a `ColumnGroup`.
+/** ## As ColumnGroup
  *
- * For example:
+ * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>` from [this][this].
+ * This is especially useful when you want to use [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] functions in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] but your column
+ * type is not recognized as a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ * If you're not sure whether a column is recognized as [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not, you can always call [asColumnGroup][asColumnGroup]
+ * and it will return the same type if it is already a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it`[`[`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`"myColumn"`[`]`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`.`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[first][ColumnsSelectionDsl.firstChild]`() }`
+ * The function can be both typed and untyped if called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath].
  *
- * @receiver The [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ * NOTE: This does not check whether the column is actually a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not. It just casts it.
+ *
+ * #### For example:
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`().`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
+ *
+ * @receiver The column reference to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
  * @param [C] The type of the (group) column.
- * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`. */
+ * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ */
 @JvmName("asColumnGroupDataRow")
 public fun <C> SingleColumn<DataRow<C>>.asColumnGroup(): SingleColumn<DataRow<C>> = this
 
 /**
  * ## As ColumnGroup
  *
- * Creates a [ColumnAccessor][ColumnAccessor]`<`[DataRow][DataRow]`<`[C][C\]`>>` from [this][this\].
- * It can both be typed and untyped and is just a shortcut to [columnGroup][columnGroup]`(`[this][this\]`)`
+ * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>` from [this][this].
+ * This is especially useful when you want to use [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] functions in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] but your column
+ * type is not recognized as a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ * If you're not sure whether a column is recognized as [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not, you can always call [asColumnGroup][asColumnGroup]
+ * and it will return the same type if it is already a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  *
- * @return A [ColumnAccessor]`<`[DataRow][DataRow]`>`.
+ * The function can be both typed and untyped if called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath].
+ *
+ * NOTE: This does not check whether the column is actually a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not. It just casts it.
+ *
+ * #### For example:
+ *
+ * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][ColumnGroup.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
+ *
+ * @receiver The column reference to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ * @param [C] The type of the (group) column.
+ * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
  */
-private interface AsColumnGroupDocs
+private interface KPropertyAsColumnGroupDocs
 
 /** ## As ColumnGroup
  *
  * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>` from [this][this].
- * It can both be typed and untyped and is just a shortcut to [columnGroup][org.jetbrains.kotlinx.dataframe.api.columnGroup]`(`[this][this]`)`
+ * This is especially useful when you want to use [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] functions in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] but your column
+ * type is not recognized as a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ * If you're not sure whether a column is recognized as [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not, you can always call [asColumnGroup][asColumnGroup]
+ * and it will return the same type if it is already a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  *
- * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`>`. */
+ * The function can be both typed and untyped if called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath].
+ *
+ * NOTE: This does not check whether the column is actually a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not. It just casts it.
+ *
+ * #### For example:
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][ColumnGroup.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
+ *
+ * @receiver The column reference to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ * @param [C] The type of the (group) column.
+ * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ */
 public fun <C> KProperty<C>.asColumnGroup(): ColumnAccessor<DataRow<C>> = columnGroup<C>(this)
 
 /** ## As ColumnGroup
  *
  * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>` from [this][this].
- * It can both be typed and untyped and is just a shortcut to [columnGroup][org.jetbrains.kotlinx.dataframe.api.columnGroup]`(`[this][this]`)`
+ * This is especially useful when you want to use [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] functions in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] but your column
+ * type is not recognized as a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ * If you're not sure whether a column is recognized as [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not, you can always call [asColumnGroup][asColumnGroup]
+ * and it will return the same type if it is already a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  *
- * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`>`. */
+ * The function can be both typed and untyped if called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath].
+ *
+ * NOTE: This does not check whether the column is actually a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not. It just casts it.
+ *
+ * #### For example:
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][ColumnGroup.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
+ *
+ * @receiver The column reference to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ * @param [C] The type of the (group) column.
+ * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ */
 @JvmName("asColumnGroupDataRowKProperty")
 public fun <C> KProperty<DataRow<C>>.asColumnGroup(): ColumnAccessor<DataRow<C>> = columnGroup<C>(this)
+
+/**
+ * ## As ColumnGroup
+ *
+ * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>` from [this][this].
+ * This is especially useful when you want to use [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] functions in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] but your column
+ * type is not recognized as a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ * If you're not sure whether a column is recognized as [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not, you can always call [asColumnGroup][asColumnGroup]
+ * and it will return the same type if it is already a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ *
+ * The function can be both typed and untyped if called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath].
+ *
+ * NOTE: This does not check whether the column is actually a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not. It just casts it.
+ *
+ * #### For example:
+ *
+ * `df.`[select][DataFrame.select]` { "myColumnGroup".`[asColumnGroup][String.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
+ *
+ * `df.`[select][DataFrame.select]` { "myColumnGroup".`[asColumnGroup][String.asColumnGroup]`<GroupType>().`[valueCols][ColumnsSelectionDsl.valueCols]`() }`
+ *
+ * @receiver The column reference to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ * @param [C] The type of the (group) column.
+ * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ */
+private interface StringAsColumnGroupDocs
 
 /** ## As ColumnGroup
  *
  * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>` from [this][this].
- * It can both be typed and untyped and is just a shortcut to [columnGroup][org.jetbrains.kotlinx.dataframe.api.columnGroup]`(`[this][this]`)`
+ * This is especially useful when you want to use [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] functions in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] but your column
+ * type is not recognized as a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ * If you're not sure whether a column is recognized as [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not, you can always call [asColumnGroup][asColumnGroup]
+ * and it will return the same type if it is already a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  *
- * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`>`. */
+ * The function can be both typed and untyped if called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath].
+ *
+ * NOTE: This does not check whether the column is actually a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not. It just casts it.
+ *
+ * #### For example:
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[asColumnGroup][kotlin.String.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[asColumnGroup][kotlin.String.asColumnGroup]`<GroupType>().`[valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`() }`
+ *
+ * @receiver The column reference to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ * @param [C] The type of the (group) column.
+ * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ */
 @JvmName("asColumnGroupTyped")
 public fun <C> String.asColumnGroup(): ColumnAccessor<DataRow<C>> = columnGroup<C>(this)
 
 /** ## As ColumnGroup
  *
  * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>` from [this][this].
- * It can both be typed and untyped and is just a shortcut to [columnGroup][org.jetbrains.kotlinx.dataframe.api.columnGroup]`(`[this][this]`)`
+ * This is especially useful when you want to use [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] functions in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] but your column
+ * type is not recognized as a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ * If you're not sure whether a column is recognized as [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not, you can always call [asColumnGroup][asColumnGroup]
+ * and it will return the same type if it is already a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  *
- * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`>`. */
+ * The function can be both typed and untyped if called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath].
+ *
+ * NOTE: This does not check whether the column is actually a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not. It just casts it.
+ *
+ * #### For example:
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[asColumnGroup][kotlin.String.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[asColumnGroup][kotlin.String.asColumnGroup]`<GroupType>().`[valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`() }`
+ *
+ * @receiver The column reference to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ * @param [C] The type of the (group) column.
+ * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ */
 public fun String.asColumnGroup(): ColumnAccessor<DataRow<*>> = columnGroup<Any?>(this)
+
+/**
+ * ## As ColumnGroup
+ *
+ * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>` from [this][this].
+ * This is especially useful when you want to use [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] functions in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] but your column
+ * type is not recognized as a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ * If you're not sure whether a column is recognized as [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not, you can always call [asColumnGroup][asColumnGroup]
+ * and it will return the same type if it is already a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ *
+ * The function can be both typed and untyped if called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath].
+ *
+ * NOTE: This does not check whether the column is actually a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not. It just casts it.
+ *
+ * #### For example:
+ *
+ * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[asColumnGroup][ColumnPath.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
+ *
+ * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[asColumnGroup][ColumnPath.asColumnGroup]`<GroupType>().`[valueCols][ColumnsSelectionDsl.valueCols]`() }`
+ *
+ * @receiver The column reference to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ * @param [C] The type of the (group) column.
+ * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ */
+private interface ColumnPathAsColumnGroupDocs
 
 /** ## As ColumnGroup
  *
  * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>` from [this][this].
- * It can both be typed and untyped and is just a shortcut to [columnGroup][org.jetbrains.kotlinx.dataframe.api.columnGroup]`(`[this][this]`)`
+ * This is especially useful when you want to use [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] functions in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] but your column
+ * type is not recognized as a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ * If you're not sure whether a column is recognized as [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not, you can always call [asColumnGroup][asColumnGroup]
+ * and it will return the same type if it is already a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  *
- * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`>`. */
+ * The function can be both typed and untyped if called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath].
+ *
+ * NOTE: This does not check whether the column is actually a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not. It just casts it.
+ *
+ * #### For example:
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.asColumnGroup]`<GroupType>().`[valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`() }`
+ *
+ * @receiver The column reference to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ * @param [C] The type of the (group) column.
+ * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ */
 @JvmName("asColumnGroupTyped")
 public fun <C> ColumnPath.asColumnGroup(): ColumnAccessor<DataRow<C>> = columnGroup<C>(this)
 
 /** ## As ColumnGroup
  *
  * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>` from [this][this].
- * It can both be typed and untyped and is just a shortcut to [columnGroup][org.jetbrains.kotlinx.dataframe.api.columnGroup]`(`[this][this]`)`
+ * This is especially useful when you want to use [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] functions in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] but your column
+ * type is not recognized as a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ * If you're not sure whether a column is recognized as [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not, you can always call [asColumnGroup][asColumnGroup]
+ * and it will return the same type if it is already a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  *
- * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`>`. */
+ * The function can be both typed and untyped if called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath].
+ *
+ * NOTE: This does not check whether the column is actually a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not. It just casts it.
+ *
+ * #### For example:
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.asColumnGroup]`<GroupType>().`[valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`() }`
+ *
+ * @receiver The column reference to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ * @param [C] The type of the (group) column.
+ * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ */
 public fun ColumnPath.asColumnGroup(): ColumnAccessor<DataRow<*>> = columnGroup<Any?>(this)
 
 // endregion

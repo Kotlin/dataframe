@@ -5,7 +5,6 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
-import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -27,8 +26,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.createComputedColumnReferenc
 import org.jetbrains.kotlinx.dataframe.impl.columns.forceResolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.unbox
 import org.jetbrains.kotlinx.dataframe.size
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_GROUP
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_GROUP_REPLACE
 import kotlin.random.Random
 import kotlin.random.nextInt
 import kotlin.reflect.KProperty
@@ -215,20 +212,35 @@ public fun <T> ColumnGroupReference.frameColumn(property: KProperty<List<T>>): C
 // region asColumnGroup
 
 /**
- * ## SingleColumn As ColumnGroup
- * Casts [this][this\] [SingleColumn][SingleColumn]`<`[C][C\]`>` to a [SingleColumn][SingleColumn]`<`[DataRow][DataRow]`<`[C][C\]`>>`.
- * This is especially useful when you want to use `ColumnGroup` functions in the [ColumnsSelectionDsl] but your column
- * type is not recognized as a `ColumnGroup`.
- * If you're not sure whether a column is recognized or not, you can always call [asColumnGroup][SingleColumn.asColumnGroup]
- * and it will return the same type if it is already a `ColumnGroup`.
+ * ## As ColumnGroup
  *
- * For example:
+ * Creates a [ColumnAccessor][ColumnAccessor]`<`[DataRow][DataRow]`<`[C][C\]`>>` from [this][this\].
+ * This is especially useful when you want to use [ColumnGroup] functions in the [ColumnsSelectionDsl] but your column
+ * type is not recognized as a [ColumnGroup].
+ * If you're not sure whether a column is recognized as [ColumnGroup] or not, you can always call [asColumnGroup][asColumnGroup\]
+ * and it will return the same type if it is already a [ColumnGroup].
  *
- * `df.`[select][DataFrame.select]` { it`[`[`][ColumnsContainer.get]`"myColumn"`[`]`][ColumnsContainer.get]`.`[asColumnGroup][SingleColumn.asColumnGroup]`().`[first][ColumnsSelectionDsl.firstChild]`() }`
+ * The function can be both typed and untyped if called on a [String] or [ColumnPath].
  *
- * @receiver The [SingleColumn] to cast to a [SingleColumn]`<`[DataRow][DataRow]`<`[C][C\]`>>`.
+ * NOTE: This does not check whether the column is actually a [ColumnGroup] or not. It just casts it.
+ *
+ * #### For example:
+ *
+ * {@includeArg [AsColumnGroupDocs.ExampleArg]}
+ *
+ * @receiver The column reference to cast to a [SingleColumn]`<`[DataRow][DataRow]`<`[C][C\]`>>`.
  * @param [C\] The type of the (group) column.
  * @return A [SingleColumn]`<`[DataRow][DataRow]`<`[C][C\]`>>`.
+ */
+private interface AsColumnGroupDocs {
+
+    interface ExampleArg
+}
+
+/**
+ *  @include [AsColumnGroupDocs]
+ *  @arg [AsColumnGroupDocs.ExampleArg]
+ * `df.`[select][DataFrame.select]` { `[first][ColumnsSelectionDsl.first]`().`[asColumnGroup][SingleColumn.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
  */
 private interface SingleColumnAsColumnGroupDocs
 
@@ -241,34 +253,49 @@ public fun <C> SingleColumn<C>.asColumnGroup(): SingleColumn<DataRow<C>> = this 
 public fun <C> SingleColumn<DataRow<C>>.asColumnGroup(): SingleColumn<DataRow<C>> = this
 
 /**
- * ## As ColumnGroup
- *
- * Creates a [ColumnAccessor][ColumnAccessor]`<`[DataRow][DataRow]`<`[C][C\]`>>` from [this][this\].
- * It can both be typed and untyped and is just a shortcut to [columnGroup][columnGroup]`(`[this][this\]`)`
- *
- * @return A [ColumnAccessor]`<`[DataRow][DataRow]`>`.
+ * @include [AsColumnGroupDocs]
+ * @arg [AsColumnGroupDocs.ExampleArg]
+ * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][ColumnGroup.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
  */
-private interface AsColumnGroupDocs
+private interface KPropertyAsColumnGroupDocs
 
-/** @include [AsColumnGroupDocs] */
+/** @include [KPropertyAsColumnGroupDocs] */
 public fun <C> KProperty<C>.asColumnGroup(): ColumnAccessor<DataRow<C>> = columnGroup<C>(this)
 
-/** @include [AsColumnGroupDocs] */
+/** @include [KPropertyAsColumnGroupDocs] */
 @JvmName("asColumnGroupDataRowKProperty")
 public fun <C> KProperty<DataRow<C>>.asColumnGroup(): ColumnAccessor<DataRow<C>> = columnGroup<C>(this)
 
-/** @include [AsColumnGroupDocs] */
+/**
+ * @include [AsColumnGroupDocs]
+ * @arg [AsColumnGroupDocs.ExampleArg]
+ * `df.`[select][DataFrame.select]` { "myColumnGroup".`[asColumnGroup][String.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
+ *
+ * `df.`[select][DataFrame.select]` { "myColumnGroup".`[asColumnGroup][String.asColumnGroup]`<GroupType>().`[valueCols][ColumnsSelectionDsl.valueCols]`() }`
+ */
+private interface StringAsColumnGroupDocs
+
+/** @include [StringAsColumnGroupDocs] */
 @JvmName("asColumnGroupTyped")
 public fun <C> String.asColumnGroup(): ColumnAccessor<DataRow<C>> = columnGroup<C>(this)
 
-/** @include [AsColumnGroupDocs] */
+/** @include [StringAsColumnGroupDocs] */
 public fun String.asColumnGroup(): ColumnAccessor<DataRow<*>> = columnGroup<Any?>(this)
 
-/** @include [AsColumnGroupDocs] */
+/**
+ * @include [AsColumnGroupDocs]
+ * @arg [AsColumnGroupDocs.ExampleArg]
+ * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[asColumnGroup][ColumnPath.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
+ *
+ * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[asColumnGroup][ColumnPath.asColumnGroup]`<GroupType>().`[valueCols][ColumnsSelectionDsl.valueCols]`() }`
+ */
+private interface ColumnPathAsColumnGroupDocs
+
+/** @include [ColumnPathAsColumnGroupDocs] */
 @JvmName("asColumnGroupTyped")
 public fun <C> ColumnPath.asColumnGroup(): ColumnAccessor<DataRow<C>> = columnGroup<C>(this)
 
-/** @include [AsColumnGroupDocs] */
+/** @include [ColumnPathAsColumnGroupDocs] */
 public fun ColumnPath.asColumnGroup(): ColumnAccessor<DataRow<*>> = columnGroup<Any?>(this)
 
 // endregion
