@@ -145,6 +145,15 @@ class JDBCTest {
     }
 
     @Test
+    fun `try to read from not existing table` () {
+        connection.use { connection ->
+            val df = DataFrame.readFromDB(connection, "dsdfs", "WrongTableName").cast<Customer>()
+            df.print()
+            assertEquals(3, df.rowsCount())
+        }
+    }
+
+    @Test
     fun `convert result of SQL-query` () {
         val sqlQuery = "select name, year, rank,\n" +
             "GROUP_CONCAT (genre) as \"genres\"\n" +

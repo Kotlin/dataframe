@@ -120,6 +120,9 @@ public fun DataFrame.Companion.readFromDB(connection: Connection, catalogName: S
     val preparedQuery = ("SELECT * FROM $tableName "
         + "LIMIT 1000")
 
+    val url = connection.metaData.url
+    val dbType = extractDBTypeFromURL(url)
+
     connection.createStatement().use { st ->
         logger.debug { "Connection with url:${connection.metaData.url} is established successfully." }
         val tableColumns = getTableColumns(connection, tableName)
@@ -143,7 +146,7 @@ public fun DataFrame.Companion.readFromDB(connection: Connection, catalogName: S
         st.executeQuery(
             preparedQuery // TODO: work with limits correctly
         ).use { rs ->
-            logger.debug {  }
+            logger.debug {  } // TODO: log the executed query
             while (rs.next()) {
                 tableColumns.forEach { (columnName, jdbcColumn) ->
                     data[columnName] = (data[columnName]!! + getData(rs, jdbcColumn)).toMutableList()
@@ -174,8 +177,6 @@ public fun DataFrame.Companion.readSchemaFromDB(connection: Connection, catalogN
     }
 }
 
-
-
 private fun getTableColumns(
     connection: Connection,
     tableName: String
@@ -191,6 +192,25 @@ private fun getTableColumns(
         tableColumns += Pair(name, JDBCColumn(name, type, size))
     }
     return tableColumns
+}
+
+public fun extractDBTypeFromURL(url: String?) {
+    if (url != null) {
+        when {
+            DBType.H2.jdbcName in url -> DBType.H2
+            DBType.MARIADB.jdbcName in url -> DBType.MARIADB
+            DBType.MYSQL.jdbcName in url -> DBType.MYSQL
+            else -> {}
+        }
+    }
+}
+
+// TODO: lools like we need here more then enum, but hierarchy of sealed classes with some fields
+// Basic Type: supported database with mapping of types and jdbcProtocol names
+public enum class DBType(public val jdbcName: String) {
+    H2("h2"),
+    MARIADB("mariadb"),
+    MYSQL("mysql")
 }
 
 // TODO: slow solution could be optimized with batches control and fetching
