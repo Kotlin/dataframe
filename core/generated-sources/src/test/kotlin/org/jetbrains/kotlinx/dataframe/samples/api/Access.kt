@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
+import org.jetbrains.kotlinx.dataframe.get
 import org.junit.Test
 
 class Access : TestBase() {

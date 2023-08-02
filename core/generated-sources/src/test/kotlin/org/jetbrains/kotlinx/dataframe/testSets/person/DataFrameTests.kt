@@ -162,6 +162,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.exceptions.ExcessiveColumnsException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
+import org.jetbrains.kotlinx.dataframe.get
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToImpl
