@@ -36,7 +36,7 @@ import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.junit.Test
 import java.time.format.DateTimeFormatter
 
-class PredicateJoin {
+class PredicateJoin : TestBase() {
 
     @DataSchema
     interface Campaigns {
