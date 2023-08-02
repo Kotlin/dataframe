@@ -113,7 +113,7 @@ class JDBCTest {
         // for gradle or as classes under the hood in KNB
 
         DriverManager.getConnection(URL, props).use { connection ->
-            val df = DataFrame.readFromDB(connection, "imdb", "imdb.actors").cast<ActorKDF>()
+            val df = DataFrame.readFromDB(connection, "imdb", "actors").cast<ActorKDF>()
             df.print()
         }
     }
