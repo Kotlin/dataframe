@@ -75,6 +75,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
 
     // cols {}, cols(), cols(colA, colB), cols(1, 5), cols(1..5)
     ColsColumnsSelectionDsl,
+
     // colA.."colB"
     ColumnRangeColumnsSelectionDsl,
     // valueCols {}, valueCols()
