@@ -60,7 +60,7 @@ class CodeGenerationTests : BaseTest() {
         val typeName = ReplCodeGeneratorImpl.markerInterfacePrefix
         val expectedDeclaration = """
             @DataSchema
-            interface $typeName
+            interface $typeName { }
             
         """.trimIndent() + "\n" + expectedProperties(typeName, typeName)
 
@@ -85,7 +85,7 @@ class CodeGenerationTests : BaseTest() {
         val typeName = ReplCodeGeneratorImpl.markerInterfacePrefix
         val expectedDeclaration = """
             @DataSchema
-            interface $typeName
+            interface $typeName { }
             
         """.trimIndent() + "\n" + expectedProperties(typeName, typeName)
 
@@ -104,7 +104,7 @@ class CodeGenerationTests : BaseTest() {
         val type2 = ReplCodeGeneratorImpl.markerInterfacePrefix
         val declaration1 = """
             @DataSchema(isOpen = false)
-            interface $type1
+            interface $type1 { }
             
             val $dfName<$type1>.city: $dataCol<$stringName?> @JvmName("${type1}_city") get() = this["city"] as $dataCol<$stringName?>
             val $dfRowName<$type1>.city: $stringName? @JvmName("${type1}_city") get() = this["city"] as $stringName?
@@ -119,7 +119,7 @@ class CodeGenerationTests : BaseTest() {
 
         val declaration2 = """
             @DataSchema
-            interface $type2
+            interface $type2 { }
             
             val $dfName<$type2>.age: $dataCol<$intName> @JvmName("${type2}_age") get() = this["age"] as $dataCol<$intName>
             val $dfRowName<$type2>.age: $intName @JvmName("${type2}_age") get() = this["age"] as $intName
@@ -146,7 +146,7 @@ class CodeGenerationTests : BaseTest() {
         val personClass = (Person::class).qualifiedName!!
         val expected = """
             @DataSchema
-            interface $personClass
+            interface $personClass { }
         """.trimIndent() + "\n" + expectedProperties(personClassName, personShortName)
 
         val code = CodeGenerator.create(useFqNames = false)
@@ -203,7 +203,7 @@ class CodeGenerationTests : BaseTest() {
         val code = codeGen.generate(df.schema(), "Person", false, true, true).code.declarations
         val expected = """
             @DataSchema
-            interface Person
+            interface Person { }
             
         """.trimIndent() + "\n" + expectedProperties("Person", "Person")
         code shouldBe expected
