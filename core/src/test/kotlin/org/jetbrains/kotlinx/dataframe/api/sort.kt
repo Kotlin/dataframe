@@ -17,7 +17,7 @@ class SortDataColumn {
         col.sortWith { a, b -> b - a } shouldBe descSortedCol
 
         col.sortWith(Int::compareTo) shouldBe sortedCol
-        col.sortWith(Comparator(Int::compareTo)) shouldBe sortedCol
+        col.sortWith(compareBy { it }) shouldBe sortedCol
     }
 
     @Test
@@ -40,7 +40,7 @@ class SortDataColumn {
         )
 
         col.sortWith { df1, df2 -> df1.nrow - df2.nrow } shouldBe sortedCol
-        col.sortWith(Comparator { df1, df2 -> df1.nrow - df2.nrow }) shouldBe sortedCol
+        col.sortWith(compareBy { it.nrow }) shouldBe sortedCol
     }
 
     @Test
@@ -65,6 +65,6 @@ class SortDataColumn {
         )
 
         col.sortWith { df1, df2 -> df1[a] - df2[a] } shouldBe sortedCol
-        col.sortWith(Comparator { df1, df2 -> df1[a] - df2[a] }) shouldBe sortedCol
+        col.sortWith(compareBy { it[a] }) shouldBe sortedCol
     }
 }
