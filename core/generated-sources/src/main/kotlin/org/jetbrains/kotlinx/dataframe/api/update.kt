@@ -90,7 +90,9 @@ private interface SetSelectingColumnsOperationArg
  * Check out the [`update` Operation Usage][org.jetbrains.kotlinx.dataframe.api.Update.Usage].
  *
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns] for all the selecting options. 
  * ## This Update Overload
  */
@@ -112,7 +114,9 @@ private interface UpdateWithNote
  * Check out the [`update` Operation Usage][org.jetbrains.kotlinx.dataframe.api.Update.Usage].
  *
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns] for all the selecting options. 
  * ## This Update Overload
  * Select or express columns using the Column(s) Selection DSL.
@@ -144,7 +148,9 @@ public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): Update<T,
  * Check out the [`update` Operation Usage][org.jetbrains.kotlinx.dataframe.api.Update.Usage].
  *
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns] for all the selecting options. 
  * ## This Update Overload
  * Select columns using their [column names][String]
@@ -170,7 +176,9 @@ public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = up
  * Check out the [`update` Operation Usage][org.jetbrains.kotlinx.dataframe.api.Update.Usage].
  *
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns] for all the selecting options. 
  * ## This Update Overload
  * Select columns using [KProperties][KProperty] ([KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]).
@@ -198,7 +206,9 @@ public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C
  * Check out the [`update` Operation Usage][org.jetbrains.kotlinx.dataframe.api.Update.Usage].
  *
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns] for all the selecting options. 
  * ## This Update Overload
  * Select columns using [column accessors][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]
@@ -613,7 +623,9 @@ public fun <T, C> Update<T, C?>.notNull(expression: UpdateExpression<T, C, C>): 
  * Check out the [`update` Operation Usage][org.jetbrains.kotlinx.dataframe.api.Update.Usage].
  *
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns] for all the selecting options. 
  * ## This Update Overload
  * ### This overload is a combination of [update] and [with][Update.with].
@@ -651,7 +663,9 @@ public fun <T, C> DataFrame<T>.update(
  * Check out the [`update` Operation Usage][org.jetbrains.kotlinx.dataframe.api.Update.Usage].
  *
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns] for all the selecting options. 
  * ## This Update Overload
  * ### This overload is a combination of [update] and [with][Update.with].
@@ -688,7 +702,9 @@ public fun <T, C> DataFrame<T>.update(
  * Check out the [`update` Operation Usage][org.jetbrains.kotlinx.dataframe.api.Update.Usage].
  *
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns] for all the selecting options. 
  * ## This Update Overload
  * ### This overload is a combination of [update] and [with][Update.with].
