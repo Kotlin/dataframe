@@ -61,7 +61,7 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
      *
      * NOTE: This doesn't work in [ColumnsSelectionDsl], use [ColumnsSelectionDsl.cols] to select columns by predicate.
      */
-    override operator fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> =
+    override fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> =
         getColumnsImpl(UnresolvedColumnsPolicy.Fail, columns)
 
     // endregion
@@ -88,6 +88,12 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 }
 
 // region get columns
+
+/**
+ * Returns a list of columns selected by [columns], a [ColumnsSelectionDsl].
+ */
+public operator fun <T, C> DataFrame<T>.get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> =
+    this.get(columns)
 
 public operator fun <T> DataFrame<T>.get(first: AnyColumnReference, vararg other: AnyColumnReference): DataFrame<T> =
     select { (listOf(first) + other).toColumnSet() }

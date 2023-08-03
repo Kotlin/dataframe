@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.Grouped
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 import org.jetbrains.kotlinx.dataframe.api.pathOf
+import org.jetbrains.kotlinx.dataframe.get
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.cast

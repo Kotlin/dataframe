@@ -22,7 +22,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.transformWithContext
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import kotlin.reflect.KProperty
 
-// TODO remove some problematic get[] operators
 public interface ColsColumnsSelectionDsl {
 
     /**
@@ -150,8 +149,6 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`() }`
      *
-     * `// NOTE: there's a `[DataFrame.get]` overload that prevents this:`
-     *
      * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`{ ... }`[`]`][SingleColumn.cols]` }`
      * {@include [LineBreak]}
      *
@@ -166,7 +163,6 @@ public interface ColsColumnsSelectionDsl {
 
     /**
      * @include [SingleColumnAnyRowColsPredicateDocs]
-     * {@comment this function is shadowed by [DataFrame.get]}
      */
     public operator fun SingleColumn<DataRow<*>>.get(
         predicate: ColumnFilter<*> = { true },
@@ -200,27 +196,25 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Predicate]
      * @arg [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { Type::columnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[cols][SingleColumn.cols]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
+     * `df.`[select][DataFrame.select]` { Type::columnGroup.`[cols][KProperty.cols]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::columnGroup)`[`[`][SingleColumn.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][SingleColumn.cols]` }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::columnGroup.`[cols][KProperty.cols]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
+     * `df.`[select][DataFrame.select]` { Type::columnGroup`[`[`][SingleColumn.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][SingleColumn.cols]` }`
      *
      * `// same as `[all][all]`()`
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::columnGroup).`[cols][SingleColumn.cols]`() }`
+     * `df.`[select][DataFrame.select]` { Type::columnGroup.`[cols][SingleColumn.cols]`() }`
      *
      * @see [all\]
      */
     private interface KPropertyColsPredicateDocs
 
     /** @include [KPropertyColsPredicateDocs] */
-    public fun KProperty<DataRow<*>>.cols(
+    public fun KProperty<*>.cols(
         predicate: ColumnFilter<*> = { true },
     ): TransformableColumnSet<*> = columnGroup(this).cols(predicate)
 
     /** @include [KPropertyColsPredicateDocs] */
-    public operator fun KProperty<DataRow<*>>.get(
+    public operator fun KProperty<*>.get(
         predicate: ColumnFilter<*> = { true },
     ): TransformableColumnSet<*> = cols(predicate)
 
@@ -309,8 +303,6 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(columnA, columnB) }`
      *
-     * `// NOTE: there's a `[DataFrame.get]` overload that prevents this:`
-     *
      * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`columnA, columnB`[`]`][SingleColumn.cols]` }`
      */
     private interface SingleColumnColsVarargColumnReferenceDocs
@@ -327,7 +319,6 @@ public interface ColsColumnsSelectionDsl {
 
     /**
      * @include [SingleColumnColsVarargColumnReferenceDocs]
-     * {@comment this function is shadowed by [DataFrame.get] for accessors}
      */
     public operator fun <C> SingleColumn<DataRow<*>>.get(
         firstCol: ColumnReference<C>,
@@ -362,22 +353,20 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
      * @arg [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[cols][SingleColumn.cols]`(columnA, columnB) }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`(columnA, columnB) }`
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[cols][SingleColumn.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`columnA, columnB`[`]`][KProperty.cols]` }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"pathTo"["colA"], "pathTo"["colB"]`[`]`][KProperty.cols]` }`
      */
     private interface KPropertyColsVarargColumnReferenceDocs
 
     /** @include [KPropertyColsVarargColumnReferenceDocs] */
-    public fun <C> KProperty<DataRow<*>>.cols(
+    public fun <C> KProperty<*>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
     ): ColumnSet<C> = columnGroup(this).cols(firstCol, *otherCols)
 
     /** @include [KPropertyColsVarargColumnReferenceDocs] */
-    public operator fun <C> KProperty<DataRow<*>>.get(
+    public operator fun <C> KProperty<*>.get(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
     ): ColumnSet<C> = cols(firstCol, *otherCols)
@@ -465,8 +454,6 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`("columnA", "columnB") }`
      *
-     * `// NOTE: there's a `[DataFrame.get]` overload that prevents this:`
-     *
      * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`"columnA", "columnB"`[`]`][SingleColumn.cols]` }`
      */
     private interface SingleColumnColsVarargStringDocs
@@ -481,7 +468,6 @@ public interface ColsColumnsSelectionDsl {
 
     /**
      * @include [SingleColumnColsVarargStringDocs]
-     * {@comment this function is shadowed by [DataFrame.get] for accessors}
      */
     public operator fun SingleColumn<DataRow<*>>.get(
         firstCol: String,
@@ -514,22 +500,20 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [String]}
      * @arg [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[cols][SingleColumn.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][SingleColumn.cols]`"columnA", "columnB"`[`]`][SingleColumn.cols]` }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`("columnA", "columnB") }`
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"columnA", "columnB"`[`]`][KProperty.cols]` }`
      */
     private interface KPropertiesColsVarargStringDocs
 
     /** @include [KPropertiesColsVarargStringDocs] */
-    public fun KProperty<DataRow<*>>.cols(
+    public fun KProperty<*>.cols(
         firstCol: String,
         vararg otherCols: String,
     ): ColumnSet<*> = columnGroup(this).cols(firstCol, *otherCols)
 
     /** @include [KPropertiesColsVarargStringDocs] */
-    public operator fun KProperty<DataRow<*>>.get(
+    public operator fun KProperty<*>.get(
         firstCol: String,
         vararg otherCols: String,
     ): ColumnSet<*> = cols(firstCol, *otherCols)
@@ -657,22 +641,20 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [KProperty]}
      * @arg [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[cols][SingleColumn.cols]`(Type::colA, Type::colB) }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`(Type::colA, Type::colB) }`
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][SingleColumn.cols]`Type::colA, Type::colB`[`]`][SingleColumn.cols]` }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[cols][KProperty.cols]`(Type::colA, Type::colB) }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup`[`[`][SingleColumn.cols]`Type::colA, Type::colB`[`]`][SingleColumn.cols]` }`
      */
     private interface KPropertyColsVarargKPropertyDocs
 
     /** @include [KPropertyColsVarargKPropertyDocs] */
-    public fun <C> KProperty<DataRow<*>>.cols(
+    public fun <C> KProperty<*>.cols(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
     ): ColumnSet<C> = columnGroup(this).cols(firstCol, *otherCols)
 
     /** @include [KPropertyColsVarargKPropertyDocs] */
-    public operator fun <C> KProperty<DataRow<*>>.get(
+    public operator fun <C> KProperty<*>.get(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
     ): ColumnSet<C> = cols(firstCol, *otherCols)
@@ -718,7 +700,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]`(1, 3, 2) }`
      *
-     * `df.`[select][DataFrame.select]` { this`[`[`][SingleColumn.get]`5, 1, 2`[`]`][SingleColumn.get]` }`
+     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][SingleColumn.get]`5, 1, 2`[`]`][SingleColumn.get]` }`
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`(0, 2) }`
      *
@@ -765,8 +747,6 @@ public interface ColsColumnsSelectionDsl {
      * @arg [CommonColsIndicesDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(1, 3) }`
-     *
-     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`5, 0`[`]`][ColumnsSelectionDsl.cols]` }`
      */
     private interface ColumnsSelectionDslColsIndicesDocs
 
@@ -776,21 +756,11 @@ public interface ColsColumnsSelectionDsl {
         vararg otherIndices: Int,
     ): ColumnSet<*> = this.asSingleColumn().colsInternal(headPlusArray(firstIndex, otherIndices))
 
-    /** @include [ColumnsSelectionDslColsIndicesDocs] */
-    public operator fun ColumnsSelectionDsl<*>.get(
-        firstIndex: Int,
-        vararg otherIndices: Int,
-    ): ColumnSet<*> = cols(firstIndex, *otherIndices)
-
     /**
      * @include [CommonColsIndicesDocs]
      * @arg [CommonColsIndicesDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(1, 3) }`
-     *
-     * `// NOTE: There's a `[ColumnGroup.get][ColumnGroup.get]` overload that prevents this from working as expected here:`
-     *
-     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`5, 6`[`]`][SingleColumn.cols]` }`
      */
     private interface SingleColumnColsIndicesDocs
 
@@ -801,21 +771,10 @@ public interface ColsColumnsSelectionDsl {
     ): ColumnSet<*> = ensureIsColGroup().colsInternal(headPlusArray(firstIndex, otherIndices))
 
     /**
-     * {@comment this function is shadowed by [ColumnGroup.get] for accessors}
-     * @include [SingleColumnColsIndicesDocs]
-     */
-    public operator fun SingleColumn<DataRow<*>>.get(
-        firstIndex: Int,
-        vararg otherIndices: Int,
-    ): ColumnSet<*> = cols(firstIndex, *otherIndices)
-
-    /**
      * @include [CommonColsIndicesDocs]
      * @arg [CommonColsIndicesDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`(5, 3, 1) }`
-     *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup"`[`[`][String.cols]`0, 3`[`]`][String.cols]` }`
      */
     private interface StringColsIndicesDocs
 
@@ -825,43 +784,25 @@ public interface ColsColumnsSelectionDsl {
         vararg otherIndices: Int,
     ): ColumnSet<*> = columnGroup(this).cols(firstIndex, *otherIndices)
 
-    /** @include [StringColsIndicesDocs] */
-    public operator fun String.get(
-        firstIndex: Int,
-        vararg otherIndices: Int,
-    ): ColumnSet<*> = cols(firstIndex, *otherIndices)
-
     /**
      * @include [CommonColsIndicesDocs]
      * @arg [CommonColsIndicesDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[cols][SingleColumn.cols]`(5, 4) }`
-     *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][SingleColumn.cols]`0, 3`[`]`][SingleColumn.cols]` }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`0, 3`[`]`][KProperty.cols]` }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`(5, 4) }`
      */
     private interface KPropertyColsIndicesDocs
 
     /** @include [KPropertyColsIndicesDocs] */
-    public fun KProperty<DataRow<*>>.cols(
+    public fun KProperty<*>.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
     ): ColumnSet<*> = columnGroup(this).cols(firstIndex, *otherIndices)
-
-    /** @include [KPropertyColsIndicesDocs] */
-    public operator fun KProperty<DataRow<*>>.get(
-        firstIndex: Int,
-        vararg otherIndices: Int,
-    ): ColumnSet<*> = cols(firstIndex, *otherIndices)
 
     /**
      * @include [CommonColsIndicesDocs]
      * @arg [CommonColsIndicesDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[col][ColumnPath.cols]`(0, 1) }`
-     *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"]`[`[`][ColumnPath.cols]`5, 6`[`]`][ColumnPath.cols]` }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[cols][ColumnPath.cols]`(0, 1) }`
      */
     private interface ColumnPathColsIndicesDocs
 
@@ -870,12 +811,6 @@ public interface ColsColumnsSelectionDsl {
         firstIndex: Int,
         vararg otherIndices: Int,
     ): ColumnSet<*> = columnGroup(this).cols(firstIndex, *otherIndices)
-
-    /** @include [ColumnPathColsIndicesDocs] */
-    public operator fun ColumnPath.get(
-        firstIndex: Int,
-        vararg otherIndices: Int,
-    ): ColumnSet<*> = cols(firstIndex, *otherIndices)
 
     // endregion
 
@@ -896,16 +831,16 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
-     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][ColumnSet.cols]` }`
+     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][ColumnSet.cols]` }`
      *
-     * `df.`[select][DataFrame.select]` { "myColGroup".`[col][String.cols]`(0`[`..`][Int.rangeTo]`2) }`
+     * `df.`[select][DataFrame.select]` { "myColGroup".`[cols][String.cols]`(0`[`..`][Int.rangeTo]`2) }`
      *
      * #### Examples for this overload:
      *
      * {@includeArg [CommonColsRangeDocs.ExampleArg]}
      *
-     * @throws [IndexOutOfBoundsException] if any of the indices in the [range\] are out of bounds.
-     * @throws [IllegalArgumentException] if the [range\] is empty.
+     * @throws [IndexOutOfBoundsException\] if any of the indices in the [range\] are out of bounds.
+     * @throws [IllegalArgumentException\] if the [range\] is empty.
      * @param [range\] The range of indices to retrieve in the form of an [IntRange].
      * @return A [ColumnSet] containing the columns found at the given indices.
      */
@@ -937,26 +872,17 @@ public interface ColsColumnsSelectionDsl {
      * @arg [CommonColsRangeDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(1`[..][Int.rangeTo]`3) }`
-     *
-     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`0`[..][Int.rangeTo]`5`[`]`][ColumnsSelectionDsl.cols]` }`
      */
     private interface ColumnsSelectionDslColsRangeDocs
 
     /** @include [ColumnsSelectionDslColsRangeDocs] */
     public fun ColumnsSelectionDsl<*>.cols(range: IntRange): ColumnSet<*> = this.asSingleColumn().colsInternal(range)
 
-    /** @include [ColumnsSelectionDslColsRangeDocs] */
-    public operator fun ColumnsSelectionDsl<*>.get(range: IntRange): ColumnSet<*> = cols(range)
-
     /**
      * @include [CommonColsRangeDocs]
      * @arg [CommonColsRangeDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(1`[..][Int.rangeTo]`3) }`
-     *
-     * `// NOTE: There's a `[ColumnGroup.get][ColumnGroup.get]` overload that prevents this from working as expected here:`
-     *
-     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`5`[..][Int.rangeTo]`6`[`]`][SingleColumn.cols]` }`
      */
     private interface SingleColumnColsRangeDocs
 
@@ -964,60 +890,38 @@ public interface ColsColumnsSelectionDsl {
     public fun SingleColumn<DataRow<*>>.cols(range: IntRange): ColumnSet<*> = ensureIsColGroup().colsInternal(range)
 
     /**
-     * {@comment this function is shadowed by [ColumnGroup.get] for accessors}
-     * @include [SingleColumnColsRangeDocs]
-     */
-    public operator fun SingleColumn<DataRow<*>>.get(range: IntRange): ColumnSet<*> = cols(range)
-
-    /**
      * @include [CommonColsRangeDocs]
      * @arg [CommonColsRangeDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "myColGroup".`[cols][String.cols]`(1`[..][Int.rangeTo]`3) }`
-     *
-     * `df.`[select][DataFrame.select]` { "myColGroup"`[`[`][String.cols]`0`[..][Int.rangeTo]`5`[`]`][String.cols]` }`
+     * `df.`[select][DataFrame.select]` { "myColGroup".`[cols][String.cols]`(1`[`..`][Int.rangeTo]`3) }`
      */
     private interface StringColsRangeDocs
 
     /** @include [StringColsRangeDocs] */
     public fun String.cols(range: IntRange): ColumnSet<*> = columnGroup(this).cols(range)
 
-    /** @include [StringColsRangeDocs] */
-    public operator fun String.get(range: IntRange): ColumnSet<*> = cols(range)
-
     /**
      * @include [CommonColsRangeDocs]
      * @arg [CommonColsRangeDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[cols][SingleColumn.cols]`(1`[..][Int.rangeTo]`3) }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][SingleColumn.cols]`0`[..][Int.rangeTo]`5`[`]`][SingleColumn.cols]` }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`0`[..][Int.rangeTo]`5`[`]`][KProperty.cols]` }`
      */
     private interface KPropertyColsRangeDocs
 
     /** @include [KPropertyColsRangeDocs] */
-    public fun KProperty<DataRow<*>>.cols(range: IntRange): ColumnSet<*> = columnGroup(this).cols(range)
-
-    /** @include [KPropertyColsRangeDocs] */
-    public operator fun KProperty<DataRow<*>>.get(range: IntRange): ColumnSet<*> = cols(range)
+    public fun KProperty<*>.cols(range: IntRange): ColumnSet<*> = columnGroup(this).cols(range)
 
     /**
      * @include [CommonColsRangeDocs]
      * @arg [CommonColsRangeDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[col][ColumnPath.cols]`(0`[..][Int.rangeTo]`1) }`
-     *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"]`[`[`][ColumnPath.cols]`0`[..][Int.rangeTo]`5`[`]`][ColumnPath.cols]` }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[cols][ColumnPath.cols]`(0`[..][Int.rangeTo]`1) }`
      */
     private interface ColumnPathColsRangeDocs
 
     /** @include [ColumnPathColsRangeDocs] */
     public fun ColumnPath.cols(range: IntRange): ColumnSet<*> = columnGroup(this).cols(range)
-
-    /** @include [ColumnPathColsRangeDocs] */
-    public operator fun ColumnPath.get(range: IntRange): ColumnSet<*> = cols(range)
 
     /**
      * ## Columns by Index Range from List of Columns

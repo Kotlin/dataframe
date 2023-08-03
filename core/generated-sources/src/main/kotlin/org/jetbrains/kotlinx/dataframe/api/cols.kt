@@ -22,7 +22,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.transformWithContext
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import kotlin.reflect.KProperty
 
-// TODO remove some problematic get[] operators
 public interface ColsColumnsSelectionDsl {
 
     /**
@@ -421,8 +420,6 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`() }`
      *
-     * `// NOTE: there's a `[DataFrame.get]` overload that prevents this:`
-     *
      * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`{ ... }`[`]`][SingleColumn.cols]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -466,8 +463,6 @@ public interface ColsColumnsSelectionDsl {
      * `// same as `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`()`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`() }`
-     *
-     * `// NOTE: there's a `[DataFrame.get][org.jetbrains.kotlinx.dataframe.DataFrame.get]` overload that prevents this:`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`{ ... }`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
@@ -514,8 +509,6 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`() }`
      *
-     * `// NOTE: there's a `[DataFrame.get][org.jetbrains.kotlinx.dataframe.DataFrame.get]` overload that prevents this:`
-     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`{ ... }`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -530,7 +523,6 @@ public interface ColsColumnsSelectionDsl {
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
      * @see [all]
-     *
      */
     public operator fun SingleColumn<DataRow<*>>.get(
         predicate: ColumnFilter<*> = { true },
@@ -679,15 +671,13 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::columnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[cols][SingleColumn.cols]` { "e" `[in][String.contains]` it.`[name][ColumnPath.name]`() } }`
+     * `df.`[select][DataFrame.select]` { Type::columnGroup.`[cols][KProperty.cols]` { "e" `[in][String.contains]` it.`[name][ColumnPath.name]`() } }`
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::columnGroup)`[`[`][SingleColumn.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][SingleColumn.cols]` }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::columnGroup.`[cols][KProperty.cols]` { "e" `[in][String.contains]` it.`[name][ColumnPath.name]`() } }`
+     * `df.`[select][DataFrame.select]` { Type::columnGroup`[`[`][SingleColumn.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][SingleColumn.cols]` }`
      *
      * `// same as `[all][all]`()`
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::columnGroup).`[cols][SingleColumn.cols]`() }`
+     * `df.`[select][DataFrame.select]` { Type::columnGroup.`[cols][SingleColumn.cols]`() }`
      *
      * @see [all]
      *
@@ -722,15 +712,13 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "e" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnGroup.`[cols][kotlin.reflect.KProperty.cols]` { "e" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::columnGroup)`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::columnGroup.`[cols][kotlin.reflect.KProperty.cols]` { "e" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
      * `// same as `[all][org.jetbrains.kotlinx.dataframe.api.all]`()`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::columnGroup).`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`() }`
      *
      *
      * #### Filter vs. Cols:
@@ -741,7 +729,7 @@ public interface ColsColumnsSelectionDsl {
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
      * @see [all] */
-    public fun KProperty<DataRow<*>>.cols(
+    public fun KProperty<*>.cols(
         predicate: ColumnFilter<*> = { true },
     ): TransformableColumnSet<*> = columnGroup(this).cols(predicate)
 
@@ -765,15 +753,13 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "e" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnGroup.`[cols][kotlin.reflect.KProperty.cols]` { "e" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::columnGroup)`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::columnGroup.`[cols][kotlin.reflect.KProperty.cols]` { "e" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
      * `// same as `[all][org.jetbrains.kotlinx.dataframe.api.all]`()`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::columnGroup).`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`() }`
      *
      *
      * #### Filter vs. Cols:
@@ -784,7 +770,7 @@ public interface ColsColumnsSelectionDsl {
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
      * @see [all] */
-    public operator fun KProperty<DataRow<*>>.get(
+    public operator fun KProperty<*>.get(
         predicate: ColumnFilter<*> = { true },
     ): TransformableColumnSet<*> = cols(predicate)
 
@@ -1148,8 +1134,6 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(columnA, columnB) }`
      *
-     * `// NOTE: there's a `[DataFrame.get]` overload that prevents this:`
-     *
      * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`columnA, columnB`[`]`][SingleColumn.cols]` }`
      *
      *
@@ -1180,8 +1164,6 @@ public interface ColsColumnsSelectionDsl {
      * #### Examples for this overload:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
-     *
-     * `// NOTE: there's a `[DataFrame.get][org.jetbrains.kotlinx.dataframe.DataFrame.get]` overload that prevents this:`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
@@ -1222,10 +1204,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
      *
-     * `// NOTE: there's a `[DataFrame.get][org.jetbrains.kotlinx.dataframe.DataFrame.get]` overload that prevents this:`
-     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
-     *
      *
      *
      * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
@@ -1364,11 +1343,9 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[cols][SingleColumn.cols]`(columnA, columnB) }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`(columnA, columnB) }`
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[cols][SingleColumn.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`columnA, columnB`[`]`][KProperty.cols]` }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"pathTo"["colA"], "pathTo"["colB"]`[`]`][KProperty.cols]` }`
      *
      *
      * @param [firstCol] A [ColumnReference] that points to a column.
@@ -1397,18 +1374,16 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`columnA, columnB`[`]`][kotlin.reflect.KProperty.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"pathTo"["colA"], "pathTo"["colB"]`[`]`][kotlin.reflect.KProperty.cols]` }`
      *
      *
      * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
      * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to columns.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
-    public fun <C> KProperty<DataRow<*>>.cols(
+    public fun <C> KProperty<*>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
     ): ColumnSet<C> = columnGroup(this).cols(firstCol, *otherCols)
@@ -1433,18 +1408,16 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`columnA, columnB`[`]`][kotlin.reflect.KProperty.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"pathTo"["colA"], "pathTo"["colB"]`[`]`][kotlin.reflect.KProperty.cols]` }`
      *
      *
      * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
      * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to columns.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
-    public operator fun <C> KProperty<DataRow<*>>.get(
+    public operator fun <C> KProperty<*>.get(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
     ): ColumnSet<C> = cols(firstCol, *otherCols)
@@ -1786,8 +1759,6 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`("columnA", "columnB") }`
      *
-     * `// NOTE: there's a `[DataFrame.get]` overload that prevents this:`
-     *
      * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`"columnA", "columnB"`[`]`][SingleColumn.cols]` }`
      *
      *
@@ -1818,8 +1789,6 @@ public interface ColsColumnsSelectionDsl {
      * #### Examples for this overload:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("columnA", "columnB") }`
-     *
-     * `// NOTE: there's a `[DataFrame.get][org.jetbrains.kotlinx.dataframe.DataFrame.get]` overload that prevents this:`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
@@ -1858,10 +1827,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("columnA", "columnB") }`
      *
-     * `// NOTE: there's a `[DataFrame.get][org.jetbrains.kotlinx.dataframe.DataFrame.get]` overload that prevents this:`
-     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
-     *
      *
      *
      * @param [firstCol] A [String] that points to a column.
@@ -1994,9 +1960,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[cols][SingleColumn.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][SingleColumn.cols]`"columnA", "columnB"`[`]`][SingleColumn.cols]` }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`("columnA", "columnB") }`
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"columnA", "columnB"`[`]`][KProperty.cols]` }`
      *
@@ -2027,9 +1991,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("columnA", "columnB") }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"columnA", "columnB"`[`]`][kotlin.reflect.KProperty.cols]` }`
      *
@@ -2038,7 +2000,7 @@ public interface ColsColumnsSelectionDsl {
      * @param [otherCols] Optional additional [String]s that point to columns.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
-    public fun KProperty<DataRow<*>>.cols(
+    public fun KProperty<*>.cols(
         firstCol: String,
         vararg otherCols: String,
     ): ColumnSet<*> = columnGroup(this).cols(firstCol, *otherCols)
@@ -2063,9 +2025,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("columnA", "columnB") }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"columnA", "columnB"`[`]`][kotlin.reflect.KProperty.cols]` }`
      *
@@ -2074,7 +2034,7 @@ public interface ColsColumnsSelectionDsl {
      * @param [otherCols] Optional additional [String]s that point to columns.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
-    public operator fun KProperty<DataRow<*>>.get(
+    public operator fun KProperty<*>.get(
         firstCol: String,
         vararg otherCols: String,
     ): ColumnSet<*> = cols(firstCol, *otherCols)
@@ -2609,11 +2569,9 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[cols][SingleColumn.cols]`(Type::colA, Type::colB) }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`(Type::colA, Type::colB) }`
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][SingleColumn.cols]`Type::colA, Type::colB`[`]`][SingleColumn.cols]` }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[cols][KProperty.cols]`(Type::colA, Type::colB) }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup`[`[`][SingleColumn.cols]`Type::colA, Type::colB`[`]`][SingleColumn.cols]` }`
      *
      *
      * @param [firstCol] A [KProperty] that points to a column.
@@ -2642,18 +2600,16 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(Type::colA, Type::colB) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(Type::colA, Type::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`(Type::colA, Type::colB) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
      *
      * @param [firstCol] A [KProperty] that points to a column.
      * @param [otherCols] Optional additional [KProperty]s that point to columns.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
-    public fun <C> KProperty<DataRow<*>>.cols(
+    public fun <C> KProperty<*>.cols(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
     ): ColumnSet<C> = columnGroup(this).cols(firstCol, *otherCols)
@@ -2678,18 +2634,16 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(Type::colA, Type::colB) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(Type::colA, Type::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`(Type::colA, Type::colB) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
      *
      * @param [firstCol] A [KProperty] that points to a column.
      * @param [otherCols] Optional additional [KProperty]s that point to columns.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
-    public operator fun <C> KProperty<DataRow<*>>.get(
+    public operator fun <C> KProperty<*>.get(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
     ): ColumnSet<C> = cols(firstCol, *otherCols)
@@ -2813,7 +2767,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]`(1, 3, 2) }`
      *
-     * `df.`[select][DataFrame.select]` { this`[`[`][SingleColumn.get]`5, 1, 2`[`]`][SingleColumn.get]` }`
+     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][SingleColumn.get]`5, 1, 2`[`]`][SingleColumn.get]` }`
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`(0, 2) }`
      *
@@ -2847,7 +2801,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(0, 2) }`
      *
@@ -2878,7 +2832,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(0, 2) }`
      *
@@ -2913,7 +2867,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(0, 2) }`
      *
@@ -2948,15 +2902,13 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(0, 2) }`
      *
      * #### Examples for this overload:
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(1, 3) }`
-     *
-     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`5, 0`[`]`][ColumnsSelectionDsl.cols]` }`
      *
      * @throws [IndexOutOfBoundsException] If any index is out of bounds.
      * @param [firstIndex] The index of the first column to retrieve.
@@ -2979,15 +2931,13 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(0, 2) }`
      *
      * #### Examples for this overload:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1, 3) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`5, 0`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      * @throws [IndexOutOfBoundsException] If any index is out of bounds.
      * @param [firstIndex] The index of the first column to retrieve.
@@ -2998,40 +2948,6 @@ public interface ColsColumnsSelectionDsl {
         firstIndex: Int,
         vararg otherIndices: Int,
     ): ColumnSet<*> = this.asSingleColumn().colsInternal(headPlusArray(firstIndex, otherIndices))
-
-    /** ## Cols: Columns by Indices
-     *
-     * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
-     * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
-     *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the columns found at the
-     * given indices inside.
-     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
-     * the given indices in the set.
-     *
-     * #### For example:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(0, 2) }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1, 3) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`5, 0`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
-     *
-     * @throws [IndexOutOfBoundsException] If any index is out of bounds.
-     * @param [firstIndex] The index of the first column to retrieve.
-     * @param [otherIndices] The other indices of the columns to retrieve.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
-     */
-    public operator fun ColumnsSelectionDsl<*>.get(
-        firstIndex: Int,
-        vararg otherIndices: Int,
-    ): ColumnSet<*> = cols(firstIndex, *otherIndices)
 
     /**
      * ## Cols: Columns by Indices
@@ -3048,17 +2964,13 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(0, 2) }`
      *
      * #### Examples for this overload:
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(1, 3) }`
-     *
-     * `// NOTE: There's a `[ColumnGroup.get][ColumnGroup.get]` overload that prevents this from working as expected here:`
-     *
-     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`5, 6`[`]`][SingleColumn.cols]` }`
      *
      * @throws [IndexOutOfBoundsException] If any index is out of bounds.
      * @param [firstIndex] The index of the first column to retrieve.
@@ -3081,17 +2993,13 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(0, 2) }`
      *
      * #### Examples for this overload:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3) }`
-     *
-     * `// NOTE: There's a `[ColumnGroup.get][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup.get]` overload that prevents this from working as expected here:`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`5, 6`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
      * @throws [IndexOutOfBoundsException] If any index is out of bounds.
      * @param [firstIndex] The index of the first column to retrieve.
@@ -3104,7 +3012,6 @@ public interface ColsColumnsSelectionDsl {
     ): ColumnSet<*> = ensureIsColGroup().colsInternal(headPlusArray(firstIndex, otherIndices))
 
     /**
-     *
      * ## Cols: Columns by Indices
      *
      * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
@@ -3119,52 +3026,13 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(0, 2) }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3) }`
-     *
-     * `// NOTE: There's a `[ColumnGroup.get][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup.get]` overload that prevents this from working as expected here:`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`5, 6`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
-     *
-     * @throws [IndexOutOfBoundsException] If any index is out of bounds.
-     * @param [firstIndex] The index of the first column to retrieve.
-     * @param [otherIndices] The other indices of the columns to retrieve.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
-     */
-    public operator fun SingleColumn<DataRow<*>>.get(
-        firstIndex: Int,
-        vararg otherIndices: Int,
-    ): ColumnSet<*> = cols(firstIndex, *otherIndices)
-
-    /**
-     * ## Cols: Columns by Indices
-     *
-     * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
-     * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
-     *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the columns found at the
-     * given indices inside.
-     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
-     * the given indices in the set.
-     *
-     * #### For example:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(0, 2) }`
      *
      * #### Examples for this overload:
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`(5, 3, 1) }`
-     *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup"`[`[`][String.cols]`0, 3`[`]`][String.cols]` }`
      *
      * @throws [IndexOutOfBoundsException] If any index is out of bounds.
      * @param [firstIndex] The index of the first column to retrieve.
@@ -3187,15 +3055,13 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(0, 2) }`
      *
      * #### Examples for this overload:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(5, 3, 1) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"`[`[`][kotlin.String.cols]`0, 3`[`]`][kotlin.String.cols]` }`
      *
      * @throws [IndexOutOfBoundsException] If any index is out of bounds.
      * @param [firstIndex] The index of the first column to retrieve.
@@ -3206,40 +3072,6 @@ public interface ColsColumnsSelectionDsl {
         firstIndex: Int,
         vararg otherIndices: Int,
     ): ColumnSet<*> = columnGroup(this).cols(firstIndex, *otherIndices)
-
-    /** ## Cols: Columns by Indices
-     *
-     * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
-     * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
-     *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the columns found at the
-     * given indices inside.
-     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
-     * the given indices in the set.
-     *
-     * #### For example:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(0, 2) }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(5, 3, 1) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"`[`[`][kotlin.String.cols]`0, 3`[`]`][kotlin.String.cols]` }`
-     *
-     * @throws [IndexOutOfBoundsException] If any index is out of bounds.
-     * @param [firstIndex] The index of the first column to retrieve.
-     * @param [otherIndices] The other indices of the columns to retrieve.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
-     */
-    public operator fun String.get(
-        firstIndex: Int,
-        vararg otherIndices: Int,
-    ): ColumnSet<*> = cols(firstIndex, *otherIndices)
 
     /**
      * ## Cols: Columns by Indices
@@ -3256,17 +3088,13 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(0, 2) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[cols][SingleColumn.cols]`(5, 4) }`
-     *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][SingleColumn.cols]`0, 3`[`]`][SingleColumn.cols]` }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`0, 3`[`]`][KProperty.cols]` }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`(5, 4) }`
      *
      * @throws [IndexOutOfBoundsException] If any index is out of bounds.
      * @param [firstIndex] The index of the first column to retrieve.
@@ -3289,63 +3117,23 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(0, 2) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(5, 4) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`0, 3`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`0, 3`[`]`][kotlin.reflect.KProperty.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(5, 4) }`
      *
      * @throws [IndexOutOfBoundsException] If any index is out of bounds.
      * @param [firstIndex] The index of the first column to retrieve.
      * @param [otherIndices] The other indices of the columns to retrieve.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
-    public fun KProperty<DataRow<*>>.cols(
+    public fun KProperty<*>.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
     ): ColumnSet<*> = columnGroup(this).cols(firstIndex, *otherIndices)
-
-    /** ## Cols: Columns by Indices
-     *
-     * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
-     * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
-     *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the columns found at the
-     * given indices inside.
-     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
-     * the given indices in the set.
-     *
-     * #### For example:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(0, 2) }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(5, 4) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`0, 3`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`0, 3`[`]`][kotlin.reflect.KProperty.cols]` }`
-     *
-     * @throws [IndexOutOfBoundsException] If any index is out of bounds.
-     * @param [firstIndex] The index of the first column to retrieve.
-     * @param [otherIndices] The other indices of the columns to retrieve.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
-     */
-    public operator fun KProperty<DataRow<*>>.get(
-        firstIndex: Int,
-        vararg otherIndices: Int,
-    ): ColumnSet<*> = cols(firstIndex, *otherIndices)
 
     /**
      * ## Cols: Columns by Indices
@@ -3362,15 +3150,13 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(0, 2) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[col][ColumnPath.cols]`(0, 1) }`
-     *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"]`[`[`][ColumnPath.cols]`5, 6`[`]`][ColumnPath.cols]` }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[cols][ColumnPath.cols]`(0, 1) }`
      *
      * @throws [IndexOutOfBoundsException] If any index is out of bounds.
      * @param [firstIndex] The index of the first column to retrieve.
@@ -3393,15 +3179,13 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(0, 2) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[col][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`(0, 1) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`5, 6`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`(0, 1) }`
      *
      * @throws [IndexOutOfBoundsException] If any index is out of bounds.
      * @param [firstIndex] The index of the first column to retrieve.
@@ -3412,40 +3196,6 @@ public interface ColsColumnsSelectionDsl {
         firstIndex: Int,
         vararg otherIndices: Int,
     ): ColumnSet<*> = columnGroup(this).cols(firstIndex, *otherIndices)
-
-    /** ## Cols: Columns by Indices
-     *
-     * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
-     * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
-     *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the columns found at the
-     * given indices inside.
-     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
-     * the given indices in the set.
-     *
-     * #### For example:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(0, 2) }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[col][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`(0, 1) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`5, 6`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
-     *
-     * @throws [IndexOutOfBoundsException] If any index is out of bounds.
-     * @param [firstIndex] The index of the first column to retrieve.
-     * @param [otherIndices] The other indices of the columns to retrieve.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
-     */
-    public operator fun ColumnPath.get(
-        firstIndex: Int,
-        vararg otherIndices: Int,
-    ): ColumnSet<*> = cols(firstIndex, *otherIndices)
 
     // endregion
 
@@ -3466,16 +3216,16 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
-     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][ColumnSet.cols]` }`
+     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][ColumnSet.cols]` }`
      *
-     * `df.`[select][DataFrame.select]` { "myColGroup".`[col][String.cols]`(0`[`..`][Int.rangeTo]`2) }`
+     * `df.`[select][DataFrame.select]` { "myColGroup".`[cols][String.cols]`(0`[`..`][Int.rangeTo]`2) }`
      *
      * #### Examples for this overload:
      *
      * {@includeArg [CommonColsRangeDocs.ExampleArg]}
      *
-     * @throws [IndexOutOfBoundsException] if any of the indices in the [range\] are out of bounds.
-     * @throws [IllegalArgumentException] if the [range\] is empty.
+     * @throws [IndexOutOfBoundsException\] if any of the indices in the [range\] are out of bounds.
+     * @throws [IllegalArgumentException\] if the [range\] is empty.
      * @param [range\] The range of indices to retrieve in the form of an [IntRange].
      * @return A [ColumnSet] containing the columns found at the given indices.
      */
@@ -3500,9 +3250,9 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[col][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[cols][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
      *
      * #### Examples for this overload:
      *
@@ -3531,9 +3281,9 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[col][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[cols][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
      *
      * #### Examples for this overload:
      *
@@ -3563,9 +3313,9 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[col][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[cols][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
      *
      * #### Examples for this overload:
      *
@@ -3595,15 +3345,13 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[col][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[cols][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
      *
      * #### Examples for this overload:
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(1`[..][Int.rangeTo]`3) }`
-     *
-     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`0`[..][Int.rangeTo]`5`[`]`][ColumnsSelectionDsl.cols]` }`
      *
      * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
      * @throws [IllegalArgumentException] if the [range] is empty.
@@ -3626,15 +3374,13 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[col][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[cols][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
      *
      * #### Examples for this overload:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1`[..][Int.rangeTo]`3) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`0`[..][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
      * @throws [IllegalArgumentException] if the [range] is empty.
@@ -3642,37 +3388,6 @@ public interface ColsColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
     public fun ColumnsSelectionDsl<*>.cols(range: IntRange): ColumnSet<*> = this.asSingleColumn().colsInternal(range)
-
-    /** ## Cols: Columns by Index Range
-     *
-     * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
-     * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
-     *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the columns found at the
-     * given indices inside.
-     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
-     * the given indices in the set.
-     *
-     * #### For example:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[col][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1`[..][Int.rangeTo]`3) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`0`[..][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
-     *
-     * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
-     * @throws [IllegalArgumentException] if the [range] is empty.
-     * @param [range] The range of indices to retrieve in the form of an [IntRange].
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
-     */
-    public operator fun ColumnsSelectionDsl<*>.get(range: IntRange): ColumnSet<*> = cols(range)
 
     /**
      * ## Cols: Columns by Index Range
@@ -3689,17 +3404,13 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[col][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[cols][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
      *
      * #### Examples for this overload:
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(1`[..][Int.rangeTo]`3) }`
-     *
-     * `// NOTE: There's a `[ColumnGroup.get][ColumnGroup.get]` overload that prevents this from working as expected here:`
-     *
-     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`5`[..][Int.rangeTo]`6`[`]`][SingleColumn.cols]` }`
      *
      * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
      * @throws [IllegalArgumentException] if the [range] is empty.
@@ -3722,17 +3433,13 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[col][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[cols][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
      *
      * #### Examples for this overload:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[..][Int.rangeTo]`3) }`
-     *
-     * `// NOTE: There's a `[ColumnGroup.get][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup.get]` overload that prevents this from working as expected here:`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`5`[..][Int.rangeTo]`6`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
      * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
      * @throws [IllegalArgumentException] if the [range] is empty.
@@ -3742,7 +3449,6 @@ public interface ColsColumnsSelectionDsl {
     public fun SingleColumn<DataRow<*>>.cols(range: IntRange): ColumnSet<*> = ensureIsColGroup().colsInternal(range)
 
     /**
-     *
      * ## Cols: Columns by Index Range
      *
      * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
@@ -3757,49 +3463,13 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[col][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[..][Int.rangeTo]`3) }`
-     *
-     * `// NOTE: There's a `[ColumnGroup.get][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup.get]` overload that prevents this from working as expected here:`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`5`[..][Int.rangeTo]`6`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
-     *
-     * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
-     * @throws [IllegalArgumentException] if the [range] is empty.
-     * @param [range] The range of indices to retrieve in the form of an [IntRange].
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
-     */
-    public operator fun SingleColumn<DataRow<*>>.get(range: IntRange): ColumnSet<*> = cols(range)
-
-    /**
-     * ## Cols: Columns by Index Range
-     *
-     * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
-     * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
-     *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the columns found at the
-     * given indices inside.
-     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
-     * the given indices in the set.
-     *
-     * #### For example:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[col][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[cols][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "myColGroup".`[cols][String.cols]`(1`[..][Int.rangeTo]`3) }`
-     *
-     * `df.`[select][DataFrame.select]` { "myColGroup"`[`[`][String.cols]`0`[..][Int.rangeTo]`5`[`]`][String.cols]` }`
+     * `df.`[select][DataFrame.select]` { "myColGroup".`[cols][String.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
      * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
      * @throws [IllegalArgumentException] if the [range] is empty.
@@ -3822,15 +3492,13 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[col][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[cols][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[cols][kotlin.String.cols]`(1`[..][Int.rangeTo]`3) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup"`[`[`][kotlin.String.cols]`0`[..][Int.rangeTo]`5`[`]`][kotlin.String.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[cols][kotlin.String.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
      * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
      * @throws [IllegalArgumentException] if the [range] is empty.
@@ -3838,37 +3506,6 @@ public interface ColsColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
     public fun String.cols(range: IntRange): ColumnSet<*> = columnGroup(this).cols(range)
-
-    /** ## Cols: Columns by Index Range
-     *
-     * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
-     * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
-     *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the columns found at the
-     * given indices inside.
-     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
-     * the given indices in the set.
-     *
-     * #### For example:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[col][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[cols][kotlin.String.cols]`(1`[..][Int.rangeTo]`3) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup"`[`[`][kotlin.String.cols]`0`[..][Int.rangeTo]`5`[`]`][kotlin.String.cols]` }`
-     *
-     * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
-     * @throws [IllegalArgumentException] if the [range] is empty.
-     * @param [range] The range of indices to retrieve in the form of an [IntRange].
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
-     */
-    public operator fun String.get(range: IntRange): ColumnSet<*> = cols(range)
 
     /**
      * ## Cols: Columns by Index Range
@@ -3885,17 +3522,14 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[col][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[cols][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[cols][SingleColumn.cols]`(1`[..][Int.rangeTo]`3) }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][SingleColumn.cols]`0`[..][Int.rangeTo]`5`[`]`][SingleColumn.cols]` }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`0`[..][Int.rangeTo]`5`[`]`][KProperty.cols]` }`
      *
      * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
      * @throws [IllegalArgumentException] if the [range] is empty.
@@ -3918,57 +3552,20 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[col][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[cols][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[..][Int.rangeTo]`3) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`0`[..][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`0`[..][Int.rangeTo]`5`[`]`][kotlin.reflect.KProperty.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
      * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
      * @throws [IllegalArgumentException] if the [range] is empty.
      * @param [range] The range of indices to retrieve in the form of an [IntRange].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
-    public fun KProperty<DataRow<*>>.cols(range: IntRange): ColumnSet<*> = columnGroup(this).cols(range)
-
-    /** ## Cols: Columns by Index Range
-     *
-     * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
-     * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
-     *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the columns found at the
-     * given indices inside.
-     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
-     * the given indices in the set.
-     *
-     * #### For example:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[col][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[..][Int.rangeTo]`3) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup)`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`0`[..][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`0`[..][Int.rangeTo]`5`[`]`][kotlin.reflect.KProperty.cols]` }`
-     *
-     * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
-     * @throws [IllegalArgumentException] if the [range] is empty.
-     * @param [range] The range of indices to retrieve in the form of an [IntRange].
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
-     */
-    public operator fun KProperty<DataRow<*>>.get(range: IntRange): ColumnSet<*> = cols(range)
+    public fun KProperty<*>.cols(range: IntRange): ColumnSet<*> = columnGroup(this).cols(range)
 
     /**
      * ## Cols: Columns by Index Range
@@ -3985,15 +3582,13 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[col][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[cols][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[col][ColumnPath.cols]`(0`[..][Int.rangeTo]`1) }`
-     *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"]`[`[`][ColumnPath.cols]`0`[..][Int.rangeTo]`5`[`]`][ColumnPath.cols]` }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[cols][ColumnPath.cols]`(0`[..][Int.rangeTo]`1) }`
      *
      * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
      * @throws [IllegalArgumentException] if the [range] is empty.
@@ -4016,15 +3611,13 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[col][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[cols][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[col][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`(0`[..][Int.rangeTo]`1) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`0`[..][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`(0`[..][Int.rangeTo]`1) }`
      *
      * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
      * @throws [IllegalArgumentException] if the [range] is empty.
@@ -4032,37 +3625,6 @@ public interface ColsColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
     public fun ColumnPath.cols(range: IntRange): ColumnSet<*> = columnGroup(this).cols(range)
-
-    /** ## Cols: Columns by Index Range
-     *
-     * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
-     * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
-     *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the columns found at the
-     * given indices inside.
-     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
-     * the given indices in the set.
-     *
-     * #### For example:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[col][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[col][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`(0`[..][Int.rangeTo]`1) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`0`[..][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
-     *
-     * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
-     * @throws [IllegalArgumentException] if the [range] is empty.
-     * @param [range] The range of indices to retrieve in the form of an [IntRange].
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
-     */
-    public operator fun ColumnPath.get(range: IntRange): ColumnSet<*> = cols(range)
 
     /**
      * ## Columns by Index Range from List of Columns

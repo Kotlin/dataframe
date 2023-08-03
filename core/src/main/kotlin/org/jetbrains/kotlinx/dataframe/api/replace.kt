@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.get
 import org.jetbrains.kotlinx.dataframe.impl.api.ColumnToInsert
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
@@ -60,6 +61,7 @@ public fun <T, C> ReplaceClause<T, C>.with(newColumns: List<AnyCol>): DataFrame<
 public fun <T, C> ReplaceClause<T, C>.with(transform: ColumnsContainer<T>.(DataColumn<C>) -> AnyBaseCol): DataFrame<T> {
     val removeResult = df.removeImpl(columns = columns)
     val toInsert = removeResult.removedColumns.map {
+        @Suppress("UNCHECKED_CAST")
         val newCol = transform(df, it.data.column as DataColumn<C>)
         ColumnToInsert(it.pathFromRoot().dropLast(1) + newCol.name, newCol, it)
     }
