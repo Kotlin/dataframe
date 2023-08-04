@@ -167,7 +167,6 @@ class DataSchemaGenerator(
             OpenApi(),
         )
 
-
         if (importStatement.isJdbc) {
             val url = importStatement.dataSource.pathRepresentation
             val connection = DriverManager.getConnection(url)
@@ -179,7 +178,7 @@ class DataSchemaGenerator(
 
                 // DataFrameSchema.createEmptyDataFrame() createEmptyColumn
 
-                val additionalImports: List<String> =  listOf(
+                val additionalImports: List<String> = listOf(
                     //"import org.jetbrains.kotlinx.dataframe.DataFrame",
                     //"import org.jetbrains.kotlinx.dataframe.api.cast"
                 )

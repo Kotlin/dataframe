@@ -8,6 +8,7 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.CodeGenerationReadResult
@@ -16,16 +17,11 @@ import org.jetbrains.kotlinx.dataframe.impl.codeGen.from
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.toStandaloneSnippet
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlCodeGenReader
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlDfReader
-import org.jetbrains.kotlinx.dataframe.io.ArrowFeather
-import org.jetbrains.kotlinx.dataframe.io.CSV
-import org.jetbrains.kotlinx.dataframe.io.Excel
-import org.jetbrains.kotlinx.dataframe.io.JSON
-import org.jetbrains.kotlinx.dataframe.io.OpenApi
-import org.jetbrains.kotlinx.dataframe.io.TSV
-import org.jetbrains.kotlinx.dataframe.io.isURL
+import org.jetbrains.kotlinx.dataframe.io.*
 import java.io.File
 import java.net.URL
 import java.nio.file.Paths
+import java.sql.DriverManager
 
 abstract class GenerateDataSchemaTask : DefaultTask() {
 
@@ -74,6 +70,42 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
         val url = urlOf(data.get())
         val schemaFile = dataSchema.get()
         val escapedPackageName = escapePackageName(packageName.get())
+
+        if (importStatement.isJdbc) {
+            val url = importStatement.dataSource.pathRepresentation
+            val connection = DriverManager.getConnection(url)
+            connection.use {
+                val schema = DataFrame.readSchemaFromDB(connection, "", importStatement.name)
+                // TODO: check if schema exists and add a test here
+
+                val codeGenerator = CodeGenerator.create(useFqNames = false)
+
+                // DataFrameSchema.createEmptyDataFrame() createEmptyColumn
+
+                val additionalImports: List<String> = listOf(
+                    //"import org.jetbrains.kotlinx.dataframe.DataFrame",
+                    //"import org.jetbrains.kotlinx.dataframe.api.cast"
+                )
+
+                val codeGenResult = codeGenerator.generate(
+                    schema = schema,
+                    name = name,
+                    fields = true,
+                    extensionProperties = false,
+                    isOpen = true,
+                    visibility = importStatement.visibility,
+                    knownMarkers = emptyList(),
+                    readDfMethod = null,
+                    fieldNameNormalizer = NameNormalizer.from(importStatement.normalizationDelimiters.toSet())
+                )
+                val code = codeGenResult.toStandaloneSnippet(packageName, additionalImports)
+                schemaFile.bufferedWriter().use {
+                    it.write(code)
+                }
+                return
+            }
+        }
+
 
         val formats = listOf(
             CSV(delimiter = csvOptions.delimiter),
