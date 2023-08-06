@@ -71,11 +71,11 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
         val schemaFile = dataSchema.get()
         val escapedPackageName = escapePackageName(packageName.get())
 
-        if (importStatement.isJdbc) {
-            val url = importStatement.dataSource.pathRepresentation
-            val connection = DriverManager.getConnection(url)
+        val rawUrl = data.get().toString()
+        if (rawUrl.startsWith("jdbc")) {
+            val connection = DriverManager.getConnection(rawUrl, jdbcOptions.user, jdbcOptions.password)
             connection.use {
-                val schema = DataFrame.getSchemaForSqlTable(connection, "", importStatement.name)
+                val schema = DataFrame.getSchemaForSqlTable(connection, "", interfaceName.get())
                 // TODO: check if schema exists and add a test here
 
                 val codeGenerator = CodeGenerator.create(useFqNames = false)
@@ -87,21 +87,24 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                     //"import org.jetbrains.kotlinx.dataframe.api.cast"
                 )
 
+                val delimiters = delimiters.get()
                 val codeGenResult = codeGenerator.generate(
                     schema = schema,
-                    name = name,
+                    name = interfaceName.get(),
                     fields = true,
                     extensionProperties = false,
                     isOpen = true,
-                    visibility = importStatement.visibility,
-                    knownMarkers = emptyList(),
+                    visibility = when (schemaVisibility.get()) {
+                        DataSchemaVisibility.INTERNAL -> MarkerVisibility.INTERNAL
+                        DataSchemaVisibility.IMPLICIT_PUBLIC -> MarkerVisibility.IMPLICIT_PUBLIC
+                        DataSchemaVisibility.EXPLICIT_PUBLIC -> MarkerVisibility.EXPLICIT_PUBLIC
+                        else -> MarkerVisibility.IMPLICIT_PUBLIC
+                    },
                     readDfMethod = null,
-                    fieldNameNormalizer = NameNormalizer.from(importStatement.normalizationDelimiters.toSet())
+                    fieldNameNormalizer = NameNormalizer.from(delimiters),
                 )
-                val code = codeGenResult.toStandaloneSnippet(packageName, additionalImports)
-                schemaFile.bufferedWriter().use {
-                    it.write(code)
-                }
+
+                schemaFile.writeText(codeGenResult.toStandaloneSnippet(escapedPackageName, additionalImports))
                 return
             }
         }
