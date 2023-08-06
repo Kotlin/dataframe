@@ -75,7 +75,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
             val url = importStatement.dataSource.pathRepresentation
             val connection = DriverManager.getConnection(url)
             connection.use {
-                val schema = DataFrame.readSchemaFromDB(connection, "", importStatement.name)
+                val schema = DataFrame.getSchemaForSqlTable(connection, "", importStatement.name)
                 // TODO: check if schema exists and add a test here
 
                 val codeGenerator = CodeGenerator.create(useFqNames = false)

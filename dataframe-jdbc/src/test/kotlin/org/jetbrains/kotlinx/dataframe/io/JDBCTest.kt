@@ -113,7 +113,7 @@ class JDBCTest {
         // for gradle or as classes under the hood in KNB
 
         DriverManager.getConnection(URL, props).use { connection ->
-            val df = DataFrame.readFromDB(connection, "imdb", "actors").cast<ActorKDF>()
+            val df = DataFrame.readSqlTable(connection, "imdb", "actors").cast<ActorKDF>()
             df.print()
         }
     }
@@ -129,7 +129,7 @@ class JDBCTest {
             GROUP BY s.customerId, c.name
         """.trimIndent()
 
-            val df = DataFrame.readFromDBViaSQLQuery(connection,  sqlQuery = sqlQuery).cast<CustomerSales>()
+            val df = DataFrame.readSqlQuery(connection,  sqlQuery = sqlQuery).cast<CustomerSales>()
             df.print()
             assertEquals(2, df.rowsCount())
         }
@@ -138,7 +138,7 @@ class JDBCTest {
     @Test
     fun `basic test for reading one table` () {
         connection.use { connection ->
-            val df = DataFrame.readFromDB(connection, "dsdfs", "Customer").cast<Customer>()
+            val df = DataFrame.readSqlTable(connection, "dsdfs", "Customer").cast<Customer>()
             df.print()
             assertEquals(3, df.rowsCount())
         }
@@ -147,7 +147,7 @@ class JDBCTest {
     @Test
     fun `try to read from not existing table` () {
         connection.use { connection ->
-            val df = DataFrame.readFromDB(connection, "dsdfs", "WrongTableName").cast<Customer>()
+            val df = DataFrame.readSqlTable(connection, "dsdfs", "WrongTableName").cast<Customer>()
             df.print()
             assertEquals(3, df.rowsCount())
         }
@@ -170,7 +170,7 @@ class JDBCTest {
         // for gradle or as classes under the hood in KNB
 
         DriverManager.getConnection(URL, props).use { connection ->
-            val df = DataFrame.readFromDBViaSQLQuery(connection, sqlQuery = sqlQuery).cast<RankedMoviesWithGenres>()
+            val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<RankedMoviesWithGenres>()
             //df.filter { year > 2000 }.print()
             df.print()
         }

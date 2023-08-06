@@ -9,13 +9,10 @@ import com.google.devtools.ksp.symbol.KSFile
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
-import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchemaVisibility
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.JdbcOptions
 import org.jetbrains.kotlinx.dataframe.annotations.JsonOptions
-import org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl
-import org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
@@ -28,15 +25,12 @@ import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlDfReader
 import org.jetbrains.kotlinx.dataframe.io.ArrowFeather
 import org.jetbrains.kotlinx.dataframe.io.CSV
 import org.jetbrains.kotlinx.dataframe.io.Excel
-import org.jetbrains.kotlinx.dataframe.io.JDBC
 import org.jetbrains.kotlinx.dataframe.io.JSON
 import org.jetbrains.kotlinx.dataframe.io.OpenApi
 import org.jetbrains.kotlinx.dataframe.io.TSV
-import org.jetbrains.kotlinx.dataframe.io.convertDataRowsWithOpenApi
 import org.jetbrains.kotlinx.dataframe.io.databaseCodeGenReader
 import org.jetbrains.kotlinx.dataframe.io.isURL
-import org.jetbrains.kotlinx.dataframe.io.readSchemaFromDB
-import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
 import java.io.File
 import java.net.MalformedURLException
 import java.net.URL
@@ -171,7 +165,7 @@ class DataSchemaGenerator(
             val url = importStatement.dataSource.pathRepresentation
             val connection = DriverManager.getConnection(url)
             connection.use {
-                val schema = DataFrame.readSchemaFromDB(connection, "", importStatement.name)
+                val schema = DataFrame.getSchemaForSqlTable(connection, "", importStatement.name)
                 // TODO: check if schema exists and add a test here
 
                 val codeGenerator = CodeGenerator.create(useFqNames = false)

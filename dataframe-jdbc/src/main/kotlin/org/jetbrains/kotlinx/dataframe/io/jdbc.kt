@@ -20,9 +20,6 @@ import kotlin.reflect.typeOf
 
 private val logger = KotlinLogging.logger {}
 
-
-//TODO: what if read the whole database schema and generate all the classes and extensions like in the open API
-
 // JDBC is not a file format, we need a hierarchy here
 public class JDBC : SupportedCodeGenerationFormat, SupportedDataFrameFormat {
     public override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readJDBC(stream)
@@ -67,11 +64,11 @@ internal class DefaultReadJdbcMethod(path: String?) : AbstractDefaultReadMethod(
 
 private const val readJDBC = "readJDBC"
 
-public data class JDBCColumn(val name: String, val type: String, val size: Int) {
+public data class JdbcColumn(val name: String, val type: String, val size: Int) {
     public fun toColumnSchema(): ColumnSchema {
         return when (type) {
             "INT", "INTEGER" -> ColumnSchema.Value(typeOf<Int>())
-            "VARCHAR", "CHARACTER VARYING"  -> ColumnSchema.Value(typeOf<String>())
+            "VARCHAR", "CHARACTER VARYING" -> ColumnSchema.Value(typeOf<String>())
             "FLOAT", "REAL", "NUMERIC" -> ColumnSchema.Value(typeOf<Float>())
             "MEDIUMTEXT" -> ColumnSchema.Value(typeOf<String>())
             else -> ColumnSchema.Value(typeOf<Any>())
@@ -79,46 +76,40 @@ public data class JDBCColumn(val name: String, val type: String, val size: Int) 
     }
 }
 
-public fun DataFrame.Companion.readFromDBViaSQLQuery(connection: Connection, sqlQuery: String): AnyFrame {
+public fun DataFrame.Companion.readResultSet(resultSet: ResultSet): AnyFrame {
+    val tableColumns = getTableColumns(resultSet)
+    val data = fetchAndConvertDataFromResultSet(tableColumns, resultSet)
+    return data.toDataFrame()
+}
+
+public fun DataFrame.Companion.readAllTables(connection: Connection): List<AnyFrame> {
+    val metaData = connection.metaData
+
+    val tables = metaData.getTables(null, null, "%", null)
+
+    val dataFrames = mutableListOf<AnyFrame>()
+
+    while (tables.next()) {
+        val tableName = tables.getString("TABLE_NAME")
+        val dataFrame = readSqlTable(connection, "",tableName)
+        dataFrames += dataFrame
+    }
+
+    return dataFrames
+}
+
+public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: String): AnyFrame {
     connection.createStatement().use { st ->
         st.executeQuery(sqlQuery).use { rs ->
-            val metaData: ResultSetMetaData = rs.metaData
-            val numberOfColumns: Int = metaData.columnCount
-
-            val tableColumns = mutableMapOf<String, JDBCColumn>()
-
-            for (i in 1 until numberOfColumns + 1) {
-                val name = metaData.getColumnName(i)
-                val size = metaData.getColumnDisplaySize(i)
-                val type = metaData.getColumnTypeName(i)
-
-                tableColumns += Pair(name, JDBCColumn(name, type, size))
-            }
-
-            // map<columnName; columndata>
-            val data = mutableMapOf<String, MutableList<Any?>>()
-            // init data
-            tableColumns.forEach { (columnName, _) ->
-                data[columnName] = mutableListOf()
-            }
-
-            var counter = 0
-            while (rs.next()) {
-                tableColumns.forEach { (columnName, jdbcColumn) ->
-                    data[columnName] = (data[columnName]!! + getData(rs, jdbcColumn)).toMutableList()
-                }
-                counter++
-                if (counter % 1000 == 0) println("Loaded yet 1000, percentage = $counter")
-            }
-
+            val tableColumns = getTableColumns(rs)
+            val data = fetchAndConvertDataFromResultSet(tableColumns, rs)
             return data.toDataFrame()
         }
     }
 }
 
-public fun DataFrame.Companion.readFromDB(connection: Connection, catalogName: String, tableName: String): AnyFrame {
-    val preparedQuery = ("SELECT * FROM $tableName "
-        + "LIMIT 1000")
+public fun DataFrame.Companion.readSqlTable(connection: Connection, catalogName: String, tableName: String): AnyFrame {
+    val preparedQuery = ("SELECT * FROM $tableName")
 
     val url = connection.metaData.url
     val dbType = extractDBTypeFromURL(url)
@@ -127,71 +118,128 @@ public fun DataFrame.Companion.readFromDB(connection: Connection, catalogName: S
         logger.debug { "Connection with url:${connection.metaData.url} is established successfully." }
         val tableColumns = getTableColumns(connection, tableName)
 
-        // map<columnName; columndata>
-        val data = mutableMapOf<String, MutableList<Any?>>()
-        // init data
-        tableColumns.forEach { (columnName, _) ->
-            data[columnName] = mutableListOf()
-        }
-
         // TODO: dynamic SQL names - no protection from SQL injection
         // What if just try to match it before to the known SQL table names and if not to reject
         // What if check the name on the SQL commands and ;; commas to reject and throw exception
 
-
         // LIMIT 1000 because is very slow to copy into dataframe the whole table (do we need a fetch here? or limit)
         // or progress bar
-        var counter = 0
         // ask the COUNT(*) for full table
         st.executeQuery(
             preparedQuery // TODO: work with limits correctly
+            //
         ).use { rs ->
-            logger.debug {  } // TODO: log the executed query
-            while (rs.next()) {
-                tableColumns.forEach { (columnName, jdbcColumn) ->
-                    data[columnName] = (data[columnName]!! + getData(rs, jdbcColumn)).toMutableList()
-                }
-                counter++
-                if (counter % 1000 == 0) logger.debug { "Loaded yet 1000, percentage = $counter" }
-            }
+            val data = fetchAndConvertDataFromResultSet(tableColumns, rs)
+            return data.toDataFrame()
         }
-
-        return data.toDataFrame()
     }
 }
 
-public fun DataFrame.Companion.readSchemaFromDB(connection: Connection, catalogName: String, tableName: String): DataFrameSchema {
-    connection.createStatement().use { st ->
+public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet): DataFrameSchema {
+    val tableColumns = getTableColumns(resultSet)
+    return buildSchemaByTableColumns(tableColumns)
+}
+
+public fun DataFrame.Companion.getSchemaForAllTables(connection: Connection): List<DataFrameSchema> {
+    val metaData = connection.metaData
+
+    val tables = metaData.getTables(null, null, "%", null)
+
+    val dataFrameSchemas = mutableListOf<DataFrameSchema>()
+
+    while (tables.next()) {
+        val tableName = tables.getString("TABLE_NAME")
+        val dataFrameSchema = getSchemaForSqlTable(connection, "",tableName)
+        dataFrameSchemas += dataFrameSchema
+    }
+
+    return dataFrameSchemas
+}
+
+public fun DataFrame.Companion.getSchemaForSqlTable(
+    connection: Connection,
+    catalogName: String,
+    tableName: String
+): DataFrameSchema {
+    connection.createStatement().use {
         logger.debug { "Connection with url:${connection.metaData.url} is established successfully." }
 
         val tableColumns = getTableColumns(connection, tableName)
-        val schemaColumns = tableColumns.map {
-            Pair(it.key, it.value.toColumnSchema())
-        }.toMap()
 
-        val dataSchema = DataFrameSchemaImpl(
-            columns = schemaColumns
-        )
-
-        return dataSchema
+        return buildSchemaByTableColumns(tableColumns)
     }
 }
 
-private fun getTableColumns(
-    connection: Connection,
-    tableName: String
-): MutableMap<String, JDBCColumn> {
+public fun DataFrame.Companion.getSchemaForSqlQuery(connection: Connection, sqlQuery: String): DataFrameSchema {
+    connection.createStatement().use { st ->
+        st.executeQuery(sqlQuery).use { rs ->
+            val tableColumns = getTableColumns(rs)
+            return buildSchemaByTableColumns(tableColumns)
+        }
+    }
+}
+
+private fun buildSchemaByTableColumns(tableColumns: MutableMap<String, JdbcColumn>): DataFrameSchema {
+    val schemaColumns = tableColumns.map {
+        Pair(it.key, it.value.toColumnSchema())
+    }.toMap()
+
+    return DataFrameSchemaImpl(
+        columns = schemaColumns
+    )
+}
+
+private fun getTableColumns(rs: ResultSet): MutableMap<String, JdbcColumn> {
+    val metaData: ResultSetMetaData = rs.metaData
+    val numberOfColumns: Int = metaData.columnCount
+
+    val tableColumns = mutableMapOf<String, JdbcColumn>()
+
+    for (i in 1 until numberOfColumns + 1) {
+        val name = metaData.getColumnName(i)
+        val size = metaData.getColumnDisplaySize(i)
+        val type = metaData.getColumnTypeName(i)
+
+        tableColumns += Pair(name, JdbcColumn(name, type, size))
+    }
+    return tableColumns
+}
+
+ private fun getTableColumns(connection: Connection, tableName: String): MutableMap<String, JdbcColumn> {
     val dbMetaData: DatabaseMetaData = connection.metaData
     val columns: ResultSet = dbMetaData.getColumns(null, null, tableName, null)
-    val tableColumns = mutableMapOf<String, JDBCColumn>()
+    val tableColumns = mutableMapOf<String, JdbcColumn>()
 
     while (columns.next()) {
         val name = columns.getString("COLUMN_NAME")
         val type = columns.getString("TYPE_NAME")
         val size = columns.getInt("COLUMN_SIZE")
-        tableColumns += Pair(name, JDBCColumn(name, type, size))
+        tableColumns += Pair(name, JdbcColumn(name, type, size))
     }
     return tableColumns
+}
+
+private fun fetchAndConvertDataFromResultSet(
+    tableColumns: MutableMap<String, JdbcColumn>,
+    rs: ResultSet
+): MutableMap<String, MutableList<Any?>> {
+    // map<columnName; columndata>
+    val data = mutableMapOf<String, MutableList<Any?>>()
+
+    // init data
+    tableColumns.forEach { (columnName, _) ->
+        data[columnName] = mutableListOf()
+    }
+
+    var counter = 0
+    while (rs.next()) {
+        tableColumns.forEach { (columnName, jdbcColumn) ->
+            data[columnName] = (data[columnName]!! + getData(rs, jdbcColumn)).toMutableList()
+        }
+        counter++
+        if (counter % 1000 == 0) println("Loaded yet 1000, percentage = $counter")
+    }
+    return data
 }
 
 public fun extractDBTypeFromURL(url: String?) {
@@ -220,10 +268,10 @@ public enum class DBType(public val jdbcName: String) {
 // TODO: parser https://docs.oracle.com/javase/8/docs/api/java/sql/JDBCType.html
 
 // TODO: different types for different databases
-private fun getData(rs: ResultSet, jdbcColumn: JDBCColumn): Any? {
+private fun getData(rs: ResultSet, jdbcColumn: JdbcColumn): Any? {
     return when (jdbcColumn.type) {
         "INT", "INTEGER" -> rs.getInt(jdbcColumn.name)
-        "VARCHAR", "CHARACTER VARYING"  -> rs.getString(jdbcColumn.name)
+        "VARCHAR", "CHARACTER VARYING" -> rs.getString(jdbcColumn.name)
         "FLOAT", "REAL", "NUMERIC" -> rs.getFloat(jdbcColumn.name)
         "MEDIUMTEXT" -> rs.getString(jdbcColumn.name)
         else -> null
