@@ -135,6 +135,9 @@ class DataFrameReadTest {
 
             val dfSale = DataFrame.readSqlTable(connection, "", "Sale")
             dfSale.columnNames() shouldBe listOf("id", "customerId", "amount")
+
+            // TODO: refactor test data population
+            // TODO: cover all the api methods here
         }
     }
 }
