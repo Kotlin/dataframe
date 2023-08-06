@@ -64,21 +64,20 @@ internal class DefaultReadJdbcMethod(path: String?) : AbstractDefaultReadMethod(
 
 private const val readJDBC = "readJDBC"
 
-public data class JdbcColumn(val name: String, val type: String, val size: Int) {
-    public fun toColumnSchema(): ColumnSchema {
-        return when (type) {
-            "INT", "INTEGER" -> ColumnSchema.Value(typeOf<Int>())
-            "VARCHAR", "CHARACTER VARYING" -> ColumnSchema.Value(typeOf<String>())
-            "FLOAT", "REAL", "NUMERIC" -> ColumnSchema.Value(typeOf<Float>())
-            "MEDIUMTEXT" -> ColumnSchema.Value(typeOf<String>())
-            else -> ColumnSchema.Value(typeOf<Any>())
-        }
-    }
+public data class JdbcColumn(val name: String, val type: String, val size: Int)
+
+public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, dbType: DbType): AnyFrame {
+    val tableColumns = getTableColumns(resultSet)
+    val data = fetchAndConvertDataFromResultSet(tableColumns, resultSet, dbType)
+    return data.toDataFrame()
 }
 
-public fun DataFrame.Companion.readResultSet(resultSet: ResultSet): AnyFrame {
+public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, connection: Connection): AnyFrame {
+    val url = connection.metaData.url
+    val dbType = extractDBTypeFromURL(url)
+
     val tableColumns = getTableColumns(resultSet)
-    val data = fetchAndConvertDataFromResultSet(tableColumns, resultSet)
+    val data = fetchAndConvertDataFromResultSet(tableColumns, resultSet, dbType)
     return data.toDataFrame()
 }
 
@@ -99,10 +98,13 @@ public fun DataFrame.Companion.readAllTables(connection: Connection): List<AnyFr
 }
 
 public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: String): AnyFrame {
+    val url = connection.metaData.url
+    val dbType = extractDBTypeFromURL(url)
+
     connection.createStatement().use { st ->
         st.executeQuery(sqlQuery).use { rs ->
             val tableColumns = getTableColumns(rs)
-            val data = fetchAndConvertDataFromResultSet(tableColumns, rs)
+            val data = fetchAndConvertDataFromResultSet(tableColumns, rs, dbType)
             return data.toDataFrame()
         }
     }
@@ -115,7 +117,7 @@ public fun DataFrame.Companion.readSqlTable(connection: Connection, catalogName:
     val dbType = extractDBTypeFromURL(url)
 
     connection.createStatement().use { st ->
-        logger.debug { "Connection with url:${connection.metaData.url} is established successfully." }
+        logger.debug { "Connection with url:${url} is established successfully." }
         val tableColumns = getTableColumns(connection, tableName)
 
         // TODO: dynamic SQL names - no protection from SQL injection
@@ -129,15 +131,23 @@ public fun DataFrame.Companion.readSqlTable(connection: Connection, catalogName:
             preparedQuery // TODO: work with limits correctly
             //
         ).use { rs ->
-            val data = fetchAndConvertDataFromResultSet(tableColumns, rs)
+            val data = fetchAndConvertDataFromResultSet(tableColumns, rs, dbType)
             return data.toDataFrame()
         }
     }
 }
 
-public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet): DataFrameSchema {
+public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet, connection: Connection): DataFrameSchema {
+    val url = connection.metaData.url
+    val dbType = extractDBTypeFromURL(url)
+
     val tableColumns = getTableColumns(resultSet)
-    return buildSchemaByTableColumns(tableColumns)
+    return buildSchemaByTableColumns(tableColumns, dbType)
+}
+
+public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet, dbType: DbType): DataFrameSchema {
+    val tableColumns = getTableColumns(resultSet)
+    return buildSchemaByTableColumns(tableColumns, dbType)
 }
 
 public fun DataFrame.Companion.getSchemaForAllTables(connection: Connection): List<DataFrameSchema> {
@@ -161,27 +171,33 @@ public fun DataFrame.Companion.getSchemaForSqlTable(
     catalogName: String,
     tableName: String
 ): DataFrameSchema {
+    val url = connection.metaData.url
+    val dbType = extractDBTypeFromURL(url)
+
     connection.createStatement().use {
         logger.debug { "Connection with url:${connection.metaData.url} is established successfully." }
 
         val tableColumns = getTableColumns(connection, tableName)
 
-        return buildSchemaByTableColumns(tableColumns)
+        return buildSchemaByTableColumns(tableColumns, dbType)
     }
 }
 
 public fun DataFrame.Companion.getSchemaForSqlQuery(connection: Connection, sqlQuery: String): DataFrameSchema {
+    val url = connection.metaData.url
+    val dbType = extractDBTypeFromURL(url)
+
     connection.createStatement().use { st ->
         st.executeQuery(sqlQuery).use { rs ->
             val tableColumns = getTableColumns(rs)
-            return buildSchemaByTableColumns(tableColumns)
+            return buildSchemaByTableColumns(tableColumns, dbType)
         }
     }
 }
 
-private fun buildSchemaByTableColumns(tableColumns: MutableMap<String, JdbcColumn>): DataFrameSchema {
+private fun buildSchemaByTableColumns(tableColumns: MutableMap<String, JdbcColumn>, dbType: DbType): DataFrameSchema {
     val schemaColumns = tableColumns.map {
-        Pair(it.key, it.value.toColumnSchema())
+        Pair(it.key, dbType.toColumnSchema(it.value))
     }.toMap()
 
     return DataFrameSchemaImpl(
@@ -205,7 +221,7 @@ private fun getTableColumns(rs: ResultSet): MutableMap<String, JdbcColumn> {
     return tableColumns
 }
 
- private fun getTableColumns(connection: Connection, tableName: String): MutableMap<String, JdbcColumn> {
+private fun getTableColumns(connection: Connection, tableName: String): MutableMap<String, JdbcColumn> {
     val dbMetaData: DatabaseMetaData = connection.metaData
     val columns: ResultSet = dbMetaData.getColumns(null, null, tableName, null)
     val tableColumns = mutableMapOf<String, JdbcColumn>()
@@ -221,7 +237,8 @@ private fun getTableColumns(rs: ResultSet): MutableMap<String, JdbcColumn> {
 
 private fun fetchAndConvertDataFromResultSet(
     tableColumns: MutableMap<String, JdbcColumn>,
-    rs: ResultSet
+    rs: ResultSet,
+    dbType: DbType
 ): MutableMap<String, MutableList<Any?>> {
     // map<columnName; columndata>
     val data = mutableMapOf<String, MutableList<Any?>>()
@@ -234,7 +251,7 @@ private fun fetchAndConvertDataFromResultSet(
     var counter = 0
     while (rs.next()) {
         tableColumns.forEach { (columnName, jdbcColumn) ->
-            data[columnName] = (data[columnName]!! + getData(rs, jdbcColumn)).toMutableList()
+            data[columnName] = (data[columnName]!! + dbType.convertDataFromResultSet(rs, jdbcColumn)).toMutableList()
         }
         counter++
         if (counter % 1000 == 0) println("Loaded yet 1000, percentage = $counter")
@@ -242,23 +259,90 @@ private fun fetchAndConvertDataFromResultSet(
     return data
 }
 
-public fun extractDBTypeFromURL(url: String?) {
+public fun extractDBTypeFromURL(url: String?): DbType {
     if (url != null) {
-        when {
-            DBType.H2.jdbcName in url -> DBType.H2
-            DBType.MARIADB.jdbcName in url -> DBType.MARIADB
-            DBType.MYSQL.jdbcName in url -> DBType.MYSQL
-            else -> {}
+        return when {
+            H2.jdbcName in url -> H2
+            MariaDb.jdbcName in url -> MariaDb
+            MySql.jdbcName in url -> MySql
+            else -> MariaDb // probably better to add default SQL databases without vendor name
         }
+    } else {
+        throw RuntimeException("Database URL could not be null. The existing value is $url")
     }
 }
 
 // TODO: lools like we need here more then enum, but hierarchy of sealed classes with some fields
 // Basic Type: supported database with mapping of types and jdbcProtocol names
-public enum class DBType(public val jdbcName: String) {
-    H2("h2"),
-    MARIADB("mariadb"),
-    MYSQL("mysql")
+public sealed class DbType(public val jdbcName: String) {
+    public abstract fun convertDataFromResultSet(rs: ResultSet, jdbcColumn: JdbcColumn): Any?
+    public abstract fun toColumnSchema(jdbcColumn: JdbcColumn): ColumnSchema
+}
+
+public object H2 : DbType("h2") {
+    override fun convertDataFromResultSet(rs: ResultSet, jdbcColumn: JdbcColumn): Any? {
+        return when (jdbcColumn.type) {
+            "INTEGER" -> rs.getInt(jdbcColumn.name)
+            "CHARACTER VARYING" -> rs.getString(jdbcColumn.name)
+            "REAL", "NUMERIC" -> rs.getFloat(jdbcColumn.name)
+            "MEDIUMTEXT" -> rs.getString(jdbcColumn.name)
+            else -> null
+        }
+    }
+
+    override fun toColumnSchema(jdbcColumn: JdbcColumn): ColumnSchema {
+        return when (jdbcColumn.type) {
+            "INTEGER" -> ColumnSchema.Value(typeOf<Int>())
+            "CHARACTER VARYING" -> ColumnSchema.Value(typeOf<String>())
+            "REAL", "NUMERIC" -> ColumnSchema.Value(typeOf<Float>())
+            "MEDIUMTEXT" -> ColumnSchema.Value(typeOf<String>())
+            else -> ColumnSchema.Value(typeOf<Any>())
+        }
+    }
+}
+
+public object MariaDb : DbType("mariadb") {
+    override fun convertDataFromResultSet(rs: ResultSet, jdbcColumn: JdbcColumn): Any? {
+        return when (jdbcColumn.type) {
+            "INT" -> rs.getInt(jdbcColumn.name)
+            "VARCHAR" -> rs.getString(jdbcColumn.name)
+            "FLOAT" -> rs.getFloat(jdbcColumn.name)
+            "MEDIUMTEXT" -> rs.getString(jdbcColumn.name)
+            else -> null
+        }
+    }
+
+    override fun toColumnSchema(jdbcColumn: JdbcColumn): ColumnSchema {
+        return when (jdbcColumn.type) {
+            "INTEGER" -> ColumnSchema.Value(typeOf<Int>())
+            "CHARACTER VARYING" -> ColumnSchema.Value(typeOf<String>())
+            "REAL", "NUMERIC" -> ColumnSchema.Value(typeOf<Float>())
+            "MEDIUMTEXT" -> ColumnSchema.Value(typeOf<String>())
+            else -> ColumnSchema.Value(typeOf<Any>())
+        }
+    }
+}
+
+public object MySql : DbType("mysql") {
+    override fun convertDataFromResultSet(rs: ResultSet, jdbcColumn: JdbcColumn): Any? {
+        return when (jdbcColumn.type) {
+            "INT" -> rs.getInt(jdbcColumn.name)
+            "VARCHAR" -> rs.getString(jdbcColumn.name)
+            "FLOAT" -> rs.getFloat(jdbcColumn.name)
+            "MEDIUMTEXT" -> rs.getString(jdbcColumn.name)
+            else -> null
+        }
+    }
+
+    override fun toColumnSchema(jdbcColumn: JdbcColumn): ColumnSchema {
+        return when (jdbcColumn.type) {
+            "INTEGER" -> ColumnSchema.Value(typeOf<Int>())
+            "CHARACTER VARYING" -> ColumnSchema.Value(typeOf<String>())
+            "REAL", "NUMERIC" -> ColumnSchema.Value(typeOf<Float>())
+            "MEDIUMTEXT" -> ColumnSchema.Value(typeOf<String>())
+            else -> ColumnSchema.Value(typeOf<Any>())
+        }
+    }
 }
 
 // TODO: slow solution could be optimized with batches control and fetching
@@ -267,14 +351,4 @@ public enum class DBType(public val jdbcName: String) {
 
 // TODO: parser https://docs.oracle.com/javase/8/docs/api/java/sql/JDBCType.html
 
-// TODO: different types for different databases
-private fun getData(rs: ResultSet, jdbcColumn: JdbcColumn): Any? {
-    return when (jdbcColumn.type) {
-        "INT", "INTEGER" -> rs.getInt(jdbcColumn.name)
-        "VARCHAR", "CHARACTER VARYING" -> rs.getString(jdbcColumn.name)
-        "FLOAT", "REAL", "NUMERIC" -> rs.getFloat(jdbcColumn.name)
-        "MEDIUMTEXT" -> rs.getString(jdbcColumn.name)
-        else -> null
-    }
-}
 
