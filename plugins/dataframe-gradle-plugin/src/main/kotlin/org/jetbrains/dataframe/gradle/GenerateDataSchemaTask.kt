@@ -67,7 +67,6 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
         val csvOptions = csvOptions.get()
         val jsonOptions = jsonOptions.get()
         val jdbcOptions = jdbcOptions.get()
-        val url = urlOf(data.get())
         val schemaFile = dataSchema.get()
         val escapedPackageName = escapePackageName(packageName.get())
 
@@ -107,65 +106,66 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                 schemaFile.writeText(codeGenResult.toStandaloneSnippet(escapedPackageName, additionalImports))
                 return
             }
-        }
+        } else {
+            val url = urlOf(data.get())
 
-
-        val formats = listOf(
-            CSV(delimiter = csvOptions.delimiter),
-            JSON(typeClashTactic = jsonOptions.typeClashTactic, keyValuePaths = jsonOptions.keyValuePaths),
-            Excel(),
-            TSV(),
-            ArrowFeather(),
-            OpenApi(),
-        )
-
-        // first try without creating dataframe
-        when (val codeGenResult = CodeGenerator.urlCodeGenReader(url, interfaceName.get(), formats, false)) {
-            is CodeGenerationReadResult.Success -> {
-                val readDfMethod = codeGenResult.getReadDfMethod(stringOf(data.get()))
-                val code = codeGenResult
-                    .code
-                    .toStandaloneSnippet(escapedPackageName, readDfMethod.additionalImports)
-
-                schemaFile.bufferedWriter().use {
-                    it.write(code)
-                }
-                return
-            }
-
-            is CodeGenerationReadResult.Error ->
-                logger.warn("Error while reading types-only from data at $url: ${codeGenResult.reason}")
-        }
-
-        // on error, try with reading dataframe first
-        val parsedDf = when (val readResult = CodeGenerator.urlDfReader(url, formats)) {
-            is DfReadResult.Error -> throw Exception(
-                "Error while reading dataframe from data at $url",
-                readResult.reason
+            val formats = listOf(
+                CSV(delimiter = csvOptions.delimiter),
+                JSON(typeClashTactic = jsonOptions.typeClashTactic, keyValuePaths = jsonOptions.keyValuePaths),
+                Excel(),
+                TSV(),
+                ArrowFeather(),
+                OpenApi(),
             )
 
-            is DfReadResult.Success -> readResult
-        }
+            // first try without creating dataframe
+            when (val codeGenResult = CodeGenerator.urlCodeGenReader(url, interfaceName.get(), formats, false)) {
+                is CodeGenerationReadResult.Success -> {
+                    val readDfMethod = codeGenResult.getReadDfMethod(stringOf(data.get()))
+                    val code = codeGenResult
+                        .code
+                        .toStandaloneSnippet(escapedPackageName, readDfMethod.additionalImports)
 
-        val codeGenerator = CodeGenerator.create(useFqNames = false)
-        val delimiters = delimiters.get()
-        val readDfMethod = parsedDf.getReadDfMethod(stringOf(data.get()))
-        val codeGenResult = codeGenerator.generate(
-            schema = parsedDf.schema,
-            name = interfaceName.get(),
-            fields = true,
-            extensionProperties = false,
-            isOpen = true,
-            visibility = when (schemaVisibility.get()) {
-                DataSchemaVisibility.INTERNAL -> MarkerVisibility.INTERNAL
-                DataSchemaVisibility.IMPLICIT_PUBLIC -> MarkerVisibility.IMPLICIT_PUBLIC
-                DataSchemaVisibility.EXPLICIT_PUBLIC -> MarkerVisibility.EXPLICIT_PUBLIC
-                else -> MarkerVisibility.IMPLICIT_PUBLIC
-            },
-            readDfMethod = readDfMethod,
-            fieldNameNormalizer = NameNormalizer.from(delimiters),
-        )
-        schemaFile.writeText(codeGenResult.toStandaloneSnippet(escapedPackageName, readDfMethod.additionalImports))
+                    schemaFile.bufferedWriter().use {
+                        it.write(code)
+                    }
+                    return
+                }
+
+                is CodeGenerationReadResult.Error ->
+                    logger.warn("Error while reading types-only from data at $url: ${codeGenResult.reason}")
+            }
+
+            // on error, try with reading dataframe first
+            val parsedDf = when (val readResult = CodeGenerator.urlDfReader(url, formats)) {
+                is DfReadResult.Error -> throw Exception(
+                    "Error while reading dataframe from data at $url",
+                    readResult.reason
+                )
+
+                is DfReadResult.Success -> readResult
+            }
+
+            val codeGenerator = CodeGenerator.create(useFqNames = false)
+            val delimiters = delimiters.get()
+            val readDfMethod = parsedDf.getReadDfMethod(stringOf(data.get()))
+            val codeGenResult = codeGenerator.generate(
+                schema = parsedDf.schema,
+                name = interfaceName.get(),
+                fields = true,
+                extensionProperties = false,
+                isOpen = true,
+                visibility = when (schemaVisibility.get()) {
+                    DataSchemaVisibility.INTERNAL -> MarkerVisibility.INTERNAL
+                    DataSchemaVisibility.IMPLICIT_PUBLIC -> MarkerVisibility.IMPLICIT_PUBLIC
+                    DataSchemaVisibility.EXPLICIT_PUBLIC -> MarkerVisibility.EXPLICIT_PUBLIC
+                    else -> MarkerVisibility.IMPLICIT_PUBLIC
+                },
+                readDfMethod = readDfMethod,
+                fieldNameNormalizer = NameNormalizer.from(delimiters),
+            )
+            schemaFile.writeText(codeGenResult.toStandaloneSnippet(escapedPackageName, readDfMethod.additionalImports))
+        }
     }
 
     private fun stringOf(data: Any): String =

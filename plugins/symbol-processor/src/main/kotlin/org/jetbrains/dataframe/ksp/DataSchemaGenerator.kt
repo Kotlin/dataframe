@@ -163,7 +163,12 @@ class DataSchemaGenerator(
 
         if (importStatement.isJdbc) {
             val url = importStatement.dataSource.pathRepresentation
-            val connection = DriverManager.getConnection(url)
+
+            // TODO: load different classes for different databases
+            Class.forName("org.mariadb.jdbc.Driver")
+            // test with wrong connections and catch the SQL exception
+            // java.sql.SQLInvalidAuthorizationSpecException: (conn=26) Access denied for user 'Alexey.Zinoviev'@'localhost'
+            val connection = DriverManager.getConnection(url, importStatement.jdbcOptions.user, importStatement.jdbcOptions.password)
             connection.use {
                 val schema = DataFrame.getSchemaForSqlTable(connection, "", importStatement.name)
                 // TODO: check if schema exists and add a test here
