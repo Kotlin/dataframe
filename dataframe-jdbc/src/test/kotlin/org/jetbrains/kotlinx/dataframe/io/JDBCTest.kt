@@ -29,7 +29,7 @@ interface ActorKDF {
 interface RankedMoviesWithGenres {
     val name: String
     val year: Int
-    val rank: Int
+    val rank: Float
     val genres: String
 }
 
@@ -113,7 +113,7 @@ class JDBCTest {
         // for gradle or as classes under the hood in KNB
 
         DriverManager.getConnection(URL, props).use { connection ->
-            val df = DataFrame.readSqlTable(connection, "imdb", "actors").cast<ActorKDF>()
+            val df = DataFrame.readSqlTable(connection, "", "actors", 100).cast<ActorKDF>()
             df.print()
         }
     }
@@ -170,9 +170,12 @@ class JDBCTest {
         // for gradle or as classes under the hood in KNB
 
         DriverManager.getConnection(URL, props).use { connection ->
-            val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<RankedMoviesWithGenres>()
+            val df = DataFrame.readSqlQuery(connection, sqlQuery).cast<RankedMoviesWithGenres>()
             //df.filter { year > 2000 }.print()
             df.print()
+
+            val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
+            schema.print()
         }
     }
 

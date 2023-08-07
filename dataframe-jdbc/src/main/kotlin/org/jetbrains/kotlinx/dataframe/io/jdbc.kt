@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
-import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.jupyter.api.Code
 import java.io.File
@@ -16,7 +15,6 @@ import java.sql.Connection
 import java.sql.DatabaseMetaData
 import java.sql.ResultSet
 import java.sql.ResultSetMetaData
-import kotlin.reflect.typeOf
 
 private val logger = KotlinLogging.logger {}
 
@@ -68,20 +66,24 @@ public data class JdbcColumn(val name: String, val type: String, val size: Int)
 
 public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, dbType: DbType): AnyFrame {
     val tableColumns = getTableColumns(resultSet)
-    val data = fetchAndConvertDataFromResultSet(tableColumns, resultSet, dbType)
+    val data = fetchAndConvertDataFromResultSet(tableColumns, resultSet, dbType, Int.MIN_VALUE)
     return data.toDataFrame()
 }
 
-public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, connection: Connection): AnyFrame {
+public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, connection: Connection, limit: Int): AnyFrame {
     val url = connection.metaData.url
     val dbType = extractDBTypeFromURL(url)
 
     val tableColumns = getTableColumns(resultSet)
-    val data = fetchAndConvertDataFromResultSet(tableColumns, resultSet, dbType)
+    val data = fetchAndConvertDataFromResultSet(tableColumns, resultSet, dbType, limit)
     return data.toDataFrame()
 }
 
-public fun DataFrame.Companion.readAllTables(connection: Connection): List<AnyFrame> {
+public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, connection: Connection): AnyFrame {
+    return readResultSet(resultSet, connection, Int.MIN_VALUE)
+}
+
+public fun DataFrame.Companion.readAllTables(connection: Connection, limit: Int): List<AnyFrame> {
     val metaData = connection.metaData
 
     val tables = metaData.getTables(null, null, "%", null)
@@ -90,7 +92,7 @@ public fun DataFrame.Companion.readAllTables(connection: Connection): List<AnyFr
 
     while (tables.next()) {
         val tableName = tables.getString("TABLE_NAME")
-        val dataFrame = readSqlTable(connection, "",tableName)
+        val dataFrame = readSqlTable(connection, "",tableName, limit)
         dataFrames += dataFrame
     }
 
@@ -98,20 +100,34 @@ public fun DataFrame.Companion.readAllTables(connection: Connection): List<AnyFr
 }
 
 public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: String): AnyFrame {
+    return readSqlQuery(connection, sqlQuery, Int.MIN_VALUE)
+}
+
+public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: String, limit: Int): AnyFrame {
     val url = connection.metaData.url
     val dbType = extractDBTypeFromURL(url)
 
+    var internalSqlQuery = sqlQuery
+    if (limit > 0) internalSqlQuery += " LIMIT $limit"
+
     connection.createStatement().use { st ->
-        st.executeQuery(sqlQuery).use { rs ->
+        st.executeQuery(internalSqlQuery).use { rs ->
             val tableColumns = getTableColumns(rs)
-            val data = fetchAndConvertDataFromResultSet(tableColumns, rs, dbType)
+            val data = fetchAndConvertDataFromResultSet(tableColumns, rs, dbType, Int.MIN_VALUE)
             return data.toDataFrame()
         }
     }
 }
 
+// TODO: add methods for stats for SQL tables as dataframe or intermediate objects like Table (name, count)
+
 public fun DataFrame.Companion.readSqlTable(connection: Connection, catalogName: String, tableName: String): AnyFrame {
-    val preparedQuery = ("SELECT * FROM $tableName")
+    return readSqlTable(connection, catalogName, tableName, Int.MIN_VALUE)
+}
+
+public fun DataFrame.Companion.readSqlTable(connection: Connection, catalogName: String, tableName: String, limit: Int): AnyFrame {
+    var preparedQuery = "SELECT * FROM $tableName"
+    if (limit > 0) preparedQuery += " LIMIT $limit"
 
     val url = connection.metaData.url
     val dbType = extractDBTypeFromURL(url)
@@ -131,7 +147,7 @@ public fun DataFrame.Companion.readSqlTable(connection: Connection, catalogName:
             preparedQuery // TODO: work with limits correctly
             //
         ).use { rs ->
-            val data = fetchAndConvertDataFromResultSet(tableColumns, rs, dbType)
+            val data = fetchAndConvertDataFromResultSet(tableColumns, rs, dbType, limit)
             return data.toDataFrame()
         }
     }
@@ -238,7 +254,8 @@ private fun getTableColumns(connection: Connection, tableName: String): MutableM
 private fun fetchAndConvertDataFromResultSet(
     tableColumns: MutableMap<String, JdbcColumn>,
     rs: ResultSet,
-    dbType: DbType
+    dbType: DbType,
+    limit: Int
 ): MutableMap<String, MutableList<Any?>> {
     // map<columnName; columndata>
     val data = mutableMapOf<String, MutableList<Any?>>()
@@ -249,18 +266,34 @@ private fun fetchAndConvertDataFromResultSet(
     }
 
     var counter = 0
-    while (rs.next()) {
-        tableColumns.forEach { (columnName, jdbcColumn) ->
-            data[columnName] = (data[columnName]!! + dbType.convertDataFromResultSet(rs, jdbcColumn)).toMutableList()
+
+    if (limit > 0) {
+        while (rs.next() && counter < limit) {
+            handleRow(tableColumns, data, dbType, rs)
+            counter++
+            if (counter % 1000 == 0) logger.debug { "Loaded $counter rows." }
         }
-        counter++
-        if (counter % 1000 == 0) println("Loaded yet 1000, percentage = $counter")
+    } else {
+        while (rs.next()) {
+            handleRow(tableColumns, data, dbType, rs)
+            counter++
+            if (counter % 1000 == 0) logger.debug { "Loaded $counter rows." }
+        }
     }
+
     return data
 }
 
-
-
+private fun handleRow(
+    tableColumns: MutableMap<String, JdbcColumn>,
+    data: MutableMap<String, MutableList<Any?>>,
+    dbType: DbType,
+    rs: ResultSet
+) {
+    tableColumns.forEach { (columnName, jdbcColumn) ->
+        data[columnName] = (data[columnName]!! + dbType.convertDataFromResultSet(rs, jdbcColumn)).toMutableList()
+    }
+}
 
 
 // TODO: slow solution could be optimized with batches control and fetching
@@ -268,5 +301,24 @@ private fun fetchAndConvertDataFromResultSet(
 // be sure that all the stuff is closed
 
 // TODO: parser https://docs.oracle.com/javase/8/docs/api/java/sql/JDBCType.html
+
+// TODO: counter
+/*
+// Your original query
+String originalQuery = "SELECT * FROM your_table_name WHERE column_name = 'some_value'";
+
+// Query to count the number of rows
+String countQuery = "SELECT COUNT(*) as count FROM (" + originalQuery + ") AS count_query";
+
+// Create a statement and execute the count query
+Statement countStatement = connection.createStatement();
+ResultSet countResultSet = countStatement.executeQuery(countQuery);
+
+// Get the row count
+int rowCount = 0;
+if (countResultSet.next()) {
+    rowCount = countResultSet.getInt("count");
+}*/
+
 
 
