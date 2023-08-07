@@ -166,6 +166,7 @@ class DataSchemaGenerator(
 
             // TODO: load different classes for different databases
             Class.forName("org.mariadb.jdbc.Driver")
+            // TODO: handle this situation - give a tip for a user
             // test with wrong connections and catch the SQL exception
             // java.sql.SQLInvalidAuthorizationSpecException: (conn=26) Access denied for user 'Alexey.Zinoviev'@'localhost'
             val connection = DriverManager.getConnection(url, importStatement.jdbcOptions.user, importStatement.jdbcOptions.password)
