@@ -120,12 +120,14 @@ public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: St
 public data class DatabaseConfiguration(val user: String = "", val password: String = "", val url:String)
 
 public fun DataFrame.Companion.readSqlTable(dbConfig: DatabaseConfiguration, tableName: String): AnyFrame {
+    Class.forName("org.mariadb.jdbc.Driver")
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return readSqlTable(connection, "", tableName, Int.MIN_VALUE)
     }
 }
 
 public fun DataFrame.Companion.readSqlTable(dbConfig: DatabaseConfiguration, tableName: String, limit: Int): AnyFrame {
+    Class.forName("org.mariadb.jdbc.Driver")
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return readSqlTable(connection, "", tableName, limit)
     }
@@ -192,6 +194,13 @@ public fun DataFrame.Companion.getSchemaForAllTables(connection: Connection): Li
     }
 
     return dataFrameSchemas
+}
+
+public fun DataFrame.Companion.getSchemaForSqlTable(dbConfig: DatabaseConfiguration, tableName: String): DataFrameSchema {
+    Class.forName("org.mariadb.jdbc.Driver")
+    DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
+        return getSchemaForSqlTable(connection, "", tableName)
+    }
 }
 
 public fun DataFrame.Companion.getSchemaForSqlTable(
