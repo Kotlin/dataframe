@@ -83,6 +83,7 @@ public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, connection: C
     return readResultSet(resultSet, connection, Int.MIN_VALUE)
 }
 
+// TODO: need to filter standard tables for each database
 public fun DataFrame.Companion.readAllTables(connection: Connection, limit: Int): List<AnyFrame> {
     val metaData = connection.metaData
 

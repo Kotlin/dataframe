@@ -52,6 +52,7 @@ public annotation class CsvOptions(
 public annotation class JdbcOptions(
     public val user: String = "", // TODO: I'm not sure about the default parameters
     public val password: String = "", // TODO: I'm not sure about the default parameters
+    public val sqlQuery: String = ""
 )
 
 public annotation class JsonOptions(

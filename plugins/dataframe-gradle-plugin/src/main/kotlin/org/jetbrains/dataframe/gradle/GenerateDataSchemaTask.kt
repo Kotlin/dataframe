@@ -74,7 +74,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
         if (rawUrl.startsWith("jdbc")) {
             val connection = DriverManager.getConnection(rawUrl, jdbcOptions.user, jdbcOptions.password)
             connection.use {
-                val schema = if(jdbcOptions.sqlQuery.isNotEmpty())
+                val schema = if(jdbcOptions.sqlQuery.isBlank())
                     DataFrame.getSchemaForSqlTable(connection, "", interfaceName.get())
                 else DataFrame.getSchemaForSqlQuery(connection, jdbcOptions.sqlQuery)
                 // TODO: check if schema exists and add a test here

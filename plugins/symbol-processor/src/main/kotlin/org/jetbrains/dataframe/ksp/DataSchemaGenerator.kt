@@ -22,15 +22,7 @@ import org.jetbrains.kotlinx.dataframe.impl.codeGen.from
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.toStandaloneSnippet
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlCodeGenReader
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlDfReader
-import org.jetbrains.kotlinx.dataframe.io.ArrowFeather
-import org.jetbrains.kotlinx.dataframe.io.CSV
-import org.jetbrains.kotlinx.dataframe.io.Excel
-import org.jetbrains.kotlinx.dataframe.io.JSON
-import org.jetbrains.kotlinx.dataframe.io.OpenApi
-import org.jetbrains.kotlinx.dataframe.io.TSV
-import org.jetbrains.kotlinx.dataframe.io.databaseCodeGenReader
-import org.jetbrains.kotlinx.dataframe.io.isURL
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
+import org.jetbrains.kotlinx.dataframe.io.*
 import java.io.File
 import java.net.MalformedURLException
 import java.net.URL
@@ -171,8 +163,11 @@ class DataSchemaGenerator(
             // java.sql.SQLInvalidAuthorizationSpecException: (conn=26) Access denied for user 'Alexey.Zinoviev'@'localhost'
             val connection = DriverManager.getConnection(url, importStatement.jdbcOptions.user, importStatement.jdbcOptions.password)
             connection.use {
-                val schema = DataFrame.getSchemaForSqlTable(connection, "", importStatement.name)
                 // TODO: check if schema exists and add a test here
+                val schema = if(importStatement.jdbcOptions.sqlQuery.isBlank())
+                    DataFrame.getSchemaForSqlTable(connection, "", importStatement.name)
+                else DataFrame.getSchemaForSqlQuery(connection, importStatement.jdbcOptions.sqlQuery)
+
 
                 val codeGenerator = CodeGenerator.create(useFqNames = false)
 
