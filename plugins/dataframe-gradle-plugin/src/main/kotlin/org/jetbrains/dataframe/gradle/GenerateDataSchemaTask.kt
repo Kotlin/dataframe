@@ -74,8 +74,11 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
         if (rawUrl.startsWith("jdbc")) {
             val connection = DriverManager.getConnection(rawUrl, jdbcOptions.user, jdbcOptions.password)
             connection.use {
-                val schema = DataFrame.getSchemaForSqlTable(connection, "", interfaceName.get())
+                val schema = if(jdbcOptions.sqlQuery.isNotEmpty())
+                    DataFrame.getSchemaForSqlTable(connection, "", interfaceName.get())
+                else DataFrame.getSchemaForSqlQuery(connection, jdbcOptions.sqlQuery)
                 // TODO: check if schema exists and add a test here
+                // TODO: support result set and all tables, but it looks that this is not possible
 
                 val codeGenerator = CodeGenerator.create(useFqNames = false)
 
