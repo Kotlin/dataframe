@@ -197,7 +197,7 @@ public fun DataFrame.Companion.getSchemaForAllTables(connection: Connection): Li
 }
 
 public fun DataFrame.Companion.getSchemaForSqlTable(dbConfig: DatabaseConfiguration, tableName: String): DataFrameSchema {
-    Class.forName("org.mariadb.jdbc.Driver")
+    Class.forName("org.mariadb.jdbc.Driver") // TODO: doesn't work because mariadb or special dependency could not be added to the module
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return getSchemaForSqlTable(connection, "", tableName)
     }
