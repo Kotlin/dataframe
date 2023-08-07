@@ -11,10 +11,7 @@ import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.jupyter.api.Code
 import java.io.File
 import java.io.InputStream
-import java.sql.Connection
-import java.sql.DatabaseMetaData
-import java.sql.ResultSet
-import java.sql.ResultSetMetaData
+import java.sql.*
 
 private val logger = KotlinLogging.logger {}
 
@@ -117,6 +114,20 @@ public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: St
             val data = fetchAndConvertDataFromResultSet(tableColumns, rs, dbType, Int.MIN_VALUE)
             return data.toDataFrame()
         }
+    }
+}
+
+public data class DatabaseConfiguration(val user: String = "", val password: String = "", val url:String)
+
+public fun DataFrame.Companion.readSqlTable(dbConfig: DatabaseConfiguration, tableName: String): AnyFrame {
+    DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
+        return readSqlTable(connection, "", tableName, Int.MIN_VALUE)
+    }
+}
+
+public fun DataFrame.Companion.readSqlTable(dbConfig: DatabaseConfiguration, tableName: String, limit: Int): AnyFrame {
+    DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
+        return readSqlTable(connection, "", tableName, limit)
     }
 }
 
