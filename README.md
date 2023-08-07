@@ -31,7 +31,7 @@ Explore [**documentation**](https://kotlin.github.io/dataframe/overview.html) fo
 plugins {
     // Optional Gradle plugin for enhanced type safety and schema generation
     // https://kotlin.github.io/dataframe/gradle.html
-    id 'org.jetbrains.kotlinx.dataframe' version '0.11.0'
+    id 'org.jetbrains.kotlinx.dataframe' version '0.11.1'
 }
 
 repositories {
@@ -39,7 +39,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.jetbrains.kotlinx:dataframe:0.11.0'
+    implementation 'org.jetbrains.kotlinx:dataframe:0.11.1'
 }
 ```
 
@@ -49,7 +49,7 @@ dependencies {
 plugins {
     // Optional Gradle plugin for enhanced type safety and schema generation
     // https://kotlin.github.io/dataframe/gradle.html
-    id("org.jetbrains.kotlinx.dataframe") version "0.11.0"
+    id("org.jetbrains.kotlinx.dataframe") version "0.11.1"
 }
 
 repositories {
@@ -57,7 +57,7 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:dataframe:0.11.0")
+    implementation("org.jetbrains.kotlinx:dataframe:0.11.1")
 }
 ```
 
@@ -68,11 +68,11 @@ dependencies {
 plugins {
     // Optional Gradle plugin for enhanced type safety and schema generation
     // https://kotlin.github.io/dataframe/gradle.html
-    id 'org.jetbrains.kotlinx.dataframe' version '0.11.0'
+    id 'org.jetbrains.kotlinx.dataframe' version '0.11.1'
 }
 
 dependencies {
-    implementation 'org.jetbrains.kotlinx:dataframe:0.11.0'
+    implementation 'org.jetbrains.kotlinx:dataframe:0.11.1'
 }
 
 android {
@@ -116,11 +116,11 @@ tasks.withType(KotlinCompile).configureEach {
 plugins {
     // Optional Gradle plugin for enhanced type safety and schema generation
     // https://kotlin.github.io/dataframe/gradle.html
-    id("org.jetbrains.kotlinx.dataframe") version "0.11.0"
+    id("org.jetbrains.kotlinx.dataframe") version "0.11.1"
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:dataframe:0.11.0")
+    implementation("org.jetbrains.kotlinx:dataframe:0.11.1")
 }
 
 android {
@@ -190,6 +190,7 @@ This table shows the mapping between main library component versions and minimum
 | 0.10.0                   | 8                    | 1.8.20         | 0.11.0-358             | 3.0.0           | 11.0.0               |
 | 0.10.1                   | 8                    | 1.8.20         | 0.11.0-358             | 3.0.0           | 11.0.0               |
 | 0.11.0                   | 8                    | 1.8.20         | 0.11.0-358             | 3.0.0           | 11.0.0               |
+| 0.11.1                   | 8                    | 1.8.20         | 0.11.0-358             | 3.0.0           | 11.0.0               |
 ## Usage example
 
 **Create:**
