@@ -5,7 +5,7 @@
 Joins two [`DataFrames`](DataFrame.md) by a join expression. 
 
 ```kotlin
-predicateJoin(otherDf, type = JoinType.Inner) [ { joinExpression } ]
+predicateJoin(otherDf, type = JoinType.Inner) { joinExpression }
 
 joinExpression: JoinedDataRow.(JoinedDataRow) -> Boolean
 
@@ -17,17 +17,16 @@ interface JoinedDataRow: LeftDataRow {
 ```
 
 This function is a [join](join.md) variant that lets you match data using any expression that returns Boolean, 
-which also gives opportunity to compute heuristics that require values from both matching rows.
-Can be helpful if data you want to join wasn't designed be relational and requires heuristics to tell if rows are matching,
+which also gives opportunity to perform operations that require values from both matching rows.
+Can be helpful if data you want to join wasn't designed relational and requires heuristics to tell if rows are matching,
 or has relations other than `equals`.
 
 For example, you can match rows based on:
 * **Order relations** such as `>`, `<`, `in` for numerical or DateTime values
-* **Numerical relations**
 * **Spatial relations**, like distance within a certain range if your data includes spatial or geographical values
-* **String equivalence** using more complex comparison techniques, such as regular expressions, Levenshtein Distance.
+* **String equivalence** using more complex comparison techniques, such as `contains`, regular expressions, Levenshtein Distance or language models.
 
-### Join types
+### Join types with examples
 
 Supported join types:
 * `Inner` (default) — only matched rows from left and right [`DataFrames`](DataFrame.md)
@@ -282,5 +281,53 @@ campaigns.predicateJoin(visits) { true }
 ```
 
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.PredicateJoin.crossProduct.html"/>
+<!---END-->
+
+### Difference from join
+
+[join](join.md) tries to take advantage of knowledge that data in matching columns is the same (because `equals` is used) to minimize number of columns in the resulting dataframe.
+
+<!---FUN compareInnerColumns-->
+
+```kotlin
+df1.innerJoin(df2, "index", "age")
+```
+
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.PredicateJoin.compareInnerColumns.html"/>
+<!---END-->
+
+Columns that were used in the condition: `index`, `age` - are present only once. Numerical suffix is used to disambiguate columns that are not used in the condition.
+Compare it to an equivalent predicate join:
+
+<!---FUN compareInnerValues-->
+
+```kotlin
+df1.innerPredicateJoin(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
+```
+
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.PredicateJoin.compareInnerValues.html"/>
+<!---END-->
+
+Here columns from both dataframes are presented as is. So [join](join.md) is better suited for `equals` relation, and predicateJoin is for everything else.
+Below are two more examples with join types that allow mismatches. Note the difference in `null` values
+
+<!---FUN compareLeft-->
+
+```kotlin
+df1.leftJoin(df2, "index", "age")
+df1.leftPredicateJoin(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
+```
+
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.PredicateJoin.compareLeft.html"/>
+<!---END-->
+
+<!---FUN compareRight-->
+
+```kotlin
+df1.rightJoin(df2, "index", "age")
+df1.rightPredicateJoin(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
+```
+
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.PredicateJoin.compareRight.html"/>
 <!---END-->
 
