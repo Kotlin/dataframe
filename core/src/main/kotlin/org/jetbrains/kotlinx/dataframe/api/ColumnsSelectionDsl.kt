@@ -179,7 +179,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### For example:
      *
-     * {@includeArg [Examples]}
+     * {@getArg [Examples]}
      *
      * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn] containing the first column that adheres to the given [condition\].
@@ -194,7 +194,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonFirstDocs]
-     * @arg [CommonFirstDocs.Examples]
+     * @setArg [CommonFirstDocs.Examples]
      * `df.`[select][select]` { `[colsOf][colsOf]`<`[String][String]`>().`[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * `df.`[select][select]` { `[colsOf][colsOf]`<`[Int][Int]`>().`[first][first]`() }`
@@ -204,7 +204,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonFirstDocs]
-     * @arg [CommonFirstDocs.Examples]
+     * @setArg [CommonFirstDocs.Examples]
      * `df.`[select][select]` { `[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * `df.`[select][select]` { myColumnGroup.`[first][first]`() }`
@@ -216,7 +216,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonFirstDocs]
-     * @arg [CommonFirstDocs.Examples]
+     * @setArg [CommonFirstDocs.Examples]
      * `df.`[select][select]` { "myColumnGroup".`[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun String.first(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
@@ -224,7 +224,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonFirstDocs]
-     * @arg [CommonFirstDocs.Examples]
+     * @setArg [CommonFirstDocs.Examples]
      * `df.`[select][select]` { Type::myColumnGroup.`[first][first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun KProperty<*>.first(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
@@ -236,7 +236,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### For example:
      *
-     * {@includeArg [Examples]}
+     * {@getArg [Examples]}
      *
      * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn] containing the last column that adheres to the given [condition\].
@@ -251,7 +251,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonLastDocs]
-     * @arg [CommonLastDocs.Examples]
+     * @setArg [CommonLastDocs.Examples]
      * `df.`[select][select]` { `[colsOf][colsOf]`<`[String][String]`>().`[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * `df.`[select][select]` { `[colsOf][colsOf]`<`[Int][Int]`>().`[first][last]`() }`
@@ -261,7 +261,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonLastDocs]
-     * @arg [CommonLastDocs.Examples]
+     * @setArg [CommonLastDocs.Examples]
      * `df.`[select][select]` { `[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * `df.`[select][select]` { myColumnGroup.`[last][last]`() }`
@@ -273,7 +273,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonLastDocs]
-     * @arg [CommonLastDocs.Examples]
+     * @setArg [CommonLastDocs.Examples]
      * `df.`[select][select]` { "myColumnGroup".`[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun String.last(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
@@ -281,7 +281,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonLastDocs]
-     * @arg [CommonLastDocs.Examples]
+     * @setArg [CommonLastDocs.Examples]
      * `df.`[select][select]` { Type::myColumnGroup.`[last][last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun KProperty<*>.last(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
@@ -293,7 +293,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### For example:
      *
-     * {@includeArg [Examples]}
+     * {@getArg [Examples]}
      *
      * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn] containing the single column that adheres to the given [condition\].
@@ -308,7 +308,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonSingleDocs]
-     * @arg [CommonSingleDocs.Examples]
+     * @setArg [CommonSingleDocs.Examples]
      * `df.`[select][select]` { `[colsOf][colsOf]`<`[String][String]`>().`[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * `df.`[select][select]` { `[colsOf][colsOf]`<`[Int][Int]`>().`[single][single]`() }`
@@ -318,7 +318,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonSingleDocs]
-     * @arg [CommonSingleDocs.Examples]
+     * @setArg [CommonSingleDocs.Examples]
      * `df.`[select][select]` { `[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * `df.`[select][select]` { myColumnGroup.`[single][single]`() }`
@@ -330,7 +330,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonSingleDocs]
-     * @arg [CommonSingleDocs.Examples]
+     * @setArg [CommonSingleDocs.Examples]
      * `df.`[select][select]` { "myColumnGroup".`[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun String.single(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
@@ -338,7 +338,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonSingleDocs]
-     * @arg [CommonSingleDocs.Examples]
+     * @setArg [CommonSingleDocs.Examples]
      * `df.`[select][select]` { Type::myColumnGroup.`[single][single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun KProperty<*>.single(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
@@ -350,7 +350,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { `{@includeArg [CommonSubsetOfColumnsDocs.Example]}` }`
+     * `df.`[select][DataFrame.select]` { `{@getArg [CommonSubsetOfColumnsDocs.Example]}` }`
      *
      * @param [endInclusive\] The last column in the subset.
      * @receiver The first column in the subset.
@@ -365,63 +365,63 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonSubsetOfColumnsDocs]
-     * {@arg [CommonSubsetOfColumnsDocs.Example] "fromColumn".."toColumn"}
+     * {@setArg [CommonSubsetOfColumnsDocs.Example] "fromColumn".."toColumn"}
      */
     public operator fun String.rangeTo(endInclusive: String): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
     /**
      * @include [CommonSubsetOfColumnsDocs]
-     * {@arg [CommonSubsetOfColumnsDocs.Example] "fromColumn"..Type::toColumn}
+     * {@setArg [CommonSubsetOfColumnsDocs.Example] "fromColumn"..Type::toColumn}
      */
     public operator fun String.rangeTo(endInclusive: KProperty<*>): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
     /**
      * @include [CommonSubsetOfColumnsDocs]
-     * {@arg [CommonSubsetOfColumnsDocs.Example] "fromColumn"..toColumn}
+     * {@setArg [CommonSubsetOfColumnsDocs.Example] "fromColumn"..toColumn}
      */
     public operator fun String.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive)
 
     /**
      * @include [CommonSubsetOfColumnsDocs]
-     * {@arg [CommonSubsetOfColumnsDocs.Example] Type::fromColumn.."toColumn"}
+     * {@setArg [CommonSubsetOfColumnsDocs.Example] Type::fromColumn.."toColumn"}
      */
     public operator fun KProperty<*>.rangeTo(endInclusive: String): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
     /**
      * @include [CommonSubsetOfColumnsDocs]
-     * {@arg [CommonSubsetOfColumnsDocs.Example] Type::fromColumn..Type::toColumn}
+     * {@setArg [CommonSubsetOfColumnsDocs.Example] Type::fromColumn..Type::toColumn}
      */
     public operator fun KProperty<*>.rangeTo(endInclusive: KProperty<*>): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
     /**
      * @include [CommonSubsetOfColumnsDocs]
-     * {@arg [CommonSubsetOfColumnsDocs.Example] Type::fromColumn..toColumn}
+     * {@setArg [CommonSubsetOfColumnsDocs.Example] Type::fromColumn..toColumn}
      */
     public operator fun KProperty<*>.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive)
 
     /**
      * @include [CommonSubsetOfColumnsDocs]
-     * {@arg [CommonSubsetOfColumnsDocs.Example] fromColumn.."toColumn"}
+     * {@setArg [CommonSubsetOfColumnsDocs.Example] fromColumn.."toColumn"}
      */
     public operator fun AnyColumnReference.rangeTo(endInclusive: String): ColumnSet<*> =
         rangeTo(endInclusive.toColumnAccessor())
 
     /**
      * @include [CommonSubsetOfColumnsDocs]
-     * {@arg [CommonSubsetOfColumnsDocs.Example] fromColumn..Type::toColumn}
+     * {@setArg [CommonSubsetOfColumnsDocs.Example] fromColumn..Type::toColumn}
      */
     public operator fun AnyColumnReference.rangeTo(endInclusive: KProperty<*>): ColumnSet<*> =
         rangeTo(endInclusive.toColumnAccessor())
 
     /**
      * @include [CommonSubsetOfColumnsDocs]
-     * {@arg [CommonSubsetOfColumnsDocs.Example] fromColumn..toColumn}
+     * {@setArg [CommonSubsetOfColumnsDocs.Example] fromColumn..toColumn}
      */
     public operator fun AnyColumnReference.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
         object : ColumnSet<Any?> {
@@ -468,19 +468,19 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * The function can also be called on [ColumnGroupReferences][ColumnGroupReference] to create
      * an accessor for a column inside a [ColumnGroup].
      *
-     * {@includeArg [CommonColDocs.Note]}
+     * {@getArg [CommonColDocs.Note]}
      *
      * #### For example:
      *
-     * `df.`[select][select]` { `[col][col]`({@includeArg [CommonColDocs.Arg]}) }`
+     * `df.`[select][select]` { `[col][col]`({@getArg [CommonColDocs.Arg]}) }`
      *
-     * `df.`[select][select]` { myColGroup.`[col][col]`<SomeType>({@includeArg [CommonColDocs.Arg]}) }`
+     * `df.`[select][select]` { myColGroup.`[col][col]`<SomeType>({@getArg [CommonColDocs.Arg]}) }`
      *
      * @return A [ColumnAccessor] for the column with the given argument.
      * @see [column\]
      * @see [colGroup\]
      * @see [frameCol\]
-     * {@arg [CommonColDocs.Note]}
+     * {@setArg [CommonColDocs.Note]}
      */
     private interface CommonColDocs {
 
@@ -492,7 +492,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     }
 
     /**
-     * @include [CommonColDocs] {@arg [CommonColDocs.Arg] "columnName"}
+     * @include [CommonColDocs] {@setArg [CommonColDocs.Arg] "columnName"}
      * @param [name] The name of the column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -500,15 +500,15 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun col(name: String): ColumnAccessor<*> = column<Any?>(name)
 
     /**
-     * @include [CommonColDocs] {@arg [CommonColDocs.Arg] "columnName"}
+     * @include [CommonColDocs] {@setArg [CommonColDocs.Arg] "columnName"}
      * @param [name] The name of the column.
      * @param [C] The type of the column.
      */
     public fun <C> col(name: String): ColumnAccessor<C> = column(name)
 
     /**
-     * @include [CommonColDocs] {@arg [CommonColDocs.Arg] "columnGroup"["columnName"]}
-     * {@arg [CommonColDocs.Note] NOTE: For column paths, this is an identity function and can be removed.}
+     * @include [CommonColDocs] {@setArg [CommonColDocs.Arg] "columnGroup"["columnName"]}
+     * {@setArg [CommonColDocs.Note] NOTE: For column paths, this is an identity function and can be removed.}
      * @param [path] The [ColumnPath] pointing to the column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -516,20 +516,20 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun col(path: ColumnPath): ColumnAccessor<*> = column<Any?>(path)
 
     /**
-     * @include [CommonColDocs] {@arg [CommonColDocs.Arg] "columnGroup"["columnName"]}
+     * @include [CommonColDocs] {@setArg [CommonColDocs.Arg] "columnGroup"["columnName"]}
      * @param [path] The [ColumnPath] pointing to the column.
      * @param [C] The type of the column.
      */
     public fun <C> col(path: ColumnPath): ColumnAccessor<C> = column(path)
 
     /**
-     * @include [CommonColDocs] {@arg [CommonColDocs.Arg] Type::columnName}
+     * @include [CommonColDocs] {@setArg [CommonColDocs.Arg] Type::columnName}
      * @param [property] The [KProperty] pointing to the column.
      */
     public fun <C> col(property: KProperty<C>): ColumnAccessor<C> = column(property)
 
     /**
-     * @include [CommonColDocs] {@arg [CommonColDocs.Arg] "columnName"}
+     * @include [CommonColDocs] {@setArg [CommonColDocs.Arg] "columnName"}
      * @param [name] The name of the column.
      * @receiver The [ColumnGroupReference] to get the column from.
      */
@@ -538,7 +538,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun ColumnGroupReference.col(name: String): ColumnAccessor<*> = column<Any?>(name)
 
     /**
-     * @include [CommonColDocs] {@arg [CommonColDocs.Arg] "columnName"}
+     * @include [CommonColDocs] {@setArg [CommonColDocs.Arg] "columnName"}
      * @param [name] The name of the column.
      * @receiver The [ColumnGroupReference] to get the column from.
      * @param [C] The type of the column.
@@ -546,7 +546,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnGroupReference.col(name: String): ColumnAccessor<C> = column(name)
 
     /**
-     * @include [CommonColDocs] {@arg [CommonColDocs.Arg] "columnGroup"["columnName"]}
+     * @include [CommonColDocs] {@setArg [CommonColDocs.Arg] "columnGroup"["columnName"]}
      * @param [path] The [ColumnPath] pointing to the column.
      * @receiver The [ColumnGroupReference] to get the column from.
      */
@@ -555,7 +555,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun ColumnGroupReference.col(path: ColumnPath): ColumnAccessor<*> = column<Any?>(path)
 
     /**
-     * @include [CommonColDocs] {@arg [CommonColDocs.Arg] "columnGroup"["columnName"]}
+     * @include [CommonColDocs] {@setArg [CommonColDocs.Arg] "columnGroup"["columnName"]}
      * @param [path] The [ColumnPath] pointing to the column.
      * @receiver The [ColumnGroupReference] to get the column from.
      * @param [C] The type of the column.
@@ -563,7 +563,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnGroupReference.col(path: ColumnPath): ColumnAccessor<C> = column(path)
 
     /**
-     * @include [CommonColDocs] {@arg [CommonColDocs.Arg] Type::columnName}
+     * @include [CommonColDocs] {@setArg [CommonColDocs.Arg] Type::columnName}
      * @param [property] The [KProperty] pointing to the column.
      * @receiver The [ColumnGroupReference] to get the column from.
      */
@@ -587,9 +587,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### For example:
      *
-     * `df.`[select][select]` { `[colGroup][colGroup]`({@includeArg [CommonColGroupDocs.Arg]}) }`
+     * `df.`[select][select]` { `[colGroup][colGroup]`({@getArg [CommonColGroupDocs.Arg]}) }`
      *
-     * `df.`[select][select]` { myColGroup.`[colGroup][colGroup]`<SomeType>({@includeArg [CommonColGroupDocs.Arg]}) }`
+     * `df.`[select][select]` { myColGroup.`[colGroup][colGroup]`<SomeType>({@getArg [CommonColGroupDocs.Arg]}) }`
      *
      * @return A [ColumnAccessor] for the column group with the given argument.
      * @see [columnGroup\]
@@ -606,7 +606,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun ColumnsContainer<*>.group(name: String): ColumnGroupReference = name.toColumnOf()
 
     /**
-     * @include [CommonColGroupDocs] {@arg [CommonColGroupDocs.Arg] "columnGroupName"}
+     * @include [CommonColGroupDocs] {@setArg [CommonColGroupDocs.Arg] "columnGroupName"}
      * @param [name] The name of the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -614,14 +614,14 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun colGroup(name: String): ColumnAccessor<DataRow<*>> = columnGroup<Any?>(name)
 
     /**
-     * @include [CommonColGroupDocs] {@arg [CommonColGroupDocs.Arg] "columnGroupName"}
+     * @include [CommonColGroupDocs] {@setArg [CommonColGroupDocs.Arg] "columnGroupName"}
      * @param [name] The name of the column group.
      * @param [C] The type of the column group.
      */
     public fun <C> colGroup(name: String): ColumnAccessor<DataRow<C>> = columnGroup<C>(name)
 
     /**
-     * @include [CommonColGroupDocs] {@arg [CommonColGroupDocs.Arg] "columnGroup"["columnGroupName"]}
+     * @include [CommonColGroupDocs] {@setArg [CommonColGroupDocs.Arg] "columnGroup"["columnGroupName"]}
      * @param [path] The [ColumnPath] pointing to the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -629,14 +629,14 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = columnGroup<Any?>(path)
 
     /**
-     * @include [CommonColGroupDocs] {@arg [CommonColGroupDocs.Arg] "columnGroup"["columnGroupName"]}
+     * @include [CommonColGroupDocs] {@setArg [CommonColGroupDocs.Arg] "columnGroup"["columnGroupName"]}
      * @param [path] The [ColumnPath] pointing to the column group.
      * @param [C] The type of the column group.
      */
     public fun <C> colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> = columnGroup<C>(path)
 
     /**
-     * @include [CommonColGroupDocs] {@arg [CommonColGroupDocs.Arg] Type::columnGroupName}
+     * @include [CommonColGroupDocs] {@setArg [CommonColGroupDocs.Arg] Type::columnGroupName}
      * @param [property] The [KProperty] pointing to the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -644,13 +644,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> colGroup(property: KProperty<DataRow<C>>): ColumnAccessor<DataRow<C>> = columnGroup(property)
 
     /**
-     * @include [CommonColGroupDocs] {@arg [CommonColGroupDocs.Arg] Type::columnGroupName}
+     * @include [CommonColGroupDocs] {@setArg [CommonColGroupDocs.Arg] Type::columnGroupName}
      * @param [property] The [KProperty] pointing to the column group.
      */
     public fun <C> colGroup(property: KProperty<C>): ColumnAccessor<DataRow<C>> = columnGroup(property)
 
     /**
-     * @include [CommonColGroupDocs] {@arg [CommonColGroupDocs.Arg] "columnGroupName"}
+     * @include [CommonColGroupDocs] {@setArg [CommonColGroupDocs.Arg] "columnGroupName"}
      * @param [name] The name of the column group.
      * @receiver The [ColumnGroupReference] to get the column group from.
      */
@@ -659,7 +659,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun ColumnGroupReference.colGroup(name: String): ColumnAccessor<DataRow<*>> = columnGroup<Any?>(name)
 
     /**
-     * @include [CommonColGroupDocs] {@arg [CommonColGroupDocs.Arg] "columnGroupName"}
+     * @include [CommonColGroupDocs] {@setArg [CommonColGroupDocs.Arg] "columnGroupName"}
      * @param [name] The name of the column group.
      * @receiver The [ColumnGroupReference] to get the column group from.
      * @param [C] The type of the column group.
@@ -667,7 +667,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnGroupReference.colGroup(name: String): ColumnAccessor<DataRow<C>> = columnGroup<C>(name)
 
     /**
-     * @include [CommonColGroupDocs] {@arg [CommonColGroupDocs.Arg] "columnGroup"["columnGroupName"]}
+     * @include [CommonColGroupDocs] {@setArg [CommonColGroupDocs.Arg] "columnGroup"["columnGroupName"]}
      * @param [path] The [ColumnPath] pointing to the column group.
      * @receiver The [ColumnGroupReference] to get the column group from.
      */
@@ -677,7 +677,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         columnGroup<Any?>(path)
 
     /**
-     * @include [CommonColGroupDocs] {@arg [CommonColGroupDocs.Arg] "columnGroup"["columnGroupName"]}
+     * @include [CommonColGroupDocs] {@setArg [CommonColGroupDocs.Arg] "columnGroup"["columnGroupName"]}
      * @param [path] The [ColumnPath] pointing to the column group.
      * @receiver The [ColumnGroupReference] to get the column group from.
      * @param [C] The type of the column group.
@@ -686,7 +686,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         columnGroup<C>(path)
 
     /**
-     * @include [CommonColGroupDocs] {@arg [CommonColGroupDocs.Arg] Type::columnGroupName}
+     * @include [CommonColGroupDocs] {@setArg [CommonColGroupDocs.Arg] Type::columnGroupName}
      * @param [property] The [KProperty] pointing to the column group.
      * @receiver The [ColumnGroupReference] to get the column group from.
      */
@@ -696,7 +696,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         columnGroup(property)
 
     /**
-     * @include [CommonColGroupDocs] {@arg [CommonColGroupDocs.Arg] Type::columnGroupName}
+     * @include [CommonColGroupDocs] {@setArg [CommonColGroupDocs.Arg] Type::columnGroupName}
      * @param [property] The [KProperty] pointing to the column group.
      * @receiver The [ColumnGroupReference] to get the column group from.
      */
@@ -714,9 +714,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * an accessor for a frame column inside a [ColumnGroup].
      *
      * #### For example:
-     * `df.`[select][select]` { `[frameCol][frameCol]`({@includeArg [CommonFrameColDocs.Arg]}) }`
+     * `df.`[select][select]` { `[frameCol][frameCol]`({@getArg [CommonFrameColDocs.Arg]}) }`
      *
-     * `df.`[select][select]` { myColGroup.`[frameCol][frameCol]`<SomeType>({@includeArg [CommonFrameColDocs.Arg]}) }`
+     * `df.`[select][select]` { myColGroup.`[frameCol][frameCol]`<SomeType>({@getArg [CommonFrameColDocs.Arg]}) }`
      *
      * @return A [ColumnAccessor] for the frame column with the given argument.
      * @see [frameColumn\]
@@ -730,7 +730,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     }
 
     /**
-     * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] "columnName"}
+     * @include [CommonFrameColDocs] {@setArg [CommonFrameColDocs.Arg] "columnName"}
      * @param [name] The name of the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -738,14 +738,14 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun frameCol(name: String): ColumnAccessor<DataFrame<*>> = frameColumn<Any?>(name)
 
     /**
-     * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] "columnName"}
+     * @include [CommonFrameColDocs] {@setArg [CommonFrameColDocs.Arg] "columnName"}
      * @param [name] The name of the frame column.
      * @param [C] The type of the frame column.
      */
     public fun <C> frameCol(name: String): ColumnAccessor<DataFrame<C>> = frameColumn<C>(name)
 
     /**
-     * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] "columnGroup"["columnName"]}
+     * @include [CommonFrameColDocs] {@setArg [CommonFrameColDocs.Arg] "columnGroup"["columnName"]}
      * @param [path] The [ColumnPath] pointing to the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -753,14 +753,14 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun frameCol(path: ColumnPath): ColumnAccessor<DataFrame<*>> = frameColumn<Any?>(path)
 
     /**
-     * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] "columnGroup"["columnName"]}
+     * @include [CommonFrameColDocs] {@setArg [CommonFrameColDocs.Arg] "columnGroup"["columnName"]}
      * @param [path] The [ColumnPath] pointing to the frame column.
      * @param [C] The type of the frame column.
      */
     public fun <C> frameCol(path: ColumnPath): ColumnAccessor<DataFrame<C>> = frameColumn<C>(path)
 
     /**
-     * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] Type::columnName}
+     * @include [CommonFrameColDocs] {@setArg [CommonFrameColDocs.Arg] Type::columnName}
      * @param [property] The [KProperty] pointing to the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -768,13 +768,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> frameCol(property: KProperty<DataFrame<C>>): ColumnAccessor<DataFrame<C>> = frameColumn(property)
 
     /**
-     * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] Type::columnName}
+     * @include [CommonFrameColDocs] {@setArg [CommonFrameColDocs.Arg] Type::columnName}
      * @param [property] The [KProperty] pointing to the frame column.
      */
     public fun <C> frameCol(property: KProperty<List<C>>): ColumnAccessor<DataFrame<C>> = frameColumn(property)
 
     /**
-     * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] "columnName"}
+     * @include [CommonFrameColDocs] {@setArg [CommonFrameColDocs.Arg] "columnName"}
      * @param [name] The name of the frame column.
      * @receiver The [ColumnGroupReference] to get the frame column from.
      */
@@ -783,7 +783,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun ColumnGroupReference.frameCol(name: String): ColumnAccessor<DataFrame<*>> = frameColumn<Any?>(name)
 
     /**
-     * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] "columnName"}
+     * @include [CommonFrameColDocs] {@setArg [CommonFrameColDocs.Arg] "columnName"}
      * @param [name] The name of the frame column.
      * @receiver The [ColumnGroupReference] to get the frame column from.
      * @param [C] The type of the frame column.
@@ -791,7 +791,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnGroupReference.frameCol(name: String): ColumnAccessor<DataFrame<C>> = frameColumn<C>(name)
 
     /**
-     * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] "columnGroup"["columnName"]}
+     * @include [CommonFrameColDocs] {@setArg [CommonFrameColDocs.Arg] "columnGroup"["columnName"]}
      * @param [path] The [ColumnPath] pointing to the frame column.
      * @receiver The [ColumnGroupReference] to get the frame column from.
      */
@@ -801,7 +801,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         frameColumn<Any?>(path)
 
     /**
-     * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] "columnGroup"["columnName"]}
+     * @include [CommonFrameColDocs] {@setArg [CommonFrameColDocs.Arg] "columnGroup"["columnName"]}
      * @param [path] The [ColumnPath] pointing to the frame column.
      * @receiver The [ColumnGroupReference] to get the frame column from.
      * @param [C] The type of the frame column.
@@ -810,7 +810,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         frameColumn<C>(path)
 
     /**
-     * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] Type::columnName}
+     * @include [CommonFrameColDocs] {@setArg [CommonFrameColDocs.Arg] Type::columnName}
      * @param [property] The [KProperty] pointing to the frame column.
      * @receiver The [ColumnGroupReference] to get the frame column from.
      */
@@ -820,7 +820,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         frameColumn(property)
 
     /**
-     * @include [CommonFrameColDocs] {@arg [CommonFrameColDocs.Arg] Type::columnName}
+     * @include [CommonFrameColDocs] {@setArg [CommonFrameColDocs.Arg] Type::columnName}
      * @param [property] The [KProperty] pointing to the frame column.
      * @receiver The [ColumnGroupReference] to get the frame column from.
      */
@@ -855,7 +855,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [CommonColsDocs.Examples]}
+     * {@getArg [CommonColsDocs.Examples]}
      *
      */
     private interface CommonColsDocs {
@@ -871,8 +871,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         /**
          * @include [CommonColsDocs]
          *
-         * @param [firstCol\] A {@includeArg [AccessorType]} that points to a column.
-         * @param [otherCols\] Optional additional {@includeArg [AccessorType]}s that point to columns.
+         * @param [firstCol\] A {@getArg [AccessorType]} that points to a column.
+         * @param [otherCols\] Optional additional {@getArg [AccessorType]}s that point to columns.
          * @return A [ColumnSet] containing the columns that [firstCol\] and [otherCols\] point to.
          */
         interface Vararg {
@@ -888,7 +888,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonColsDocs.Predicate]
-     * @arg [CommonColsDocs.Examples]
+     * @setArg [CommonColsDocs.Examples]
      *
      * `// although these can be shortened to just the `[colsOf][colsOf]` call`
      *
@@ -917,7 +917,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonColsDocs.Predicate]
-     * @arg [CommonColsDocs.Examples]
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][select]` { `[cols][cols]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
      *
@@ -956,7 +956,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonColsDocs.Predicate]
-     * @arg [CommonColsDocs.Examples]
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][select]` { "myGroupCol".`[cols][cols]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
      *
@@ -980,7 +980,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonColsDocs.Predicate]
-     * @arg [CommonColsDocs.Examples]
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][select]` { Type::columnGroup.`[cols][cols]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
      *
@@ -1009,8 +1009,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     // region references
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][select]` { `[colsOf][colsOf]`<`[String][String]`>().`[cols][cols]`(columnA, columnB) }`
      *
@@ -1038,8 +1038,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     ): ColumnSet<C> = cols(firstCol, *otherCols)
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][select]` { `[cols][cols]`(columnA, columnB) }`
      *
@@ -1081,8 +1081,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     ): ColumnSet<C> = cols(firstCol, *otherCols)
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][select]` { "myColumnGroup".`[cols][cols]`(columnA, columnB) }`
      *
@@ -1105,8 +1105,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     ): ColumnSet<C> = cols(firstCol, *otherCols)
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][select]` { Type::myColumnGroup.`[cols][cols]`(columnA, columnB) }`
      *
@@ -1133,8 +1133,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     // region names
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [String]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [String]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][select]` { `[colsOf][colsOf]`<`[String][String]`>().`[cols][cols]`("columnA", "columnB") }`
      *
@@ -1159,8 +1159,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     ): ColumnSet<C> = cols(firstCol, *otherCols)
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [String]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [String]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][select]` { `[cols][cols]`("columnA", "columnB") }`
      *
@@ -1196,8 +1196,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     ): ColumnSet<*> = cols(firstCol, *otherCols)
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [String]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [String]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][select]` { "columnGroup".`[cols][cols]`("columnA", "columnB") }`
      *
@@ -1218,8 +1218,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     ): ColumnSet<*> = cols(firstCol, *otherCols)
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [String]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [String]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][select]` { Type::myColumnGroup.`[cols][cols]`("columnA", "columnB") }`
      *
@@ -1244,8 +1244,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     // region properties
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [KProperty]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [KProperty]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][select]` { `[colsOf][colsOf]`<`[String][String]`>().`[cols][cols]`(Type::colA, Type::colB) }`
      *
@@ -1268,8 +1268,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     ): ColumnSet<C> = cols(firstCol, *otherCols)
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [KProperty]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [KProperty]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][select]` { `[cols][cols]`(Type::colA, Type::colB) }`
      *
@@ -1300,8 +1300,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     ): ColumnSet<C> = cols(firstCol, *otherCols)
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [KProperty]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [KProperty]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][select]` { "myColumnGroup".`[cols][cols]`(Type::colA, Type::colB) }`
      *
@@ -1322,8 +1322,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     ): ColumnSet<C> = cols(firstCol, *otherCols)
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [KProperty]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [KProperty]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][select]` { Type::myColumnGroup.`[cols][cols]`(Type::colA, Type::colB) }`
      *
@@ -1489,7 +1489,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [CommonAllDocs.Examples]}
+     * {@getArg [CommonAllDocs.Examples]}
      *
      * @see [cols\]
      */
@@ -1501,7 +1501,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonAllDocs]
-     * @arg [CommonAllDocs.Examples]
+     * @setArg [CommonAllDocs.Examples]
      *
      * `df.`[select][select]` { `[cols][cols]` { "a" in `[name][ColumnWithPath.name]` }.`[all][all]`() }`
      * {@include [LineBreak]}
@@ -1512,7 +1512,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonAllDocs]
-     * @arg [CommonAllDocs.Examples]
+     * @setArg [CommonAllDocs.Examples]
      *
      * `df.`[select][select]` { `[all][all]`() }`
      *
@@ -1524,7 +1524,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonAllDocs]
-     * @arg [CommonAllDocs.Examples]
+     * @setArg [CommonAllDocs.Examples]
      *
      * `df.`[select][select]` { "myGroupCol".`[all][all]`() }`
      */
@@ -1532,7 +1532,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonAllDocs]
-     * @arg [CommonAllDocs.Examples]
+     * @setArg [CommonAllDocs.Examples]
      *
      * `df.`[select][select]` { Type::columnGroup.`[all][all]`() }`
      */
@@ -1594,7 +1594,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [CommonRecursivelyDocs.Examples]}
+     * {@getArg [CommonRecursivelyDocs.Examples]}
      *
      * @param [includeTopLevel\] Whether to include the top-level columns in the result. `true` by default.
      */
@@ -1606,7 +1606,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonRecursivelyDocs]
-     * @arg [CommonRecursivelyDocs.Examples]
+     * @setArg [CommonRecursivelyDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][ColumnSet.colsOf]`<`[String][String]`>().`[recursively][recursively]`() }`
      *
@@ -1622,7 +1622,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     /**
      * @include [CommonRecursivelyDocs]
-     * @arg [CommonRecursivelyDocs.Examples]
+     * @setArg [CommonRecursivelyDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { `[first][ColumnSet.first]` { col -> col.`[any][DataColumn.any]` { it == "Alice" } }.`[recursively][recursively]`() }`
      *
