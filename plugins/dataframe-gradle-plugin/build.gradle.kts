@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+
 plugins {
     `kotlin-dsl`
     `java-gradle-plugin`
@@ -104,13 +106,13 @@ tasks.withType<JavaCompile>().all {
 }
 
 sourceSets {
+    val main by getting
+    val test by getting
+    val testRuntimeClasspath by configurations
     create("integrationTest") {
-        withConvention(org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet::class) {
-            kotlin.srcDir("src/integrationTest/kotlin")
-            resources.srcDir("src/integrationTest/resources")
-            compileClasspath += sourceSets["main"].output + sourceSets["test"].output + configurations["testRuntimeClasspath"]
-            runtimeClasspath += output + compileClasspath + sourceSets["test"].runtimeClasspath
-        }
+        kotlin.srcDir("src/integrationTest/kotlin")
+        compileClasspath += main.output + test.output + testRuntimeClasspath
+        runtimeClasspath += output + compileClasspath + test.runtimeClasspath
     }
 }
 
