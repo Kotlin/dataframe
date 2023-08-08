@@ -19,9 +19,12 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.excludePredicateJoin
 import org.jetbrains.kotlinx.dataframe.api.filterPredicateJoin
 import org.jetbrains.kotlinx.dataframe.api.fullPredicateJoin
+import org.jetbrains.kotlinx.dataframe.api.innerJoin
 import org.jetbrains.kotlinx.dataframe.api.innerPredicateJoin
+import org.jetbrains.kotlinx.dataframe.api.leftJoin
 import org.jetbrains.kotlinx.dataframe.api.leftPredicateJoin
 import org.jetbrains.kotlinx.dataframe.api.predicateJoin
+import org.jetbrains.kotlinx.dataframe.api.rightJoin
 import org.jetbrains.kotlinx.dataframe.api.rightPredicateJoin
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.explainer.PluginCallbackProxy
@@ -36,7 +39,7 @@ import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.junit.Test
 import java.time.format.DateTimeFormatter
 
-class PredicateJoin {
+class PredicateJoin : TestBase() {
 
     @DataSchema
     interface Campaigns {
@@ -66,7 +69,20 @@ class PredicateJoin {
         LocalDate(2023, 7, 10), 2,
     ).cast<Visits>()
 
-    class ColoredValue<T>(val value: T, val backgroundColor: RGBColor, val textColor: RGBColor)
+    class ColoredValue<T>(val value: T, val backgroundColor: RGBColor, val textColor: RGBColor) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as ColoredValue<*>
+
+            return value == other.value
+        }
+
+        override fun hashCode(): Int {
+            return value?.hashCode() ?: 0
+        }
+    }
 
     private val renderer = object : ChainedCellRenderer(DefaultCellRenderer) {
         override fun maybeContent(value: Any?, configuration: DisplayConfiguration): RenderedContent? {
@@ -131,21 +147,31 @@ class PredicateJoin {
             "startDate"<ColoredValue<LocalDate>>().value.."endDate"<ColoredValue<LocalDate>>().value
     }
 
-    private fun snippetOutput(coloredResult: DataFrame<Any?>, result: DataFrame<Any?>) {
-        coloredCampaigns.uwrapColoredValues() shouldBe campaigns
-        coloredVisits.uwrapColoredValues() shouldBe visits
-        coloredResult.uwrapColoredValues() shouldBe result
-
-        fun DataFrameHtmlData.wrap(title: String): DataFrameHtmlData {
-            return copy(
-                body = """
+    private fun DataFrameHtmlData.wrap(title: String): DataFrameHtmlData {
+        return copy(
+            body = """
                     <div class="table-container">
                         <b>$title</b>
                         $body
                     </div>
-                """.trimIndent()
-            )
-        }
+            """.trimIndent()
+        )
+    }
+
+    private fun DataFrameHtmlData.wrap(): DataFrameHtmlData {
+        return copy(
+            body = """
+                    <div class="table-container">
+                        $body
+                    </div>
+            """.trimIndent()
+        )
+    }
+
+    private fun snippetOutput(coloredResult: DataFrame<Any?>, result: DataFrame<Any?>) {
+        coloredCampaigns.uwrapColoredValues() shouldBe campaigns
+        coloredVisits.uwrapColoredValues() shouldBe visits
+        coloredResult.uwrapColoredValues() shouldBe result
 
         PluginCallbackProxy.overrideHtmlOutput(
             manualOutput = DataFrameHtmlData.tableDefinitions()
@@ -464,4 +490,170 @@ class PredicateJoin {
         val coloredResult = coloredCampaigns.predicateJoin(coloredVisits) { true }
         snippetOutput(coloredResult, result)
     }
+
+    val df1 = dataFrameOf("index", "age", "name")(
+        1.spring(), 15.spring(), "BOB".spring(),
+        2.summer(), 19.summer(), "ALICE".summer(),
+        3.autumn(), 20.autumn(), "CHARLIE".autumn()
+    )
+
+    val df2 = dataFrameOf("index", "age", "name")(
+        1.spring(), 15.spring(), "Bob".spring(),
+        2.summer(), 19.summer(), "Alice".summer(),
+        4.winter(), 21.winter(), "John".winter()
+    )
+
+    @TransformDataFrameExpressions
+    @Test
+    fun compareInnerColumns() {
+        // SampleStart
+        df1.innerJoin(df2, "index", "age")
+        // SampleEnd
+
+        PluginCallbackProxy.overrideHtmlOutput(
+            manualOutput = DataFrameHtmlData.tableDefinitions()
+                .plus(
+                    DataFrameHtmlData()
+                        .plus(df1.toColoredHTML().wrap("df1"))
+                        .plus(df2.toColoredHTML().wrap("df2"))
+                        .plus(df1.innerJoin(df2, "index", "age").toColoredHTML().wrap("result"))
+                        .wrapRow()
+                )
+                .plus(other)
+        )
+    }
+
+    @TransformDataFrameExpressions
+    @Test
+    fun compareInnerValues() {
+        // SampleStart
+        df1.innerPredicateJoin(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
+        // SampleEnd
+
+        PluginCallbackProxy.overrideHtmlOutput(
+            manualOutput = DataFrameHtmlData.tableDefinitions()
+                .plus(
+                    DataFrameHtmlData()
+                        .plus(df1.toColoredHTML().wrap("df1"))
+                        .plus(df2.toColoredHTML().wrap("df2"))
+                        .plus(
+                            df1.innerPredicateJoin(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
+                                .toColoredHTML().wrap("result")
+                        )
+                        .wrapRow()
+                )
+                .plus(other)
+        )
+    }
+
+    @TransformDataFrameExpressions
+    @Test
+    fun compareLeft() {
+        // SampleStart
+        df1.leftJoin(df2, "index", "age")
+        df1.leftPredicateJoin(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
+        // SampleEnd
+
+        PluginCallbackProxy.overrideHtmlOutput(
+            manualOutput = DataFrameHtmlData.tableDefinitions()
+                .plus(
+                    DataFrameHtmlData()
+                        .plus(df1.toColoredHTML().wrap("df1"))
+                        .plus(df2.toColoredHTML().wrap("df2"))
+                        .plus(
+                            df1.leftJoin(df2, "index", "age").toColoredHTML().wrap("result")
+                        )
+                        .wrapRow()
+                )
+                .plus(DataFrameHtmlData(body = "<br><br>"))
+                .plus(
+                    DataFrameHtmlData()
+                        .plus(df1.toColoredHTML().wrap())
+                        .plus(df2.toColoredHTML().wrap())
+                        .plus(
+                            df1.leftPredicateJoin(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
+                                .toColoredHTML().wrap()
+                        )
+                        .wrapRow()
+                )
+                .plus(other)
+        )
+    }
+
+    @TransformDataFrameExpressions
+    @Test
+    fun compareRight() {
+        // SampleStart
+        df1.rightJoin(df2, "index", "age")
+        df1.rightPredicateJoin(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
+        // SampleEnd
+
+        PluginCallbackProxy.overrideHtmlOutput(
+            manualOutput = DataFrameHtmlData.tableDefinitions()
+                .plus(
+                    DataFrameHtmlData()
+                        .plus(df1.toColoredHTML().wrap("df1"))
+                        .plus(df2.toColoredHTML().wrap("df2"))
+                        .plus(
+                            df1.rightJoin(df2, "index", "age").toColoredHTML().wrap("result")
+                        )
+                        .wrapRow()
+                )
+                .plus(DataFrameHtmlData(body = "<br><br>"))
+                .plus(
+                    DataFrameHtmlData()
+                        .plus(df1.toColoredHTML().wrap())
+                        .plus(df2.toColoredHTML().wrap())
+                        .plus(
+                            df1.rightPredicateJoin(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
+                                .toColoredHTML().wrap()
+                        )
+                        .wrapRow()
+                )
+                .plus(other)
+        )
+    }
+
+    private fun DataFrameHtmlData.wrapRow(): DataFrameHtmlData {
+        return copy(
+            body = """
+                    <div class="table-row">
+                        $body
+                    </div>
+            """.trimIndent()
+        )
+    }
+
+    private val other = DataFrameHtmlData(
+        style = """
+            body {
+                font-family: "JetBrains Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace;
+                font-size: 14px;
+            }
+
+            :root {
+                color: #19191C;
+                background-color: #fff;
+            }
+            
+            :root[theme="dark"] {
+                background-color: #19191C;
+                color: #FFFFFFCC
+            }
+            
+            .table-row {
+                display: flex;
+                align-items: flex-start;
+                overflow-x: auto;
+            }
+            
+            .table-container:not(:last-child) {
+                margin-right: 20px; 
+            }
+            
+            td {
+                white-space: nowrap;
+            }
+        """.trimIndent()
+    )
 }
