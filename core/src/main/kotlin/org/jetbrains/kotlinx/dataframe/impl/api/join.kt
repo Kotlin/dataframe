@@ -3,17 +3,7 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.ColumnMatch
-import org.jetbrains.kotlinx.dataframe.api.JoinColumnsSelector
-import org.jetbrains.kotlinx.dataframe.api.JoinDsl
-import org.jetbrains.kotlinx.dataframe.api.JoinType
-import org.jetbrains.kotlinx.dataframe.api.allowLeftNulls
-import org.jetbrains.kotlinx.dataframe.api.allowRightNulls
-import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
-import org.jetbrains.kotlinx.dataframe.api.indices
-import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
-import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
-import org.jetbrains.kotlinx.dataframe.api.toDataFrameFromPairs
+import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -21,7 +11,10 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
+import org.jetbrains.kotlinx.dataframe.impl.api.getColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
+import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -38,14 +31,15 @@ internal fun <T> defaultJoinColumns(dataFrames: Iterable<DataFrame<T>>): JoinCol
         }.orEmpty().map { it.toColumnAccessor() }.let { ColumnsList(it) }
     }
 
-internal fun <C> ColumnSet<C>.extractJoinColumns(): List<ColumnMatch<C>> = when (this) {
+internal fun <C> ColumnSet<C>.extractJoinColumns(): List<JoinDslReturnType<C>> = when (this) {
     is ColumnsList -> columns.flatMap { it.extractJoinColumns() }
     is ColumnReference<C> -> listOf(ColumnMatch(this, path().toColumnAccessor() as ColumnReference<C>))
     is ColumnMatch -> listOf(this)
+    is ColumnPredicate<*, *> -> listOf(this as JoinDslReturnType<C>)
     else -> throw Exception()
 }
 
-internal fun <A, B> DataFrame<A>.getColumns(other: DataFrame<B>, selector: JoinColumnsSelector<A, B>): List<ColumnMatch<Any?>> {
+internal fun <A, B> DataFrame<A>.getColumns(other: DataFrame<B>, selector: JoinColumnsSelector<A, B>): List<JoinDslReturnType<Any?>> {
     val receiver = object : DataFrameReceiver<A>(this, UnresolvedColumnsPolicy.Fail), JoinDsl<A, B> {
         override val right: DataFrame<B> = DataFrameReceiver(other, UnresolvedColumnsPolicy.Fail)
     }
@@ -60,6 +54,12 @@ internal fun <A, B> DataFrame<A>.joinImpl(
     selector: JoinColumnsSelector<A, B>?
 ): DataFrame<A> {
     val joinColumns = getColumns(other, selector ?: defaultJoinColumns(this, other))
+    if (joinColumns.any { it is ColumnPredicate<*, *> }) {
+        val predicate = joinColumns.last { it is ColumnPredicate<*, *> } as ColumnPredicate<A, B>
+        return predicateJoinImpl(other, joinType, addNewColumns, predicate.joinExpression)
+    }
+    require(joinColumns.all { it is ColumnMatch<*> }) { "Only column matches are supported in join" }
+    joinColumns as List<ColumnMatch<*>>
 
     val leftJoinColumns = getColumnsWithPaths { joinColumns.map { it.left }.toColumnSet() }
     val rightJoinColumns = other.getColumnsWithPaths { joinColumns.map { it.right }.toColumnSet() }

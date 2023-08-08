@@ -103,9 +103,21 @@ public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
     public infix fun <C> ColumnReference<C>.match(other: KProperty<C>): ColumnMatch<C> = ColumnMatch(this, other.toColumnAccessor())
 
     public infix fun <C> KProperty<C>.match(other: ColumnReference<C>): ColumnMatch<C> = ColumnMatch(toColumnAccessor(), other)
+
+    public fun where(joinExpression: JoinExpression<A, B>): ColumnPredicate<@UnsafeVariance A, @UnsafeVariance B> =
+        ColumnPredicate(joinExpression)
 }
 
-public class ColumnMatch<C>(public val left: ColumnReference<C>, public val right: ColumnReference<C>) : ColumnSet<C> {
+public interface JoinDslReturnType<C>: ColumnSet<C>
+
+public class ColumnPredicate<A, B>(public val joinExpression: JoinExpression<A, B>) : JoinDslReturnType<Any?> {
+
+    override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<Any?>> {
+        throw UnsupportedOperationException()
+    }
+}
+
+public open class ColumnMatch<C>(public val left: ColumnReference<C>, public val right: ColumnReference<C>) : JoinDslReturnType<C> {
 
     override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> {
         throw UnsupportedOperationException()

@@ -1,26 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.testSets.person
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.api.JoinType
-import org.jetbrains.kotlinx.dataframe.api.addId
-import org.jetbrains.kotlinx.dataframe.api.all
-import org.jetbrains.kotlinx.dataframe.api.append
-import org.jetbrains.kotlinx.dataframe.api.column
-import org.jetbrains.kotlinx.dataframe.api.count
-import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.distinct
-import org.jetbrains.kotlinx.dataframe.api.excludeJoin
-import org.jetbrains.kotlinx.dataframe.api.excludePredicateJoin
-import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.api.filterPredicateJoin
-import org.jetbrains.kotlinx.dataframe.api.fullPredicateJoin
-import org.jetbrains.kotlinx.dataframe.api.innerPredicateJoin
-import org.jetbrains.kotlinx.dataframe.api.leftPredicateJoin
-import org.jetbrains.kotlinx.dataframe.api.predicateJoin
-import org.jetbrains.kotlinx.dataframe.api.print
-import org.jetbrains.kotlinx.dataframe.api.remove
-import org.jetbrains.kotlinx.dataframe.api.rightPredicateJoin
-import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.api.*
 import org.junit.Test
 
 class PredicateJoinTests : BaseJoinTest() {
@@ -29,6 +10,19 @@ class PredicateJoinTests : BaseJoinTest() {
     fun `inner join`() {
         val res = typed.predicateJoin(typed2) {
             name == right.name && city == right.origin
+        }
+        res.columnsCount() shouldBe 8
+        res.rowsCount() shouldBe 7
+        res["age1"].hasNulls() shouldBe false
+        res.count { name == "Charlie" && city == "Moscow" } shouldBe 4
+        res.select { city and name }.distinct().rowsCount() shouldBe 3
+        res[Person2::grade].hasNulls() shouldBe false
+    }
+
+    @Test
+    fun `inner join 2`() {
+        val res = typed.join(typed2) {
+            where { name == right.name && city == right.origin }
         }
         res.columnsCount() shouldBe 8
         res.rowsCount() shouldBe 7
