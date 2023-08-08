@@ -10,24 +10,24 @@ import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.api.excludeJoin
-import org.jetbrains.kotlinx.dataframe.api.excludePredicateJoin
+import org.jetbrains.kotlinx.dataframe.api.excludeJoinWith
 import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.api.filterPredicateJoin
-import org.jetbrains.kotlinx.dataframe.api.fullPredicateJoin
-import org.jetbrains.kotlinx.dataframe.api.innerPredicateJoin
-import org.jetbrains.kotlinx.dataframe.api.leftPredicateJoin
-import org.jetbrains.kotlinx.dataframe.api.predicateJoin
+import org.jetbrains.kotlinx.dataframe.api.filterJoinWith
+import org.jetbrains.kotlinx.dataframe.api.fullJoinWith
+import org.jetbrains.kotlinx.dataframe.api.innerJoinWith
+import org.jetbrains.kotlinx.dataframe.api.joinWith
+import org.jetbrains.kotlinx.dataframe.api.leftJoinWith
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.remove
-import org.jetbrains.kotlinx.dataframe.api.rightPredicateJoin
+import org.jetbrains.kotlinx.dataframe.api.rightJoinWith
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.junit.Test
 
-class PredicateJoinTests : BaseJoinTest() {
+class JoinWithTests : BaseJoinTest() {
 
     @Test
     fun `inner join`() {
-        val res = typed.predicateJoin(typed2) {
+        val res = typed.joinWith(typed2) {
             name == right.name && city == right.origin
         }
         res.columnsCount() shouldBe 8
@@ -40,7 +40,7 @@ class PredicateJoinTests : BaseJoinTest() {
 
     @Test
     fun `left join`() {
-        val res = typed.leftPredicateJoin(typed2) { name == right.name && city == right.origin }
+        val res = typed.leftJoinWith(typed2) { name == right.name && city == right.origin }
 
         res.columnsCount() shouldBe 8
         res.rowsCount() shouldBe 10
@@ -52,7 +52,7 @@ class PredicateJoinTests : BaseJoinTest() {
 
     @Test
     fun `right join`() {
-        val res = typed.rightPredicateJoin(typed2) {
+        val res = typed.rightJoinWith(typed2) {
             name == right.name && city == right.origin
         }
         res.columnsCount() shouldBe 8
@@ -68,7 +68,7 @@ class PredicateJoinTests : BaseJoinTest() {
 
     @Test
     fun `outer join`() {
-        val res = typed.fullPredicateJoin(typed2) { name == right.name && city == right.origin }
+        val res = typed.fullJoinWith(typed2) { name == right.name && city == right.origin }
         println(res)
         res.columnsCount() shouldBe 8
         res.rowsCount() shouldBe 12
@@ -81,20 +81,20 @@ class PredicateJoinTests : BaseJoinTest() {
 
     @Test
     fun `filter join`() {
-        val res = typed.filterPredicateJoin(typed2) { city == right.origin }
-        val expected = typed.innerPredicateJoin(typed2.select { origin }) { city == right.origin }.remove("origin")
+        val res = typed.filterJoinWith(typed2) { city == right.origin }
+        val expected = typed.innerJoinWith(typed2.select { origin }) { city == right.origin }.remove("origin")
         res shouldBe expected
     }
 
     @Test
     fun `filter not join`() {
-        val res = typed.excludePredicateJoin(typed2) { city == right.origin }
+        val res = typed.excludeJoinWith(typed2) { city == right.origin }
         res.rowsCount() shouldBe 3
         res.city.toSet() shouldBe typed.city.toSet() - typed2.origin.toSet()
 
         val indexColumn = column<Int>("__index__")
         val withIndex = typed.addId(indexColumn)
-        val joined = withIndex.filterPredicateJoin(typed2) { city == right.origin }
+        val joined = withIndex.filterJoinWith(typed2) { city == right.origin }
         val joinedIndices = joined[indexColumn].toSet()
         val expected = withIndex.filter { !joinedIndices.contains(it[indexColumn]) }.remove(indexColumn)
 
@@ -120,11 +120,11 @@ class PredicateJoinTests : BaseJoinTest() {
 
     @Test
     fun `test overloads contract`() {
-        typed.innerPredicateJoin(typed2) { name == right.name && city == right.origin } shouldBe typed.predicateJoin(typed2, JoinType.Inner) { name == right.name && city == right.origin }
-        typed.leftPredicateJoin(typed2) { name == right.name && city == right.origin } shouldBe typed.predicateJoin(typed2, JoinType.Left) { name == right.name && city == right.origin }
-        typed.rightPredicateJoin(typed2) { name == right.name && city == right.origin } shouldBe typed.predicateJoin(typed2, JoinType.Right) { name == right.name && city == right.origin }
-        typed.fullPredicateJoin(typed2) { name == right.name && city == right.origin } shouldBe typed.predicateJoin(typed2, JoinType.Full) { name == right.name && city == right.origin }
-        typed.excludePredicateJoin(typed2) { city == right.origin } shouldBe typed.predicateJoin(typed2, JoinType.Exclude) { city == right.origin }
-        typed.filterPredicateJoin(typed2) { city == right.origin } shouldBe typed.predicateJoin(typed2, JoinType.Filter) { city == right.origin }
+        typed.innerJoinWith(typed2) { name == right.name && city == right.origin } shouldBe typed.joinWith(typed2, JoinType.Inner) { name == right.name && city == right.origin }
+        typed.leftJoinWith(typed2) { name == right.name && city == right.origin } shouldBe typed.joinWith(typed2, JoinType.Left) { name == right.name && city == right.origin }
+        typed.rightJoinWith(typed2) { name == right.name && city == right.origin } shouldBe typed.joinWith(typed2, JoinType.Right) { name == right.name && city == right.origin }
+        typed.fullJoinWith(typed2) { name == right.name && city == right.origin } shouldBe typed.joinWith(typed2, JoinType.Full) { name == right.name && city == right.origin }
+        typed.excludeJoinWith(typed2) { city == right.origin } shouldBe typed.joinWith(typed2, JoinType.Exclude) { city == right.origin }
+        typed.filterJoinWith(typed2) { city == right.origin } shouldBe typed.joinWith(typed2, JoinType.Filter) { city == right.origin }
     }
 }

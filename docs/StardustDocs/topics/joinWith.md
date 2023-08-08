@@ -1,11 +1,11 @@
-[//]: # (title: predicateJoin)
+[//]: # (title: joinWith)
 
-<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.PredicateJoin-->
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.JoinWith-->
 
 Joins two [`DataFrames`](DataFrame.md) by a join expression. 
 
 ```kotlin
-predicateJoin(otherDf, type = JoinType.Inner) { joinExpression }
+joinWith(otherDf, type = JoinType.Inner) { joinExpression }
 
 joinExpression: JoinedDataRow.(JoinedDataRow) -> Boolean
 
@@ -40,12 +40,12 @@ For every join type there is a shortcut operation:
 
 #### Inner join
 
-<!---FUN predicateJoin-->
+<!---FUN joinWith-->
 <tabs>
 <tab title="Properties">
 
 ```kotlin
-campaigns.innerPredicateJoin(visits) {
+campaigns.innerJoinWith(visits) {
     right.date in startDate..endDate
 }
 ```
@@ -58,7 +58,7 @@ val date by column<LocalDate>()
 val startDate by column<LocalDate>()
 val endDate by column<LocalDate>()
 
-campaigns.innerPredicateJoin(visits) {
+campaigns.innerJoinWith(visits) {
     right[date] in startDate()..endDate()
 }
 ```
@@ -67,25 +67,25 @@ campaigns.innerPredicateJoin(visits) {
 <tab title="Strings">
 
 ```kotlin
-campaigns.innerPredicateJoin(visits) {
+campaigns.innerJoinWith(visits) {
     right[{ "date"<LocalDate>() }] in "startDate"<LocalDate>().."endDate"<LocalDate>()
 }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.PredicateJoin.predicateJoin.html"/>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.joinWith.html"/>
 <!---END-->
 
 #### Filter join
 
 Special case of inner join when you only need the data from the left table.
 
-<!---FUN filterPredicateJoin-->
+<!---FUN filterJoinWith-->
 <tabs>
 <tab title="Properties">
 
 ```kotlin
-campaigns.filterPredicateJoin(visits) {
+campaigns.filterJoinWith(visits) {
     right.date in startDate..endDate
 }
 ```
@@ -98,7 +98,7 @@ val date by column<LocalDate>()
 val startDate by column<LocalDate>()
 val endDate by column<LocalDate>()
 
-campaigns.filterPredicateJoin(visits) {
+campaigns.filterJoinWith(visits) {
     right[date] in startDate()..endDate()
 }
 ```
@@ -107,23 +107,23 @@ campaigns.filterPredicateJoin(visits) {
 <tab title="Strings">
 
 ```kotlin
-campaigns.filterPredicateJoin(visits) {
+campaigns.filterJoinWith(visits) {
     right[{ "date"<LocalDate>() }] in "startDate"<LocalDate>().."endDate"<LocalDate>()
 }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.PredicateJoin.filterPredicateJoin.html"/>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.filterJoinWith.html"/>
 <!---END-->
 
 #### Left join
 
-<!---FUN leftPredicateJoin-->
+<!---FUN leftJoinWith-->
 <tabs>
 <tab title="Properties">
 
 ```kotlin
-campaigns.leftPredicateJoin(visits) {
+campaigns.leftJoinWith(visits) {
     right.date in startDate..endDate
 }
 ```
@@ -136,7 +136,7 @@ val date by column<LocalDate>()
 val startDate by column<LocalDate>()
 val endDate by column<LocalDate>()
 
-campaigns.leftPredicateJoin(visits) {
+campaigns.leftJoinWith(visits) {
     right[date] in startDate()..endDate()
 }
 ```
@@ -145,23 +145,23 @@ campaigns.leftPredicateJoin(visits) {
 <tab title="Strings">
 
 ```kotlin
-campaigns.leftPredicateJoin(visits) {
+campaigns.leftJoinWith(visits) {
     right[{ "date"<LocalDate>() }] in "startDate"<LocalDate>().."endDate"<LocalDate>()
 }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.PredicateJoin.leftPredicateJoin.html"/>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.leftJoinWith.html"/>
 <!---END-->
 
 #### Right join
 
-<!---FUN rightPredicateJoin-->
+<!---FUN rightJoinWith-->
 <tabs>
 <tab title="Properties">
 
 ```kotlin
-campaigns.rightPredicateJoin(visits) {
+campaigns.rightJoinWith(visits) {
     right.date in startDate..endDate
 }
 ```
@@ -174,7 +174,7 @@ val date by column<LocalDate>()
 val startDate by column<LocalDate>()
 val endDate by column<LocalDate>()
 
-campaigns.rightPredicateJoin(visits) {
+campaigns.rightJoinWith(visits) {
     right[date] in startDate()..endDate()
 }
 ```
@@ -183,23 +183,23 @@ campaigns.rightPredicateJoin(visits) {
 <tab title="Strings">
 
 ```kotlin
-campaigns.rightPredicateJoin(visits) {
+campaigns.rightJoinWith(visits) {
     right[{ "date"<LocalDate>() }] in "startDate"<LocalDate>().."endDate"<LocalDate>()
 }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.PredicateJoin.rightPredicateJoin.html"/>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.rightJoinWith.html"/>
 <!---END-->
 
 #### Full join
 
-<!---FUN fullPredicateJoin-->
+<!---FUN fullJoinWith-->
 <tabs>
 <tab title="Properties">
 
 ```kotlin
-campaigns.fullPredicateJoin(visits) {
+campaigns.fullJoinWith(visits) {
     right.date in startDate..endDate
 }
 ```
@@ -212,7 +212,7 @@ val date by column<LocalDate>()
 val startDate by column<LocalDate>()
 val endDate by column<LocalDate>()
 
-campaigns.fullPredicateJoin(visits) {
+campaigns.fullJoinWith(visits) {
     right[date] in startDate()..endDate()
 }
 ```
@@ -221,25 +221,25 @@ campaigns.fullPredicateJoin(visits) {
 <tab title="Strings">
 
 ```kotlin
-campaigns.fullPredicateJoin(visits) {
+campaigns.fullJoinWith(visits) {
     right[{ "date"<LocalDate>() }] in "startDate"<LocalDate>().."endDate"<LocalDate>()
 }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.PredicateJoin.fullPredicateJoin.html"/>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.fullJoinWith.html"/>
 <!---END-->
 
 #### Exclude join
 
 Can be viewed as **filterJoin** with logically opposite predicate 
 
-<!---FUN excludePredicateJoin-->
+<!---FUN excludeJoinWith-->
 <tabs>
 <tab title="Properties">
 
 ```kotlin
-campaigns.excludePredicateJoin(visits) {
+campaigns.excludeJoinWith(visits) {
     right.date in startDate..endDate
 }
 ```
@@ -252,7 +252,7 @@ val date by column<LocalDate>()
 val startDate by column<LocalDate>()
 val endDate by column<LocalDate>()
 
-campaigns.excludePredicateJoin(visits) {
+campaigns.excludeJoinWith(visits) {
     right[date] in startDate()..endDate()
 }
 ```
@@ -261,13 +261,13 @@ campaigns.excludePredicateJoin(visits) {
 <tab title="Strings">
 
 ```kotlin
-campaigns.excludePredicateJoin(visits) {
+campaigns.excludeJoinWith(visits) {
     right[{ "date"<LocalDate>() }] in "startDate"<LocalDate>().."endDate"<LocalDate>()
 }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.PredicateJoin.excludePredicateJoin.html"/>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.excludeJoinWith.html"/>
 <!---END-->
 
 #### Cross join
@@ -277,10 +277,10 @@ Can also be called cross product of two dataframes
 <!---FUN crossProduct-->
 
 ```kotlin
-campaigns.predicateJoin(visits) { true }
+campaigns.joinWith(visits) { true }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.PredicateJoin.crossProduct.html"/>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.crossProduct.html"/>
 <!---END-->
 
 ### Difference from join
@@ -293,41 +293,41 @@ campaigns.predicateJoin(visits) { true }
 df1.innerJoin(df2, "index", "age")
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.PredicateJoin.compareInnerColumns.html"/>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.compareInnerColumns.html"/>
 <!---END-->
 
 Columns that were used in the condition: `index`, `age` - are present only once. Numerical suffix is used to disambiguate columns that are not used in the condition.
-Compare it to an equivalent predicate join:
+Compare it to an equivalent `joinWith`:
 
 <!---FUN compareInnerValues-->
 
 ```kotlin
-df1.innerPredicateJoin(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
+df1.innerJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.PredicateJoin.compareInnerValues.html"/>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.compareInnerValues.html"/>
 <!---END-->
 
-Here columns from both dataframes are presented as is. So [join](join.md) is better suited for `equals` relation, and predicateJoin is for everything else.
+Here columns from both dataframes are presented as is. So [join](join.md) is better suited for `equals` relation, and joinWith is for everything else.
 Below are two more examples with join types that allow mismatches. Note the difference in `null` values
 
 <!---FUN compareLeft-->
 
 ```kotlin
 df1.leftJoin(df2, "index", "age")
-df1.leftPredicateJoin(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
+df1.leftJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.PredicateJoin.compareLeft.html"/>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.compareLeft.html"/>
 <!---END-->
 
 <!---FUN compareRight-->
 
 ```kotlin
 df1.rightJoin(df2, "index", "age")
-df1.rightPredicateJoin(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
+df1.rightJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.PredicateJoin.compareRight.html"/>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.compareRight.html"/>
 <!---END-->
 

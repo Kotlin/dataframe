@@ -16,16 +16,17 @@ import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.excludePredicateJoin
-import org.jetbrains.kotlinx.dataframe.api.filterPredicateJoin
-import org.jetbrains.kotlinx.dataframe.api.fullPredicateJoin
+import org.jetbrains.kotlinx.dataframe.api.excludeJoinWith
+import org.jetbrains.kotlinx.dataframe.api.filterJoinWith
+import org.jetbrains.kotlinx.dataframe.api.fullJoinWith
+import org.jetbrains.kotlinx.dataframe.api.getValue
 import org.jetbrains.kotlinx.dataframe.api.innerJoin
-import org.jetbrains.kotlinx.dataframe.api.innerPredicateJoin
+import org.jetbrains.kotlinx.dataframe.api.innerJoinWith
+import org.jetbrains.kotlinx.dataframe.api.joinWith
 import org.jetbrains.kotlinx.dataframe.api.leftJoin
-import org.jetbrains.kotlinx.dataframe.api.leftPredicateJoin
-import org.jetbrains.kotlinx.dataframe.api.predicateJoin
+import org.jetbrains.kotlinx.dataframe.api.leftJoinWith
 import org.jetbrains.kotlinx.dataframe.api.rightJoin
-import org.jetbrains.kotlinx.dataframe.api.rightPredicateJoin
+import org.jetbrains.kotlinx.dataframe.api.rightJoinWith
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.explainer.PluginCallbackProxy
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
@@ -39,7 +40,7 @@ import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.junit.Test
 import java.time.format.DateTimeFormatter
 
-class PredicateJoin : TestBase() {
+class JoinWith : TestBase() {
 
     @DataSchema
     interface Campaigns {
@@ -218,265 +219,265 @@ class PredicateJoin : TestBase() {
 
     @TransformDataFrameExpressions
     @Test
-    fun predicateJoin_accessors() {
+    fun joinWith_accessors() {
         val result = run {
             // SampleStart
             val date by column<LocalDate>()
             val startDate by column<LocalDate>()
             val endDate by column<LocalDate>()
 
-            campaigns.innerPredicateJoin(visits) {
+            campaigns.innerJoinWith(visits) {
                 right[date] in startDate()..endDate()
             }
             // SampleEnd
         }
-        val coloredResult = coloredCampaigns.innerPredicateJoin(coloredVisits, joinExpression = joinExpression)
+        val coloredResult = coloredCampaigns.innerJoinWith(coloredVisits, joinExpression = joinExpression)
         snippetOutput(coloredResult, result)
     }
 
     @TransformDataFrameExpressions
     @Test
-    fun filterPredicateJoin_accessors() {
+    fun filterJoinWith_accessors() {
         val result = run {
             // SampleStart
             val date by column<LocalDate>()
             val startDate by column<LocalDate>()
             val endDate by column<LocalDate>()
 
-            campaigns.filterPredicateJoin(visits) {
+            campaigns.filterJoinWith(visits) {
                 right[date] in startDate()..endDate()
             }
             // SampleEnd
         }
-        val coloredResult = coloredCampaigns.filterPredicateJoin(coloredVisits, joinExpression = joinExpression)
+        val coloredResult = coloredCampaigns.filterJoinWith(coloredVisits, joinExpression = joinExpression)
         snippetOutput(coloredResult, result)
     }
 
     @TransformDataFrameExpressions
     @Test
-    fun leftPredicateJoin_accessors() {
+    fun leftJoinWith_accessors() {
         val result = run {
             // SampleStart
             val date by column<LocalDate>()
             val startDate by column<LocalDate>()
             val endDate by column<LocalDate>()
 
-            campaigns.leftPredicateJoin(visits) {
+            campaigns.leftJoinWith(visits) {
                 right[date] in startDate()..endDate()
             }
             // SampleEnd
         }
-        val coloredResult = coloredCampaigns.leftPredicateJoin(coloredVisits, joinExpression = joinExpression)
+        val coloredResult = coloredCampaigns.leftJoinWith(coloredVisits, joinExpression = joinExpression)
         snippetOutput(coloredResult, result)
     }
 
     @TransformDataFrameExpressions
     @Test
-    fun rightPredicateJoin_accessors() {
+    fun rightJoinWith_accessors() {
         val result = run {
             // SampleStart
             val date by column<LocalDate>()
             val startDate by column<LocalDate>()
             val endDate by column<LocalDate>()
 
-            campaigns.rightPredicateJoin(visits) {
+            campaigns.rightJoinWith(visits) {
                 right[date] in startDate()..endDate()
             }
             // SampleEnd
         }
-        val coloredResult = coloredCampaigns.rightPredicateJoin(coloredVisits, joinExpression = joinExpression)
+        val coloredResult = coloredCampaigns.rightJoinWith(coloredVisits, joinExpression = joinExpression)
         snippetOutput(coloredResult, result)
     }
 
     @TransformDataFrameExpressions
     @Test
-    fun fullPredicateJoin_accessors() {
+    fun fullJoinWith_accessors() {
         val result = run {
             // SampleStart
             val date by column<LocalDate>()
             val startDate by column<LocalDate>()
             val endDate by column<LocalDate>()
 
-            campaigns.fullPredicateJoin(visits) {
+            campaigns.fullJoinWith(visits) {
                 right[date] in startDate()..endDate()
             }
             // SampleEnd
         }
-        val coloredResult = coloredCampaigns.fullPredicateJoin(coloredVisits, joinExpression = joinExpression)
+        val coloredResult = coloredCampaigns.fullJoinWith(coloredVisits, joinExpression = joinExpression)
         snippetOutput(coloredResult, result)
     }
 
     @TransformDataFrameExpressions
     @Test
-    fun excludePredicateJoin_accessors() {
+    fun excludeJoinWith_accessors() {
         val result = run {
             // SampleStart
             val date by column<LocalDate>()
             val startDate by column<LocalDate>()
             val endDate by column<LocalDate>()
 
-            campaigns.excludePredicateJoin(visits) {
+            campaigns.excludeJoinWith(visits) {
                 right[date] in startDate()..endDate()
             }
             // SampleEnd
         }
-        val coloredResult = coloredCampaigns.excludePredicateJoin(coloredVisits, joinExpression = joinExpression)
+        val coloredResult = coloredCampaigns.excludeJoinWith(coloredVisits, joinExpression = joinExpression)
         snippetOutput(coloredResult, result)
     }
 
     @TransformDataFrameExpressions
     @Test
-    fun predicateJoin_strings() {
+    fun joinWith_strings() {
         val result =
             // SampleStart
-            campaigns.innerPredicateJoin(visits) {
-                right[{ "date"<LocalDate>() }] in "startDate"<LocalDate>().."endDate"<LocalDate>()
+            campaigns.innerJoinWith(visits) {
+                right.getValue<LocalDate>("date") in "startDate"<LocalDate>().."endDate"<LocalDate>()
             }
         // SampleEnd
-        val coloredResult = coloredCampaigns.innerPredicateJoin(coloredVisits, joinExpression = joinExpression)
+        val coloredResult = coloredCampaigns.innerJoinWith(coloredVisits, joinExpression = joinExpression)
         snippetOutput(coloredResult, result)
     }
 
     @TransformDataFrameExpressions
     @Test
-    fun filterPredicateJoin_strings() {
+    fun filterJoinWith_strings() {
         val result =
             // SampleStart
-            campaigns.filterPredicateJoin(visits) {
-                right[{ "date"<LocalDate>() }] in "startDate"<LocalDate>().."endDate"<LocalDate>()
+            campaigns.filterJoinWith(visits) {
+                right.getValue<LocalDate>("date") in "startDate"<LocalDate>().."endDate"<LocalDate>()
             }
         // SampleEnd
-        val coloredResult = coloredCampaigns.filterPredicateJoin(coloredVisits, joinExpression = joinExpression)
+        val coloredResult = coloredCampaigns.filterJoinWith(coloredVisits, joinExpression = joinExpression)
         snippetOutput(coloredResult, result)
     }
 
     @TransformDataFrameExpressions
     @Test
-    fun leftPredicateJoin_strings() {
+    fun leftJoinWith_strings() {
         val result =
             // SampleStart
-            campaigns.leftPredicateJoin(visits) {
-                right[{ "date"<LocalDate>() }] in "startDate"<LocalDate>().."endDate"<LocalDate>()
+            campaigns.leftJoinWith(visits) {
+                right.getValue<LocalDate>("date") in "startDate"<LocalDate>().."endDate"<LocalDate>()
             }
         // SampleEnd
-        val coloredResult = coloredCampaigns.leftPredicateJoin(coloredVisits, joinExpression = joinExpression)
+        val coloredResult = coloredCampaigns.leftJoinWith(coloredVisits, joinExpression = joinExpression)
         snippetOutput(coloredResult, result)
     }
 
     @TransformDataFrameExpressions
     @Test
-    fun rightPredicateJoin_strings() {
+    fun rightJoinWith_strings() {
         val result =
             // SampleStart
-            campaigns.rightPredicateJoin(visits) {
-                right[{ "date"<LocalDate>() }] in "startDate"<LocalDate>().."endDate"<LocalDate>()
+            campaigns.rightJoinWith(visits) {
+                right.getValue<LocalDate>("date") in "startDate"<LocalDate>().."endDate"<LocalDate>()
             }
         // SampleEnd
-        val coloredResult = coloredCampaigns.rightPredicateJoin(coloredVisits, joinExpression = joinExpression)
+        val coloredResult = coloredCampaigns.rightJoinWith(coloredVisits, joinExpression = joinExpression)
         snippetOutput(coloredResult, result)
     }
 
     @TransformDataFrameExpressions
     @Test
-    fun fullPredicateJoin_strings() {
+    fun fullJoinWith_strings() {
         val result =
             // SampleStart
-            campaigns.fullPredicateJoin(visits) {
-                right[{ "date"<LocalDate>() }] in "startDate"<LocalDate>().."endDate"<LocalDate>()
+            campaigns.fullJoinWith(visits) {
+                right.getValue<LocalDate>("date") in "startDate"<LocalDate>().."endDate"<LocalDate>()
             }
         // SampleEnd
-        val coloredResult = coloredCampaigns.fullPredicateJoin(coloredVisits, joinExpression = joinExpression)
+        val coloredResult = coloredCampaigns.fullJoinWith(coloredVisits, joinExpression = joinExpression)
         snippetOutput(coloredResult, result)
     }
 
     @TransformDataFrameExpressions
     @Test
-    fun excludePredicateJoin_strings() {
+    fun excludeJoinWith_strings() {
         val result =
             // SampleStart
-            campaigns.excludePredicateJoin(visits) {
-                right[{ "date"<LocalDate>() }] in "startDate"<LocalDate>().."endDate"<LocalDate>()
+            campaigns.excludeJoinWith(visits) {
+                right.getValue<LocalDate>("date") in "startDate"<LocalDate>().."endDate"<LocalDate>()
             }
         // SampleEnd
-        val coloredResult = coloredCampaigns.excludePredicateJoin(coloredVisits, joinExpression = joinExpression)
+        val coloredResult = coloredCampaigns.excludeJoinWith(coloredVisits, joinExpression = joinExpression)
         snippetOutput(coloredResult, result)
     }
 
     @TransformDataFrameExpressions
     @Test
-    fun predicateJoin_properties() {
+    fun joinWith_properties() {
         val result =
             // SampleStart
-            campaigns.innerPredicateJoin(visits) {
+            campaigns.innerJoinWith(visits) {
                 right.date in startDate..endDate
             }
         // SampleEnd
-        val coloredResult = coloredCampaigns.innerPredicateJoin(coloredVisits, joinExpression = joinExpression)
+        val coloredResult = coloredCampaigns.innerJoinWith(coloredVisits, joinExpression = joinExpression)
         snippetOutput(coloredResult, result)
     }
 
     @TransformDataFrameExpressions
     @Test
-    fun filterPredicateJoin_properties() {
+    fun filterJoinWith_properties() {
         val result =
             // SampleStart
-            campaigns.filterPredicateJoin(visits) {
+            campaigns.filterJoinWith(visits) {
                 right.date in startDate..endDate
             }
         // SampleEnd
-        val coloredResult = coloredCampaigns.filterPredicateJoin(coloredVisits, joinExpression = joinExpression)
+        val coloredResult = coloredCampaigns.filterJoinWith(coloredVisits, joinExpression = joinExpression)
         snippetOutput(coloredResult, result)
     }
 
     @TransformDataFrameExpressions
     @Test
-    fun leftPredicateJoin_properties() {
+    fun leftJoinWith_properties() {
         val result =
             // SampleStart
-            campaigns.leftPredicateJoin(visits) {
+            campaigns.leftJoinWith(visits) {
                 right.date in startDate..endDate
             }
         // SampleEnd
-        val coloredResult = coloredCampaigns.leftPredicateJoin(coloredVisits, joinExpression = joinExpression)
+        val coloredResult = coloredCampaigns.leftJoinWith(coloredVisits, joinExpression = joinExpression)
         snippetOutput(coloredResult, result)
     }
 
     @TransformDataFrameExpressions
     @Test
-    fun rightPredicateJoin_properties() {
+    fun rightJoinWith_properties() {
         val result =
             // SampleStart
-            campaigns.rightPredicateJoin(visits) {
+            campaigns.rightJoinWith(visits) {
                 right.date in startDate..endDate
             }
         // SampleEnd
-        val coloredResult = coloredCampaigns.rightPredicateJoin(coloredVisits, joinExpression = joinExpression)
+        val coloredResult = coloredCampaigns.rightJoinWith(coloredVisits, joinExpression = joinExpression)
         snippetOutput(coloredResult, result)
     }
 
     @TransformDataFrameExpressions
     @Test
-    fun fullPredicateJoin_properties() {
+    fun fullJoinWith_properties() {
         val result =
             // SampleStart
-            campaigns.fullPredicateJoin(visits) {
+            campaigns.fullJoinWith(visits) {
                 right.date in startDate..endDate
             }
         // SampleEnd
-        val coloredResult = coloredCampaigns.fullPredicateJoin(coloredVisits, joinExpression = joinExpression)
+        val coloredResult = coloredCampaigns.fullJoinWith(coloredVisits, joinExpression = joinExpression)
         snippetOutput(coloredResult, result)
     }
 
     @TransformDataFrameExpressions
     @Test
-    fun excludePredicateJoin_properties() {
+    fun excludeJoinWith_properties() {
         val result =
             // SampleStart
-            campaigns.excludePredicateJoin(visits) {
+            campaigns.excludeJoinWith(visits) {
                 right.date in startDate..endDate
             }
         // SampleEnd
-        val coloredResult = coloredCampaigns.excludePredicateJoin(coloredVisits, joinExpression = joinExpression)
+        val coloredResult = coloredCampaigns.excludeJoinWith(coloredVisits, joinExpression = joinExpression)
         snippetOutput(coloredResult, result)
     }
 
@@ -485,9 +486,9 @@ class PredicateJoin : TestBase() {
     fun crossProduct() {
         val result =
             // SampleStart
-            campaigns.predicateJoin(visits) { true }
+            campaigns.joinWith(visits) { true }
         // SampleEnd
-        val coloredResult = coloredCampaigns.predicateJoin(coloredVisits) { true }
+        val coloredResult = coloredCampaigns.joinWith(coloredVisits) { true }
         snippetOutput(coloredResult, result)
     }
 
@@ -527,7 +528,7 @@ class PredicateJoin : TestBase() {
     @Test
     fun compareInnerValues() {
         // SampleStart
-        df1.innerPredicateJoin(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
+        df1.innerJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
         // SampleEnd
 
         PluginCallbackProxy.overrideHtmlOutput(
@@ -537,7 +538,7 @@ class PredicateJoin : TestBase() {
                         .plus(df1.toColoredHTML().wrap("df1"))
                         .plus(df2.toColoredHTML().wrap("df2"))
                         .plus(
-                            df1.innerPredicateJoin(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
+                            df1.innerJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
                                 .toColoredHTML().wrap("result")
                         )
                         .wrapRow()
@@ -551,7 +552,7 @@ class PredicateJoin : TestBase() {
     fun compareLeft() {
         // SampleStart
         df1.leftJoin(df2, "index", "age")
-        df1.leftPredicateJoin(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
+        df1.leftJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
         // SampleEnd
 
         PluginCallbackProxy.overrideHtmlOutput(
@@ -571,7 +572,7 @@ class PredicateJoin : TestBase() {
                         .plus(df1.toColoredHTML().wrap())
                         .plus(df2.toColoredHTML().wrap())
                         .plus(
-                            df1.leftPredicateJoin(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
+                            df1.leftJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
                                 .toColoredHTML().wrap()
                         )
                         .wrapRow()
@@ -585,7 +586,7 @@ class PredicateJoin : TestBase() {
     fun compareRight() {
         // SampleStart
         df1.rightJoin(df2, "index", "age")
-        df1.rightPredicateJoin(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
+        df1.rightJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
         // SampleEnd
 
         PluginCallbackProxy.overrideHtmlOutput(
@@ -605,7 +606,7 @@ class PredicateJoin : TestBase() {
                         .plus(df1.toColoredHTML().wrap())
                         .plus(df2.toColoredHTML().wrap())
                         .plus(
-                            df1.rightPredicateJoin(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
+                            df1.rightJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
                                 .toColoredHTML().wrap()
                         )
                         .wrapRow()

@@ -78,7 +78,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [inferType](inferType.md) — infer column type from column values
 * [insert](insert.md) — insert column
 * [join](join.md) — join [`DataFrames`](DataFrame.md) by key columns
-  * [predicateJoin](predicateJoin.md) — join [`DataFrames`](DataFrame.md) by an expression that evaluates joined [DataRows](DataRow.md) to Boolean
+* [joinWith](joinWith.md) — join [`DataFrames`](DataFrame.md) by an expression that evaluates joined [DataRows](DataRow.md) to Boolean
 * [last](last.md) / [lastOrNull](last.md#lastornull) — find last row by condition 
 * [map](map.md) — map columns into new [`DataFrame`](DataFrame.md) or [`DataColumn`](DataColumn.md)
 * [max](minmax.md) / [maxBy](minmax.md) / [maxOf](minmax.md) / [maxFor](minmax.md) — max of values 

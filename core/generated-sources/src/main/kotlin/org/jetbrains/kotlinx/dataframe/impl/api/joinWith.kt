@@ -24,7 +24,7 @@ internal class JoinedDataRowImpl<A, B>(
     override val right: DataRow<B> = DataRowImpl(index1, rightOwner)
 }
 
-internal fun <A, B> DataFrame<A>.predicateJoinImpl(
+internal fun <A, B> DataFrame<A>.joinWithImpl(
     right: DataFrame<B>,
     type: JoinType = JoinType.Inner,
     addNewColumns: Boolean,
