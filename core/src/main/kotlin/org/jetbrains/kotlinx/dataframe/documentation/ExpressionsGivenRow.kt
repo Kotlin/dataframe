@@ -29,12 +29,12 @@ import org.jetbrains.kotlinx.dataframe.RowValueExpression as DfRowValueExpressio
 internal interface ExpressionsGivenRow {
 
     /**
-     * The key for an @arg that will define the operation name for the examples below.
+     * The key for an @setArg that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
     interface OperationArg
 
-    /** {@arg [OperationArg] operation} */
+    /** {@setArg [OperationArg] operation} */
     interface SetDefaultOperationArg
 
     /**
@@ -53,9 +53,9 @@ internal interface ExpressionsGivenRow {
          *
          * For example:
          *
-         * `df.`{@includeArg [OperationArg]}` { name.firstName + " " + name.lastName }`
+         * `df.`{@getArg [OperationArg]}` { name.firstName + " " + name.lastName }`
          *
-         * `df.`{@includeArg [OperationArg]}` { 2021 - age }`
+         * `df.`{@getArg [OperationArg]}` { 2021 - age }`
          * @include [SetDefaultOperationArg]
          */
         interface WithExample
@@ -74,9 +74,9 @@ internal interface ExpressionsGivenRow {
          *
          * For example:
          *
-         * `df.`{@includeArg [OperationArg]}` { name.firstName + " from " + it }`
+         * `df.`{@getArg [OperationArg]}` { name.firstName + " from " + it }`
          *
-         * `df.`{@includeArg [OperationArg]}` { it.uppercase() }`
+         * `df.`{@getArg [OperationArg]}` { it.uppercase() }`
          * {@include [SetDefaultOperationArg]}
          */
         interface WithExample
