@@ -16,9 +16,9 @@ interface JoinedDataRow: LeftDataRow {
 }
 ```
 
-This function is a [join](join.md) variant that lets you match data using any expression that returns Boolean, 
+This function is a [join](join.md) variant that lets you match data using any expression that returns a Boolean, 
 which also gives opportunity to perform operations that require values from both matching rows.
-Can be helpful if data you want to join wasn't designed relational and requires heuristics to tell if rows are matching,
+Can be helpful if the data you want to join wasn't designed relational and requires heuristics to tell if rows are matching,
 or has relations other than `equals`.
 
 For example, you can match rows based on:
