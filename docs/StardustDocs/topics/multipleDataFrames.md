@@ -4,3 +4,4 @@
 * [`add`](add.md) — union of columns from several [`DataFrames`](DataFrame.md) 
 * [`concat`](concat.md) — union of rows from several [`DataFrames`](DataFrame.md)
 * [`join`](join.md) — sql-like join of two [`DataFrames`](DataFrame.md) by key columns
+* [`joinWith`](joinWith.md) — join of two [`DataFrames`](DataFrame.md) by an expression that evaluates joined [DataRows](DataRow.md) to Boolean

@@ -29,12 +29,12 @@ import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.full.withNullability
 
 internal fun <A, B> defaultJoinColumns(left: DataFrame<A>, right: DataFrame<B>): JoinColumnsSelector<A, B> =
-    { left.columnNames().intersect(right.columnNames()).map { it.toColumnAccessor() }.let { ColumnsList(it) } }
+    { left.columnNames().intersect(right.columnNames().toSet()).map { it.toColumnAccessor() }.let { ColumnsList(it) } }
 
 internal fun <T> defaultJoinColumns(dataFrames: Iterable<DataFrame<T>>): JoinColumnsSelector<T, T> =
     {
         dataFrames.map { it.columnNames() }.fold<List<String>, Set<String>?>(null) { set, names ->
-            set?.intersect(names) ?: names.toSet()
+            set?.intersect(names.toSet()) ?: names.toSet()
         }.orEmpty().map { it.toColumnAccessor() }.let { ColumnsList(it) }
     }
 
@@ -114,7 +114,7 @@ internal fun <A, B> DataFrame<A>.joinImpl(
 
     // group row indices by key from right data frame
     val groupedRight = when (joinType) {
-        JoinType.Exclude -> rightJoinKeyToIndex.map { it.first to emptyList<Int>() }.toMap()
+        JoinType.Exclude -> rightJoinKeyToIndex.associate { it.first to emptyList<Int>() }
         else -> rightJoinKeyToIndex.groupBy({ it.first }) { it.second }
     }
 
@@ -129,7 +129,7 @@ internal fun <A, B> DataFrame<A>.joinImpl(
     }
 
     // for every row index in right data frame store a flag indicating whether this row was matched by some row in left data frame
-    val rightMatched = Array(other.nrow) { false }
+    val rightMatched = BooleanArray(other.nrow) { false }
 
     // number of rows in right data frame that were not matched by any row in left data frame. Used for correct allocation of an output array
     var rightUnmatchedCount = other.nrow
@@ -162,8 +162,8 @@ internal fun <A, B> DataFrame<A>.joinImpl(
     val newRightColumnsCount = newRightColumns.size
     val outputColumnsCount = leftColumnsCount + newRightColumnsCount
 
-    val outputData = Array<Array<Any?>>(outputColumnsCount) { arrayOfNulls(outputRowsCount) }
-    val hasNulls = Array(outputColumnsCount) { false }
+    val outputData = List<Array<Any?>>(outputColumnsCount) { arrayOfNulls(outputRowsCount) }
+    val hasNulls = BooleanArray(outputColumnsCount) { false }
 
     var row = 0
 
