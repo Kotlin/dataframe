@@ -157,6 +157,8 @@ tasks.withType<KorroTask> {
 // This task installs the pre-commit hook to the local machine the first time the project is built
 // The pre-commit hook contains the command to run processKDocsMain before each commit
 val installGitPreCommitHook by tasks.creating(Copy::class) {
+    doNotTrackState(/* reasonNotToTrackState = */ "Fails on TeamCity otherwise.")
+
     from(File(rootProject.rootDir, "gradle/scripts/pre-commit"))
     into(File(rootProject.rootDir, ".git/hooks"))
     fileMode = 755
