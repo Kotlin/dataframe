@@ -13,12 +13,12 @@ import org.jetbrains.kotlinx.dataframe.ColumnExpression as DfColumnExpression
 internal interface ExpressionsGivenColumn {
 
     /**
-     * The key for an @arg that will define the operation name for the examples below.
+     * The key for an @setArg that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
     interface OperationArg
 
-    /** {@arg [OperationArg] operation} */
+    /** {@setArg [OperationArg] operation} */
     interface SetDefaultOperationArg
 
     /** Provide a new value for every selected cell given its column using a [column expression][DfColumnExpression]. */
@@ -29,9 +29,9 @@ internal interface ExpressionsGivenColumn {
          *
          * For example:
          *
-         * `df.`{@includeArg [OperationArg]}` { `[mean][DataColumn.mean]`(skipNA = true) }`
+         * `df.`{@getArg [OperationArg]}` { `[mean][DataColumn.mean]`(skipNA = true) }`
          *
-         * `df.`{@includeArg [OperationArg]}` { `[count][DataColumn.count]` { it > 10 } }`
+         * `df.`{@getArg [OperationArg]}` { `[count][DataColumn.count]` { it > 10 } }`
          * @include [SetDefaultOperationArg]
          */
         interface WithExample

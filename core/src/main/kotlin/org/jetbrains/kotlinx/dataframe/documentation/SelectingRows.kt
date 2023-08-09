@@ -22,18 +22,18 @@ import org.jetbrains.kotlinx.dataframe.index
 internal interface SelectingRows {
 
     /**
-     * The key for an @arg that will define the operation name for the examples below.
+     * The key for an @setArg that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
     interface FirstOperationArg
 
     /**
-     * The key for an @arg that will define the operation name for the examples below.
+     * The key for an @setArg that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
     interface SecondOperationArg
 
-    /** {@arg [FirstOperationArg] operation}{@arg [SecondOperationArg] where} */
+    /** {@setArg [FirstOperationArg] operation}{@setArg [SecondOperationArg] where} */
     interface SetDefaultOperationArg
 
     /** [Entire-Row Condition][EntireRowCondition.WithExample] */
@@ -47,9 +47,9 @@ internal interface SelectingRows {
          *
          * For example:
          *
-         * `df.`{@includeArg [FirstOperationArg]}` { `[index][index]`() % 2 == 0 }`
+         * `df.`{@getArg [FirstOperationArg]}` { `[index][index]`() % 2 == 0 }`
          *
-         * `df.`{@includeArg [FirstOperationArg]}` { `[diff][diff]` { age } == 0 }`
+         * `df.`{@getArg [FirstOperationArg]}` { `[diff][diff]` { age } == 0 }`
          * @include [SetDefaultOperationArg]
          */
         interface WithExample
@@ -68,9 +68,9 @@ internal interface SelectingRows {
          *
          * For example:
          *
-         * `df.`{@includeArg [FirstOperationArg]}` { length }.`{@includeArg [SecondOperationArg]}` { it > 10.0 }`
+         * `df.`{@getArg [FirstOperationArg]}` { length }.`{@getArg [SecondOperationArg]}` { it > 10.0 }`
          *
-         * `df.`{@includeArg [FirstOperationArg]}` { `[cols][ColumnsSelectionDsl.cols]`(1..5) }.`{@includeArg [SecondOperationArg]}` { `[index][index]`() > 4 && city != "Paris" }`
+         * `df.`{@getArg [FirstOperationArg]}` { `[cols][ColumnsSelectionDsl.cols]`(1..5) }.`{@getArg [SecondOperationArg]}` { `[index][index]`() > 4 && city != "Paris" }`
          * @include [SetDefaultOperationArg]
          */
         interface WithExample
