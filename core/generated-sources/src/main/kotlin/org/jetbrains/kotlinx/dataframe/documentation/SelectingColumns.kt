@@ -64,7 +64,7 @@ internal interface SelectingColumnsLink
 internal interface SelectingColumns {
 
     /**
-     * The key for an @arg that will define the operation name for the examples below.
+     * The key for an @setArg that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
     interface OperationArg
