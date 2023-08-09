@@ -47,7 +47,7 @@ public interface ColGroupColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [CommonColGroupDocs.ExampleArg]}
+     * {@getArg [CommonColGroupDocs.ExampleArg]}
      *
      * To create a [ColumnAccessor] for another kind of column, take a look at the functions
      * [col][ColumnsSelectionDsl.col],
@@ -70,14 +70,14 @@ public interface ColGroupColumnsSelectionDsl {
         interface ExampleArg
 
         /**
-         * `df.`[select][DataFrame.select]` { {@includeArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`({@includeArg [CommonColGroupDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@getArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`({@getArg [CommonColGroupDocs.Arg]}) \\\\}`
          */
         interface SingleExample
 
         /**
-         * `df.`[select][DataFrame.select]` { {@includeArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`({@includeArg [CommonColGroupDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@getArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`({@getArg [CommonColGroupDocs.Arg]}) \\\\}`
          *
-         * `df.`[select][DataFrame.select]` { {@includeArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`<`[String][String]`>({@includeArg [CommonColGroupDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@getArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`<`[String][String]`>({@getArg [CommonColGroupDocs.Arg]}) \\\\}`
          */
         interface DoubleExample
 
@@ -122,7 +122,7 @@ public interface ColGroupColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@includeArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`(columnGroupA) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@getArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`(columnGroupA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
      * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
@@ -534,9 +534,9 @@ public interface ColGroupColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@includeArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`("columnGroupName") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@getArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`("columnGroupName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@includeArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("columnGroupName") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@getArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("columnGroupName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
      * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
@@ -1330,9 +1330,9 @@ public interface ColGroupColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@includeArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`("pathTo"["columnGroupName"] ) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@getArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`("pathTo"["columnGroupName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@includeArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("pathTo"["columnGroupName"] ) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@getArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("pathTo"["columnGroupName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
      * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
@@ -2126,7 +2126,7 @@ public interface ColGroupColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@includeArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`(Type::columnGroupA) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@getArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`(Type::columnGroupA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
      * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
@@ -2791,9 +2791,9 @@ public interface ColGroupColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@includeArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`(0) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@getArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`(0) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@includeArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>(0) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@getArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
      * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],

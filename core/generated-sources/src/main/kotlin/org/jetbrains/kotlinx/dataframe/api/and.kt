@@ -41,7 +41,7 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * #### Example for this overload:
      *
-     * {@includeArg [CommonAndDocs.ExampleArg]}
+     * {@getArg [CommonAndDocs.ExampleArg]}
      *
      * @return A [ColumnSet] that contains all the columns from the [ColumnsResolvers][ColumnsResolver] on the left
      *   and right side of the [and] operator.
@@ -65,19 +65,19 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][ColumnSet.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][ColumnsSelectionDsl.recursively]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][ColumnPath.and]` colD }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { ... } `[and][ColumnsResolver.and] {@includeArg [ColumnsResolverAndDocs.Argument]}` }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { ... } `[and][ColumnsResolver.and] {@getArg [ColumnsResolverAndDocs.Argument]}` }`
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -98,15 +98,15 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][ColumnSet.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][ColumnsSelectionDsl.recursively]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][ColumnPath.and]` colD }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
@@ -128,15 +128,15 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][ColumnSet.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][ColumnsSelectionDsl.recursively]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][ColumnPath.and]` colD }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
@@ -158,15 +158,15 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][ColumnSet.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][ColumnsSelectionDsl.recursively]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][ColumnPath.and]` colD }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
@@ -188,15 +188,15 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][ColumnSet.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][ColumnsSelectionDsl.recursively]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][ColumnPath.and]` colD }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
@@ -223,19 +223,19 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][ColumnSet.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][ColumnsSelectionDsl.recursively]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][ColumnPath.and]` colD }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "colA" `[and][String.and] {@includeArg [StringAndDocs.Argument]}` }`
+     * `df.`[select][DataFrame.select]` { "colA" `[and][String.and] {@getArg [StringAndDocs.Argument]}` }`
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -256,15 +256,15 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][ColumnSet.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][ColumnsSelectionDsl.recursively]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][ColumnPath.and]` colD }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
@@ -286,15 +286,15 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][ColumnSet.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][ColumnsSelectionDsl.recursively]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][ColumnPath.and]` colD }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
@@ -316,15 +316,15 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][ColumnSet.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][ColumnsSelectionDsl.recursively]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][ColumnPath.and]` colD }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
@@ -346,15 +346,15 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][ColumnSet.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][ColumnsSelectionDsl.recursively]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][ColumnPath.and]` colD }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
@@ -381,19 +381,19 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][ColumnSet.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][ColumnsSelectionDsl.recursively]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][ColumnPath.and]` colD }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::colA `[and][KProperty.and] {@includeArg [KPropertyAndDocs.Argument]}` }`
+     * `df.`[select][DataFrame.select]` { Type::colA `[and][KProperty.and] {@getArg [KPropertyAndDocs.Argument]}` }`
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -414,15 +414,15 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][ColumnSet.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][ColumnsSelectionDsl.recursively]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][ColumnPath.and]` colD }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
@@ -444,15 +444,15 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][ColumnSet.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][ColumnsSelectionDsl.recursively]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][ColumnPath.and]` colD }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
@@ -474,15 +474,15 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][ColumnSet.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][ColumnsSelectionDsl.recursively]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][ColumnPath.and]` colD }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
@@ -505,15 +505,15 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][ColumnSet.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][ColumnsSelectionDsl.recursively]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][ColumnPath.and]` colD }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
@@ -540,21 +540,21 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][ColumnSet.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][ColumnsSelectionDsl.recursively]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][ColumnPath.and]` colD }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
      * `val intCols: `[ColumnsSelector][ColumnsSelector]`<*, `[Int][Int]`> = { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>() }`
      *
-     * `df.`[select][DataFrame.select]` { intCols `[and][and] {@includeArg [ColumnsSelectorAndDocs.Argument]}` }`
+     * `df.`[select][DataFrame.select]` { intCols `[and][and] {@getArg [ColumnsSelectorAndDocs.Argument]}` }`
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -575,15 +575,15 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][ColumnSet.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][ColumnsSelectionDsl.recursively]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][ColumnPath.and]` colD }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
@@ -607,15 +607,15 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][ColumnSet.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][ColumnsSelectionDsl.recursively]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][ColumnPath.and]` colD }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
@@ -639,15 +639,15 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][ColumnSet.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][ColumnsSelectionDsl.recursively]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][ColumnPath.and]` colD }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
@@ -671,15 +671,15 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][ColumnSet.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][ColumnsSelectionDsl.recursively]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][ColumnPath.and]` colD }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colC" `[and][kotlin.String.and]` Type::colB `[and][kotlin.reflect.KProperty.and]` "pathTo"["colC"] `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *

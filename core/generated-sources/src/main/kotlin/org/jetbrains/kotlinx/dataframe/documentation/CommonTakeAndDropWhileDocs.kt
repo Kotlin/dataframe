@@ -19,36 +19,36 @@ import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs.
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs.TitleArg
 
 /**
- * ## {@includeArg [TitleArg]} (Children) While
- * This function {@includeArg [NounArg]}s the {@includeArg [FirstOrLastArg]} columns of a [ColumnGroup] or
+ * ## {@getArg [TitleArg]} (Children) While
+ * This function {@getArg [NounArg]}s the {@getArg [FirstOrLastArg]} columns of a [ColumnGroup] or
  * [ColumnSet] adhering to the given [predicate\].
  *
  * If called on a [SingleColumn] containing a [ColumnGroup],
- * [{@includeArg [OperationArg]}While][SingleColumn.{@includeArg [OperationArg]}While] will {@includeArg [NounArg]} the
- * {@includeArg [FirstOrLastArg]} children of that column group adhering to the given [predicate\].
+ * [{@getArg [OperationArg]}While][SingleColumn.{@getArg [OperationArg]}While] will {@getArg [NounArg]} the
+ * {@getArg [FirstOrLastArg]} children of that column group adhering to the given [predicate\].
  *
- * Else, if called on a [ColumnSet], [{@includeArg [OperationArg]}While][ColumnSet.{@includeArg [OperationArg]}While] will
- * {@includeArg [NounArg]} the {@includeArg [FirstOrLastArg]} columns of that column set adhering to the given [predicate\].
+ * Else, if called on a [ColumnSet], [{@getArg [OperationArg]}While][ColumnSet.{@getArg [OperationArg]}While] will
+ * {@getArg [NounArg]} the {@getArg [FirstOrLastArg]} columns of that column set adhering to the given [predicate\].
  *
  * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
  *
- * NOTE: To avoid ambiguity, `{@includeArg [CommonTakeAndDropWhileDocs.OperationArg]}While` is called
- * `{@includeArg [CommonTakeAndDropWhileDocs.OperationArg]}ChildrenWhile` when called on a [String] or [ColumnPath] resembling
+ * NOTE: To avoid ambiguity, `{@getArg [CommonTakeAndDropWhileDocs.OperationArg]}While` is called
+ * `{@getArg [CommonTakeAndDropWhileDocs.OperationArg]}ChildrenWhile` when called on a [String] or [ColumnPath] resembling
  * a [ColumnGroup].
  *
  * #### Examples:
- * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[{@includeArg [OperationArg]}While][ColumnSet.{@includeArg [OperationArg]}While]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` } }`
+ * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[{@getArg [OperationArg]}While][ColumnSet.{@getArg [OperationArg]}While]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` } }`
  *
- * `df.`[select][DataFrame.select]` { myColumnGroup.`[{@includeArg [OperationArg]}While][SingleColumn.{@includeArg [OperationArg]}While]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+ * `df.`[select][DataFrame.select]` { myColumnGroup.`[{@getArg [OperationArg]}While][SingleColumn.{@getArg [OperationArg]}While]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
  *
- * `df.`[select][DataFrame.select]` { "myColumnGroup".`[{@includeArg [OperationArg]}ChildrenWhile][String.{@includeArg [OperationArg]}ChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][ColumnKind.Value]` } }`
+ * `df.`[select][DataFrame.select]` { "myColumnGroup".`[{@getArg [OperationArg]}ChildrenWhile][String.{@getArg [OperationArg]}ChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][ColumnKind.Value]` } }`
  *
  * #### Examples for this overload:
  *
- * {@includeArg [CommonTakeAndDropWhileDocs.ExampleArg]}
+ * {@getArg [CommonTakeAndDropWhileDocs.ExampleArg]}
  *
- * @param [predicate\] The [ColumnFilter] to control which columns to {@includeArg [NounArg]}.
- * @return A [ColumnSet] containing the {@includeArg [FirstOrLastArg]} columns adhering to the [predicate\].
+ * @param [predicate\] The [ColumnFilter] to control which columns to {@getArg [NounArg]}.
+ * @return A [ColumnSet] containing the {@getArg [FirstOrLastArg]} columns adhering to the [predicate\].
  */
 internal interface CommonTakeAndDropWhileDocs {
 

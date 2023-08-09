@@ -17,11 +17,11 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     /**
      * ## (Children) Name Contains
      * Returns a ([transformable][TransformableColumnSet]) [ColumnSet] containing
-     * all columns containing {@includeArg [CommonNameContainsDocs.ArgumentArg]} in their name.
+     * all columns containing {@getArg [CommonNameContainsDocs.ArgumentArg]} in their name.
      *
      * NOTE: For [column groups][ColumnGroup], `nameContains` is named `childrenNameContains` to avoid confusion.
      *
-     * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]` { `{@includeArg [ArgumentArg]}{@includeArg [ArgumentArg]}` `[in][String.contains]` it.`[name][DataColumn.name]` }`.
+     * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]` { `{@getArg [ArgumentArg]}{@getArg [ArgumentArg]}` `[in][String.contains]` it.`[name][DataColumn.name]` }`.
      *
      * #### For example:
      *
@@ -33,11 +33,11 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [ExampleArg]}
+     * {@getArg [ExampleArg]}
      *
-     * @param {@includeArg [ArgumentArg]} what the column name should contain to be included in the result.
+     * @param {@getArg [ArgumentArg]} what the column name should contain to be included in the result.
      * @return A ([transformable][TransformableColumnSet]) [ColumnSet] containing
-     *   all columns containing {@includeArg [CommonNameContainsDocs.ArgumentArg]} in their name.
+     *   all columns containing {@getArg [CommonNameContainsDocs.ArgumentArg]} in their name.
      */
     private interface CommonNameContainsDocs {
         interface ExampleArg
@@ -57,7 +57,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
@@ -65,7 +65,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.CommonNameContainsDocs.ExampleArg]}
+     * {@getArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.CommonNameContainsDocs.ExampleArg]}
      *
      * @param [text] what the column name should contain to be included in the result.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
@@ -84,7 +84,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
@@ -115,7 +115,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
@@ -143,7 +143,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
@@ -171,7 +171,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
@@ -202,7 +202,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
@@ -232,7 +232,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
@@ -262,7 +262,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
@@ -270,7 +270,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.CommonNameContainsDocs.ExampleArg]}
+     * {@getArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.CommonNameContainsDocs.ExampleArg]}
      *
      * @param [regex] what the column name should contain to be included in the result.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
@@ -289,7 +289,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
@@ -320,7 +320,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
@@ -348,7 +348,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
@@ -376,7 +376,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
@@ -406,7 +406,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
@@ -436,7 +436,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameContains][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenNameContains]`("my").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[nameContains][kotlin.String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
@@ -458,30 +458,30 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     // endregion
 
     /**
-     * ## (Children) Name {@includeArg [CommonNameStartsEndsDocs.CapitalTitle]} With
+     * ## (Children) Name {@getArg [CommonNameStartsEndsDocs.CapitalTitle]} With
      * Returns a ([transformable][TransformableColumnSet]) [ColumnSet] containing
-     * all columns {@includeArg [CommonNameStartsEndsDocs.Noun]} with {@includeArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name.
+     * all columns {@getArg [CommonNameStartsEndsDocs.Noun]} with {@getArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name.
      *
      * If [this\] is a [SingleColumn] containing a [ColumnGroup], the function runs on the children of the [ColumnGroup].
      * Else, if [this\] is a [ColumnSet], the function runs on the [ColumnSet] itself.
      *
-     * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]` { it.`[name][DataColumn.name]`.`[{@includeArg [OperationName]}][String.{@includeArg [OperationName]}]`(`{@includeArg [ArgumentArg]}{@includeArg [ArgumentArg]}`) }`.
+     * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]` { it.`[name][DataColumn.name]`.`[{@getArg [OperationName]}][String.{@getArg [OperationName]}]`(`{@getArg [ArgumentArg]}{@getArg [ArgumentArg]}`) }`.
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { `[{@includeArg [NameOperationName]}][ColumnsSelectionDsl.{@includeArg [NameOperationName]}]`("order").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][DataFrame.select]` { `[{@getArg [NameOperationName]}][ColumnsSelectionDsl.{@getArg [NameOperationName]}]`("order").`[recursively][ColumnsSelectionDsl.recursively]`() }`
      *
-     * `df.`[select][DataFrame.select]` { "someGroupCol".`[{@includeArg [ChildrenNameOperationName]}][String.{@includeArg [ChildrenNameOperationName]}]`("b") }`
+     * `df.`[select][DataFrame.select]` { "someGroupCol".`[{@getArg [ChildrenNameOperationName]}][String.{@getArg [ChildrenNameOperationName]}]`("b") }`
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[{@includeArg [ChildrenNameOperationName]}][SingleColumn.{@includeArg [ChildrenNameOperationName]}]`("a") }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[{@getArg [ChildrenNameOperationName]}][SingleColumn.{@getArg [ChildrenNameOperationName]}]`("a") }`
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [ExampleArg]}
+     * {@getArg [ExampleArg]}
      *
-     * @param {@includeArg [ArgumentArg]} Columns {@includeArg [CommonNameStartsEndsDocs.Noun]} with this {@includeArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name will be returned.
+     * @param {@getArg [ArgumentArg]} Columns {@getArg [CommonNameStartsEndsDocs.Noun]} with this {@getArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name will be returned.
      * @return A ([transformable][TransformableColumnSet]) [ColumnSet] containing
-     *   all columns {@includeArg [CommonNameStartsEndsDocs.Noun]} with {@includeArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name.
+     *   all columns {@getArg [CommonNameStartsEndsDocs.Noun]} with {@getArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name.
      */
     private interface CommonNameStartsEndsDocs {
 
@@ -529,7 +529,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameStartsWith][String.childrenNameStartsWith]`("b") }`
      *
@@ -537,7 +537,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.CommonNameStartsEndsDocs.ExampleArg]}
+     * {@getArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.CommonNameStartsEndsDocs.ExampleArg]}
      *
      * @param [prefix]
      *
@@ -578,7 +578,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameStartsWith][String.childrenNameStartsWith]`("b") }`
      *
@@ -610,7 +610,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameStartsWith][String.childrenNameStartsWith]`("b") }`
      *
@@ -641,7 +641,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameStartsWith][String.childrenNameStartsWith]`("b") }`
      *
@@ -672,7 +672,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameStartsWith][String.childrenNameStartsWith]`("b") }`
      *
@@ -703,7 +703,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameStartsWith][String.childrenNameStartsWith]`("b") }`
      *
@@ -736,7 +736,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameStartsWith][String.childrenNameStartsWith]`("b") }`
      *
@@ -780,7 +780,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameEndsWith][ColumnsSelectionDsl.nameEndsWith]`("order").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameEndsWith][ColumnsSelectionDsl.nameEndsWith]`("order").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameEndsWith][String.childrenNameEndsWith]`("b") }`
      *
@@ -788,7 +788,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.CommonNameStartsEndsDocs.ExampleArg]}
+     * {@getArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.CommonNameStartsEndsDocs.ExampleArg]}
      *
      * @param [suffix]
      *
@@ -830,7 +830,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameEndsWith][ColumnsSelectionDsl.nameEndsWith]`("order").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameEndsWith][ColumnsSelectionDsl.nameEndsWith]`("order").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameEndsWith][String.childrenNameEndsWith]`("b") }`
      *
@@ -862,7 +862,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameEndsWith][ColumnsSelectionDsl.nameEndsWith]`("order").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameEndsWith][ColumnsSelectionDsl.nameEndsWith]`("order").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameEndsWith][String.childrenNameEndsWith]`("b") }`
      *
@@ -893,7 +893,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameEndsWith][ColumnsSelectionDsl.nameEndsWith]`("order").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameEndsWith][ColumnsSelectionDsl.nameEndsWith]`("order").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameEndsWith][String.childrenNameEndsWith]`("b") }`
      *
@@ -924,7 +924,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameEndsWith][ColumnsSelectionDsl.nameEndsWith]`("order").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameEndsWith][ColumnsSelectionDsl.nameEndsWith]`("order").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameEndsWith][String.childrenNameEndsWith]`("b") }`
      *
@@ -955,7 +955,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameEndsWith][ColumnsSelectionDsl.nameEndsWith]`("order").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameEndsWith][ColumnsSelectionDsl.nameEndsWith]`("order").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameEndsWith][String.childrenNameEndsWith]`("b") }`
      *
@@ -988,7 +988,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameEndsWith][ColumnsSelectionDsl.nameEndsWith]`("order").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[nameEndsWith][ColumnsSelectionDsl.nameEndsWith]`("order").`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[childrenNameEndsWith][String.childrenNameEndsWith]`("b") }`
      *

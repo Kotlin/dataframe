@@ -147,7 +147,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [CommonSelectDocs.ExampleArg]}
+     * {@getArg [CommonSelectDocs.ExampleArg]}
      *
      * {@include [LineBreak]}
      *
@@ -166,7 +166,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
 
     /**
      * @include [CommonSelectDocs]
-     * @arg [CommonSelectDocs.ExampleArg]
+     * @setArg [CommonSelectDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { myColGroup.`[select][SingleColumn.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
      *
@@ -192,7 +192,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
 
     /**
      * @include [CommonSelectDocs]
-     * @arg [CommonSelectDocs.ExampleArg]
+     * @setArg [CommonSelectDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[select][SingleColumn.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
      *
@@ -213,7 +213,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
 
     /**
      * @include [CommonSelectDocs]
-     * @arg [CommonSelectDocs.ExampleArg]
+     * @setArg [CommonSelectDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[select][String.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
      *
@@ -228,7 +228,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
 
     /**
      * @include [CommonSelectDocs]
-     * @arg [CommonSelectDocs.ExampleArg]
+     * @setArg [CommonSelectDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[select][ColumnPath.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
      *

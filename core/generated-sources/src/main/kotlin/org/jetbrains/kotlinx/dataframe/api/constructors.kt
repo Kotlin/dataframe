@@ -226,7 +226,7 @@ public fun <T> ColumnGroupReference.frameColumn(property: KProperty<List<T>>): C
  *
  * #### For example:
  *
- * {@includeArg [AsColumnGroupDocs.ExampleArg]}
+ * {@getArg [AsColumnGroupDocs.ExampleArg]}
  *
  * @receiver The column reference to cast to a [SingleColumn]`<`[DataRow][DataRow]`<`[C][C\]`>>`.
  * @param [C\] The type of the (group) column.
@@ -274,7 +274,7 @@ private interface SingleColumnAsColumnGroupDocs
  *
  * #### For example:
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`().`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`().`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
  *
  * @receiver The column reference to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
  * @param [C] The type of the (group) column.
@@ -297,7 +297,7 @@ public fun <C> SingleColumn<C>.asColumnGroup(): SingleColumn<DataRow<C>> = this 
  *
  * #### For example:
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`().`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`().`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
  *
  * @receiver The column reference to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
  * @param [C] The type of the (group) column.
@@ -343,7 +343,7 @@ private interface KPropertyAsColumnGroupDocs
  *
  * #### For example:
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][ColumnGroup.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
  *
  * @receiver The column reference to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
  * @param [C] The type of the (group) column.
@@ -365,7 +365,7 @@ public fun <C> KProperty<C>.asColumnGroup(): ColumnAccessor<DataRow<C>> = column
  *
  * #### For example:
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][ColumnGroup.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
  *
  * @receiver The column reference to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
  * @param [C] The type of the (group) column.
@@ -413,7 +413,7 @@ private interface StringAsColumnGroupDocs
  *
  * #### For example:
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[asColumnGroup][kotlin.String.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[asColumnGroup][kotlin.String.asColumnGroup]`().`[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[asColumnGroup][kotlin.String.asColumnGroup]`<GroupType>().`[valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`() }`
  *
@@ -438,7 +438,7 @@ public fun <C> String.asColumnGroup(): ColumnAccessor<DataRow<C>> = columnGroup<
  *
  * #### For example:
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[asColumnGroup][kotlin.String.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[asColumnGroup][kotlin.String.asColumnGroup]`().`[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[asColumnGroup][kotlin.String.asColumnGroup]`<GroupType>().`[valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`() }`
  *
@@ -487,7 +487,7 @@ private interface ColumnPathAsColumnGroupDocs
  *
  * #### For example:
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.asColumnGroup]`().`[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.asColumnGroup]`<GroupType>().`[valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`() }`
  *
@@ -512,7 +512,7 @@ public fun <C> ColumnPath.asColumnGroup(): ColumnAccessor<DataRow<C>> = columnGr
  *
  * #### For example:
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.asColumnGroup]`().`[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.asColumnGroup]`<GroupType>().`[valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`() }`
  *

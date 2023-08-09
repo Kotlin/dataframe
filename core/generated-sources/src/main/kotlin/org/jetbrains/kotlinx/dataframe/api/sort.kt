@@ -5,13 +5,17 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataFrameExpression
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Selector
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.api.SortFlag
 import org.jetbrains.kotlinx.dataframe.impl.api.addFlag
 import org.jetbrains.kotlinx.dataframe.impl.api.sortByImpl
@@ -61,6 +65,88 @@ public fun <T : Comparable<T>> DataColumn<T>.sort(): ValueColumn<T> =
 
 public fun <T : Comparable<T>> DataColumn<T>.sortDesc(): ValueColumn<T> =
     DataColumn.createValueColumn(name, values().sortedDescending(), type, defaultValue = defaultValue())
+
+/**
+ * ## Sort [DataColumn] With
+ *
+ * This function returns the sorted version of the current [ValueColumn], [FrameColumn], or [ColumnGroup] based
+ * on the given [Comparator]. The [comparator\] can either be given as an instance of [Comparator], or directly
+ * as a lambda.
+ *
+ * #### For example
+ *
+ * `df`[`[`][DataFrame.get]`"price"`[`]`][DataFrame.get]`.`[sortWith][sortWith]` { a, b -> a - b }`
+ *
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
+ * `df.`[select][DataFrame.select]` {`
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;`name.`[sortWith][sortWith]`(myComparator) `[and][ColumnsSelectionDsl.and]` `[allAfter][ColumnsSelectionDsl.allAfter]`(name)`
+ *
+ * `}`
+ *
+ * @receiver The [DataColumn] to sort. This can be either a [ValueColumn], [FrameColumn], or [ColumnGroup] and will
+ *   dictate the return type of the function.
+ * @param [comparator\] The [Comparator] to use for sorting the [DataColumn]. This can either be a [Comparator]<[T\]> or
+ *   a lambda of type `(`[T][T\]`, `[T][T\]`) -> `[Int][Int].
+ * @return The sorted [DataColumn] [this\] of the same type as the receiver.
+ */
+private interface CommonDataColumnSortWithDocs
+
+/** ## Sort [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] With
+ *
+ * This function returns the sorted version of the current [ValueColumn][org.jetbrains.kotlinx.dataframe.columns.ValueColumn], [FrameColumn][org.jetbrains.kotlinx.dataframe.columns.FrameColumn], or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] based
+ * on the given [Comparator]. The [comparator] can either be given as an instance of [Comparator], or directly
+ * as a lambda.
+ *
+ * #### For example
+ *
+ * `df`[`[`][org.jetbrains.kotlinx.dataframe.DataFrame.get]`"price"`[`]`][org.jetbrains.kotlinx.dataframe.DataFrame.get]`.`[sortWith][org.jetbrains.kotlinx.dataframe.api.sortWith]` { a, b -> a - b }`
+ *
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;`name.`[sortWith][org.jetbrains.kotlinx.dataframe.api.sortWith]`(myComparator) `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `[allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`(name)`
+ *
+ * `}`
+ *
+ * @receiver The [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] to sort. This can be either a [ValueColumn][org.jetbrains.kotlinx.dataframe.columns.ValueColumn], [FrameColumn][org.jetbrains.kotlinx.dataframe.columns.FrameColumn], or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and will
+ *   dictate the return type of the function.
+ * @param [comparator] The [Comparator] to use for sorting the [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]. This can either be a [Comparator]<[T]> or
+ *   a lambda of type `(`[T][T]`, `[T][T]`) -> `[Int][Int].
+ * @return The sorted [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] [this] of the same type as the receiver. */
+public fun <T, C : DataColumn<T>> C.sortWith(comparator: Comparator<T>): C =
+    DataColumn.create(name, values().sortedWith(comparator), type) as C
+
+/** ## Sort [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] With
+ *
+ * This function returns the sorted version of the current [ValueColumn][org.jetbrains.kotlinx.dataframe.columns.ValueColumn], [FrameColumn][org.jetbrains.kotlinx.dataframe.columns.FrameColumn], or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] based
+ * on the given [Comparator]. The [comparator] can either be given as an instance of [Comparator], or directly
+ * as a lambda.
+ *
+ * #### For example
+ *
+ * `df`[`[`][org.jetbrains.kotlinx.dataframe.DataFrame.get]`"price"`[`]`][org.jetbrains.kotlinx.dataframe.DataFrame.get]`.`[sortWith][org.jetbrains.kotlinx.dataframe.api.sortWith]` { a, b -> a - b }`
+ *
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;`name.`[sortWith][org.jetbrains.kotlinx.dataframe.api.sortWith]`(myComparator) `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `[allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`(name)`
+ *
+ * `}`
+ *
+ * @receiver The [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] to sort. This can be either a [ValueColumn][org.jetbrains.kotlinx.dataframe.columns.ValueColumn], [FrameColumn][org.jetbrains.kotlinx.dataframe.columns.FrameColumn], or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and will
+ *   dictate the return type of the function.
+ * @param [comparator] The [Comparator] to use for sorting the [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]. This can either be a [Comparator]<[T]> or
+ *   a lambda of type `(`[T][T]`, `[T][T]`) -> `[Int][Int].
+ * @return The sorted [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] [this] of the same type as the receiver. */
+public fun <T, C : DataColumn<T>> C.sortWith(comparator: (T, T) -> Int): C =
+    sortWith(Comparator(comparator))
 
 // endregion
 

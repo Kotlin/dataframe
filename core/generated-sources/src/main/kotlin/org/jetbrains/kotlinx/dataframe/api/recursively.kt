@@ -52,7 +52,7 @@ public interface RecursivelyColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [CommonRecursivelyDocs.Examples]}
+     * {@getArg [CommonRecursivelyDocs.Examples]}
      *
      * @param [includeTopLevel\] Whether to include the top-level columns in the result. `true` by default.
      * @see [DataFrame.flatten\]

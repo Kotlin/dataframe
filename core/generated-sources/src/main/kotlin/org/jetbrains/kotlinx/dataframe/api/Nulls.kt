@@ -88,7 +88,7 @@ private interface CommonFillNullsFunctionDoc
  *
  * For example:
  *
- * `df.`[fillNulls][org.jetbrains.kotlinx.dataframe.api.fillNulls]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * `df.`[fillNulls][org.jetbrains.kotlinx.dataframe.api.fillNulls]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
  *
  * `df.`[fillNulls][org.jetbrains.kotlinx.dataframe.api.fillNulls]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
@@ -297,7 +297,7 @@ private interface CommonFillNaNsFunctionDoc
  *
  * For example:
  *
- * `df.`[fillNaNs][org.jetbrains.kotlinx.dataframe.api.fillNaNs]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * `df.`[fillNaNs][org.jetbrains.kotlinx.dataframe.api.fillNaNs]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
  *
  * `df.`[fillNaNs][org.jetbrains.kotlinx.dataframe.api.fillNaNs]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
@@ -480,7 +480,7 @@ private interface CommonFillNAFunctionDoc
  *
  * For example:
  *
- * `df.`[fillNA][org.jetbrains.kotlinx.dataframe.api.fillNA]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * `df.`[fillNA][org.jetbrains.kotlinx.dataframe.api.fillNA]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
  *
  * `df.`[fillNA][org.jetbrains.kotlinx.dataframe.api.fillNA]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
@@ -660,7 +660,7 @@ private interface CommonDropNullsFunctionDoc
  *
  * For example:
  *
- * `df.`[dropNulls][org.jetbrains.kotlinx.dataframe.api.dropNulls]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * `df.`[dropNulls][org.jetbrains.kotlinx.dataframe.api.dropNulls]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
  *
  * `df.`[dropNulls][org.jetbrains.kotlinx.dataframe.api.dropNulls]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
@@ -868,7 +868,7 @@ private interface CommonDropNAFunctionDoc
  *
  * For example:
  *
- * `df.`[dropNA][org.jetbrains.kotlinx.dataframe.api.dropNA]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * `df.`[dropNA][org.jetbrains.kotlinx.dataframe.api.dropNA]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
  *
  * `df.`[dropNA][org.jetbrains.kotlinx.dataframe.api.dropNA]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
@@ -1076,7 +1076,7 @@ private interface CommonDropNaNsFunctionDoc
  *
  * For example:
  *
- * `df.`[dropNaNs][org.jetbrains.kotlinx.dataframe.api.dropNaNs]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * `df.`[dropNaNs][org.jetbrains.kotlinx.dataframe.api.dropNaNs]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
  *
  * `df.`[dropNaNs][org.jetbrains.kotlinx.dataframe.api.dropNaNs]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *

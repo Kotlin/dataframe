@@ -39,7 +39,7 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [CommonValueColsDocs.ExampleArg]}
+     * {@getArg [CommonValueColsDocs.ExampleArg]}
      *
      * @param [filter\] An optional [predicate][Predicate] to filter the value columns by.
      * @return A ([transformable][TransformableColumnSet]) [ColumnSet] of [ValueColumns][ValueColumn].
@@ -52,7 +52,7 @@ public interface ValueColsColumnsSelectionDsl {
 
     /**
      * @include [CommonValueColsDocs]
-     * @arg [CommonValueColsDocs.ExampleArg]
+     * @setArg [CommonValueColsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") }.`[valueCols][ColumnSet.valueCols]`() }`
      *
@@ -65,7 +65,7 @@ public interface ValueColsColumnsSelectionDsl {
 
     /**
      * @include [CommonValueColsDocs]
-     * @arg [CommonValueColsDocs.ExampleArg]
+     * @setArg [CommonValueColsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[valueCols][SingleColumn.valueCols]`() }`
      *
@@ -80,7 +80,7 @@ public interface ValueColsColumnsSelectionDsl {
 
     /**
      * @include [CommonValueColsDocs]
-     * @arg [CommonValueColsDocs.ExampleArg]
+     * @setArg [CommonValueColsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[valueCols][String.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
@@ -91,7 +91,7 @@ public interface ValueColsColumnsSelectionDsl {
 
     /**
      * @include [CommonValueColsDocs]
-     * @arg [CommonValueColsDocs.ExampleArg]
+     * @setArg [CommonValueColsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[valueCols][SingleColumn.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
@@ -104,7 +104,7 @@ public interface ValueColsColumnsSelectionDsl {
 
     /**
      * @include [CommonValueColsDocs]
-     * @arg [CommonValueColsDocs.ExampleArg]
+     * @setArg [CommonValueColsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[valueCols][ColumnPath.valueCols]`().`[recursively][ColumnsSelectionDsl.recursively]`() }`
      */

@@ -45,7 +45,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [CommonColsDocs.Examples]}
+     * {@getArg [CommonColsDocs.Examples]}
      *
      */
     private interface CommonColsDocs {
@@ -66,8 +66,8 @@ public interface ColsColumnsSelectionDsl {
         /**
          * @include [CommonColsDocs]
          *
-         * @param [firstCol\] A {@includeArg [AccessorType]} that points to a column.
-         * @param [otherCols\] Optional additional {@includeArg [AccessorType]}s that point to columns.
+         * @param [firstCol\] A {@getArg [AccessorType]} that points to a column.
+         * @param [otherCols\] Optional additional {@getArg [AccessorType]}s that point to columns.
          * @return A ([transformable][TransformableColumnSet]) [ColumnSet] containing the columns that [firstCol\] and [otherCols\] point to.
          */
         interface Vararg {
@@ -83,7 +83,7 @@ public interface ColsColumnsSelectionDsl {
 
     /**
      * @include [CommonColsDocs.Predicate]
-     * @arg [CommonColsDocs.Examples]
+     * @setArg [CommonColsDocs.Examples]
      *
      * `// although these can be shortened to just the `[colsOf<>{ }][ColumnsSelectionDsl.colsOf]` call`
      *
@@ -113,7 +113,7 @@ public interface ColsColumnsSelectionDsl {
 
     /**
      * @include [CommonColsDocs.Predicate]
-     * @arg [CommonColsDocs.Examples]
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() }.`[recursively][ColumnsSelectionDsl.recursively]`() }`
      *
@@ -141,7 +141,7 @@ public interface ColsColumnsSelectionDsl {
 
     /**
      * @include [CommonColsDocs.Predicate]
-     * @arg [CommonColsDocs.Examples]
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup`.[cols][SingleColumn.cols]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
      *
@@ -170,7 +170,7 @@ public interface ColsColumnsSelectionDsl {
 
     /**
      * @include [CommonColsDocs.Predicate]
-     * @arg [CommonColsDocs.Examples]
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { "myGroupCol".`[cols][String.cols]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
      *
@@ -194,7 +194,7 @@ public interface ColsColumnsSelectionDsl {
 
     /**
      * @include [CommonColsDocs.Predicate]
-     * @arg [CommonColsDocs.Examples]
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { Type::columnGroup.`[cols][KProperty.cols]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
      *
@@ -220,7 +220,7 @@ public interface ColsColumnsSelectionDsl {
 
     /**
      * @include [CommonColsDocs.Predicate]
-     * @arg [CommonColsDocs.Examples]
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[cols][ColumnPath.cols]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
      *
@@ -245,8 +245,8 @@ public interface ColsColumnsSelectionDsl {
     // region references
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[cols][ColumnSet.cols]`(columnA, columnB) }`
      *
@@ -274,8 +274,8 @@ public interface ColsColumnsSelectionDsl {
     ): ColumnSet<C> = cols(firstCol, *otherCols)
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(columnA, columnB) }`
      *
@@ -298,8 +298,8 @@ public interface ColsColumnsSelectionDsl {
     ): ColumnSet<C> = cols(firstCol, *otherCols)
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(columnA, columnB) }`
      *
@@ -326,8 +326,8 @@ public interface ColsColumnsSelectionDsl {
     ): ColumnSet<C> = cols(firstCol, *otherCols)
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`(columnA, columnB) }`
      *
@@ -350,8 +350,8 @@ public interface ColsColumnsSelectionDsl {
     ): ColumnSet<C> = cols(firstCol, *otherCols)
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`(columnA, columnB) }`
      *
@@ -372,8 +372,8 @@ public interface ColsColumnsSelectionDsl {
     ): ColumnSet<C> = cols(firstCol, *otherCols)
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][ColumnPath.cols]`(columnA, columnB) }`
      *
@@ -400,8 +400,8 @@ public interface ColsColumnsSelectionDsl {
     // region names
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [String]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [String]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[cols][ColumnSet.cols]`("columnA", "columnB") }`
      *
@@ -427,8 +427,8 @@ public interface ColsColumnsSelectionDsl {
     ): ColumnSet<C> = cols(firstCol, *otherCols)
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [String]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [String]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]`("columnA", "columnB") }`
      *
@@ -449,8 +449,8 @@ public interface ColsColumnsSelectionDsl {
     ): ColumnSet<*> = cols(firstCol, *otherCols)
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [String]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [String]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`("columnA", "columnB") }`
      *
@@ -475,8 +475,8 @@ public interface ColsColumnsSelectionDsl {
     ): ColumnSet<*> = cols(firstCol, *otherCols)
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [String]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [String]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { "columnGroup".`[cols][String.cols]`("columnA", "columnB") }`
      *
@@ -497,8 +497,8 @@ public interface ColsColumnsSelectionDsl {
     ): ColumnSet<*> = cols(firstCol, *otherCols)
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [String]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [String]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`("columnA", "columnB") }`
      *
@@ -519,8 +519,8 @@ public interface ColsColumnsSelectionDsl {
     ): ColumnSet<*> = cols(firstCol, *otherCols)
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [String]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [String]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][ColumnPath.cols]`("columnA", "columnB") }`
      *
@@ -545,8 +545,8 @@ public interface ColsColumnsSelectionDsl {
     // region properties
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [KProperty]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [KProperty]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[cols][ColumnSet.cols]`(Type::colA, Type::colB) }`
      *
@@ -570,8 +570,8 @@ public interface ColsColumnsSelectionDsl {
     ): ColumnSet<C> = cols(firstCol, *otherCols)
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [KProperty]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [KProperty]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(Type::colA, Type::colB) }`
      *
@@ -592,8 +592,8 @@ public interface ColsColumnsSelectionDsl {
     ): ColumnSet<C> = cols(firstCol, *otherCols)
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [KProperty]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [KProperty]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(Type::colA, Type::colB) }`
      *
@@ -616,8 +616,8 @@ public interface ColsColumnsSelectionDsl {
     ): ColumnSet<C> = cols(firstCol, *otherCols)
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [KProperty]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [KProperty]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`(Type::colA, Type::colB) }`
      *
@@ -638,8 +638,8 @@ public interface ColsColumnsSelectionDsl {
     ): ColumnSet<C> = cols(firstCol, *otherCols)
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [KProperty]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [KProperty]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`(Type::colA, Type::colB) }`
      *
@@ -660,8 +660,8 @@ public interface ColsColumnsSelectionDsl {
     ): ColumnSet<C> = cols(firstCol, *otherCols)
 
     /**
-     * @include [CommonColsDocs.Vararg] {@arg [CommonColsDocs.Vararg.AccessorType] [KProperty]}
-     * @arg [CommonColsDocs.Examples]
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [KProperty]}
+     * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][ColumnPath.cols]`(Type::colA, Type::colB) }`
      *
@@ -706,7 +706,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [CommonColsIndicesDocs.ExampleArg]}
+     * {@getArg [CommonColsIndicesDocs.ExampleArg]}
      *
      * @throws [IndexOutOfBoundsException] If any index is out of bounds.
      * @param [firstIndex\] The index of the first column to retrieve.
@@ -721,7 +721,7 @@ public interface ColsColumnsSelectionDsl {
 
     /**
      * @include [CommonColsIndicesDocs]
-     * @arg [CommonColsIndicesDocs.ExampleArg]
+     * @setArg [CommonColsIndicesDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[cols][ColumnSet.cols]`(1, 3) }`
      *
@@ -744,7 +744,7 @@ public interface ColsColumnsSelectionDsl {
 
     /**
      * @include [CommonColsIndicesDocs]
-     * @arg [CommonColsIndicesDocs.ExampleArg]
+     * @setArg [CommonColsIndicesDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(1, 3) }`
      */
@@ -758,7 +758,7 @@ public interface ColsColumnsSelectionDsl {
 
     /**
      * @include [CommonColsIndicesDocs]
-     * @arg [CommonColsIndicesDocs.ExampleArg]
+     * @setArg [CommonColsIndicesDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(1, 3) }`
      */
@@ -772,7 +772,7 @@ public interface ColsColumnsSelectionDsl {
 
     /**
      * @include [CommonColsIndicesDocs]
-     * @arg [CommonColsIndicesDocs.ExampleArg]
+     * @setArg [CommonColsIndicesDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`(5, 3, 1) }`
      */
@@ -786,7 +786,7 @@ public interface ColsColumnsSelectionDsl {
 
     /**
      * @include [CommonColsIndicesDocs]
-     * @arg [CommonColsIndicesDocs.ExampleArg]
+     * @setArg [CommonColsIndicesDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`(5, 4) }`
      */
@@ -800,7 +800,7 @@ public interface ColsColumnsSelectionDsl {
 
     /**
      * @include [CommonColsIndicesDocs]
-     * @arg [CommonColsIndicesDocs.ExampleArg]
+     * @setArg [CommonColsIndicesDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[cols][ColumnPath.cols]`(0, 1) }`
      */
@@ -837,7 +837,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [CommonColsRangeDocs.ExampleArg]}
+     * {@getArg [CommonColsRangeDocs.ExampleArg]}
      *
      * @throws [IndexOutOfBoundsException\] if any of the indices in the [range\] are out of bounds.
      * @throws [IllegalArgumentException\] if the [range\] is empty.
@@ -852,7 +852,7 @@ public interface ColsColumnsSelectionDsl {
 
     /**
      * @include [CommonColsRangeDocs]
-     * @arg [CommonColsRangeDocs.ExampleArg]
+     * @setArg [CommonColsRangeDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[cols][ColumnSet.cols]`(1`[..][Int.rangeTo]`3) }`
      *
@@ -869,7 +869,7 @@ public interface ColsColumnsSelectionDsl {
 
     /**
      * @include [CommonColsRangeDocs]
-     * @arg [CommonColsRangeDocs.ExampleArg]
+     * @setArg [CommonColsRangeDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(1`[..][Int.rangeTo]`3) }`
      */
@@ -880,7 +880,7 @@ public interface ColsColumnsSelectionDsl {
 
     /**
      * @include [CommonColsRangeDocs]
-     * @arg [CommonColsRangeDocs.ExampleArg]
+     * @setArg [CommonColsRangeDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(1`[..][Int.rangeTo]`3) }`
      */
@@ -891,7 +891,7 @@ public interface ColsColumnsSelectionDsl {
 
     /**
      * @include [CommonColsRangeDocs]
-     * @arg [CommonColsRangeDocs.ExampleArg]
+     * @setArg [CommonColsRangeDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[cols][String.cols]`(1`[`..`][Int.rangeTo]`3) }`
      */
@@ -902,7 +902,7 @@ public interface ColsColumnsSelectionDsl {
 
     /**
      * @include [CommonColsRangeDocs]
-     * @arg [CommonColsRangeDocs.ExampleArg]
+     * @setArg [CommonColsRangeDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
@@ -914,7 +914,7 @@ public interface ColsColumnsSelectionDsl {
 
     /**
      * @include [CommonColsRangeDocs]
-     * @arg [CommonColsRangeDocs.ExampleArg]
+     * @setArg [CommonColsRangeDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[cols][ColumnPath.cols]`(0`[..][Int.rangeTo]`1) }`
      */

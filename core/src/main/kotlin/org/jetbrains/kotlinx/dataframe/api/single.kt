@@ -56,7 +56,7 @@ public interface SingleColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [Examples]}
+     * {@getArg [Examples]}
      *
      * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
      * @return A ([transformable][TransformableSingleColumn]) [SingleColumn] containing the single column that adheres to the given [condition\].
@@ -71,7 +71,7 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * @include [CommonSingleDocs]
-     * @arg [CommonSingleDocs.Examples]
+     * @setArg [CommonSingleDocs.Examples]
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[single][ColumnSet.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[single][ColumnSet.single]`() }`
@@ -81,7 +81,7 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * @include [CommonSingleDocs]
-     * @arg [CommonSingleDocs.Examples]
+     * @setArg [CommonSingleDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { `[single][ColumnsSelectionDsl.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
@@ -90,7 +90,7 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * @include [CommonSingleDocs]
-     * @arg [CommonSingleDocs.Examples]
+     * @setArg [CommonSingleDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[singleCol][SingleColumn.singleCol]`() }`
      */
@@ -99,7 +99,7 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * @include [CommonSingleDocs]
-     * @arg [CommonSingleDocs.Examples]
+     * @setArg [CommonSingleDocs.Examples]
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[singleCol][String.singleCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun String.singleCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
@@ -107,7 +107,7 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * @include [CommonSingleDocs]
-     * @arg [CommonSingleDocs.Examples]
+     * @setArg [CommonSingleDocs.Examples]
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[singleCol][SingleColumn.singleCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[singleCol][SingleColumn.singleCol]`() }`
@@ -119,7 +119,7 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * @include [CommonSingleDocs]
-     * @arg [CommonSingleDocs.Examples]
+     * @setArg [CommonSingleDocs.Examples]
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[singleCol][SingleColumn.singleCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[singleCol][SingleColumn.singleCol]`() }`
@@ -133,7 +133,7 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * @include [CommonSingleDocs]
-     * @arg [CommonSingleDocs.Examples]
+     * @setArg [CommonSingleDocs.Examples]
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[singleCol][ColumnPath.singleCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun ColumnPath.singleCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =

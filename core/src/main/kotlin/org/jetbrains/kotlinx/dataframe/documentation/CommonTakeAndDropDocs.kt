@@ -14,34 +14,34 @@ import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs.Opera
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs.TitleArg
 
 /**
- * ## {@includeArg [TitleArg]} (Children)
- * This function {@includeArg [NounArg]}s the {@includeArg [FirstOrLastArg]} [n\] columns of a [ColumnGroup] or [ColumnSet].
+ * ## {@getArg [TitleArg]} (Children)
+ * This function {@getArg [NounArg]}s the {@getArg [FirstOrLastArg]} [n\] columns of a [ColumnGroup] or [ColumnSet].
  *
  * If called on a [SingleColumn] containing a [ColumnGroup],
- * [{@includeArg [OperationArg]}Children][SingleColumn.{@includeArg [OperationArg]}Children] will {@includeArg [NounArg]} the {@includeArg [FirstOrLastArg]} [n\] children of that column group.
+ * [{@getArg [OperationArg]}Children][SingleColumn.{@getArg [OperationArg]}Children] will {@getArg [NounArg]} the {@getArg [FirstOrLastArg]} [n\] children of that column group.
  *
- * Else, if called on a [ColumnSet], [{@includeArg [OperationArg]}][ColumnSet.{@includeArg [OperationArg]}] will {@includeArg [NounArg]} the {@includeArg [FirstOrLastArg]} [n\] columns of that column set.
+ * Else, if called on a [ColumnSet], [{@getArg [OperationArg]}][ColumnSet.{@getArg [OperationArg]}] will {@getArg [NounArg]} the {@getArg [FirstOrLastArg]} [n\] columns of that column set.
  *
  * Any {@include [AccessApiLink]} can be used as receiver for these functions.
  *
- * NOTE: To avoid ambiguity, `{@includeArg [CommonTakeAndDropDocs.OperationArg]}` is called `{@includeArg [CommonTakeAndDropDocs.OperationArg]}Children` when called on
+ * NOTE: To avoid ambiguity, `{@getArg [CommonTakeAndDropDocs.OperationArg]}` is called `{@getArg [CommonTakeAndDropDocs.OperationArg]}Children` when called on
  * a [ColumnGroup].
  *
  * #### Examples:
- * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[{@includeArg [OperationArg]}][ColumnSet.{@includeArg [OperationArg]}]`(5) }`
+ * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[{@getArg [OperationArg]}][ColumnSet.{@getArg [OperationArg]}]`(5) }`
  *
- * `df.`[select][DataFrame.select]` { `[{@includeArg [OperationArg]}][ColumnsSelectionDsl.{@includeArg [OperationArg]}]`(1) }`
+ * `df.`[select][DataFrame.select]` { `[{@getArg [OperationArg]}][ColumnsSelectionDsl.{@getArg [OperationArg]}]`(1) }`
  *
- * `df.`[select][DataFrame.select]` { myColumnGroup.`[{@includeArg [OperationArg]}Children][SingleColumn.{@includeArg [OperationArg]}Children]`(2) }`
+ * `df.`[select][DataFrame.select]` { myColumnGroup.`[{@getArg [OperationArg]}Children][SingleColumn.{@getArg [OperationArg]}Children]`(2) }`
  *
- * `df.`[select][DataFrame.select]` { "myColumnGroup".`[{@includeArg [OperationArg]}Children][String.{@includeArg [OperationArg]}Children]`(3) }`
+ * `df.`[select][DataFrame.select]` { "myColumnGroup".`[{@getArg [OperationArg]}Children][String.{@getArg [OperationArg]}Children]`(3) }`
  *
  * #### Examples for this overload:
  *
- * {@includeArg [CommonTakeAndDropDocs.ExampleArg]}
+ * {@getArg [CommonTakeAndDropDocs.ExampleArg]}
  *
- * @param [n\] The number of columns to {@includeArg [NounArg]}.
- * @return A [ColumnSet] containing the {@includeArg [FirstOrLastArg]} [n\] columns.
+ * @param [n\] The number of columns to {@getArg [NounArg]}.
+ * @return A [ColumnSet] containing the {@getArg [FirstOrLastArg]} [n\] columns.
  */
 internal interface CommonTakeAndDropDocs {
     /** Title, like "Take Last" */

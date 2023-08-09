@@ -28,7 +28,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [CommonWithoutNullsDocs.ExampleArg]]}
+     * {@getArg [CommonWithoutNullsDocs.ExampleArg]]}
      *
      * @return A [ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */
@@ -39,7 +39,7 @@ public interface WithoutNullsColumnsSelectionDsl {
 
     /**
      * @include [CommonWithoutNullsDocs]
-     * @arg [CommonWithoutNullsDocs.ExampleArg]
+     * @setArg [CommonWithoutNullsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[withoutNulls][ColumnSet.withoutNulls]`() }`
      */
@@ -49,7 +49,7 @@ public interface WithoutNullsColumnsSelectionDsl {
 
     /**
      * @include [CommonWithoutNullsDocs]
-     * @arg [CommonWithoutNullsDocs.ExampleArg]
+     * @setArg [CommonWithoutNullsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[withoutNulls][ColumnsSelectionDsl.childrenWithoutNulls]`() }`
      */
@@ -58,7 +58,7 @@ public interface WithoutNullsColumnsSelectionDsl {
 
     /**
      * @include [CommonWithoutNullsDocs]
-     * @arg [CommonWithoutNullsDocs.ExampleArg]
+     * @setArg [CommonWithoutNullsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[childrenWithoutNulls][SingleColumn.childrenWithoutNulls]`() }`
      */
@@ -67,7 +67,7 @@ public interface WithoutNullsColumnsSelectionDsl {
 
     /**
      * @include [CommonWithoutNullsDocs]
-     * @arg [CommonWithoutNullsDocs.ExampleArg]
+     * @setArg [CommonWithoutNullsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[childrenWithoutNulls][String.childrenWithoutNulls]`() }`
      */
@@ -76,7 +76,7 @@ public interface WithoutNullsColumnsSelectionDsl {
 
     /**
      * @include [CommonWithoutNullsDocs]
-     * @arg [CommonWithoutNullsDocs.ExampleArg]
+     * @setArg [CommonWithoutNullsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[childrenWithoutNulls][SingleColumn.childrenWithoutNulls]`() }`
      *
@@ -87,7 +87,7 @@ public interface WithoutNullsColumnsSelectionDsl {
 
     /**
      * @include [CommonWithoutNullsDocs]
-     * @arg [CommonWithoutNullsDocs.ExampleArg]
+     * @setArg [CommonWithoutNullsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[childrenWithoutNulls][ColumnPath.childrenWithoutNulls]`() }`
      */

@@ -58,7 +58,7 @@ public interface ChildrenColumnsSelectionDsl {
      *
      * #### Examples of this overload:
      *
-     * {@includeArg [ChildrenDocs.ExampleArg]}
+     * {@getArg [ChildrenDocs.ExampleArg]}
      *
      * @see [cols\]
      * @see [filter\]
@@ -74,7 +74,7 @@ public interface ChildrenColumnsSelectionDsl {
 
     /**
      * @include [ChildrenDocs]
-     * @arg [ChildrenDocs.ExampleArg]
+     * @setArg [ChildrenDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[children][ColumnSet.children]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[recursively][ColumnsSelectionDsl.recursively]`() }`
      *
@@ -85,7 +85,7 @@ public interface ChildrenColumnsSelectionDsl {
 
     /**
      * @include [ChildrenDocs]
-     * @arg [ChildrenDocs.ExampleArg]
+     * @setArg [ChildrenDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[children][SingleColumn.children]`().`[recursively][ColumnsSelectionDsl.recursively]`() }`
      *
@@ -96,7 +96,7 @@ public interface ChildrenColumnsSelectionDsl {
 
     /**
      * @include [ChildrenDocs]
-     * @arg [ChildrenDocs.ExampleArg]
+     * @setArg [ChildrenDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[children][String.children]`().`[recursively][ColumnsSelectionDsl.recursively]`() }`
      */
@@ -105,7 +105,7 @@ public interface ChildrenColumnsSelectionDsl {
 
     /**
      * @include [ChildrenDocs]
-     * @arg [ChildrenDocs.ExampleArg]
+     * @setArg [ChildrenDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[children][SingleColumn.children]`().`[recursively][TransformableColumnSet.recursively]`() }`
      *
@@ -116,7 +116,7 @@ public interface ChildrenColumnsSelectionDsl {
 
     /**
      * @include [ChildrenDocs]
-     * @arg [ChildrenDocs.ExampleArg]
+     * @setArg [ChildrenDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[children][ColumnPath.children]`().`[recursively][ColumnsSelectionDsl.recursively]`() }`
      */

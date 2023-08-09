@@ -28,7 +28,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [CommonWithoutNullsDocs.ExampleArg]]}
+     * {@getArg [CommonWithoutNullsDocs.ExampleArg]]}
      *
      * @return A [ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */
@@ -45,7 +45,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[nameContains][ColumnsSelectionDsl.childrenNameContains]`("middleName").`[withoutNulls][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.withoutNulls]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.childrenNameContains]`("middleName").`[withoutNulls][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.withoutNulls]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[withoutNulls][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]`() }`
      *
@@ -53,7 +53,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [CommonWithoutNullsDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.CommonWithoutNullsDocs.ExampleArg]]}
+     * {@getArg [CommonWithoutNullsDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.CommonWithoutNullsDocs.ExampleArg]]}
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */
@@ -69,7 +69,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[nameContains][ColumnsSelectionDsl.childrenNameContains]`("middleName").`[withoutNulls][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.withoutNulls]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.childrenNameContains]`("middleName").`[withoutNulls][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.withoutNulls]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[withoutNulls][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]`() }`
      *
@@ -77,7 +77,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [CommonWithoutNullsDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.CommonWithoutNullsDocs.ExampleArg]]}
+     * {@getArg [CommonWithoutNullsDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.CommonWithoutNullsDocs.ExampleArg]]}
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */
@@ -92,7 +92,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[nameContains][ColumnsSelectionDsl.childrenNameContains]`("middleName").`[withoutNulls][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.withoutNulls]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.childrenNameContains]`("middleName").`[withoutNulls][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.withoutNulls]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[withoutNulls][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]`() }`
      *
@@ -100,7 +100,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [CommonWithoutNullsDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.CommonWithoutNullsDocs.ExampleArg]]}
+     * {@getArg [CommonWithoutNullsDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.CommonWithoutNullsDocs.ExampleArg]]}
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */
@@ -115,7 +115,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[nameContains][ColumnsSelectionDsl.childrenNameContains]`("middleName").`[withoutNulls][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.withoutNulls]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.childrenNameContains]`("middleName").`[withoutNulls][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.withoutNulls]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[withoutNulls][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]`() }`
      *
@@ -123,7 +123,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [CommonWithoutNullsDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.CommonWithoutNullsDocs.ExampleArg]]}
+     * {@getArg [CommonWithoutNullsDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.CommonWithoutNullsDocs.ExampleArg]]}
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */
@@ -138,7 +138,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[nameContains][ColumnsSelectionDsl.childrenNameContains]`("middleName").`[withoutNulls][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.withoutNulls]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.childrenNameContains]`("middleName").`[withoutNulls][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.withoutNulls]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[withoutNulls][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]`() }`
      *
@@ -146,7 +146,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [CommonWithoutNullsDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.CommonWithoutNullsDocs.ExampleArg]]}
+     * {@getArg [CommonWithoutNullsDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.CommonWithoutNullsDocs.ExampleArg]]}
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */
@@ -161,7 +161,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[nameContains][ColumnsSelectionDsl.childrenNameContains]`("middleName").`[withoutNulls][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.withoutNulls]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.childrenNameContains]`("middleName").`[withoutNulls][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.withoutNulls]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[withoutNulls][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]`() }`
      *
@@ -169,7 +169,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [CommonWithoutNullsDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.CommonWithoutNullsDocs.ExampleArg]]}
+     * {@getArg [CommonWithoutNullsDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.CommonWithoutNullsDocs.ExampleArg]]}
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */

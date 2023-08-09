@@ -17,11 +17,11 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     /**
      * ## (Children) Name Contains
      * Returns a ([transformable][TransformableColumnSet]) [ColumnSet] containing
-     * all columns containing {@includeArg [CommonNameContainsDocs.ArgumentArg]} in their name.
+     * all columns containing {@getArg [CommonNameContainsDocs.ArgumentArg]} in their name.
      *
      * NOTE: For [column groups][ColumnGroup], `nameContains` is named `childrenNameContains` to avoid confusion.
      *
-     * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]` { `{@includeArg [ArgumentArg]}{@includeArg [ArgumentArg]}` `[in][String.contains]` it.`[name][DataColumn.name]` }`.
+     * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]` { `{@getArg [ArgumentArg]}{@getArg [ArgumentArg]}` `[in][String.contains]` it.`[name][DataColumn.name]` }`.
      *
      * #### For example:
      *
@@ -33,11 +33,11 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [ExampleArg]}
+     * {@getArg [ExampleArg]}
      *
-     * @param {@includeArg [ArgumentArg]} what the column name should contain to be included in the result.
+     * @param {@getArg [ArgumentArg]} what the column name should contain to be included in the result.
      * @return A ([transformable][TransformableColumnSet]) [ColumnSet] containing
-     *   all columns containing {@includeArg [CommonNameContainsDocs.ArgumentArg]} in their name.
+     *   all columns containing {@getArg [CommonNameContainsDocs.ArgumentArg]} in their name.
      */
     private interface CommonNameContainsDocs {
         interface ExampleArg
@@ -48,12 +48,12 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [CommonNameContainsDocs]
-     * @arg [CommonNameContainsDocs.ArgumentArg] [text\] */
+     * @setArg [CommonNameContainsDocs.ArgumentArg] [text\] */
     private interface NameContainsTextDocs
 
     /**
      * @include [NameContainsTextDocs]
-     * @arg [CommonNameContainsDocs.ExampleArg]
+     * @setArg [CommonNameContainsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[nameContains][ColumnSet.nameContains]`("my") }`
      *
@@ -65,7 +65,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [NameContainsTextDocs]
-     * @arg [CommonNameContainsDocs.ExampleArg]
+     * @setArg [CommonNameContainsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[nameContains][ColumnsSelectionDsl.childrenNameContains]`("my") }`
      */
@@ -74,7 +74,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [NameContainsTextDocs]
-     * @arg [CommonNameContainsDocs.ExampleArg]
+     * @setArg [CommonNameContainsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { someGroupCol.`[childrenNameContains][SingleColumn.childrenNameContains]`("my").`[rec][ColumnsSelectionDsl.rec]`() }`
      */
@@ -83,7 +83,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [NameContainsTextDocs]
-     * @arg [CommonNameContainsDocs.ExampleArg]
+     * @setArg [CommonNameContainsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "someGroupCol".`[childrenNameContains][String.childrenNameContains]`("my").`[rec][ColumnsSelectionDsl.rec]`() }`
      *
@@ -95,7 +95,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [NameContainsTextDocs]
-     * @arg [CommonNameContainsDocs.ExampleArg]
+     * @setArg [CommonNameContainsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameContains][SingleColumn.childrenNameContains]`("my") }`
      *
@@ -106,7 +106,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [NameContainsTextDocs]
-     * @arg [CommonNameContainsDocs.ExampleArg]
+     * @setArg [CommonNameContainsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[childrenNameContains][ColumnPath.childrenNameContains]`("my") }`
      *
@@ -117,12 +117,12 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [CommonNameContainsDocs]
-     * @arg [CommonNameContainsDocs.ArgumentArg] [regex\] */
+     * @setArg [CommonNameContainsDocs.ArgumentArg] [regex\] */
     private interface NameContainsRegexDocs
 
     /**
      * @include [NameContainsRegexDocs]
-     * @arg [CommonNameContainsDocs.ExampleArg]
+     * @setArg [CommonNameContainsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[nameContains][ColumnSet.nameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
      *
@@ -134,7 +134,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [NameContainsRegexDocs]
-     * @arg [CommonNameContainsDocs.ExampleArg]
+     * @setArg [CommonNameContainsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[nameContains][ColumnsSelectionDsl.nameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
      */
@@ -143,7 +143,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [NameContainsRegexDocs]
-     * @arg [CommonNameContainsDocs.ExampleArg]
+     * @setArg [CommonNameContainsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { someGroupCol.`[childrenNameContains][SingleColumn.childrenNameContains]`(`[Regex][Regex]`("order-[0-9]+")).`[rec][ColumnsSelectionDsl.rec]`() }`
      */
@@ -152,7 +152,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [NameContainsRegexDocs]
-     * @arg [CommonNameContainsDocs.ExampleArg]
+     * @setArg [CommonNameContainsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "someGroupCol".`[childrenNameContains][String.childrenNameContains]`(`[Regex][Regex]`("order-[0-9]+")).`[rec][ColumnsSelectionDsl.rec]`() }`
      *
@@ -163,7 +163,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [NameContainsRegexDocs]
-     * @arg [CommonNameContainsDocs.ExampleArg]
+     * @setArg [CommonNameContainsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameContains][SingleColumn.childrenNameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
      *
@@ -174,7 +174,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [NameContainsRegexDocs]
-     * @arg [CommonNameContainsDocs.ExampleArg]
+     * @setArg [CommonNameContainsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[childrenNameContains][ColumnPath.childrenNameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
      *
@@ -186,30 +186,30 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     // endregion
 
     /**
-     * ## (Children) Name {@includeArg [CommonNameStartsEndsDocs.CapitalTitle]} With
+     * ## (Children) Name {@getArg [CommonNameStartsEndsDocs.CapitalTitle]} With
      * Returns a ([transformable][TransformableColumnSet]) [ColumnSet] containing
-     * all columns {@includeArg [CommonNameStartsEndsDocs.Noun]} with {@includeArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name.
+     * all columns {@getArg [CommonNameStartsEndsDocs.Noun]} with {@getArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name.
      *
      * If [this\] is a [SingleColumn] containing a [ColumnGroup], the function runs on the children of the [ColumnGroup].
      * Else, if [this\] is a [ColumnSet], the function runs on the [ColumnSet] itself.
      *
-     * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]` { it.`[name][DataColumn.name]`.`[{@includeArg [OperationName]}][String.{@includeArg [OperationName]}]`(`{@includeArg [ArgumentArg]}{@includeArg [ArgumentArg]}`) }`.
+     * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]` { it.`[name][DataColumn.name]`.`[{@getArg [OperationName]}][String.{@getArg [OperationName]}]`(`{@getArg [ArgumentArg]}{@getArg [ArgumentArg]}`) }`.
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { `[{@includeArg [NameOperationName]}][ColumnsSelectionDsl.{@includeArg [NameOperationName]}]`("order").`[recursively][ColumnsSelectionDsl.recursively]`() }`
+     * `df.`[select][DataFrame.select]` { `[{@getArg [NameOperationName]}][ColumnsSelectionDsl.{@getArg [NameOperationName]}]`("order").`[recursively][ColumnsSelectionDsl.recursively]`() }`
      *
-     * `df.`[select][DataFrame.select]` { "someGroupCol".`[{@includeArg [ChildrenNameOperationName]}][String.{@includeArg [ChildrenNameOperationName]}]`("b") }`
+     * `df.`[select][DataFrame.select]` { "someGroupCol".`[{@getArg [ChildrenNameOperationName]}][String.{@getArg [ChildrenNameOperationName]}]`("b") }`
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[{@includeArg [ChildrenNameOperationName]}][SingleColumn.{@includeArg [ChildrenNameOperationName]}]`("a") }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[{@getArg [ChildrenNameOperationName]}][SingleColumn.{@getArg [ChildrenNameOperationName]}]`("a") }`
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [ExampleArg]}
+     * {@getArg [ExampleArg]}
      *
-     * @param {@includeArg [ArgumentArg]} Columns {@includeArg [CommonNameStartsEndsDocs.Noun]} with this {@includeArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name will be returned.
+     * @param {@getArg [ArgumentArg]} Columns {@getArg [CommonNameStartsEndsDocs.Noun]} with this {@getArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name will be returned.
      * @return A ([transformable][TransformableColumnSet]) [ColumnSet] containing
-     *   all columns {@includeArg [CommonNameStartsEndsDocs.Noun]} with {@includeArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name.
+     *   all columns {@getArg [CommonNameStartsEndsDocs.Noun]} with {@getArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name.
      */
     private interface CommonNameStartsEndsDocs {
 
@@ -238,12 +238,12 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [CommonNameStartsEndsDocs]
-     * @arg [CommonNameStartsEndsDocs.CapitalTitle] Starts
-     * @arg [CommonNameStartsEndsDocs.Noun] starting
-     * @arg [CommonNameStartsEndsDocs.OperationName] startsWith
-     * @arg [CommonNameStartsEndsDocs.NameOperationName] nameStartsWith
-     * @arg [CommonNameStartsEndsDocs.ChildrenNameOperationName] childrenNameStartsWith
-     * @arg [CommonNameStartsEndsDocs.ArgumentArg] [prefix\]
+     * @setArg [CommonNameStartsEndsDocs.CapitalTitle] Starts
+     * @setArg [CommonNameStartsEndsDocs.Noun] starting
+     * @setArg [CommonNameStartsEndsDocs.OperationName] startsWith
+     * @setArg [CommonNameStartsEndsDocs.NameOperationName] nameStartsWith
+     * @setArg [CommonNameStartsEndsDocs.ChildrenNameOperationName] childrenNameStartsWith
+     * @setArg [CommonNameStartsEndsDocs.ArgumentArg] [prefix\]
      *
      * @see [nameEndsWith\]
      * @see [nameContains\]
@@ -264,7 +264,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [CommonNameStartsWithDocs]
-     * @arg [CommonNameStartsEndsDocs.ExampleArg]
+     * @setArg [CommonNameStartsEndsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameStartsWith][ColumnSet.nameStartsWith]`("order-") }`
      */
@@ -274,7 +274,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [CommonNameStartsWithDocs]
-     * @arg [CommonNameStartsEndsDocs.ExampleArg]
+     * @setArg [CommonNameStartsEndsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order-") }`
      */
@@ -283,7 +283,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [CommonNameStartsWithDocs]
-     * @arg [CommonNameStartsEndsDocs.ExampleArg]
+     * @setArg [CommonNameStartsEndsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { someGroupCol.`[childrenNameStartsWith][SingleColumn.childrenNameStartsWith]`("order-") }`
      */
@@ -292,7 +292,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [CommonNameStartsWithDocs]
-     * @arg [CommonNameStartsEndsDocs.ExampleArg]
+     * @setArg [CommonNameStartsEndsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "someGroupCol".`[childrenNameStartsWith][String.childrenNameStartsWith]`("order-") }`
      */
@@ -301,7 +301,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [CommonNameStartsWithDocs]
-     * @arg [CommonNameStartsEndsDocs.ExampleArg]
+     * @setArg [CommonNameStartsEndsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameStartsWith][SingleColumn.childrenNameStartsWith]`("order-") }`
      *
@@ -312,7 +312,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [CommonNameStartsWithDocs]
-     * @arg [CommonNameStartsEndsDocs.ExampleArg]
+     * @setArg [CommonNameStartsEndsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[childrenNameStartsWith][ColumnPath.childrenNameStartsWith]`("order-") }`
      */
@@ -325,12 +325,12 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [CommonNameStartsEndsDocs]
-     * @arg [CommonNameStartsEndsDocs.CapitalTitle] Ends
-     * @arg [CommonNameStartsEndsDocs.Noun] ending
-     * @arg [CommonNameStartsEndsDocs.OperationName] endsWith
-     * @arg [CommonNameStartsEndsDocs.NameOperationName] nameEndsWith
-     * @arg [CommonNameStartsEndsDocs.ChildrenNameOperationName] childrenNameEndsWith
-     * @arg [CommonNameStartsEndsDocs.ArgumentArg] [suffix\]
+     * @setArg [CommonNameStartsEndsDocs.CapitalTitle] Ends
+     * @setArg [CommonNameStartsEndsDocs.Noun] ending
+     * @setArg [CommonNameStartsEndsDocs.OperationName] endsWith
+     * @setArg [CommonNameStartsEndsDocs.NameOperationName] nameEndsWith
+     * @setArg [CommonNameStartsEndsDocs.ChildrenNameOperationName] childrenNameEndsWith
+     * @setArg [CommonNameStartsEndsDocs.ArgumentArg] [suffix\]
      *
      * @see [nameStartsWith\]
      * @see [nameContains\]
@@ -352,7 +352,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [CommonNameEndsWithDocs]
-     * @arg [CommonNameStartsEndsDocs.ExampleArg]
+     * @setArg [CommonNameStartsEndsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameEndsWith][ColumnSet.nameEndsWith]`("-order") }`
      */
@@ -362,7 +362,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [CommonNameEndsWithDocs]
-     * @arg [CommonNameStartsEndsDocs.ExampleArg]
+     * @setArg [CommonNameStartsEndsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[nameEndsWith][ColumnsSelectionDsl.nameEndsWith]`("-order") }`
      */
@@ -371,7 +371,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [CommonNameEndsWithDocs]
-     * @arg [CommonNameStartsEndsDocs.ExampleArg]
+     * @setArg [CommonNameStartsEndsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { someGroupCol.`[childrenNameEndsWith][SingleColumn.childrenNameEndsWith]`("-order") }`
      */
@@ -380,7 +380,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [CommonNameEndsWithDocs]
-     * @arg [CommonNameStartsEndsDocs.ExampleArg]
+     * @setArg [CommonNameStartsEndsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "someGroupCol".`[childrenNameEndsWith][String.childrenNameEndsWith]`("-order") }`
      */
@@ -389,7 +389,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [CommonNameEndsWithDocs]
-     * @arg [CommonNameStartsEndsDocs.ExampleArg]
+     * @setArg [CommonNameStartsEndsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameEndsWith][SingleColumn.childrenNameEndsWith]`("-order") }`
      *
@@ -400,7 +400,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [CommonNameEndsWithDocs]
-     * @arg [CommonNameStartsEndsDocs.ExampleArg]
+     * @setArg [CommonNameStartsEndsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[childrenNameEndsWith][ColumnPath.childrenNameEndsWith]`("-order") }`
      */

@@ -75,16 +75,16 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropDocs]
-     * @arg [CommonTakeAndDropDocs.TitleArg] Drop
-     * @arg [CommonTakeAndDropDocs.OperationArg] drop
-     * @arg [CommonTakeAndDropDocs.NounArg] drop
-     * @arg [CommonTakeAndDropDocs.FirstOrLastArg] first
+     * @setArg [CommonTakeAndDropDocs.TitleArg] Drop
+     * @setArg [CommonTakeAndDropDocs.OperationArg] drop
+     * @setArg [CommonTakeAndDropDocs.NounArg] drop
+     * @setArg [CommonTakeAndDropDocs.FirstOrLastArg] first
      */
     private interface CommonDropFirstDocs
 
     /**
      * @include [CommonDropFirstDocs]
-     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     * @setArg [CommonTakeAndDropDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[drop][ColumnSet.drop]`(2) }`
      *
@@ -94,7 +94,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropFirstDocs]
-     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     * @setArg [CommonTakeAndDropDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[drop][ColumnsSelectionDsl.drop]`(5) }`
      */
@@ -103,7 +103,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropFirstDocs]
-     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     * @setArg [CommonTakeAndDropDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropChildren][SingleColumn.dropChildren]`(1) }`
      */
@@ -112,7 +112,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropFirstDocs]
-     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     * @setArg [CommonTakeAndDropDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropChildren][String.dropChildren]`(1) }`
      */
@@ -120,7 +120,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropFirstDocs]
-     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     * @setArg [CommonTakeAndDropDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[dropChildren][SingleColumn.dropChildren]`(1) }`
      *
@@ -132,7 +132,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropFirstDocs]
-     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     * @setArg [CommonTakeAndDropDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropChildren][ColumnPath.dropChildren]`(1) }`
      */
@@ -144,16 +144,16 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropDocs]
-     * @arg [CommonTakeAndDropDocs.TitleArg] Drop Last
-     * @arg [CommonTakeAndDropDocs.OperationArg] dropLast
-     * @arg [CommonTakeAndDropDocs.NounArg] drop
-     * @arg [CommonTakeAndDropDocs.FirstOrLastArg] last
+     * @setArg [CommonTakeAndDropDocs.TitleArg] Drop Last
+     * @setArg [CommonTakeAndDropDocs.OperationArg] dropLast
+     * @setArg [CommonTakeAndDropDocs.NounArg] drop
+     * @setArg [CommonTakeAndDropDocs.FirstOrLastArg] last
      */
     private interface CommonDropLastDocs
 
     /**
      * @include [CommonDropLastDocs]
-     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     * @setArg [CommonTakeAndDropDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[dropLast][ColumnSet.dropLast]`(2) }`
      *
@@ -163,7 +163,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropLastDocs]
-     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     * @setArg [CommonTakeAndDropDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[dropLast][ColumnsSelectionDsl.dropLast]`(5) }`
      */
@@ -172,7 +172,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropLastDocs]
-     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     * @setArg [CommonTakeAndDropDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropLastChildren][SingleColumn.dropLastChildren]`() }`
      */
@@ -181,7 +181,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropLastDocs]
-     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     * @setArg [CommonTakeAndDropDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropLastChildren][String.dropLastChildren]`(1) }`
      */
@@ -189,7 +189,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropLastDocs]
-     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     * @setArg [CommonTakeAndDropDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[dropLastChildren][SingleColumn.dropLastChildren]`(1) }`
      *
@@ -201,7 +201,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropLastDocs]
-     * @arg [CommonTakeAndDropDocs.ExampleArg]
+     * @setArg [CommonTakeAndDropDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropLastChildren][ColumnPath.dropLastChildren]`(1) }`
      */
@@ -213,16 +213,16 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropWhileDocs]
-     * @arg [CommonTakeAndDropWhileDocs.TitleArg] Drop
-     * @arg [CommonTakeAndDropWhileDocs.OperationArg] drop
-     * @arg [CommonTakeAndDropWhileDocs.NounArg] drop
-     * @arg [CommonTakeAndDropWhileDocs.FirstOrLastArg] first
+     * @setArg [CommonTakeAndDropWhileDocs.TitleArg] Drop
+     * @setArg [CommonTakeAndDropWhileDocs.OperationArg] drop
+     * @setArg [CommonTakeAndDropWhileDocs.NounArg] drop
+     * @setArg [CommonTakeAndDropWhileDocs.FirstOrLastArg] first
      */
     private interface CommonDropWhileDocs
 
     /**
      * @include [CommonDropWhileDocs]
-     * @arg [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @setArg [CommonTakeAndDropWhileDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[dropWhile][ColumnSet.dropWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
@@ -233,7 +233,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropWhileDocs]
-     * @arg [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @setArg [CommonTakeAndDropWhileDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[dropWhile][ColumnsSelectionDsl.dropWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
@@ -242,7 +242,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropWhileDocs]
-     * @arg [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @setArg [CommonTakeAndDropWhileDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropChildrenWhile][SingleColumn.dropChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
@@ -251,7 +251,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropWhileDocs]
-     * @arg [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @setArg [CommonTakeAndDropWhileDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropChildrenWhile][String.dropChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
@@ -260,7 +260,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropWhileDocs]
-     * @arg [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @setArg [CommonTakeAndDropWhileDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[dropChildrenWhile][SingleColumn.dropChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
@@ -271,7 +271,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropWhileDocs]
-     * @arg [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @setArg [CommonTakeAndDropWhileDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropChildrenWhile][ColumnPath.dropChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
@@ -284,16 +284,16 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropWhileDocs]
-     * @arg [CommonTakeAndDropWhileDocs.TitleArg] Drop Last
-     * @arg [CommonTakeAndDropWhileDocs.OperationArg] dropLast
-     * @arg [CommonTakeAndDropWhileDocs.NounArg] drop
-     * @arg [CommonTakeAndDropWhileDocs.FirstOrLastArg] last
+     * @setArg [CommonTakeAndDropWhileDocs.TitleArg] Drop Last
+     * @setArg [CommonTakeAndDropWhileDocs.OperationArg] dropLast
+     * @setArg [CommonTakeAndDropWhileDocs.NounArg] drop
+     * @setArg [CommonTakeAndDropWhileDocs.FirstOrLastArg] last
      */
     private interface CommonDropLastWhileDocs
 
     /**
      * @include [CommonDropLastWhileDocs]
-     * @arg [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @setArg [CommonTakeAndDropWhileDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[dropLastWhile][ColumnSet.dropLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
@@ -304,7 +304,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropLastWhileDocs]
-     * @arg [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @setArg [CommonTakeAndDropWhileDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[dropLastWhile][ColumnsSelectionDsl.dropLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
@@ -313,7 +313,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropLastWhileDocs]
-     * @arg [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @setArg [CommonTakeAndDropWhileDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropLastChildrenWhile][SingleColumn.dropLastChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
@@ -322,7 +322,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropLastWhileDocs]
-     * @arg [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @setArg [CommonTakeAndDropWhileDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropLastChildrenWhile][String.dropLastChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
@@ -331,7 +331,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropLastWhileDocs]
-     * @arg [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @setArg [CommonTakeAndDropWhileDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[dropLastChildrenWhile][SingleColumn.dropLastChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
@@ -342,7 +342,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropLastWhileDocs]
-     * @arg [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @setArg [CommonTakeAndDropWhileDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropLastChildrenWhile][ColumnPath.dropLastChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */

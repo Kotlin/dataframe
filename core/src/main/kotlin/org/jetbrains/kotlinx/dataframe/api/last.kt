@@ -85,7 +85,7 @@ public interface LastColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [Examples]}
+     * {@getArg [Examples]}
      *
      * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
      * @return A ([transformable][TransformableSingleColumn]) [SingleColumn] containing the last column
@@ -101,7 +101,7 @@ public interface LastColumnsSelectionDsl {
 
     /**
      * @include [CommonLastDocs]
-     * @arg [CommonLastDocs.Examples]
+     * @setArg [CommonLastDocs.Examples]
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[last][ColumnSet.last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[last][ColumnSet.last]`() }`
@@ -114,7 +114,7 @@ public interface LastColumnsSelectionDsl {
 
     /**
      * @include [CommonLastDocs]
-     * @arg [CommonLastDocs.Examples]
+     * @setArg [CommonLastDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { `[last][ColumnsSelectionDsl.last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
@@ -123,7 +123,7 @@ public interface LastColumnsSelectionDsl {
 
     /**
      * @include [CommonLastDocs]
-     * @arg [CommonLastDocs.Examples]
+     * @setArg [CommonLastDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[lastCol][SingleColumn.lastCol]`() }`
      */
@@ -132,7 +132,7 @@ public interface LastColumnsSelectionDsl {
 
     /**
      * @include [CommonLastDocs]
-     * @arg [CommonLastDocs.Examples]
+     * @setArg [CommonLastDocs.Examples]
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[lastCol][String.lastCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun String.lastCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
@@ -140,7 +140,7 @@ public interface LastColumnsSelectionDsl {
 
     /**
      * @include [CommonLastDocs]
-     * @arg [CommonLastDocs.Examples]
+     * @setArg [CommonLastDocs.Examples]
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[lastCol][SingleColumn.lastCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[lastCol][SingleColumn.lastCol]`() }`
@@ -152,7 +152,7 @@ public interface LastColumnsSelectionDsl {
 
     /**
      * @include [CommonLastDocs]
-     * @arg [CommonLastDocs.Examples]
+     * @setArg [CommonLastDocs.Examples]
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[lastCol][SingleColumn.lastCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[lastCol][SingleColumn.lastCol]`() }`
@@ -166,7 +166,7 @@ public interface LastColumnsSelectionDsl {
 
     /**
      * @include [CommonLastDocs]
-     * @arg [CommonLastDocs.Examples]
+     * @setArg [CommonLastDocs.Examples]
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[lastCol][ColumnPath.lastCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun ColumnPath.lastCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =

@@ -62,7 +62,7 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [CommonColGroupsDocs.ExampleArg]}
+     * {@getArg [CommonColGroupsDocs.ExampleArg]}
      *
      * @param [filter\] An optional [predicate][Predicate] to filter the column groups by.
      * @return A ([transformable][TransformableColumnSet]) [ColumnSet] of [ColumnGroups][ColumnGroup].
@@ -75,7 +75,7 @@ public interface ColGroupsColumnsSelectionDsl {
 
     /**
      * @include [CommonColGroupsDocs]
-     * @arg [CommonColGroupsDocs.ExampleArg]
+     * @setArg [CommonColGroupsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") }.`[colGroups][ColumnSet.colGroups]`() }`
      *
@@ -88,7 +88,7 @@ public interface ColGroupsColumnsSelectionDsl {
 
     /**
      * @include [CommonColGroupsDocs]
-     * @arg [CommonColGroupsDocs.ExampleArg]
+     * @setArg [CommonColGroupsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[colGroups][SingleColumn.colGroups]`() }`
      *
@@ -103,7 +103,7 @@ public interface ColGroupsColumnsSelectionDsl {
 
     /**
      * @include [CommonColGroupsDocs]
-     * @arg [CommonColGroupsDocs.ExampleArg]
+     * @setArg [CommonColGroupsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[colGroups][String.colGroups]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
@@ -114,7 +114,7 @@ public interface ColGroupsColumnsSelectionDsl {
 
     /**
      * @include [CommonColGroupsDocs]
-     * @arg [CommonColGroupsDocs.ExampleArg]
+     * @setArg [CommonColGroupsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[colGroups][SingleColumn.colGroups]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
@@ -127,7 +127,7 @@ public interface ColGroupsColumnsSelectionDsl {
 
     /**
      * @include [CommonColGroupsDocs]
-     * @arg [CommonColGroupsDocs.ExampleArg]
+     * @setArg [CommonColGroupsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[colGroups][ColumnPath.colGroups]`().`[recursively][ColumnsSelectionDsl.recursively]`() }`
      */

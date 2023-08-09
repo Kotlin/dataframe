@@ -94,7 +94,7 @@ public interface FirstColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [Examples]}
+     * {@getArg [Examples]}
      *
      * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
      * @return A ([transformable][TransformableSingleColumn]) [SingleColumn] containing the first column
@@ -110,7 +110,7 @@ public interface FirstColumnsSelectionDsl {
 
     /**
      * @include [CommonFirstDocs]
-     * @arg [CommonFirstDocs.Examples]
+     * @setArg [CommonFirstDocs.Examples]
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[first][ColumnSet.first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[first][ColumnSet.first]`() }`
@@ -123,7 +123,7 @@ public interface FirstColumnsSelectionDsl {
 
     /**
      * @include [CommonFirstDocs]
-     * @arg [CommonFirstDocs.Examples]
+     * @setArg [CommonFirstDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { `[first][ColumnsSelectionDsl.first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
@@ -132,7 +132,7 @@ public interface FirstColumnsSelectionDsl {
 
     /**
      * @include [CommonFirstDocs]
-     * @arg [CommonFirstDocs.Examples]
+     * @setArg [CommonFirstDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[firstCol][SingleColumn.firstCol]`() }`
      */
@@ -141,7 +141,7 @@ public interface FirstColumnsSelectionDsl {
 
     /**
      * @include [CommonFirstDocs]
-     * @arg [CommonFirstDocs.Examples]
+     * @setArg [CommonFirstDocs.Examples]
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[firstCol][String.firstCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun String.firstCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
@@ -149,7 +149,7 @@ public interface FirstColumnsSelectionDsl {
 
     /**
      * @include [CommonFirstDocs]
-     * @arg [CommonFirstDocs.Examples]
+     * @setArg [CommonFirstDocs.Examples]
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[firstCol][SingleColumn.firstCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[firstCol][SingleColumn.firstCol]`() }`
@@ -161,7 +161,7 @@ public interface FirstColumnsSelectionDsl {
 
     /**
      * @include [CommonFirstDocs]
-     * @arg [CommonFirstDocs.Examples]
+     * @setArg [CommonFirstDocs.Examples]
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[firstCol][SingleColumn.firstCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[firstCol][SingleColumn.firstCol]`() }`
@@ -175,7 +175,7 @@ public interface FirstColumnsSelectionDsl {
 
     /**
      * @include [CommonFirstDocs]
-     * @arg [CommonFirstDocs.Examples]
+     * @setArg [CommonFirstDocs.Examples]
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[firstCol][ColumnPath.firstCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun ColumnPath.firstCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =

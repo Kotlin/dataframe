@@ -226,7 +226,7 @@ public fun <T> ColumnGroupReference.frameColumn(property: KProperty<List<T>>): C
  *
  * #### For example:
  *
- * {@includeArg [AsColumnGroupDocs.ExampleArg]}
+ * {@getArg [AsColumnGroupDocs.ExampleArg]}
  *
  * @receiver The column reference to cast to a [SingleColumn]`<`[DataRow][DataRow]`<`[C][C\]`>>`.
  * @param [C\] The type of the (group) column.
@@ -239,7 +239,7 @@ private interface AsColumnGroupDocs {
 
 /**
  *  @include [AsColumnGroupDocs]
- *  @arg [AsColumnGroupDocs.ExampleArg]
+ *  @setArg [AsColumnGroupDocs.ExampleArg]
  * `df.`[select][DataFrame.select]` { `[first][ColumnsSelectionDsl.first]`().`[asColumnGroup][SingleColumn.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
  */
 private interface SingleColumnAsColumnGroupDocs
@@ -254,7 +254,7 @@ public fun <C> SingleColumn<DataRow<C>>.asColumnGroup(): SingleColumn<DataRow<C>
 
 /**
  * @include [AsColumnGroupDocs]
- * @arg [AsColumnGroupDocs.ExampleArg]
+ * @setArg [AsColumnGroupDocs.ExampleArg]
  * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][ColumnGroup.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
  */
 private interface KPropertyAsColumnGroupDocs
@@ -268,7 +268,7 @@ public fun <C> KProperty<DataRow<C>>.asColumnGroup(): ColumnAccessor<DataRow<C>>
 
 /**
  * @include [AsColumnGroupDocs]
- * @arg [AsColumnGroupDocs.ExampleArg]
+ * @setArg [AsColumnGroupDocs.ExampleArg]
  * `df.`[select][DataFrame.select]` { "myColumnGroup".`[asColumnGroup][String.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
  *
  * `df.`[select][DataFrame.select]` { "myColumnGroup".`[asColumnGroup][String.asColumnGroup]`<GroupType>().`[valueCols][ColumnsSelectionDsl.valueCols]`() }`
@@ -284,7 +284,7 @@ public fun String.asColumnGroup(): ColumnAccessor<DataRow<*>> = columnGroup<Any?
 
 /**
  * @include [AsColumnGroupDocs]
- * @arg [AsColumnGroupDocs.ExampleArg]
+ * @setArg [AsColumnGroupDocs.ExampleArg]
  * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[asColumnGroup][ColumnPath.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
  *
  * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[asColumnGroup][ColumnPath.asColumnGroup]`<GroupType>().`[valueCols][ColumnsSelectionDsl.valueCols]`() }`

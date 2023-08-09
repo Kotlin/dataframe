@@ -81,7 +81,7 @@ public interface FilterColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [CommonFilterDocs.ExampleArg]}
+     * {@getArg [CommonFilterDocs.ExampleArg]}
      *
      * #### Filter vs. Cols:
      * [cols][ColumnsSelectionDsl.cols] with predicate functions exactly like [filter][SingleColumn.filter].

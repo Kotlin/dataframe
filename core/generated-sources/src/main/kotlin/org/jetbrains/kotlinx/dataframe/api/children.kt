@@ -58,7 +58,7 @@ public interface ChildrenColumnsSelectionDsl {
      *
      * #### Examples of this overload:
      *
-     * {@includeArg [ChildrenDocs.ExampleArg]}
+     * {@getArg [ChildrenDocs.ExampleArg]}
      *
      * @see [cols\]
      * @see [filter\]
@@ -83,19 +83,19 @@ public interface ChildrenColumnsSelectionDsl {
      * ### On a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]:
      * When called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] consisting of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], [children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children] will return the (filtered) children of that
      * column group. This makes the function behave similarly to [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all] and exactly the same as
-     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] and [filter][ColumnsSelectionDsl.filter].
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] and [filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
      *
      * #### For example:
      *
      * To select some columns or "children" of `myColumnGroup`, you can do:
      * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
-     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[filter][ColumnsSelectionDsl.filter]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
      * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
      *
      * Similarly, to select _all_ columns or "children" of a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
      * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() }`
      * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() }`
-     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[filter][ColumnsSelectionDsl.filter]` { true } }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { true } }`
      * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children]`() }`
      *
      * ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
@@ -137,19 +137,19 @@ public interface ChildrenColumnsSelectionDsl {
      * ### On a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]:
      * When called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] consisting of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], [children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children] will return the (filtered) children of that
      * column group. This makes the function behave similarly to [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all] and exactly the same as
-     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] and [filter][ColumnsSelectionDsl.filter].
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] and [filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
      *
      * #### For example:
      *
      * To select some columns or "children" of `myColumnGroup`, you can do:
      * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
-     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[filter][ColumnsSelectionDsl.filter]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
      * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
      *
      * Similarly, to select _all_ columns or "children" of a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
      * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() }`
      * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() }`
-     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[filter][ColumnsSelectionDsl.filter]` { true } }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { true } }`
      * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children]`() }`
      *
      * ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
@@ -191,19 +191,19 @@ public interface ChildrenColumnsSelectionDsl {
      * ### On a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]:
      * When called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] consisting of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], [children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children] will return the (filtered) children of that
      * column group. This makes the function behave similarly to [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all] and exactly the same as
-     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] and [filter][ColumnsSelectionDsl.filter].
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] and [filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
      *
      * #### For example:
      *
      * To select some columns or "children" of `myColumnGroup`, you can do:
      * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
-     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[filter][ColumnsSelectionDsl.filter]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
      * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
      *
      * Similarly, to select _all_ columns or "children" of a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
      * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() }`
      * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() }`
-     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[filter][ColumnsSelectionDsl.filter]` { true } }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { true } }`
      * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children]`() }`
      *
      * ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
@@ -243,19 +243,19 @@ public interface ChildrenColumnsSelectionDsl {
      * ### On a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]:
      * When called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] consisting of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], [children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children] will return the (filtered) children of that
      * column group. This makes the function behave similarly to [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all] and exactly the same as
-     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] and [filter][ColumnsSelectionDsl.filter].
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] and [filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
      *
      * #### For example:
      *
      * To select some columns or "children" of `myColumnGroup`, you can do:
      * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
-     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[filter][ColumnsSelectionDsl.filter]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
      * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
      *
      * Similarly, to select _all_ columns or "children" of a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
      * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() }`
      * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() }`
-     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[filter][ColumnsSelectionDsl.filter]` { true } }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { true } }`
      * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children]`() }`
      *
      * ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
@@ -297,19 +297,19 @@ public interface ChildrenColumnsSelectionDsl {
      * ### On a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]:
      * When called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] consisting of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], [children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children] will return the (filtered) children of that
      * column group. This makes the function behave similarly to [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all] and exactly the same as
-     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] and [filter][ColumnsSelectionDsl.filter].
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] and [filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
      *
      * #### For example:
      *
      * To select some columns or "children" of `myColumnGroup`, you can do:
      * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
-     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[filter][ColumnsSelectionDsl.filter]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
      * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`("e") } }`
      *
      * Similarly, to select _all_ columns or "children" of a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
      * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() }`
      * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() }`
-     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[filter][ColumnsSelectionDsl.filter]` { true } }`
+     * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { true } }`
      * - `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[children][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.children]`() }`
      *
      * ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:

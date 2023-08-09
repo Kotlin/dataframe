@@ -92,7 +92,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [CommonAllDocs.Examples]}
+     * {@getArg [CommonAllDocs.Examples]}
      *
      * #### Flavors of All:
      *
@@ -134,7 +134,7 @@ public interface AllColumnsSelectionDsl {
      * This makes the function equivalent to [cols()][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols].
      *
      * #### For example:
-     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`().`[recursively][ColumnsSelectionDsl.recursively]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`().`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`() }`
      *
@@ -184,7 +184,7 @@ public interface AllColumnsSelectionDsl {
      * This makes the function equivalent to [cols()][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols].
      *
      * #### For example:
-     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`().`[recursively][ColumnsSelectionDsl.recursively]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`().`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`() }`
      *
@@ -232,7 +232,7 @@ public interface AllColumnsSelectionDsl {
      * This makes the function equivalent to [cols()][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols].
      *
      * #### For example:
-     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`().`[recursively][ColumnsSelectionDsl.recursively]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`().`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`() }`
      *
@@ -276,7 +276,7 @@ public interface AllColumnsSelectionDsl {
      * This makes the function equivalent to [cols()][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols].
      *
      * #### For example:
-     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`().`[recursively][ColumnsSelectionDsl.recursively]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`().`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`() }`
      *
@@ -324,7 +324,7 @@ public interface AllColumnsSelectionDsl {
      * This makes the function equivalent to [cols()][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols].
      *
      * #### For example:
-     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`().`[recursively][ColumnsSelectionDsl.recursively]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`().`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[all][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.all]`() }`
      *
@@ -360,25 +360,25 @@ public interface AllColumnsSelectionDsl {
     // endregion
 
     /**
-     * ## {@includeArg [TitleArg]}
+     * ## {@getArg [TitleArg]}
      *
      * Creates a new [ColumnSet] that contains a subset from the current [ColumnSet],
-     * containing all columns {@includeArg [BehaviorArg]}.
+     * containing all columns {@getArg [BehaviorArg]}.
      *
      * If the current [ColumnSet] is a [SingleColumn] and consists of only one [column group][ColumnGroup],
      * then the function will take columns from its children.
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { `[{@includeArg [FunctionArg]}][SingleColumn.{@includeArg [FunctionArg]}]`("someColumn") }`
+     * `df.`[select][DataFrame.select]` { `[{@getArg [FunctionArg]}][SingleColumn.{@getArg [FunctionArg]}]`("someColumn") }`
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[{@includeArg [FunctionArg]}][SingleColumn.{@includeArg [FunctionArg]}]`(someColumn) }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[{@getArg [FunctionArg]}][SingleColumn.{@getArg [FunctionArg]}]`(someColumn) }`
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[{@includeArg [FunctionArg]}][SingleColumn.{@includeArg [FunctionArg]}]`(Type::someColumn) }`
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[{@getArg [FunctionArg]}][SingleColumn.{@getArg [FunctionArg]}]`(Type::someColumn) }`
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [ExampleArg]}
+     * {@getArg [ExampleArg]}
      *
      * #### Flavors of All:
      *
@@ -397,7 +397,7 @@ public interface AllColumnsSelectionDsl {
      * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
      *     All columns up to the specified column, including that column
      *
-     * @return A new [ColumnSet] containing all columns {@includeArg [BehaviorArg]}.
+     * @return A new [ColumnSet] containing all columns {@getArg [BehaviorArg]}.
      * @see [allBefore\]
      * @see [allAfter\]
      * @see [allFrom\]
@@ -445,7 +445,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.ExampleArg]}
+     * {@getArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.ExampleArg]}
      *
      * #### Flavors of All:
      *
@@ -494,7 +494,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allAfter][ColumnSet.allAfter]`({@includeArg [ColumnSetAllAfterDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allAfter][ColumnSet.allAfter]`({@getArg [ColumnSetAllAfterDocs.Arg]}) }`
      *
      * #### Flavors of All:
      *
@@ -751,9 +751,9 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`({@includeArg [SingleColumnAllAfterDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { `[allAfter][SingleColumn.allAfter]`({@getArg [SingleColumnAllAfterDocs.Arg]}) }`
      *
-     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allAfter][SingleColumn.allAfter]`({@includeArg [SingleColumnAllAfterDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allAfter][SingleColumn.allAfter]`({@getArg [SingleColumnAllAfterDocs.Arg]}) }`
      *
      * #### Flavors of All:
      *
@@ -1022,7 +1022,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "someColGroup".`[allAfter][String.allAfter]`({@includeArg [StringAllAfterDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { "someColGroup".`[allAfter][String.allAfter]`({@getArg [StringAllAfterDocs.Arg]}) }`
      *
      * #### Flavors of All:
      *
@@ -1268,9 +1268,9 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(SomeType::myColGroup).`[allAfter][SingleColumn.allAfter]`({@includeArg [KPropertyAllAfterDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(SomeType::myColGroup).`[allAfter][SingleColumn.allAfter]`({@getArg [KPropertyAllAfterDocs.Arg]}) }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup.`[allAfter][KProperty.allAfter]`({@includeArg [KPropertyAllAfterDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup.`[allAfter][KProperty.allAfter]`({@getArg [KPropertyAllAfterDocs.Arg]}) }`
      *
      * #### Flavors of All:
      *
@@ -1526,7 +1526,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allAfter][ColumnPath.allAfter]`({@includeArg [ColumnPathAllAfterDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allAfter][ColumnPath.allAfter]`({@getArg [ColumnPathAllAfterDocs.Arg]}) }`
      *
      * #### Flavors of All:
      *
@@ -1780,7 +1780,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.ExampleArg]}
+     * {@getArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.ExampleArg]}
      *
      * #### Flavors of All:
      *
@@ -1829,7 +1829,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allFrom][ColumnSet.allFrom]`({@includeArg [ColumnSetAllFromDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allFrom][ColumnSet.allFrom]`({@getArg [ColumnSetAllFromDocs.Arg]}) }`
      *
      * #### Flavors of All:
      *
@@ -2086,9 +2086,9 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`({@includeArg [SingleColumnAllFromDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { `[allFrom][SingleColumn.allFrom]`({@getArg [SingleColumnAllFromDocs.Arg]}) }`
      *
-     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allFrom][SingleColumn.allFrom]`({@includeArg [SingleColumnAllFromDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allFrom][SingleColumn.allFrom]`({@getArg [SingleColumnAllFromDocs.Arg]}) }`
      *
      * #### Flavors of All:
      *
@@ -2359,7 +2359,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "someColGroup".`[allFrom][String.allFrom]`({@includeArg [StringAllFromDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { "someColGroup".`[allFrom][String.allFrom]`({@getArg [StringAllFromDocs.Arg]}) }`
      *
      * #### Flavors of All:
      *
@@ -2605,9 +2605,9 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(SomeType::someColGroup).`[allFrom][SingleColumn.allFrom]`({@includeArg [KPropertyAllFromDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(SomeType::someColGroup).`[allFrom][SingleColumn.allFrom]`({@getArg [KPropertyAllFromDocs.Arg]}) }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::someColGroup.`[allFrom][KProperty.allFrom]`({@includeArg [KPropertyAllFromDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::someColGroup.`[allFrom][KProperty.allFrom]`({@getArg [KPropertyAllFromDocs.Arg]}) }`
      *
      * #### Flavors of All:
      *
@@ -2863,7 +2863,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allFrom][ColumnPath.allFrom]`({@includeArg [ColumnPathAllFromDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allFrom][ColumnPath.allFrom]`({@getArg [ColumnPathAllFromDocs.Arg]}) }`
      *
      * #### Flavors of All:
      *
@@ -3113,7 +3113,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.ExampleArg]}
+     * {@getArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.ExampleArg]}
      *
      * #### Flavors of All:
      *
@@ -3162,7 +3162,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allBefore][ColumnSet.allBefore]`({@includeArg [ColumnSetAllBeforeDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allBefore][ColumnSet.allBefore]`({@getArg [ColumnSetAllBeforeDocs.Arg]}) }`
      *
      * #### Flavors of All:
      *
@@ -3419,9 +3419,9 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`({@includeArg [SingleColumnAllBeforeDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { `[allBefore][SingleColumn.allBefore]`({@getArg [SingleColumnAllBeforeDocs.Arg]}) }`
      *
-     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allBefore][SingleColumn.allBefore]`({@includeArg [SingleColumnAllBeforeDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allBefore][SingleColumn.allBefore]`({@getArg [SingleColumnAllBeforeDocs.Arg]}) }`
      *
      * #### Flavors of All:
      *
@@ -3690,7 +3690,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "someColGroup".`[allBefore][String.allBefore]`({@includeArg [StringAllBeforeDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { "someColGroup".`[allBefore][String.allBefore]`({@getArg [StringAllBeforeDocs.Arg]}) }`
      *
      * #### Flavors of All:
      *
@@ -3937,9 +3937,9 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(SomeType::someColGroup).`[allBefore][SingleColumn.allBefore]`({@includeArg [KPropertyAllBeforeDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(SomeType::someColGroup).`[allBefore][SingleColumn.allBefore]`({@getArg [KPropertyAllBeforeDocs.Arg]}) }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::someColGroup.`[allBefore][KProperty.allBefore]`({@includeArg [KPropertyAllBeforeDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::someColGroup.`[allBefore][KProperty.allBefore]`({@getArg [KPropertyAllBeforeDocs.Arg]}) }`
      *
      * #### Flavors of All:
      *
@@ -4196,7 +4196,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allBefore][ColumnPath.allBefore]`({@includeArg [ColumnPathAllBeforeDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allBefore][ColumnPath.allBefore]`({@getArg [ColumnPathAllBeforeDocs.Arg]}) }`
      *
      * #### Flavors of All:
      *
@@ -4450,7 +4450,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.ExampleArg]}
+     * {@getArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.ExampleArg]}
      *
      * #### Flavors of All:
      *
@@ -4499,7 +4499,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allUpTo][ColumnSet.allUpTo]`({@includeArg [ColumnSetAllUpToDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allUpTo][ColumnSet.allUpTo]`({@getArg [ColumnSetAllUpToDocs.Arg]}) }`
      *
      * #### Flavors of All:
      *
@@ -4756,9 +4756,9 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`({@includeArg [SingleColumnAllUpToDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { `[allUpTo][SingleColumn.allUpTo]`({@getArg [SingleColumnAllUpToDocs.Arg]}) }`
      *
-     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allUpTo][SingleColumn.allUpTo]`({@includeArg [SingleColumnAllUpToDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allUpTo][SingleColumn.allUpTo]`({@getArg [SingleColumnAllUpToDocs.Arg]}) }`
      *
      * #### Flavors of All:
      *
@@ -5029,7 +5029,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "someColGroup".`[allUpTo][String.allUpTo]`({@includeArg [StringAllUpToDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { "someColGroup".`[allUpTo][String.allUpTo]`({@getArg [StringAllUpToDocs.Arg]}) }`
      *
      * #### Flavors of All:
      *
@@ -5275,9 +5275,9 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(SomeType::someColGroup).`[allUpTo][SingleColumn.allUpTo]`({@includeArg [KPropertyAllUpToDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(SomeType::someColGroup).`[allUpTo][SingleColumn.allUpTo]`({@getArg [KPropertyAllUpToDocs.Arg]}) }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::someColGroup.`[allUpTo][KProperty.allUpTo]`({@includeArg [KPropertyAllUpToDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::someColGroup.`[allUpTo][KProperty.allUpTo]`({@getArg [KPropertyAllUpToDocs.Arg]}) }`
      *
      * #### Flavors of All:
      *
@@ -5533,7 +5533,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allUpTo][ColumnPath.allUpTo]`({@includeArg [ColumnPathAllUpToDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allUpTo][ColumnPath.allUpTo]`({@getArg [ColumnPathAllUpToDocs.Arg]}) }`
      *
      * #### Flavors of All:
      *

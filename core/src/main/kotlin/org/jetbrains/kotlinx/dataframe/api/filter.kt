@@ -81,7 +81,7 @@ public interface FilterColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [CommonFilterDocs.ExampleArg]}
+     * {@getArg [CommonFilterDocs.ExampleArg]}
      *
      * #### Filter vs. Cols:
      * [cols][ColumnsSelectionDsl.cols] with predicate functions exactly like [filter][SingleColumn.filter].
@@ -99,7 +99,7 @@ public interface FilterColumnsSelectionDsl {
 
     /**
      * @include [CommonFilterDocs]
-     * @arg [CommonFilterDocs.ExampleArg]
+     * @setArg [CommonFilterDocs.ExampleArg]
      *
      * `// although these can be shortened to just the `[colsOf][SingleColumn.colsOf]` call:`
      *
@@ -113,7 +113,7 @@ public interface FilterColumnsSelectionDsl {
 
     /**
      * @include [CommonFilterDocs]
-     * @arg [CommonFilterDocs.ExampleArg]
+     * @setArg [CommonFilterDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[filter][SingleColumn.filter]` { "e" `[in][String.contains]` it.`[name][ColumnPath.name]`() }.`[recursively][ColumnsSelectionDsl.recursively]`() }`
      *
@@ -135,7 +135,7 @@ public interface FilterColumnsSelectionDsl {
 
     /**
      * @include [CommonFilterDocs]
-     * @arg [CommonFilterDocs.ExampleArg]
+     * @setArg [CommonFilterDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "myGroupCol".`[filterChildren][String.filterChildren]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
      *
@@ -146,7 +146,7 @@ public interface FilterColumnsSelectionDsl {
 
     /**
      * @include [CommonFilterDocs]
-     * @arg [CommonFilterDocs.ExampleArg]
+     * @setArg [CommonFilterDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { Type::columnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[filter][SingleColumn.filter]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
      *
@@ -159,7 +159,7 @@ public interface FilterColumnsSelectionDsl {
 
     /**
      * @include [CommonFilterDocs]
-     * @arg [CommonFilterDocs.ExampleArg]
+     * @setArg [CommonFilterDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[filterChildren][ColumnPath.filterChildren]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
      *

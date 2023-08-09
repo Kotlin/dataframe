@@ -39,7 +39,7 @@ public interface FrameColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [CommonFrameColsDocs.ExampleArg]}
+     * {@getArg [CommonFrameColsDocs.ExampleArg]}
      *
      * @param [filter\] An optional [predicate][Predicate] to filter the frame columns by.
      * @return A ([transformable][TransformableColumnSet]) [ColumnSet] of [FrameColumns][FrameColumn].
@@ -52,7 +52,7 @@ public interface FrameColsColumnsSelectionDsl {
 
     /**
      * @include [CommonFrameColsDocs]
-     * @arg [CommonFrameColsDocs.ExampleArg]
+     * @setArg [CommonFrameColsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") }.`[frameCols][ColumnSet.frameCols]`() }`
      *
@@ -65,7 +65,7 @@ public interface FrameColsColumnsSelectionDsl {
 
     /**
      * @include [CommonFrameColsDocs]
-     * @arg [CommonFrameColsDocs.ExampleArg]
+     * @setArg [CommonFrameColsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[frameCols][SingleColumn.frameCols]`() }`
      *
@@ -80,7 +80,7 @@ public interface FrameColsColumnsSelectionDsl {
 
     /**
      * @include [CommonFrameColsDocs]
-     * @arg [CommonFrameColsDocs.ExampleArg]
+     * @setArg [CommonFrameColsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[frameCols][String.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
@@ -91,7 +91,7 @@ public interface FrameColsColumnsSelectionDsl {
 
     /**
      * @include [CommonFrameColsDocs]
-     * @arg [CommonFrameColsDocs.ExampleArg]
+     * @setArg [CommonFrameColsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[frameCols][SingleColumn.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
@@ -104,7 +104,7 @@ public interface FrameColsColumnsSelectionDsl {
 
     /**
      * @include [CommonFrameColsDocs]
-     * @arg [CommonFrameColsDocs.ExampleArg]
+     * @setArg [CommonFrameColsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[frameCols][ColumnPath.frameCols]`().`[recursively][ColumnsSelectionDsl.recursively]`() }`
      */

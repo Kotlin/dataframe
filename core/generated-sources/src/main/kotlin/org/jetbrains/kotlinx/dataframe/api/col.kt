@@ -46,7 +46,7 @@ public interface ColColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [CommonColDocs.ExampleArg]}
+     * {@getArg [CommonColDocs.ExampleArg]}
      *
      * To create a [ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
      * [valueCol][ColumnsSelectionDsl.valueCol],
@@ -68,14 +68,14 @@ public interface ColColumnsSelectionDsl {
         interface ExampleArg
 
         /**
-         * `df.`[select][DataFrame.select]` { {@includeArg [CommonColDocs.ReceiverArg]}`[col][col]`({@includeArg [CommonColDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@getArg [CommonColDocs.ReceiverArg]}`[col][col]`({@getArg [CommonColDocs.Arg]}) \\\\}`
          */
         interface SingleExample
 
         /**
-         * `df.`[select][DataFrame.select]` { {@includeArg [CommonColDocs.ReceiverArg]}`[col][col]`({@includeArg [CommonColDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@getArg [CommonColDocs.ReceiverArg]}`[col][col]`({@getArg [CommonColDocs.Arg]}) \\\\}`
          *
-         * `df.`[select][DataFrame.select]` { {@includeArg [CommonColDocs.ReceiverArg]}`[col][col]`<`[String][String]`>({@includeArg [CommonColDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@getArg [CommonColDocs.ReceiverArg]}`[col][col]`<`[String][String]`>({@getArg [CommonColDocs.Arg]}) \\\\}`
          */
         interface DoubleExample
 
@@ -119,7 +119,7 @@ public interface ColColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@includeArg [CommonColDocs.ReceiverArg]}`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(columnA) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@getArg [CommonColDocs.ReceiverArg]}`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(columnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
      * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
@@ -515,9 +515,9 @@ public interface ColColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@includeArg [CommonColDocs.ReceiverArg]}`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@getArg [CommonColDocs.ReceiverArg]}`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@includeArg [CommonColDocs.ReceiverArg]}`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@getArg [CommonColDocs.ReceiverArg]}`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
      * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
@@ -1282,9 +1282,9 @@ public interface ColColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@includeArg [CommonColDocs.ReceiverArg]}`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@getArg [CommonColDocs.ReceiverArg]}`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@includeArg [CommonColDocs.ReceiverArg]}`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@getArg [CommonColDocs.ReceiverArg]}`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
      * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
@@ -2047,7 +2047,7 @@ public interface ColColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@includeArg [CommonColDocs.ReceiverArg]}`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(Type::columnA) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@getArg [CommonColDocs.ReceiverArg]}`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(Type::columnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
      * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
@@ -2385,9 +2385,9 @@ public interface ColColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@includeArg [CommonColDocs.ReceiverArg]}`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@getArg [CommonColDocs.ReceiverArg]}`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@includeArg [CommonColDocs.ReceiverArg]}`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>(0) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { {@getArg [CommonColDocs.ReceiverArg]}`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
      * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
