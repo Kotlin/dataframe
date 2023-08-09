@@ -17,7 +17,7 @@ import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 /**
- * Specifies how to handle columns in original dataframe that were not mathced to any column in destination dataframe schema.
+ * Specifies how to handle columns in original dataframe that were not matched to any column in destination dataframe schema.
  */
 public enum class ExcessiveColumns {
     /**
