@@ -458,7 +458,7 @@ private interface UpdatePerColMap
  *
  * For example:
  *
- * `val defaults = {@includeArg [CommonUpdatePerColMapDoc]}`
+ * `val defaults = {@getArg [CommonUpdatePerColMapDoc]}`
  *
  * `df.`[update][update]` { name and age }.`[where][Update.where]` { ... }.`[perCol][perCol]`(defaults)`
  *
@@ -734,11 +734,11 @@ public fun <T> DataFrame<T>.update(
     update(*headPlusArray(firstCol, cols)).with(expression)
 
 /**
- * Specific version of [with] that simply sets the value of each selected row to {@includeArg [CommonSpecificWithDocFirstArg]}.
+ * Specific version of [with] that simply sets the value of each selected row to {@getArg [CommonSpecificWithDocFirstArg]}.
  *
  * For example:
  *
- * `df.`[update][update]` { id }.`[where][Update.where]` { it < 0 }.`{@includeArg [CommonSpecificWithDocSecondArg]}`
+ * `df.`[update][update]` { id }.`[where][Update.where]` { it < 0 }.`{@getArg [CommonSpecificWithDocSecondArg]}`
  */
 private interface CommonSpecificWithDoc
 

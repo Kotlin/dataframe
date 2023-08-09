@@ -4,7 +4,7 @@ internal interface DocumentationUrls {
 
     interface NameArg
 
-    /** See {@includeArg [NameArg]} on the documentation website. */
+    /** See {@getArg [NameArg]} on the documentation website. */
     interface Text
 
     /** https://kotlin.github.io/dataframe */

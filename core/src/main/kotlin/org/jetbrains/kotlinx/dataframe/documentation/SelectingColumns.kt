@@ -25,12 +25,12 @@ internal interface SelectingColumnsLink
 internal interface SelectingColumns {
 
     /**
-     * The key for an @arg that will define the operation name for the examples below.
+     * The key for an @setArg that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
     interface OperationArg
 
-    /** {@arg [OperationArg] operation} */
+    /** {@setArg [OperationArg] operation} */
     interface SetDefaultOperationArg
 
     /** Select or express columns using the Column(s) Selection DSL.
@@ -46,11 +46,11 @@ internal interface SelectingColumns {
          *
          * For example:
          *
-         * `df.`{@includeArg [OperationArg]}` { length `[and][ColumnsSelectionDsl.and]` age }`
+         * `df.`{@getArg [OperationArg]}` { length `[and][ColumnsSelectionDsl.and]` age }`
          *
-         * `df.`{@includeArg [OperationArg]}` { `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
+         * `df.`{@getArg [OperationArg]}` { `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
          *
-         * `df.`{@includeArg [OperationArg]}` { `[colsOf][colsOf]`<`[Double][Double]`>() }`
+         * `df.`{@getArg [OperationArg]}` { `[colsOf][colsOf]`<`[Double][Double]`>() }`
          * @include [SetDefaultOperationArg]
          */
         interface WithExample
@@ -68,7 +68,7 @@ internal interface SelectingColumns {
          *
          * For example:
          *
-         * `df.`{@includeArg [OperationArg]}`("length", "age")`
+         * `df.`{@getArg [OperationArg]}`("length", "age")`
          * @include [SetDefaultOperationArg]
          */
         interface WithExample
@@ -90,7 +90,7 @@ internal interface SelectingColumns {
          *
          * `val age by `[column][column]`<`[Double][Double]`>()`
          *
-         * `df.`{@includeArg [OperationArg]}`(length, age)`
+         * `df.`{@getArg [OperationArg]}`(length, age)`
          * @include [SetDefaultOperationArg]
          */
         interface WithExample
@@ -109,7 +109,7 @@ internal interface SelectingColumns {
          * data class Person(val length: Double, val age: Double)
          * ```
          *
-         * `df.`{@includeArg [OperationArg]}`(Person::length, Person::age)`
+         * `df.`{@getArg [OperationArg]}`(Person::length, Person::age)`
          * @include [SetDefaultOperationArg]
          */
         interface WithExample
