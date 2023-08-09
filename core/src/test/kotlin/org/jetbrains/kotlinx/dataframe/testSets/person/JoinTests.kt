@@ -1,49 +1,26 @@
 package org.jetbrains.kotlinx.dataframe.testSets.person
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.JoinType
 import org.jetbrains.kotlinx.dataframe.api.addId
 import org.jetbrains.kotlinx.dataframe.api.all
 import org.jetbrains.kotlinx.dataframe.api.append
-import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.count
-import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.api.excludeJoin
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.filterJoin
 import org.jetbrains.kotlinx.dataframe.api.fullJoin
 import org.jetbrains.kotlinx.dataframe.api.innerJoin
+import org.jetbrains.kotlinx.dataframe.api.join
 import org.jetbrains.kotlinx.dataframe.api.leftJoin
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rightJoin
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.junit.Test
 
-class JoinTests : BaseTest() {
-
-    val df2 = dataFrameOf("name", "origin", "grade", "age")(
-        "Alice", "London", 3, "young",
-        "Alice", "London", 5, "old",
-        "Bob", "Tokyo", 4, "young",
-        "Bob", "Paris", 5, "old",
-        "Charlie", "Moscow", 1, "young",
-        "Charlie", "Moscow", 2, "old",
-        "Bob", "Paris", 4, null
-    )
-
-// Generated Code
-
-    @DataSchema
-    interface Person2 {
-        val name: String
-        val origin: String?
-        val grade: Int
-    }
-
-    val typed2: DataFrame<Person2> = df2.cast()
+class JoinTests : BaseJoinTest() {
 
     @Test
     fun `inner join`() {
@@ -117,5 +94,15 @@ class JoinTests : BaseTest() {
         val expected = withIndex.filter { !joinedIndices.contains(it[indexColumn]) }.remove(indexColumn)
 
         res shouldBe expected
+    }
+
+    @Test
+    fun `test overloads contract`() {
+        typed.innerJoin(typed2) { name and it.city.match(right.origin) } shouldBe typed.join(typed2, JoinType.Inner) { name and it.city.match(right.origin) }
+        typed.leftJoin(typed2) { name and it.city.match(right.origin) } shouldBe typed.join(typed2, JoinType.Left) { name and it.city.match(right.origin) }
+        typed.rightJoin(typed2) { name and it.city.match(right.origin) } shouldBe typed.join(typed2, JoinType.Right) { name and it.city.match(right.origin) }
+        typed.fullJoin(typed2) { name and it.city.match(right.origin) } shouldBe typed.join(typed2, JoinType.Full) { name and it.city.match(right.origin) }
+        typed.excludeJoin(typed2) { city.match(right.origin) } shouldBe typed.join(typed2, JoinType.Exclude) { city.match(right.origin) }
+        typed.filterJoin(typed2) { city.match(right.origin) } shouldBe typed.join(typed2, JoinType.Filter) { city.match(right.origin) }
     }
 }
