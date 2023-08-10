@@ -112,13 +112,11 @@ public interface ColColumnsSelectionDsl {
      * @include [ColReferenceDocs] {@setArg [CommonColDocs.ReceiverArg] myColumnGroup.}
      */
     public fun <C> SingleColumn<DataRow<*>>.col(col: ColumnAccessor<C>): SingleColumn<C> =
-        ensureIsColGroup()
-            .transformSingle {
-                it.getChild(col)
-                    ?.cast<C>()
-                    ?.let(::listOf)
-                    ?: throw IllegalStateException("Column '${col.path()}' not found in column group '${it.path}'")
-            }.singleImpl()
+        ensureIsColGroup().transformSingle {
+            val child = it.getChild(col)
+                ?: throw IllegalStateException("Column '${col.path()}' not found in column group '${it.path}'")
+            listOf(child)
+        }.singleImpl()
 
     /**
      * @include [ColReferenceDocs] {@setArg [CommonColDocs.ReceiverArg] myColumnGroup.}
@@ -190,13 +188,11 @@ public interface ColColumnsSelectionDsl {
      * @include [CommonColDocs.ColumnTypeParam]
      */
     public fun <C> SingleColumn<DataRow<*>>.col(name: String): SingleColumn<C> =
-        ensureIsColGroup()
-            .transformSingle {
-                it.getChild(name)
-                    ?.cast<C>()
-                    ?.let(::listOf)
-                    ?: throw IllegalStateException("Column '$name' not found in column group '${it.path}'")
-            }.singleImpl()
+        ensureIsColGroup().transformSingle {
+            val child = it.getChild(name)?.cast<C>()
+                ?: throw IllegalStateException("Column '$name' not found in column group '${it.path}'")
+            listOf(child)
+        }.singleImpl()
 
     /**
      * @include [ColNameDocs] {@setArg [CommonColDocs.ReceiverArg] myColumnGroup.}
@@ -315,13 +311,11 @@ public interface ColColumnsSelectionDsl {
      * @include [CommonColDocs.ColumnTypeParam]
      */
     public fun <C> SingleColumn<DataRow<*>>.col(path: ColumnPath): SingleColumn<C> =
-        ensureIsColGroup()
-            .transformSingle {
-                it.getChild(path)
-                    ?.cast<C>()
-                    ?.let(::listOf)
-                    ?: throw IllegalStateException("Column '$path' not found in column group '${it.path}'")
-            }.singleImpl()
+        ensureIsColGroup().transformSingle {
+            val child = it.getChild(path)?.cast<C>()
+                ?: throw IllegalStateException("Column '$path' not found in column group '${it.path}'")
+            listOf(child)
+        }.singleImpl()
 
     /**
      * @include [ColPathDocs] {@setArg [CommonColDocs.ReceiverArg] myColumnGroup.}

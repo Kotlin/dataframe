@@ -113,14 +113,12 @@ public interface ValueColColumnsSelectionDsl {
      * @include [ValueColReferenceDocs] {@setArg [CommonValueColDocs.ReceiverArg] myColumnGroup.}
      */
     public fun <C> SingleColumn<DataRow<*>>.valueCol(valueCol: ColumnAccessor<C>): SingleColumn<C> =
-        ensureIsColGroup()
-            .transformSingle {
-                it.getChild(valueCol)
-                    ?.cast<C>()
-                    ?.also { it.data.ensureIsValueColumn() }
-                    ?.let(::listOf)
-                    ?: throw IllegalStateException("ValueColumn '${valueCol.path()}' not found in column group '${it.path}'")
-            }.singleImpl()
+        ensureIsColGroup().transformSingle {
+            val child = it.getChild(valueCol)
+                ?: throw IllegalStateException("ValueColumn '${valueCol.path()}' not found in column group '${it.path}'")
+            child.data.ensureIsValueColumn()
+            listOf(child)
+        }.singleImpl()
 
     /**
      * @include [ValueColReferenceDocs] {@setArg [CommonValueColDocs.ReceiverArg] myColumnGroup.}
@@ -192,14 +190,12 @@ public interface ValueColColumnsSelectionDsl {
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> SingleColumn<DataRow<*>>.valueCol(name: String): SingleColumn<C> =
-        ensureIsColGroup()
-            .transformSingle {
-                it.getChild(name)
-                    ?.cast<C>()
-                    ?.also { it.data.ensureIsValueColumn() }
-                    ?.let(::listOf)
-                    ?: throw IllegalStateException("Value column '$name' not found in column group '${it.path}'")
-            }.singleImpl()
+        ensureIsColGroup().transformSingle {
+            val child = it.getChild(name)?.cast<C>()
+                ?: throw IllegalStateException("Value column '$name' not found in column group '${it.path}'")
+            child.data.ensureIsValueColumn()
+            listOf(child)
+        }.singleImpl()
 
     /**
      * @include [ValueColNameDocs] {@setArg [CommonValueColDocs.ReceiverArg] myColumnGroup.}
@@ -316,14 +312,12 @@ public interface ValueColColumnsSelectionDsl {
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> SingleColumn<DataRow<*>>.valueCol(path: ColumnPath): SingleColumn<C> =
-        ensureIsColGroup()
-            .transformSingle {
-                it.getChild(path)
-                    ?.cast<C>()
-                    ?.also { it.data.ensureIsValueColumn() }
-                    ?.let(::listOf)
-                    ?: throw IllegalStateException("Value column '$path' not found in column group '${it.path}'")
-            }.singleImpl()
+        ensureIsColGroup().transformSingle {
+            val child = it.getChild(path)?.cast<C>()
+                ?: throw IllegalStateException("Value column '$path' not found in column group '${it.path}'")
+            child.data.ensureIsValueColumn()
+            listOf(child)
+        }.singleImpl()
 
     /**
      * @include [ValueColPathDocs] {@setArg [CommonValueColDocs.ReceiverArg] myColumnGroup.}
