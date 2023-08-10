@@ -111,11 +111,12 @@ public interface AllColumnsSelectionDsl {
      * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
      *     All columns up to the specified column, including that column
      *
-     * @see [allBefore\]
-     * @see [allAfter\]
-     * @see [allFrom\]
-     * @see [allUpTo\]
-     * @see [cols\]
+     * @see [ColumnsSelectionDsl.rangeTo\]
+     * @see [ColumnsSelectionDsl.allBefore\]
+     * @see [ColumnsSelectionDsl.allAfter\]
+     * @see [ColumnsSelectionDsl.allFrom\]
+     * @see [ColumnsSelectionDsl.allUpTo\]
+     * @see [ColumnsSelectionDsl.cols\]
      */
     private interface CommonAllDocs {
 
@@ -164,11 +165,12 @@ public interface AllColumnsSelectionDsl {
      * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
      *     All columns up to the specified column, including that column
      *
-     * @see [allBefore]
-     * @see [allAfter]
-     * @see [allFrom]
-     * @see [allUpTo]
-     * @see [cols]
+     * @see [ColumnsSelectionDsl.rangeTo]
+     * @see [ColumnsSelectionDsl.allBefore]
+     * @see [ColumnsSelectionDsl.allAfter]
+     * @see [ColumnsSelectionDsl.allFrom]
+     * @see [ColumnsSelectionDsl.allUpTo]
+     * @see [ColumnsSelectionDsl.cols]
      */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.all(): TransformableColumnSet<C> = allColumnsInternal() as TransformableColumnSet<C>
@@ -211,11 +213,12 @@ public interface AllColumnsSelectionDsl {
      * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
      *     All columns up to the specified column, including that column
      *
-     * @see [allBefore]
-     * @see [allAfter]
-     * @see [allFrom]
-     * @see [allUpTo]
-     * @see [cols]
+     * @see [ColumnsSelectionDsl.rangeTo]
+     * @see [ColumnsSelectionDsl.allBefore]
+     * @see [ColumnsSelectionDsl.allAfter]
+     * @see [ColumnsSelectionDsl.allFrom]
+     * @see [ColumnsSelectionDsl.allUpTo]
+     * @see [ColumnsSelectionDsl.cols]
      */
     public fun SingleColumn<DataRow<*>>.all(): TransformableColumnSet<*> = ensureIsColGroup().allColumnsInternal()
 
@@ -257,11 +260,12 @@ public interface AllColumnsSelectionDsl {
      * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
      *     All columns up to the specified column, including that column
      *
-     * @see [allBefore]
-     * @see [allAfter]
-     * @see [allFrom]
-     * @see [allUpTo]
-     * @see [cols]
+     * @see [ColumnsSelectionDsl.rangeTo]
+     * @see [ColumnsSelectionDsl.allBefore]
+     * @see [ColumnsSelectionDsl.allAfter]
+     * @see [ColumnsSelectionDsl.allFrom]
+     * @see [ColumnsSelectionDsl.allUpTo]
+     * @see [ColumnsSelectionDsl.cols]
      */
     public fun String.all(): TransformableColumnSet<*> = columnGroup(this).all()
 
@@ -305,11 +309,12 @@ public interface AllColumnsSelectionDsl {
      * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
      *     All columns up to the specified column, including that column
      *
-     * @see [allBefore]
-     * @see [allAfter]
-     * @see [allFrom]
-     * @see [allUpTo]
-     * @see [cols]
+     * @see [ColumnsSelectionDsl.rangeTo]
+     * @see [ColumnsSelectionDsl.allBefore]
+     * @see [ColumnsSelectionDsl.allAfter]
+     * @see [ColumnsSelectionDsl.allFrom]
+     * @see [ColumnsSelectionDsl.allUpTo]
+     * @see [ColumnsSelectionDsl.cols]
      */
     public fun KProperty<DataRow<*>>.all(): TransformableColumnSet<*> = columnGroup(this).all()
 
@@ -349,11 +354,12 @@ public interface AllColumnsSelectionDsl {
      * - [allUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allUpTo]`(column)`:
      *     All columns up to the specified column, including that column
      *
-     * @see [allBefore]
-     * @see [allAfter]
-     * @see [allFrom]
-     * @see [allUpTo]
-     * @see [cols]
+     * @see [ColumnsSelectionDsl.rangeTo]
+     * @see [ColumnsSelectionDsl.allBefore]
+     * @see [ColumnsSelectionDsl.allAfter]
+     * @see [ColumnsSelectionDsl.allFrom]
+     * @see [ColumnsSelectionDsl.allUpTo]
+     * @see [ColumnsSelectionDsl.cols]
      */
     public fun ColumnPath.all(): TransformableColumnSet<*> = columnGroup(this).all()
 

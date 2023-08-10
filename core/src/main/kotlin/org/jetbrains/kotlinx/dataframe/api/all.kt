@@ -96,11 +96,12 @@ public interface AllColumnsSelectionDsl {
      *
      * {@include [AllFlavors]}
      *
-     * @see [allBefore\]
-     * @see [allAfter\]
-     * @see [allFrom\]
-     * @see [allUpTo\]
-     * @see [cols\]
+     * @see [ColumnsSelectionDsl.rangeTo\]
+     * @see [ColumnsSelectionDsl.allBefore\]
+     * @see [ColumnsSelectionDsl.allAfter\]
+     * @see [ColumnsSelectionDsl.allFrom\]
+     * @see [ColumnsSelectionDsl.allUpTo\]
+     * @see [ColumnsSelectionDsl.cols\]
      */
     private interface CommonAllDocs {
 
