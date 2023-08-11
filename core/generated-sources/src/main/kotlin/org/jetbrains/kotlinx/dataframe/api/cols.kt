@@ -480,7 +480,7 @@ public interface ColsColumnsSelectionDsl {
      * @see [all] */
     public fun SingleColumn<DataRow<*>>.cols(
         predicate: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> = ensureIsColGroup().colsInternal(predicate)
+    ): TransformableColumnSet<*> = this.ensureIsColumnGroup().colsInternal(predicate)
 
     /**
      * ## Cols
@@ -1176,7 +1176,7 @@ public interface ColsColumnsSelectionDsl {
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
     ): ColumnSet<C> = headPlusArray(firstCol, otherCols).let { refs ->
-        ensureIsColGroup().asColumnSet().transform {
+        this.ensureIsColumnGroup().asColumnSet().transform {
             it.flatMap { col -> refs.mapNotNull { col.getChild(it) } }
         }
     }
@@ -1801,7 +1801,7 @@ public interface ColsColumnsSelectionDsl {
         firstCol: String,
         vararg otherCols: String,
     ): ColumnSet<*> = headPlusArray(firstCol, otherCols).let { names ->
-        ensureIsColGroup().asColumnSet().transform { it.flatMap { col -> names.mapNotNull { col.getChild(it) } } }
+        this.ensureIsColumnGroup().asColumnSet().transform { it.flatMap { col -> names.mapNotNull { col.getChild(it) } } }
     }
 
     /**
@@ -2411,7 +2411,7 @@ public interface ColsColumnsSelectionDsl {
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
     ): ColumnSet<C> = headPlusArray(firstCol, otherCols).let { props ->
-        ensureIsColGroup().asColumnSet().transform { it.flatMap { col -> props.mapNotNull { col.getChild(it) } } }
+        this.ensureIsColumnGroup().asColumnSet().transform { it.flatMap { col -> props.mapNotNull { col.getChild(it) } } }
     }
 
     /** ## Cols
@@ -3009,7 +3009,7 @@ public interface ColsColumnsSelectionDsl {
     public fun SingleColumn<DataRow<*>>.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
-    ): ColumnSet<*> = ensureIsColGroup().colsInternal(headPlusArray(firstIndex, otherIndices))
+    ): ColumnSet<*> = this.ensureIsColumnGroup().colsInternal(headPlusArray(firstIndex, otherIndices))
 
     /**
      * ## Cols: Columns by Indices
@@ -3446,7 +3446,7 @@ public interface ColsColumnsSelectionDsl {
      * @param [range] The range of indices to retrieve in the form of an [IntRange].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
-    public fun SingleColumn<DataRow<*>>.cols(range: IntRange): ColumnSet<*> = ensureIsColGroup().colsInternal(range)
+    public fun SingleColumn<DataRow<*>>.cols(range: IntRange): ColumnSet<*> = this.ensureIsColumnGroup().colsInternal(range)
 
     /**
      * ## Cols: Columns by Index Range

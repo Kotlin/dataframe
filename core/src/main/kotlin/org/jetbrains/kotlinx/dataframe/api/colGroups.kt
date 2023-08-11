@@ -23,7 +23,7 @@ public interface ColGroupsColumnsSelectionDsl {
 
     @Deprecated("Use colGroups instead", ReplaceWith("this.colGroups(filter)"))
     public fun SingleColumn<DataRow<*>>.groups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
-        ensureIsColGroup().columnGroupsInternal(filter)
+        this.ensureIsColumnGroup().columnGroupsInternal(filter)
 
     @Deprecated("Use colGroups instead", ReplaceWith("this.colGroups(filter)"))
     public fun ColumnsSelectionDsl<*>.groups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
@@ -95,7 +95,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColGroup.`[colGroups][SingleColumn.colGroups]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     public fun SingleColumn<DataRow<*>>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
-        ensureIsColGroup().columnGroupsInternal(filter)
+        this.ensureIsColumnGroup().columnGroupsInternal(filter)
 
     /** TODO */
     public fun ColumnsSelectionDsl<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =

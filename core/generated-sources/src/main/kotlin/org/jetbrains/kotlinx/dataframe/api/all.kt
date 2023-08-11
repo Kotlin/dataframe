@@ -220,7 +220,7 @@ public interface AllColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.allUpTo]
      * @see [ColumnsSelectionDsl.cols]
      */
-    public fun SingleColumn<DataRow<*>>.all(): TransformableColumnSet<*> = ensureIsColGroup().allColumnsInternal()
+    public fun SingleColumn<DataRow<*>>.all(): TransformableColumnSet<*> = this.ensureIsColumnGroup().allColumnsInternal()
 
     public fun ColumnsSelectionDsl<*>.all(): TransformableColumnSet<*> = this.asSingleColumn().allColumnsInternal()
 
@@ -842,7 +842,7 @@ public interface AllColumnsSelectionDsl {
      * @param [column] The specified column after which all columns should be taken.
      */
     public fun SingleColumn<DataRow<*>>.allAfter(column: ColumnPath): ColumnSet<*> =
-        ensureIsColGroup().asColumnSet().allAfter(column)
+        this.ensureIsColumnGroup().asColumnSet().allAfter(column)
 
     /** ## All After
      *
@@ -2177,7 +2177,7 @@ public interface AllColumnsSelectionDsl {
      * @param [column] The specified column from which all columns should be taken.
      */
     public fun SingleColumn<DataRow<*>>.allFrom(column: ColumnPath): ColumnSet<*> =
-        ensureIsColGroup().asColumnSet().allFrom(column)
+        this.ensureIsColumnGroup().asColumnSet().allFrom(column)
 
     /** ## All From
      *
@@ -3510,7 +3510,7 @@ public interface AllColumnsSelectionDsl {
      * @param [column] The specified column before which all columns should be taken
      */
     public fun SingleColumn<DataRow<*>>.allBefore(column: ColumnPath): ColumnSet<*> =
-        ensureIsColGroup().asColumnSet().allBefore(column)
+        this.ensureIsColumnGroup().asColumnSet().allBefore(column)
 
     /** ## All Before
      *
@@ -4847,7 +4847,7 @@ public interface AllColumnsSelectionDsl {
      * @param [column] The specified column up to which all columns should be taken.
      */
     public fun SingleColumn<DataRow<*>>.allUpTo(column: ColumnPath): ColumnSet<*> =
-        ensureIsColGroup().asColumnSet().allUpTo(column)
+        this.ensureIsColumnGroup().asColumnSet().allUpTo(column)
 
     /** ## All Up To
      *

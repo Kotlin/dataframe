@@ -63,7 +63,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[childrenWithoutNulls][SingleColumn.childrenWithoutNulls]`() }`
      */
     public fun SingleColumn<DataRow<*>>.childrenWithoutNulls(): ColumnSet<Any> =
-        ensureIsColGroup().allColumnsInternal().withoutNulls()
+        this.ensureIsColumnGroup().allColumnsInternal().withoutNulls()
 
     /**
      * @include [CommonWithoutNullsDocs]

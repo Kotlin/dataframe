@@ -196,7 +196,7 @@ public fun <C> SingleColumn<DataRow<*>>.colsOf(
     type: KType,
     filter: (DataColumn<C>) -> Boolean = { true },
 ): TransformableColumnSet<C> =
-    ensureIsColGroup().colsInternal { it.isSubtypeOf(type) && filter(it.cast()) } as TransformableColumnSet<C>
+    this.ensureIsColumnGroup().colsInternal { it.isSubtypeOf(type) && filter(it.cast()) } as TransformableColumnSet<C>
 
 /**
  * @include [CommonColsOfDocs]

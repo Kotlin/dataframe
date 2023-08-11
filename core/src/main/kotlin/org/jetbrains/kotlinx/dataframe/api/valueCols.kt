@@ -72,7 +72,7 @@ public interface ValueColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColGroup.`[valueCols][SingleColumn.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
     public fun SingleColumn<DataRow<*>>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
-        ensureIsColGroup().valueColumnsInternal(filter)
+        this.ensureIsColumnGroup().valueColumnsInternal(filter)
 
     /** TODO */
     public fun ColumnsSelectionDsl<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =

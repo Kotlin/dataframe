@@ -131,7 +131,7 @@ public interface FilterColumnsSelectionDsl {
      * @see [children\]
      */
     public fun SingleColumn<DataRow<*>>.filter(predicate: ColumnFilter<*>): TransformableColumnSet<*> =
-        ensureIsColGroup().colsInternal(predicate)
+        this.ensureIsColumnGroup().colsInternal(predicate)
 
     /**
      * @include [CommonFilterDocs]

@@ -79,7 +79,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { someGroupCol.`[childrenNameContains][SingleColumn.childrenNameContains]`("my").`[rec][ColumnsSelectionDsl.rec]`() }`
      */
     public fun SingleColumn<DataRow<*>>.childrenNameContains(text: CharSequence): TransformableColumnSet<*> =
-        ensureIsColGroup().colsInternal { it.name.contains(text) }
+        this.ensureIsColumnGroup().colsInternal { it.name.contains(text) }
 
     /**
      * @include [NameContainsTextDocs]
@@ -148,7 +148,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { someGroupCol.`[childrenNameContains][SingleColumn.childrenNameContains]`(`[Regex][Regex]`("order-[0-9]+")).`[rec][ColumnsSelectionDsl.rec]`() }`
      */
     public fun SingleColumn<DataRow<*>>.childrenNameContains(regex: Regex): TransformableColumnSet<*> =
-        ensureIsColGroup().colsInternal { it.name.contains(regex) }
+        this.ensureIsColumnGroup().colsInternal { it.name.contains(regex) }
 
     /**
      * @include [NameContainsRegexDocs]
@@ -288,7 +288,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { someGroupCol.`[childrenNameStartsWith][SingleColumn.childrenNameStartsWith]`("order-") }`
      */
     public fun SingleColumn<DataRow<*>>.childrenNameStartsWith(prefix: CharSequence): TransformableColumnSet<*> =
-        ensureIsColGroup().colsInternal { it.name.startsWith(prefix) }
+        this.ensureIsColumnGroup().colsInternal { it.name.startsWith(prefix) }
 
     /**
      * @include [CommonNameStartsWithDocs]
@@ -348,7 +348,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     @Deprecated("Use childrenNameEndsWith instead", ReplaceWith("this.childrenNameEndsWith(suffix)"))
     public fun SingleColumn<DataRow<*>>.endsWith(suffix: CharSequence): TransformableColumnSet<*> =
-        ensureIsColGroup().colsInternal { it.name.endsWith(suffix) }
+        this.ensureIsColumnGroup().colsInternal { it.name.endsWith(suffix) }
 
     /**
      * @include [CommonNameEndsWithDocs]
@@ -376,7 +376,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { someGroupCol.`[childrenNameEndsWith][SingleColumn.childrenNameEndsWith]`("-order") }`
      */
     public fun SingleColumn<DataRow<*>>.childrenNameEndsWith(suffix: CharSequence): TransformableColumnSet<*> =
-        ensureIsColGroup().colsInternal { it.name.endsWith(suffix) }
+        this.ensureIsColumnGroup().colsInternal { it.name.endsWith(suffix) }
 
     /**
      * @include [CommonNameEndsWithDocs]

@@ -43,7 +43,7 @@ public interface RootsColumnsSelectionDsl {
      * else it simply runs on the columns in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
      *
      */
-    public fun SingleColumn<DataRow<*>>.roots(): ColumnSet<*> = ensureIsColGroup().rootsInternal()
+    public fun SingleColumn<DataRow<*>>.roots(): ColumnSet<*> = this.ensureIsColumnGroup().rootsInternal()
 
     /** todo */
     public fun ColumnsSelectionDsl<*>.roots(): ColumnSet<*> = asSingleColumn().roots()

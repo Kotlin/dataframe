@@ -3,6 +3,8 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.*
 import org.jetbrains.kotlinx.dataframe.columns.*
 import org.jetbrains.kotlinx.dataframe.columns.values
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
@@ -38,6 +40,29 @@ public fun <T> DataFrame<T>.singleOrNull(predicate: RowExpression<T, Boolean>): 
 // region ColumnsSelectionDsl
 
 public interface SingleColumnsSelectionDsl {
+
+    /**
+     * @include [ColumnsSelectionDsl.Usage.Receivers]
+     *
+     * `[ columnSet. ]`
+     *
+     * {@include [Indent]}{@include [SingleColumnsSelectionDsl.Usage.ColumnSet]} {@include [ColumnsSelectionDsl.Usage.OptionalColumnFilter]}
+     *
+     * {@include [LineBreak]}
+     *
+     * `column.`
+     *
+     * {@include [Indent]}{@include [SingleColumnsSelectionDsl.Usage.Column]} {@include [ColumnsSelectionDsl.Usage.OptionalColumnFilter]}
+     *
+     */
+    public interface Usage {
+
+        /** [single][ColumnsSelectionDsl.single] */
+        public interface ColumnSet
+
+        /** [singleCol][ColumnsSelectionDsl.singleCol] */
+        public interface Column
+    }
 
     /**
      * ## Single (Col)
@@ -95,7 +120,7 @@ public interface SingleColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[singleCol][SingleColumn.singleCol]`() }`
      */
     public fun SingleColumn<DataRow<*>>.singleCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        ensureIsColGroup().asColumnSet().single(condition)
+        this.ensureIsColumnGroup().asColumnSet().single(condition)
 
     /**
      * @include [CommonSingleDocs]

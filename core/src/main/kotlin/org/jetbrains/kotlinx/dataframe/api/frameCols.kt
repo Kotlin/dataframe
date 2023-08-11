@@ -72,7 +72,7 @@ public interface FrameColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColGroup.`[frameCols][SingleColumn.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     public fun SingleColumn<DataRow<*>>.frameCols(filter: Predicate<FrameColumn<*>> = { true }): TransformableColumnSet<DataFrame<*>> =
-        ensureIsColGroup().frameColumnsInternal(filter)
+        this.ensureIsColumnGroup().frameColumnsInternal(filter)
 
     /** TODO */
     public fun ColumnsSelectionDsl<*>.frameCols(filter: Predicate<FrameColumn<*>> = { true }): TransformableColumnSet<DataFrame<*>> =

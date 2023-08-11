@@ -220,7 +220,7 @@ public interface RecursivelyColumnsSelectionDsl {
         level = DeprecationLevel.WARNING,
     )
     public fun SingleColumn<DataRow<*>>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
-        ensureIsColGroup().asColumnSet().dfsInternal(predicate)
+        this.ensureIsColumnGroup().asColumnSet().dfsInternal(predicate)
 
     @Deprecated(
         message = "dfs is deprecated, use recursively instead.",
@@ -363,7 +363,7 @@ public fun <C> SingleColumn<DataRow<*>>.dfsOf(
     type: KType,
     predicate: (ColumnWithPath<C>) -> Boolean = { true },
 ): ColumnSet<*> =
-    ensureIsColGroup().asColumnSet().dfsInternal { it.isSubtypeOf(type) && predicate(it.cast()) }
+    this.ensureIsColumnGroup().asColumnSet().dfsInternal { it.isSubtypeOf(type) && predicate(it.cast()) }
 
 @Deprecated(
     message = "Use recursively() instead",

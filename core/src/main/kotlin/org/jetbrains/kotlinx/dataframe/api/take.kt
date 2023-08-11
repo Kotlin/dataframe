@@ -99,7 +99,7 @@ public interface TakeColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[takeChildren][SingleColumn.takeChildren]`(1) }`
      */
     public fun SingleColumn<DataRow<*>>.takeChildren(n: Int): ColumnSet<*> =
-        ensureIsColGroup().transformSingle { it.children().take(n) }
+        this.ensureIsColumnGroup().transformSingle { it.children().take(n) }
 
     /**
      * @include [CommonTakeFirstDocs]
@@ -168,7 +168,7 @@ public interface TakeColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[takeLast][SingleColumn.takeLastChildren]`(1) }`
      */
     public fun SingleColumn<DataRow<*>>.takeLastChildren(n: Int): ColumnSet<*> =
-        ensureIsColGroup().transformSingle { it.children().takeLast(n) }
+        this.ensureIsColumnGroup().transformSingle { it.children().takeLast(n) }
 
     /**
      * @include [CommonTakeLastDocs]
@@ -238,7 +238,7 @@ public interface TakeColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[takeWhile][SingleColumn.takeChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     public fun SingleColumn<DataRow<*>>.takeChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        ensureIsColGroup().transformSingle { it.children().takeWhile(predicate) }
+        this.ensureIsColumnGroup().transformSingle { it.children().takeWhile(predicate) }
 
     /**
      * @include [CommonTakeFirstWhileDocs]
@@ -309,7 +309,7 @@ public interface TakeColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[takeLastChildrenWhile][SingleColumn.takeLastChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     public fun SingleColumn<DataRow<*>>.takeLastChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        ensureIsColGroup().transformSingle { it.children().takeLastWhile(predicate) }
+        this.ensureIsColumnGroup().transformSingle { it.children().takeLastWhile(predicate) }
 
     /**
      * @include [CommonTakeLastWhileDocs]

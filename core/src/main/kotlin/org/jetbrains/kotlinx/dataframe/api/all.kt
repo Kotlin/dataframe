@@ -129,7 +129,7 @@ public interface AllColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myGroup.`[all][SingleColumn.all]`() }`
      */
-    public fun SingleColumn<DataRow<*>>.all(): TransformableColumnSet<*> = ensureIsColGroup().allColumnsInternal()
+    public fun SingleColumn<DataRow<*>>.all(): TransformableColumnSet<*> = this.ensureIsColumnGroup().allColumnsInternal()
 
     public fun ColumnsSelectionDsl<*>.all(): TransformableColumnSet<*> = this.asSingleColumn().allColumnsInternal()
 
@@ -275,7 +275,7 @@ public interface AllColumnsSelectionDsl {
 
     /** @include [SingleColumnAllAfterDocs] {@setArg [SingleColumnAllAfterDocs.Arg] "pathTo"["myColumn"]} */
     public fun SingleColumn<DataRow<*>>.allAfter(column: ColumnPath): ColumnSet<*> =
-        ensureIsColGroup().asColumnSet().allAfter(column)
+        this.ensureIsColumnGroup().asColumnSet().allAfter(column)
 
     /** @include [SingleColumnAllAfterDocs] {@setArg [SingleColumnAllAfterDocs.Arg] "myColumn"} */
     public fun SingleColumn<DataRow<*>>.allAfter(column: String): ColumnSet<*> = allAfter(pathOf(column))
@@ -448,7 +448,7 @@ public interface AllColumnsSelectionDsl {
 
     /** @include [SingleColumnAllFromDocs] {@setArg [SingleColumnAllFromDocs.Arg] "pathTo"["myColumn"]} */
     public fun SingleColumn<DataRow<*>>.allFrom(column: ColumnPath): ColumnSet<*> =
-        ensureIsColGroup().asColumnSet().allFrom(column)
+        this.ensureIsColumnGroup().asColumnSet().allFrom(column)
 
     /** @include [SingleColumnAllFromDocs] {@setArg [SingleColumnAllFromDocs.Arg] "myColumn"} */
     public fun SingleColumn<DataRow<*>>.allFrom(column: String): ColumnSet<*> = allFrom(pathOf(column))
@@ -619,7 +619,7 @@ public interface AllColumnsSelectionDsl {
 
     /** @include [SingleColumnAllBeforeDocs] {@setArg [SingleColumnAllBeforeDocs.Arg] "pathTo"["myColumn"]} */
     public fun SingleColumn<DataRow<*>>.allBefore(column: ColumnPath): ColumnSet<*> =
-        ensureIsColGroup().asColumnSet().allBefore(column)
+        this.ensureIsColumnGroup().asColumnSet().allBefore(column)
 
     /** @include [SingleColumnAllBeforeDocs] {@setArg [SingleColumnAllBeforeDocs.Arg] "myColumn"} */
     public fun SingleColumn<DataRow<*>>.allBefore(column: String): ColumnSet<*> = allBefore(pathOf(column))
@@ -794,7 +794,7 @@ public interface AllColumnsSelectionDsl {
 
     /** @include [SingleColumnAllUpToDocs] {@setArg [SingleColumnAllUpToDocs.Arg] "pathTo"["myColumn"]} */
     public fun SingleColumn<DataRow<*>>.allUpTo(column: ColumnPath): ColumnSet<*> =
-        ensureIsColGroup().asColumnSet().allUpTo(column)
+        this.ensureIsColumnGroup().asColumnSet().allUpTo(column)
 
     /** @include [SingleColumnAllUpToDocs] {@setArg [SingleColumnAllUpToDocs.Arg] "myColumn"} */
     public fun SingleColumn<DataRow<*>>.allUpTo(column: String): ColumnSet<*> = allUpTo(pathOf(column))

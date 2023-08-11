@@ -112,7 +112,7 @@ public interface ColColumnsSelectionDsl {
      * @include [ColReferenceDocs] {@setArg [CommonColDocs.ReceiverArg] myColumnGroup.}
      */
     public fun <C> SingleColumn<DataRow<*>>.col(col: ColumnAccessor<C>): SingleColumn<C> =
-        ensureIsColGroup().transformSingle {
+        this.ensureIsColumnGroup().transformSingle {
             val child = it.getChild(col)
                 ?: throw IllegalStateException("Column '${col.path()}' not found in column group '${it.path}'")
             listOf(child)
@@ -122,19 +122,19 @@ public interface ColColumnsSelectionDsl {
      * @include [ColReferenceDocs] {@setArg [CommonColDocs.ReceiverArg] myColumnGroup.}
      */
     public fun <C> AnyColumnGroupAccessor.col(col: ColumnAccessor<C>): ColumnAccessor<C> =
-        ensureIsColGroup().column(col.path())
+        this.ensureIsColumnGroup().column(col.path())
 
     /**
      * @include [ColReferenceDocs] {@setArg [CommonColDocs.ReceiverArg] "myColumnGroup".}
      */
     public fun <C> String.col(col: ColumnAccessor<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().column(col.path())
+        asColumnGroup().ensureIsColumnGroup().column(col.path())
 
     /**
      * @include [ColReferenceDocs] {@setArg [CommonColDocs.ReceiverArg] Type::myColumnGroup.}
      */
     public fun <C> KProperty<*>.col(col: ColumnAccessor<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().column(col.path())
+        asColumnGroup().ensureIsColumnGroup().column(col.path())
 
     /**
      * @include [ColReferenceDocs] {@setArg [CommonColDocs.ReceiverArg] Type::myColumnGroup.}
@@ -142,13 +142,13 @@ public interface ColColumnsSelectionDsl {
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colKPropertyDataRow")
     public fun <C> KProperty<DataRow<*>>.col(col: ColumnAccessor<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().column(col.path())
+        asColumnGroup().ensureIsColumnGroup().column(col.path())
 
     /**
      * @include [ColReferenceDocs] {@setArg [CommonColDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
      */
     public fun <C> ColumnPath.col(col: ColumnAccessor<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().column(col.path())
+        asColumnGroup().ensureIsColumnGroup().column(col.path())
 
     // endregion
 
@@ -188,7 +188,7 @@ public interface ColColumnsSelectionDsl {
      * @include [CommonColDocs.ColumnTypeParam]
      */
     public fun <C> SingleColumn<DataRow<*>>.col(name: String): SingleColumn<C> =
-        ensureIsColGroup().transformSingle {
+        this.ensureIsColumnGroup().transformSingle {
             val child = it.getChild(name)?.cast<C>()
                 ?: throw IllegalStateException("Column '$name' not found in column group '${it.path}'")
             listOf(child)
@@ -207,7 +207,7 @@ public interface ColColumnsSelectionDsl {
      * @include [CommonColDocs.ColumnTypeParam]
      */
     public fun <C> AnyColumnGroupAccessor.col(name: String): ColumnAccessor<C> =
-        ensureIsColGroup().column(name)
+        this.ensureIsColumnGroup().column(name)
 
     /**
      * @include [ColNameDocs] {@setArg [CommonColDocs.ReceiverArg] "myColumnGroup".}
@@ -223,7 +223,7 @@ public interface ColColumnsSelectionDsl {
      */
     public fun <C> String.col(name: String): ColumnAccessor<C> =
         asColumnGroup()
-            .ensureIsColGroup()
+            .ensureIsColumnGroup()
             .column(name)
 
     /**
@@ -239,7 +239,7 @@ public interface ColColumnsSelectionDsl {
      * @include [CommonColDocs.ColumnTypeParam]
      */
     public fun <C> KProperty<*>.col(name: String): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().column(name)
+        asColumnGroup().ensureIsColumnGroup().column(name)
 
     /**
      * @include [ColNameDocs] {@setArg [CommonColDocs.ReceiverArg] Type::myColumnGroup.}
@@ -256,7 +256,7 @@ public interface ColColumnsSelectionDsl {
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colKPropertyDataRow")
     public fun <C> KProperty<DataRow<*>>.col(name: String): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().column(name)
+        asColumnGroup().ensureIsColumnGroup().column(name)
 
     /**
      * @include [ColNameDocs] {@setArg [CommonColDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
@@ -271,7 +271,7 @@ public interface ColColumnsSelectionDsl {
      * @include [CommonColDocs.ColumnTypeParam]
      */
     public fun <C> ColumnPath.col(name: String): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().column(name)
+        asColumnGroup().ensureIsColumnGroup().column(name)
 
     // endregion
 
@@ -311,7 +311,7 @@ public interface ColColumnsSelectionDsl {
      * @include [CommonColDocs.ColumnTypeParam]
      */
     public fun <C> SingleColumn<DataRow<*>>.col(path: ColumnPath): SingleColumn<C> =
-        ensureIsColGroup().transformSingle {
+        this.ensureIsColumnGroup().transformSingle {
             val child = it.getChild(path)?.cast<C>()
                 ?: throw IllegalStateException("Column '$path' not found in column group '${it.path}'")
             listOf(child)
@@ -330,7 +330,7 @@ public interface ColColumnsSelectionDsl {
      * @include [CommonColDocs.ColumnTypeParam]
      */
     public fun <C> AnyColumnGroupAccessor.col(path: ColumnPath): ColumnAccessor<C> =
-        ensureIsColGroup().column(path)
+        this.ensureIsColumnGroup().column(path)
 
     /**
      * @include [ColPathDocs] {@setArg [CommonColDocs.ReceiverArg] "myColumnGroup".}
@@ -345,7 +345,7 @@ public interface ColColumnsSelectionDsl {
      * @include [CommonColDocs.ColumnTypeParam]
      */
     public fun <C> String.col(path: ColumnPath): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().column(path)
+        asColumnGroup().ensureIsColumnGroup().column(path)
 
     /**
      * @include [ColPathDocs] {@setArg [CommonColDocs.ReceiverArg] Type::myColumnGroup.}
@@ -360,7 +360,7 @@ public interface ColColumnsSelectionDsl {
      * @include [CommonColDocs.ColumnTypeParam]
      */
     public fun <C> KProperty<*>.col(path: ColumnPath): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().column(path)
+        asColumnGroup().ensureIsColumnGroup().column(path)
 
     /**
      * @include [ColPathDocs] {@setArg [CommonColDocs.ReceiverArg] Type::myColumnGroup.}
@@ -377,7 +377,7 @@ public interface ColColumnsSelectionDsl {
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colKPropertyDataRow")
     public fun <C> KProperty<DataRow<*>>.col(path: ColumnPath): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().column(path)
+        asColumnGroup().ensureIsColumnGroup().column(path)
 
     /**
      * @include [ColPathDocs] {@setArg [CommonColDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
@@ -392,7 +392,7 @@ public interface ColColumnsSelectionDsl {
      * @include [CommonColDocs.ColumnTypeParam]
      */
     public fun <C> ColumnPath.col(path: ColumnPath): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().column(path)
+        asColumnGroup().ensureIsColumnGroup().column(path)
 
     // endregion
 
@@ -422,25 +422,25 @@ public interface ColColumnsSelectionDsl {
      * @include [ColKPropertyDocs] {@setArg [CommonColDocs.ReceiverArg] myColumnGroup.}
      */
     public fun <C> AnyColumnGroupAccessor.col(property: KProperty<C>): ColumnAccessor<C> =
-        ensureIsColGroup().column(property)
+        this.ensureIsColumnGroup().column(property)
 
     /**
      * @include [ColKPropertyDocs] {@setArg [CommonColDocs.ReceiverArg] "myColumnGroup".}
      */
     public fun <C> String.col(property: KProperty<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().column(property)
+        asColumnGroup().ensureIsColumnGroup().column(property)
 
     /**
      * @include [ColKPropertyDocs] {@setArg [CommonColDocs.ReceiverArg] Type::myColumnGroup.}
      */
     public fun <C> KProperty<*>.col(property: KProperty<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().column(property)
+        asColumnGroup().ensureIsColumnGroup().column(property)
 
     /**
      * @include [ColKPropertyDocs] {@setArg [CommonColDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
      */
     public fun <C> ColumnPath.col(property: KProperty<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().column(property)
+        asColumnGroup().ensureIsColumnGroup().column(property)
 
     // endregion
 
@@ -506,7 +506,7 @@ public interface ColColumnsSelectionDsl {
      * @include [CommonColDocs.ColumnTypeParam]
      */
     public fun <C> SingleColumn<DataRow<*>>.col(index: Int): SingleColumn<C> =
-        ensureIsColGroup()
+        this.ensureIsColumnGroup()
             .allColumnsInternal()
             .getAt(index)
             .cast()

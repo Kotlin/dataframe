@@ -33,7 +33,7 @@ public interface RootsColumnsSelectionDsl {
     public fun <C> ColumnSet<C>.roots(): ColumnSet<C> = rootsInternal() as ColumnSet<C>
 
     /** @include [ColumnSet.roots] */
-    public fun SingleColumn<DataRow<*>>.roots(): ColumnSet<*> = ensureIsColGroup().rootsInternal()
+    public fun SingleColumn<DataRow<*>>.roots(): ColumnSet<*> = this.ensureIsColumnGroup().rootsInternal()
 
     /** todo */
     public fun ColumnsSelectionDsl<*>.roots(): ColumnSet<*> = asSingleColumn().roots()

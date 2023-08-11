@@ -33,7 +33,7 @@ public interface ColsOfKindColumnsSelectionDsl {
         vararg others: ColumnKind,
         predicate: ColumnFilter<*> = { true },
     ): TransformableColumnSet<*> =
-        ensureIsColGroup().columnsOfKindInternal(
+        this.ensureIsColumnGroup().columnsOfKindInternal(
             kinds = headPlusArray(kind, others).toSet(),
             predicate = predicate
         )

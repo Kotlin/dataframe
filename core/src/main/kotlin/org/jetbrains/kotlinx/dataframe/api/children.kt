@@ -92,7 +92,7 @@ public interface ChildrenColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { `[children][SingleColumn.children]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
     public fun SingleColumn<DataRow<*>>.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
-        ensureIsColGroup().asColumnSet().colsInternal(predicate)
+        this.ensureIsColumnGroup().asColumnSet().colsInternal(predicate)
 
     /**
      * @include [ChildrenDocs]

@@ -1,25 +1,26 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage.Receivers
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
-import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
 import org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.columns.performCheck
 import kotlin.reflect.KProperty
 
 /**
@@ -52,6 +53,8 @@ internal fun <T> ColumnsSelectionDsl<T>.asSingleColumn(): SingleColumn<DataRow<T
  *
  * Can be safely cast to [SingleColumn] across the library. It does not directly
  * implement it for DSL purposes.
+ *
+ * See [Usage] for the DSL Grammar of the ColumnsSelectionDsl.
  */
 public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     ColumnSelectionDsl<T>,
@@ -115,6 +118,59 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     AndColumnsSelectionDsl<T>,
     // colA named "colB", colA into "colB"
     RenameColumnsSelectionDsl {
+
+    /**
+     * ## [ColumnsSelectionDsl] Usage
+     * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>
+     *
+     * `column: `[SingleColumn][SingleColumn]`<`[DataRow][DataRow]`<*>> | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][ColumnPath]
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *
+     * `[ columnSet. ]`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;(
+     * [first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first] |
+     * [last][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last] |
+     * [single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]
+     * ) `[ { `[condition][org.jetbrains.kotlinx.dataframe.ColumnFilter]` } ]`
+     * |
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;TODO
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *
+     * `column.`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;(
+     * [firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol] |
+     * [lastCol][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.lastCol] |
+     * [singleCol][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.singleCol]
+     * ) `[ { `[condition][org.jetbrains.kotlinx.dataframe.ColumnFilter]` } ]`
+     * |
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;TODO
+     */
+    public interface Usage {
+
+        /**
+         * `columnSet: `[ColumnSet][ColumnSet]`<*>
+         *
+         * `column: `[SingleColumn][SingleColumn]`<`[DataRow][DataRow]`<*>> | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][ColumnPath]
+         *
+         *
+         * &nbsp;&nbsp;&nbsp;&nbsp;
+         *
+         */
+        public interface Receivers
+
+        /** `[ { `[condition][ColumnFilter]` } ]` */
+        public interface OptionalColumnFilter
+    }
 
     /**
      * Invokes the given [ColumnsSelector] using this [ColumnsSelectionDsl].
@@ -210,7 +266,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     @Suppress("UNCHECKED_CAST")
     public fun <C, R> SingleColumn<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         createColumnSet { context ->
-            this.ensureIsColGroup().resolveSingle(context)?.let { col ->
+            this.ensureIsColumnGroup().resolveSingle(context)?.let { col ->
                 require(col.isColumnGroup()) {
                     "Column ${col.path} is not a ColumnGroup and can thus not be selected from."
                 }
@@ -569,26 +625,3 @@ public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(
     infer: Infer = Infer.Nulls,
     noinline expression: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(name, infer, expression)
-
-/**
- * Checks the validity of this [SingleColumn],
- * by adding a check to see it's a [ColumnGroup] (so, a [SingleColumn]<[DataRow]<*>>)
- * and throwing an [IllegalArgumentException] if it's not.
- */
-@Suppress("UNCHECKED_CAST")
-internal fun <C> SingleColumn<DataRow<C>>.ensureIsColGroup(): SingleColumn<DataRow<C>> =
-    performCheck { col: ColumnWithPath<*>? ->
-        require(col?.isColumnGroup() != false) {
-            "Attempted to perform a ColumnGroup operation on ${col?.kind()} ${col?.path}."
-        }
-    }
-
-/** Checks the validity of this [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn],
- * by adding a check to see it's a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] (so, a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]<[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]<*>>)
- * and throwing an [IllegalArgumentException] if it's not. */
-internal fun <C> ColumnAccessor<DataRow<C>>.ensureIsColGroup(): ColumnAccessor<DataRow<C>> =
-    performCheck { col: ColumnWithPath<*>? ->
-        require(col?.isColumnGroup() != false) {
-            "Attempted to perform a ColumnGroup operation on ${col?.kind()} ${col?.path}."
-        }
-    }

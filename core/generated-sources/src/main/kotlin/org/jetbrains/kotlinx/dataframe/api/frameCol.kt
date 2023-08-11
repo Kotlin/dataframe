@@ -244,7 +244,7 @@ public interface FrameColColumnsSelectionDsl {
      * @param [C] The type of the frame column. 
      */
     public fun <C> SingleColumn<DataRow<*>>.frameCol(frameCol: ColumnAccessor<DataFrame<C>>): SingleColumn<DataFrame<C>> =
-        ensureIsColGroup().transformSingle {
+        this.ensureIsColumnGroup().transformSingle {
             val child = it.getChild(frameCol)
                 ?: throw IllegalStateException("FrameColumn '${frameCol.path()}' not found in column group '${it.path}'")
             child.data.ensureIsFrameColumn()
@@ -299,7 +299,7 @@ public interface FrameColColumnsSelectionDsl {
      * @param [C] The type of the frame column. 
      */
     public fun <C> AnyColumnGroupAccessor.frameCol(frameCol: ColumnAccessor<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
-        ensureIsColGroup().frameColumn<C>(frameCol.path()).ensureIsFrameColumn()
+        this.ensureIsColumnGroup().frameColumn<C>(frameCol.path()).ensureIsFrameColumn()
 
     /**
      * ## Frame Col
@@ -349,7 +349,7 @@ public interface FrameColColumnsSelectionDsl {
      * @param [C] The type of the frame column. 
      */
     public fun <C> String.frameCol(frameCol: ColumnAccessor<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
-        asColumnGroup().ensureIsColGroup().frameColumn<C>(frameCol.path()).ensureIsFrameColumn()
+        asColumnGroup().ensureIsColumnGroup().frameColumn<C>(frameCol.path()).ensureIsFrameColumn()
 
     /**
      * ## Frame Col
@@ -399,7 +399,7 @@ public interface FrameColColumnsSelectionDsl {
      * @param [C] The type of the frame column. 
      */
     public fun <C> KProperty<*>.frameCol(frameCol: ColumnAccessor<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
-        asColumnGroup().ensureIsColGroup().frameColumn<C>(frameCol.path()).ensureIsFrameColumn()
+        asColumnGroup().ensureIsColumnGroup().frameColumn<C>(frameCol.path()).ensureIsFrameColumn()
 
     /**
      * ## Frame Col
@@ -451,7 +451,7 @@ public interface FrameColColumnsSelectionDsl {
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColKPropertyDataRow")
     public fun <C> KProperty<DataRow<*>>.frameCol(frameCol: ColumnAccessor<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
-        asColumnGroup().ensureIsColGroup().frameColumn<C>(frameCol.path()).ensureIsFrameColumn()
+        asColumnGroup().ensureIsColumnGroup().frameColumn<C>(frameCol.path()).ensureIsFrameColumn()
 
     /**
      * ## Frame Col
@@ -501,7 +501,7 @@ public interface FrameColColumnsSelectionDsl {
      * @param [C] The type of the frame column. 
      */
     public fun <C> ColumnPath.frameCol(frameCol: ColumnAccessor<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
-        asColumnGroup().ensureIsColGroup().frameColumn<C>(frameCol.path()).ensureIsFrameColumn()
+        asColumnGroup().ensureIsColumnGroup().frameColumn<C>(frameCol.path()).ensureIsFrameColumn()
 
     // endregion
 
@@ -763,7 +763,7 @@ public interface FrameColColumnsSelectionDsl {
      * @param [C] The type of the frame column.
      */
     public fun <C> SingleColumn<DataRow<*>>.frameCol(name: String): SingleColumn<DataFrame<C>> =
-        ensureIsColGroup().transformSingle {
+        this.ensureIsColumnGroup().transformSingle {
             val child = it.getChild(name)?.cast<DataFrame<C>>()
                 ?: throw IllegalStateException("Frame column '$name' not found in column group '${it.path}'")
             child.data.ensureIsFrameColumn()
@@ -873,7 +873,7 @@ public interface FrameColColumnsSelectionDsl {
      * @param [C] The type of the frame column.
      */
     public fun <C> AnyColumnGroupAccessor.frameCol(name: String): ColumnAccessor<DataFrame<C>> =
-        ensureIsColGroup().frameColumn<C>(name).ensureIsFrameColumn()
+        this.ensureIsColumnGroup().frameColumn<C>(name).ensureIsFrameColumn()
 
     /**
      * ## Frame Col
@@ -978,7 +978,7 @@ public interface FrameColColumnsSelectionDsl {
      * @param [C] The type of the frame column.
      */
     public fun <C> String.frameCol(name: String): ColumnAccessor<DataFrame<C>> =
-        asColumnGroup().ensureIsColGroup().frameColumn<C>(name).ensureIsFrameColumn()
+        asColumnGroup().ensureIsColumnGroup().frameColumn<C>(name).ensureIsFrameColumn()
 
     /**
      * ## Frame Col
@@ -1083,7 +1083,7 @@ public interface FrameColColumnsSelectionDsl {
      * @param [C] The type of the frame column.
      */
     public fun <C> KProperty<*>.frameCol(name: String): ColumnAccessor<DataFrame<C>> =
-        asColumnGroup().ensureIsColGroup().frameColumn<C>(name).ensureIsFrameColumn()
+        asColumnGroup().ensureIsColumnGroup().frameColumn<C>(name).ensureIsFrameColumn()
 
     /**
      * ## Frame Col
@@ -1190,7 +1190,7 @@ public interface FrameColColumnsSelectionDsl {
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColKPropertyDataRow")
     public fun <C> KProperty<DataRow<*>>.frameCol(name: String): ColumnAccessor<DataFrame<C>> =
-        asColumnGroup().ensureIsColGroup().frameColumn<C>(name).ensureIsFrameColumn()
+        asColumnGroup().ensureIsColumnGroup().frameColumn<C>(name).ensureIsFrameColumn()
 
     /**
      * ## Frame Col
@@ -1295,7 +1295,7 @@ public interface FrameColColumnsSelectionDsl {
      * @param [C] The type of the frame column.
      */
     public fun <C> ColumnPath.frameCol(name: String): ColumnAccessor<DataFrame<C>> =
-        asColumnGroup().ensureIsColGroup().frameColumn<C>(name).ensureIsFrameColumn()
+        asColumnGroup().ensureIsColumnGroup().frameColumn<C>(name).ensureIsFrameColumn()
 
     // endregion
 
@@ -1557,7 +1557,7 @@ public interface FrameColColumnsSelectionDsl {
      * @param [C] The type of the frame column.
      */
     public fun <C> SingleColumn<DataRow<*>>.frameCol(path: ColumnPath): SingleColumn<DataFrame<C>> =
-        ensureIsColGroup().transformSingle {
+        this.ensureIsColumnGroup().transformSingle {
             val child = it.getChild(path)?.cast<DataFrame<C>>()
                 ?: throw IllegalStateException("Frame column '$path' not found in column group '${it.path}'")
             child.data.ensureIsFrameColumn()
@@ -1667,7 +1667,7 @@ public interface FrameColColumnsSelectionDsl {
      * @param [C] The type of the frame column.
      */
     public fun <C> AnyColumnGroupAccessor.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<C>> =
-        ensureIsColGroup().frameColumn<C>(path).ensureIsFrameColumn()
+        this.ensureIsColumnGroup().frameColumn<C>(path).ensureIsFrameColumn()
 
     /**
      * ## Frame Col
@@ -1772,7 +1772,7 @@ public interface FrameColColumnsSelectionDsl {
      * @param [C] The type of the frame column.
      */
     public fun <C> String.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<C>> =
-        asColumnGroup().ensureIsColGroup().frameColumn<C>(path).ensureIsFrameColumn()
+        asColumnGroup().ensureIsColumnGroup().frameColumn<C>(path).ensureIsFrameColumn()
 
     /**
      * ## Frame Col
@@ -1877,7 +1877,7 @@ public interface FrameColColumnsSelectionDsl {
      * @param [C] The type of the frame column.
      */
     public fun <C> KProperty<*>.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<C>> =
-        asColumnGroup().ensureIsColGroup().frameColumn<C>(path).ensureIsFrameColumn()
+        asColumnGroup().ensureIsColumnGroup().frameColumn<C>(path).ensureIsFrameColumn()
 
     /**
      * ## Frame Col
@@ -1984,7 +1984,7 @@ public interface FrameColColumnsSelectionDsl {
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColKPropertyDataRow")
     public fun <C> KProperty<DataRow<*>>.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<C>> =
-        asColumnGroup().ensureIsColGroup().frameColumn<C>(path).ensureIsFrameColumn()
+        asColumnGroup().ensureIsColumnGroup().frameColumn<C>(path).ensureIsFrameColumn()
 
     /**
      * ## Frame Col
@@ -2089,7 +2089,7 @@ public interface FrameColColumnsSelectionDsl {
      * @param [C] The type of the frame column.
      */
     public fun <C> ColumnPath.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<C>> =
-        asColumnGroup().ensureIsColGroup().frameColumn<C>(path).ensureIsFrameColumn()
+        asColumnGroup().ensureIsColumnGroup().frameColumn<C>(path).ensureIsFrameColumn()
 
     // endregion
 
@@ -2398,7 +2398,7 @@ public interface FrameColColumnsSelectionDsl {
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColDataFrameKProperty")
     public fun <C> AnyColumnGroupAccessor.frameCol(property: KProperty<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
-        ensureIsColGroup().frameColumn(property).ensureIsFrameColumn()
+        this.ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
 
     /**
      * ## Frame Col
@@ -2448,7 +2448,7 @@ public interface FrameColColumnsSelectionDsl {
      * @param [C] The type of the frame column. 
      */
     public fun <C> AnyColumnGroupAccessor.frameCol(property: KProperty<List<C>>): ColumnAccessor<DataFrame<C>> =
-        ensureIsColGroup().frameColumn(property).ensureIsFrameColumn()
+        this.ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
 
     /**
      * ## Frame Col
@@ -2500,7 +2500,7 @@ public interface FrameColColumnsSelectionDsl {
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColDataFrameKProperty")
     public fun <C> String.frameCol(property: KProperty<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
-        asColumnGroup().ensureIsColGroup().frameColumn(property).ensureIsFrameColumn()
+        asColumnGroup().ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
 
     /**
      * ## Frame Col
@@ -2550,7 +2550,7 @@ public interface FrameColColumnsSelectionDsl {
      * @param [C] The type of the frame column. 
      */
     public fun <C> String.frameCol(property: KProperty<List<C>>): ColumnAccessor<DataFrame<C>> =
-        asColumnGroup().ensureIsColGroup().frameColumn(property).ensureIsFrameColumn()
+        asColumnGroup().ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
 
     /**
      * ## Frame Col
@@ -2602,7 +2602,7 @@ public interface FrameColColumnsSelectionDsl {
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColDataFrameKProperty")
     public fun <C> KProperty<*>.frameCol(property: KProperty<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
-        asColumnGroup().ensureIsColGroup().frameColumn(property).ensureIsFrameColumn()
+        asColumnGroup().ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
 
     /**
      * ## Frame Col
@@ -2652,7 +2652,7 @@ public interface FrameColColumnsSelectionDsl {
      * @param [C] The type of the frame column. 
      */
     public fun <C> KProperty<*>.frameCol(property: KProperty<List<C>>): ColumnAccessor<DataFrame<C>> =
-        asColumnGroup().ensureIsColGroup().frameColumn(property).ensureIsFrameColumn()
+        asColumnGroup().ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
 
     /**
      * ## Frame Col
@@ -2704,7 +2704,7 @@ public interface FrameColColumnsSelectionDsl {
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColDataFrameKProperty")
     public fun <C> ColumnPath.frameCol(property: KProperty<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
-        asColumnGroup().ensureIsColGroup().frameColumn(property).ensureIsFrameColumn()
+        asColumnGroup().ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
 
     /**
      * ## Frame Col
@@ -2754,7 +2754,7 @@ public interface FrameColColumnsSelectionDsl {
      * @param [C] The type of the frame column. 
      */
     public fun <C> ColumnPath.frameCol(property: KProperty<List<C>>): ColumnAccessor<DataFrame<C>> =
-        asColumnGroup().ensureIsColGroup().frameColumn(property).ensureIsFrameColumn()
+        asColumnGroup().ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
 
     // endregion
 
@@ -3129,7 +3129,7 @@ public interface FrameColColumnsSelectionDsl {
      * @param [C] The type of the frame column.
      */
     public fun <C> SingleColumn<DataRow<*>>.frameCol(index: Int): SingleColumn<DataFrame<C>> =
-        ensureIsColGroup()
+        this.ensureIsColumnGroup()
             .allColumnsInternal()
             .getAt(index)
             .cast<DataFrame<C>>()
@@ -3576,7 +3576,7 @@ public interface FrameColColumnsSelectionDsl {
 internal fun <C> SingleColumn<DataFrame<C>>.ensureIsFrameColumn(): SingleColumn<DataFrame<C>> =
     performCheck { col: ColumnWithPath<*>? ->
         require(col?.isFrameColumn() != false) {
-            "Attempted to perform a FrameColumn operation on ${col?.kind()} ${col?.path}."
+            "Column at ${col?.path} is not a FrameColumn, but a ${col?.kind()}."
         }
     }
 
@@ -3586,7 +3586,7 @@ internal fun <C> SingleColumn<DataFrame<C>>.ensureIsFrameColumn(): SingleColumn<
 internal fun <C> ColumnAccessor<DataFrame<C>>.ensureIsFrameColumn(): ColumnAccessor<DataFrame<C>> =
     performCheck { col: ColumnWithPath<*>? ->
         require(col?.isFrameColumn() != false) {
-            "Attempted to perform a FrameColumn operation on ${col?.kind()} ${col?.path}."
+            "Column at ${col?.path} is not a FrameColumn, but a ${col?.kind()}."
         }
     }
 

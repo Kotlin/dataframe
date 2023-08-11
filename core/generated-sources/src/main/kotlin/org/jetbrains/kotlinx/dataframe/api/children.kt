@@ -178,7 +178,7 @@ public interface ChildrenColumnsSelectionDsl {
      * @return A [TransformableColumnSet][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet] containing the (filtered) children.
      */
     public fun SingleColumn<DataRow<*>>.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
-        ensureIsColGroup().asColumnSet().colsInternal(predicate)
+        this.ensureIsColumnGroup().asColumnSet().colsInternal(predicate)
 
     /**
      * ## Children

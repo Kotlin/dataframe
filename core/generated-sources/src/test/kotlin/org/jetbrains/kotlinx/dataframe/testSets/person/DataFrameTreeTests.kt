@@ -596,7 +596,9 @@ class DataFrameTreeTests : BaseTest() {
             added.select { weight..nameAndCity.name }
         }
 
-        added.select { nameAndCity.city..nameAndCity.name }.isEmpty() shouldBe true
+        shouldThrow<IllegalArgumentException> {
+            added.select { nameAndCity.city..nameAndCity.name }
+        }
 
         added.select { nameAndCity.select { name..city } } shouldBe expected
     }

@@ -3,6 +3,8 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.*
 import org.jetbrains.kotlinx.dataframe.columns.*
 import org.jetbrains.kotlinx.dataframe.columns.values
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
@@ -38,6 +40,37 @@ public fun <T> DataFrame<T>.singleOrNull(predicate: RowExpression<T, Boolean>): 
 // region ColumnsSelectionDsl
 
 public interface SingleColumnsSelectionDsl {
+
+    /**
+     * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>
+     *
+     * `column: `[SingleColumn][SingleColumn]`<`[DataRow][DataRow]`<*>> | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][ColumnPath]
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *
+     * `[ columnSet. ]`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single] `[ { `[condition][org.jetbrains.kotlinx.dataframe.ColumnFilter]` } ]`
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *
+     * `column.`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;[singleCol][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.singleCol] `[ { `[condition][org.jetbrains.kotlinx.dataframe.ColumnFilter]` } ]`
+     *
+     */
+    public interface Usage {
+
+        /** [single][ColumnsSelectionDsl.single] */
+        public interface ColumnSet
+
+        /** [singleCol][ColumnsSelectionDsl.singleCol] */
+        public interface Column
+    }
 
     /**
      * ## Single (Col)
@@ -150,7 +183,7 @@ public interface SingleColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
      */
     public fun SingleColumn<DataRow<*>>.singleCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        ensureIsColGroup().asColumnSet().single(condition)
+        this.ensureIsColumnGroup().asColumnSet().single(condition)
 
     /**
      * ## Single (Col)

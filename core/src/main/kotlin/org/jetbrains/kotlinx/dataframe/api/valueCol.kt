@@ -113,7 +113,7 @@ public interface ValueColColumnsSelectionDsl {
      * @include [ValueColReferenceDocs] {@setArg [CommonValueColDocs.ReceiverArg] myColumnGroup.}
      */
     public fun <C> SingleColumn<DataRow<*>>.valueCol(valueCol: ColumnAccessor<C>): SingleColumn<C> =
-        ensureIsColGroup().transformSingle {
+        this.ensureIsColumnGroup().transformSingle {
             val child = it.getChild(valueCol)
                 ?: throw IllegalStateException("ValueColumn '${valueCol.path()}' not found in column group '${it.path}'")
             child.data.ensureIsValueColumn()
@@ -124,19 +124,19 @@ public interface ValueColColumnsSelectionDsl {
      * @include [ValueColReferenceDocs] {@setArg [CommonValueColDocs.ReceiverArg] myColumnGroup.}
      */
     public fun <C> AnyColumnGroupAccessor.valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> =
-        ensureIsColGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
+        this.ensureIsColumnGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
 
     /**
      * @include [ValueColReferenceDocs] {@setArg [CommonValueColDocs.ReceiverArg] "myColumnGroup".}
      */
     public fun <C> String.valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
+        asColumnGroup().ensureIsColumnGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
 
     /**
      * @include [ValueColReferenceDocs] {@setArg [CommonValueColDocs.ReceiverArg] Type::myColumnGroup.}
      */
     public fun <C> KProperty<*>.valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
+        asColumnGroup().ensureIsColumnGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
 
     /**
      * @include [ValueColReferenceDocs] {@setArg [CommonValueColDocs.ReceiverArg] Type::myColumnGroup.}
@@ -144,13 +144,13 @@ public interface ValueColColumnsSelectionDsl {
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColKPropertyDataRow")
     public fun <C> KProperty<DataRow<*>>.valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
+        asColumnGroup().ensureIsColumnGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
 
     /**
      * @include [ValueColReferenceDocs] {@setArg [CommonValueColDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
      */
     public fun <C> ColumnPath.valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
+        asColumnGroup().ensureIsColumnGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
 
     // endregion
 
@@ -190,7 +190,7 @@ public interface ValueColColumnsSelectionDsl {
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> SingleColumn<DataRow<*>>.valueCol(name: String): SingleColumn<C> =
-        ensureIsColGroup().transformSingle {
+        this.ensureIsColumnGroup().transformSingle {
             val child = it.getChild(name)?.cast<C>()
                 ?: throw IllegalStateException("Value column '$name' not found in column group '${it.path}'")
             child.data.ensureIsValueColumn()
@@ -210,7 +210,7 @@ public interface ValueColColumnsSelectionDsl {
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> AnyColumnGroupAccessor.valueCol(name: String): ColumnAccessor<C> =
-        ensureIsColGroup().valueColumn<C>(name).ensureIsValueColumn()
+        this.ensureIsColumnGroup().valueColumn<C>(name).ensureIsValueColumn()
 
     /**
      * @include [ValueColNameDocs] {@setArg [CommonValueColDocs.ReceiverArg] "myColumnGroup".}
@@ -225,7 +225,7 @@ public interface ValueColColumnsSelectionDsl {
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> String.valueCol(name: String): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().valueColumn<C>(name).ensureIsValueColumn()
+        asColumnGroup().ensureIsColumnGroup().valueColumn<C>(name).ensureIsValueColumn()
 
     /**
      * @include [ValueColNameDocs] {@setArg [CommonValueColDocs.ReceiverArg] Type::myColumnGroup.}
@@ -240,7 +240,7 @@ public interface ValueColColumnsSelectionDsl {
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> KProperty<*>.valueCol(name: String): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().valueColumn<C>(name).ensureIsValueColumn()
+        asColumnGroup().ensureIsColumnGroup().valueColumn<C>(name).ensureIsValueColumn()
 
     /**
      * @include [ValueColNameDocs] {@setArg [CommonValueColDocs.ReceiverArg] Type::myColumnGroup.}
@@ -257,7 +257,7 @@ public interface ValueColColumnsSelectionDsl {
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColKPropertyDataRow")
     public fun <C> KProperty<DataRow<*>>.valueCol(name: String): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().valueColumn<C>(name).ensureIsValueColumn()
+        asColumnGroup().ensureIsColumnGroup().valueColumn<C>(name).ensureIsValueColumn()
 
     /**
      * @include [ValueColNameDocs] {@setArg [CommonValueColDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
@@ -272,7 +272,7 @@ public interface ValueColColumnsSelectionDsl {
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> ColumnPath.valueCol(name: String): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().valueColumn<C>(name).ensureIsValueColumn()
+        asColumnGroup().ensureIsColumnGroup().valueColumn<C>(name).ensureIsValueColumn()
 
     // endregion
 
@@ -312,7 +312,7 @@ public interface ValueColColumnsSelectionDsl {
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> SingleColumn<DataRow<*>>.valueCol(path: ColumnPath): SingleColumn<C> =
-        ensureIsColGroup().transformSingle {
+        this.ensureIsColumnGroup().transformSingle {
             val child = it.getChild(path)?.cast<C>()
                 ?: throw IllegalStateException("Value column '$path' not found in column group '${it.path}'")
             child.data.ensureIsValueColumn()
@@ -332,7 +332,7 @@ public interface ValueColColumnsSelectionDsl {
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> AnyColumnGroupAccessor.valueCol(path: ColumnPath): ColumnAccessor<C> =
-        ensureIsColGroup().valueColumn<C>(path).ensureIsValueColumn()
+        this.ensureIsColumnGroup().valueColumn<C>(path).ensureIsValueColumn()
 
     /**
      * @include [ValueColPathDocs] {@setArg [CommonValueColDocs.ReceiverArg] "myColumnGroup".}
@@ -347,7 +347,7 @@ public interface ValueColColumnsSelectionDsl {
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> String.valueCol(path: ColumnPath): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().valueColumn<C>(path).ensureIsValueColumn()
+        asColumnGroup().ensureIsColumnGroup().valueColumn<C>(path).ensureIsValueColumn()
 
     /**
      * @include [ValueColPathDocs] {@setArg [CommonValueColDocs.ReceiverArg] Type::myColumnGroup.}
@@ -362,7 +362,7 @@ public interface ValueColColumnsSelectionDsl {
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> KProperty<*>.valueCol(path: ColumnPath): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().valueColumn<C>(path).ensureIsValueColumn()
+        asColumnGroup().ensureIsColumnGroup().valueColumn<C>(path).ensureIsValueColumn()
 
     /**
      * @include [ValueColPathDocs] {@setArg [CommonValueColDocs.ReceiverArg] Type::myColumnGroup.}
@@ -379,7 +379,7 @@ public interface ValueColColumnsSelectionDsl {
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColKPropertyDataRow")
     public fun <C> KProperty<DataRow<*>>.valueCol(path: ColumnPath): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().valueColumn<C>(path).ensureIsValueColumn()
+        asColumnGroup().ensureIsColumnGroup().valueColumn<C>(path).ensureIsValueColumn()
 
     /**
      * @include [ValueColPathDocs] {@setArg [CommonValueColDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
@@ -394,7 +394,7 @@ public interface ValueColColumnsSelectionDsl {
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> ColumnPath.valueCol(path: ColumnPath): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().valueColumn<C>(path).ensureIsValueColumn()
+        asColumnGroup().ensureIsColumnGroup().valueColumn<C>(path).ensureIsValueColumn()
 
     // endregion
 
@@ -424,25 +424,25 @@ public interface ValueColColumnsSelectionDsl {
      * @include [ValueColKPropertyDocs] {@setArg [CommonValueColDocs.ReceiverArg] myColumnGroup.}
      */
     public fun <C> AnyColumnGroupAccessor.valueCol(property: KProperty<C>): ColumnAccessor<C> =
-        ensureIsColGroup().valueColumn(property).ensureIsValueColumn()
+        this.ensureIsColumnGroup().valueColumn(property).ensureIsValueColumn()
 
     /**
      * @include [ValueColKPropertyDocs] {@setArg [CommonValueColDocs.ReceiverArg] "myColumnGroup".}
      */
     public fun <C> String.valueCol(property: KProperty<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().valueColumn(property).ensureIsValueColumn()
+        asColumnGroup().ensureIsColumnGroup().valueColumn(property).ensureIsValueColumn()
 
     /**
      * @include [ValueColKPropertyDocs] {@setArg [CommonValueColDocs.ReceiverArg] Type::myColumnGroup.}
      */
     public fun <C> KProperty<*>.valueCol(property: KProperty<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().valueColumn(property).ensureIsValueColumn()
+        asColumnGroup().ensureIsColumnGroup().valueColumn(property).ensureIsValueColumn()
 
     /**
      * @include [ValueColKPropertyDocs] {@setArg [CommonValueColDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
      */
     public fun <C> ColumnPath.valueCol(property: KProperty<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColGroup().valueColumn(property).ensureIsValueColumn()
+        asColumnGroup().ensureIsColumnGroup().valueColumn(property).ensureIsValueColumn()
 
     // endregion
 
@@ -492,7 +492,7 @@ public interface ValueColColumnsSelectionDsl {
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> SingleColumn<DataRow<*>>.valueCol(index: Int): SingleColumn<C> =
-        ensureIsColGroup()
+        this.ensureIsColumnGroup()
             .allColumnsInternal()
             .getAt(index)
             .ensureIsValueColumn()
@@ -571,7 +571,7 @@ public interface ValueColColumnsSelectionDsl {
 internal fun <C> SingleColumn<C>.ensureIsValueColumn(): SingleColumn<C> =
     performCheck { col: ColumnWithPath<*>? ->
         require(col?.isValueColumn() != false) {
-            "Attempted to perform a ValueColumn operation on ${col?.kind()} ${col?.path}."
+            "Column at ${col?.path} is not a ValueColumn, but a ${col?.kind()}."
         }
     }
 
@@ -579,7 +579,7 @@ internal fun <C> SingleColumn<C>.ensureIsValueColumn(): SingleColumn<C> =
 internal fun <C> ColumnAccessor<C>.ensureIsValueColumn(): ColumnAccessor<C> =
     performCheck { col: ColumnWithPath<*>? ->
         require(col?.isValueColumn() != false) {
-            "Attempted to perform a ValueColumn operation on ${col?.kind()} ${col?.path}."
+            "Column at ${col?.path} is not a ValueColumn, but a ${col?.kind()}."
         }
     }
 

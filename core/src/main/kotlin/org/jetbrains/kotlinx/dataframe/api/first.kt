@@ -14,6 +14,8 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
@@ -70,13 +72,37 @@ public fun <T> Pivot<T>.first(predicate: RowFilter<T>): ReducedPivot<T> = reduce
 
 public fun <T> PivotGroupBy<T>.first(): ReducedPivotGroupBy<T> = reduce { firstOrNull() }
 
-public fun <T> PivotGroupBy<T>.first(predicate: RowFilter<T>): ReducedPivotGroupBy<T> = reduce { firstOrNull(predicate) }
+public fun <T> PivotGroupBy<T>.first(predicate: RowFilter<T>): ReducedPivotGroupBy<T> =
+    reduce { firstOrNull(predicate) }
 
 // endregion
 
 // region ColumnsSelectionDsl
 
 public interface FirstColumnsSelectionDsl {
+
+    /**
+     * @include [ColumnsSelectionDsl.Usage.Receivers]
+     *
+     * `[ columnSet. ]`
+     *
+     * {@include [Indent]}{@include [FirstColumnsSelectionDsl.Usage.ColumnSet]} {@include [ColumnsSelectionDsl.Usage.OptionalColumnFilter]}
+     *
+     * {@include [LineBreak]}
+     *
+     * `column.`
+     *
+     * {@include [Indent]}{@include [FirstColumnsSelectionDsl.Usage.Column]} {@include [ColumnsSelectionDsl.Usage.OptionalColumnFilter]}
+     *
+     */
+    public interface Usage {
+
+        /** [first][ColumnsSelectionDsl.first] */
+        public interface ColumnSet
+
+        /** [firstCol][ColumnsSelectionDsl.firstCol] */
+        public interface Column
+    }
 
     /**
      * ## First (Col)
@@ -137,7 +163,7 @@ public interface FirstColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[firstCol][SingleColumn.firstCol]`() }`
      */
     public fun SingleColumn<DataRow<*>>.firstCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        ensureIsColGroup().asColumnSet().first(condition)
+        this.ensureIsColumnGroup().asColumnSet().first(condition)
 
     /**
      * @include [CommonFirstDocs]

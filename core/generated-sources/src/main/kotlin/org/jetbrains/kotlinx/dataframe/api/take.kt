@@ -194,7 +194,7 @@ public interface TakeColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
      */
     public fun SingleColumn<DataRow<*>>.takeChildren(n: Int): ColumnSet<*> =
-        ensureIsColGroup().transformSingle { it.children().take(n) }
+        this.ensureIsColumnGroup().transformSingle { it.children().take(n) }
 
     /**
      * ## Take (Children)
@@ -430,7 +430,7 @@ public interface TakeColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
      */
     public fun SingleColumn<DataRow<*>>.takeLastChildren(n: Int): ColumnSet<*> =
-        ensureIsColGroup().transformSingle { it.children().takeLast(n) }
+        this.ensureIsColumnGroup().transformSingle { it.children().takeLast(n) }
 
     /**
      * ## Take Last (Children)
@@ -675,7 +675,7 @@ public interface TakeColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
      */
     public fun SingleColumn<DataRow<*>>.takeChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        ensureIsColGroup().transformSingle { it.children().takeWhile(predicate) }
+        this.ensureIsColumnGroup().transformSingle { it.children().takeWhile(predicate) }
 
     /**
      * ## Take (Children) While
@@ -927,7 +927,7 @@ public interface TakeColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
      */
     public fun SingleColumn<DataRow<*>>.takeLastChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        ensureIsColGroup().transformSingle { it.children().takeLastWhile(predicate) }
+        this.ensureIsColumnGroup().transformSingle { it.children().takeLastWhile(predicate) }
 
     /**
      * ## Take Last (Children) While

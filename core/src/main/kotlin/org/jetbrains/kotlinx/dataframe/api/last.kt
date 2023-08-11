@@ -4,6 +4,8 @@ import org.jetbrains.kotlinx.dataframe.*
 import org.jetbrains.kotlinx.dataframe.columns.*
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
@@ -70,6 +72,29 @@ public fun <T> PivotGroupBy<T>.last(predicate: RowFilter<T>): ReducedPivotGroupB
 public interface LastColumnsSelectionDsl {
 
     /**
+     * @include [ColumnsSelectionDsl.Usage.Receivers]
+     *
+     * `[ columnSet. ]`
+     *
+     * {@include [Indent]}{@include [LastColumnsSelectionDsl.Usage.ColumnSet]} {@include [ColumnsSelectionDsl.Usage.OptionalColumnFilter]}
+     *
+     * {@include [LineBreak]}
+     *
+     * `column.`
+     *
+     * {@include [Indent]}{@include [LastColumnsSelectionDsl.Usage.Column]} {@include [ColumnsSelectionDsl.Usage.OptionalColumnFilter]}
+     *
+     */
+    public interface Usage {
+
+        /** [last][ColumnsSelectionDsl.last] */
+        public interface ColumnSet
+
+        /** [lastCol][ColumnsSelectionDsl.lastCol] */
+        public interface Column
+    }
+
+    /**
      * ## Last (Col)
      * Returns the last ([transformable][TransformableSingleColumn]) column in this [ColumnSet] or [ColumnGroup]
      * that adheres to the given [condition\].
@@ -128,7 +153,7 @@ public interface LastColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[lastCol][SingleColumn.lastCol]`() }`
      */
     public fun SingleColumn<DataRow<*>>.lastCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        ensureIsColGroup().asColumnSet().last(condition)
+        this.ensureIsColumnGroup().asColumnSet().last(condition)
 
     /**
      * @include [CommonLastDocs]

@@ -105,7 +105,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */
     public fun SingleColumn<DataRow<*>>.childrenWithoutNulls(): ColumnSet<Any> =
-        ensureIsColGroup().allColumnsInternal().withoutNulls()
+        this.ensureIsColumnGroup().allColumnsInternal().withoutNulls()
 
     /**
      * ## (Children) Without Nulls

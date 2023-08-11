@@ -47,7 +47,7 @@ public interface ExceptColumnsSelectionDsl<out T> {
         allExcept(selector)
 
     public infix fun <C> SingleColumn<DataRow<C>>.exceptNew(selector: ColumnsSelector<C, *>): SingleColumn<DataRow<*>> =
-        ensureIsColGroup().transformSingle { singleCol ->
+        this.ensureIsColumnGroup().transformSingle { singleCol ->
 
             val columnsToExcept = singleCol.asColumnGroup().getColumnsWithPaths(selector)
                 .map { it.changePath(singleCol.path + it.path) }
@@ -59,7 +59,7 @@ public interface ExceptColumnsSelectionDsl<out T> {
 
     public fun <C> SingleColumn<DataRow<C>>.allExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         createColumnSet { context ->
-            this.ensureIsColGroup().resolveSingle(context)?.let { col ->
+            this.ensureIsColumnGroup().resolveSingle(context)?.let { col ->
                 require(col.isColumnGroup()) {
                     "Column ${col.path} is not a ColumnGroup and can thus not be excepted from."
                 }
@@ -114,7 +114,7 @@ public interface ExceptColumnsSelectionDsl<out T> {
         allExcept(*other)
 
     public infix fun SingleColumn<DataRow<*>>.allExcept(other: ColumnsResolver<*>): ColumnSet<*> =
-        ensureIsColGroup().allColumnsInternal().except(other)
+        this.ensureIsColumnGroup().allColumnsInternal().except(other)
 
     public fun SingleColumn<DataRow<*>>.allExcept(vararg other: ColumnsResolver<*>): ColumnSet<*> =
         allExcept(other.toColumnSet())

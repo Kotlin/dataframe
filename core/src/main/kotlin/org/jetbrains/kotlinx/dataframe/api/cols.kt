@@ -159,7 +159,7 @@ public interface ColsColumnsSelectionDsl {
     /** @include [SingleColumnAnyRowColsPredicateDocs] */
     public fun SingleColumn<DataRow<*>>.cols(
         predicate: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> = ensureIsColGroup().colsInternal(predicate)
+    ): TransformableColumnSet<*> = this.ensureIsColumnGroup().colsInternal(predicate)
 
     /**
      * @include [SingleColumnAnyRowColsPredicateDocs]
@@ -312,7 +312,7 @@ public interface ColsColumnsSelectionDsl {
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
     ): ColumnSet<C> = headPlusArray(firstCol, otherCols).let { refs ->
-        ensureIsColGroup().asColumnSet().transform {
+        this.ensureIsColumnGroup().asColumnSet().transform {
             it.flatMap { col -> refs.mapNotNull { col.getChild(it) } }
         }
     }
@@ -463,7 +463,7 @@ public interface ColsColumnsSelectionDsl {
         firstCol: String,
         vararg otherCols: String,
     ): ColumnSet<*> = headPlusArray(firstCol, otherCols).let { names ->
-        ensureIsColGroup().asColumnSet().transform { it.flatMap { col -> names.mapNotNull { col.getChild(it) } } }
+        this.ensureIsColumnGroup().asColumnSet().transform { it.flatMap { col -> names.mapNotNull { col.getChild(it) } } }
     }
 
     /**
@@ -606,7 +606,7 @@ public interface ColsColumnsSelectionDsl {
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
     ): ColumnSet<C> = headPlusArray(firstCol, otherCols).let { props ->
-        ensureIsColGroup().asColumnSet().transform { it.flatMap { col -> props.mapNotNull { col.getChild(it) } } }
+        this.ensureIsColumnGroup().asColumnSet().transform { it.flatMap { col -> props.mapNotNull { col.getChild(it) } } }
     }
 
     /** @include [SingleColumnColsVarargKPropertyDocs] */
@@ -768,7 +768,7 @@ public interface ColsColumnsSelectionDsl {
     public fun SingleColumn<DataRow<*>>.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
-    ): ColumnSet<*> = ensureIsColGroup().colsInternal(headPlusArray(firstIndex, otherIndices))
+    ): ColumnSet<*> = this.ensureIsColumnGroup().colsInternal(headPlusArray(firstIndex, otherIndices))
 
     /**
      * @include [CommonColsIndicesDocs]
@@ -887,7 +887,7 @@ public interface ColsColumnsSelectionDsl {
     private interface SingleColumnColsRangeDocs
 
     /** @include [SingleColumnColsRangeDocs] */
-    public fun SingleColumn<DataRow<*>>.cols(range: IntRange): ColumnSet<*> = ensureIsColGroup().colsInternal(range)
+    public fun SingleColumn<DataRow<*>>.cols(range: IntRange): ColumnSet<*> = this.ensureIsColumnGroup().colsInternal(range)
 
     /**
      * @include [CommonColsRangeDocs]

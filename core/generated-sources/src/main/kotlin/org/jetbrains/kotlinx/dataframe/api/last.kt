@@ -4,6 +4,8 @@ import org.jetbrains.kotlinx.dataframe.*
 import org.jetbrains.kotlinx.dataframe.columns.*
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
@@ -68,6 +70,37 @@ public fun <T> PivotGroupBy<T>.last(predicate: RowFilter<T>): ReducedPivotGroupB
 // region ColumnsSelectionDsl
 
 public interface LastColumnsSelectionDsl {
+
+    /**
+     * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>
+     *
+     * `column: `[SingleColumn][SingleColumn]`<`[DataRow][DataRow]`<*>> | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][ColumnPath]
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *
+     * `[ columnSet. ]`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;[last][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last] `[ { `[condition][org.jetbrains.kotlinx.dataframe.ColumnFilter]` } ]`
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *
+     * `column.`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;[lastCol][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.lastCol] `[ { `[condition][org.jetbrains.kotlinx.dataframe.ColumnFilter]` } ]`
+     *
+     */
+    public interface Usage {
+
+        /** [last][ColumnsSelectionDsl.last] */
+        public interface ColumnSet
+
+        /** [lastCol][ColumnsSelectionDsl.lastCol] */
+        public interface Column
+    }
 
     /**
      * ## Last (Col)
@@ -183,7 +216,7 @@ public interface LastColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.first]
      */
     public fun SingleColumn<DataRow<*>>.lastCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        ensureIsColGroup().asColumnSet().last(condition)
+        this.ensureIsColumnGroup().asColumnSet().last(condition)
 
     /**
      * ## Last (Col)
