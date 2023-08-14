@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleImpl
@@ -20,6 +21,55 @@ import kotlin.reflect.KProperty
 // region ColumnsSelectionDsl
 
 public interface ColColumnsSelectionDsl {
+
+    /**
+     * ## Col Usage
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * `columnGroup: `[SingleColumn][SingleColumn]`<`[DataRow][DataRow]`<*>> | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][ColumnPath]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * `columnRef: `[ColumnAccessor][ColumnAccessor]` | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][ColumnPath]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * `index: `[Int][Int]
+     *
+     * ### In the plain DSL:
+     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]`(columnRef | index)`
+     *
+     * ### On a [ColumnSet]:
+     * `columnSet`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;.[col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]`(index) |`
+     *   [`[`][ColumnsSelectionDsl.col]`index`[`]`][ColumnsSelectionDsl.col]
+     *
+     * ### On a column group reference:
+     * `columnGroup`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;.[col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]`(columnRef | index)`
+     *
+     *
+     *
+     */
+    public interface Usage {
+
+        /** [col][ColumnsSelectionDsl.col] */
+        public interface PlainDslName
+
+        /** .[col][ColumnsSelectionDsl.col] */
+        public interface ColumnSetName
+
+        /** .[col][ColumnsSelectionDsl.col] */
+        public interface ColumnGroupName
+    }
 
     /**
      * ## Col

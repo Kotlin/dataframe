@@ -6,6 +6,10 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.CommonFirstDocs.Examples
+import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage
+import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage.ColumnGroupName
+import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage.ColumnSetName
+import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage.PlainDslName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -15,7 +19,6 @@ import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
@@ -79,29 +82,35 @@ public fun <T> PivotGroupBy<T>.first(predicate: RowFilter<T>): ReducedPivotGroup
 
 // region ColumnsSelectionDsl
 
+/**
+ * See [Usage].
+ */
 public interface FirstColumnsSelectionDsl {
 
     /**
-     * @include [ColumnsSelectionDsl.Usage.Receivers]
+     * ## First (Col) Usage
      *
-     * `[ columnSet. ]`
-     *
-     * {@include [Indent]}{@include [FirstColumnsSelectionDsl.Usage.ColumnSet]} {@include [ColumnsSelectionDsl.Usage.OptionalColumnFilter]}
-     *
-     * {@include [LineBreak]}
-     *
-     * `column.`
-     *
-     * {@include [Indent]}{@include [FirstColumnsSelectionDsl.Usage.Column]} {@include [ColumnsSelectionDsl.Usage.OptionalColumnFilter]}
-     *
+     * @include [ColumnsSelectionDsl.UsageTemplate]
+     * {@setArg [ColumnsSelectionDsl.UsageTemplate.PlainDslFunctionsArg]
+     *   {@include [PlainDslName]} {@include [ColumnsSelectionDsl.UsageTemplate.OptionalColumnFilter]}
+     * }
+     * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnSetFunctionsArg]
+     *   {@include [Indent]}{@include [ColumnSetName]} {@include [ColumnsSelectionDsl.UsageTemplate.OptionalColumnFilter]}
+     * }
+     * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnGroupFunctionsArg]
+     *   {@include [Indent]}{@include [ColumnGroupName]} {@include [ColumnsSelectionDsl.UsageTemplate.OptionalColumnFilter]}
+     * }
      */
     public interface Usage {
 
         /** [first][ColumnsSelectionDsl.first] */
-        public interface ColumnSet
+        public interface PlainDslName
 
-        /** [firstCol][ColumnsSelectionDsl.firstCol] */
-        public interface Column
+        /** .[first][ColumnsSelectionDsl.first] */
+        public interface ColumnSetName
+
+        /** .[firstCol][ColumnsSelectionDsl.firstCol] */
+        public interface ColumnGroupName
     }
 
     /**

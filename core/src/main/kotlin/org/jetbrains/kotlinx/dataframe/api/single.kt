@@ -1,10 +1,23 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.*
-import org.jetbrains.kotlinx.dataframe.columns.*
+import org.jetbrains.kotlinx.dataframe.ColumnFilter
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.RowExpression
+import org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.CommonSingleDocs.Examples
+import org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage
+import org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage.ColumnGroupName
+import org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage.ColumnSetName
+import org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage.PlainDslName
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
@@ -39,29 +52,35 @@ public fun <T> DataFrame<T>.singleOrNull(predicate: RowExpression<T, Boolean>): 
 
 // region ColumnsSelectionDsl
 
+/**
+ * See [Usage].
+ */
 public interface SingleColumnsSelectionDsl {
 
     /**
-     * @include [ColumnsSelectionDsl.Usage.Receivers]
+     * ## Single (Col) Usage
      *
-     * `[ columnSet. ]`
-     *
-     * {@include [Indent]}{@include [SingleColumnsSelectionDsl.Usage.ColumnSet]} {@include [ColumnsSelectionDsl.Usage.OptionalColumnFilter]}
-     *
-     * {@include [LineBreak]}
-     *
-     * `column.`
-     *
-     * {@include [Indent]}{@include [SingleColumnsSelectionDsl.Usage.Column]} {@include [ColumnsSelectionDsl.Usage.OptionalColumnFilter]}
-     *
+     * @include [ColumnsSelectionDsl.UsageTemplate]
+     * {@setArg [ColumnsSelectionDsl.UsageTemplate.PlainDslFunctionsArg]
+     *   {@include [PlainDslName]} {@include [ColumnsSelectionDsl.UsageTemplate.OptionalColumnFilter]}
+     * }
+     * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnSetFunctionsArg]
+     *   {@include [Indent]}{@include [ColumnSetName]} {@include [ColumnsSelectionDsl.UsageTemplate.OptionalColumnFilter]}
+     * }
+     * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnGroupFunctionsArg]
+     *   {@include [Indent]}{@include [ColumnGroupName]} {@include [ColumnsSelectionDsl.UsageTemplate.OptionalColumnFilter]}
+     * }
      */
     public interface Usage {
 
         /** [single][ColumnsSelectionDsl.single] */
-        public interface ColumnSet
+        public interface PlainDslName
 
-        /** [singleCol][ColumnsSelectionDsl.singleCol] */
-        public interface Column
+        /** .[single][ColumnsSelectionDsl.single] */
+        public interface ColumnSetName
+
+        /** .[singleCol][ColumnsSelectionDsl.singleCol] */
+        public interface ColumnGroupName
     }
 
     /**

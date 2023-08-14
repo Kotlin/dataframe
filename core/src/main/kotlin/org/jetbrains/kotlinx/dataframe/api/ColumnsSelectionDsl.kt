@@ -5,8 +5,9 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage.PlainDslName
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage
-import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage.Receivers
+import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -117,45 +118,83 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
 
     /**
      * ## [ColumnsSelectionDsl] Usage
-     * @include [Receivers]
      *
-     * `[ columnSet. ]`
+     * @include [UsageTemplate]
+     * {@setArg [UsageTemplate.PlainDslFunctionsArg]
+     *   (
+     *   {@include [FirstColumnsSelectionDsl.Usage.PlainDslName]} |
+     *   {@include [LastColumnsSelectionDsl.Usage.PlainDslName]} |
+     *   {@include [SingleColumnsSelectionDsl.Usage.PlainDslName]}
+     *   ) {@include [UsageTemplate.OptionalColumnFilter]}
+     *   |
      *
-     * {@include [Indent]}(
-     * {@include [FirstColumnsSelectionDsl.Usage.ColumnSet]} |
-     * {@include [LastColumnsSelectionDsl.Usage.ColumnSet]} |
-     * {@include [SingleColumnsSelectionDsl.Usage.ColumnSet]}
-     * ) {@include [OptionalColumnFilter]}
-     * |
+     *   {@include [PlainDslName]}`({@include [ColumnsSelectionDsl.UsageTemplate.ColumnRefArgumentName]} | {@include [ColumnsSelectionDsl.UsageTemplate.IndexArgumentName]})`
+     *   |
      *
-     * {@include [Indent]}TODO
+     *   TODO
+     * }
+     * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
+     *   {@include [Indent]}(
+     *   {@include [FirstColumnsSelectionDsl.Usage.ColumnSetName]} |
+     *   {@include [LastColumnsSelectionDsl.Usage.ColumnSetName]} |
+     *   {@include [SingleColumnsSelectionDsl.Usage.ColumnSetName]}
+     *   ) {@include [UsageTemplate.OptionalColumnFilter]}
+     *   |
      *
-     * {@include [LineBreak]}
+     *   {@include [Indent]}TODO
+     * }
+     * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
+     *   {@include [Indent]}(
+     *   {@include [FirstColumnsSelectionDsl.Usage.ColumnGroupName]} |
+     *   {@include [LastColumnsSelectionDsl.Usage.ColumnGroupName]} |
+     *   {@include [SingleColumnsSelectionDsl.Usage.ColumnGroupName]}
+     *   ) {@include [UsageTemplate.OptionalColumnFilter]}
+     *   |
      *
-     * `column.`
-     *
-     * {@include [Indent]}(
-     * {@include [FirstColumnsSelectionDsl.Usage.Column]} |
-     * {@include [LastColumnsSelectionDsl.Usage.Column]} |
-     * {@include [SingleColumnsSelectionDsl.Usage.Column]}
-     * ) {@include [OptionalColumnFilter]}
-     * |
-     *
-     * {@include [Indent]}TODO
+     *   {@include [Indent]}TODO
+     * }
      */
-    public interface Usage {
+    public interface Usage
 
-        /**
-         * `columnSet: `[ColumnSet][ColumnSet]`<*>
-         *
-         * `column: `[SingleColumn][SingleColumn]`<`[DataRow][DataRow]`<*>> | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][ColumnPath]
-         *
-         * {@include [LineBreak]}
-         */
-        public interface Receivers
+    /**
+     * {@include [LineBreak]}
+     * `columnSet: `[ColumnSet][ColumnSet]`<*>
+     * {@include [LineBreak]}
+     * `columnGroup: `[SingleColumn][SingleColumn]`<`[DataRow][DataRow]`<*>> | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][ColumnPath]
+     * {@include [LineBreak]}
+     * `columnRef: `[ColumnAccessor][ColumnAccessor]` | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][ColumnPath]
+     * {@include [LineBreak]}
+     * `index: `[Int][Int]
+     *
+     * ### In the plain DSL:
+     * {@getArg [ColumnsSelectionDsl.UsageTemplate.PlainDslFunctionsArg]}
+     *
+     * ### On a [ColumnSet]:
+     * `columnSet`
+     *
+     * {@getArg [ColumnsSelectionDsl.UsageTemplate.ColumnSetFunctionsArg]}
+     *
+     * ### On a column group reference:
+     * `columnGroup`
+     *
+     * {@getArg [ColumnsSelectionDsl.UsageTemplate.ColumnGroupFunctionsArg]}
+     */
+    public interface UsageTemplate {
 
-        /** `[ { `[condition][ColumnFilter]` } ]` */
+        public interface PlainDslFunctionsArg
+
+        public interface ColumnSetFunctionsArg
+
+        public interface ColumnGroupFunctionsArg
+
+        /** `[ \{ `[condition][ColumnFilter]` \\\\} ]` */
         public interface OptionalColumnFilter
+
+        /** columnRef */
+        public interface ColumnRefArgumentName
+
+        /** index */
+        public interface IndexArgumentName
     }
 
     /**

@@ -6,6 +6,10 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.CommonFirstDocs.Examples
+import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage
+import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage.ColumnGroupName
+import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage.ColumnSetName
+import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage.PlainDslName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -15,7 +19,6 @@ import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
@@ -79,37 +82,57 @@ public fun <T> PivotGroupBy<T>.first(predicate: RowFilter<T>): ReducedPivotGroup
 
 // region ColumnsSelectionDsl
 
+/**
+ * See [Usage].
+ */
 public interface FirstColumnsSelectionDsl {
 
     /**
+     * ## First (Col) Usage
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
      * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>
      *
-     * `column: `[SingleColumn][SingleColumn]`<`[DataRow][DataRow]`<*>> | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][ColumnPath]
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
+     * `columnGroup: `[SingleColumn][SingleColumn]`<`[DataRow][DataRow]`<*>> | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *
-     * `[ columnSet. ]`
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first] `[ { `[condition][org.jetbrains.kotlinx.dataframe.ColumnFilter]` } ]`
-     *
+     * `columnRef: `[ColumnAccessor][ColumnAccessor]` | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
+     * `index: `[Int][Int]
      *
-     * `column.`
+     * ### In the plain DSL:
+     * [first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first] `[ { `[condition][org.jetbrains.kotlinx.dataframe.ColumnFilter]` } ]`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol] `[ { `[condition][org.jetbrains.kotlinx.dataframe.ColumnFilter]` } ]`
+     * ### On a [ColumnSet]:
+     * `columnSet`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;.[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first] `[ { `[condition][org.jetbrains.kotlinx.dataframe.ColumnFilter]` } ]`
+     *
+     * ### On a column group reference:
+     * `columnGroup`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;.[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol] `[ { `[condition][org.jetbrains.kotlinx.dataframe.ColumnFilter]` } ]`
+     *
+     *
      *
      */
     public interface Usage {
 
         /** [first][ColumnsSelectionDsl.first] */
-        public interface ColumnSet
+        public interface PlainDslName
 
-        /** [firstCol][ColumnsSelectionDsl.firstCol] */
-        public interface Column
+        /** .[first][ColumnsSelectionDsl.first] */
+        public interface ColumnSetName
+
+        /** .[firstCol][ColumnsSelectionDsl.firstCol] */
+        public interface ColumnGroupName
     }
 
     /**

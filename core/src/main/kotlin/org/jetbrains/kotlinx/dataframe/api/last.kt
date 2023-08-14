@@ -1,11 +1,13 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.*
+import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage.ColumnGroupName
+import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage.ColumnSetName
+import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage.PlainDslName
 import org.jetbrains.kotlinx.dataframe.columns.*
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
@@ -69,29 +71,35 @@ public fun <T> PivotGroupBy<T>.last(predicate: RowFilter<T>): ReducedPivotGroupB
 
 // region ColumnsSelectionDsl
 
+/**
+ * See [Usage].
+ */
 public interface LastColumnsSelectionDsl {
 
     /**
-     * @include [ColumnsSelectionDsl.Usage.Receivers]
+     * ## Last (Col) Usage
      *
-     * `[ columnSet. ]`
-     *
-     * {@include [Indent]}{@include [LastColumnsSelectionDsl.Usage.ColumnSet]} {@include [ColumnsSelectionDsl.Usage.OptionalColumnFilter]}
-     *
-     * {@include [LineBreak]}
-     *
-     * `column.`
-     *
-     * {@include [Indent]}{@include [LastColumnsSelectionDsl.Usage.Column]} {@include [ColumnsSelectionDsl.Usage.OptionalColumnFilter]}
-     *
+     * @include [ColumnsSelectionDsl.UsageTemplate]
+     * {@setArg [ColumnsSelectionDsl.UsageTemplate.PlainDslFunctionsArg]
+     *   {@include [PlainDslName]} {@include [ColumnsSelectionDsl.UsageTemplate.OptionalColumnFilter]}
+     * }
+     * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnSetFunctionsArg]
+     *   {@include [Indent]}{@include [ColumnSetName]} {@include [ColumnsSelectionDsl.UsageTemplate.OptionalColumnFilter]}
+     * }
+     * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnGroupFunctionsArg]
+     *   {@include [Indent]}{@include [ColumnGroupName]} {@include [ColumnsSelectionDsl.UsageTemplate.OptionalColumnFilter]}
+     * }
      */
     public interface Usage {
 
         /** [last][ColumnsSelectionDsl.last] */
-        public interface ColumnSet
+        public interface PlainDslName
 
-        /** [lastCol][ColumnsSelectionDsl.lastCol] */
-        public interface Column
+        /** .[last][ColumnsSelectionDsl.last] */
+        public interface ColumnSetName
+
+        /** .[lastCol][ColumnsSelectionDsl.lastCol] */
+        public interface ColumnGroupName
     }
 
     /**

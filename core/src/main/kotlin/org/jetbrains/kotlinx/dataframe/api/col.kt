@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleImpl
@@ -20,6 +21,33 @@ import kotlin.reflect.KProperty
 // region ColumnsSelectionDsl
 
 public interface ColColumnsSelectionDsl {
+
+    /**
+     * ## Col Usage
+     *
+     * @include [ColumnsSelectionDsl.UsageTemplate]
+     * {@setArg [ColumnsSelectionDsl.UsageTemplate.PlainDslFunctionsArg]
+     *   {@include [PlainDslName]}`({@include [ColumnsSelectionDsl.UsageTemplate.ColumnRefArgumentName]} | {@include [ColumnsSelectionDsl.UsageTemplate.IndexArgumentName]})`
+     * }
+     * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnSetFunctionsArg]
+     *   {@include [Indent]}{@include [ColumnSetName]}`({@include [ColumnsSelectionDsl.UsageTemplate.IndexArgumentName]}) |`
+     *   [`[`][ColumnsSelectionDsl.col]`{@include [ColumnsSelectionDsl.UsageTemplate.IndexArgumentName]}`[`]`][ColumnsSelectionDsl.col]
+     * }
+     * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnGroupFunctionsArg]
+     *   {@include [Indent]}{@include [ColumnGroupName]}`({@include [ColumnsSelectionDsl.UsageTemplate.ColumnRefArgumentName]} | {@include [ColumnsSelectionDsl.UsageTemplate.IndexArgumentName]})`
+     * }
+     */
+    public interface Usage {
+
+        /** [col][ColumnsSelectionDsl.col] */
+        public interface PlainDslName
+
+        /** .[col][ColumnsSelectionDsl.col] */
+        public interface ColumnSetName
+
+        /** .[col][ColumnsSelectionDsl.col] */
+        public interface ColumnGroupName
+    }
 
     /**
      * ## Col
