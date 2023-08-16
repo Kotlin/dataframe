@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowFilter
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.CommonFirstDocs.Examples
 import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage
 import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage.ColumnGroupName
@@ -92,13 +93,13 @@ public interface FirstColumnsSelectionDsl {
      *
      * @include [ColumnsSelectionDsl.UsageTemplate]
      * {@setArg [ColumnsSelectionDsl.UsageTemplate.PlainDslFunctionsArg]
-     *   {@include [PlainDslName]} {@include [ColumnsSelectionDsl.UsageTemplate.OptionalColumnFilter]}
+     *   {@include [PlainDslName]} **`[`**` { `{@include [ColumnsSelectionDsl.UsageTemplate.ColumnFilterCondition]}` \\} `**`]`**
      * }
      * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnSetFunctionsArg]
-     *   {@include [Indent]}{@include [ColumnSetName]} {@include [ColumnsSelectionDsl.UsageTemplate.OptionalColumnFilter]}
+     *   {@include [Indent]}{@include [ColumnSetName]} **`[`**` { `{@include [ColumnsSelectionDsl.UsageTemplate.ColumnFilterCondition]}` \\} `**`]`**
      * }
      * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnGroupFunctionsArg]
-     *   {@include [Indent]}{@include [ColumnGroupName]} {@include [ColumnsSelectionDsl.UsageTemplate.OptionalColumnFilter]}
+     *   {@include [Indent]}{@include [ColumnGroupName]} **`[`**` { `{@include [ColumnsSelectionDsl.UsageTemplate.ColumnFilterCondition]}` \\} `**`]`**
      * }
      */
     public interface Usage {

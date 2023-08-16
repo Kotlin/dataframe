@@ -5,6 +5,8 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage.ColumnGroupName
+import org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage.ColumnSetName
 import org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage.PlainDslName
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
@@ -121,60 +123,65 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      * @include [UsageTemplate]
      * {@setArg [UsageTemplate.PlainDslFunctionsArg]
-     *   (
-     *   {@include [FirstColumnsSelectionDsl.Usage.PlainDslName]} |
-     *   {@include [LastColumnsSelectionDsl.Usage.PlainDslName]} |
-     *   {@include [SingleColumnsSelectionDsl.Usage.PlainDslName]}
-     *   ) {@include [UsageTemplate.OptionalColumnFilter]}
-     *   |
+     *   **`(`**
+     *   {@include [FirstColumnsSelectionDsl.Usage.PlainDslName]}
+     *   **`|`** {@include [LastColumnsSelectionDsl.Usage.PlainDslName]}
+     *   **`|`** {@include [SingleColumnsSelectionDsl.Usage.PlainDslName]}
+     *   **`)`** **`[`**` { `{@include [UsageTemplate.ColumnFilterCondition]}` \\} `**`]`**
      *
-     *   {@include [PlainDslName]}`({@include [ColumnsSelectionDsl.UsageTemplate.ColumnRefArgumentName]} | {@include [ColumnsSelectionDsl.UsageTemplate.IndexArgumentName]})`
-     *   |
+     *   **`|`** {@include [ColColumnsSelectionDsl.Usage.PlainDslName]}`({@include [ColumnsSelectionDsl.UsageTemplate.ColumnRefArgumentName]} `**`|`**` {@include [ColumnsSelectionDsl.UsageTemplate.IndexArgumentName]})`
      *
-     *   TODO
+     *   **`|`** TODO
      * }
      * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
-     *   {@include [Indent]}(
-     *   {@include [FirstColumnsSelectionDsl.Usage.ColumnSetName]} |
-     *   {@include [LastColumnsSelectionDsl.Usage.ColumnSetName]} |
-     *   {@include [SingleColumnsSelectionDsl.Usage.ColumnSetName]}
-     *   ) {@include [UsageTemplate.OptionalColumnFilter]}
-     *   |
+     *   {@include [Indent]}**`(`**
+     *   {@include [FirstColumnsSelectionDsl.Usage.ColumnSetName]}
+     *   **`|`** {@include [LastColumnsSelectionDsl.Usage.ColumnSetName]}
+     *   **`|`** {@include [SingleColumnsSelectionDsl.Usage.ColumnSetName]}
+     *   **`)`** **`[`**` { `{@include [UsageTemplate.ColumnFilterCondition]}` \\} `**`]`**
      *
-     *   {@include [Indent]}TODO
+     *   {@include [Indent]}**`|`** {@include [ColColumnsSelectionDsl.Usage.ColumnSetName]}`({@include [UsageTemplate.IndexArgumentName]})` **`|`** [`[`][ColumnsSelectionDsl.col]`{@include [UsageTemplate.IndexArgumentName]}`[`]`][ColumnsSelectionDsl.col]
+     *
+     *   {@include [Indent]}**`|`** TODO
      * }
      * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
-     *   {@include [Indent]}(
-     *   {@include [FirstColumnsSelectionDsl.Usage.ColumnGroupName]} |
-     *   {@include [LastColumnsSelectionDsl.Usage.ColumnGroupName]} |
-     *   {@include [SingleColumnsSelectionDsl.Usage.ColumnGroupName]}
-     *   ) {@include [UsageTemplate.OptionalColumnFilter]}
-     *   |
+     *   {@include [Indent]}**`(`**
+     *   {@include [FirstColumnsSelectionDsl.Usage.ColumnGroupName]}
+     *   **`|`** {@include [LastColumnsSelectionDsl.Usage.ColumnGroupName]}
+     *   **`|`** {@include [SingleColumnsSelectionDsl.Usage.ColumnGroupName]}
+     *   **`)`** **`[`**` { `{@include [UsageTemplate.ColumnFilterCondition]}` \\} `**`]`**
      *
-     *   {@include [Indent]}TODO
+     *   {@include [Indent]}**`|`** {@include [ColColumnsSelectionDsl.Usage.ColumnGroupName]}`({@include [UsageTemplate.ColumnRefArgumentName]} `**`|`**` {@include [UsageTemplate.IndexArgumentName]})`
+     *
+     *   {@include [Indent]}**`|`** TODO
      * }
      */
     public interface Usage
 
     /**
      * {@include [LineBreak]}
-     * `columnSet: `[ColumnSet][ColumnSet]`<*>
+     * `columnSet: `[ColumnSet][ColumnSet]`<*>`
      * {@include [LineBreak]}
-     * `columnGroup: `[SingleColumn][SingleColumn]`<`[DataRow][DataRow]`<*>> | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][ColumnPath]
+     * `columnGroup: `[SingleColumn][SingleColumn]`<`[DataRow][DataRow]`<*>>` **`|`** [String][String]
+     *
+     * {@include [Indent]}**`|`** [KProperty][KProperty]`<*>` **`|`** [ColumnPath][ColumnPath]
      * {@include [LineBreak]}
-     * `columnRef: `[ColumnAccessor][ColumnAccessor]` | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][ColumnPath]
+     * `columnRef: `[ColumnAccessor][ColumnAccessor] **`|`** [String][String] **`|`** [KProperty][KProperty]`<*>` **`|`** [ColumnPath][ColumnPath]
      * {@include [LineBreak]}
      * `index: `[Int][Int]
-     *
+     * {@include [LineBreak]}
      * ### In the plain DSL:
+     * {@include [LineBreak]}
      * {@getArg [ColumnsSelectionDsl.UsageTemplate.PlainDslFunctionsArg]}
-     *
+     * {@include [LineBreak]}
      * ### On a [ColumnSet]:
+     * {@include [LineBreak]}
      * `columnSet`
      *
      * {@getArg [ColumnsSelectionDsl.UsageTemplate.ColumnSetFunctionsArg]}
-     *
+     * {@include [LineBreak]}
      * ### On a column group reference:
+     * {@include [LineBreak]}
      * `columnGroup`
      *
      * {@getArg [ColumnsSelectionDsl.UsageTemplate.ColumnGroupFunctionsArg]}
@@ -187,8 +194,8 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
 
         public interface ColumnGroupFunctionsArg
 
-        /** `[ \{ `[condition][ColumnFilter]` \\\\} ]` */
-        public interface OptionalColumnFilter
+        /** [condition][ColumnFilter] */
+        public interface ColumnFilterCondition
 
         /** columnRef */
         public interface ColumnRefArgumentName

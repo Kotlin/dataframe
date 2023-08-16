@@ -46,17 +46,33 @@ public data class Update<T, C>(
      *
      * {@getArg [UpdateOperationArg]} `{ `[columns][SelectingColumns]` }`
      *
-     * - `[.`[where][Update.where]` { `[rowValueCondition][SelectingRows.RowValueCondition.WithExample]` } ]`
+     * {@include [Indent]}
+     * **`[`** `.`[where][Update.where]` { `[rowValueCondition][SelectingRows.RowValueCondition.WithExample]` }` **`]`**
      *
-     * - `[.`[at][Update.at]` (`[rowIndices][CommonUpdateAtFunctionDoc.RowIndicesParam]`) ]`
+     * {@include [Indent]}
+     * **`[`** `.`[at][Update.at]`(`[rowIndices][CommonUpdateAtFunctionDoc.RowIndicesParam]`) `**`]`**
      *
-     * - `.`[with][Update.with]` { `[rowExpression][ExpressionsGivenRow.RowValueExpression.WithExample]` }
-     *   | .`[notNull][Update.notNull]` { `[rowExpression][ExpressionsGivenRow.RowValueExpression.WithExample]` }
-     *   | .`[perCol][Update.perCol]` { `[colExpression][ExpressionsGivenColumn.ColumnExpression.WithExample]` }
-     *   | .`[perRowCol][Update.perRowCol]` { `[rowColExpression][ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]` }
-     *   | .`[withNull][Update.withNull]`()
-     *   | .`[withZero][Update.withZero]`()
-     *   | .`[asFrame][Update.asFrame]` { `[dataFrameExpression][ExpressionsGivenDataFrame.DataFrameExpression.WithExample]` }`
+     * {@include [Indent]}
+     * `.`[with][Update.with]` { `[rowExpression][ExpressionsGivenRow.RowValueExpression.WithExample]` }`
+     *
+     * {@include [Indent]}
+     * **`|`**` .`[notNull][Update.notNull]` { `[rowExpression][ExpressionsGivenRow.RowValueExpression.WithExample]` }`
+     *
+     * {@include [Indent]}
+     * **`|`**` .`[perCol][Update.perCol]` { `[colExpression][ExpressionsGivenColumn.ColumnExpression.WithExample]` }`
+     *
+     * {@include [Indent]}
+     * **`|`**` .`[perRowCol][Update.perRowCol]` { `[rowColExpression][ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]` }`
+     *
+     * {@include [Indent]}
+     * **`|`**` .`[withNull][Update.withNull]`()`
+     *
+     * {@include [Indent]}
+     * **`|`**` .`[withZero][Update.withZero]`()`
+     *
+     * {@include [Indent]}
+     * **`|`**` .`[asFrame][Update.asFrame]` { `[dataFrameExpression][ExpressionsGivenDataFrame.DataFrameExpression.WithExample]` }`
+     * 
      * {@setArg [UpdateOperationArg] [update][update]}{@comment The default name of the `update` operation function name.}
      */
     public interface Usage

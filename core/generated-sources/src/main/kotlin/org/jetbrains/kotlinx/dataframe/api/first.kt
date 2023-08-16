@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowFilter
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.CommonFirstDocs.Examples
 import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage
 import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage.ColumnGroupName
@@ -93,32 +94,49 @@ public interface FirstColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>
+     * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `columnGroup: `[SingleColumn][SingleColumn]`<`[DataRow][DataRow]`<*>> | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][ColumnPath]
+     * `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>` **`|`** [String][String]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;**`|`** [KProperty][KProperty]`<*>` **`|`** [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `columnRef: `[ColumnAccessor][ColumnAccessor]` | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][ColumnPath]
+     * `columnRef: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] **`|`** [String][String] **`|`** [KProperty][KProperty]`<*>` **`|`** [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * `index: `[Int][Int]
      *
-     * ### In the plain DSL:
-     * [first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first] `[ { `[condition][org.jetbrains.kotlinx.dataframe.ColumnFilter]` } ]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * ### On a [ColumnSet]:
+     * ### In the plain DSL:
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * [first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first] **`[`**` { `[condition][org.jetbrains.kotlinx.dataframe.ColumnFilter]` } `**`]`**
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
      * `columnSet`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;.[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first] `[ { `[condition][org.jetbrains.kotlinx.dataframe.ColumnFilter]` } ]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;.[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first] **`[`**` { `[condition][org.jetbrains.kotlinx.dataframe.ColumnFilter]` } `**`]`**
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * ### On a column group reference:
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
      * `columnGroup`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;.[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol] `[ { `[condition][org.jetbrains.kotlinx.dataframe.ColumnFilter]` } ]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;.[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol] **`[`**` { `[condition][org.jetbrains.kotlinx.dataframe.ColumnFilter]` } `**`]`**
      *
      *
      *

@@ -27,14 +27,14 @@ public interface ColColumnsSelectionDsl {
      *
      * @include [ColumnsSelectionDsl.UsageTemplate]
      * {@setArg [ColumnsSelectionDsl.UsageTemplate.PlainDslFunctionsArg]
-     *   {@include [PlainDslName]}`({@include [ColumnsSelectionDsl.UsageTemplate.ColumnRefArgumentName]} | {@include [ColumnsSelectionDsl.UsageTemplate.IndexArgumentName]})`
+     *   {@include [PlainDslName]}`({@include [ColumnsSelectionDsl.UsageTemplate.ColumnRefArgumentName]} `**`|`**` {@include [ColumnsSelectionDsl.UsageTemplate.IndexArgumentName]})`
      * }
      * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnSetFunctionsArg]
-     *   {@include [Indent]}{@include [ColumnSetName]}`({@include [ColumnsSelectionDsl.UsageTemplate.IndexArgumentName]}) |`
+     *   {@include [Indent]}{@include [ColumnSetName]}`({@include [ColumnsSelectionDsl.UsageTemplate.IndexArgumentName]})` **`|`**
      *   [`[`][ColumnsSelectionDsl.col]`{@include [ColumnsSelectionDsl.UsageTemplate.IndexArgumentName]}`[`]`][ColumnsSelectionDsl.col]
      * }
      * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnGroupFunctionsArg]
-     *   {@include [Indent]}{@include [ColumnGroupName]}`({@include [ColumnsSelectionDsl.UsageTemplate.ColumnRefArgumentName]} | {@include [ColumnsSelectionDsl.UsageTemplate.IndexArgumentName]})`
+     *   {@include [Indent]}{@include [ColumnGroupName]}`({@include [ColumnsSelectionDsl.UsageTemplate.ColumnRefArgumentName]} `**`|`**` {@include [ColumnsSelectionDsl.UsageTemplate.IndexArgumentName]})`
      * }
      */
     public interface Usage {

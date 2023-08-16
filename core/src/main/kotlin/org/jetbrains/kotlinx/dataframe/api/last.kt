@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.*
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage.ColumnGroupName
 import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage.ColumnSetName
 import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage.PlainDslName
@@ -81,13 +82,13 @@ public interface LastColumnsSelectionDsl {
      *
      * @include [ColumnsSelectionDsl.UsageTemplate]
      * {@setArg [ColumnsSelectionDsl.UsageTemplate.PlainDslFunctionsArg]
-     *   {@include [PlainDslName]} {@include [ColumnsSelectionDsl.UsageTemplate.OptionalColumnFilter]}
+     *   {@include [PlainDslName]} **`[`**` { `{@include [ColumnsSelectionDsl.UsageTemplate.ColumnFilterCondition]}` \\} `**`]`**
      * }
      * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnSetFunctionsArg]
-     *   {@include [Indent]}{@include [ColumnSetName]} {@include [ColumnsSelectionDsl.UsageTemplate.OptionalColumnFilter]}
+     *   {@include [Indent]}{@include [ColumnSetName]} **`[`**` { `{@include [ColumnsSelectionDsl.UsageTemplate.ColumnFilterCondition]}` \\} `**`]`**
      * }
      * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnGroupFunctionsArg]
-     *   {@include [Indent]}{@include [ColumnGroupName]} {@include [ColumnsSelectionDsl.UsageTemplate.OptionalColumnFilter]}
+     *   {@include [Indent]}{@include [ColumnGroupName]} **`[`**` { `{@include [ColumnsSelectionDsl.UsageTemplate.ColumnFilterCondition]}` \\} `**`]`**
      * }
      */
     public interface Usage {
