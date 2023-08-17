@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -27,25 +28,27 @@ public interface ColColumnsSelectionDsl {
      *
      * @include [ColumnsSelectionDsl.UsageTemplate]
      * {@setArg [ColumnsSelectionDsl.UsageTemplate.PlainDslFunctionsArg]
-     *   {@include [PlainDslName]}`({@include [ColumnsSelectionDsl.UsageTemplate.ColumnRefArgumentName]} `**`|`**` {@include [ColumnsSelectionDsl.UsageTemplate.IndexArgumentName]})`
+     *   {@include [PlainDslName]}**`(`**{@include [ColumnsSelectionDsl.UsageTemplate.ColumnRef]}` | `{@include [ColumnsSelectionDsl.UsageTemplate.Index]}**`)`**
      * }
+     *
      * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnSetFunctionsArg]
-     *   {@include [Indent]}{@include [ColumnSetName]}`({@include [ColumnsSelectionDsl.UsageTemplate.IndexArgumentName]})` **`|`**
-     *   [`[`][ColumnsSelectionDsl.col]`{@include [ColumnsSelectionDsl.UsageTemplate.IndexArgumentName]}`[`]`][ColumnsSelectionDsl.col]
+     *   {@include [Indent]}{@include [ColumnSetName]}**`(`**{@include [ColumnsSelectionDsl.UsageTemplate.Index]}**`)`**
+     *   `|` [**`[`**][ColumnsSelectionDsl.col]{@include [ColumnsSelectionDsl.UsageTemplate.Index]}[**`]`**][ColumnsSelectionDsl.col]
      * }
+     *
      * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnGroupFunctionsArg]
-     *   {@include [Indent]}{@include [ColumnGroupName]}`({@include [ColumnsSelectionDsl.UsageTemplate.ColumnRefArgumentName]} `**`|`**` {@include [ColumnsSelectionDsl.UsageTemplate.IndexArgumentName]})`
+     *   {@include [Indent]}{@include [ColColumnsSelectionDsl.Usage.ColumnGroupName]}**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.Index]}**`)`**
      * }
      */
     public interface Usage {
 
-        /** [col][ColumnsSelectionDsl.col] */
+        /** [**col**][ColumnsSelectionDsl.col] */
         public interface PlainDslName
 
-        /** .[col][ColumnsSelectionDsl.col] */
+        /** .[**col**][ColumnsSelectionDsl.col] */
         public interface ColumnSetName
 
-        /** .[col][ColumnsSelectionDsl.col] */
+        /** .[**col**][ColumnsSelectionDsl.col] */
         public interface ColumnGroupName
     }
 

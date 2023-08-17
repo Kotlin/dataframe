@@ -62,24 +62,26 @@ public interface SingleColumnsSelectionDsl {
      *
      * @include [ColumnsSelectionDsl.UsageTemplate]
      * {@setArg [ColumnsSelectionDsl.UsageTemplate.PlainDslFunctionsArg]
-     *   {@include [PlainDslName]} **`[`**` { `{@include [ColumnsSelectionDsl.UsageTemplate.ColumnFilterCondition]}` \\} `**`]`**
+     *   {@include [PlainDslName]}` [` **`{ `**{@include [ColumnsSelectionDsl.UsageTemplate.Condition]}**` \\}`** `]`
      * }
+     *
      * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnSetFunctionsArg]
-     *   {@include [Indent]}{@include [ColumnSetName]} **`[`**` { `{@include [ColumnsSelectionDsl.UsageTemplate.ColumnFilterCondition]}` \\} `**`]`**
+     *   {@include [Indent]}{@include [ColumnSetName]}` [` **`{ `**{@include [ColumnsSelectionDsl.UsageTemplate.Condition]}**` \\}`** `]`
      * }
+     *
      * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnGroupFunctionsArg]
-     *   {@include [Indent]}{@include [ColumnGroupName]} **`[`**` { `{@include [ColumnsSelectionDsl.UsageTemplate.ColumnFilterCondition]}` \\} `**`]`**
+     *   {@include [Indent]}{@include [ColumnGroupName]}` [` **`{ `**{@include [ColumnsSelectionDsl.UsageTemplate.Condition]}**` \\}`** `]`
      * }
      */
     public interface Usage {
 
-        /** [single][ColumnsSelectionDsl.single] */
+        /** [**single**][ColumnsSelectionDsl.single] */
         public interface PlainDslName
 
-        /** .[single][ColumnsSelectionDsl.single] */
+        /** .[**single**][ColumnsSelectionDsl.single] */
         public interface ColumnSetName
 
-        /** .[singleCol][ColumnsSelectionDsl.singleCol] */
+        /** .[**singleCol**][ColumnsSelectionDsl.singleCol] */
         public interface ColumnGroupName
     }
 

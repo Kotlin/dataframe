@@ -5,7 +5,6 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowFilter
-import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.CommonFirstDocs.Examples
 import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage
 import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage.ColumnGroupName
@@ -93,24 +92,26 @@ public interface FirstColumnsSelectionDsl {
      *
      * @include [ColumnsSelectionDsl.UsageTemplate]
      * {@setArg [ColumnsSelectionDsl.UsageTemplate.PlainDslFunctionsArg]
-     *   {@include [PlainDslName]} **`[`**` { `{@include [ColumnsSelectionDsl.UsageTemplate.ColumnFilterCondition]}` \\} `**`]`**
+     *   {@include [PlainDslName]}` [` **`{ `**{@include [ColumnsSelectionDsl.UsageTemplate.Condition]}**` \\}`** `]`
      * }
+     *
      * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnSetFunctionsArg]
-     *   {@include [Indent]}{@include [ColumnSetName]} **`[`**` { `{@include [ColumnsSelectionDsl.UsageTemplate.ColumnFilterCondition]}` \\} `**`]`**
+     *   {@include [Indent]}{@include [ColumnSetName]}` [` **`{ `**{@include [ColumnsSelectionDsl.UsageTemplate.Condition]}**` \\}`** `]`
      * }
+     *
      * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnGroupFunctionsArg]
-     *   {@include [Indent]}{@include [ColumnGroupName]} **`[`**` { `{@include [ColumnsSelectionDsl.UsageTemplate.ColumnFilterCondition]}` \\} `**`]`**
+     *   {@include [Indent]}{@include [ColumnGroupName]}` [` **`{ `**{@include [ColumnsSelectionDsl.UsageTemplate.Condition]}**` \\}`** `]`
      * }
      */
     public interface Usage {
 
-        /** [first][ColumnsSelectionDsl.first] */
+        /** [**first**][ColumnsSelectionDsl.first] */
         public interface PlainDslName
 
-        /** .[first][ColumnsSelectionDsl.first] */
+        /** .[**first**][ColumnsSelectionDsl.first] */
         public interface ColumnSetName
 
-        /** .[firstCol][ColumnsSelectionDsl.firstCol] */
+        /** .[**firstCol**][ColumnsSelectionDsl.firstCol] */
         public interface ColumnGroupName
     }
 

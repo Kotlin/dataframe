@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -26,65 +27,85 @@ public interface ColColumnsSelectionDsl {
      * ## Col Usage
      *
      *
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>` **`|`** [String][String]
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;**`|`** [KProperty][KProperty]`<*>` **`|`** [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `columnRef: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] **`|`** [String][String] **`|`** [KProperty][KProperty]`<*>` **`|`** [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     * `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `[KProperty][KProperty]`<*>` | `[ColumnPath][ColumnPath]
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * `condition: `[ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter]
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * `columnRef: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]` | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * `index: `[Int][Int]
      *
+     *
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * ### In the plain DSL:
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]`(columnRef `**`|`**` index)`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * [**col**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]**`(`**[columnRef][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnRefDef]` | `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]**`)`**
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `columnSet`
+     * ### On a [org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;.[col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]`(index)` **`|`**
-     *   [`[`][ColumnsSelectionDsl.col]`index`[`]`][ColumnsSelectionDsl.col]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * [columnSet][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;.[**col**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]**`(`**[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]**`)`**
+     *   `|` [**`[`**][ColumnsSelectionDsl.col][index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef][**`]`**][ColumnsSelectionDsl.col]
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * ### On a column group reference:
      *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `columnGroup`
+     * [columnGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;.[col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]`(columnRef `**`|`**` index)`
+     * &nbsp;&nbsp;&nbsp;&nbsp;.[**col**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]**`(`**[columnRef][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnRefDef]` | `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]**`)`**
+     *
+     *
      *
      *
      *
      */
     public interface Usage {
 
-        /** [col][ColumnsSelectionDsl.col] */
+        /** [**col**][ColumnsSelectionDsl.col] */
         public interface PlainDslName
 
-        /** .[col][ColumnsSelectionDsl.col] */
+        /** .[**col**][ColumnsSelectionDsl.col] */
         public interface ColumnSetName
 
-        /** .[col][ColumnsSelectionDsl.col] */
+        /** .[**col**][ColumnsSelectionDsl.col] */
         public interface ColumnGroupName
     }
 

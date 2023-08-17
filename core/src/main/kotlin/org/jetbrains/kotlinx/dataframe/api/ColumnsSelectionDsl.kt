@@ -5,9 +5,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage.PlainDslName
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -123,85 +120,132 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      * @include [UsageTemplate]
      * {@setArg [UsageTemplate.PlainDslFunctionsArg]
-     *   **`(`**
+     *   `(`
      *   {@include [FirstColumnsSelectionDsl.Usage.PlainDslName]}
-     *   **`|`** {@include [LastColumnsSelectionDsl.Usage.PlainDslName]}
-     *   **`|`** {@include [SingleColumnsSelectionDsl.Usage.PlainDslName]}
-     *   **`)`** **`[`**` { `{@include [UsageTemplate.ColumnFilterCondition]}` \\} `**`]`**
+     *   `|` {@include [LastColumnsSelectionDsl.Usage.PlainDslName]}
+     *   `|` {@include [SingleColumnsSelectionDsl.Usage.PlainDslName]}
+     *   `) [` **`{ `**{@include [UsageTemplate.Condition]}**` \\}`** `]`
      *
-     *   **`|`** {@include [ColColumnsSelectionDsl.Usage.PlainDslName]}`({@include [ColumnsSelectionDsl.UsageTemplate.ColumnRefArgumentName]} `**`|`**` {@include [ColumnsSelectionDsl.UsageTemplate.IndexArgumentName]})`
+     *   `|` {@include [ColColumnsSelectionDsl.Usage.PlainDslName]}**`(`**{@include [ColumnsSelectionDsl.UsageTemplate.ColumnRef]}` | `{@include [ColumnsSelectionDsl.UsageTemplate.Index]}**`)`**
      *
-     *   **`|`** TODO
+     *   `|` TODO
      * }
+     *
      * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
-     *   {@include [Indent]}**`(`**
+     *   {@include [Indent]}`(`
      *   {@include [FirstColumnsSelectionDsl.Usage.ColumnSetName]}
-     *   **`|`** {@include [LastColumnsSelectionDsl.Usage.ColumnSetName]}
-     *   **`|`** {@include [SingleColumnsSelectionDsl.Usage.ColumnSetName]}
-     *   **`)`** **`[`**` { `{@include [UsageTemplate.ColumnFilterCondition]}` \\} `**`]`**
+     *   `|` {@include [LastColumnsSelectionDsl.Usage.ColumnSetName]}
+     *   `|` {@include [SingleColumnsSelectionDsl.Usage.ColumnSetName]}
+     *   `) [` **`{ `**{@include [UsageTemplate.Condition]}**` \\}`** `]`
      *
-     *   {@include [Indent]}**`|`** {@include [ColColumnsSelectionDsl.Usage.ColumnSetName]}`({@include [UsageTemplate.IndexArgumentName]})` **`|`** [`[`][ColumnsSelectionDsl.col]`{@include [UsageTemplate.IndexArgumentName]}`[`]`][ColumnsSelectionDsl.col]
+     *   {@include [Indent]}`|` {@include [ColColumnsSelectionDsl.Usage.ColumnSetName]}**`(`**{@include [UsageTemplate.Index]}**`)`**
+     *   `|` [**`[`**][ColumnsSelectionDsl.col]{@include [UsageTemplate.Index]}[**`]`**][ColumnsSelectionDsl.col]
      *
-     *   {@include [Indent]}**`|`** TODO
+     *   {@include [Indent]}`|` TODO
      * }
+     *
      * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
-     *   {@include [Indent]}**`(`**
+     *   {@include [Indent]}`(`
      *   {@include [FirstColumnsSelectionDsl.Usage.ColumnGroupName]}
-     *   **`|`** {@include [LastColumnsSelectionDsl.Usage.ColumnGroupName]}
-     *   **`|`** {@include [SingleColumnsSelectionDsl.Usage.ColumnGroupName]}
-     *   **`)`** **`[`**` { `{@include [UsageTemplate.ColumnFilterCondition]}` \\} `**`]`**
+     *   `|` {@include [LastColumnsSelectionDsl.Usage.ColumnGroupName]}
+     *   `|` {@include [SingleColumnsSelectionDsl.Usage.ColumnGroupName]}
+     *   `) [` **`{ `**{@include [UsageTemplate.Condition]}**` \\}`** `]`
      *
-     *   {@include [Indent]}**`|`** {@include [ColColumnsSelectionDsl.Usage.ColumnGroupName]}`({@include [UsageTemplate.ColumnRefArgumentName]} `**`|`**` {@include [UsageTemplate.IndexArgumentName]})`
+     *   {@include [Indent]}`|` {@include [ColColumnsSelectionDsl.Usage.ColumnGroupName]}**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.Index]}**`)`**
      *
-     *   {@include [Indent]}**`|`** TODO
+     *   {@include [Indent]}`|` TODO
      * }
      */
     public interface Usage
 
     /**
-     * {@include [LineBreak]}
-     * `columnSet: `[ColumnSet][ColumnSet]`<*>`
-     * {@include [LineBreak]}
-     * `columnGroup: `[SingleColumn][SingleColumn]`<`[DataRow][DataRow]`<*>>` **`|`** [String][String]
+     * {@comment All definitions first.}
      *
-     * {@include [Indent]}**`|`** [KProperty][KProperty]`<*>` **`|`** [ColumnPath][ColumnPath]
      * {@include [LineBreak]}
-     * `columnRef: `[ColumnAccessor][ColumnAccessor] **`|`** [String][String] **`|`** [KProperty][KProperty]`<*>` **`|`** [ColumnPath][ColumnPath]
+     * {@include [ColumnsSelectionDsl.UsageTemplate.ColumnSetDef]}
+     *
      * {@include [LineBreak]}
-     * `index: `[Int][Int]
+     * {@include [ColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]}
+     *
+     * {@include [LineBreak]}
+     * {@include [ColumnsSelectionDsl.UsageTemplate.ConditionDef]}
+     *
+     * {@include [LineBreak]}
+     * {@include [ColumnsSelectionDsl.UsageTemplate.ColumnRefDef]}
+     *
+     * {@include [LineBreak]}
+     * {@include [ColumnsSelectionDsl.UsageTemplate.IndexDef]}
+     *
+     * {@comment Then the usage of the functions per receiver.}
+     *
      * {@include [LineBreak]}
      * ### In the plain DSL:
+     *
      * {@include [LineBreak]}
      * {@getArg [ColumnsSelectionDsl.UsageTemplate.PlainDslFunctionsArg]}
+     *
      * {@include [LineBreak]}
-     * ### On a [ColumnSet]:
+     * ### On a [org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *
      * {@include [LineBreak]}
-     * `columnSet`
+     * {@include [ColumnSet]}
      *
      * {@getArg [ColumnsSelectionDsl.UsageTemplate.ColumnSetFunctionsArg]}
+     *
      * {@include [LineBreak]}
      * ### On a column group reference:
+     *
      * {@include [LineBreak]}
-     * `columnGroup`
+     * {@include [ColumnGroup]}
      *
      * {@getArg [ColumnsSelectionDsl.UsageTemplate.ColumnGroupFunctionsArg]}
      */
     public interface UsageTemplate {
 
+        /* What to put in the plain dsl part. Does not need indents. */
         public interface PlainDslFunctionsArg
 
+        /* What to put in the column set part. Needs indents. */
         public interface ColumnSetFunctionsArg
 
+        /* What to put in the column group part. Needs indents. */
         public interface ColumnGroupFunctionsArg
 
-        /** [condition][ColumnFilter] */
-        public interface ColumnFilterCondition
+        /** `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>` */
+        public interface ColumnSetDef
 
-        /** columnRef */
-        public interface ColumnRefArgumentName
+        /**
+         * `columnGroup: `[SingleColumn][SingleColumn]`<`[DataRow][DataRow]`<*>> | `[String][String]
+         *
+         * {@include [Indent]}`| `[KProperty][KProperty]`<*>` | `[ColumnPath][ColumnPath]
+         */
+        public interface ColumnGroupDef
 
-        /** index */
-        public interface IndexArgumentName
+        /**
+         * `columnRef: `[ColumnAccessor][ColumnAccessor]` | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][ColumnPath]
+         */
+        public interface ColumnRefDef
+
+        /** `index: `[Int][Int] */
+        public interface IndexDef
+
+        /** `condition: `[ColumnFilter][ColumnFilter] */
+        public interface ConditionDef
+
+        /** [columnSet][ColumnSetDef] */
+        public interface ColumnSet
+
+        /** [columnGroup][ColumnGroupDef] */
+        public interface ColumnGroup
+
+        /** [condition][ConditionDef] */
+        public interface Condition
+
+        /** [columnRef][ColumnRefDef] */
+        public interface ColumnRef
+
+        /** [index][IndexDef] */
+        public interface Index
     }
 
     /**

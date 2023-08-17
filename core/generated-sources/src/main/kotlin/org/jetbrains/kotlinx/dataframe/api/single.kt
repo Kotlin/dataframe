@@ -61,64 +61,84 @@ public interface SingleColumnsSelectionDsl {
      * ## Single (Col) Usage
      *
      *
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>` **`|`** [String][String]
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;**`|`** [KProperty][KProperty]`<*>` **`|`** [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `columnRef: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] **`|`** [String][String] **`|`** [KProperty][KProperty]`<*>` **`|`** [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     * `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `[KProperty][KProperty]`<*>` | `[ColumnPath][ColumnPath]
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * `condition: `[ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter]
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * `columnRef: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]` | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * `index: `[Int][Int]
      *
+     *
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * ### In the plain DSL:
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * [single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single] **`[`**` { `[condition][org.jetbrains.kotlinx.dataframe.ColumnFilter]` } `**`]`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * [**single**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `]`
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `columnSet`
+     * ### On a [org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;.[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single] **`[`**` { `[condition][org.jetbrains.kotlinx.dataframe.ColumnFilter]` } `**`]`**
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * [columnSet][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;.[**single**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `]`
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * ### On a column group reference:
      *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `columnGroup`
+     * [columnGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;.[singleCol][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.singleCol] **`[`**` { `[condition][org.jetbrains.kotlinx.dataframe.ColumnFilter]` } `**`]`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;.[**singleCol**][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.singleCol]` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `]`
+     *
+     *
      *
      *
      *
      */
     public interface Usage {
 
-        /** [single][ColumnsSelectionDsl.single] */
+        /** [**single**][ColumnsSelectionDsl.single] */
         public interface PlainDslName
 
-        /** .[single][ColumnsSelectionDsl.single] */
+        /** .[**single**][ColumnsSelectionDsl.single] */
         public interface ColumnSetName
 
-        /** .[singleCol][ColumnsSelectionDsl.singleCol] */
+        /** .[**singleCol**][ColumnsSelectionDsl.singleCol] */
         public interface ColumnGroupName
     }
 
