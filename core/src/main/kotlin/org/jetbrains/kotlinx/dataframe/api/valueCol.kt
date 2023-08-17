@@ -36,7 +36,7 @@ public interface ValueColColumnsSelectionDsl {
      *   {@include [LineBreak]}
      *   {@include [UsageTemplate.ColumnGroupDef]}
      *   {@include [LineBreak]}
-     *   {@include [UsageTemplate.ColumnRefDef]}
+     *   {@include [UsageTemplate.ColumnDef]}
      *   {@include [LineBreak]}
      *   {@include [UsageTemplate.IndexDef]}
      *   {@include [LineBreak]}
@@ -44,15 +44,15 @@ public interface ValueColColumnsSelectionDsl {
      * }
      *
      * {@setArg [UsageTemplate.PlainDslFunctionsArg]
-     *   {@include [PlainDslName]}`[`**`<`**{@include [UsageTemplate.ColumnType]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.Index]}**`)`**
+     *   {@include [PlainDslName]}`[`**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.IndexRef]}**`)`**
      * }
      *
      * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
-     *   {@include [Indent]}{@include [ColumnSetName]}**`(`**{@include [UsageTemplate.Index]}**`)`**
+     *   {@include [Indent]}{@include [ColumnSetName]}**`(`**{@include [UsageTemplate.IndexRef]}**`)`**
      * }
      *
      * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
-     *   {@include [Indent]}{@include [ColumnGroupName]}`[`**`<`**{@include [UsageTemplate.ColumnType]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.Index]}**`)`**
+     *   {@include [Indent]}{@include [ColumnGroupName]}`[`**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.IndexRef]}**`)`**
      * }
      */
     public interface Usage {

@@ -6,6 +6,8 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnGroupRef
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnSetRef
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -17,8 +19,12 @@ import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
 import org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.DoubleIndent
+import org.jetbrains.kotlinx.dataframe.documentation.HalfIndent
+import org.jetbrains.kotlinx.dataframe.documentation.QuadrupleIndent
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.QuarterIndent
 import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
 import kotlin.reflect.KProperty
@@ -127,7 +133,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *   {@include [LineBreak]}
      *   {@include [ColumnsSelectionDsl.UsageTemplate.ConditionDef]}
      *   {@include [LineBreak]}
-     *   {@include [ColumnsSelectionDsl.UsageTemplate.ColumnRefDef]}
+     *   {@include [ColumnsSelectionDsl.UsageTemplate.ColumnDef]}
      *   {@include [LineBreak]}
      *   {@include [ColumnsSelectionDsl.UsageTemplate.IndexDef]}
      *   {@include [LineBreak]}
@@ -139,14 +145,14 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *   {@include [FirstColumnsSelectionDsl.Usage.PlainDslName]}
      *   `|` {@include [LastColumnsSelectionDsl.Usage.PlainDslName]}
      *   `|` {@include [SingleColumnsSelectionDsl.Usage.PlainDslName]}
-     *   `) [` **`{ `**{@include [UsageTemplate.Condition]}**` \\}`** `]`
+     *   `) [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
      *
      *   `| (`
      *   {@include [ColColumnsSelectionDsl.Usage.PlainDslName]}
      *   `|` {@include [ValueColColumnsSelectionDsl.Usage.PlainDslName]}
      *   `|` {@include [FrameColColumnsSelectionDsl.Usage.PlainDslName]}
      *   `|` {@include [ColGroupColumnsSelectionDsl.Usage.PlainDslName]}
-     *   `)[`**`<`**{@include [ColumnsSelectionDsl.UsageTemplate.ColumnType]}**`>`**`]`**`(`**{@include [ColumnsSelectionDsl.UsageTemplate.ColumnRef]}` | `{@include [ColumnsSelectionDsl.UsageTemplate.Index]}**`)`**
+     *   `)[`**`<`**{@include [ColumnsSelectionDsl.UsageTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [ColumnsSelectionDsl.UsageTemplate.ColumnRef]}` | `{@include [ColumnsSelectionDsl.UsageTemplate.IndexRef]}**`)`**
      *
      *   `|` TODO
      * }
@@ -156,15 +162,15 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *   {@include [FirstColumnsSelectionDsl.Usage.ColumnSetName]}
      *   `|` {@include [LastColumnsSelectionDsl.Usage.ColumnSetName]}
      *   `|` {@include [SingleColumnsSelectionDsl.Usage.ColumnSetName]}
-     *   `) [` **`{ `**{@include [UsageTemplate.Condition]}**` \\}`** `]`
+     *   `) [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
      *
      *   {@include [Indent]}`| (`
      *   {@include [ColColumnsSelectionDsl.Usage.ColumnSetName]}
      *   `|` {@include [ValueColColumnsSelectionDsl.Usage.ColumnSetName]}
      *   `|` {@include [FrameColColumnsSelectionDsl.Usage.ColumnSetName]}
      *   `|` {@include [ColGroupColumnsSelectionDsl.Usage.ColumnSetName]}
-     *   `)`**`(`**{@include [UsageTemplate.Index]}**`)`**
-     *   `|` [**`[`**][ColumnsSelectionDsl.col]{@include [UsageTemplate.Index]}[**`]`**][ColumnsSelectionDsl.col]
+     *   `)`**`(`**{@include [UsageTemplate.IndexRef]}**`)`**
+     *   `|` [**`[`**][ColumnsSelectionDsl.col]{@include [UsageTemplate.IndexRef]}[**`]`**][ColumnsSelectionDsl.col]
      *
      *   {@include [Indent]}`|` TODO
      * }
@@ -174,14 +180,14 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *   {@include [FirstColumnsSelectionDsl.Usage.ColumnGroupName]}
      *   `|` {@include [LastColumnsSelectionDsl.Usage.ColumnGroupName]}
      *   `|` {@include [SingleColumnsSelectionDsl.Usage.ColumnGroupName]}
-     *   `) [` **`{ `**{@include [UsageTemplate.Condition]}**` \\}`** `]`
+     *   `) [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
      *
      *   {@include [Indent]}`| (`
      *   {@include [ColColumnsSelectionDsl.Usage.ColumnGroupName]}
      *   `|` {@include [ValueColColumnsSelectionDsl.Usage.ColumnGroupName]}
      *   `|` {@include [FrameColColumnsSelectionDsl.Usage.ColumnGroupName]}
      *   `|` {@include [ColGroupColumnsSelectionDsl.Usage.ColumnGroupName]}
-     *   `)[`**`<`**{@include [ColumnsSelectionDsl.UsageTemplate.ColumnType]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.Index]}**`)`**
+     *   `)[`**`<`**{@include [ColumnsSelectionDsl.UsageTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.IndexRef]}**`)`**
      *
      *   {@include [Indent]}`|` TODO
      * }
@@ -189,11 +195,8 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     public interface Usage
 
     /**
-     * {@comment All definitions first.}
      * {@include [LineBreak]}
      * {@getArg [ColumnsSelectionDsl.UsageTemplate.DefinitionsArg]}
-     *
-     * {@comment Then the usage of the functions per receiver.}
      *
      * {@include [LineBreak]}
      * ### In the plain DSL:
@@ -205,7 +208,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      * ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      * {@include [LineBreak]}
-     * {@include [ColumnSet]}
+     * {@include [ColumnSetRef]}
      *
      * {@getArg [ColumnsSelectionDsl.UsageTemplate.ColumnSetFunctionsArg]}
      *
@@ -213,11 +216,13 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      * ### On a column group reference:
      *
      * {@include [LineBreak]}
-     * {@include [ColumnGroup]}
+     * {@include [ColumnGroupRef]}
      *
      * {@getArg [ColumnsSelectionDsl.UsageTemplate.ColumnGroupFunctionsArg]}
      */
     public interface UsageTemplate {
+
+        // region Template arguments
 
         /* What to put in definitions part. */
         public interface DefinitionsArg
@@ -231,20 +236,28 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
         /* What to put in the column group part. Needs indents. */
         public interface ColumnGroupFunctionsArg
 
-        /** `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>` */
+        // endregion
+
+        // region Definitions for at the top of the template
+
+        /** `columnSet: `[ColumnSet][ColumnSet]`<*>` */
         public interface ColumnSetDef
 
         /**
          * `columnGroup: `[SingleColumn][SingleColumn]`<`[DataRow][DataRow]`<*>> | `[String][String]
          *
-         * {@include [Indent]}`| `[KProperty][KProperty]`<*>` | `[ColumnPath][ColumnPath]
+         * {@include [QuadrupleIndent]}{@include [Indent]}{@include [QuarterIndent]}
+         * `| `[KProperty][KProperty]`<*>` | `[ColumnPath][ColumnPath]
          */
         public interface ColumnGroupDef
 
         /**
-         * `columnRef: `[ColumnAccessor][ColumnAccessor]` | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][ColumnPath]
+         * `column: `[ColumnAccessor][ColumnAccessor]` | `[String][String]
+         *
+         * {@include [DoubleIndent]}{@include [HalfIndent]}{@include [QuarterIndent]}
+         * `| `[KProperty][KProperty]`<*> | `[ColumnPath][ColumnPath]
          */
-        public interface ColumnRefDef
+        public interface ColumnDef
 
         /** `T: Column type` */
         public interface ColumnTypeDef
@@ -255,23 +268,29 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
         /** `condition: `[ColumnFilter][ColumnFilter] */
         public interface ConditionDef
 
+        // endregion
+
+        // region References to the definitions
+
         /** [columnSet][ColumnSetDef] */
-        public interface ColumnSet
+        public interface ColumnSetRef
 
         /** [columnGroup][ColumnGroupDef] */
-        public interface ColumnGroup
+        public interface ColumnGroupRef
 
         /** [condition][ConditionDef] */
-        public interface Condition
+        public interface ConditionRef
 
-        /** [columnRef][ColumnRefDef] */
+        /** [column][ColumnDef] */
         public interface ColumnRef
 
         /** [index][IndexDef] */
-        public interface Index
+        public interface IndexRef
 
         /** [T][ColumnTypeDef] */
-        public interface ColumnType
+        public interface ColumnTypeRef
+
+        // endregion
     }
 
     /**

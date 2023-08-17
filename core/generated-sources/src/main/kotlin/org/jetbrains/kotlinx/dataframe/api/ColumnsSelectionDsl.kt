@@ -6,6 +6,8 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnGroupRef
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnSetRef
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -17,8 +19,12 @@ import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
 import org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.DoubleIndent
+import org.jetbrains.kotlinx.dataframe.documentation.HalfIndent
+import org.jetbrains.kotlinx.dataframe.documentation.QuadrupleIndent
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.QuarterIndent
 import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
 import kotlin.reflect.KProperty
@@ -123,7 +129,6 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      * ## [ColumnsSelectionDsl] Usage
      *
      *
-     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
@@ -132,7 +137,8 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *   `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;`| `[KProperty][KProperty]`<*>` | `[ColumnPath][ColumnPath]
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `[KProperty][KProperty]`<*>` | `[ColumnPath][ColumnPath]
      *   
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -140,7 +146,10 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *   
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *   `columnRef: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]` | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *   `column: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]` | `[String][String]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `[KProperty][KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *   
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -149,8 +158,6 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *   `T: Column type`
-     *
-     *
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -171,7 +178,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *   `|` [**valueCol**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]
      *   `|` [**frameCol**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol]
      *   `|` [**colGroup**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]
-     *   `)[`**`<`**[T][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**[columnRef][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnRefDef]` | `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]**`)`**
+     *   `)[`**`<`**[T][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**[column][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnDef]` | `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]**`)`**
      *
      *   `|` TODO
      *
@@ -222,7 +229,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *   `|` .[**valueCol**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]
      *   `|` .[**frameCol**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol]
      *   `|` .[**colGroup**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]
-     *   `)[`**`<`**[T][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**[columnRef][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnRefDef]` | `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]**`)`**
+     *   `)[`**`<`**[T][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**[column][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnDef]` | `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]**`)`**
      *
      *   &nbsp;&nbsp;&nbsp;&nbsp;`|` TODO
      *
@@ -238,12 +245,9 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
 
     /**
      *
-     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * {@getArg [ColumnsSelectionDsl.UsageTemplate.DefinitionsArg]}
-     *
-     *
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -281,6 +285,8 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      */
     public interface UsageTemplate {
 
+        // region Template arguments
+
         /* What to put in definitions part. */
         public interface DefinitionsArg
 
@@ -293,20 +299,28 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
         /* What to put in the column group part. Needs indents. */
         public interface ColumnGroupFunctionsArg
 
-        /** `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>` */
+        // endregion
+
+        // region Definitions for at the top of the template
+
+        /** `columnSet: `[ColumnSet][ColumnSet]`<*>` */
         public interface ColumnSetDef
 
         /**
          * `columnGroup: `[SingleColumn][SingleColumn]`<`[DataRow][DataRow]`<*>> | `[String][String]
          *
-         * &nbsp;&nbsp;&nbsp;&nbsp;`| `[KProperty][KProperty]`<*>` | `[ColumnPath][ColumnPath]
+         * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         * `| `[KProperty][KProperty]`<*>` | `[ColumnPath][ColumnPath]
          */
         public interface ColumnGroupDef
 
         /**
-         * `columnRef: `[ColumnAccessor][ColumnAccessor]` | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][ColumnPath]
+         * `column: `[ColumnAccessor][ColumnAccessor]` | `[String][String]
+         *
+         * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         * `| `[KProperty][KProperty]`<*> | `[ColumnPath][ColumnPath]
          */
-        public interface ColumnRefDef
+        public interface ColumnDef
 
         /** `T: Column type` */
         public interface ColumnTypeDef
@@ -317,23 +331,29 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
         /** `condition: `[ColumnFilter][ColumnFilter] */
         public interface ConditionDef
 
+        // endregion
+
+        // region References to the definitions
+
         /** [columnSet][ColumnSetDef] */
-        public interface ColumnSet
+        public interface ColumnSetRef
 
         /** [columnGroup][ColumnGroupDef] */
-        public interface ColumnGroup
+        public interface ColumnGroupRef
 
         /** [condition][ConditionDef] */
-        public interface Condition
+        public interface ConditionRef
 
-        /** [columnRef][ColumnRefDef] */
+        /** [column][ColumnDef] */
         public interface ColumnRef
 
         /** [index][IndexDef] */
-        public interface Index
+        public interface IndexRef
 
         /** [T][ColumnTypeDef] */
-        public interface ColumnType
+        public interface ColumnTypeRef
+
+        // endregion
     }
 
     /**

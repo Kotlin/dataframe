@@ -63,7 +63,6 @@ public interface SingleColumnsSelectionDsl {
      * ## Single (Col) Usage
      *
      *
-     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
@@ -72,13 +71,12 @@ public interface SingleColumnsSelectionDsl {
      *
      *   `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;`| `[KProperty][KProperty]`<*>` | `[ColumnPath][ColumnPath]
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `[KProperty][KProperty]`<*>` | `[ColumnPath][ColumnPath]
      *   
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *   `condition: `[ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter]
-     *
-     *
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;

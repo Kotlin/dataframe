@@ -31,7 +31,6 @@ public interface ColColumnsSelectionDsl {
      * ## Col Usage
      *
      *
-     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
@@ -40,11 +39,15 @@ public interface ColColumnsSelectionDsl {
      *
      *   `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;`| `[KProperty][KProperty]`<*>` | `[ColumnPath][ColumnPath]
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `[KProperty][KProperty]`<*>` | `[ColumnPath][ColumnPath]
      *   
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *   `columnRef: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]` | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *   `column: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]` | `[String][String]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `[KProperty][KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *   
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -55,8 +58,6 @@ public interface ColColumnsSelectionDsl {
      *   `T: Column type`
      *
      *
-     *
-     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * ### In the plain DSL:
@@ -64,7 +65,7 @@ public interface ColColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [**col**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]`[`**`<`**[T][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**[columnRef][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnRefDef]` | `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]**`)`**
+     * [**col**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]`[`**`<`**[T][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**[column][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnDef]` | `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]**`)`**
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -89,7 +90,7 @@ public interface ColColumnsSelectionDsl {
      *
      * [columnGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;.[**col**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]`[`**`<`**[T][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**[columnRef][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnRefDef]` | `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]**`)`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;.[**col**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]`[`**`<`**[T][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**[column][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnDef]` | `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]**`)`**
      *
      *
      *
