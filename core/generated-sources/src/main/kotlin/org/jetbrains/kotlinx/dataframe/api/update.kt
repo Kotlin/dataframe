@@ -36,42 +36,43 @@ public data class Update<T, C>(
     public fun <R : C> cast(): Update<T, R> =
         Update(df, filter as RowValueFilter<T, R>?, columns as ColumnsSelector<T, R>)
 
-    /** This argument providing the (clickable) name of the update-like function.
+    /* 
+     * This argument providing the (clickable) name of the update-like function.
      * Note: If clickable, make sure to [alias][your type].
      */
     internal interface UpdateOperationArg
 
     /**
-     * ## [update][update] Operation Usage
+     * ## [**update**][update] Operation Usage
      *
-     * [update][update] `{ `[columns][SelectingColumns]` }`
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     * **`[`** `.`[where][Update.where]` { `[rowValueCondition][SelectingRows.RowValueCondition.WithExample]` }` **`]`**
+     * [**update**][update] **`{ `**[columns][SelectingColumns]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * **`[`** `.`[at][Update.at]`(`[rowIndices][CommonUpdateAtFunctionDoc.RowIndicesParam]`) `**`]`**
+     * `[ .`[**where**][Update.where]**` { `**[rowValueCondition][SelectingRows.RowValueCondition.WithExample]**` } `**`]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `.`[with][Update.with]` { `[rowExpression][ExpressionsGivenRow.RowValueExpression.WithExample]` }`
+     * `[ .`[**at**][Update.at]**`(`**[rowIndices][CommonUpdateAtFunctionDoc.RowIndicesParam]**`)`**` ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * **`|`**` .`[notNull][Update.notNull]` { `[rowExpression][ExpressionsGivenRow.RowValueExpression.WithExample]` }`
+     * `.`[**with**][Update.with]**` { `**[rowExpression][ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * **`|`**` .`[perCol][Update.perCol]` { `[colExpression][ExpressionsGivenColumn.ColumnExpression.WithExample]` }`
+     * `| .`[**notNull**][Update.notNull]**` { `**[rowExpression][ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * **`|`**` .`[perRowCol][Update.perRowCol]` { `[rowColExpression][ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]` }`
+     * `| .`[**perCol**][Update.perCol]**` { `**[colExpression][ExpressionsGivenColumn.ColumnExpression.WithExample]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * **`|`**` .`[withNull][Update.withNull]`()`
+     * `| .`[**perRowCol**][Update.perRowCol]**` { `**[rowColExpression][ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * **`|`**` .`[withZero][Update.withZero]`()`
+     * `| .`[**withNull**][Update.withNull]**`()`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * **`|`**` .`[asFrame][Update.asFrame]` { `[dataFrameExpression][ExpressionsGivenDataFrame.DataFrameExpression.WithExample]` }`
+     * `| .`[**withZero**][Update.withZero]**`()`**
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| .`[**asFrame**][Update.asFrame]**` { `**[dataFrameExpression][ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
      *
      *
      */

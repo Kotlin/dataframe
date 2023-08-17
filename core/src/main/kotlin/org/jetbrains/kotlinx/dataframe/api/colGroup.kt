@@ -4,12 +4,17 @@ import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage.ColumnGroupName
+import org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage.ColumnSetName
+import org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage.PlainDslName
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
 import org.jetbrains.kotlinx.dataframe.impl.columns.performCheck
@@ -21,6 +26,46 @@ import kotlin.reflect.KProperty
 
 public interface ColGroupColumnsSelectionDsl {
 
+    /**
+     * ## Col Group Usage
+     *
+     * @include [UsageTemplate]
+     * {@setArg [UsageTemplate.DefinitionsArg]
+     *   {@include [UsageTemplate.ColumnSetDef]}
+     *   {@include [LineBreak]}
+     *   {@include [UsageTemplate.ColumnGroupDef]}
+     *   {@include [LineBreak]}
+     *   {@include [UsageTemplate.ColumnRefDef]}
+     *   {@include [LineBreak]}
+     *   {@include [UsageTemplate.IndexDef]}
+     *   {@include [LineBreak]}
+     *   {@include [UsageTemplate.ColumnTypeDef]}
+     * }
+     *
+     * {@setArg [UsageTemplate.PlainDslFunctionsArg]
+     *   {@include [PlainDslName]}`[`**`<`**{@include [UsageTemplate.ColumnType]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.Index]}**`)`**
+     * }
+     *
+     * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
+     *   {@include [Indent]}{@include [ColumnSetName]}**`(`**{@include [UsageTemplate.Index]}**`)`**
+     * }
+     *
+     * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
+     *   {@include [Indent]}{@include [ColumnGroupName]}`[`**`<`**{@include [UsageTemplate.ColumnType]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.Index]}**`)`**
+     * }
+     */
+    public interface Usage {
+
+        /** [**colGroup**][ColumnsSelectionDsl.colGroup] */
+        public interface PlainDslName
+
+        /** .[**colGroup**][ColumnsSelectionDsl.colGroup] */
+        public interface ColumnSetName
+
+        /** .[**colGroup**][ColumnsSelectionDsl.colGroup] */
+        public interface ColumnGroupName
+    }
+    
     /**
      * ## Col Group
      *
@@ -34,6 +79,8 @@ public interface ColGroupColumnsSelectionDsl {
      * an accessor for a column group inside a [ColumnGroup].
      * {@include [LineBreak]}
      * {@getArg [CommonColGroupDocs.Note]}
+     *
+     * Check out [Usage] for how to use [colGroup].
      *
      * #### For example:
      *

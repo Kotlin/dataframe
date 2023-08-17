@@ -119,6 +119,21 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      * ## [ColumnsSelectionDsl] Usage
      *
      * @include [UsageTemplate]
+     *
+     * {@setArg [UsageTemplate.DefinitionsArg]
+     *   {@include [ColumnsSelectionDsl.UsageTemplate.ColumnSetDef]}
+     *   {@include [LineBreak]}
+     *   {@include [ColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]}
+     *   {@include [LineBreak]}
+     *   {@include [ColumnsSelectionDsl.UsageTemplate.ConditionDef]}
+     *   {@include [LineBreak]}
+     *   {@include [ColumnsSelectionDsl.UsageTemplate.ColumnRefDef]}
+     *   {@include [LineBreak]}
+     *   {@include [ColumnsSelectionDsl.UsageTemplate.IndexDef]}
+     *   {@include [LineBreak]}
+     *   {@include [ColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]}
+     * }
+     *
      * {@setArg [UsageTemplate.PlainDslFunctionsArg]
      *   `(`
      *   {@include [FirstColumnsSelectionDsl.Usage.PlainDslName]}
@@ -126,7 +141,12 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *   `|` {@include [SingleColumnsSelectionDsl.Usage.PlainDslName]}
      *   `) [` **`{ `**{@include [UsageTemplate.Condition]}**` \\}`** `]`
      *
-     *   `|` {@include [ColColumnsSelectionDsl.Usage.PlainDslName]}**`(`**{@include [ColumnsSelectionDsl.UsageTemplate.ColumnRef]}` | `{@include [ColumnsSelectionDsl.UsageTemplate.Index]}**`)`**
+     *   `| (`
+     *   {@include [ColColumnsSelectionDsl.Usage.PlainDslName]}
+     *   `|` {@include [ValueColColumnsSelectionDsl.Usage.PlainDslName]}
+     *   `|` {@include [FrameColColumnsSelectionDsl.Usage.PlainDslName]}
+     *   `|` {@include [ColGroupColumnsSelectionDsl.Usage.PlainDslName]}
+     *   `)[`**`<`**{@include [ColumnsSelectionDsl.UsageTemplate.ColumnType]}**`>`**`]`**`(`**{@include [ColumnsSelectionDsl.UsageTemplate.ColumnRef]}` | `{@include [ColumnsSelectionDsl.UsageTemplate.Index]}**`)`**
      *
      *   `|` TODO
      * }
@@ -138,7 +158,12 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *   `|` {@include [SingleColumnsSelectionDsl.Usage.ColumnSetName]}
      *   `) [` **`{ `**{@include [UsageTemplate.Condition]}**` \\}`** `]`
      *
-     *   {@include [Indent]}`|` {@include [ColColumnsSelectionDsl.Usage.ColumnSetName]}**`(`**{@include [UsageTemplate.Index]}**`)`**
+     *   {@include [Indent]}`| (`
+     *   {@include [ColColumnsSelectionDsl.Usage.ColumnSetName]}
+     *   `|` {@include [ValueColColumnsSelectionDsl.Usage.ColumnSetName]}
+     *   `|` {@include [FrameColColumnsSelectionDsl.Usage.ColumnSetName]}
+     *   `|` {@include [ColGroupColumnsSelectionDsl.Usage.ColumnSetName]}
+     *   `)`**`(`**{@include [UsageTemplate.Index]}**`)`**
      *   `|` [**`[`**][ColumnsSelectionDsl.col]{@include [UsageTemplate.Index]}[**`]`**][ColumnsSelectionDsl.col]
      *
      *   {@include [Indent]}`|` TODO
@@ -151,7 +176,12 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *   `|` {@include [SingleColumnsSelectionDsl.Usage.ColumnGroupName]}
      *   `) [` **`{ `**{@include [UsageTemplate.Condition]}**` \\}`** `]`
      *
-     *   {@include [Indent]}`|` {@include [ColColumnsSelectionDsl.Usage.ColumnGroupName]}**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.Index]}**`)`**
+     *   {@include [Indent]}`| (`
+     *   {@include [ColColumnsSelectionDsl.Usage.ColumnGroupName]}
+     *   `|` {@include [ValueColColumnsSelectionDsl.Usage.ColumnGroupName]}
+     *   `|` {@include [FrameColColumnsSelectionDsl.Usage.ColumnGroupName]}
+     *   `|` {@include [ColGroupColumnsSelectionDsl.Usage.ColumnGroupName]}
+     *   `)[`**`<`**{@include [ColumnsSelectionDsl.UsageTemplate.ColumnType]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.Index]}**`)`**
      *
      *   {@include [Indent]}`|` TODO
      * }
@@ -160,21 +190,8 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
 
     /**
      * {@comment All definitions first.}
-     *
      * {@include [LineBreak]}
-     * {@include [ColumnsSelectionDsl.UsageTemplate.ColumnSetDef]}
-     *
-     * {@include [LineBreak]}
-     * {@include [ColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]}
-     *
-     * {@include [LineBreak]}
-     * {@include [ColumnsSelectionDsl.UsageTemplate.ConditionDef]}
-     *
-     * {@include [LineBreak]}
-     * {@include [ColumnsSelectionDsl.UsageTemplate.ColumnRefDef]}
-     *
-     * {@include [LineBreak]}
-     * {@include [ColumnsSelectionDsl.UsageTemplate.IndexDef]}
+     * {@getArg [ColumnsSelectionDsl.UsageTemplate.DefinitionsArg]}
      *
      * {@comment Then the usage of the functions per receiver.}
      *
@@ -185,7 +202,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      * {@getArg [ColumnsSelectionDsl.UsageTemplate.PlainDslFunctionsArg]}
      *
      * {@include [LineBreak]}
-     * ### On a [org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      * {@include [LineBreak]}
      * {@include [ColumnSet]}
@@ -201,6 +218,9 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      * {@getArg [ColumnsSelectionDsl.UsageTemplate.ColumnGroupFunctionsArg]}
      */
     public interface UsageTemplate {
+
+        /* What to put in definitions part. */
+        public interface DefinitionsArg
 
         /* What to put in the plain dsl part. Does not need indents. */
         public interface PlainDslFunctionsArg
@@ -226,6 +246,9 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
          */
         public interface ColumnRefDef
 
+        /** `T: Column type` */
+        public interface ColumnTypeDef
+
         /** `index: `[Int][Int] */
         public interface IndexDef
 
@@ -246,6 +269,9 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
 
         /** [index][IndexDef] */
         public interface Index
+
+        /** [T][ColumnTypeDef] */
+        public interface ColumnType
     }
 
     /**

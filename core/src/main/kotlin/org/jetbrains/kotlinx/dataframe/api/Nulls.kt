@@ -23,7 +23,7 @@ import kotlin.reflect.KProperty
  */
 internal interface FillNulls {
 
-    /** @include [Update.Usage] {@setArg [UpdateOperationArg] [fillNulls][fillNulls]} */
+    /** @include [Update.Usage] {@setArg [UpdateOperationArg] [**fillNulls**][fillNulls]} */
     interface Usage
 }
 

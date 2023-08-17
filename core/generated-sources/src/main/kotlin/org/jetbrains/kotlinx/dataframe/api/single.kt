@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.CommonSingleDocs.Examples
 import org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage
 import org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage.ColumnGroupName
@@ -18,6 +19,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
@@ -62,32 +64,19 @@ public interface SingleColumnsSelectionDsl {
      *
      *
      *
-     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
-     *
-     *
+     *   
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
+     *   `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`| `[KProperty][KProperty]`<*>` | `[ColumnPath][ColumnPath]
-     *
-     *
+     *   
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `condition: `[ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter]
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * `columnRef: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]` | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * `index: `[Int][Int]
+     *   `condition: `[ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter]
      *
      *
      *
@@ -104,7 +93,7 @@ public interface SingleColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * ### On a [org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -124,6 +113,8 @@ public interface SingleColumnsSelectionDsl {
      * [columnGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;.[**singleCol**][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.singleCol]` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `]`
+     *
+     *
      *
      *
      *
@@ -150,6 +141,8 @@ public interface SingleColumnsSelectionDsl {
      * If multiple columns adhere to it, [IllegalArgumentException] is thrown.
      *
      * NOTE: For [column groups][ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
+     *
+     * Check out [Usage] for how to use [single]/[singleCol].
      *
      * #### Examples:
      *
@@ -181,6 +174,8 @@ public interface SingleColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage] for how to use [single][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.single]/[singleCol][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.singleCol].
+     *
      * #### Examples:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
@@ -210,6 +205,8 @@ public interface SingleColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage] for how to use [single][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.single]/[singleCol][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.singleCol].
+     *
      * #### Examples:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
@@ -236,6 +233,8 @@ public interface SingleColumnsSelectionDsl {
      * If multiple columns adhere to it, [IllegalArgumentException] is thrown.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage] for how to use [single][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.single]/[singleCol][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.singleCol].
      *
      * #### Examples:
      *
@@ -264,6 +263,8 @@ public interface SingleColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage] for how to use [single][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.single]/[singleCol][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.singleCol].
+     *
      * #### Examples:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
@@ -290,6 +291,8 @@ public interface SingleColumnsSelectionDsl {
      * If multiple columns adhere to it, [IllegalArgumentException] is thrown.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage] for how to use [single][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.single]/[singleCol][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.singleCol].
      *
      * #### Examples:
      *
@@ -321,6 +324,8 @@ public interface SingleColumnsSelectionDsl {
      * If multiple columns adhere to it, [IllegalArgumentException] is thrown.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage] for how to use [single][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.single]/[singleCol][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.singleCol].
      *
      * #### Examples:
      *
@@ -354,6 +359,8 @@ public interface SingleColumnsSelectionDsl {
      * If multiple columns adhere to it, [IllegalArgumentException] is thrown.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage] for how to use [single][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.single]/[singleCol][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.singleCol].
      *
      * #### Examples:
      *

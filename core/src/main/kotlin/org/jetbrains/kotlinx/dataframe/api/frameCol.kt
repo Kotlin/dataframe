@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -11,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
 import org.jetbrains.kotlinx.dataframe.impl.columns.performCheck
@@ -21,6 +23,46 @@ import kotlin.reflect.KProperty
 // region ColumnsSelectionDsl
 
 public interface FrameColColumnsSelectionDsl {
+
+    /**
+     * ## Frame Col Usage
+     *
+     * @include [UsageTemplate]
+     * {@setArg [UsageTemplate.DefinitionsArg]
+     *   {@include [UsageTemplate.ColumnSetDef]}
+     *   {@include [LineBreak]}
+     *   {@include [UsageTemplate.ColumnGroupDef]}
+     *   {@include [LineBreak]}
+     *   {@include [UsageTemplate.ColumnRefDef]}
+     *   {@include [LineBreak]}
+     *   {@include [UsageTemplate.IndexDef]}
+     *   {@include [LineBreak]}
+     *   {@include [UsageTemplate.ColumnTypeDef]}
+     * }
+     *
+     * {@setArg [UsageTemplate.PlainDslFunctionsArg]
+     *   {@include [PlainDslName]}`[`**`<`**{@include [UsageTemplate.ColumnType]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.Index]}**`)`**
+     * }
+     *
+     * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
+     *   {@include [Indent]}{@include [ColumnSetName]}**`(`**{@include [UsageTemplate.Index]}**`)`**
+     * }
+     *
+     * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
+     *   {@include [Indent]}{@include [ColumnGroupName]}`[`**`<`**{@include [UsageTemplate.ColumnType]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.Index]}**`)`**
+     * }
+     */
+    public interface Usage {
+
+        /** [**frameCol**][ColumnsSelectionDsl.frameCol] */
+        public interface PlainDslName
+
+        /** .[**frameCol**][ColumnsSelectionDsl.frameCol] */
+        public interface ColumnSetName
+
+        /** .[**frameCol**][ColumnsSelectionDsl.frameCol] */
+        public interface ColumnGroupName
+    }
 
     /**
      * ## Frame Col
@@ -35,6 +77,8 @@ public interface FrameColColumnsSelectionDsl {
      * an accessor for a frame column inside a [ColumnGroup].
      * {@include [LineBreak]}
      * {@getArg [CommonFrameColDocs.Note]}
+     *
+     * Check out [Usage] for how to use [frameCol].
      *
      * #### For example:
      *

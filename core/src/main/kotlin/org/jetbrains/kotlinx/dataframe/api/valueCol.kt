@@ -4,6 +4,10 @@ import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate
+import org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage.ColumnGroupName
+import org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage.ColumnSetName
+import org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage.PlainDslName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -11,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
 import org.jetbrains.kotlinx.dataframe.impl.columns.performCheck
@@ -21,6 +26,46 @@ import kotlin.reflect.KProperty
 // region ColumnsSelectionDsl
 
 public interface ValueColColumnsSelectionDsl {
+
+    /**
+     * ## Value Col Usage
+     *
+     * @include [UsageTemplate]
+     * {@setArg [UsageTemplate.DefinitionsArg]
+     *   {@include [UsageTemplate.ColumnSetDef]}
+     *   {@include [LineBreak]}
+     *   {@include [UsageTemplate.ColumnGroupDef]}
+     *   {@include [LineBreak]}
+     *   {@include [UsageTemplate.ColumnRefDef]}
+     *   {@include [LineBreak]}
+     *   {@include [UsageTemplate.IndexDef]}
+     *   {@include [LineBreak]}
+     *   {@include [UsageTemplate.ColumnTypeDef]}
+     * }
+     *
+     * {@setArg [UsageTemplate.PlainDslFunctionsArg]
+     *   {@include [PlainDslName]}`[`**`<`**{@include [UsageTemplate.ColumnType]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.Index]}**`)`**
+     * }
+     *
+     * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
+     *   {@include [Indent]}{@include [ColumnSetName]}**`(`**{@include [UsageTemplate.Index]}**`)`**
+     * }
+     *
+     * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
+     *   {@include [Indent]}{@include [ColumnGroupName]}`[`**`<`**{@include [UsageTemplate.ColumnType]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.Index]}**`)`**
+     * }
+     */
+    public interface Usage {
+
+        /** [**valueCol**][ColumnsSelectionDsl.valueCol] */
+        public interface PlainDslName
+
+        /** .[**valueCol**][ColumnsSelectionDsl.valueCol] */
+        public interface ColumnSetName
+
+        /** .[**valueCol**][ColumnsSelectionDsl.valueCol] */
+        public interface ColumnGroupName
+    }
 
     /**
      * ## Value Col
@@ -35,6 +80,8 @@ public interface ValueColColumnsSelectionDsl {
      * an accessor for a value column inside a [ColumnGroup].
      * {@include [LineBreak]}
      * {@getArg [CommonValueColDocs.Note]}
+     *
+     * Check out [Usage] for how to use [valueCol].
      *
      * #### For example:
      *

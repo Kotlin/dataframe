@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -11,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
 import org.jetbrains.kotlinx.dataframe.impl.columns.performCheck
@@ -21,6 +23,88 @@ import kotlin.reflect.KProperty
 // region ColumnsSelectionDsl
 
 public interface FrameColColumnsSelectionDsl {
+
+    /**
+     * ## Frame Col Usage
+     *
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     *   
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *   `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `[KProperty][KProperty]`<*>` | `[ColumnPath][ColumnPath]
+     *   
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *   `columnRef: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]` | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *   
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *   `index: `[Int][Int]
+     *   
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *   `T: Column type`
+     *
+     *
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * ### In the plain DSL:
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * [**frameCol**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol]`[`**`<`**[T][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**[columnRef][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnRefDef]` | `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]**`)`**
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * [columnSet][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;.[**frameCol**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol]**`(`**[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]**`)`**
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * ### On a column group reference:
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * [columnGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;.[**frameCol**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol]`[`**`<`**[T][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**[columnRef][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnRefDef]` | `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]**`)`**
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
+    public interface Usage {
+
+        /** [**frameCol**][ColumnsSelectionDsl.frameCol] */
+        public interface PlainDslName
+
+        /** .[**frameCol**][ColumnsSelectionDsl.frameCol] */
+        public interface ColumnSetName
+
+        /** .[**frameCol**][ColumnsSelectionDsl.frameCol] */
+        public interface ColumnGroupName
+    }
 
     /**
      * ## Frame Col
@@ -37,6 +121,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage] for how to use [frameCol].
      *
      * #### For example:
      *
@@ -113,6 +199,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -161,6 +249,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -211,6 +301,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -267,6 +359,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -316,6 +410,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -367,6 +463,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -416,6 +514,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -468,6 +568,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -523,6 +625,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -572,6 +676,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -625,6 +731,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -675,6 +783,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -728,6 +838,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -786,6 +898,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -839,6 +953,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -890,6 +1006,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -944,6 +1062,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -995,6 +1115,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -1049,6 +1171,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -1100,6 +1224,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -1153,6 +1279,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -1208,6 +1336,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -1260,6 +1390,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -1317,6 +1449,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -1366,6 +1500,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -1419,6 +1555,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -1469,6 +1607,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -1522,6 +1662,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -1580,6 +1722,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -1633,6 +1777,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -1684,6 +1830,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -1738,6 +1886,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -1789,6 +1939,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -1843,6 +1995,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -1894,6 +2048,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -1947,6 +2103,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -2002,6 +2160,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -2054,6 +2214,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -2111,6 +2273,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -2159,6 +2323,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -2212,6 +2378,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -2261,6 +2429,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -2314,6 +2484,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -2363,6 +2535,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -2416,6 +2590,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -2465,6 +2641,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -2518,6 +2696,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -2567,6 +2747,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -2620,6 +2802,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -2669,6 +2853,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -2721,6 +2907,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -2776,6 +2964,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -2826,6 +3016,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -2881,6 +3073,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -2932,6 +3126,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -2987,6 +3183,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -3039,6 +3237,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -3093,6 +3293,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -3151,6 +3353,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -3205,6 +3409,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -3257,6 +3463,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -3312,6 +3520,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -3364,6 +3574,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -3418,6 +3630,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *
@@ -3474,6 +3688,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
@@ -3527,6 +3743,8 @@ public interface FrameColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.Usage] for how to use [frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol].
      *
      * #### For example:
      *

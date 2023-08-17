@@ -4,6 +4,10 @@ import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage
+import org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage.ColumnGroupName
+import org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage.ColumnSetName
+import org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage.PlainDslName
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -20,7 +24,7 @@ import org.jetbrains.kotlinx.dataframe.util.IDENTITY_FUNCTION
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
-
+/** See [Usage] */
 public interface ColColumnsSelectionDsl {
 
     /**
@@ -28,32 +32,27 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
-     *
-     *
+     *   
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
+     *   `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`| `[KProperty][KProperty]`<*>` | `[ColumnPath][ColumnPath]
-     *
-     *
+     *   
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `condition: `[ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter]
-     *
-     *
+     *   `columnRef: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]` | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *   
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `columnRef: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]` | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
-     *
-     *
+     *   `index: `[Int][Int]
+     *   
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `index: `[Int][Int]
+     *   `T: Column type`
      *
      *
      *
@@ -65,12 +64,12 @@ public interface ColColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [**col**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]**`(`**[columnRef][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnRefDef]` | `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]**`)`**
+     * [**col**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]`[`**`<`**[T][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**[columnRef][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnRefDef]` | `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]**`)`**
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * ### On a [org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -90,7 +89,9 @@ public interface ColColumnsSelectionDsl {
      *
      * [columnGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;.[**col**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]**`(`**[columnRef][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnRefDef]` | `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]**`)`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;.[**col**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]`[`**`<`**[T][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**[columnRef][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnRefDef]` | `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]**`)`**
+     *
+     *
      *
      *
      *
@@ -123,6 +124,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage] for how to use [col].
      *
      * #### For example:
      *
@@ -197,6 +200,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -243,6 +248,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * NOTE: This overload is an identity function and can be omitted.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -292,6 +299,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -345,6 +354,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -392,6 +403,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -441,6 +454,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -488,6 +503,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -538,6 +555,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -591,6 +610,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -638,6 +659,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -689,6 +712,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -737,6 +762,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -788,6 +815,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -843,6 +872,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -894,6 +925,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -943,6 +976,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -994,6 +1029,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -1047,6 +1084,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -1098,6 +1137,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -1147,6 +1188,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -1198,6 +1241,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -1251,6 +1296,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -1301,6 +1348,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -1356,6 +1405,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -1403,6 +1454,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -1454,6 +1507,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -1502,6 +1557,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -1553,6 +1610,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -1608,6 +1667,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -1659,6 +1720,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -1708,6 +1771,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -1760,6 +1825,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -1809,6 +1876,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -1861,6 +1930,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -1910,6 +1981,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -1961,6 +2034,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -2014,6 +2089,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -2064,6 +2141,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -2119,6 +2198,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -2166,6 +2247,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -2212,6 +2295,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -2261,6 +2346,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -2308,6 +2395,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -2357,6 +2446,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -2404,6 +2495,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -2457,6 +2550,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -2505,6 +2600,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * NOTE: You can use the get-[] operator on [ColumnSets][ColumnSet] as well!
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -2558,6 +2655,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -2608,6 +2707,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -2661,6 +2762,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -2711,6 +2814,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -2763,6 +2868,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -2818,6 +2925,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -2870,6 +2979,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -2920,6 +3031,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -2973,6 +3086,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -3023,6 +3138,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -3075,6 +3192,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *
@@ -3129,6 +3248,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
@@ -3180,6 +3301,8 @@ public interface ColColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage] for how to use [col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col].
      *
      * #### For example:
      *

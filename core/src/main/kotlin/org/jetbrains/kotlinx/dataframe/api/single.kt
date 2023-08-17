@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.CommonSingleDocs.Examples
 import org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage
 import org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage.ColumnGroupName
@@ -18,6 +19,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
@@ -60,17 +62,25 @@ public interface SingleColumnsSelectionDsl {
     /**
      * ## Single (Col) Usage
      *
-     * @include [ColumnsSelectionDsl.UsageTemplate]
-     * {@setArg [ColumnsSelectionDsl.UsageTemplate.PlainDslFunctionsArg]
-     *   {@include [PlainDslName]}` [` **`{ `**{@include [ColumnsSelectionDsl.UsageTemplate.Condition]}**` \\}`** `]`
+     * @include [UsageTemplate]
+     * {@setArg [UsageTemplate.DefinitionsArg]
+     *   {@include [UsageTemplate.ColumnSetDef]}
+     *   {@include [LineBreak]}
+     *   {@include [UsageTemplate.ColumnGroupDef]}
+     *   {@include [LineBreak]}
+     *   {@include [UsageTemplate.ConditionDef]}
      * }
      *
-     * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnSetFunctionsArg]
-     *   {@include [Indent]}{@include [ColumnSetName]}` [` **`{ `**{@include [ColumnsSelectionDsl.UsageTemplate.Condition]}**` \\}`** `]`
+     * {@setArg [UsageTemplate.PlainDslFunctionsArg]
+     *   {@include [PlainDslName]}` [` **`{ `**{@include [UsageTemplate.Condition]}**` \\}`** `]`
      * }
      *
-     * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnGroupFunctionsArg]
-     *   {@include [Indent]}{@include [ColumnGroupName]}` [` **`{ `**{@include [ColumnsSelectionDsl.UsageTemplate.Condition]}**` \\}`** `]`
+     * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
+     *   {@include [Indent]}{@include [ColumnSetName]}` [` **`{ `**{@include [UsageTemplate.Condition]}**` \\}`** `]`
+     * }
+     *
+     * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
+     *   {@include [Indent]}{@include [ColumnGroupName]}` [` **`{ `**{@include [UsageTemplate.Condition]}**` \\}`** `]`
      * }
      */
     public interface Usage {
@@ -93,6 +103,8 @@ public interface SingleColumnsSelectionDsl {
      * If multiple columns adhere to it, [IllegalArgumentException] is thrown.
      *
      * NOTE: For [column groups][ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
+     *
+     * Check out [Usage] for how to use [single]/[singleCol].
      *
      * #### Examples:
      *

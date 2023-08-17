@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowFilter
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.CommonFirstDocs.Examples
 import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage
 import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage.ColumnGroupName
@@ -19,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
@@ -92,32 +94,19 @@ public interface FirstColumnsSelectionDsl {
      *
      *
      *
-     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
-     *
-     *
+     *   
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
+     *   `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`| `[KProperty][KProperty]`<*>` | `[ColumnPath][ColumnPath]
-     *
-     *
+     *   
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `condition: `[ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter]
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * `columnRef: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]` | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * `index: `[Int][Int]
+     *   `condition: `[ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter]
      *
      *
      *
@@ -134,7 +123,7 @@ public interface FirstColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * ### On a [org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -154,6 +143,8 @@ public interface FirstColumnsSelectionDsl {
      * [columnGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;.[**firstCol**][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `]`
+     *
+     *
      *
      *
      *
@@ -179,6 +170,8 @@ public interface FirstColumnsSelectionDsl {
      * If no column adheres to the given [condition\], [NoSuchElementException] is thrown.
      *
      * NOTE: For [column groups][ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
+     *
+     * Check out [Usage] for how to use [first]/[firstCol].
      *
      * #### Examples:
      *
@@ -209,6 +202,8 @@ public interface FirstColumnsSelectionDsl {
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage] for how to use [first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.first]/[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol].
      *
      * #### Examples:
      *
@@ -242,6 +237,8 @@ public interface FirstColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage] for how to use [first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.first]/[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol].
+     *
      * #### Examples:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
@@ -268,6 +265,8 @@ public interface FirstColumnsSelectionDsl {
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage] for how to use [first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.first]/[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol].
      *
      * #### Examples:
      *
@@ -296,6 +295,8 @@ public interface FirstColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage] for how to use [first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.first]/[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol].
+     *
      * #### Examples:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
@@ -322,6 +323,8 @@ public interface FirstColumnsSelectionDsl {
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage] for how to use [first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.first]/[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol].
      *
      * #### Examples:
      *
@@ -353,6 +356,8 @@ public interface FirstColumnsSelectionDsl {
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage] for how to use [first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.first]/[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol].
      *
      * #### Examples:
      *
@@ -386,6 +391,8 @@ public interface FirstColumnsSelectionDsl {
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage] for how to use [first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.first]/[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol].
      *
      * #### Examples:
      *

@@ -4,12 +4,17 @@ import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage.ColumnGroupName
+import org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage.ColumnSetName
+import org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage.PlainDslName
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
 import org.jetbrains.kotlinx.dataframe.impl.columns.performCheck
@@ -21,6 +26,88 @@ import kotlin.reflect.KProperty
 
 public interface ColGroupColumnsSelectionDsl {
 
+    /**
+     * ## Col Group Usage
+     *
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     *   
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *   `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `[KProperty][KProperty]`<*>` | `[ColumnPath][ColumnPath]
+     *   
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *   `columnRef: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]` | `[String][String]` | `[KProperty][KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *   
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *   `index: `[Int][Int]
+     *   
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *   `T: Column type`
+     *
+     *
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * ### In the plain DSL:
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * [**colGroup**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`[`**`<`**[T][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**[columnRef][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnRefDef]` | `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]**`)`**
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * [columnSet][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;.[**colGroup**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]**`(`**[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]**`)`**
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * ### On a column group reference:
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * [columnGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;.[**colGroup**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`[`**`<`**[T][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**[columnRef][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnRefDef]` | `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]**`)`**
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
+    public interface Usage {
+
+        /** [**colGroup**][ColumnsSelectionDsl.colGroup] */
+        public interface PlainDslName
+
+        /** .[**colGroup**][ColumnsSelectionDsl.colGroup] */
+        public interface ColumnSetName
+
+        /** .[**colGroup**][ColumnsSelectionDsl.colGroup] */
+        public interface ColumnGroupName
+    }
+    
     /**
      * ## Col Group
      *
@@ -36,6 +123,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage] for how to use [colGroup].
      *
      * #### For example:
      *
@@ -112,6 +201,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -160,6 +251,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -210,6 +303,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -266,6 +361,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -315,6 +412,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -366,6 +465,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -415,6 +516,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -467,6 +570,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -522,6 +627,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -571,6 +678,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -624,6 +733,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -674,6 +785,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -727,6 +840,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -785,6 +900,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -838,6 +955,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -889,6 +1008,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -943,6 +1064,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -994,6 +1117,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -1048,6 +1173,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -1099,6 +1226,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -1152,6 +1281,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -1207,6 +1338,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -1259,6 +1392,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -1316,6 +1451,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -1365,6 +1502,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -1418,6 +1557,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -1468,6 +1609,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -1521,6 +1664,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -1580,6 +1725,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -1633,6 +1780,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -1684,6 +1833,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -1738,6 +1889,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -1789,6 +1942,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -1843,6 +1998,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -1894,6 +2051,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -1947,6 +2106,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -2002,6 +2163,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -2054,6 +2217,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -2111,6 +2276,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -2159,6 +2326,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -2212,6 +2381,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -2261,6 +2432,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -2314,6 +2487,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -2363,6 +2538,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -2416,6 +2593,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -2465,6 +2644,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -2518,6 +2699,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -2567,6 +2750,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -2620,6 +2805,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -2669,6 +2856,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -2721,6 +2910,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -2776,6 +2967,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -2826,6 +3019,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -2881,6 +3076,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -2932,6 +3129,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -2987,6 +3186,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -3039,6 +3240,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -3093,6 +3296,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -3151,6 +3356,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -3205,6 +3412,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -3257,6 +3466,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -3312,6 +3523,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -3364,6 +3577,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -3418,6 +3633,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *
@@ -3474,6 +3691,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[String][String]`>("colGroupA") }`
@@ -3527,6 +3746,8 @@ public interface ColGroupColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Usage] for how to use [colGroup][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup].
      *
      * #### For example:
      *

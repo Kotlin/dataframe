@@ -36,7 +36,8 @@ public data class Update<T, C>(
     public fun <R : C> cast(): Update<T, R> =
         Update(df, filter as RowValueFilter<T, R>?, columns as ColumnsSelector<T, R>)
 
-    /** This argument providing the (clickable) name of the update-like function.
+    /* 
+     * This argument providing the (clickable) name of the update-like function.
      * Note: If clickable, make sure to [alias][your type].
      */
     internal interface UpdateOperationArg
@@ -44,36 +45,36 @@ public data class Update<T, C>(
     /**
      * ## {@getArg [UpdateOperationArg]} Operation Usage
      *
-     * {@getArg [UpdateOperationArg]} `{ `[columns][SelectingColumns]` }`
+     * {@getArg [UpdateOperationArg]} **`{ `**[columns][SelectingColumns]**` }`**
      *
      * {@include [Indent]}
-     * **`[`** `.`[where][Update.where]` { `[rowValueCondition][SelectingRows.RowValueCondition.WithExample]` }` **`]`**
+     * `[ .`[**where**][Update.where]**` { `**[rowValueCondition][SelectingRows.RowValueCondition.WithExample]**` } `**`]`
      *
      * {@include [Indent]}
-     * **`[`** `.`[at][Update.at]`(`[rowIndices][CommonUpdateAtFunctionDoc.RowIndicesParam]`) `**`]`**
+     * `[ .`[**at**][Update.at]**`(`**[rowIndices][CommonUpdateAtFunctionDoc.RowIndicesParam]**`)`**` ]`
      *
      * {@include [Indent]}
-     * `.`[with][Update.with]` { `[rowExpression][ExpressionsGivenRow.RowValueExpression.WithExample]` }`
+     * `.`[**with**][Update.with]**` { `**[rowExpression][ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
      *
      * {@include [Indent]}
-     * **`|`**` .`[notNull][Update.notNull]` { `[rowExpression][ExpressionsGivenRow.RowValueExpression.WithExample]` }`
+     * `| .`[**notNull**][Update.notNull]**` { `**[rowExpression][ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
      *
      * {@include [Indent]}
-     * **`|`**` .`[perCol][Update.perCol]` { `[colExpression][ExpressionsGivenColumn.ColumnExpression.WithExample]` }`
+     * `| .`[**perCol**][Update.perCol]**` { `**[colExpression][ExpressionsGivenColumn.ColumnExpression.WithExample]**` }`**
      *
      * {@include [Indent]}
-     * **`|`**` .`[perRowCol][Update.perRowCol]` { `[rowColExpression][ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]` }`
+     * `| .`[**perRowCol**][Update.perRowCol]**` { `**[rowColExpression][ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]**` }`**
      *
      * {@include [Indent]}
-     * **`|`**` .`[withNull][Update.withNull]`()`
+     * `| .`[**withNull**][Update.withNull]**`()`**
      *
      * {@include [Indent]}
-     * **`|`**` .`[withZero][Update.withZero]`()`
+     * `| .`[**withZero**][Update.withZero]**`()`**
      *
      * {@include [Indent]}
-     * **`|`**` .`[asFrame][Update.asFrame]` { `[dataFrameExpression][ExpressionsGivenDataFrame.DataFrameExpression.WithExample]` }`
+     * `| .`[**asFrame**][Update.asFrame]**` { `**[dataFrameExpression][ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
      * 
-     * {@setArg [UpdateOperationArg] [update][update]}{@comment The default name of the `update` operation function name.}
+     * {@setArg [UpdateOperationArg] [**update**][update]}{@comment The default name of the `update` operation function name.}
      */
     public interface Usage
 

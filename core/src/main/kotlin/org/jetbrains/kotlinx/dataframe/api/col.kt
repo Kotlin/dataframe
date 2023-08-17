@@ -4,6 +4,10 @@ import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage
+import org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage.ColumnGroupName
+import org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage.ColumnSetName
+import org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Usage.PlainDslName
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -20,24 +24,36 @@ import org.jetbrains.kotlinx.dataframe.util.IDENTITY_FUNCTION
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
-
+/** See [Usage] */
 public interface ColColumnsSelectionDsl {
 
     /**
      * ## Col Usage
      *
-     * @include [ColumnsSelectionDsl.UsageTemplate]
-     * {@setArg [ColumnsSelectionDsl.UsageTemplate.PlainDslFunctionsArg]
-     *   {@include [PlainDslName]}**`(`**{@include [ColumnsSelectionDsl.UsageTemplate.ColumnRef]}` | `{@include [ColumnsSelectionDsl.UsageTemplate.Index]}**`)`**
+     * @include [UsageTemplate]
+     * {@setArg [UsageTemplate.DefinitionsArg]
+     *   {@include [UsageTemplate.ColumnSetDef]}
+     *   {@include [LineBreak]}
+     *   {@include [UsageTemplate.ColumnGroupDef]}
+     *   {@include [LineBreak]}
+     *   {@include [UsageTemplate.ColumnRefDef]}
+     *   {@include [LineBreak]}
+     *   {@include [UsageTemplate.IndexDef]}
+     *   {@include [LineBreak]}
+     *   {@include [UsageTemplate.ColumnTypeDef]}
      * }
      *
-     * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnSetFunctionsArg]
-     *   {@include [Indent]}{@include [ColumnSetName]}**`(`**{@include [ColumnsSelectionDsl.UsageTemplate.Index]}**`)`**
-     *   `|` [**`[`**][ColumnsSelectionDsl.col]{@include [ColumnsSelectionDsl.UsageTemplate.Index]}[**`]`**][ColumnsSelectionDsl.col]
+     * {@setArg [UsageTemplate.PlainDslFunctionsArg]
+     *   {@include [PlainDslName]}`[`**`<`**{@include [UsageTemplate.ColumnType]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.Index]}**`)`**
      * }
      *
-     * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnGroupFunctionsArg]
-     *   {@include [Indent]}{@include [ColColumnsSelectionDsl.Usage.ColumnGroupName]}**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.Index]}**`)`**
+     * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
+     *   {@include [Indent]}{@include [ColumnSetName]}**`(`**{@include [UsageTemplate.Index]}**`)`**
+     *   `|` [**`[`**][ColumnsSelectionDsl.col]{@include [UsageTemplate.Index]}[**`]`**][ColumnsSelectionDsl.col]
+     * }
+     *
+     * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
+     *   {@include [Indent]}{@include [ColumnGroupName]}`[`**`<`**{@include [UsageTemplate.ColumnType]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.Index]}**`)`**
      * }
      */
     public interface Usage {
@@ -64,6 +80,8 @@ public interface ColColumnsSelectionDsl {
      * an accessor for a column inside a [ColumnGroup].
      * {@include [LineBreak]}
      * {@getArg [CommonColDocs.Note]}
+     *
+     * Check out [Usage] for how to use [col].
      *
      * #### For example:
      *
