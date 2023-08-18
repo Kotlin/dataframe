@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException
+import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
@@ -23,6 +24,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.createColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.createComputedColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columns.forceResolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.unbox
+import org.jetbrains.kotlinx.dataframe.impl.unnamedColumnPrefix
 import org.jetbrains.kotlinx.dataframe.size
 import kotlin.random.Random
 import kotlin.random.nextInt
@@ -346,6 +348,34 @@ public class DataFrameBuilder(private val header: List<String>) {
         fillNotNull(nrow) { Random.nextLong(range.start, range.endInclusive) }
 
     public fun randomBoolean(nrow: Int): AnyFrame = fillNotNull(nrow) { Random.nextBoolean() }
+}
+
+/**
+ * Helper class for implementing operations when column names can be potentially duplicated.
+ * For example, operations involving multiple dataframes, computed columns or parsing some third-party data
+ */
+public class DynamicDataFrameBuilder {
+    private var cols: MutableList<AnyCol> = mutableListOf()
+    private val generator = ColumnNameGenerator()
+
+    public fun add(col: AnyCol): String {
+        val uniqueName = if (col.name().isEmpty()) {
+            generator.addUnique(unnamedColumnPrefix)
+        } else {
+            generator.addUnique(col.name())
+        }
+        val renamed = if (uniqueName != col.name()) {
+            col.rename(uniqueName)
+        } else {
+            col
+        }
+        cols.add(renamed)
+        return uniqueName
+    }
+
+    public fun toDataFrame(): AnyFrame {
+        return dataFrameOf(cols)
+    }
 }
 
 /**

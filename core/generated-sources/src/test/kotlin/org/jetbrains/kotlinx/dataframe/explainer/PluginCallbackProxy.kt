@@ -118,7 +118,7 @@ object PluginCallbackProxy : PluginCallback {
                             body =
                             """
                             <details>
-                            <summary>${expressions.joinToString(".") { it.source }
+                            <summary>${expressions.joinToSource()
                                 .also {
                                     if (it.length > 95) TODO("expression is too long ${it.length}. better to split sample in multiple snippets")
                                 }
@@ -155,50 +155,67 @@ object PluginCallbackProxy : PluginCallback {
         )
     }
 
+    private fun List<Expression>.joinToSource(): String =
+        joinToString(".") { it.source }
+
     private fun statementOutput(
         expressions: List<Expression>,
     ): DataFrameHtmlData {
         var data = DataFrameHtmlData()
-        if (expressions.size < 2) error("Sample without output or input (i.e. function returns some value)")
-        for ((i, expression) in expressions.withIndex()) {
-            when (i) {
-                0 -> {
-                    val table = convertToHTML(expression.df)
-                    val description = table.copy(
-                        body = """
+        val allow = setOf(
+            "toDataFrame", "peek(dataFrameOf(col), dataFrameOf(col))"
+        )
+        if (expressions.isEmpty()) {
+            error("No dataframe expressions in sample")
+        }
+        if (expressions.size == 1) {
+            if (allow.any { expressions[0].source.contains(it) }) {
+                val expression = expressions[0]
+                data += convertToHTML(expression.df)
+            } else {
+                error("${expressions.joinToSource()} Sample without output or input (i.e. function returns some value)")
+            }
+        } else {
+            for ((i, expression) in expressions.withIndex()) {
+                when (i) {
+                    0 -> {
+                        val table = convertToHTML(expression.df)
+                        val description = table.copy(
+                            body = """
                                     <details>
                                     <summary>Input ${convertToDescription(expression.df)}</summary>
                                      ${table.body}
                                     </details>
-                        """.trimIndent()
-                    )
-                    data += description
-                }
+                            """.trimIndent()
+                        )
+                        data += description
+                    }
 
-                expressions.lastIndex -> {
-                    val table = convertToHTML(expression.df)
-                    val description = table.copy(
-                        body = """
+                    expressions.lastIndex -> {
+                        val table = convertToHTML(expression.df)
+                        val description = table.copy(
+                            body = """
                                     <details>
                                     <summary>Output ${convertToDescription(expression.df)}</summary>
                                      ${table.body}
                                     </details>
-                        """.trimIndent()
-                    )
-                    data += description
-                }
+                            """.trimIndent()
+                        )
+                        data += description
+                    }
 
-                else -> {
-                    val table = convertToHTML(expression.df)
-                    val description = table.copy(
-                        body = """
+                    else -> {
+                        val table = convertToHTML(expression.df)
+                        val description = table.copy(
+                            body = """
                                     <details>
                                     <summary>Step $i: ${convertToDescription(expression.df)}</summary>
                                      ${table.body}
                                     </details>
-                        """.trimIndent()
-                    )
-                    data += description
+                            """.trimIndent()
+                        )
+                        data += description
+                    }
                 }
             }
         }
