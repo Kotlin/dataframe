@@ -2,6 +2,8 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
@@ -10,12 +12,58 @@ import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
 
+/**
+ * See [Usage].
+ */
 public interface ColumnRangeColumnsSelectionDsl {
+
+    /**
+     * ## Range of Columns Usage
+     *
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * `column: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]` | `[String][String]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `[KProperty][KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### In the plain DSL:
+     *
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  [column][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnDef] [**..**][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo] [column][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnDef]
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
+    public interface Usage {
+        /** [**..**][ColumnsSelectionDsl.rangeTo] */
+        public interface PlainDslName
+    }
 
     /**
      * ## Range of Columns
      * Creates a [ColumnSet] containing all columns from [this\] up to (and including) [endInclusive\].
      * Columns inside of column groups are also supported.
+     *
+     * Check out [Usage] for how to use [this function][rangeTo].
      *
      * #### For example:
      *
@@ -42,6 +90,8 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      * Columns inside of column groups are also supported.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage] for how to use [this function][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `"fromColumn"[`..`][String.rangeTo]"toColumn"` }`
@@ -64,6 +114,8 @@ public interface ColumnRangeColumnsSelectionDsl {
      * ## Range of Columns
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      * Columns inside of column groups are also supported.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage] for how to use [this function][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo].
      *
      * #### For example:
      *
@@ -88,6 +140,8 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      * Columns inside of column groups are also supported.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage] for how to use [this function][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `"fromColumn"[`..`][String.rangeTo]toColumn` }`
@@ -110,6 +164,8 @@ public interface ColumnRangeColumnsSelectionDsl {
      * ## Range of Columns
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      * Columns inside of column groups are also supported.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage] for how to use [this function][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo].
      *
      * #### For example:
      *
@@ -134,6 +190,8 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      * Columns inside of column groups are also supported.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage] for how to use [this function][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `Type::fromColumn[`..`][KProperty.rangeTo]Type::toColumn` }`
@@ -156,6 +214,8 @@ public interface ColumnRangeColumnsSelectionDsl {
      * ## Range of Columns
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      * Columns inside of column groups are also supported.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage] for how to use [this function][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo].
      *
      * #### For example:
      *
@@ -180,6 +240,8 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      * Columns inside of column groups are also supported.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage] for how to use [this function][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `fromColumn[`..`][ColumnReference.rangeTo]"toColumn"` }`
@@ -203,6 +265,8 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      * Columns inside of column groups are also supported.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage] for how to use [this function][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `fromColumn[`..`][ColumnReference.rangeTo]Type::toColumn` }`
@@ -225,6 +289,8 @@ public interface ColumnRangeColumnsSelectionDsl {
      * ## Range of Columns
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      * Columns inside of column groups are also supported.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage] for how to use [this function][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo].
      *
      * #### For example:
      *

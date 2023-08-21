@@ -2,6 +2,8 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
@@ -10,12 +12,36 @@ import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
 
+/**
+ * See [Usage].
+ */
 public interface ColumnRangeColumnsSelectionDsl {
+
+    /**
+     * ## Range of Columns Usage
+     *
+     * @include [UsageTemplate]
+     * {@setArg [UsageTemplate.DefinitionsArg]
+     *  {@include [UsageTemplate.ColumnDef]}
+     * }
+     *
+     * {@setArg [UsageTemplate.PlainDslFunctionsArg]
+     *  {@include [UsageTemplate.ColumnRef]} {@include [Usage.PlainDslName]} {@include [UsageTemplate.ColumnRef]}
+     * }
+     * {@setArg [UsageTemplate.ColumnSetPart]}
+     * {@setArg [UsageTemplate.ColumnGroupPart]}
+     */
+    public interface Usage {
+        /** [**..**][ColumnsSelectionDsl.rangeTo] */
+        public interface PlainDslName
+    }
 
     /**
      * ## Range of Columns
      * Creates a [ColumnSet] containing all columns from [this\] up to (and including) [endInclusive\].
      * Columns inside of column groups are also supported.
+     *
+     * Check out [Usage] for how to use [this function][rangeTo].
      *
      * #### For example:
      *

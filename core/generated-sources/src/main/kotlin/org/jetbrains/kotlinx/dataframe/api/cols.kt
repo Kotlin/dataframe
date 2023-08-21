@@ -5,6 +5,8 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Vararg.AccessorType
+import org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage.ColumnGroupName
+import org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage.ColumnSetName
 import org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage.PlainDslName
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -18,7 +20,6 @@ import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
@@ -28,6 +29,7 @@ public interface ColsColumnsSelectionDsl {
 
     /**
      * ## Cols Usage
+     *
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -67,51 +69,54 @@ public interface ColsColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * ### In the plain DSL:
+     *  ### In the plain DSL:
      *
-     *
+     *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`[`**`<`**[T][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**`[ `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]`, .. | `[column][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnDef]`, .. | `[indexRange][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexRangeDef]` ]`**`)`**
+     *  [**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`[`**`<`**[T][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**`[ `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]`, .. | `[column][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnDef]`, .. | `[indexRange][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexRangeDef]` ]`**`)`**
      *
      *  `|` [**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]**` { `**[condition][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ConditionDef]**` } `**
      *
      *  `|` `( `**`this`**` | `**`it`**` )`[**`[`**][cols][column][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnDef]`, .. | `**` { `**[condition][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`**[**`]`**][cols]
      *
-     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *  ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
-     *
+     *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [columnSet][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
+     *  [columnSet][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;.[**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]**`(`**`[ `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]`, .. | `[indexRange][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexRangeDef]` ]`**`)`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]**`(`**`[ `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]`, .. | `[indexRange][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexRangeDef]` ]`**`)`**
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]**` { `**[condition][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ConditionDef]**` } `**
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][cols]**`{ `**[condition][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`**[**`]`**][cols]
      *
-     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * ### On a column group reference:
+     *  ### On a column group reference:
      *
-     *
+     *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [columnGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
+     *  [columnGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;.[**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`[`**`<`**[T][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**`[ `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]`, .. | `[column][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnDef]`, .. | `[indexRange][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexRangeDef]` ]`**`)`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`[`**`<`**[T][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**`[ `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]`, .. | `[column][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnDef]`, .. | `[indexRange][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexRangeDef]` ]`**`)`**
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]**` { `**[condition][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ConditionDef]**` } `**
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][cols][column][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnDef]`, .. | `**` { `**[condition][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`**[**`]`**][cols]
+     *
+     *
+     *
+     *
+     *
+     *
      *
      *
      *
@@ -144,6 +149,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols] directly, you can also use the [get][ColumnSet.get] operator in most cases.
      *
+     * Check out [Usage] for how to use [cols].
+     *
      * #### For example:
      * `df.`[remove][DataFrame.remove]` { `[cols][ColumnsSelectionDsl.cols]` { it.`[hasNulls][DataColumn.hasNulls]`() }.`[recursively][ColumnsSelectionDsl.recursively]`() }`
      *
@@ -169,6 +176,8 @@ public interface ColsColumnsSelectionDsl {
          * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
          *
          * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+         *
+         * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
          *
          * #### For example:
          * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -203,6 +212,8 @@ public interface ColsColumnsSelectionDsl {
          * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
          *
          * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+         *
+         * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
          *
          * #### For example:
          * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -242,6 +253,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -286,6 +299,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -332,6 +347,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
@@ -376,6 +393,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -422,6 +441,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
@@ -466,6 +487,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -513,6 +536,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
@@ -556,6 +581,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -602,6 +629,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
@@ -648,6 +677,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
@@ -686,6 +717,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -727,6 +760,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -770,6 +805,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
@@ -811,6 +848,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
@@ -851,6 +890,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -894,6 +935,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
@@ -930,6 +973,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -969,6 +1014,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -1014,6 +1061,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
@@ -1046,6 +1095,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -1082,6 +1133,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -1120,6 +1173,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
@@ -1150,6 +1205,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -1190,6 +1247,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
@@ -1225,6 +1284,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
@@ -1257,6 +1318,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -1293,6 +1356,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -1331,6 +1396,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
@@ -1361,6 +1428,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -1395,6 +1464,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -1431,6 +1502,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
@@ -1463,6 +1536,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -1499,6 +1574,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -1541,6 +1618,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
@@ -1571,6 +1650,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -1605,6 +1686,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -1641,6 +1724,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
@@ -1671,6 +1756,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -1709,6 +1796,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
@@ -1744,6 +1833,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
@@ -1774,6 +1865,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -1808,6 +1901,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -1844,6 +1939,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
@@ -1874,6 +1971,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -1908,6 +2007,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -1944,6 +2045,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
@@ -1974,6 +2077,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -2008,6 +2113,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -2048,6 +2155,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
@@ -2078,6 +2187,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -2112,6 +2223,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -2148,6 +2261,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
@@ -2178,6 +2293,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -2215,6 +2332,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
@@ -2250,6 +2369,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
@@ -2280,6 +2401,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -2314,6 +2437,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -2350,6 +2475,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
@@ -2380,6 +2507,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -2414,6 +2543,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -2450,6 +2581,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
      *
@@ -2480,6 +2613,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -2514,6 +2649,8 @@ public interface ColsColumnsSelectionDsl {
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
@@ -2553,6 +2690,8 @@ public interface ColsColumnsSelectionDsl {
      * Else, if called on a normal [ColumnSet], the function will return a new [ColumnSet] with the columns found at
      * the given indices in the set.
      *
+     * Check out [Usage] for how to use [cols].
+     *
      * #### For example:
      *
      * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]`(1, 3, 2) }`
@@ -2587,6 +2726,8 @@ public interface ColsColumnsSelectionDsl {
      * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
      * the given indices in the set.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
@@ -2617,6 +2758,8 @@ public interface ColsColumnsSelectionDsl {
      * given indices inside.
      * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
      * the given indices in the set.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      *
@@ -2653,6 +2796,8 @@ public interface ColsColumnsSelectionDsl {
      * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
      * the given indices in the set.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
@@ -2688,6 +2833,8 @@ public interface ColsColumnsSelectionDsl {
      * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
      * the given indices in the set.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
@@ -2716,6 +2863,8 @@ public interface ColsColumnsSelectionDsl {
      * given indices inside.
      * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
      * the given indices in the set.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      *
@@ -2750,6 +2899,8 @@ public interface ColsColumnsSelectionDsl {
      * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
      * the given indices in the set.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
@@ -2778,6 +2929,8 @@ public interface ColsColumnsSelectionDsl {
      * given indices inside.
      * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
      * the given indices in the set.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      *
@@ -2812,6 +2965,8 @@ public interface ColsColumnsSelectionDsl {
      * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
      * the given indices in the set.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
@@ -2840,6 +2995,8 @@ public interface ColsColumnsSelectionDsl {
      * given indices inside.
      * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
      * the given indices in the set.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      *
@@ -2874,6 +3031,8 @@ public interface ColsColumnsSelectionDsl {
      * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
      * the given indices in the set.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
@@ -2902,6 +3061,8 @@ public interface ColsColumnsSelectionDsl {
      * given indices inside.
      * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
      * the given indices in the set.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      *
@@ -2936,6 +3097,8 @@ public interface ColsColumnsSelectionDsl {
      * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
      * the given indices in the set.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
@@ -2964,6 +3127,8 @@ public interface ColsColumnsSelectionDsl {
      * given indices inside.
      * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
      * the given indices in the set.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      *
@@ -3002,6 +3167,8 @@ public interface ColsColumnsSelectionDsl {
      * Else, if called on a normal [ColumnSet], the function will return a new [ColumnSet] with the columns found at
      * the given indices in the set.
      *
+     * Check out [Usage] for how to use [cols].
+     *
      * #### For example:
      *
      * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
@@ -3036,6 +3203,8 @@ public interface ColsColumnsSelectionDsl {
      * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
      * the given indices in the set.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
@@ -3066,6 +3235,8 @@ public interface ColsColumnsSelectionDsl {
      * given indices inside.
      * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
      * the given indices in the set.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      *
@@ -3099,6 +3270,8 @@ public interface ColsColumnsSelectionDsl {
      * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
      * the given indices in the set.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
@@ -3131,6 +3304,8 @@ public interface ColsColumnsSelectionDsl {
      * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
      * the given indices in the set.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
@@ -3159,6 +3334,8 @@ public interface ColsColumnsSelectionDsl {
      * given indices inside.
      * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
      * the given indices in the set.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      *
@@ -3190,6 +3367,8 @@ public interface ColsColumnsSelectionDsl {
      * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
      * the given indices in the set.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
@@ -3218,6 +3397,8 @@ public interface ColsColumnsSelectionDsl {
      * given indices inside.
      * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
      * the given indices in the set.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      *
@@ -3249,6 +3430,8 @@ public interface ColsColumnsSelectionDsl {
      * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
      * the given indices in the set.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
@@ -3277,6 +3460,8 @@ public interface ColsColumnsSelectionDsl {
      * given indices inside.
      * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
      * the given indices in the set.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      *
@@ -3308,6 +3493,8 @@ public interface ColsColumnsSelectionDsl {
      * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
      * the given indices in the set.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
@@ -3337,6 +3524,8 @@ public interface ColsColumnsSelectionDsl {
      * given indices inside.
      * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
      * the given indices in the set.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
      *
      * #### For example:
      *
@@ -3368,6 +3557,8 @@ public interface ColsColumnsSelectionDsl {
      * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
      * the given indices in the set.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
@@ -3397,6 +3588,8 @@ public interface ColsColumnsSelectionDsl {
      * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
      * the given indices in the set.
      *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
@@ -3415,15 +3608,6 @@ public interface ColsColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
     public fun ColumnPath.cols(range: IntRange): ColumnSet<*> = columnGroup(this).cols(range)
-
-    /**
-     * ## Columns by Index Range from List of Columns
-     * Helper function to create a [ColumnSet] from a list of columns by specifying a range of indices.
-     *
-     *
-     */
-    public operator fun <C> List<DataColumn<C>>.get(range: IntRange): ColumnSet<C> =
-        ColumnsList(subList(range.first, range.last + 1))
 
     // endregion
 }

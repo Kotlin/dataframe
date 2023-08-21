@@ -5,6 +5,8 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Vararg.AccessorType
+import org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage.ColumnGroupName
+import org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage.ColumnSetName
 import org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage.PlainDslName
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -18,7 +20,6 @@ import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
@@ -94,6 +95,8 @@ public interface ColsColumnsSelectionDsl {
      * {@include [AccessApiLink]}.
      *
      * Aside from calling [cols] directly, you can also use the [get][ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage] for how to use [cols].
      *
      * #### For example:
      * `df.`[remove][DataFrame.remove]` { `[cols][ColumnsSelectionDsl.cols]` { it.`[hasNulls][DataColumn.hasNulls]`() }.`[recursively][ColumnsSelectionDsl.recursively]`() }`
@@ -674,6 +677,8 @@ public interface ColsColumnsSelectionDsl {
      * Else, if called on a normal [ColumnSet], the function will return a new [ColumnSet] with the columns found at
      * the given indices in the set.
      *
+     * Check out [Usage] for how to use [cols].
+     *
      * #### For example:
      *
      * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]`(1, 3, 2) }`
@@ -805,6 +810,8 @@ public interface ColsColumnsSelectionDsl {
      * Else, if called on a normal [ColumnSet], the function will return a new [ColumnSet] with the columns found at
      * the given indices in the set.
      *
+     * Check out [Usage] for how to use [cols].
+     *
      * #### For example:
      *
      * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
@@ -900,15 +907,6 @@ public interface ColsColumnsSelectionDsl {
 
     /** @include [ColumnPathColsRangeDocs] */
     public fun ColumnPath.cols(range: IntRange): ColumnSet<*> = columnGroup(this).cols(range)
-
-    /**
-     * ## Columns by Index Range from List of Columns
-     * Helper function to create a [ColumnSet] from a list of columns by specifying a range of indices.
-     *
-     * {@comment TODO find out usages of this function and add examples}
-     */
-    public operator fun <C> List<DataColumn<C>>.get(range: IntRange): ColumnSet<C> =
-        ColumnsList(subList(range.first, range.last + 1))
 
     // endregion
 }

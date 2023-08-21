@@ -31,27 +31,27 @@ public interface ColGroupColumnsSelectionDsl {
      *
      * @include [UsageTemplate]
      * {@setArg [UsageTemplate.DefinitionsArg]
-     *   {@include [UsageTemplate.ColumnSetDef]}
-     *   {@include [LineBreak]}
-     *   {@include [UsageTemplate.ColumnGroupDef]}
-     *   {@include [LineBreak]}
-     *   {@include [UsageTemplate.ColumnDef]}
-     *   {@include [LineBreak]}
-     *   {@include [UsageTemplate.IndexDef]}
-     *   {@include [LineBreak]}
-     *   {@include [UsageTemplate.ColumnTypeDef]}
+     *  {@include [UsageTemplate.ColumnSetDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.ColumnGroupDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.ColumnDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.IndexDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.ColumnTypeDef]}
      * }
      *
      * {@setArg [UsageTemplate.PlainDslFunctionsArg]
-     *   {@include [PlainDslName]}`[`**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.IndexRef]}**`)`**
+     *  {@include [PlainDslName]}`[`**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.IndexRef]}**`)`**
      * }
      *
      * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
-     *   {@include [Indent]}{@include [ColumnSetName]}**`(`**{@include [UsageTemplate.IndexRef]}**`)`**
+     *  {@include [Indent]}{@include [ColumnSetName]}**`(`**{@include [UsageTemplate.IndexRef]}**`)`**
      * }
      *
      * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
-     *   {@include [Indent]}{@include [ColumnGroupName]}`[`**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.IndexRef]}**`)`**
+     *  {@include [Indent]}{@include [ColumnGroupName]}`[`**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.IndexRef]}**`)`**
      * }
      */
     public interface Usage {

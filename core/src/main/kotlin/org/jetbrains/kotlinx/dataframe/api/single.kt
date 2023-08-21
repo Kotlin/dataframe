@@ -64,23 +64,23 @@ public interface SingleColumnsSelectionDsl {
      *
      * @include [UsageTemplate]
      * {@setArg [UsageTemplate.DefinitionsArg]
-     *   {@include [UsageTemplate.ColumnSetDef]}
-     *   {@include [LineBreak]}
-     *   {@include [UsageTemplate.ColumnGroupDef]}
-     *   {@include [LineBreak]}
-     *   {@include [UsageTemplate.ConditionDef]}
+     *  {@include [UsageTemplate.ColumnSetDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.ColumnGroupDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.ConditionDef]}
      * }
      *
      * {@setArg [UsageTemplate.PlainDslFunctionsArg]
-     *   {@include [PlainDslName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     *  {@include [PlainDslName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
      * }
      *
      * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
-     *   {@include [Indent]}{@include [ColumnSetName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     *  {@include [Indent]}{@include [ColumnSetName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
      * }
      *
      * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
-     *   {@include [Indent]}{@include [ColumnGroupName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     *  {@include [Indent]}{@include [ColumnGroupName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
      * }
      */
     public interface Usage {
