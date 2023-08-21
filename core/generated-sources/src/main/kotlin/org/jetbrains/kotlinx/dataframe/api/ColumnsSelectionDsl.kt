@@ -21,9 +21,9 @@ import org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DoubleIndent
 import org.jetbrains.kotlinx.dataframe.documentation.HalfIndent
-import org.jetbrains.kotlinx.dataframe.documentation.QuadrupleIndent
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.QuadrupleIndent
 import org.jetbrains.kotlinx.dataframe.documentation.QuarterIndent
 import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
@@ -158,6 +158,13 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *   `T: Column type`
+     *   
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *   `indexRange: `[IntRange][IntRange]
+     *   
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -173,12 +180,18 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *   `|` [**single**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]
      *   `) [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `]`
      *
-     *   `| (`
+     *   `|` `(`
      *   [**col**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]
      *   `|` [**valueCol**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]
      *   `|` [**frameCol**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol]
      *   `|` [**colGroup**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]
      *   `)[`**`<`**[T][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**[column][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnDef]` | `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]**`)`**
+     *
+     *   `|` [**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`[`**`<`**[T][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**`[ `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]`, .. | `[column][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnDef]`, .. | `[indexRange][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexRangeDef]` ]`**`)`**
+     *
+     *   `|` [**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]**` { `**[condition][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ConditionDef]**` } `**
+     *
+     *   `|` `( `**`this`**` | `**`it`**` )`[**`[`**][ColumnsSelectionDsl.cols][column][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnDef]`, .. | `**` { `**[condition][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`**[**`]`**][ColumnsSelectionDsl.cols]
      *
      *   `|` TODO
      *
@@ -198,13 +211,19 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *   `|` .[**single**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]
      *   `) [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `]`
      *
-     *   &nbsp;&nbsp;&nbsp;&nbsp;`| (`
+     *   &nbsp;&nbsp;&nbsp;&nbsp;`|` `(`
      *   .[**col**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]
      *   `|` .[**valueCol**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]
      *   `|` .[**frameCol**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol]
      *   `|` .[**colGroup**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]
      *   `)`**`(`**[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]**`)`**
      *   `|` [**`[`**][ColumnsSelectionDsl.col][index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef][**`]`**][ColumnsSelectionDsl.col]
+     *
+     *   &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]**`(`**`[ `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]`, .. | `[indexRange][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexRangeDef]` ]`**`)`**
+     *
+     *   &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]**` { `**[condition][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ConditionDef]**` } `**
+     *
+     *   &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][ColumnsSelectionDsl.cols]**`{ `**[condition][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`**[**`]`**][ColumnsSelectionDsl.cols]
      *
      *   &nbsp;&nbsp;&nbsp;&nbsp;`|` TODO
      *
@@ -230,6 +249,12 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *   `|` .[**frameCol**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol]
      *   `|` .[**colGroup**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]
      *   `)[`**`<`**[T][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**[column][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnDef]` | `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]**`)`**
+     *
+     *   &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`[`**`<`**[T][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**`[ `[index][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexDef]`, .. | `[column][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnDef]`, .. | `[indexRange][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.IndexRangeDef]` ]`**`)`**
+     *
+     *   &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]**` { `**[condition][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ConditionDef]**` } `**
+     *
+     *   &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][ColumnsSelectionDsl.cols][column][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnDef]`, .. | `**` { `**[condition][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`**[**`]`**][ColumnsSelectionDsl.cols]
      *
      *   &nbsp;&nbsp;&nbsp;&nbsp;`|` TODO
      *
@@ -328,6 +353,9 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
         /** `index: `[Int][Int] */
         public interface IndexDef
 
+        /** `indexRange: `[IntRange][IntRange] */
+        public interface IndexRangeDef
+
         /** `condition: `[ColumnFilter][ColumnFilter] */
         public interface ConditionDef
 
@@ -349,6 +377,9 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
 
         /** [index][IndexDef] */
         public interface IndexRef
+
+        /** [indexRange][IndexRangeDef] */
+        public interface IndexRangeRef
 
         /** [T][ColumnTypeDef] */
         public interface ColumnTypeRef

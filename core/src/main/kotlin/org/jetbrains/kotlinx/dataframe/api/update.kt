@@ -1,16 +1,32 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.*
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnExpression
+import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataFrameExpression
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.RowColumnExpression
+import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.api.Update.Usage
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.documentation.*
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenColumn
+import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame
+import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow
+import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRowAndColumn
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumnsLink
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
 import org.jetbrains.kotlinx.dataframe.impl.api.asFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateWithValuePerColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
+import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.util.ITERABLE_COLUMNS_DEPRECATION_MESSAGE
 import org.jetbrains.kotlinx.dataframe.util.UPDATE_AS_NULLABLE_MESSAGE
 import org.jetbrains.kotlinx.dataframe.util.UPDATE_AS_NULLABLE_REPLACE
@@ -73,7 +89,7 @@ public data class Update<T, C>(
      *
      * {@include [Indent]}
      * `| .`[**asFrame**][Update.asFrame]**` { `**[dataFrameExpression][ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
-     * 
+     *
      * {@setArg [UpdateOperationArg] [**update**][update]}{@comment The default name of the `update` operation function name.}
      */
     public interface Usage
@@ -393,7 +409,7 @@ public fun <T, C> Update<T, C?>.notNull(expression: UpdateExpression<T, C, C>): 
 public fun <T, C> DataFrame<T>.update(
     firstCol: ColumnReference<C>,
     vararg cols: ColumnReference<C>,
-    expression: UpdateExpression<T, C, C>
+    expression: UpdateExpression<T, C, C>,
 ): DataFrame<T> =
     update(*headPlusArray(firstCol, cols)).with(expression)
 
@@ -412,7 +428,7 @@ public fun <T, C> DataFrame<T>.update(
 public fun <T, C> DataFrame<T>.update(
     firstCol: KProperty<C>,
     vararg cols: KProperty<C>,
-    expression: UpdateExpression<T, C, C>
+    expression: UpdateExpression<T, C, C>,
 ): DataFrame<T> =
     update(*headPlusArray(firstCol, cols)).with(expression)
 
@@ -431,7 +447,7 @@ public fun <T, C> DataFrame<T>.update(
 public fun <T> DataFrame<T>.update(
     firstCol: String,
     vararg cols: String,
-    expression: UpdateExpression<T, Any?, Any?>
+    expression: UpdateExpression<T, Any?, Any?>,
 ): DataFrame<T> =
     update(*headPlusArray(firstCol, cols)).with(expression)
 

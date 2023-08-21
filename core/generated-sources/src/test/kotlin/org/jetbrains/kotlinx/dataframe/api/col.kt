@@ -1,12 +1,20 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldThrow
+import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.samples.api.age
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.junit.Test
 
 class ColTests : ColumnsSelectionDslTests() {
+
+    @Test
+    fun `col on renamed column`() {
+        df.select {
+            colGroup("name").named("name1").col("firstName")
+        }.alsoDebug()
+    }
 
     @Test
     fun `col exceptions`() {

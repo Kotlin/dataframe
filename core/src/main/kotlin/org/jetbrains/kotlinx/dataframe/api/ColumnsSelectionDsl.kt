@@ -21,9 +21,9 @@ import org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DoubleIndent
 import org.jetbrains.kotlinx.dataframe.documentation.HalfIndent
-import org.jetbrains.kotlinx.dataframe.documentation.QuadrupleIndent
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.QuadrupleIndent
 import org.jetbrains.kotlinx.dataframe.documentation.QuarterIndent
 import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
@@ -138,6 +138,9 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *   {@include [ColumnsSelectionDsl.UsageTemplate.IndexDef]}
      *   {@include [LineBreak]}
      *   {@include [ColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]}
+     *   {@include [LineBreak]}
+     *   {@include [UsageTemplate.IndexRangeDef]}
+     *   {@include [LineBreak]}
      * }
      *
      * {@setArg [UsageTemplate.PlainDslFunctionsArg]
@@ -147,12 +150,18 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *   `|` {@include [SingleColumnsSelectionDsl.Usage.PlainDslName]}
      *   `) [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
      *
-     *   `| (`
+     *   `|` `(`
      *   {@include [ColColumnsSelectionDsl.Usage.PlainDslName]}
      *   `|` {@include [ValueColColumnsSelectionDsl.Usage.PlainDslName]}
      *   `|` {@include [FrameColColumnsSelectionDsl.Usage.PlainDslName]}
      *   `|` {@include [ColGroupColumnsSelectionDsl.Usage.PlainDslName]}
      *   `)[`**`<`**{@include [ColumnsSelectionDsl.UsageTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [ColumnsSelectionDsl.UsageTemplate.ColumnRef]}` | `{@include [ColumnsSelectionDsl.UsageTemplate.IndexRef]}**`)`**
+     *
+     *   `|` {@include [ColsColumnsSelectionDsl.Usage.PlainDslName]}`[`**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>`**`]`**`(`**`[ `{@include [UsageTemplate.IndexRef]}`, .. | `{@include [UsageTemplate.ColumnRef]}`, .. | `{@include [UsageTemplate.IndexRangeRef]}` ]`**`)`**
+     *
+     *   `|` {@include [ColsColumnsSelectionDsl.Usage.PlainDslName]}**` { `**{@include [UsageTemplate.ConditionRef]}**` \\} `**
+     *
+     *   `|` `( `**`this`**` | `**`it`**` )`[**`[`**][ColumnsSelectionDsl.cols]{@include [UsageTemplate.ColumnRef]}`, .. | `**` { `**{@include [UsageTemplate.ConditionRef]}**` \\}`**[**`]`**][ColumnsSelectionDsl.cols]
      *
      *   `|` TODO
      * }
@@ -164,13 +173,19 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *   `|` {@include [SingleColumnsSelectionDsl.Usage.ColumnSetName]}
      *   `) [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
      *
-     *   {@include [Indent]}`| (`
+     *   {@include [Indent]}`|` `(`
      *   {@include [ColColumnsSelectionDsl.Usage.ColumnSetName]}
      *   `|` {@include [ValueColColumnsSelectionDsl.Usage.ColumnSetName]}
      *   `|` {@include [FrameColColumnsSelectionDsl.Usage.ColumnSetName]}
      *   `|` {@include [ColGroupColumnsSelectionDsl.Usage.ColumnSetName]}
      *   `)`**`(`**{@include [UsageTemplate.IndexRef]}**`)`**
      *   `|` [**`[`**][ColumnsSelectionDsl.col]{@include [UsageTemplate.IndexRef]}[**`]`**][ColumnsSelectionDsl.col]
+     *
+     *   {@include [Indent]}`|` {@include [ColsColumnsSelectionDsl.Usage.ColumnSetName]}**`(`**`[ `{@include [UsageTemplate.IndexRef]}`, .. | `{@include [UsageTemplate.IndexRangeRef]}` ]`**`)`**
+     *
+     *   {@include [Indent]}`|` {@include [ColsColumnsSelectionDsl.Usage.ColumnSetName]}**` { `**{@include [UsageTemplate.ConditionRef]}**` \\} `**
+     *
+     *   {@include [Indent]}`| `[**`[`**][ColumnsSelectionDsl.cols]**`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`**[**`]`**][ColumnsSelectionDsl.cols]
      *
      *   {@include [Indent]}`|` TODO
      * }
@@ -188,6 +203,12 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *   `|` {@include [FrameColColumnsSelectionDsl.Usage.ColumnGroupName]}
      *   `|` {@include [ColGroupColumnsSelectionDsl.Usage.ColumnGroupName]}
      *   `)[`**`<`**{@include [ColumnsSelectionDsl.UsageTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.IndexRef]}**`)`**
+     *
+     *   {@include [Indent]}`|` {@include [ColsColumnsSelectionDsl.Usage.ColumnGroupName]}`[`**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>`**`]`**`(`**`[ `{@include [UsageTemplate.IndexRef]}`, .. | `{@include [UsageTemplate.ColumnRef]}`, .. | `{@include [UsageTemplate.IndexRangeRef]}` ]`**`)`**
+     *
+     *   {@include [Indent]}`|` {@include [ColsColumnsSelectionDsl.Usage.ColumnGroupName]}**` { `**{@include [UsageTemplate.ConditionRef]}**` \\} `**
+     *
+     *   {@include [Indent]}`| `[**`[`**][ColumnsSelectionDsl.cols]{@include [UsageTemplate.ColumnRef]}`, .. | `**` { `**{@include [UsageTemplate.ConditionRef]}**` \\}`**[**`]`**][ColumnsSelectionDsl.cols]
      *
      *   {@include [Indent]}`|` TODO
      * }
@@ -265,6 +286,9 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
         /** `index: `[Int][Int] */
         public interface IndexDef
 
+        /** `indexRange: `[IntRange][IntRange] */
+        public interface IndexRangeDef
+
         /** `condition: `[ColumnFilter][ColumnFilter] */
         public interface ConditionDef
 
@@ -286,6 +310,9 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
 
         /** [index][IndexDef] */
         public interface IndexRef
+
+        /** [indexRange][IndexRangeDef] */
+        public interface IndexRangeRef
 
         /** [T][ColumnTypeDef] */
         public interface ColumnTypeRef

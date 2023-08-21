@@ -5,6 +5,8 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Vararg.AccessorType
+import org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage.PlainDslName
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -14,15 +16,72 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
-import org.jetbrains.kotlinx.dataframe.impl.columns.transformWithContext
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import kotlin.reflect.KProperty
 
 public interface ColsColumnsSelectionDsl {
+
+    /**
+     * ## Cols Usage
+     *
+     * @include [UsageTemplate]
+     * {@setArg [UsageTemplate.DefinitionsArg]
+     *  {@include [UsageTemplate.ColumnSetDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.ColumnGroupDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.ColumnDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.IndexDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.ConditionDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.ColumnTypeDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.IndexRangeDef]}
+     *  {@include [LineBreak]}
+     * }
+     *
+     * {@setArg [UsageTemplate.PlainDslFunctionsArg]
+     *  {@include [PlainDslName]}`[`**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>`**`]`**`(`**`[ `{@include [UsageTemplate.IndexRef]}`, .. | `{@include [UsageTemplate.ColumnRef]}`, .. | `{@include [UsageTemplate.IndexRangeRef]}` ]`**`)`**
+     *
+     *  `|` {@include [PlainDslName]}**` { `**{@include [UsageTemplate.ConditionRef]}**` \\} `**
+     *
+     *  `|` `( `**`this`**` | `**`it`**` )`[**`[`**][cols]{@include [UsageTemplate.ColumnRef]}`, .. | `**` { `**{@include [UsageTemplate.ConditionRef]}**` \\}`**[**`]`**][cols]
+     * }
+     *
+     * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
+     *  {@include [Indent]}{@include [ColumnSetName]}**`(`**`[ `{@include [UsageTemplate.IndexRef]}`, .. | `{@include [UsageTemplate.IndexRangeRef]}` ]`**`)`**
+     *
+     *  {@include [Indent]}`|` {@include [ColumnSetName]}**` { `**{@include [UsageTemplate.ConditionRef]}**` \\} `**
+     *
+     *  {@include [Indent]}`| `[**`[`**][cols]**`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`**[**`]`**][cols]
+     * }
+     *
+     * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
+     *  {@include [Indent]}{@include [ColumnGroupName]}`[`**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>`**`]`**`(`**`[ `{@include [UsageTemplate.IndexRef]}`, .. | `{@include [UsageTemplate.ColumnRef]}`, .. | `{@include [UsageTemplate.IndexRangeRef]}` ]`**`)`**
+     *
+     *  {@include [Indent]}`|` {@include [ColumnGroupName]}**` { `**{@include [UsageTemplate.ConditionRef]}**` \\} `**
+     *
+     *  {@include [Indent]}`| `[**`[`**][cols]{@include [UsageTemplate.ColumnRef]}`, .. | `**` { `**{@include [UsageTemplate.ConditionRef]}**` \\}`**[**`]`**][cols]
+     * }
+     */
+    public interface Usage {
+
+        /** [**cols**][ColumnsSelectionDsl.cols] */
+        public interface PlainDslName
+
+        /** .[**cols**][ColumnsSelectionDsl.cols] */
+        public interface ColumnSetName
+
+        /** .[**cols**][ColumnsSelectionDsl.cols] */
+        public interface ColumnGroupName
+    }
 
     /**
      * ## Cols
@@ -248,35 +307,6 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
      * @setArg [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[cols][ColumnSet.cols]`(columnA, columnB) }`
-     *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>()`[`[`][ColumnSet.cols]`columnA, columnB`[`]`][ColumnSet.cols]` }`
-     *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[cols][ColumnSet.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
-     */
-    private interface ColumnSetColsVarargColumnReferenceDocs
-
-    /** @include [ColumnSetColsVarargColumnReferenceDocs] */
-    public fun <C> ColumnSet<C>.cols(
-        firstCol: ColumnReference<C>,
-        vararg otherCols: ColumnReference<C>,
-    ): ColumnSet<C> = transformWithContext {
-        dataFrameOf(it)
-            .asColumnGroup()
-            .cols(firstCol, *otherCols)
-            .resolve(this)
-    }
-
-    /** @include [ColumnSetColsVarargColumnReferenceDocs] */
-    public operator fun <C> ColumnSet<C>.get(
-        firstCol: ColumnReference<C>,
-        vararg otherCols: ColumnReference<C>,
-    ): ColumnSet<C> = cols(firstCol, *otherCols)
-
-    /**
-     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
-     * @setArg [CommonColsDocs.Examples]
-     *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(columnA, columnB) }`
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
@@ -403,33 +433,6 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [String]}
      * @setArg [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[cols][ColumnSet.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>()`[`[`][ColumnSet.cols]`"columnA", "columnB"`[`]`][ColumnSet.cols]` }`
-     */
-    private interface ColumnSetColsVarargStringDocs
-
-    /** @include [ColumnSetColsVarargStringDocs] */
-    @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.cols(
-        firstCol: String,
-        vararg otherCols: String,
-    ): ColumnSet<C> = headPlusArray(firstCol, otherCols).let { names ->
-        colsInternal { it.name in names } as ColumnSet<C>
-    }
-
-    /**
-     * @include [ColumnSetColsVarargStringDocs]
-     */
-    public operator fun <C> ColumnSet<C>.get(
-        firstCol: String,
-        vararg otherCols: String,
-    ): ColumnSet<C> = cols(firstCol, *otherCols)
-
-    /**
-     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [String]}
-     * @setArg [CommonColsDocs.Examples]
-     *
      * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]`("columnA", "columnB") }`
      *
      * `df.`[select][DataFrame.select]` { this`[`[`][SingleColumn.cols]`"columnA", "columnB"`[`]`][SingleColumn.cols]` }`
@@ -543,31 +546,6 @@ public interface ColsColumnsSelectionDsl {
     // endregion
 
     // region properties
-
-    /**
-     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [KProperty]}
-     * @setArg [CommonColsDocs.Examples]
-     *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[cols][ColumnSet.cols]`(Type::colA, Type::colB) }`
-     *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>()`[`[`][ColumnSet.cols]`Type::colA, Type::colB`[`]`][ColumnSet.cols]` }`
-     */
-    private interface ColumnSetColsVarargKPropertyDocs
-
-    /** @include [ColumnSetColsVarargKPropertyDocs] */
-    @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.cols(
-        firstCol: KProperty<C>,
-        vararg otherCols: KProperty<C>,
-    ): ColumnSet<C> = headPlusArray(firstCol, otherCols).map { it.name }.let { names ->
-        colsInternal { it.name in names } as ColumnSet<C>
-    }
-
-    /** @include [ColumnSetColsVarargKPropertyDocs] */
-    public operator fun <C> ColumnSet<C>.get(
-        firstCol: KProperty<C>,
-        vararg otherCols: KProperty<C>,
-    ): ColumnSet<C> = cols(firstCol, *otherCols)
 
     /**
      * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [KProperty]}

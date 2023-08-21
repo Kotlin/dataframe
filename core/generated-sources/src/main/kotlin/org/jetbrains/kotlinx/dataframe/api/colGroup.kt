@@ -108,7 +108,7 @@ public interface ColGroupColumnsSelectionDsl {
         /** .[**colGroup**][ColumnsSelectionDsl.colGroup] */
         public interface ColumnGroupName
     }
-    
+
     /**
      * ## Col Group
      *

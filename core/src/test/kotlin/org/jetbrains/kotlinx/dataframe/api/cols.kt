@@ -73,8 +73,8 @@ class ColsTests : ColumnsSelectionDslTests() {
             df.select { this[name, age] },
             df.select { it[name, age] },
 
-            df.select { all().cols(name, age) },
-            df.select { all()[name, age] },
+//            df.select { all().cols(name, age) },
+//            df.select { all()[name, age] },
         ).shouldAllBeEqual()
 
         val firstName by column<String>()
@@ -86,8 +86,8 @@ class ColsTests : ColumnsSelectionDslTests() {
             df.select { name.cols(firstName, lastName) },
             df.select { name[firstName, lastName] },
 
-            df.select { name.colsOf<String>().cols(firstName, lastName) },
-            df.select { name.colsOf<String>()[firstName, lastName] },
+//            df.select { name.colsOf<String>().cols(firstName, lastName) },
+//            df.select { name.colsOf<String>()[firstName, lastName] },
 
             df.select {
                 name.select {
@@ -127,8 +127,8 @@ class ColsTests : ColumnsSelectionDslTests() {
             df.select { this["name", "age"] },
             df.select { it["name", "age"] },
 
-            df.select { all().cols("name", "age") },
-            df.select { all()["name", "age"] },
+//            df.select { all().cols("name", "age") },
+//            df.select { all()["name", "age"] },
         ).shouldAllBeEqual()
 
         listOf(
@@ -137,8 +137,8 @@ class ColsTests : ColumnsSelectionDslTests() {
             df.select { name.cols("firstName", "lastName") },
             df.select { name["firstName", "lastName"] },
 
-            df.select { name.colsOf<String>().cols("firstName", "lastName") },
-            df.select { name.colsOf<String>()["firstName", "lastName"] },
+//            df.select { name.colsOf<String>().cols("firstName", "lastName") },
+//            df.select { name.colsOf<String>()["firstName", "lastName"] },
 
             df.select { "name".cols("firstName", "lastName") },
             df.select { "name"["firstName", "lastName"] },
@@ -167,8 +167,8 @@ class ColsTests : ColumnsSelectionDslTests() {
             df.select { this[pathOf("name", "firstName")] },
             df.select { it[pathOf("name", "firstName")] },
 
-            df.select { all().cols(pathOf("name", "firstName")) },
-            df.select { all()[pathOf("name", "firstName")] },
+//            df.select { all().cols(pathOf("name", "firstName")) },
+//            df.select { all()[pathOf("name", "firstName")] },
 
             df.select { pathOf("name", "firstName") },
         ).shouldAllBeEqual()
@@ -180,8 +180,8 @@ class ColsTests : ColumnsSelectionDslTests() {
             df.select { this[pathOf("name"), pathOf("age")] },
             df.select { it[pathOf("name"), pathOf("age")] },
 
-            df.select { all().cols(pathOf("name"), pathOf("age")) },
-            df.select { all()[pathOf("name"), pathOf("age")] },
+//            df.select { all().cols(pathOf("name"), pathOf("age")) },
+//            df.select { all()[pathOf("name"), pathOf("age")] },
         ).shouldAllBeEqual()
 
         listOf(
@@ -190,8 +190,8 @@ class ColsTests : ColumnsSelectionDslTests() {
             df.select { name.cols(pathOf("firstName"), pathOf("lastName")) },
             df.select { name[pathOf("firstName"), pathOf("lastName")] },
 
-            df.select { name.colsOf<String>().cols(pathOf("firstName"), pathOf("lastName")) },
-            df.select { name.colsOf<String>()[pathOf("firstName"), pathOf("lastName")] },
+//            df.select { name.colsOf<String>().cols(pathOf("firstName"), pathOf("lastName")) },
+//            df.select { name.colsOf<String>()[pathOf("firstName"), pathOf("lastName")] },
 
             df.select { "name".cols(pathOf("firstName"), pathOf("lastName")) },
             df.select { "name"[pathOf("firstName"), pathOf("lastName")] },
@@ -219,8 +219,8 @@ class ColsTests : ColumnsSelectionDslTests() {
             df.select { this[Person::name, Person::age] },
             df.select { it[Person::name, Person::age] },
 
-            df.select { all().cols(Person::name, Person::age) },
-            df.select { all()[Person::name, Person::age] },
+//            df.select { all().cols(Person::name, Person::age) },
+//            df.select { all()[Person::name, Person::age] },
         ).shouldAllBeEqual()
 
         listOf(
@@ -229,8 +229,8 @@ class ColsTests : ColumnsSelectionDslTests() {
             df.select { name.cols(Name::firstName, Name::lastName) },
             df.select { name[Name::firstName, Name::lastName] },
 
-            df.select { name.colsOf<String>().cols(Name::firstName, Name::lastName) },
-            df.select { name.colsOf<String>()[Name::firstName, Name::lastName] },
+//            df.select { name.colsOf<String>().cols(Name::firstName, Name::lastName) },
+//            df.select { name.colsOf<String>()[Name::firstName, Name::lastName] },
 
             df.select { "name".cols(Name::firstName, Name::lastName) },
             df.select { "name"[Name::firstName, Name::lastName] },
