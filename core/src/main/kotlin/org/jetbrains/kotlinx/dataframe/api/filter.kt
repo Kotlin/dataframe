@@ -148,7 +148,7 @@ public interface FilterColumnsSelectionDsl {
      * @include [CommonFilterDocs]
      * @setArg [CommonFilterDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { Type::columnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[filter][SingleColumn.filter]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
+     * `df.`[select][DataFrame.select]` { Type::columnGroup.`[filter][SingleColumn.filter]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::columnGroup)`[`[`][SingleColumn.filter]`{ it.`[any\][ColumnWithPath.any\]` { it == "Alice" } }`[`]`][ColumnsSelectionDsl.cols]` }`
      *

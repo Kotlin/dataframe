@@ -448,7 +448,7 @@ public interface ValueColColumnsSelectionDsl {
      * @param [C] The type of the value column. 
      */
     public fun <C> String.valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
+        columnGroup(this).ensureIsColumnGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
 
     /**
      * ## Value Col
@@ -500,7 +500,7 @@ public interface ValueColColumnsSelectionDsl {
      * @param [C] The type of the value column. 
      */
     public fun <C> KProperty<*>.valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
+        columnGroup(this).ensureIsColumnGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
 
     /**
      * ## Value Col
@@ -554,7 +554,7 @@ public interface ValueColColumnsSelectionDsl {
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColKPropertyDataRow")
     public fun <C> KProperty<DataRow<*>>.valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
+        columnGroup(this).ensureIsColumnGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
 
     /**
      * ## Value Col
@@ -606,7 +606,7 @@ public interface ValueColColumnsSelectionDsl {
      * @param [C] The type of the value column. 
      */
     public fun <C> ColumnPath.valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
+        columnGroup(this).ensureIsColumnGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
 
     // endregion
 
@@ -1101,7 +1101,7 @@ public interface ValueColColumnsSelectionDsl {
      * @param [C] The type of the value column.
      */
     public fun <C> String.valueCol(name: String): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().valueColumn<C>(name).ensureIsValueColumn()
+        columnGroup(this).ensureIsColumnGroup().valueColumn<C>(name).ensureIsValueColumn()
 
     /**
      * ## Value Col
@@ -1210,7 +1210,7 @@ public interface ValueColColumnsSelectionDsl {
      * @param [C] The type of the value column.
      */
     public fun <C> KProperty<*>.valueCol(name: String): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().valueColumn<C>(name).ensureIsValueColumn()
+        columnGroup(this).ensureIsColumnGroup().valueColumn<C>(name).ensureIsValueColumn()
 
     /**
      * ## Value Col
@@ -1321,7 +1321,7 @@ public interface ValueColColumnsSelectionDsl {
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColKPropertyDataRow")
     public fun <C> KProperty<DataRow<*>>.valueCol(name: String): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().valueColumn<C>(name).ensureIsValueColumn()
+        columnGroup(this).ensureIsColumnGroup().valueColumn<C>(name).ensureIsValueColumn()
 
     /**
      * ## Value Col
@@ -1430,7 +1430,7 @@ public interface ValueColColumnsSelectionDsl {
      * @param [C] The type of the value column.
      */
     public fun <C> ColumnPath.valueCol(name: String): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().valueColumn<C>(name).ensureIsValueColumn()
+        columnGroup(this).ensureIsColumnGroup().valueColumn<C>(name).ensureIsValueColumn()
 
     // endregion
 
@@ -1925,7 +1925,7 @@ public interface ValueColColumnsSelectionDsl {
      * @param [C] The type of the value column.
      */
     public fun <C> String.valueCol(path: ColumnPath): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().valueColumn<C>(path).ensureIsValueColumn()
+        columnGroup(this).ensureIsColumnGroup().valueColumn<C>(path).ensureIsValueColumn()
 
     /**
      * ## Value Col
@@ -2034,7 +2034,7 @@ public interface ValueColColumnsSelectionDsl {
      * @param [C] The type of the value column.
      */
     public fun <C> KProperty<*>.valueCol(path: ColumnPath): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().valueColumn<C>(path).ensureIsValueColumn()
+        columnGroup(this).ensureIsColumnGroup().valueColumn<C>(path).ensureIsValueColumn()
 
     /**
      * ## Value Col
@@ -2145,7 +2145,7 @@ public interface ValueColColumnsSelectionDsl {
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColKPropertyDataRow")
     public fun <C> KProperty<DataRow<*>>.valueCol(path: ColumnPath): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().valueColumn<C>(path).ensureIsValueColumn()
+        columnGroup(this).ensureIsColumnGroup().valueColumn<C>(path).ensureIsValueColumn()
 
     /**
      * ## Value Col
@@ -2254,7 +2254,7 @@ public interface ValueColColumnsSelectionDsl {
      * @param [C] The type of the value column.
      */
     public fun <C> ColumnPath.valueCol(path: ColumnPath): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().valueColumn<C>(path).ensureIsValueColumn()
+        columnGroup(this).ensureIsColumnGroup().valueColumn<C>(path).ensureIsValueColumn()
 
     // endregion
 
@@ -2516,7 +2516,7 @@ public interface ValueColColumnsSelectionDsl {
      * @param [C] The type of the value column. 
      */
     public fun <C> String.valueCol(property: KProperty<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().valueColumn(property).ensureIsValueColumn()
+        columnGroup(this).ensureIsColumnGroup().valueColumn(property).ensureIsValueColumn()
 
     /**
      * ## Value Col
@@ -2568,7 +2568,7 @@ public interface ValueColColumnsSelectionDsl {
      * @param [C] The type of the value column. 
      */
     public fun <C> KProperty<*>.valueCol(property: KProperty<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().valueColumn(property).ensureIsValueColumn()
+        columnGroup(this).ensureIsColumnGroup().valueColumn(property).ensureIsValueColumn()
 
     /**
      * ## Value Col
@@ -2620,7 +2620,7 @@ public interface ValueColColumnsSelectionDsl {
      * @param [C] The type of the value column. 
      */
     public fun <C> ColumnPath.valueCol(property: KProperty<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().valueColumn(property).ensureIsValueColumn()
+        columnGroup(this).ensureIsColumnGroup().valueColumn(property).ensureIsValueColumn()
 
     // endregion
 
@@ -3067,7 +3067,7 @@ public interface ValueColColumnsSelectionDsl {
      * @param [C] The type of the value column.
      */
     public fun <C> String.valueCol(index: Int): SingleColumn<C> =
-        asColumnGroup().valueCol<C>(index)
+        columnGroup(this).valueCol<C>(index)
 
     /**
      * ## Value Col
@@ -3178,7 +3178,7 @@ public interface ValueColColumnsSelectionDsl {
      * @param [C] The type of the value column.
      */
     public fun <C> KProperty<*>.valueCol(index: Int): SingleColumn<C> =
-        asColumnGroup().valueCol<C>(index)
+        columnGroup(this).valueCol<C>(index)
 
     /**
      * ## Value Col
@@ -3291,7 +3291,7 @@ public interface ValueColColumnsSelectionDsl {
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColKPropertyDataRow")
     public fun <C> KProperty<DataRow<*>>.valueCol(index: Int): SingleColumn<C> =
-        asColumnGroup().valueCol<C>(index)
+        columnGroup(this).valueCol<C>(index)
 
     /**
      * ## Value Col
@@ -3402,7 +3402,7 @@ public interface ValueColColumnsSelectionDsl {
      * @param [C] The type of the value column.
      */
     public fun <C> ColumnPath.valueCol(index: Int): SingleColumn<C> =
-        asColumnGroup().valueCol<C>(index)
+        columnGroup(this).valueCol<C>(index)
 
     // endregion
 }

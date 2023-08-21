@@ -13,7 +13,7 @@ class SingleTests : ColumnsSelectionDslTests() {
             df.select { "age".singleCol() }
         }
         shouldThrow<IllegalArgumentException> {
-            df.select { Person::age.asColumnGroup().singleCol() }
+            df.select { columnGroup(Person::age).singleCol() }
         }
         shouldThrow<IllegalArgumentException> {
             df.select { Person::age.singleCol() }

@@ -13,7 +13,7 @@ class LastTests : ColumnsSelectionDslTests() {
             df.select { "age".lastCol() }
         }
         shouldThrow<IllegalArgumentException> {
-            df.select { Person::age.asColumnGroup().lastCol() }
+            df.select { columnGroup(Person::age).lastCol() }
         }
         shouldThrow<IllegalArgumentException> {
             df.select { Person::age.lastCol() }

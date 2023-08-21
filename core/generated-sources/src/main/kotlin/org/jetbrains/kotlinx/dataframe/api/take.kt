@@ -255,7 +255,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[takeChildren][SingleColumn.takeChildren]`(1) }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[takeChildren][SingleColumn.takeChildren]`(1) }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[takeChildren][SingleColumn.takeChildren]`(1) }`
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[takeChildren][KProperty.takeChildren]`(1) }`
      *
@@ -491,7 +491,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[takeLastChildren][SingleColumn.takeLastChildren]`(1) }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[takeLastChildren][SingleColumn.takeLastChildren]`(1) }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[takeLastChildren][SingleColumn.takeLastChildren]`(1) }`
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[takeLastChildren][KProperty.takeLastChildren]`(1) }`
      *

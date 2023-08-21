@@ -177,13 +177,13 @@ public interface ColColumnsSelectionDsl {
      * @include [ColReferenceDocs] {@setArg [CommonColDocs.ReceiverArg] "myColumnGroup".}
      */
     public fun <C> String.col(col: ColumnAccessor<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(col.path())
+        columnGroup(this).ensureIsColumnGroup().column(col.path())
 
     /**
      * @include [ColReferenceDocs] {@setArg [CommonColDocs.ReceiverArg] Type::myColumnGroup.}
      */
     public fun <C> KProperty<*>.col(col: ColumnAccessor<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(col.path())
+        columnGroup(this).ensureIsColumnGroup().column(col.path())
 
     /**
      * @include [ColReferenceDocs] {@setArg [CommonColDocs.ReceiverArg] Type::myColumnGroup.}
@@ -191,13 +191,13 @@ public interface ColColumnsSelectionDsl {
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colKPropertyDataRow")
     public fun <C> KProperty<DataRow<*>>.col(col: ColumnAccessor<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(col.path())
+        columnGroup(this).ensureIsColumnGroup().column(col.path())
 
     /**
      * @include [ColReferenceDocs] {@setArg [CommonColDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
      */
     public fun <C> ColumnPath.col(col: ColumnAccessor<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(col.path())
+        columnGroup(this).ensureIsColumnGroup().column(col.path())
 
     // endregion
 
@@ -271,7 +271,7 @@ public interface ColColumnsSelectionDsl {
      * @include [CommonColDocs.ColumnTypeParam]
      */
     public fun <C> String.col(name: String): ColumnAccessor<C> =
-        asColumnGroup()
+        columnGroup(this)
             .ensureIsColumnGroup()
             .column(name)
 
@@ -288,7 +288,7 @@ public interface ColColumnsSelectionDsl {
      * @include [CommonColDocs.ColumnTypeParam]
      */
     public fun <C> KProperty<*>.col(name: String): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(name)
+        columnGroup(this).ensureIsColumnGroup().column(name)
 
     /**
      * @include [ColNameDocs] {@setArg [CommonColDocs.ReceiverArg] Type::myColumnGroup.}
@@ -305,7 +305,7 @@ public interface ColColumnsSelectionDsl {
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colKPropertyDataRow")
     public fun <C> KProperty<DataRow<*>>.col(name: String): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(name)
+        columnGroup(this).ensureIsColumnGroup().column(name)
 
     /**
      * @include [ColNameDocs] {@setArg [CommonColDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
@@ -320,7 +320,7 @@ public interface ColColumnsSelectionDsl {
      * @include [CommonColDocs.ColumnTypeParam]
      */
     public fun <C> ColumnPath.col(name: String): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(name)
+        columnGroup(this).ensureIsColumnGroup().column(name)
 
     // endregion
 
@@ -394,7 +394,7 @@ public interface ColColumnsSelectionDsl {
      * @include [CommonColDocs.ColumnTypeParam]
      */
     public fun <C> String.col(path: ColumnPath): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(path)
+        columnGroup(this).ensureIsColumnGroup().column(path)
 
     /**
      * @include [ColPathDocs] {@setArg [CommonColDocs.ReceiverArg] Type::myColumnGroup.}
@@ -409,7 +409,7 @@ public interface ColColumnsSelectionDsl {
      * @include [CommonColDocs.ColumnTypeParam]
      */
     public fun <C> KProperty<*>.col(path: ColumnPath): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(path)
+        columnGroup(this).ensureIsColumnGroup().column(path)
 
     /**
      * @include [ColPathDocs] {@setArg [CommonColDocs.ReceiverArg] Type::myColumnGroup.}
@@ -426,7 +426,7 @@ public interface ColColumnsSelectionDsl {
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colKPropertyDataRow")
     public fun <C> KProperty<DataRow<*>>.col(path: ColumnPath): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(path)
+        columnGroup(this).ensureIsColumnGroup().column(path)
 
     /**
      * @include [ColPathDocs] {@setArg [CommonColDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
@@ -441,7 +441,7 @@ public interface ColColumnsSelectionDsl {
      * @include [CommonColDocs.ColumnTypeParam]
      */
     public fun <C> ColumnPath.col(path: ColumnPath): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(path)
+        columnGroup(this).ensureIsColumnGroup().column(path)
 
     // endregion
 
@@ -477,19 +477,19 @@ public interface ColColumnsSelectionDsl {
      * @include [ColKPropertyDocs] {@setArg [CommonColDocs.ReceiverArg] "myColumnGroup".}
      */
     public fun <C> String.col(property: KProperty<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(property)
+        columnGroup(this).ensureIsColumnGroup().column(property)
 
     /**
      * @include [ColKPropertyDocs] {@setArg [CommonColDocs.ReceiverArg] Type::myColumnGroup.}
      */
     public fun <C> KProperty<*>.col(property: KProperty<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(property)
+        columnGroup(this).ensureIsColumnGroup().column(property)
 
     /**
      * @include [ColKPropertyDocs] {@setArg [CommonColDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
      */
     public fun <C> ColumnPath.col(property: KProperty<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(property)
+        columnGroup(this).ensureIsColumnGroup().column(property)
 
     // endregion
 
@@ -573,7 +573,7 @@ public interface ColColumnsSelectionDsl {
      * @include [CommonColDocs.ColumnTypeParam]
      */
     public fun <C> String.col(index: Int): SingleColumn<C> =
-        asColumnGroup().col<C>(index)
+        columnGroup(this).col<C>(index)
 
     /**
      * @include [ColIndexDocs] {@setArg [CommonColDocs.ReceiverArg] Type::myColumnGroup.}
@@ -588,7 +588,7 @@ public interface ColColumnsSelectionDsl {
      * @include [CommonColDocs.ColumnTypeParam]
      */
     public fun <C> KProperty<*>.col(index: Int): SingleColumn<C> =
-        asColumnGroup().col<C>(index)
+        columnGroup(this).col<C>(index)
 
     /**
      * @include [ColIndexDocs] {@setArg [CommonColDocs.ReceiverArg] Type::myColumnGroup.}
@@ -605,7 +605,7 @@ public interface ColColumnsSelectionDsl {
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colKPropertyDataRow")
     public fun <C> KProperty<DataRow<*>>.col(index: Int): SingleColumn<C> =
-        asColumnGroup().col<C>(index)
+        columnGroup(this).col<C>(index)
 
     /**
      * @include [ColIndexDocs] {@setArg [CommonColDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
@@ -620,7 +620,7 @@ public interface ColColumnsSelectionDsl {
      * @include [CommonColDocs.ColumnTypeParam]
      */
     public fun <C> ColumnPath.col(index: Int): SingleColumn<C> =
-        asColumnGroup().col<C>(index)
+        columnGroup(this).col<C>(index)
 
     // endregion
 }

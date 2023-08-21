@@ -115,11 +115,11 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      *
      * This is a shorthand for
      *
-     * [get][ColumnsContainer.get]`(MyType::myColumnGroup).`[asColumnGroup][KProperty.asColumnGroup]`().`[get][ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
+     * [get][ColumnsContainer.get]`(MyType::myColumnGroup).`[asColumnGroup][asColumnGroup]`().`[get][ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
      *
      * and can instead be written as
      *
-     * `MyType::myColumnGroup.`[asColumnGroup][KProperty.asColumnGroup]`()`[`[`][ColumnsContainer.get]`MyOtherType::myOtherColumn`[`]`][ColumnsContainer.get].
+     * `MyType::myColumnGroup`[`[`][KProperty.get]`MyOtherType::myOtherColumn`[`]`][KProperty.get].
      *
      * @throws [IllegalArgumentException] if the column is not found.
      */
@@ -130,11 +130,11 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      *
      * This is a shorthand for
      *
-     * [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
+     * [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[asColumnGroup][org.jetbrains.kotlinx.dataframe.api.asColumnGroup]`().`[get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
      *
      * and can instead be written as
      *
-     * `MyType::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`()`[`[`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`MyOtherType::myOtherColumn`[`]`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get].
+     * `MyType::myColumnGroup`[`[`][kotlin.reflect.KProperty.get]`MyOtherType::myOtherColumn`[`]`][kotlin.reflect.KProperty.get].
      *
      * @throws [IllegalArgumentException] if the column is not found.
      * @return The [DataColumn] these [KProperty Accessors][KProperty] point to.
@@ -146,11 +146,11 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      *
      * This is a shorthand for
      *
-     * [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
+     * [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[asColumnGroup][org.jetbrains.kotlinx.dataframe.api.asColumnGroup]`().`[get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
      *
      * and can instead be written as
      *
-     * `MyType::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`()`[`[`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`MyOtherType::myOtherColumn`[`]`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get].
+     * `MyType::myColumnGroup`[`[`][kotlin.reflect.KProperty.get]`MyOtherType::myOtherColumn`[`]`][kotlin.reflect.KProperty.get].
      *
      * @throws [IllegalArgumentException] if the column is not found.
      * @return The [ColumnGroup] these [KProperty Accessors][KProperty] point to.
@@ -163,11 +163,11 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      *
      * This is a shorthand for
      *
-     * [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`().`[get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
+     * [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[asColumnGroup][org.jetbrains.kotlinx.dataframe.api.asColumnGroup]`().`[get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
      *
      * and can instead be written as
      *
-     * `MyType::myColumnGroup.`[asColumnGroup][kotlin.reflect.KProperty.asColumnGroup]`()`[`[`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`MyOtherType::myOtherColumn`[`]`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get].
+     * `MyType::myColumnGroup`[`[`][kotlin.reflect.KProperty.get]`MyOtherType::myOtherColumn`[`]`][kotlin.reflect.KProperty.get].
      *
      * @throws [IllegalArgumentException] if the column is not found.
      * @return The [FrameColumn] these [KProperty Accessors][KProperty] point to.

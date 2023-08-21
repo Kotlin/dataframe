@@ -147,8 +147,6 @@ public interface AllColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::columnGroup).`[all][SingleColumn.all]`() }`
      *
-     * `df.`[select][DataFrame.select]` { Type::columnGroup.`[asColumnGroup][KProperty.asColumnGroup]`().`[all][SingleColumn.all]`() }`
-     *
      * `df.`[select][DataFrame.select]` { DataSchemaType::columnGroup.`[all][KProperty.all]`() }`
      */
     public fun KProperty<DataRow<*>>.all(): TransformableColumnSet<*> = columnGroup(this).all()

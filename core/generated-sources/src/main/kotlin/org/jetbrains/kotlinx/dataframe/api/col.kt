@@ -438,7 +438,7 @@ public interface ColColumnsSelectionDsl {
      * @param [C] The type of the column. 
      */
     public fun <C> String.col(col: ColumnAccessor<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(col.path())
+        columnGroup(this).ensureIsColumnGroup().column(col.path())
 
     /**
      * ## Col
@@ -488,7 +488,7 @@ public interface ColColumnsSelectionDsl {
      * @param [C] The type of the column. 
      */
     public fun <C> KProperty<*>.col(col: ColumnAccessor<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(col.path())
+        columnGroup(this).ensureIsColumnGroup().column(col.path())
 
     /**
      * ## Col
@@ -540,7 +540,7 @@ public interface ColColumnsSelectionDsl {
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colKPropertyDataRow")
     public fun <C> KProperty<DataRow<*>>.col(col: ColumnAccessor<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(col.path())
+        columnGroup(this).ensureIsColumnGroup().column(col.path())
 
     /**
      * ## Col
@@ -590,7 +590,7 @@ public interface ColColumnsSelectionDsl {
      * @param [C] The type of the column. 
      */
     public fun <C> ColumnPath.col(col: ColumnAccessor<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(col.path())
+        columnGroup(this).ensureIsColumnGroup().column(col.path())
 
     // endregion
 
@@ -1066,7 +1066,7 @@ public interface ColColumnsSelectionDsl {
      * @param [C] The type of the column.
      */
     public fun <C> String.col(name: String): ColumnAccessor<C> =
-        asColumnGroup()
+        columnGroup(this)
             .ensureIsColumnGroup()
             .column(name)
 
@@ -1173,7 +1173,7 @@ public interface ColColumnsSelectionDsl {
      * @param [C] The type of the column.
      */
     public fun <C> KProperty<*>.col(name: String): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(name)
+        columnGroup(this).ensureIsColumnGroup().column(name)
 
     /**
      * ## Col
@@ -1280,7 +1280,7 @@ public interface ColColumnsSelectionDsl {
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colKPropertyDataRow")
     public fun <C> KProperty<DataRow<*>>.col(name: String): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(name)
+        columnGroup(this).ensureIsColumnGroup().column(name)
 
     /**
      * ## Col
@@ -1385,7 +1385,7 @@ public interface ColColumnsSelectionDsl {
      * @param [C] The type of the column.
      */
     public fun <C> ColumnPath.col(name: String): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(name)
+        columnGroup(this).ensureIsColumnGroup().column(name)
 
     // endregion
 
@@ -1861,7 +1861,7 @@ public interface ColColumnsSelectionDsl {
      * @param [C] The type of the column.
      */
     public fun <C> String.col(path: ColumnPath): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(path)
+        columnGroup(this).ensureIsColumnGroup().column(path)
 
     /**
      * ## Col
@@ -1966,7 +1966,7 @@ public interface ColColumnsSelectionDsl {
      * @param [C] The type of the column.
      */
     public fun <C> KProperty<*>.col(path: ColumnPath): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(path)
+        columnGroup(this).ensureIsColumnGroup().column(path)
 
     /**
      * ## Col
@@ -2073,7 +2073,7 @@ public interface ColColumnsSelectionDsl {
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colKPropertyDataRow")
     public fun <C> KProperty<DataRow<*>>.col(path: ColumnPath): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(path)
+        columnGroup(this).ensureIsColumnGroup().column(path)
 
     /**
      * ## Col
@@ -2178,7 +2178,7 @@ public interface ColColumnsSelectionDsl {
      * @param [C] The type of the column.
      */
     public fun <C> ColumnPath.col(path: ColumnPath): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(path)
+        columnGroup(this).ensureIsColumnGroup().column(path)
 
     // endregion
 
@@ -2430,7 +2430,7 @@ public interface ColColumnsSelectionDsl {
      * @param [C] The type of the column. 
      */
     public fun <C> String.col(property: KProperty<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(property)
+        columnGroup(this).ensureIsColumnGroup().column(property)
 
     /**
      * ## Col
@@ -2480,7 +2480,7 @@ public interface ColColumnsSelectionDsl {
      * @param [C] The type of the column. 
      */
     public fun <C> KProperty<*>.col(property: KProperty<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(property)
+        columnGroup(this).ensureIsColumnGroup().column(property)
 
     /**
      * ## Col
@@ -2530,7 +2530,7 @@ public interface ColColumnsSelectionDsl {
      * @param [C] The type of the column. 
      */
     public fun <C> ColumnPath.col(property: KProperty<C>): ColumnAccessor<C> =
-        asColumnGroup().ensureIsColumnGroup().column(property)
+        columnGroup(this).ensureIsColumnGroup().column(property)
 
     // endregion
 
@@ -3016,7 +3016,7 @@ public interface ColColumnsSelectionDsl {
      * @param [C] The type of the column.
      */
     public fun <C> String.col(index: Int): SingleColumn<C> =
-        asColumnGroup().col<C>(index)
+        columnGroup(this).col<C>(index)
 
     /**
      * ## Col
@@ -3123,7 +3123,7 @@ public interface ColColumnsSelectionDsl {
      * @param [C] The type of the column.
      */
     public fun <C> KProperty<*>.col(index: Int): SingleColumn<C> =
-        asColumnGroup().col<C>(index)
+        columnGroup(this).col<C>(index)
 
     /**
      * ## Col
@@ -3232,7 +3232,7 @@ public interface ColColumnsSelectionDsl {
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colKPropertyDataRow")
     public fun <C> KProperty<DataRow<*>>.col(index: Int): SingleColumn<C> =
-        asColumnGroup().col<C>(index)
+        columnGroup(this).col<C>(index)
 
     /**
      * ## Col
@@ -3339,7 +3339,7 @@ public interface ColColumnsSelectionDsl {
      * @param [C] The type of the column.
      */
     public fun <C> ColumnPath.col(index: Int): SingleColumn<C> =
-        asColumnGroup().col<C>(index)
+        columnGroup(this).col<C>(index)
 
     // endregion
 }

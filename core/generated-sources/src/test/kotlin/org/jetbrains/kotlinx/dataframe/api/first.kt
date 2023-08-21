@@ -13,7 +13,7 @@ class FirstTests : ColumnsSelectionDslTests() {
             df.select { "age".firstCol() }
         }
         shouldThrow<IllegalArgumentException> {
-            df.select { Person::age.asColumnGroup().firstCol() }
+            df.select { columnGroup(Person::age).firstCol() }
         }
         shouldThrow<IllegalArgumentException> {
             df.select { Person::age.firstCol() }

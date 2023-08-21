@@ -235,11 +235,11 @@ class ColsTests : ColumnsSelectionDslTests() {
             df.select { "name".cols(Name::firstName, Name::lastName) },
             df.select { "name"[Name::firstName, Name::lastName] },
 
-            df.select { Person::name.asColumnGroup().cols(Name::firstName, Name::lastName) },
-            df.select { Person::name.asColumnGroup()[Name::firstName, Name::lastName] },
+            df.select { columnGroup(Person::name).cols(Name::firstName, Name::lastName) },
+            df.select { columnGroup(Person::name)[Name::firstName, Name::lastName] },
 
-            df.select { NonDataSchemaPerson::name.asColumnGroup().cols(Name::firstName, Name::lastName) },
-            df.select { NonDataSchemaPerson::name.asColumnGroup()[Name::firstName, Name::lastName] },
+            df.select { columnGroup(NonDataSchemaPerson::name).cols(Name::firstName, Name::lastName) },
+            df.select { columnGroup(NonDataSchemaPerson::name)[Name::firstName, Name::lastName] },
 
             df.select { pathOf("name").cols(Name::firstName, Name::lastName) },
             df.select { pathOf("name")[Name::firstName, Name::lastName] },
