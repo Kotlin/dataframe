@@ -118,7 +118,7 @@ object PluginCallbackProxy : PluginCallback {
                             body =
                             """
                             <details>
-                            <summary>${expressions.joinToSource()
+                            <summary>${expressions.joinToString(".") { it.source }
                                 .also {
                                     if (it.length > 95) TODO("expression is too long ${it.length}. better to split sample in multiple snippets")
                                 }
