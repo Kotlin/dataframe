@@ -159,9 +159,15 @@ tasks.withType<KorroTask> {
 val installGitPreCommitHook by tasks.creating(Copy::class) {
     doNotTrackState(/* reasonNotToTrackState = */ "Fails on TeamCity otherwise.")
 
-    from(File(rootProject.rootDir, "gradle/scripts/pre-commit"))
-    into(File(rootProject.rootDir, ".git/hooks"))
-    fileMode = 755
+    val gitHooksDir = File(rootProject.rootDir, ".git/hooks")
+    if (gitHooksDir.exists()) {
+        from(File(rootProject.rootDir, "gradle/scripts/pre-commit"))
+        into(gitHooksDir)
+        fileMode = 755
+    } else {
+        logger.lifecycle("'.git/hooks' directory not found. Skipping installation of pre-commit hook.")
+    }
+
 }
 tasks.named("assemble") {
     dependsOn(installGitPreCommitHook)
