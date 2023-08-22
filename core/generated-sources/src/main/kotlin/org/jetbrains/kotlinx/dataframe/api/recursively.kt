@@ -28,6 +28,15 @@ public interface RecursivelyColumnsSelectionDsl {
     // region recursively
 
     /**
+     * TODO
+     */
+    public interface Usage {
+
+        /** .[**recursively**][ColumnsSelectionDsl.recursively]`()` */
+        public interface Name
+    }
+
+    /**
      * ## Recursively / Rec
      *
      * Modifies the previous call to run not only on the current column set,
