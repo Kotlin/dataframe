@@ -21,12 +21,24 @@ internal open class DataRowImpl<T>(private val index: Int, private val df: DataF
 
     override operator fun <R> get(column: ColumnReference<R>): R {
         ColumnAccessTracker.registerColumnAccess(column.name())
-        return column.getValue(this)
+
+        // Issue #442: df1Row[df2Column] should be df1Row[df2Column.name], not df2Column[df1Row(.index)]
+        return if (column.name() in df.columnNames()) {
+            df[column.name()][index] as R
+        } else {
+            column.getValue(this)
+        }
     }
 
     override fun <R> getValueOrNull(column: ColumnReference<R>): R? {
         ColumnAccessTracker.registerColumnAccess(column.name())
-        return column.getValueOrNull(this)
+
+        // Issue #442: df1Row[df2Column] should be df1Row[df2Column.name], not df2Column[df1Row(.index)]
+        return if (column.name() in df.columnNames()) {
+            df.getColumnOrNull(column.name())?.get(index) as? R?
+        } else {
+            column.getValueOrNull(this)
+        }
     }
 
     override fun index() = index

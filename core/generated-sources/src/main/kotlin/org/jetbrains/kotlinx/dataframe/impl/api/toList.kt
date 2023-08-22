@@ -68,7 +68,7 @@ internal fun AnyFrame.toListImpl(type: KType): List<Any> {
 
     return rows().map { row ->
         val parameters = convertedColumns.map {
-            row[it]
+            it[row]
         }.toTypedArray()
         constructor.call(*parameters)
     }

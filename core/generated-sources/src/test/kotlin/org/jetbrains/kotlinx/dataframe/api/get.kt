@@ -3,12 +3,11 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.assertions.throwables.shouldThrowAny
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.junit.Test
-import java.lang.ClassCastException
-import java.lang.IllegalArgumentException
 
 class GetTests {
 
@@ -30,6 +29,7 @@ class GetTests {
     fun `get value from row`() {
         val a by column<Int>()
         val c by column<Int>()
+
         data class A(val a: Int, val b: Int, val c: Int)
 
         val df = dataFrameOf("a", "b")(1, 2)
@@ -88,5 +88,24 @@ class GetTests {
             df[0].getColumnGroup("a")
         }
         throwable.message shouldContain "Cannot cast null value of a ValueColumn to"
+    }
+
+    @Test
+    fun `Get column from a data row`() {
+        val df1 = dataFrameOf("a")(1, 2, 3)
+        val a by column<String>()
+        val aPath = pathOf("a")
+
+        val df2 = dataFrameOf("a")(4, 5, 6)
+
+        df1.rows().forEach {
+            it["a"] shouldBe df1[it.index()][0]
+            it[a] shouldBe df1[it.index()][0]
+            it[aPath] shouldBe df1[it.index()][0]
+            it[df2["a"].name()] shouldBe df1[it.index()][0]
+            it[df2["a"]] shouldNotBe df2["a"][it]
+            it[df2["a"]] shouldBe it[df2["a"].name()]
+            it[df2["a"]] shouldBe df1[it.index()][0]
+        }
     }
 }
