@@ -1,14 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage
-import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnGroupRef
-import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.UsageTemplate.ColumnSetRef
-import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -19,12 +15,10 @@ import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
 import org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
-import org.jetbrains.kotlinx.dataframe.documentation.DoubleIndent
-import org.jetbrains.kotlinx.dataframe.documentation.HalfIndent
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.QuadrupleIndent
-import org.jetbrains.kotlinx.dataframe.documentation.QuarterIndent
+import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl
+import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
@@ -127,20 +121,20 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     /**
      * ## [ColumnsSelectionDsl] Usage
      *
-     * @include [UsageTemplate]
+     * @include [UsageTemplateColumnsSelectionDsl.UsageTemplate]
      *
      * {@setArg [UsageTemplate.DefinitionsArg]
-     *  {@include [ColumnsSelectionDsl.UsageTemplate.ColumnSetDef]}
+     *  {@include [UsageTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
-     *  {@include [ColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]}
+     *  {@include [UsageTemplate.ColumnGroupDef]}
      *  {@include [LineBreak]}
-     *  {@include [ColumnsSelectionDsl.UsageTemplate.ConditionDef]}
+     *  {@include [UsageTemplate.ConditionDef]}
      *  {@include [LineBreak]}
-     *  {@include [ColumnsSelectionDsl.UsageTemplate.ColumnDef]}
+     *  {@include [UsageTemplate.ColumnDef]}
      *  {@include [LineBreak]}
-     *  {@include [ColumnsSelectionDsl.UsageTemplate.IndexDef]}
+     *  {@include [UsageTemplate.IndexDef]}
      *  {@include [LineBreak]}
-     *  {@include [ColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]}
+     *  {@include [UsageTemplate.ColumnTypeDef]}
      *  {@include [LineBreak]}
      *  {@include [UsageTemplate.IndexRangeDef]}
      * }
@@ -157,7 +151,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *  `|` {@include [ValueColColumnsSelectionDsl.Usage.PlainDslName]}
      *  `|` {@include [FrameColColumnsSelectionDsl.Usage.PlainDslName]}
      *  `|` {@include [ColGroupColumnsSelectionDsl.Usage.PlainDslName]}
-     *  `)[`**`<`**{@include [ColumnsSelectionDsl.UsageTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [ColumnsSelectionDsl.UsageTemplate.ColumnRef]}` | `{@include [ColumnsSelectionDsl.UsageTemplate.IndexRef]}**`)`**
+     *  `)[`**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.IndexRef]}**`)`**
      *
      *  `|` {@include [ColsColumnsSelectionDsl.Usage.PlainDslName]}`[`**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}`, .. | `{@include [UsageTemplate.IndexRef]}`, .. | `{@include [UsageTemplate.IndexRangeRef]}**`)`**
      *
@@ -206,7 +200,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *  `|` {@include [ValueColColumnsSelectionDsl.Usage.ColumnGroupName]}
      *  `|` {@include [FrameColColumnsSelectionDsl.Usage.ColumnGroupName]}
      *  `|` {@include [ColGroupColumnsSelectionDsl.Usage.ColumnGroupName]}
-     *  `)[`**`<`**{@include [ColumnsSelectionDsl.UsageTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.IndexRef]}**`)`**
+     *  `)[`**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.IndexRef]}**`)`**
      *
      *  {@include [Indent]}`|` {@include [ColsColumnsSelectionDsl.Usage.ColumnGroupName]}`[`**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}`, .. | `{@include [UsageTemplate.IndexRef]}`, .. | `{@include [UsageTemplate.IndexRangeRef]}**`)`**
      *
@@ -218,137 +212,6 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      * }
      */
     public interface Usage
-
-    /**
-     * {@comment Definitions part, including column set and column group by default.}
-     * {@include [LineBreak]}
-     * {@getArg [ColumnsSelectionDsl.UsageTemplate.DefinitionsArg]}
-     *
-     * {@setArg [ColumnsSelectionDsl.UsageTemplate.PlainDslPart]
-     *  {@include [LineBreak]}
-     *  ### In the plain DSL:
-     *
-     *  {@include [LineBreak]}
-     *  {@getArg [ColumnsSelectionDsl.UsageTemplate.PlainDslFunctionsArg]}
-     * }{@getArg [ColumnsSelectionDsl.UsageTemplate.PlainDslPart]}
-     * {@comment -------------------------------------------------------------------------------------------- }
-     * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnSetPart]
-     *  {@include [LineBreak]}
-     *  ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
-     *
-     *  {@include [LineBreak]}
-     *  {@include [ColumnSetRef]}
-     *
-     *  {@getArg [ColumnsSelectionDsl.UsageTemplate.ColumnSetFunctionsArg]}
-     * }{@getArg [ColumnsSelectionDsl.UsageTemplate.ColumnSetPart]}
-     * {@comment -------------------------------------------------------------------------------------------- }
-     * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnGroupPart]
-     *  {@include [LineBreak]}
-     *  ### On a column group reference:
-     *
-     *  {@include [LineBreak]}
-     *  {@include [ColumnGroupRef]}
-     *
-     *  {@getArg [ColumnsSelectionDsl.UsageTemplate.ColumnGroupFunctionsArg]}
-     * }{@getArg [ColumnsSelectionDsl.UsageTemplate.ColumnGroupPart]}
-     * {@comment -------------------------------------------------------------------------------------------- }
-     * {@comment Setting default arguments for the template}
-     * {@setArg [ColumnsSelectionDsl.UsageTemplate.DefinitionsArg]}
-     * {@setArg [ColumnsSelectionDsl.UsageTemplate.PlainDslFunctionsArg]}
-     * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnSetFunctionsArg]}
-     * {@setArg [ColumnsSelectionDsl.UsageTemplate.ColumnGroupFunctionsArg]}
-     */
-    public interface UsageTemplate {
-
-        // region parts
-
-        /* Can be set to nothing to disable the plain dsl part */
-        public interface PlainDslPart
-
-        /* Can be set to nothing to disable the column set part */
-        public interface ColumnSetPart
-
-        /* Can be set to nothing to disable the column group part */
-        public interface ColumnGroupPart
-
-        // endregion
-
-        // region Template arguments
-
-        /* What to put in definitions part aside from the default part. */
-        public interface DefinitionsArg
-
-        /* What to put in the plain dsl part. Does not need indents. */
-        public interface PlainDslFunctionsArg
-
-        /* What to put in the column set part. Needs indents. */
-        public interface ColumnSetFunctionsArg
-
-        /* What to put in the column group part. Needs indents. */
-        public interface ColumnGroupFunctionsArg
-
-        // endregion
-
-        // region Definitions for at the top of the template
-
-        /** `columnSet: `[ColumnSet][ColumnSet]`<*>` */
-        public interface ColumnSetDef
-
-        /**
-         * `columnGroup: `[SingleColumn][SingleColumn]`<`[DataRow][DataRow]`<*>> | `[String][String]
-         *
-         * {@include [QuadrupleIndent]}{@include [Indent]}{@include [QuarterIndent]}
-         * `| `[KProperty][KProperty]`<*>` | `[ColumnPath][ColumnPath]
-         */
-        public interface ColumnGroupDef
-
-        /**
-         * `column: `[ColumnAccessor][ColumnAccessor]` | `[String][String]
-         *
-         * {@include [DoubleIndent]}{@include [HalfIndent]}{@include [QuarterIndent]}
-         * `| `[KProperty][KProperty]`<*> | `[ColumnPath][ColumnPath]
-         */
-        public interface ColumnDef
-
-        /** `T: Column type` */
-        public interface ColumnTypeDef
-
-        /** `index: `[Int][Int] */
-        public interface IndexDef
-
-        /** `indexRange: `[IntRange][IntRange] */
-        public interface IndexRangeDef
-
-        /** `condition: `[ColumnFilter][ColumnFilter] */
-        public interface ConditionDef
-
-        // endregion
-
-        // region References to the definitions
-
-        /** [columnSet][ColumnSetDef] */
-        public interface ColumnSetRef
-
-        /** [columnGroup][ColumnGroupDef] */
-        public interface ColumnGroupRef
-
-        /** [condition][ConditionDef] */
-        public interface ConditionRef
-
-        /** [column][ColumnDef] */
-        public interface ColumnRef
-
-        /** [index][IndexDef] */
-        public interface IndexRef
-
-        /** [indexRange][IndexRangeDef] */
-        public interface IndexRangeRef
-
-        /** [T][ColumnTypeDef] */
-        public interface ColumnTypeRef
-
-        // endregion
-    }
 
     /**
      * Invokes the given [ColumnsSelector] using this [ColumnsSelectionDsl].

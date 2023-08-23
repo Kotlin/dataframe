@@ -20,7 +20,7 @@ class ValueColsTests : ColumnsSelectionDslTests() {
     }
 
     @Test
-    fun `valueCol at top-level`() {
+    fun `valueCols at top-level`() {
         listOf(
             df.select { cols(age, city, weight, isHappy) },
 
