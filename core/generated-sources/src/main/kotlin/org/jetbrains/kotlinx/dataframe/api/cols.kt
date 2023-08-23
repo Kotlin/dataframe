@@ -145,7 +145,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols] directly, you can also use the [get][ColumnSet.get] operator in most cases.
      *
@@ -173,7 +174,8 @@ public interface ColsColumnsSelectionDsl {
          * then `cols` will create a subset of its contained columns.
          *
          * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-         * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+         * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+         * a column name, -path, or index (range)).
          *
          * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
          *
@@ -209,7 +211,8 @@ public interface ColsColumnsSelectionDsl {
          * then `cols` will create a subset of its contained columns.
          *
          * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-         * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+         * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+         * a column name, -path, or index (range)).
          *
          * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
          *
@@ -250,7 +253,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -296,7 +300,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -343,7 +348,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -390,7 +396,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -437,7 +444,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -484,7 +492,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -532,7 +541,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -578,7 +588,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -625,7 +636,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -673,7 +685,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -714,7 +727,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -757,7 +771,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -801,7 +816,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -844,7 +860,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -887,7 +904,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -931,7 +949,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -970,7 +989,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1011,7 +1031,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1057,7 +1078,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1073,8 +1095,6 @@ public interface ColsColumnsSelectionDsl {
      * #### Examples for this overload:
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(columnA, columnB) }`
-     *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
      *
      * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`columnA, columnB`[`]`][ColumnsSelectionDsl.cols]` }`
      *
@@ -1092,7 +1112,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1108,8 +1129,6 @@ public interface ColsColumnsSelectionDsl {
      * #### Examples for this overload:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(columnA, columnB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
@@ -1130,7 +1149,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1146,8 +1166,6 @@ public interface ColsColumnsSelectionDsl {
      * #### Examples for this overload:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(columnA, columnB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
@@ -1169,7 +1187,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1202,7 +1221,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1243,7 +1263,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1280,7 +1301,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1296,8 +1318,6 @@ public interface ColsColumnsSelectionDsl {
      * #### Examples for this overload:
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`(columnA, columnB) }`
-     *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup"`[`[`][String.cols]`columnA, columnB`[`]`][String.cols]` }`
      *
@@ -1315,7 +1335,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1331,8 +1352,6 @@ public interface ColsColumnsSelectionDsl {
      * #### Examples for this overload:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(columnA, columnB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"`[`[`][kotlin.String.cols]`columnA, columnB`[`]`][kotlin.String.cols]` }`
      *
@@ -1353,7 +1372,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1369,8 +1389,6 @@ public interface ColsColumnsSelectionDsl {
      * #### Examples for this overload:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(columnA, columnB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"`[`[`][kotlin.String.cols]`columnA, columnB`[`]`][kotlin.String.cols]` }`
      *
@@ -1392,7 +1410,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1425,7 +1444,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1461,7 +1481,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1498,7 +1519,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1533,7 +1555,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1571,7 +1594,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1614,7 +1638,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1629,16 +1654,18 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]`("columnA", "columnB") }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`("columnA", "columnB") }`
      *
-     * `df.`[select][DataFrame.select]` { this`[`[`][SingleColumn.cols]`"columnA", "columnB"`[`]`][SingleColumn.cols]` }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`<`[String][String]`>("columnA", "columnB") }`
+     *
+     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][ColumnsSelectionDsl.cols]` }`
      *
      *
      * @param [firstCol] A [String] that points to a column.
      * @param [otherCols] Optional additional [String]s that point to columns.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
-    private interface ColumnsSelectionDslVarargColumnReferenceDocs
+    private interface ColumnsSelectionDslVarargStringDocs
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
@@ -1647,7 +1674,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1662,19 +1690,23 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("columnA", "columnB") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("columnA", "columnB") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`<`[String][String]`>("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      *
      * @param [firstCol] A [String] that points to a column.
      * @param [otherCols] Optional additional [String]s that point to columns.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
     public fun ColumnsSelectionDsl<*>.cols(
         firstCol: String,
         vararg otherCols: String,
-    ): ColumnSet<*> = this.asSingleColumn().cols(firstCol, *otherCols)
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
@@ -1683,7 +1715,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1698,9 +1731,50 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("columnA", "columnB") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("columnA", "columnB") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`<`[String][String]`>("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     *
+     *
+     * @param [firstCol] A [String] that points to a column.
+     * @param [otherCols] Optional additional [String]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
+    public fun <T> ColumnsSelectionDsl<*>.cols(
+        firstCol: String,
+        vararg otherCols: String,
+    ): ColumnSet<T> = this.asSingleColumn().cols(firstCol, *otherCols).cast()
+
+    /** ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its contained columns.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`<`[String][String]`>("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      *
      * @param [firstCol] A [String] that points to a column.
@@ -1710,7 +1784,7 @@ public interface ColsColumnsSelectionDsl {
     public operator fun ColumnsSelectionDsl<*>.get(
         firstCol: String,
         vararg otherCols: String,
-    ): ColumnSet<*> = cols(firstCol, *otherCols)
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
 
     /**
      * ## Cols
@@ -1720,7 +1794,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1753,7 +1828,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1777,12 +1853,52 @@ public interface ColsColumnsSelectionDsl {
      * @param [otherCols] Optional additional [String]s that point to columns.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
     public fun SingleColumn<DataRow<*>>.cols(
         firstCol: String,
         vararg otherCols: String,
-    ): ColumnSet<*> = headPlusArray(firstCol, otherCols).let { names ->
-        this.ensureIsColumnGroup().asColumnSet().transform { it.flatMap { col -> names.mapNotNull { col.getChild(it) } } }
-    }
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
+
+    /** ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its contained columns.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
+     *
+     *
+     * @param [firstCol] A [String] that points to a column.
+     * @param [otherCols] Optional additional [String]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
+    public fun <T> SingleColumn<DataRow<*>>.cols(
+        firstCol: String,
+        vararg otherCols: String,
+    ): ColumnSet<T> = headPlusArray(firstCol, otherCols).let { names ->
+        this.ensureIsColumnGroup().asColumnSet()
+            .transform { it.flatMap { col -> names.mapNotNull { col.getChild(it) } } }
+    }.cast()
 
     /**
      * ## Cols
@@ -1792,7 +1908,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1819,7 +1936,7 @@ public interface ColsColumnsSelectionDsl {
     public operator fun SingleColumn<DataRow<*>>.get(
         firstCol: String,
         vararg otherCols: String,
-    ): ColumnSet<*> = cols(firstCol, *otherCols)
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
 
     /**
      * ## Cols
@@ -1829,7 +1946,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1862,7 +1980,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1886,10 +2005,12 @@ public interface ColsColumnsSelectionDsl {
      * @param [otherCols] Optional additional [String]s that point to columns.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
     public fun String.cols(
         firstCol: String,
         vararg otherCols: String,
-    ): ColumnSet<*> = columnGroup(this).cols(firstCol, *otherCols)
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
@@ -1898,7 +2019,45 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup".`[cols][kotlin.String.cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup"`[`[`][kotlin.String.cols]`"columnA", "columnB"`[`]`][kotlin.String.cols]` }`
+     *
+     *
+     * @param [firstCol] A [String] that points to a column.
+     * @param [otherCols] Optional additional [String]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
+    public fun <T> String.cols(
+        firstCol: String,
+        vararg otherCols: String,
+    ): ColumnSet<T> = columnGroup(this).cols(firstCol, *otherCols).cast()
+
+    /** ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its contained columns.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1925,7 +2084,7 @@ public interface ColsColumnsSelectionDsl {
     public operator fun String.get(
         firstCol: String,
         vararg otherCols: String,
-    ): ColumnSet<*> = cols(firstCol, *otherCols)
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
 
     /**
      * ## Cols
@@ -1935,7 +2094,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1950,7 +2110,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`("columnA", "columnB") }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][KProperty.cols]`("columnA", "columnB") }`
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"columnA", "columnB"`[`]`][KProperty.cols]` }`
      *
@@ -1968,7 +2128,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -1983,7 +2144,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("columnA", "columnB") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`("columnA", "columnB") }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"columnA", "columnB"`[`]`][kotlin.reflect.KProperty.cols]` }`
      *
@@ -1992,10 +2153,12 @@ public interface ColsColumnsSelectionDsl {
      * @param [otherCols] Optional additional [String]s that point to columns.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
     public fun KProperty<*>.cols(
         firstCol: String,
         vararg otherCols: String,
-    ): ColumnSet<*> = columnGroup(this).cols(firstCol, *otherCols)
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
@@ -2004,7 +2167,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -2019,7 +2183,44 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("columnA", "columnB") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"columnA", "columnB"`[`]`][kotlin.reflect.KProperty.cols]` }`
+     *
+     *
+     * @param [firstCol] A [String] that points to a column.
+     * @param [otherCols] Optional additional [String]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
+    public fun <T> KProperty<*>.cols(
+        firstCol: String,
+        vararg otherCols: String,
+    ): ColumnSet<T> = columnGroup(this).cols(firstCol, *otherCols).cast()
+
+    /** ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its contained columns.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`("columnA", "columnB") }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"columnA", "columnB"`[`]`][kotlin.reflect.KProperty.cols]` }`
      *
@@ -2031,7 +2232,7 @@ public interface ColsColumnsSelectionDsl {
     public operator fun KProperty<*>.get(
         firstCol: String,
         vararg otherCols: String,
-    ): ColumnSet<*> = cols(firstCol, *otherCols)
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
 
     /**
      * ## Cols
@@ -2041,7 +2242,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -2074,7 +2276,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -2098,10 +2301,12 @@ public interface ColsColumnsSelectionDsl {
      * @param [otherCols] Optional additional [String]s that point to columns.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
     public fun ColumnPath.cols(
         firstCol: String,
         vararg otherCols: String,
-    ): ColumnSet<*> = columnGroup(this).cols(firstCol, *otherCols)
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
@@ -2110,7 +2315,45 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     *
+     *
+     * @param [firstCol] A [String] that points to a column.
+     * @param [otherCols] Optional additional [String]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
+    public fun <T> ColumnPath.cols(
+        firstCol: String,
+        vararg otherCols: String,
+    ): ColumnSet<T> = columnGroup(this).cols(firstCol, *otherCols).cast()
+
+    /** ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its contained columns.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -2137,7 +2380,795 @@ public interface ColsColumnsSelectionDsl {
     public operator fun ColumnPath.get(
         firstCol: String,
         vararg otherCols: String,
-    ): ColumnSet<*> = cols(firstCol, *otherCols)
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
+
+    // endregion
+
+    // region paths
+
+    /**
+     * ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its contained columns.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][ColumnsSelectionDsl.cols]` }`
+     *
+     *
+     * @param [firstCol] A [String] that points to a column.
+     * @param [otherCols] Optional additional [String]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
+    private interface ColumnsSelectionDslVarargColumnPathDocs
+
+    /** ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its contained columns.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     *
+     *
+     * @param [firstCol] A [String] that points to a column.
+     * @param [otherCols] Optional additional [String]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
+    public fun ColumnsSelectionDsl<*>.cols(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
+
+    /** ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its contained columns.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     *
+     *
+     * @param [firstCol] A [String] that points to a column.
+     * @param [otherCols] Optional additional [String]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
+    public fun <T> ColumnsSelectionDsl<*>.cols(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<T> = this.asSingleColumn().cols(firstCol, *otherCols).cast()
+
+    /** ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its contained columns.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     *
+     *
+     * @param [firstCol] A [String] that points to a column.
+     * @param [otherCols] Optional additional [String]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
+    public operator fun ColumnsSelectionDsl<*>.get(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
+
+    /**
+     * ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its contained columns.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][SingleColumn.cols]` }`
+     *
+     *
+     * @param [firstCol] A [ColumnPath] that points to a column.
+     * @param [otherCols] Optional additional [ColumnPath]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
+    private interface SingleColumnColsVarargColumnPathDocs
+
+    /** ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its contained columns.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
+     *
+     *
+     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
+     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
+    public fun SingleColumn<DataRow<*>>.cols(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
+
+    /** ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its contained columns.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
+     *
+     *
+     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
+     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
+    public fun <T> SingleColumn<DataRow<*>>.cols(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<T> = headPlusArray(firstCol, otherCols).let { names ->
+        this.ensureIsColumnGroup().asColumnSet()
+            .transform { it.flatMap { col -> names.mapNotNull { col.getChild(it) } } }
+    }.cast()
+
+    /**
+     * ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its contained columns.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
+     *
+     *
+     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
+     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
+    public operator fun SingleColumn<DataRow<*>>.get(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
+
+    /**
+     * ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its contained columns.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "columnGroup".`[cols][String.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { "columnGroup".`[cols][String.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { "columnGroup"`[`[`][String.cols]`""pathTo"["colA"], "pathTo"["colB"])`[`]`][ColumnPath.cols]` }`
+     *
+     *
+     * @param [firstCol] A [ColumnPath] that points to a column.
+     * @param [otherCols] Optional additional [ColumnPath]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
+    private interface StringColsVarargColumnPathDocs
+
+    /** ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its contained columns.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup".`[cols][kotlin.String.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup".`[cols][kotlin.String.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup"`[`[`][kotlin.String.cols]`""pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     *
+     *
+     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
+     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
+    public fun String.cols(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
+
+    /** ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its contained columns.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup".`[cols][kotlin.String.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup".`[cols][kotlin.String.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup"`[`[`][kotlin.String.cols]`""pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     *
+     *
+     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
+     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
+    public fun <T> String.cols(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<T> = columnGroup(this).cols(firstCol, *otherCols).cast()
+
+    /** ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its contained columns.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup".`[cols][kotlin.String.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup".`[cols][kotlin.String.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup"`[`[`][kotlin.String.cols]`""pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     *
+     *
+     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
+     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
+    public operator fun String.get(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
+
+    /**
+     * ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its contained columns.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][KProperty.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][KProperty.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"columnA", "columnB"`[`]`][KProperty.cols]` }`
+     *
+     *
+     * @param [firstCol] A [ColumnPath] that points to a column.
+     * @param [otherCols] Optional additional [ColumnPath]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
+    private interface KPropertiesColsVarargColumnPathDocs
+
+    /** ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its contained columns.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"columnA", "columnB"`[`]`][kotlin.reflect.KProperty.cols]` }`
+     *
+     *
+     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
+     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
+    public fun KProperty<*>.cols(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
+
+    /** ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its contained columns.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"columnA", "columnB"`[`]`][kotlin.reflect.KProperty.cols]` }`
+     *
+     *
+     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
+     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
+    public fun <T> KProperty<*>.cols(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<T> = columnGroup(this).cols(firstCol, *otherCols).cast()
+
+    /** ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its contained columns.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"columnA", "columnB"`[`]`][kotlin.reflect.KProperty.cols]` }`
+     *
+     *
+     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
+     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
+    public operator fun KProperty<*>.get(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
+
+    /**
+     * ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its contained columns.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][ColumnPath.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][ColumnPath.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][ColumnPath.cols]` }`
+     *
+     *
+     * @param [firstCol] A [ColumnPath] that points to a column.
+     * @param [otherCols] Optional additional [ColumnPath]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
+    private interface ColumnPathColsVarargColumnPathDocs
+
+    /** ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its contained columns.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     *
+     *
+     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
+     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
+    public fun ColumnPath.cols(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
+
+    /** ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its contained columns.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     *
+     *
+     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
+     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
+    public fun <T> ColumnPath.cols(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<T> = columnGroup(this).cols(firstCol, *otherCols).cast()
+
+    /** ## Cols
+     * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `cols` will create a subset of its contained columns.
+     *
+     * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
+     *
+     * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() }.`[recursively][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`() }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroupCol.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1, 3, 5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     *
+     *
+     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
+     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     */
+    public operator fun ColumnPath.get(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
 
     // endregion
 
@@ -2151,7 +3182,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -2184,7 +3216,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -2220,7 +3253,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -2257,7 +3291,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -2290,7 +3325,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -2318,7 +3354,8 @@ public interface ColsColumnsSelectionDsl {
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
     ): ColumnSet<C> = headPlusArray(firstCol, otherCols).let { props ->
-        this.ensureIsColumnGroup().asColumnSet().transform { it.flatMap { col -> props.mapNotNull { col.getChild(it) } } }
+        this.ensureIsColumnGroup().asColumnSet()
+            .transform { it.flatMap { col -> props.mapNotNull { col.getChild(it) } } }
     }
 
     /** ## Cols
@@ -2328,7 +3365,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -2365,7 +3403,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -2398,7 +3437,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -2434,7 +3474,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -2471,7 +3512,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -2504,7 +3546,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -2540,7 +3583,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -2577,7 +3621,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -2610,7 +3655,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -2646,7 +3692,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
@@ -2847,6 +3894,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(1, 3) }`
      *
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`<`[String][String]`>(1, 3) }`
+     *
      * @throws [IndexOutOfBoundsException] If any index is out of bounds.
      * @param [firstIndex] The index of the first column to retrieve.
      * @param [otherIndices] The other indices of the columns to retrieve.
@@ -2878,15 +3927,55 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1, 3) }`
      *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`<`[String][String]`>(1, 3) }`
+     *
      * @throws [IndexOutOfBoundsException] If any index is out of bounds.
      * @param [firstIndex] The index of the first column to retrieve.
      * @param [otherIndices] The other indices of the columns to retrieve.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
     public fun ColumnsSelectionDsl<*>.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
-    ): ColumnSet<*> = this.asSingleColumn().colsInternal(headPlusArray(firstIndex, otherIndices))
+    ): ColumnSet<*> = cols<Any?>(firstIndex, *otherIndices)
+
+    /** ## Cols: Columns by Indices
+     *
+     * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
+     * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the columns found at the
+     * given indices inside.
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
+     * the given indices in the set.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(0, 2) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1, 3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`<`[String][String]`>(1, 3) }`
+     *
+     * @throws [IndexOutOfBoundsException] If any index is out of bounds.
+     * @param [firstIndex] The index of the first column to retrieve.
+     * @param [otherIndices] The other indices of the columns to retrieve.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
+     */
+    public fun <T> ColumnsSelectionDsl<*>.cols(
+        firstIndex: Int,
+        vararg otherIndices: Int,
+    ): ColumnSet<T> = this.asSingleColumn().colsInternal(headPlusArray(firstIndex, otherIndices)).cast()
 
     /**
      * ## Cols: Columns by Indices
@@ -2912,6 +4001,8 @@ public interface ColsColumnsSelectionDsl {
      * #### Examples for this overload:
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(1, 3) }`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`<`[String][String]`>(3, 4) }`
      *
      * @throws [IndexOutOfBoundsException] If any index is out of bounds.
      * @param [firstIndex] The index of the first column to retrieve.
@@ -2944,15 +4035,55 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3) }`
      *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`<`[String][String]`>(3, 4) }`
+     *
      * @throws [IndexOutOfBoundsException] If any index is out of bounds.
      * @param [firstIndex] The index of the first column to retrieve.
      * @param [otherIndices] The other indices of the columns to retrieve.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
     public fun SingleColumn<DataRow<*>>.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
-    ): ColumnSet<*> = this.ensureIsColumnGroup().colsInternal(headPlusArray(firstIndex, otherIndices))
+    ): ColumnSet<*> = cols<Any?>(firstIndex, *otherIndices)
+
+    /** ## Cols: Columns by Indices
+     *
+     * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
+     * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the columns found at the
+     * given indices inside.
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
+     * the given indices in the set.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(0, 2) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`<`[String][String]`>(3, 4) }`
+     *
+     * @throws [IndexOutOfBoundsException] If any index is out of bounds.
+     * @param [firstIndex] The index of the first column to retrieve.
+     * @param [otherIndices] The other indices of the columns to retrieve.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
+     */
+    public fun <T> SingleColumn<DataRow<*>>.cols(
+        firstIndex: Int,
+        vararg otherIndices: Int,
+    ): ColumnSet<T> = this.ensureIsColumnGroup().colsInternal(headPlusArray(firstIndex, otherIndices)).cast()
 
     /**
      * ## Cols: Columns by Indices
@@ -2978,6 +4109,8 @@ public interface ColsColumnsSelectionDsl {
      * #### Examples for this overload:
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`(5, 3, 1) }`
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`<`[String][String]`>(5, 3, 1) }`
      *
      * @throws [IndexOutOfBoundsException] If any index is out of bounds.
      * @param [firstIndex] The index of the first column to retrieve.
@@ -3010,15 +4143,55 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(5, 3, 1) }`
      *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`<`[String][String]`>(5, 3, 1) }`
+     *
      * @throws [IndexOutOfBoundsException] If any index is out of bounds.
      * @param [firstIndex] The index of the first column to retrieve.
      * @param [otherIndices] The other indices of the columns to retrieve.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
     public fun String.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
-    ): ColumnSet<*> = columnGroup(this).cols(firstIndex, *otherIndices)
+    ): ColumnSet<*> = cols<Any?>(firstIndex, *otherIndices)
+
+    /** ## Cols: Columns by Indices
+     *
+     * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
+     * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the columns found at the
+     * given indices inside.
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
+     * the given indices in the set.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(0, 2) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(5, 3, 1) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`<`[String][String]`>(5, 3, 1) }`
+     *
+     * @throws [IndexOutOfBoundsException] If any index is out of bounds.
+     * @param [firstIndex] The index of the first column to retrieve.
+     * @param [otherIndices] The other indices of the columns to retrieve.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
+     */
+    public fun <T> String.cols(
+        firstIndex: Int,
+        vararg otherIndices: Int,
+    ): ColumnSet<T> = columnGroup(this).cols(firstIndex, *otherIndices).cast()
 
     /**
      * ## Cols: Columns by Indices
@@ -3044,6 +4217,8 @@ public interface ColsColumnsSelectionDsl {
      * #### Examples for this overload:
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`(5, 4) }`
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`<`[String][String]`>(5, 4) }`
      *
      * @throws [IndexOutOfBoundsException] If any index is out of bounds.
      * @param [firstIndex] The index of the first column to retrieve.
@@ -3076,15 +4251,55 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(5, 4) }`
      *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`<`[String][String]`>(5, 4) }`
+     *
      * @throws [IndexOutOfBoundsException] If any index is out of bounds.
      * @param [firstIndex] The index of the first column to retrieve.
      * @param [otherIndices] The other indices of the columns to retrieve.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
     public fun KProperty<*>.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
-    ): ColumnSet<*> = columnGroup(this).cols(firstIndex, *otherIndices)
+    ): ColumnSet<*> = cols<Any?>(firstIndex, *otherIndices)
+
+    /** ## Cols: Columns by Indices
+     *
+     * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
+     * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the columns found at the
+     * given indices inside.
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
+     * the given indices in the set.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(0, 2) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(5, 4) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`<`[String][String]`>(5, 4) }`
+     *
+     * @throws [IndexOutOfBoundsException] If any index is out of bounds.
+     * @param [firstIndex] The index of the first column to retrieve.
+     * @param [otherIndices] The other indices of the columns to retrieve.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
+     */
+    public fun <T> KProperty<*>.cols(
+        firstIndex: Int,
+        vararg otherIndices: Int,
+    ): ColumnSet<T> = columnGroup(this).cols(firstIndex, *otherIndices).cast()
 
     /**
      * ## Cols: Columns by Indices
@@ -3110,6 +4325,8 @@ public interface ColsColumnsSelectionDsl {
      * #### Examples for this overload:
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[cols][ColumnPath.cols]`(0, 1) }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[cols][ColumnPath.cols]`<`[String][String]`>(0, 1) }`
      *
      * @throws [IndexOutOfBoundsException] If any index is out of bounds.
      * @param [firstIndex] The index of the first column to retrieve.
@@ -3142,15 +4359,55 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`(0, 1) }`
      *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`<`[String][String]`>(0, 1) }`
+     *
      * @throws [IndexOutOfBoundsException] If any index is out of bounds.
      * @param [firstIndex] The index of the first column to retrieve.
      * @param [otherIndices] The other indices of the columns to retrieve.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
     public fun ColumnPath.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
-    ): ColumnSet<*> = columnGroup(this).cols(firstIndex, *otherIndices)
+    ): ColumnSet<*> = cols<Any?>(firstIndex, *otherIndices)
+
+    /** ## Cols: Columns by Indices
+     *
+     * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
+     * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the columns found at the
+     * given indices inside.
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
+     * the given indices in the set.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1, 3, 2) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]`5, 1, 2`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.get]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(0, 2) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`(0, 1) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`<`[String][String]`>(0, 1) }`
+     *
+     * @throws [IndexOutOfBoundsException] If any index is out of bounds.
+     * @param [firstIndex] The index of the first column to retrieve.
+     * @param [otherIndices] The other indices of the columns to retrieve.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
+     */
+    public fun <T> ColumnPath.cols(
+        firstIndex: Int,
+        vararg otherIndices: Int,
+    ): ColumnSet<T> = columnGroup(this).cols(firstIndex, *otherIndices).cast()
 
     // endregion
 
@@ -3316,7 +4573,9 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(1`[..][Int.rangeTo]`3) }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(1`[`..`][Int.rangeTo]`3) }`
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`<`[String][String]`>(1`[`..`][Int.rangeTo]`3) }`
      *
      * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
      * @throws [IllegalArgumentException] if the [range] is empty.
@@ -3347,14 +4606,53 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1`[..][Int.rangeTo]`3) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1`[`..`][Int.rangeTo]`3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`<`[String][String]`>(1`[`..`][Int.rangeTo]`3) }`
      *
      * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
      * @throws [IllegalArgumentException] if the [range] is empty.
      * @param [range] The range of indices to retrieve in the form of an [IntRange].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
-    public fun ColumnsSelectionDsl<*>.cols(range: IntRange): ColumnSet<*> = this.asSingleColumn().colsInternal(range)
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
+    public fun ColumnsSelectionDsl<*>.cols(range: IntRange): ColumnSet<*> =
+        cols<Any?>(range)
+
+    /** ## Cols: Columns by Index Range
+     *
+     * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
+     * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the columns found at the
+     * given indices inside.
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
+     * the given indices in the set.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[cols][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1`[`..`][Int.rangeTo]`3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`<`[String][String]`>(1`[`..`][Int.rangeTo]`3) }`
+     *
+     * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
+     * @throws [IllegalArgumentException] if the [range] is empty.
+     * @param [range] The range of indices to retrieve in the form of an [IntRange].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
+     */
+    public fun <T> ColumnsSelectionDsl<*>.cols(range: IntRange): ColumnSet<T> =
+        this.asSingleColumn().colsInternal(range).cast()
 
     /**
      * ## Cols: Columns by Index Range
@@ -3379,7 +4677,9 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(1`[..][Int.rangeTo]`3) }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`<`[String][String]`>(1`[`..`][Int.rangeTo]`3) }`
      *
      * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
      * @throws [IllegalArgumentException] if the [range] is empty.
@@ -3410,14 +4710,53 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[..][Int.rangeTo]`3) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`<`[String][String]`>(1`[`..`][Int.rangeTo]`3) }`
      *
      * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
      * @throws [IllegalArgumentException] if the [range] is empty.
      * @param [range] The range of indices to retrieve in the form of an [IntRange].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
-    public fun SingleColumn<DataRow<*>>.cols(range: IntRange): ColumnSet<*> = this.ensureIsColumnGroup().colsInternal(range)
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
+    public fun SingleColumn<DataRow<*>>.cols(range: IntRange): ColumnSet<*> =
+        cols<Any?>(range)
+
+    /** ## Cols: Columns by Index Range
+     *
+     * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
+     * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the columns found at the
+     * given indices inside.
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
+     * the given indices in the set.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[cols][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`<`[String][String]`>(1`[`..`][Int.rangeTo]`3) }`
+     *
+     * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
+     * @throws [IllegalArgumentException] if the [range] is empty.
+     * @param [range] The range of indices to retrieve in the form of an [IntRange].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
+     */
+    public fun <T> SingleColumn<DataRow<*>>.cols(range: IntRange): ColumnSet<T> =
+        this.ensureIsColumnGroup().colsInternal(range).cast()
 
     /**
      * ## Cols: Columns by Index Range
@@ -3443,6 +4782,8 @@ public interface ColsColumnsSelectionDsl {
      * #### Examples for this overload:
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[cols][String.cols]`(1`[`..`][Int.rangeTo]`3) }`
+     *
+     * `df.`[select][DataFrame.select]` { "myColGroup".`[cols][String.cols]`<`[String][String]`>(1`[`..`][Int.rangeTo]`3) }`
      *
      * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
      * @throws [IllegalArgumentException] if the [range] is empty.
@@ -3475,12 +4816,49 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[cols][kotlin.String.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[cols][kotlin.String.cols]`<`[String][String]`>(1`[`..`][Int.rangeTo]`3) }`
+     *
      * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
      * @throws [IllegalArgumentException] if the [range] is empty.
      * @param [range] The range of indices to retrieve in the form of an [IntRange].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
-    public fun String.cols(range: IntRange): ColumnSet<*> = columnGroup(this).cols(range)
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
+    public fun String.cols(range: IntRange): ColumnSet<*> = cols<Any?>(range)
+
+    /** ## Cols: Columns by Index Range
+     *
+     * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
+     * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the columns found at the
+     * given indices inside.
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
+     * the given indices in the set.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[cols][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[cols][kotlin.String.cols]`(1`[`..`][Int.rangeTo]`3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[cols][kotlin.String.cols]`<`[String][String]`>(1`[`..`][Int.rangeTo]`3) }`
+     *
+     * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
+     * @throws [IllegalArgumentException] if the [range] is empty.
+     * @param [range] The range of indices to retrieve in the form of an [IntRange].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
+     */
+    public fun <T> String.cols(range: IntRange): ColumnSet<T> = columnGroup(this).cols(range).cast()
 
     /**
      * ## Cols: Columns by Index Range
@@ -3506,6 +4884,8 @@ public interface ColsColumnsSelectionDsl {
      * #### Examples for this overload:
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`<`[String][String]`>(1`[`..`][Int.rangeTo]`3) }`
      *
      *
      * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
@@ -3539,12 +4919,49 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`<`[String][String]`>(1`[`..`][Int.rangeTo]`3) }`
+     *
      * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
      * @throws [IllegalArgumentException] if the [range] is empty.
      * @param [range] The range of indices to retrieve in the form of an [IntRange].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
-    public fun KProperty<*>.cols(range: IntRange): ColumnSet<*> = columnGroup(this).cols(range)
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
+    public fun KProperty<*>.cols(range: IntRange): ColumnSet<*> = cols<Any?>(range)
+
+    /** ## Cols: Columns by Index Range
+     *
+     * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
+     * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the columns found at the
+     * given indices inside.
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
+     * the given indices in the set.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[cols][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`<`[String][String]`>(1`[`..`][Int.rangeTo]`3) }`
+     *
+     * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
+     * @throws [IllegalArgumentException] if the [range] is empty.
+     * @param [range] The range of indices to retrieve in the form of an [IntRange].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
+     */
+    public fun <T> KProperty<*>.cols(range: IntRange): ColumnSet<T> = columnGroup(this).cols(range).cast()
 
     /**
      * ## Cols: Columns by Index Range
@@ -3569,7 +4986,9 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[cols][ColumnPath.cols]`(0`[..][Int.rangeTo]`1) }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[cols][ColumnPath.cols]`(0`[`..`][Int.rangeTo]`1) }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[cols][ColumnPath.cols]`<`[String][String]`>(0`[`..`][Int.rangeTo]`1) }`
      *
      * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
      * @throws [IllegalArgumentException] if the [range] is empty.
@@ -3600,14 +5019,51 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`(0`[..][Int.rangeTo]`1) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`(0`[`..`][Int.rangeTo]`1) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`<`[String][String]`>(0`[`..`][Int.rangeTo]`1) }`
      *
      * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
      * @throws [IllegalArgumentException] if the [range] is empty.
      * @param [range] The range of indices to retrieve in the form of an [IntRange].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
-    public fun ColumnPath.cols(range: IntRange): ColumnSet<*> = columnGroup(this).cols(range)
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
+    public fun ColumnPath.cols(range: IntRange): ColumnSet<*> = cols<Any?>(range)
+
+    /** ## Cols: Columns by Index Range
+     *
+     * Retrieves multiple columns in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
+     * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
+     *
+     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn], [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], the function will take the columns found at the
+     * given indices inside.
+     * Else, if called on a normal [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], the function will return a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] with the columns found at
+     * the given indices in the set.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage] for how to use [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols].
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[cols][kotlin.String.cols]`(0`[`..`][Int.rangeTo]`2) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`(0`[`..`][Int.rangeTo]`1) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`<`[String][String]`>(0`[`..`][Int.rangeTo]`1) }`
+     *
+     * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
+     * @throws [IllegalArgumentException] if the [range] is empty.
+     * @param [range] The range of indices to retrieve in the form of an [IntRange].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
+     */
+    public fun <T> ColumnPath.cols(range: IntRange): ColumnSet<T> = columnGroup(this).cols(range).cast()
 
     // endregion
 }

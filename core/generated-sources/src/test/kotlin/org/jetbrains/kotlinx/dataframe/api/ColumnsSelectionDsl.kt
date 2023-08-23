@@ -43,42 +43,6 @@ open class ColumnsSelectionDslTests : TestBase() {
         }
 
     @Test
-    fun valueCols() {
-        listOf(
-            df.select { cols(age, city, weight, isHappy) },
-
-            df.select { all().valueCols() },
-            df.select { valueCols() },
-        ).shouldAllBeEqual()
-
-        listOf(
-            df.select { age },
-
-            df.select { age }.select { all() },
-            df.select { age }.select { valueCols() },
-            df.select { age }.select { valueCols().all() },
-            df.select { age }.select { all().valueCols() },
-        ).shouldAllBeEqual()
-
-        listOf(
-            df.select { cols(age, weight) },
-            df.select { valueCols { "e" in it.name() } },
-            df.select { all().valueCols { "e" in it.name() } },
-        ).shouldAllBeEqual()
-
-        listOf(
-            df.select { name.firstName and name.lastName },
-
-            df.select { name.valueCols { "Name" in it.name() } },
-            df.select { name.colsOf<String>().valueCols { "Name" in it.name() } },
-            df.select { "name".valueCols { "Name" in it.name() } },
-            df.select { Person::name.valueCols { "Name" in it.name() } },
-            df.select { pathOf("name").valueCols { "Name" in it.name() } },
-            df.select { it["name"].asColumnGroup().valueCols { "Name" in it.name() } },
-        ).shouldAllBeEqual()
-    }
-
-    @Test
     fun colGroups() {
         listOf(
             df.select { name },

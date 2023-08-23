@@ -92,7 +92,8 @@ public interface ColsColumnsSelectionDsl {
      * then `cols` will create a subset of its contained columns.
      *
      * You can use either a [ColumnFilter], or any of the `vararg` overloads for any
-     * {@include [AccessApiLink]}.
+     * {@include [AccessApiLink]}. The function can be both typed and untyped (in case you're supplying
+     * a column name, -path, or index (range)).
      *
      * Aside from calling [cols] directly, you can also use the [get][ColumnSet.get] operator in most cases.
      *
@@ -312,8 +313,6 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(columnA, columnB) }`
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
-     *
      * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`columnA, columnB`[`]`][ColumnsSelectionDsl.cols]` }`
      */
     private interface ColumnsSelectionDslColsVarargColumnReferenceDocs
@@ -363,8 +362,6 @@ public interface ColsColumnsSelectionDsl {
      * @setArg [CommonColsDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`(columnA, columnB) }`
-     *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup"`[`[`][String.cols]`columnA, columnB`[`]`][String.cols]` }`
      */
@@ -436,23 +433,33 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [String]}
      * @setArg [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]`("columnA", "columnB") }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`("columnA", "columnB") }`
      *
-     * `df.`[select][DataFrame.select]` { this`[`[`][SingleColumn.cols]`"columnA", "columnB"`[`]`][SingleColumn.cols]` }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`<`[String][String]`>("columnA", "columnB") }`
+     *
+     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][ColumnsSelectionDsl.cols]` }`
      */
-    private interface ColumnsSelectionDslVarargColumnReferenceDocs
+    private interface ColumnsSelectionDslVarargStringDocs
 
-    /** @include [ColumnsSelectionDslVarargColumnReferenceDocs] */
+    /** @include [ColumnsSelectionDslVarargStringDocs] */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
     public fun ColumnsSelectionDsl<*>.cols(
         firstCol: String,
         vararg otherCols: String,
-    ): ColumnSet<*> = this.asSingleColumn().cols(firstCol, *otherCols)
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
 
-    /** @include [ColumnsSelectionDslVarargColumnReferenceDocs] */
+    /** @include [ColumnsSelectionDslVarargStringDocs] */
+    public fun <T> ColumnsSelectionDsl<*>.cols(
+        firstCol: String,
+        vararg otherCols: String,
+    ): ColumnSet<T> = this.asSingleColumn().cols(firstCol, *otherCols).cast()
+
+    /** @include [ColumnsSelectionDslVarargStringDocs] */
     public operator fun ColumnsSelectionDsl<*>.get(
         firstCol: String,
         vararg otherCols: String,
-    ): ColumnSet<*> = cols(firstCol, *otherCols)
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
 
     /**
      * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [String]}
@@ -465,12 +472,21 @@ public interface ColsColumnsSelectionDsl {
     private interface SingleColumnColsVarargStringDocs
 
     /** @include [SingleColumnColsVarargStringDocs] */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
     public fun SingleColumn<DataRow<*>>.cols(
         firstCol: String,
         vararg otherCols: String,
-    ): ColumnSet<*> = headPlusArray(firstCol, otherCols).let { names ->
-        this.ensureIsColumnGroup().asColumnSet().transform { it.flatMap { col -> names.mapNotNull { col.getChild(it) } } }
-    }
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
+
+    /** @include [SingleColumnColsVarargStringDocs] */
+    public fun <T> SingleColumn<DataRow<*>>.cols(
+        firstCol: String,
+        vararg otherCols: String,
+    ): ColumnSet<T> = headPlusArray(firstCol, otherCols).let { names ->
+        this.ensureIsColumnGroup().asColumnSet()
+            .transform { it.flatMap { col -> names.mapNotNull { col.getChild(it) } } }
+    }.cast()
 
     /**
      * @include [SingleColumnColsVarargStringDocs]
@@ -478,7 +494,7 @@ public interface ColsColumnsSelectionDsl {
     public operator fun SingleColumn<DataRow<*>>.get(
         firstCol: String,
         vararg otherCols: String,
-    ): ColumnSet<*> = cols(firstCol, *otherCols)
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
 
     /**
      * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [String]}
@@ -491,38 +507,54 @@ public interface ColsColumnsSelectionDsl {
     private interface StringColsVarargStringDocs
 
     /** @include [StringColsVarargStringDocs] */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
     public fun String.cols(
         firstCol: String,
         vararg otherCols: String,
-    ): ColumnSet<*> = columnGroup(this).cols(firstCol, *otherCols)
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
+
+    /** @include [StringColsVarargStringDocs] */
+    public fun <T> String.cols(
+        firstCol: String,
+        vararg otherCols: String,
+    ): ColumnSet<T> = columnGroup(this).cols(firstCol, *otherCols).cast()
 
     /** @include [StringColsVarargStringDocs] */
     public operator fun String.get(
         firstCol: String,
         vararg otherCols: String,
-    ): ColumnSet<*> = cols(firstCol, *otherCols)
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
 
     /**
      * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [String]}
      * @setArg [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`("columnA", "columnB") }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][KProperty.cols]`("columnA", "columnB") }`
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"columnA", "columnB"`[`]`][KProperty.cols]` }`
      */
     private interface KPropertiesColsVarargStringDocs
 
     /** @include [KPropertiesColsVarargStringDocs] */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
     public fun KProperty<*>.cols(
         firstCol: String,
         vararg otherCols: String,
-    ): ColumnSet<*> = columnGroup(this).cols(firstCol, *otherCols)
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
+
+    /** @include [KPropertiesColsVarargStringDocs] */
+    public fun <T> KProperty<*>.cols(
+        firstCol: String,
+        vararg otherCols: String,
+    ): ColumnSet<T> = columnGroup(this).cols(firstCol, *otherCols).cast()
 
     /** @include [KPropertiesColsVarargStringDocs] */
     public operator fun KProperty<*>.get(
         firstCol: String,
         vararg otherCols: String,
-    ): ColumnSet<*> = cols(firstCol, *otherCols)
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
 
     /**
      * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [String]}
@@ -535,16 +567,193 @@ public interface ColsColumnsSelectionDsl {
     private interface ColumnPathColsVarargStringDocs
 
     /** @include [ColumnPathColsVarargStringDocs] */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
     public fun ColumnPath.cols(
         firstCol: String,
         vararg otherCols: String,
-    ): ColumnSet<*> = columnGroup(this).cols(firstCol, *otherCols)
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
+
+    /** @include [ColumnPathColsVarargStringDocs] */
+    public fun <T> ColumnPath.cols(
+        firstCol: String,
+        vararg otherCols: String,
+    ): ColumnSet<T> = columnGroup(this).cols(firstCol, *otherCols).cast()
 
     /** @include [ColumnPathColsVarargStringDocs] */
     public operator fun ColumnPath.get(
         firstCol: String,
         vararg otherCols: String,
-    ): ColumnSet<*> = cols(firstCol, *otherCols)
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
+
+    // endregion
+
+    // region paths
+
+    /**
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [String]}
+     * @setArg [CommonColsDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][ColumnsSelectionDsl.cols]` }`
+     */
+    private interface ColumnsSelectionDslVarargColumnPathDocs
+
+    /** @include [ColumnsSelectionDslVarargColumnPathDocs] */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
+    public fun ColumnsSelectionDsl<*>.cols(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
+
+    /** @include [ColumnsSelectionDslVarargColumnPathDocs] */
+    public fun <T> ColumnsSelectionDsl<*>.cols(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<T> = this.asSingleColumn().cols(firstCol, *otherCols).cast()
+
+    /** @include [ColumnsSelectionDslVarargColumnPathDocs] */
+    public operator fun ColumnsSelectionDsl<*>.get(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
+
+    /**
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [ColumnPath]}
+     * @setArg [CommonColsDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][SingleColumn.cols]` }`
+     */
+    private interface SingleColumnColsVarargColumnPathDocs
+
+    /** @include [SingleColumnColsVarargColumnPathDocs] */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
+    public fun SingleColumn<DataRow<*>>.cols(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
+
+    /** @include [SingleColumnColsVarargColumnPathDocs] */
+    public fun <T> SingleColumn<DataRow<*>>.cols(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<T> = headPlusArray(firstCol, otherCols).let { names ->
+        this.ensureIsColumnGroup().asColumnSet()
+            .transform { it.flatMap { col -> names.mapNotNull { col.getChild(it) } } }
+    }.cast()
+
+    /**
+     * @include [SingleColumnColsVarargColumnPathDocs]
+     */
+    public operator fun SingleColumn<DataRow<*>>.get(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
+
+    /**
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [ColumnPath]}
+     * @setArg [CommonColsDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { "columnGroup".`[cols][String.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { "columnGroup".`[cols][String.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { "columnGroup"`[`[`][String.cols]`""pathTo"["colA"], "pathTo"["colB"])`[`]`][ColumnPath.cols]` }`
+     */
+    private interface StringColsVarargColumnPathDocs
+
+    /** @include [StringColsVarargColumnPathDocs] */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
+    public fun String.cols(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
+
+    /** @include [StringColsVarargColumnPathDocs] */
+    public fun <T> String.cols(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<T> = columnGroup(this).cols(firstCol, *otherCols).cast()
+
+    /** @include [StringColsVarargColumnPathDocs] */
+    public operator fun String.get(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
+
+    /**
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [ColumnPath]}
+     * @setArg [CommonColsDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][KProperty.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][KProperty.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"columnA", "columnB"`[`]`][KProperty.cols]` }`
+     */
+    private interface KPropertiesColsVarargColumnPathDocs
+
+    /** @include [KPropertiesColsVarargColumnPathDocs] */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
+    public fun KProperty<*>.cols(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
+
+    /** @include [KPropertiesColsVarargColumnPathDocs] */
+    public fun <T> KProperty<*>.cols(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<T> = columnGroup(this).cols(firstCol, *otherCols).cast()
+
+    /** @include [KPropertiesColsVarargColumnPathDocs] */
+    public operator fun KProperty<*>.get(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
+
+    /**
+     * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [ColumnPath]}
+     * @setArg [CommonColsDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][ColumnPath.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][ColumnPath.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][ColumnPath.cols]` }`
+     */
+    private interface ColumnPathColsVarargColumnPathDocs
+
+    /** @include [ColumnPathColsVarargColumnPathDocs] */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
+    public fun ColumnPath.cols(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
+
+    /** @include [ColumnPathColsVarargColumnPathDocs] */
+    public fun <T> ColumnPath.cols(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<T> = columnGroup(this).cols(firstCol, *otherCols).cast()
+
+    /** @include [ColumnPathColsVarargColumnPathDocs] */
+    public operator fun ColumnPath.get(
+        firstCol: ColumnPath,
+        vararg otherCols: ColumnPath,
+    ): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
 
     // endregion
 
@@ -587,7 +796,8 @@ public interface ColsColumnsSelectionDsl {
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
     ): ColumnSet<C> = headPlusArray(firstCol, otherCols).let { props ->
-        this.ensureIsColumnGroup().asColumnSet().transform { it.flatMap { col -> props.mapNotNull { col.getChild(it) } } }
+        this.ensureIsColumnGroup().asColumnSet()
+            .transform { it.flatMap { col -> props.mapNotNull { col.getChild(it) } } }
     }
 
     /** @include [SingleColumnColsVarargKPropertyDocs] */
@@ -730,70 +940,120 @@ public interface ColsColumnsSelectionDsl {
      * @setArg [CommonColsIndicesDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(1, 3) }`
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`<`[String][String]`>(1, 3) }`
      */
     private interface ColumnsSelectionDslColsIndicesDocs
 
     /** @include [ColumnsSelectionDslColsIndicesDocs] */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
     public fun ColumnsSelectionDsl<*>.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
-    ): ColumnSet<*> = this.asSingleColumn().colsInternal(headPlusArray(firstIndex, otherIndices))
+    ): ColumnSet<*> = cols<Any?>(firstIndex, *otherIndices)
+
+    /** @include [ColumnsSelectionDslColsIndicesDocs] */
+    public fun <T> ColumnsSelectionDsl<*>.cols(
+        firstIndex: Int,
+        vararg otherIndices: Int,
+    ): ColumnSet<T> = this.asSingleColumn().colsInternal(headPlusArray(firstIndex, otherIndices)).cast()
 
     /**
      * @include [CommonColsIndicesDocs]
      * @setArg [CommonColsIndicesDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(1, 3) }`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`<`[String][String]`>(3, 4) }`
      */
     private interface SingleColumnColsIndicesDocs
 
     /** @include [SingleColumnColsIndicesDocs] */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
     public fun SingleColumn<DataRow<*>>.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
-    ): ColumnSet<*> = this.ensureIsColumnGroup().colsInternal(headPlusArray(firstIndex, otherIndices))
+    ): ColumnSet<*> = cols<Any?>(firstIndex, *otherIndices)
+
+    /** @include [SingleColumnColsIndicesDocs] */
+    public fun <T> SingleColumn<DataRow<*>>.cols(
+        firstIndex: Int,
+        vararg otherIndices: Int,
+    ): ColumnSet<T> = this.ensureIsColumnGroup().colsInternal(headPlusArray(firstIndex, otherIndices)).cast()
 
     /**
      * @include [CommonColsIndicesDocs]
      * @setArg [CommonColsIndicesDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`(5, 3, 1) }`
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`<`[String][String]`>(5, 3, 1) }`
      */
     private interface StringColsIndicesDocs
 
     /** @include [StringColsIndicesDocs] */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
     public fun String.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
-    ): ColumnSet<*> = columnGroup(this).cols(firstIndex, *otherIndices)
+    ): ColumnSet<*> = cols<Any?>(firstIndex, *otherIndices)
+
+    /** @include [StringColsIndicesDocs] */
+    public fun <T> String.cols(
+        firstIndex: Int,
+        vararg otherIndices: Int,
+    ): ColumnSet<T> = columnGroup(this).cols(firstIndex, *otherIndices).cast()
 
     /**
      * @include [CommonColsIndicesDocs]
      * @setArg [CommonColsIndicesDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`(5, 4) }`
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`<`[String][String]`>(5, 4) }`
      */
     private interface KPropertyColsIndicesDocs
 
     /** @include [KPropertyColsIndicesDocs] */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
     public fun KProperty<*>.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
-    ): ColumnSet<*> = columnGroup(this).cols(firstIndex, *otherIndices)
+    ): ColumnSet<*> = cols<Any?>(firstIndex, *otherIndices)
+
+    /** @include [KPropertyColsIndicesDocs] */
+    public fun <T> KProperty<*>.cols(
+        firstIndex: Int,
+        vararg otherIndices: Int,
+    ): ColumnSet<T> = columnGroup(this).cols(firstIndex, *otherIndices).cast()
 
     /**
      * @include [CommonColsIndicesDocs]
      * @setArg [CommonColsIndicesDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[cols][ColumnPath.cols]`(0, 1) }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[cols][ColumnPath.cols]`<`[String][String]`>(0, 1) }`
      */
     private interface ColumnPathColsIndicesDocs
 
     /** @include [ColumnPathColsIndicesDocs] */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
     public fun ColumnPath.cols(
         firstIndex: Int,
         vararg otherIndices: Int,
-    ): ColumnSet<*> = columnGroup(this).cols(firstIndex, *otherIndices)
+    ): ColumnSet<*> = cols<Any?>(firstIndex, *otherIndices)
+
+    /** @include [ColumnPathColsIndicesDocs] */
+    public fun <T> ColumnPath.cols(
+        firstIndex: Int,
+        vararg otherIndices: Int,
+    ): ColumnSet<T> = columnGroup(this).cols(firstIndex, *otherIndices).cast()
 
     // endregion
 
@@ -856,34 +1116,59 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsRangeDocs]
      * @setArg [CommonColsRangeDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(1`[..][Int.rangeTo]`3) }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(1`[`..`][Int.rangeTo]`3) }`
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`<`[String][String]`>(1`[`..`][Int.rangeTo]`3) }`
      */
     private interface ColumnsSelectionDslColsRangeDocs
 
     /** @include [ColumnsSelectionDslColsRangeDocs] */
-    public fun ColumnsSelectionDsl<*>.cols(range: IntRange): ColumnSet<*> = this.asSingleColumn().colsInternal(range)
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
+    public fun ColumnsSelectionDsl<*>.cols(range: IntRange): ColumnSet<*> =
+        cols<Any?>(range)
+
+    /** @include [ColumnsSelectionDslColsRangeDocs] */
+    public fun <T> ColumnsSelectionDsl<*>.cols(range: IntRange): ColumnSet<T> =
+        this.asSingleColumn().colsInternal(range).cast()
 
     /**
      * @include [CommonColsRangeDocs]
      * @setArg [CommonColsRangeDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(1`[..][Int.rangeTo]`3) }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`<`[String][String]`>(1`[`..`][Int.rangeTo]`3) }`
      */
     private interface SingleColumnColsRangeDocs
 
     /** @include [SingleColumnColsRangeDocs] */
-    public fun SingleColumn<DataRow<*>>.cols(range: IntRange): ColumnSet<*> = this.ensureIsColumnGroup().colsInternal(range)
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
+    public fun SingleColumn<DataRow<*>>.cols(range: IntRange): ColumnSet<*> =
+        cols<Any?>(range)
+
+    /** @include [SingleColumnColsRangeDocs] */
+    public fun <T> SingleColumn<DataRow<*>>.cols(range: IntRange): ColumnSet<T> =
+        this.ensureIsColumnGroup().colsInternal(range).cast()
 
     /**
      * @include [CommonColsRangeDocs]
      * @setArg [CommonColsRangeDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[cols][String.cols]`(1`[`..`][Int.rangeTo]`3) }`
+     *
+     * `df.`[select][DataFrame.select]` { "myColGroup".`[cols][String.cols]`<`[String][String]`>(1`[`..`][Int.rangeTo]`3) }`
      */
     private interface StringColsRangeDocs
 
     /** @include [StringColsRangeDocs] */
-    public fun String.cols(range: IntRange): ColumnSet<*> = columnGroup(this).cols(range)
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
+    public fun String.cols(range: IntRange): ColumnSet<*> = cols<Any?>(range)
+
+    /** @include [StringColsRangeDocs] */
+    public fun <T> String.cols(range: IntRange): ColumnSet<T> = columnGroup(this).cols(range).cast()
 
     /**
      * @include [CommonColsRangeDocs]
@@ -891,22 +1176,36 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`<`[String][String]`>(1`[`..`][Int.rangeTo]`3) }`
+     *
      */
     private interface KPropertyColsRangeDocs
 
     /** @include [KPropertyColsRangeDocs] */
-    public fun KProperty<*>.cols(range: IntRange): ColumnSet<*> = columnGroup(this).cols(range)
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
+    public fun KProperty<*>.cols(range: IntRange): ColumnSet<*> = cols<Any?>(range)
+
+    /** @include [KPropertyColsRangeDocs] */
+    public fun <T> KProperty<*>.cols(range: IntRange): ColumnSet<T> = columnGroup(this).cols(range).cast()
 
     /**
      * @include [CommonColsRangeDocs]
      * @setArg [CommonColsRangeDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[cols][ColumnPath.cols]`(0`[..][Int.rangeTo]`1) }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[cols][ColumnPath.cols]`(0`[`..`][Int.rangeTo]`1) }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[cols][ColumnPath.cols]`<`[String][String]`>(0`[`..`][Int.rangeTo]`1) }`
      */
     private interface ColumnPathColsRangeDocs
 
     /** @include [ColumnPathColsRangeDocs] */
-    public fun ColumnPath.cols(range: IntRange): ColumnSet<*> = columnGroup(this).cols(range)
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("colsUnTyped")
+    public fun ColumnPath.cols(range: IntRange): ColumnSet<*> = cols<Any?>(range)
+
+    /** @include [ColumnPathColsRangeDocs] */
+    public fun <T> ColumnPath.cols(range: IntRange): ColumnSet<T> = columnGroup(this).cols(range).cast()
 
     // endregion
 }
