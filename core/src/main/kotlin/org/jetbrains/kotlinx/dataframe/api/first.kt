@@ -201,25 +201,9 @@ public interface FirstColumnsSelectionDsl {
      * @setArg [CommonFirstDocs.Examples]
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[firstCol][SingleColumn.firstCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[firstCol][SingleColumn.firstCol]`() }`
-     *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[firstCol][KProperty.firstCol]`() }`
      */
     public fun KProperty<*>.firstCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        columnGroup(this).firstCol(condition)
-
-    /**
-     * @include [CommonFirstDocs]
-     * @setArg [CommonFirstDocs.Examples]
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[firstCol][SingleColumn.firstCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[firstCol][SingleColumn.firstCol]`() }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[firstCol][KProperty.firstCol]`() }`
-     */
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("firstKPropertyDataRow")
-    public fun KProperty<DataRow<*>>.firstCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         columnGroup(this).firstCol(condition)
 
     /**

@@ -184,14 +184,6 @@ public interface FrameColColumnsSelectionDsl {
         columnGroup(this).ensureIsColumnGroup().frameColumn<C>(frameCol.path()).ensureIsFrameColumn()
 
     /**
-     * @include [FrameColReferenceDocs] {@setArg [CommonFrameColDocs.ReceiverArg] Type::myColumnGroup.}
-     */
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("frameColKPropertyDataRow")
-    public fun <C> KProperty<DataRow<*>>.frameCol(frameCol: ColumnAccessor<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
-        columnGroup(this).ensureIsColumnGroup().frameColumn<C>(frameCol.path()).ensureIsFrameColumn()
-
-    /**
      * @include [FrameColReferenceDocs] {@setArg [CommonFrameColDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
      */
     public fun <C> ColumnPath.frameCol(frameCol: ColumnAccessor<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
@@ -285,23 +277,6 @@ public interface FrameColColumnsSelectionDsl {
      * @include [CommonFrameColDocs.FrameColumnTypeParam]
      */
     public fun <C> KProperty<*>.frameCol(name: String): ColumnAccessor<DataFrame<C>> =
-        columnGroup(this).ensureIsColumnGroup().frameColumn<C>(name).ensureIsFrameColumn()
-
-    /**
-     * @include [FrameColNameDocs] {@setArg [CommonFrameColDocs.ReceiverArg] Type::myColumnGroup.}
-     */
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("frameColUnTypedKPropertyDataRow")
-    public fun KProperty<DataRow<*>>.frameCol(name: String): ColumnAccessor<DataFrame<*>> =
-        frameCol<Any?>(name)
-
-    /**
-     * @include [FrameColNameDocs] {@setArg [CommonFrameColDocs.ReceiverArg] Type::myColumnGroup.}
-     * @include [CommonFrameColDocs.FrameColumnTypeParam]
-     */
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("frameColKPropertyDataRow")
-    public fun <C> KProperty<DataRow<*>>.frameCol(name: String): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn<C>(name).ensureIsFrameColumn()
 
     /**
@@ -407,23 +382,6 @@ public interface FrameColColumnsSelectionDsl {
      * @include [CommonFrameColDocs.FrameColumnTypeParam]
      */
     public fun <C> KProperty<*>.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<C>> =
-        columnGroup(this).ensureIsColumnGroup().frameColumn<C>(path).ensureIsFrameColumn()
-
-    /**
-     * @include [FrameColPathDocs] {@setArg [CommonFrameColDocs.ReceiverArg] Type::myColumnGroup.}
-     */
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("frameColUnTypedKPropertyDataRow")
-    public fun KProperty<DataRow<*>>.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<*>> =
-        frameCol<Any?>(path)
-
-    /**
-     * @include [FrameColPathDocs] {@setArg [CommonFrameColDocs.ReceiverArg] Type::myColumnGroup.}
-     * @include [CommonFrameColDocs.FrameColumnTypeParam]
-     */
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("frameColKPropertyDataRow")
-    public fun <C> KProperty<DataRow<*>>.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn<C>(path).ensureIsFrameColumn()
 
     /**
@@ -631,23 +589,6 @@ public interface FrameColColumnsSelectionDsl {
      * @include [CommonFrameColDocs.FrameColumnTypeParam]
      */
     public fun <C> KProperty<*>.frameCol(index: Int): SingleColumn<DataFrame<C>> =
-        columnGroup(this).frameCol<C>(index)
-
-    /**
-     * @include [FrameColIndexDocs] {@setArg [CommonFrameColDocs.ReceiverArg] Type::myColumnGroup.}
-     */
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("frameColUnTypedKPropertyDataRow")
-    public fun KProperty<DataRow<*>>.frameCol(index: Int): SingleColumn<DataFrame<*>> =
-        frameCol<Any?>(index)
-
-    /**
-     * @include [FrameColIndexDocs] {@setArg [CommonFrameColDocs.ReceiverArg] Type::myColumnGroup.}
-     * @include [CommonFrameColDocs.FrameColumnTypeParam]
-     */
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("frameColKPropertyDataRow")
-    public fun <C> KProperty<DataRow<*>>.frameCol(index: Int): SingleColumn<DataFrame<C>> =
         columnGroup(this).frameCol<C>(index)
 
     /**

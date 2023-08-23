@@ -201,25 +201,9 @@ public interface LastColumnsSelectionDsl {
      * @setArg [CommonLastDocs.Examples]
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[lastCol][SingleColumn.lastCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[lastCol][SingleColumn.lastCol]`() }`
-     *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[lastCol][KProperty.lastCol]`() }`
      */
     public fun KProperty<*>.lastCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        columnGroup(this).lastCol(condition)
-
-    /**
-     * @include [CommonLastDocs]
-     * @setArg [CommonLastDocs.Examples]
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[lastCol][SingleColumn.lastCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[lastCol][SingleColumn.lastCol]`() }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[lastCol][KProperty.lastCol]`() }`
-     */
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("lastKPropertyDataRow")
-    public fun KProperty<DataRow<*>>.lastCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         columnGroup(this).lastCol(condition)
 
     /**
