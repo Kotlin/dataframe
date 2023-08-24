@@ -45,3 +45,11 @@ internal const val COLS_SELECT_DSL_GROUP_REPLACE = "this.colGroups(filter)"
 private const val message_0_14_0 = "Will be removed in 0.14.0."
 
 // endregion
+
+// region keep across releases
+
+internal const val IDENTITY_FUNCTION = "This overload is an identity function and can be omitted."
+
+internal const val COL_REPLACE = "col"
+
+// endregion
