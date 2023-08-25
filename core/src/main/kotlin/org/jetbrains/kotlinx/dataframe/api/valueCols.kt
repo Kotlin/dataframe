@@ -65,7 +65,7 @@ public interface ValueColsColumnsSelectionDsl {
      * ## Value Columns
      * Creates a subset of columns that are [ValueColumns][ValueColumn] from the current [ColumnSet].
      *
-     * If the current [ColumnSet] is a [SingleColumn]
+     * If the current [ColumnsResolver] is a [SingleColumn]
      * (and thus consists of only one column (or [column group][ColumnGroup])),
      * then [valueCols] will create a subset of its children.
      *
@@ -88,6 +88,10 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * @param [filter\] An optional [predicate][Predicate] to filter the value columns by.
      * @return A ([transformable][TransformableColumnSet]) [ColumnSet] of [ValueColumns][ValueColumn].
+     * @see [ColumnsSelectionDsl.colsOfKind\]
+     * @see [ColumnsSelectionDsl.frameCols\]
+     * @see [ColumnsSelectionDsl.colGroups\]
+     * @see [ColumnsSelectionDsl.cols\]
      */
     private interface CommonValueColsDocs {
 
@@ -103,7 +107,7 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * `// NOTE: This can be shortened to just:`
      *
-     * `df.`[select][DataFrame.select]` { `[valueCols][SingleColumn.valueCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { `[valueCols][ColumnsSelectionDsl.valueCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     public fun ColumnSet<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
         valueColumnsInternal(filter)

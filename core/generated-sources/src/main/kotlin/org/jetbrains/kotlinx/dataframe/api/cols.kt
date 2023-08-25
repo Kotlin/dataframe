@@ -200,6 +200,11 @@ public interface ColsColumnsSelectionDsl {
          *
          * @param [predicate] A [ColumnFilter function][ColumnFilter] that takes a [ColumnReference] and returns a [Boolean].
          * @return A ([transformable][TransformableColumnSet]) [ColumnSet] containing the columns that match the given [predicate].
+         * @see [ColumnsSelectionDsl.filter]
+         * @see [ColumnsSelectionDsl.colsOfKind]
+         * @see [ColumnsSelectionDsl.valueCols]
+         * @see [ColumnsSelectionDsl.frameCols]
+         * @see [ColumnsSelectionDsl.colGroups]
          */
         interface Predicate
 
@@ -290,6 +295,11 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
+     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
      */
     private interface ColumnSetColsPredicateDocs
 
@@ -334,6 +344,11 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
+     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
      * @see [all]
      * @see [filter] */
     @Suppress("UNCHECKED_CAST")
@@ -382,6 +397,11 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
+     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
      * @see [all]
      * @see [filter] */
     public operator fun <C> ColumnSet<C>.get(
@@ -434,6 +454,11 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
+     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
      */
     private interface ColumnsSelectionDslColsPredicateDocs
 
@@ -480,6 +505,11 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
+     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
      * @see [all] */
     public fun ColumnsSelectionDsl<*>.cols(
         predicate: ColumnFilter<*> = { true },
@@ -528,6 +558,11 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
+     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
      * @see [all] */
     public operator fun ColumnsSelectionDsl<*>.get(
         predicate: ColumnFilter<*> = { true },
@@ -578,6 +613,11 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
+     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
      */
     private interface SingleColumnAnyRowColsPredicateDocs
 
@@ -623,6 +663,11 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
+     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
      * @see [all] */
     public fun SingleColumn<DataRow<*>>.cols(
         predicate: ColumnFilter<*> = { true },
@@ -671,6 +716,11 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
+     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
      * @see [all]
      */
     public operator fun SingleColumn<DataRow<*>>.get(
@@ -717,6 +767,11 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
+     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
      */
     private interface StringColsPredicateDocs
 
@@ -759,6 +814,11 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
+     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
      */
     public fun String.cols(
         predicate: ColumnFilter<*> = { true },
@@ -803,6 +863,11 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
+     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
      */
     public operator fun String.get(
         predicate: ColumnFilter<*> = { true },
@@ -850,6 +915,11 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
+     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
      */
     private interface KPropertyColsPredicateDocs
 
@@ -892,6 +962,11 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
+     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
      * @see [all] */
     public fun KProperty<*>.cols(
         predicate: ColumnFilter<*> = { true },
@@ -936,6 +1011,11 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
+     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
      * @see [all] */
     public operator fun KProperty<*>.get(
         predicate: ColumnFilter<*> = { true },
@@ -979,6 +1059,11 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
+     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
      */
     private interface ColumnPathPredicateDocs
 
@@ -1019,6 +1104,11 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
+     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
      */
     public fun ColumnPath.cols(
         predicate: ColumnFilter<*> = { true },
@@ -1061,6 +1151,11 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
+     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
      */
     public operator fun ColumnPath.get(
         predicate: ColumnFilter<*> = { true },

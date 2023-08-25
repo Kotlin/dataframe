@@ -137,6 +137,8 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *  {@include [UsageTemplate.ColumnTypeDef]}
      *  {@include [LineBreak]}
      *  {@include [UsageTemplate.IndexRangeDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.ColumnKindDef]}
      * }
      * {@comment -------------------------------------------------------------------------------------------- }
      * {@setArg [UsageTemplate.PlainDslFunctionsArg]
@@ -164,6 +166,8 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *  `|` {@include [FrameColsColumnsSelectionDsl.Usage.PlainDslName]}
      *  `|` {@include [ColGroupsColumnsSelectionDsl.Usage.PlainDslName]}
      *  `) [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `] [ `{@include [RecursivelyColumnsSelectionDsl.Usage.Name]} ` ]`
+     *
+     *  `|` {@include [ColsOfKindColumnsSelectionDsl.Usage.PlainDslName]}**`(`**{@include [UsageTemplate.ColumnKindRef]}`, ..`**`)`**` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]` `[ `{@include [RecursivelyColumnsSelectionDsl.Usage.Name]} ` ]`
      *
      *  `|` {@include [UsageTemplate.ColumnRef]} {@include [ColumnRangeColumnsSelectionDsl.Usage.PlainDslName]} {@include [UsageTemplate.ColumnRef]}
      *
@@ -197,6 +201,8 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *  `|` {@include [ColGroupColumnsSelectionDsl.Usage.ColumnSetName]}
      *  `) [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `] [ `{@include [RecursivelyColumnsSelectionDsl.Usage.Name]} ` ]`
      *
+     *  {@include [Indent]}`|` {@include [ColsOfKindColumnsSelectionDsl.Usage.ColumnSetName]}**`(`**{@include [UsageTemplate.ColumnKindRef]}`, ..`**`)`**` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]` `[ `{@include [RecursivelyColumnsSelectionDsl.Usage.Name]} ` ]`
+     *
      *  {@include [Indent]}`|` TODO
      * }
      * {@comment -------------------------------------------------------------------------------------------- }
@@ -225,6 +231,8 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *   `|` {@include [FrameColColumnsSelectionDsl.Usage.ColumnGroupName]}
      *   `|` {@include [ColGroupColumnsSelectionDsl.Usage.ColumnGroupName]}
      *   `) [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `] [ `{@include [RecursivelyColumnsSelectionDsl.Usage.Name]} ` ]`
+     *
+     *  {@include [Indent]}`|` {@include [ColsOfKindColumnsSelectionDsl.Usage.ColumnGroupName]}**`(`**{@include [UsageTemplate.ColumnKindRef]}`, ..`**`)`**` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]` `[ `{@include [RecursivelyColumnsSelectionDsl.Usage.Name]} ` ]`
      *
      *  {@include [Indent]}`|` TODO
      * }

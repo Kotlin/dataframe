@@ -105,7 +105,7 @@ public interface ValueColsColumnsSelectionDsl {
      * ## Value Columns
      * Creates a subset of columns that are [ValueColumns][ValueColumn] from the current [ColumnSet].
      *
-     * If the current [ColumnSet] is a [SingleColumn]
+     * If the current [ColumnsResolver] is a [SingleColumn]
      * (and thus consists of only one column (or [column group][ColumnGroup])),
      * then [valueCols] will create a subset of its children.
      *
@@ -128,6 +128,10 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * @param [filter\] An optional [predicate][Predicate] to filter the value columns by.
      * @return A ([transformable][TransformableColumnSet]) [ColumnSet] of [ValueColumns][ValueColumn].
+     * @see [ColumnsSelectionDsl.colsOfKind\]
+     * @see [ColumnsSelectionDsl.frameCols\]
+     * @see [ColumnsSelectionDsl.colGroups\]
+     * @see [ColumnsSelectionDsl.cols\]
      */
     private interface CommonValueColsDocs {
 
@@ -139,7 +143,7 @@ public interface ValueColsColumnsSelectionDsl {
      * ## Value Columns
      * Creates a subset of columns that are [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn] from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
      * (and thus consists of only one column (or [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup])),
      * then [valueCols][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.valueCols] will create a subset of its children.
      *
@@ -162,10 +166,14 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * `// NOTE: This can be shortened to just:`
      *
-     * `df.`[select][DataFrame.select]` { `[valueCols][SingleColumn.valueCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { `[valueCols][ColumnsSelectionDsl.valueCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the value columns by.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn].
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.cols]
      */
     public fun ColumnSet<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
         valueColumnsInternal(filter)
@@ -174,7 +182,7 @@ public interface ValueColsColumnsSelectionDsl {
      * ## Value Columns
      * Creates a subset of columns that are [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn] from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
      * (and thus consists of only one column (or [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup])),
      * then [valueCols][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.valueCols] will create a subset of its children.
      *
@@ -199,6 +207,10 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the value columns by.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn].
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.cols]
      */
     public fun ColumnsSelectionDsl<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
         asSingleColumn().valueColumnsInternal(filter)
@@ -207,7 +219,7 @@ public interface ValueColsColumnsSelectionDsl {
      * ## Value Columns
      * Creates a subset of columns that are [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn] from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
      * (and thus consists of only one column (or [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup])),
      * then [valueCols][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.valueCols] will create a subset of its children.
      *
@@ -232,6 +244,10 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the value columns by.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn].
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.cols]
      */
     public fun SingleColumn<DataRow<*>>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
         this.ensureIsColumnGroup().valueColumnsInternal(filter)
@@ -240,7 +256,7 @@ public interface ValueColsColumnsSelectionDsl {
      * ## Value Columns
      * Creates a subset of columns that are [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn] from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
      * (and thus consists of only one column (or [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup])),
      * then [valueCols][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.valueCols] will create a subset of its children.
      *
@@ -265,6 +281,10 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the value columns by.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn].
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.cols]
      */
     public fun String.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
         columnGroup(this).valueCols(filter)
@@ -273,7 +293,7 @@ public interface ValueColsColumnsSelectionDsl {
      * ## Value Columns
      * Creates a subset of columns that are [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn] from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
      * (and thus consists of only one column (or [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup])),
      * then [valueCols][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.valueCols] will create a subset of its children.
      *
@@ -300,6 +320,10 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the value columns by.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn].
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.cols]
      */
     public fun KProperty<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
         columnGroup(this).valueCols(filter)
@@ -308,7 +332,7 @@ public interface ValueColsColumnsSelectionDsl {
      * ## Value Columns
      * Creates a subset of columns that are [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn] from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
      * (and thus consists of only one column (or [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup])),
      * then [valueCols][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.valueCols] will create a subset of its children.
      *
@@ -331,6 +355,10 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the value columns by.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn].
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.cols]
      */
     public fun ColumnPath.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
         columnGroup(this).valueCols(filter)

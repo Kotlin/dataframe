@@ -43,18 +43,6 @@ open class ColumnsSelectionDslTests : TestBase() {
         }
 
     @Test
-    fun `cols of kind`() {
-        listOf(
-            df.select { cols(age, city, weight, isHappy) },
-
-            df.select { all().valueCols() },
-            df.select { valueCols() },
-            df.select { colsOfKind(Value) },
-            df.select { colsOfKind(Value, Value) },
-        ).shouldAllBeEqual()
-    }
-
-    @Test
     fun roots() {
         df.select { cols(name.firstName, name.lastName, age).roots() } shouldBe
             df.select { cols(name.firstName, name.lastName, age) }

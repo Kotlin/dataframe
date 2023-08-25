@@ -102,7 +102,7 @@ public interface FrameColsColumnsSelectionDsl {
      * ## Frame Columns
      * Creates a subset of columns that are [FrameColumns][FrameColumn] from the current [ColumnSet].
      *
-     * If the current [ColumnSet] is a [SingleColumn]
+     * If the current [ColumnsResolver] is a [SingleColumn]
      * (and thus consists of only one column (or [column group][ColumnGroup])),
      * then [frameCols] will create a subset of its children.
      *
@@ -125,6 +125,10 @@ public interface FrameColsColumnsSelectionDsl {
      *
      * @param [filter\] An optional [predicate][Predicate] to filter the frame columns by.
      * @return A ([transformable][TransformableColumnSet]) [ColumnSet] of [FrameColumns][FrameColumn].
+     * @see [ColumnsSelectionDsl.colsOfKind\]
+     * @see [ColumnsSelectionDsl.valueCols\]
+     * @see [ColumnsSelectionDsl.colGroups\]
+     * @see [ColumnsSelectionDsl.cols\]
      */
     private interface CommonFrameColsDocs {
 
@@ -136,7 +140,7 @@ public interface FrameColsColumnsSelectionDsl {
      * ## Frame Columns
      * Creates a subset of columns that are [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
      * (and thus consists of only one column (or [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup])),
      * then [frameCols][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.frameCols] will create a subset of its children.
      *
@@ -163,6 +167,10 @@ public interface FrameColsColumnsSelectionDsl {
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the frame columns by.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.cols]
      */
     public fun ColumnSet<*>.frameCols(filter: Predicate<FrameColumn<*>> = { true }): TransformableColumnSet<DataFrame<*>> =
         frameColumnsInternal(filter)
@@ -171,7 +179,7 @@ public interface FrameColsColumnsSelectionDsl {
      * ## Frame Columns
      * Creates a subset of columns that are [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
      * (and thus consists of only one column (or [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup])),
      * then [frameCols][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.frameCols] will create a subset of its children.
      *
@@ -196,6 +204,10 @@ public interface FrameColsColumnsSelectionDsl {
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the frame columns by.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.cols]
      */
     public fun ColumnsSelectionDsl<*>.frameCols(filter: Predicate<FrameColumn<*>> = { true }): TransformableColumnSet<DataFrame<*>> =
         asSingleColumn().frameColumnsInternal(filter)
@@ -204,7 +216,7 @@ public interface FrameColsColumnsSelectionDsl {
      * ## Frame Columns
      * Creates a subset of columns that are [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
      * (and thus consists of only one column (or [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup])),
      * then [frameCols][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.frameCols] will create a subset of its children.
      *
@@ -229,6 +241,10 @@ public interface FrameColsColumnsSelectionDsl {
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the frame columns by.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.cols]
      */
     public fun SingleColumn<DataRow<*>>.frameCols(filter: Predicate<FrameColumn<*>> = { true }): TransformableColumnSet<DataFrame<*>> =
         this.ensureIsColumnGroup().frameColumnsInternal(filter)
@@ -237,7 +253,7 @@ public interface FrameColsColumnsSelectionDsl {
      * ## Frame Columns
      * Creates a subset of columns that are [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
      * (and thus consists of only one column (or [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup])),
      * then [frameCols][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.frameCols] will create a subset of its children.
      *
@@ -262,6 +278,10 @@ public interface FrameColsColumnsSelectionDsl {
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the frame columns by.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.cols]
      */
     public fun String.frameCols(filter: Predicate<FrameColumn<*>> = { true }): TransformableColumnSet<DataFrame<*>> =
         columnGroup(this).frameCols(filter)
@@ -270,7 +290,7 @@ public interface FrameColsColumnsSelectionDsl {
      * ## Frame Columns
      * Creates a subset of columns that are [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
      * (and thus consists of only one column (or [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup])),
      * then [frameCols][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.frameCols] will create a subset of its children.
      *
@@ -297,6 +317,10 @@ public interface FrameColsColumnsSelectionDsl {
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the frame columns by.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.cols]
      */
     public fun KProperty<*>.frameCols(filter: Predicate<FrameColumn<*>> = { true }): TransformableColumnSet<DataFrame<*>> =
         columnGroup(this).frameCols(filter)
@@ -305,7 +329,7 @@ public interface FrameColsColumnsSelectionDsl {
      * ## Frame Columns
      * Creates a subset of columns that are [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
      * (and thus consists of only one column (or [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup])),
      * then [frameCols][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.frameCols] will create a subset of its children.
      *
@@ -328,11 +352,21 @@ public interface FrameColsColumnsSelectionDsl {
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the frame columns by.
      * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.cols]
      */
     public fun ColumnPath.frameCols(filter: Predicate<FrameColumn<*>> = { true }): TransformableColumnSet<DataFrame<*>> =
         columnGroup(this).frameCols(filter)
 }
 
+/**
+ * Returns a TransformableColumnSet containing the frame columns that satisfy the given filter.
+ *
+ * @param filter The filter function to apply on each frame column. Must accept a FrameColumn object and return a Boolean.
+ * @return A [TransformableColumnSet] containing the frame columns that satisfy the filter.
+ */
 @Suppress("UNCHECKED_CAST")
 internal fun ColumnsResolver<*>.frameColumnsInternal(filter: (FrameColumn<*>) -> Boolean): TransformableColumnSet<AnyFrame> =
     colsInternal { it.isFrameColumn() && filter(it.asFrameColumn()) } as TransformableColumnSet<AnyFrame>

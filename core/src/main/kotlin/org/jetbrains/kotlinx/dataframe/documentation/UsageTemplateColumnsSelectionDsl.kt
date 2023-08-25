@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.documentation
 import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
+import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
@@ -115,6 +116,9 @@ public interface UsageTemplateColumnsSelectionDsl {
         /** `condition: `[ColumnFilter][ColumnFilter] */
         public interface ConditionDef
 
+        /** `kind: `[ColumnKind][ColumnKind] */
+        public interface ColumnKindDef
+
         // endregion
 
         // region References to the definitions
@@ -139,6 +143,9 @@ public interface UsageTemplateColumnsSelectionDsl {
 
         /** [T][ColumnTypeDef] */
         public interface ColumnTypeRef
+
+        /** [kind][ColumnKindDef] */
+        public interface ColumnKindRef
 
         // endregion
     }

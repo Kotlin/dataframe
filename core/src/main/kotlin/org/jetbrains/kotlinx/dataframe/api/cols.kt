@@ -123,6 +123,11 @@ public interface ColsColumnsSelectionDsl {
          *
          * @param [predicate\] A [ColumnFilter function][ColumnFilter] that takes a [ColumnReference] and returns a [Boolean].
          * @return A ([transformable][TransformableColumnSet]) [ColumnSet] containing the columns that match the given [predicate\].
+         * @see [ColumnsSelectionDsl.filter\]
+         * @see [ColumnsSelectionDsl.colsOfKind\]
+         * @see [ColumnsSelectionDsl.valueCols\]
+         * @see [ColumnsSelectionDsl.frameCols\]
+         * @see [ColumnsSelectionDsl.colGroups\]
          */
         interface Predicate
 
