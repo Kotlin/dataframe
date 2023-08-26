@@ -79,7 +79,7 @@ class DataFrameTreeTests : BaseTest() {
         df2.select { nameAndCity.col(1) } shouldBe typed2.select { nameAndCity.city }
         df2.select { nameAndCity["city"] } shouldBe typed2.select { nameAndCity.city }
         df2.select { nameAndCity.cols("city", "name") } shouldBe typed2.select { nameAndCity.city and nameAndCity.name }
-        df2.select { nameAndCity.cols(name, city) } shouldBe typed2.select { nameAndCity.all() }
+        df2.select { nameAndCity.cols(name, city) } shouldBe typed2.select { nameAndCity.allCols() }
         df2.select { nameAndCity[name] } shouldBe typed2.nameAndCity.select { name }
         df2.select { nameAndCity.cols().drop(1) } shouldBe typed2.nameAndCity.select { city }
 
@@ -89,7 +89,7 @@ class DataFrameTreeTests : BaseTest() {
         typed2.select { nameAndCity.col(1) } shouldBe typed2.select { nameAndCity.city }
         typed2.select { nameAndCity["city"] } shouldBe typed2.select { nameAndCity.city }
         typed2.select { nameAndCity.cols("city", "name") } shouldBe typed2.select { nameAndCity.city and nameAndCity.name }
-        typed2.select { nameAndCity.cols(name, city) } shouldBe typed2.select { nameAndCity.all() }
+        typed2.select { nameAndCity.cols(name, city) } shouldBe typed2.select { nameAndCity.allCols() }
         typed2.select { nameAndCity[name] } shouldBe typed2.nameAndCity.select { name }
         typed2.select { nameAndCity.cols().drop(1) } shouldBe typed2.nameAndCity.select { city }
 
@@ -255,7 +255,7 @@ class DataFrameTreeTests : BaseTest() {
             .rows()
             .groupBy { it.name to (it.city ?: "null") }
             .mapValues { it.value.map { it.age to it.weight } }
-        val dataCols = pivoted.getColumns { col(1).asColumnGroup().all() }
+        val dataCols = pivoted.getColumns { col(1).asColumnGroup().allCols() }
 
         dataCols.forEach { (it.isColumnGroup() || it.isFrameColumn()) shouldBe true }
 
@@ -391,7 +391,7 @@ class DataFrameTreeTests : BaseTest() {
     fun `group cols`() {
         val joined = typed2.move { cols { !it.isColumnGroup() }.rec() }.into { pathOf(it.path.joinToString(".")) }
         val grouped = joined.group { nameContains(".") }.into { it.name().substringBefore(".") }
-        val expected = typed2.rename { nameAndCity.all() }.into { it.path.joinToString(".") }
+        val expected = typed2.rename { nameAndCity.allCols() }.into { it.path.joinToString(".") }
         grouped shouldBe expected
     }
 
@@ -404,7 +404,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun rename() {
-        val res = typed2.rename { nameAndCity.all() }.into { it.name().capitalize() }
+        val res = typed2.rename { nameAndCity.allCols() }.into { it.name().capitalize() }
         res.nameAndCity.columnNames() shouldBe typed2.nameAndCity.columnNames().map { it.capitalize() }
     }
 

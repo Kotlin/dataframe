@@ -107,7 +107,7 @@ class Analyze : TestBase() {
     @TransformDataFrameExpressions
     fun describeColumns_properties() {
         // SampleStart
-        df.describe { age and name.all() }
+        df.describe { age and name.allCols() }
         // SampleEnd
     }
 
@@ -118,7 +118,7 @@ class Analyze : TestBase() {
         val age by column<Int>()
         val name by columnGroup()
 
-        df.describe { age and name.all() }
+        df.describe { age and name.allCols() }
         // SampleEnd
     }
 
@@ -126,7 +126,7 @@ class Analyze : TestBase() {
     @TransformDataFrameExpressions
     fun describeColumns_strings() {
         // SampleStart
-        df.describe { "age" and "name".all() }
+        df.describe { "age" and "name".allCols() }
         // SampleEnd
     }
 

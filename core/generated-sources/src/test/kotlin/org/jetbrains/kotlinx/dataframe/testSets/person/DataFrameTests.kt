@@ -154,7 +154,6 @@ import org.jetbrains.kotlinx.dataframe.api.valuesNotNull
 import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withNull
-import org.jetbrains.kotlinx.dataframe.api.withValue
 import org.jetbrains.kotlinx.dataframe.api.withValues
 import org.jetbrains.kotlinx.dataframe.api.withZero
 import org.jetbrains.kotlinx.dataframe.api.xs
@@ -1462,7 +1461,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `forEachIn`() {
         val pivoted = typed.pivot(inward = true) { city }.groupBy { name and weight }.with { age }
-        val sum = pivoted.select { "city".all() }.values().filterNotNull().sumOf { it as Int }
+        val sum = pivoted.select { "city".allCols() }.values().filterNotNull().sumOf { it as Int }
         sum shouldBe typed.age.sum()
     }
 

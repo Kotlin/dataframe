@@ -738,7 +738,7 @@ class Access : TestBase() {
         df.select { name..age }
 
         // all columns of ColumnGroup
-        df.select { name.all() }
+        df.select { name.allCols() }
 
         // recursive traversal of all children columns excluding ColumnGroups
         df.select { name.cols { !it.isColumnGroup() }.recursively() }
@@ -776,7 +776,7 @@ class Access : TestBase() {
         df.select { name..age }
 
         // all columns of ColumnGroup
-        df.select { name.all() }
+        df.select { name.allCols() }
 
         // recursive traversal of all children columns excluding ColumnGroups
         df.select { name.cols { !it.isColumnGroup() }.recursively() }
@@ -811,7 +811,7 @@ class Access : TestBase() {
         df.select { Person::name..Person::age }
 
         // all columns of ColumnGroup
-        df.select { Person::name.all() }
+        df.select { Person::name.allCols() }
 
         // recursive traversal of all children columns excluding groups
         df.select { Person::name.cols { !it.isColumnGroup() }.recursively() }
@@ -845,7 +845,7 @@ class Access : TestBase() {
         df.select { "name".."age" }
 
         // all columns of ColumnGroup
-        df.select { "name".all() }
+        df.select { "name".allCols() }
 
         // recursive traversal of all children columns excluding groups
         df.select { "name".cols { !it.isColumnGroup() }.recursively() }

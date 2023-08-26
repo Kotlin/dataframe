@@ -99,7 +99,7 @@ public interface RecursivelyColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[recursively][TransformableColumnSet.recursively]`() }`
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[all][ColumnsSelectionDsl.all]`().`[rec][TransformableColumnSet.rec]`() }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[allCols][ColumnsSelectionDsl.allCols]`().`[rec][TransformableColumnSet.rec]`() }`
      *
      * `df.`[select][DataFrame.select]` { `[groups][ColumnsSelectionDsl.groups]`().`[recursively][TransformableColumnSet.recursively]`() }`
      *
@@ -135,7 +135,7 @@ public interface RecursivelyColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>().`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[rec][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.rec]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`().`[rec][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.rec]`() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.groups]`().`[recursively][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet.recursively]`() }`
      *

@@ -78,7 +78,7 @@ public interface RecursivelyColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[recursively][TransformableColumnSet.recursively]`() }`
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[all][ColumnsSelectionDsl.all]`().`[rec][TransformableColumnSet.rec]`() }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[allCols][ColumnsSelectionDsl.allCols]`().`[rec][TransformableColumnSet.rec]`() }`
      *
      * `df.`[select][DataFrame.select]` { `[groups][ColumnsSelectionDsl.groups]`().`[recursively][TransformableColumnSet.recursively]`() }`
      */

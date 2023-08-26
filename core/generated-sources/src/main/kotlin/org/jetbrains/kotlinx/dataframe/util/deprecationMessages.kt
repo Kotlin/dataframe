@@ -32,11 +32,14 @@ internal const val UPDATE_AS_NULLABLE_REPLACE = "this as Update<T, C?>"
 internal const val UPDATE_WITH_VALUE = "Replaced in favor of `with { value }`. $message_0_13_0"
 internal const val UPDATE_WITH_VALUE_REPLACE = "this.with { value }"
 
-internal const val COL_SELECT_DSL_GROUP = "Use `colGroup()` instead. $message_0_12_0"
+internal const val COL_SELECT_DSL_GROUP = "Use `colGroup()` instead. $message_0_13_0"
 internal const val COL_SELECT_DSL_GROUP_REPLACE = "this.colGroup(name)"
 
-internal const val COLS_SELECT_DSL_GROUP = "Use `colGroups` instead. $message_0_12_0"
+internal const val COLS_SELECT_DSL_GROUP = "Use `colGroups` instead. $message_0_13_0"
 internal const val COLS_SELECT_DSL_GROUP_REPLACE = "this.colGroups(filter)"
+
+internal const val COL_SELECT_DSL_GROUP_BY = "Use `allCols()` instead. $message_0_13_0"
+internal const val COL_SELECT_DSL_GROUP_BY_REPLACE = "this.allCols()"
 
 // endregion
 

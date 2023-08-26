@@ -20,7 +20,7 @@ class ReorderTests {
 
         df.reorder { all() }.byName().columnNames() shouldBe listOf("a", "b")
 
-        val sorted1 = df.reorder { "a".all() }.byName()
+        val sorted1 = df.reorder { "a".allCols() }.byName()
         sorted1.columnNames() shouldBe listOf("b", "a")
         sorted1["a"].asColumnGroup().columnNames() shouldBe listOf("a", "c")
 
