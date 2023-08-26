@@ -35,8 +35,20 @@ import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelecti
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.owner
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_GROUP_BY
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_GROUP_BY_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_ALL_COLS
+import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_ALL_COLS_AFTER
+import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_ALL_COLS_AFTER_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_ALL_COLS_BEFORE
+import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_ALL_COLS_BEFORE_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_ALL_COLS_FROM
+import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_ALL_COLS_FROM_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_ALL_COLS_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_ALL_COLS_UP_TO
+import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_ALL_COLS_UP_TO_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_ALL_FROM
+import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_ALL_FROM_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_ALL_UP_TO
+import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_ALL_UP_TO_REPLACE
 import kotlin.reflect.KProperty
 
 // region DataColumn
@@ -112,6 +124,7 @@ public interface AllColumnsSelectionDsl {
      *  &nbsp;&nbsp;&nbsp;&nbsp;.[**all**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]**`()`**` [ `.[**recursively**][org.jetbrains.kotlinx.dataframe.api.RecursivelyColumnsSelectionDsl.recursively]`()` ` ]`
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .**`all`** `( `[**Before**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]` | `[**After**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]` | `[**From**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]` | `[**UpTo**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`)`**`(`**[column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]**`)`**
+     *  TODO debate whether these overloads make sense. They didn't exist in 0.9.0
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2912,7 +2925,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken.
      */
-    public fun SingleColumn<DataRow<*>>.allColsFrom(column: AnyColumnReference): ColumnSet<*> = allColsFrom(column.path())
+    public fun SingleColumn<DataRow<*>>.allColsFrom(column: AnyColumnReference): ColumnSet<*> =
+        allColsFrom(column.path())
 
     /** ## All (Cols) From
      *
@@ -4456,7 +4470,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken
      */
-    public fun SingleColumn<DataRow<*>>.allColsBefore(column: AnyColumnReference): ColumnSet<*> = allColsBefore(column.path())
+    public fun SingleColumn<DataRow<*>>.allColsBefore(column: AnyColumnReference): ColumnSet<*> =
+        allColsBefore(column.path())
 
     /** ## All (Cols) Before
      *
@@ -6008,7 +6023,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken.
      */
-    public fun SingleColumn<DataRow<*>>.allColsUpTo(column: AnyColumnReference): ColumnSet<*> = allColsUpTo(column.path())
+    public fun SingleColumn<DataRow<*>>.allColsUpTo(column: AnyColumnReference): ColumnSet<*> =
+        allColsUpTo(column.path())
 
     /** ## All (Cols) Up To
      *
@@ -6797,19 +6813,72 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken.
      */
-    public fun ColumnPath.allColsUpTo(column: KProperty<*>): ColumnSet<*> = allColsUpTo(column.toColumnAccessor().path())
+    public fun ColumnPath.allColsUpTo(column: KProperty<*>): ColumnSet<*> =
+        allColsUpTo(column.toColumnAccessor().path())
 
     // endregion
 
     // region deprecated
 
-    @Deprecated(COL_SELECT_DSL_GROUP_BY, ReplaceWith(COL_SELECT_DSL_GROUP_BY_REPLACE))
+    @Deprecated(COL_SELECT_DSL_ALL_COLS, ReplaceWith(COL_SELECT_DSL_ALL_COLS_REPLACE))
     public fun SingleColumn<DataRow<*>>.all(): TransformableColumnSet<*> = allCols()
 
-    @Deprecated(COL_SELECT_DSL_GROUP_BY, ReplaceWith(COL_SELECT_DSL_GROUP_BY_REPLACE))
+    @Deprecated(COL_SELECT_DSL_ALL_COLS, ReplaceWith(COL_SELECT_DSL_ALL_COLS_REPLACE))
     public fun String.all(): TransformableColumnSet<*> = allCols()
 
-    // TODO
+    @Deprecated(COL_SELECT_DSL_ALL_COLS_AFTER, ReplaceWith(COL_SELECT_DSL_ALL_COLS_AFTER_REPLACE))
+    public fun SingleColumn<DataRow<*>>.allAfter(colPath: ColumnPath): ColumnSet<*> = allColsAfter(colPath)
+
+    @Deprecated(COL_SELECT_DSL_ALL_COLS_AFTER, ReplaceWith(COL_SELECT_DSL_ALL_COLS_AFTER_REPLACE))
+    public fun SingleColumn<DataRow<*>>.allAfter(colName: String): ColumnSet<*> = allColsAfter(colName)
+
+    @Deprecated(COL_SELECT_DSL_ALL_COLS_AFTER, ReplaceWith(COL_SELECT_DSL_ALL_COLS_AFTER_REPLACE))
+    public fun SingleColumn<DataRow<*>>.allAfter(col: AnyColumnReference): ColumnSet<*> = allColsAfter(col)
+
+    @Deprecated(COL_SELECT_DSL_ALL_COLS_BEFORE, ReplaceWith(COL_SELECT_DSL_ALL_COLS_BEFORE_REPLACE))
+    public fun SingleColumn<DataRow<*>>.allBefore(colPath: ColumnPath): ColumnSet<*> = allColsBefore(colPath)
+
+    @Deprecated(COL_SELECT_DSL_ALL_COLS_BEFORE, ReplaceWith(COL_SELECT_DSL_ALL_COLS_BEFORE_REPLACE))
+    public fun SingleColumn<DataRow<*>>.allBefore(colName: String): ColumnSet<*> = allColsBefore(colName)
+
+    @Deprecated(COL_SELECT_DSL_ALL_COLS_BEFORE, ReplaceWith(COL_SELECT_DSL_ALL_COLS_BEFORE_REPLACE))
+    public fun SingleColumn<DataRow<*>>.allBefore(col: AnyColumnReference): ColumnSet<*> = allColsBefore(col)
+
+    @Deprecated(COL_SELECT_DSL_ALL_FROM, ReplaceWith(COL_SELECT_DSL_ALL_FROM_REPLACE))
+    public fun ColumnsSelectionDsl<*>.allSince(colPath: ColumnPath): ColumnSet<*> = allFrom(colPath)
+
+    @Deprecated(COL_SELECT_DSL_ALL_FROM, ReplaceWith(COL_SELECT_DSL_ALL_FROM_REPLACE))
+    public fun ColumnsSelectionDsl<*>.allSince(colName: String): ColumnSet<*> = allFrom(colName)
+
+    @Deprecated(COL_SELECT_DSL_ALL_FROM, ReplaceWith(COL_SELECT_DSL_ALL_FROM_REPLACE))
+    public fun ColumnsSelectionDsl<*>.allSince(col: AnyColumnReference): ColumnSet<*> = allFrom(col)
+
+    @Deprecated(COL_SELECT_DSL_ALL_COLS_FROM, ReplaceWith(COL_SELECT_DSL_ALL_COLS_FROM_REPLACE))
+    public fun SingleColumn<DataRow<*>>.allSince(colPath: ColumnPath): ColumnSet<*> = allColsFrom(colPath)
+
+    @Deprecated(COL_SELECT_DSL_ALL_COLS_FROM, ReplaceWith(COL_SELECT_DSL_ALL_COLS_FROM_REPLACE))
+    public fun SingleColumn<DataRow<*>>.allSince(colName: String): ColumnSet<*> = allColsFrom(colName)
+
+    @Deprecated(COL_SELECT_DSL_ALL_COLS_FROM, ReplaceWith(COL_SELECT_DSL_ALL_COLS_FROM_REPLACE))
+    public fun SingleColumn<DataRow<*>>.allSince(col: AnyColumnReference): ColumnSet<*> = allColsFrom(col)
+
+    @Deprecated(COL_SELECT_DSL_ALL_UP_TO, ReplaceWith(COL_SELECT_DSL_ALL_UP_TO_REPLACE))
+    public fun ColumnsSelectionDsl<*>.allUntil(colPath: ColumnPath): ColumnSet<*> = allUpTo(colPath)
+
+    @Deprecated(COL_SELECT_DSL_ALL_UP_TO, ReplaceWith(COL_SELECT_DSL_ALL_UP_TO_REPLACE))
+    public fun ColumnsSelectionDsl<*>.allUntil(colName: String): ColumnSet<*> = allUpTo(colName)
+
+    @Deprecated(COL_SELECT_DSL_ALL_UP_TO, ReplaceWith(COL_SELECT_DSL_ALL_UP_TO_REPLACE))
+    public fun ColumnsSelectionDsl<*>.allUntil(col: AnyColumnReference): ColumnSet<*> = allUpTo(col)
+
+    @Deprecated(COL_SELECT_DSL_ALL_COLS_UP_TO, ReplaceWith(COL_SELECT_DSL_ALL_COLS_UP_TO_REPLACE))
+    public fun SingleColumn<DataRow<*>>.allUntil(colPath: ColumnPath): ColumnSet<*> = allColsUpTo(colPath)
+
+    @Deprecated(COL_SELECT_DSL_ALL_COLS_UP_TO, ReplaceWith(COL_SELECT_DSL_ALL_COLS_UP_TO_REPLACE))
+    public fun SingleColumn<DataRow<*>>.allUntil(colName: String): ColumnSet<*> = allColsUpTo(colName)
+
+    @Deprecated(COL_SELECT_DSL_ALL_COLS_UP_TO, ReplaceWith(COL_SELECT_DSL_ALL_COLS_UP_TO_REPLACE))
+    public fun SingleColumn<DataRow<*>>.allUntil(col: AnyColumnReference): ColumnSet<*> = allColsUpTo(col)
 
     // endregion
 }

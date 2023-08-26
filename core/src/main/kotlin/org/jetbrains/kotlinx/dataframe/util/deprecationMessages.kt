@@ -38,9 +38,26 @@ internal const val COL_SELECT_DSL_GROUP_REPLACE = "this.colGroup(name)"
 internal const val COLS_SELECT_DSL_GROUP = "Use `colGroups` instead. $message_0_13_0"
 internal const val COLS_SELECT_DSL_GROUP_REPLACE = "this.colGroups(filter)"
 
-internal const val COL_SELECT_DSL_GROUP_BY = "Use `allCols()` instead. $message_0_13_0"
-internal const val COL_SELECT_DSL_GROUP_BY_REPLACE = "this.allCols()"
+internal const val COL_SELECT_DSL_ALL_COLS = "Use `allCols()` instead. $message_0_13_0"
+internal const val COL_SELECT_DSL_ALL_COLS_REPLACE = "this.allCols()"
 
+internal const val COL_SELECT_DSL_ALL_COLS_AFTER = "Use `allColsAfter()` instead. $message_0_13_0"
+internal const val COL_SELECT_DSL_ALL_COLS_AFTER_REPLACE = "this.allColsAfter(name)"
+
+internal const val COL_SELECT_DSL_ALL_COLS_BEFORE = "Use `allColsBefore()` instead. $message_0_13_0"
+internal const val COL_SELECT_DSL_ALL_COLS_BEFORE_REPLACE = "this.allColsBefore(name)"
+
+internal const val COL_SELECT_DSL_ALL_FROM = "Use `allFrom()` instead. $message_0_13_0"
+internal const val COL_SELECT_DSL_ALL_FROM_REPLACE = "this.allFrom(name)"
+
+internal const val COL_SELECT_DSL_ALL_COLS_FROM = "Use `allColsFrom()` instead. $message_0_13_0"
+internal const val COL_SELECT_DSL_ALL_COLS_FROM_REPLACE = "this.allColsFrom(name)"
+
+internal const val COL_SELECT_DSL_ALL_UP_TO = "Use `allUpTo()` instead. $message_0_13_0"
+internal const val COL_SELECT_DSL_ALL_UP_TO_REPLACE = "this.allUpTo(name)"
+
+internal const val COL_SELECT_DSL_ALL_COLS_UP_TO = "Use `allColsUpTo()` instead. $message_0_13_0"
+internal const val COL_SELECT_DSL_ALL_COLS_UP_TO_REPLACE = "this.allColsUpTo(name)"
 // endregion
 
 // region WARNING in 0.13.0, ERROR in 0.14.0
