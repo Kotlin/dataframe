@@ -104,12 +104,16 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * @include [CommonKPropertyGetDocs]
      * @return The [DataColumn] these [KProperty Accessors][KProperty] point to.
      */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("KPropertyDataRowGet")
     public operator fun <T, R> KProperty<DataRow<T>>.get(column: KProperty<R>): DataColumn<R> = invoke()[column]
 
     /**
      * @include [CommonKPropertyGetDocs]
      * @return The [ColumnGroup] these [KProperty Accessors][KProperty] point to.
      */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("KPropertyDataRowGet")
     public operator fun <T, R> KProperty<DataRow<T>>.get(column: KProperty<DataRow<R>>): ColumnGroup<R> =
         invoke()[column]
 
@@ -117,8 +121,30 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * @include [CommonKPropertyGetDocs]
      * @return The [FrameColumn] these [KProperty Accessors][KProperty] point to.
      */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("KPropertyDataRowGet")
     public operator fun <T, R> KProperty<DataRow<T>>.get(column: KProperty<DataFrame<R>>): FrameColumn<R> =
         invoke()[column]
+
+    /**
+     * @include [CommonKPropertyGetDocs]
+     * @return The [DataColumn] these [KProperty Accessors][KProperty] point to.
+     */
+    public operator fun <T, R> KProperty<T>.get(column: KProperty<R>): DataColumn<R> = invoke().asColumnGroup()[column]
+
+    /**
+     * @include [CommonKPropertyGetDocs]
+     * @return The [ColumnGroup] these [KProperty Accessors][KProperty] point to.
+     */
+    public operator fun <T, R> KProperty<T>.get(column: KProperty<DataRow<R>>): ColumnGroup<R> =
+        invoke().asColumnGroup()[column]
+
+    /**
+     * @include [CommonKPropertyGetDocs]
+     * @return The [FrameColumn] these [KProperty Accessors][KProperty] point to.
+     */
+    public operator fun <T, R> KProperty<T>.get(column: KProperty<DataFrame<R>>): FrameColumn<R> =
+        invoke().asColumnGroup()[column]
 
     /**
      * Retrieves the value of the column with this name from the [DataFrame]. This can be

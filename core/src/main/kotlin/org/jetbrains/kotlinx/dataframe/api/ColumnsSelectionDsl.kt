@@ -171,6 +171,10 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  `|` {@include [UsageTemplate.ColumnRef]} {@include [ColumnRangeColumnsSelectionDsl.Usage.PlainDslName]} {@include [UsageTemplate.ColumnRef]}
      *
+     *  `|` {@include [AllColumnsSelectionDsl.Usage.PlainDslName]}**`()`**` [ `{@include [RecursivelyColumnsSelectionDsl.Usage.Name]} ` ]`
+     *
+     *  `|` **`all`** `( `{@include [AllColumnsSelectionDsl.Usage.Before]}` | `{@include [AllColumnsSelectionDsl.Usage.After]}` | `{@include [AllColumnsSelectionDsl.Usage.From]}` | `{@include [AllColumnsSelectionDsl.Usage.UpTo]}`)`**`(`**{@include [UsageTemplate.ColumnRef]}**`)`**
+     *
      *  `|` TODO
      * }
      * {@comment -------------------------------------------------------------------------------------------- }
@@ -203,6 +207,11 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  {@include [Indent]}`|` {@include [ColsOfKindColumnsSelectionDsl.Usage.ColumnSetName]}**`(`**{@include [UsageTemplate.ColumnKindRef]}`, ..`**`)`**` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]` `[ `{@include [RecursivelyColumnsSelectionDsl.Usage.Name]} ` ]`
      *
+     *  {@include [Indent]}`|` {@include [AllColumnsSelectionDsl.Usage.ColumnSetName]}**`()`**` [ `{@include [RecursivelyColumnsSelectionDsl.Usage.Name]} ` ]`
+     *
+     *  {@include [Indent]}`|` .**`all`** `( `{@include [AllColumnsSelectionDsl.Usage.Before]}` | `{@include [AllColumnsSelectionDsl.Usage.After]}` | `{@include [AllColumnsSelectionDsl.Usage.From]}` | `{@include [AllColumnsSelectionDsl.Usage.UpTo]}`)`**`(`**{@include [UsageTemplate.ColumnRef]}**`)`**
+     *  TODO debate whether these overloads make sense. They didn't exist in 0.9.0
+     *
      *  {@include [Indent]}`|` TODO
      * }
      * {@comment -------------------------------------------------------------------------------------------- }
@@ -233,6 +242,10 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *   `) [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `] [ `{@include [RecursivelyColumnsSelectionDsl.Usage.Name]} ` ]`
      *
      *  {@include [Indent]}`|` {@include [ColsOfKindColumnsSelectionDsl.Usage.ColumnGroupName]}**`(`**{@include [UsageTemplate.ColumnKindRef]}`, ..`**`)`**` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]` `[ `{@include [RecursivelyColumnsSelectionDsl.Usage.Name]} ` ]`
+     *
+     *  {@include [Indent]}`|` {@include [AllColumnsSelectionDsl.Usage.ColumnGroupName]}**`()`**` [ `{@include [RecursivelyColumnsSelectionDsl.Usage.Name]} ` ]`
+     *
+     *  {@include [Indent]}`|` .**`allCols`** `( `{@include [AllColumnsSelectionDsl.Usage.Before]}` | `{@include [AllColumnsSelectionDsl.Usage.After]}` | `{@include [AllColumnsSelectionDsl.Usage.From]}` | `{@include [AllColumnsSelectionDsl.Usage.UpTo]}`)`**`(`**{@include [UsageTemplate.ColumnRef]}**`)`**
      *
      *  {@include [Indent]}`|` TODO
      * }

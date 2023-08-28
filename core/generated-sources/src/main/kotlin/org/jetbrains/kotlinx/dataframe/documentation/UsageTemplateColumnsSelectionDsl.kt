@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.ColumnFilter
+import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
@@ -124,6 +125,9 @@ public interface UsageTemplateColumnsSelectionDsl {
         /** `kind: `[ColumnKind][ColumnKind] */
         public interface ColumnKindDef
 
+        /** `colSelector: `[ColumnSelector][ColumnSelector] */
+        public interface ColumnSelectorDef
+
         // endregion
 
         // region References to the definitions
@@ -151,6 +155,9 @@ public interface UsageTemplateColumnsSelectionDsl {
 
         /** [kind][ColumnKindDef] */
         public interface ColumnKindRef
+
+        /** [colSelector][ColumnSelectorDef] */
+        public interface ColumnSelectorRef
 
         // endregion
     }
