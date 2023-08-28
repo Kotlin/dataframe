@@ -84,6 +84,30 @@ public object H2 : DbType("h2") {
     }
 }
 
+public object Sqlite : DbType("sqlite") {
+    override fun convertDataFromResultSet(rs: ResultSet, jdbcColumn: JdbcColumn): Any? {
+        return when (jdbcColumn.type) {
+            "INTEGER" -> rs.getInt(jdbcColumn.name)
+            "TEXT" -> rs.getString(jdbcColumn.name)
+            "REAL" -> rs.getDouble(jdbcColumn.name)
+            "NUMERIC" -> rs.getDouble(jdbcColumn.name)
+            "BLOB" -> rs.getBytes(jdbcColumn.name)
+            else -> throw IllegalArgumentException("Unsupported SQLite type: ${jdbcColumn.type}")
+        }
+    }
+
+    override fun toColumnSchema(jdbcColumn: JdbcColumn): ColumnSchema {
+        return when (jdbcColumn.type) {
+            "INTEGER" -> ColumnSchema.Value(typeOf<Int>())
+            "TEXT" -> ColumnSchema.Value(typeOf<String>())
+            "REAL" -> ColumnSchema.Value(typeOf<Double>())
+            "NUMERIC" -> ColumnSchema.Value(typeOf<Double>())
+            "BLOB" -> ColumnSchema.Value(typeOf<ByteArray>())
+            else -> throw IllegalArgumentException("Unsupported SQLite type: ${jdbcColumn.type}")
+        }
+    }
+}
+
 public object MariaDb : DbType("mariadb") {
     override fun convertDataFromResultSet(rs: ResultSet, jdbcColumn: JdbcColumn): Any? {
         return when (jdbcColumn.type) {
@@ -134,6 +158,7 @@ public fun extractDBTypeFromURL(url: String?): DbType {
             H2.jdbcName in url -> H2
             MariaDb.jdbcName in url -> MariaDb
             MySql.jdbcName in url -> MySql
+            Sqlite.jdbcName in url -> Sqlite
             else -> MariaDb // probably better to add default SQL databases without vendor name
         }
     } else {
