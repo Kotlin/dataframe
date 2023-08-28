@@ -53,6 +53,35 @@ interface CustomerSales {
     val totalSalesAmount: Double
 }
 
+data class TestTableData(
+    val characterCol: String,
+    val characterVaryingCol: String,
+    val characterLargeObjectCol: String,
+    val mediumTextCol: String,
+    val varcharIgnoreCaseCol: String,
+    val binaryCol: ByteArray,
+    val binaryVaryingCol: ByteArray,
+    val binaryLargeObjectCol: ByteArray,
+    val booleanCol: Boolean,
+    val tinyIntCol: Byte,
+    val smallIntCol: Short,
+    val integerCol: Int,
+    val bigIntCol: Long,
+    val numericCol: Double,
+    val realCol: Float,
+    val doublePrecisionCol: Double,
+    val decFloatCol: Double,
+    val dateCol: String,
+    val timeCol: String,
+    val timeWithTimeZoneCol: String,
+    val timestampCol: String,
+    val timestampWithTimeZoneCol: String,
+    val javaObjectCol: Any?,
+    val enumCol: String,
+    val jsonCol: String,
+    val uuidCol: String
+)
+
 class JDBCTest {
     companion object {
         private lateinit var connection: Connection
@@ -104,34 +133,78 @@ class JDBCTest {
     }
 
     @Test
-    fun `setup connection and select from one table` () {
-        val props = Properties()
-        props.setProperty("user", USER_NAME)
-        props.setProperty("password", PASSWORD)
-
-        // generate kdf schemas by database metadata (as interfaces or extensions)
-        // for gradle or as classes under the hood in KNB
-
-        DriverManager.getConnection(URL, props).use { connection ->
-            val df = DataFrame.readSqlTable(connection, "", "actors", 100).cast<ActorKDF>()
-            df.print()
-        }
-    }
-
-    @Test
     fun `basic test for reading join from two table` () {
         connection.use { connection ->
-            val sqlQuery = """
-            SELECT c.name as customerName, SUM(s.amount) as totalSalesAmount
-            FROM Sale s
-            INNER JOIN Customer c ON s.customerId = c.id
-            WHERE c.age > 35
-            GROUP BY s.customerId, c.name
-        """.trimIndent()
+            connection.createStatement().execute("""
+                CREATE TABLE TestTable (
+                    characterCol CHAR(10),
+                    characterVaryingCol VARCHAR(20),
+                    characterLargeObjectCol CLOB,
+                    mediumTextCol CLOB,
+                    varcharIgnoreCaseCol VARCHAR_IGNORECASE(30),
+                    binaryCol BINARY(8),
+                    binaryVaryingCol VARBINARY(16),
+                    binaryLargeObjectCol BLOB,
+                    booleanCol BOOLEAN,
+                    tinyIntCol TINYINT,
+                    smallIntCol SMALLINT,
+                    integerCol INT,
+                    bigIntCol BIGINT,
+                    numericCol NUMERIC(10, 2),
+                    realCol REAL,
+                    doublePrecisionCol DOUBLE PRECISION,
+                    decFloatCol DECFLOAT(16),
+                    dateCol DATE,
+                    timeCol TIME,
+                    timeWithTimeZoneCol TIME WITH TIME ZONE,
+                    timestampCol TIMESTAMP,
+                    timestampWithTimeZoneCol TIMESTAMP WITH TIME ZONE,
+                    javaObjectCol OBJECT,
+                    enumCol VARCHAR(10),
+                    jsonCol JSON,
+                    uuidCol UUID
+                )
+            """.trimIndent())
 
-            val df = DataFrame.readSqlQuery(connection,  sqlQuery = sqlQuery).cast<CustomerSales>()
+            connection.prepareStatement("""
+                INSERT INTO TestTable VALUES (
+                    'ABC', 'XYZ', 'Long text data for CLOB', 'Medium text data for CLOB',
+                    'Varchar IgnoreCase', X'010203', X'040506', X'070809',
+                    TRUE, 1, 100, 1000, 100000,
+                    123.45, 1.23, 3.14, 2.71,
+                    '2023-07-20', '08:30:00', '18:15:00', '2023-07-19 12:45:30',
+                    '2023-07-18 12:45:30', NULL,
+                    'Option1', '{"key": "value"}', '123e4567-e89b-12d3-a456-426655440000'
+                )
+            """.trimIndent()).executeUpdate()
+
+            connection.prepareStatement("""
+                INSERT INTO TestTable VALUES (
+                    'DEF', 'LMN', 'Another CLOB data', 'Different CLOB data',
+                    'Another Varchar', X'101112', X'131415', X'161718',
+                    FALSE, 2, 200, 2000, 200000,
+                    234.56, 2.34, 4.56, 3.14,
+                    '2023-07-21', '14:30:00', '22:45:00', '2023-07-20 18:15:30',
+                    '2023-07-19 18:15:30', NULL,
+                    'Option2', '{"key": "another_value"}', '234e5678-e89b-12d3-a456-426655440001'
+                )
+            """.trimIndent()).executeUpdate()
+
+            connection.prepareStatement("""
+                INSERT INTO TestTable VALUES (
+                    'GHI', 'OPQ', 'Third CLOB entry', 'Yet another CLOB data',
+                    'Yet Another Varchar', X'192021', X'222324', X'252627',
+                    TRUE, 3, 300, 3000, 300000,
+                    345.67, 3.45, 5.67, 4.71,
+                    '2023-07-22', '20:45:00', '03:30:00', '2023-07-21 23:45:15',
+                    '2023-07-20 23:45:15', NULL,
+                    'Option3', '{"key": "yet_another_value"}', '345e6789-e89b-12d3-a456-426655440002'
+                )
+            """.trimIndent()).executeUpdate()
+
+            val df = DataFrame.readSqlTable(connection, "dsdfs", "TestTable").cast<TestTableData>()
             df.print()
-            assertEquals(2, df.rowsCount())
+            assertEquals(3, df.rowsCount())
         }
     }
 
@@ -154,7 +227,32 @@ class JDBCTest {
     }
 
     @Test
-    fun `convert result of SQL-query` () {
+    fun `h2 sql native types mapping to JDBC types` () {
+
+    }
+
+    @Test
+    fun `sqlite native types mapping to JDBC types` () {
+        // TODO: add a small SQLite database in resources and connect to it (important for the future android users)
+    }
+
+    @Test
+    fun `imdb setup connection and select from one table` () {
+        val props = Properties()
+        props.setProperty("user", USER_NAME)
+        props.setProperty("password", PASSWORD)
+
+        // generate kdf schemas by database metadata (as interfaces or extensions)
+        // for gradle or as classes under the hood in KNB
+
+        DriverManager.getConnection(URL, props).use { connection ->
+            val df = DataFrame.readSqlTable(connection, "", "actors", 100).cast<ActorKDF>()
+            df.print()
+        }
+    }
+
+    @Test
+    fun `imdb convert result of SQL-query` () {
         val sqlQuery = "select name, year, rank,\n" +
             "GROUP_CONCAT (genre) as \"genres\"\n" +
             "from movies join movies_directors on  movie_id = movies.id\n" +
@@ -177,15 +275,5 @@ class JDBCTest {
             val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
             schema.print()
         }
-    }
-
-    @Test
-    fun `h2 sql native types mapping to JDBC types` () {
-        // TODO: need to add test with very diverse table with all different column and fake data with conversion to JDBC and DataFrame types
-    }
-
-    @Test
-    fun `sqlite native types mapping to JDBC types` () {
-        // TODO: add a small SQLite database in resources and connect to it (important for the future android users)
     }
 }
