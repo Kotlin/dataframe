@@ -24,7 +24,7 @@ class ReorderTests {
         sorted1.columnNames() shouldBe listOf("b", "a")
         sorted1["a"].asColumnGroup().columnNames() shouldBe listOf("a", "c")
 
-        val sorted2 = df.reorder { all().recursively() }.byName()
+        val sorted2 = df.reorder { all().atAnyDepth() }.byName()
         sorted2.columnNames() shouldBe listOf("a", "b")
         sorted2["a"].asColumnGroup().columnNames() shouldBe listOf("a", "c")
     }

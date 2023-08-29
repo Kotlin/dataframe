@@ -12,8 +12,8 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
  * This type of [ColumnsResolver] can be [transformed][transformResolve] before being resolved.
  *
  * This is especially useful for calls like
- * [cols { }][ColumnsSelectionDsl.cols].[recursively()][ColumnsSelectionDsl.recursively],
- * where [recursively][ColumnsSelectionDsl.recursively] modifies the [ColumnSet][ColumnsResolver]
+ * [cols { }][ColumnsSelectionDsl.cols].[atAnyDepth()][ColumnsSelectionDsl.atAnyDepth],
+ * where [atAnyDepth][ColumnsSelectionDsl.atAnyDepth] modifies the [ColumnSet][ColumnsResolver]
  * that [cols { }][ColumnsSelectionDsl.cols] operates on to include ALL columns, including those inside
  * column groups, before it's evaluated.
  *
@@ -33,9 +33,9 @@ public interface TransformableColumnSet<out C> : ColumnSet<C> {
  * This type of [SingleColumn] can be [transformed][transformResolveSingle] before being resolved.
  *
  * This is especially useful for calls like
- * [first { }][ColumnsSelectionDsl.firstChild].[recursively()][ColumnsSelectionDsl.recursively],
- * where [recursively][ColumnsSelectionDsl.recursively] modifies the [SingleColumn]
- * that [first { }][ColumnsSelectionDsl.firstChild] operates on to include ALL columns, including those inside
+ * [first { }][ColumnsSelectionDsl.firstCol].[atAnyDepth()][ColumnsSelectionDsl.atAnyDepth],
+ * where [atAnyDepth][ColumnsSelectionDsl.atAnyDepth] modifies the [SingleColumn]
+ * that [first { }][ColumnsSelectionDsl.firstCol] operates on to include ALL columns, including those inside
  * column groups, before it's evaluated.
  *
  * @see [SingleColumn]

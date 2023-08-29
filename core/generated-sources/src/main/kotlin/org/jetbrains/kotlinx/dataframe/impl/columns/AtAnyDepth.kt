@@ -11,19 +11,19 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.flattenRecursively
 
 /**
- * Recursively implementation for [TransformableColumnSet].
+ * AtAnyDepth implementation for [TransformableColumnSet].
  * This converts a [TransformableColumnSet] into a [ColumnSet] by redirecting [ColumnSet.resolve]
- * to [TransformableColumnSet.transformResolve] with a correctly configured [RecursivelyTransformer].
+ * to [TransformableColumnSet.transformResolve] with a correctly configured [AtAnyDepthTransformer].
  */
-internal fun <C> TransformableColumnSet<C>.recursivelyImpl(
+internal fun <C> TransformableColumnSet<C>.atAnyDepthImpl(
     includeGroups: Boolean = true,
     includeTopLevel: Boolean = true,
 ): ColumnSet<C> = object : ColumnSet<C> {
 
     override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> =
-        this@recursivelyImpl.transformResolve(
+        this@atAnyDepthImpl.transformResolve(
             context = context,
-            transformer = RecursivelyTransformer(
+            transformer = AtAnyDepthTransformer(
                 includeGroups = includeGroups,
                 includeTopLevel = includeTopLevel,
             ),
@@ -31,19 +31,19 @@ internal fun <C> TransformableColumnSet<C>.recursivelyImpl(
 }
 
 /**
- * Recursively implementation for [TransformableSingleColumn].
+ * AtAnyDepth implementation for [TransformableSingleColumn].
  * This converts a [TransformableSingleColumn] into a [SingleColumn] by redirecting [SingleColumn.resolveSingle]
- * to [TransformableSingleColumn.transformResolveSingle] with a correctly configured [RecursivelyTransformer].
+ * to [TransformableSingleColumn.transformResolveSingle] with a correctly configured [AtAnyDepthTransformer].
  */
-internal fun <C> TransformableSingleColumn<C>.recursivelyImpl(
+internal fun <C> TransformableSingleColumn<C>.atAnyDepthImpl(
     includeGroups: Boolean = true,
     includeTopLevel: Boolean = true,
 ): SingleColumn<C> = object : SingleColumn<C> {
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? =
-        this@recursivelyImpl.transformResolveSingle(
+        this@atAnyDepthImpl.transformResolveSingle(
             context = context,
-            transformer = RecursivelyTransformer(
+            transformer = AtAnyDepthTransformer(
                 includeGroups = includeGroups,
                 includeTopLevel = includeTopLevel,
             ),
@@ -51,11 +51,11 @@ internal fun <C> TransformableSingleColumn<C>.recursivelyImpl(
 }
 
 /**
- * ## Recursively transformer.
+ * ## AtAnyDepth transformer.
  * A [ColumnsResolverTransformer] implementation around the [ColumnsResolver.flattenRecursively] function.
- * Created only using [recursivelyImpl].
+ * Created only using [atAnyDepthImpl].
  */
-private class RecursivelyTransformer(
+private class AtAnyDepthTransformer(
     val includeGroups: Boolean = true,
     val includeTopLevel: Boolean = true,
 ) : ColumnsResolverTransformer {

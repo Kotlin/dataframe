@@ -18,7 +18,7 @@ public data class Corr<T, C>(
     internal val columns: ColumnsSelector<T, C>,
 )
 
-public fun <T> DataFrame<T>.corr(): DataFrame<T> = corr { cols { it.isSuitableForCorr() }.rec() }.withItself()
+public fun <T> DataFrame<T>.corr(): DataFrame<T> = corr { cols { it.isSuitableForCorr() }.atAnyDepth() }.withItself()
 
 public fun <T, C> DataFrame<T>.corr(columns: ColumnsSelector<T, C>): Corr<T, C> = Corr(this, columns)
 public fun <T> DataFrame<T>.corr(vararg columns: String): Corr<T, Any?> = corr { columns.toColumnSet() }

@@ -31,7 +31,7 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * {@include [Indent]}[colsOf][SingleColumn.colsOf]`<`[String][String]`>() `[and][ColumnSet.and]` {`
      *
-     * {@include [DoubleIndent]}[cols][ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[recursively][ColumnsSelectionDsl.recursively]`()`
+     * {@include [DoubleIndent]}[cols][ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`()`
      *
      * {@include [Indent]}`}`
      *

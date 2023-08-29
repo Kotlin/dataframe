@@ -99,7 +99,7 @@ public interface DistinctColumnsSelectionDsl {
      * #### For Example:
      * `df.`[select][DataFrame.select]` { (`[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>() `[and][ColumnsSelectionDsl.and]` age).`[distinct][ColumnSet.distinct]`() }`
      *
-     * `df.`[select][DataFrame.select]` { `[all][ColumnsSelectionDsl.all]`().`[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order").`[recursively][ColumnsSelectionDsl.recursively]`().`[distinct][ColumnSet.distinct]`() }`
+     * `df.`[select][DataFrame.select]` { `[all][ColumnsSelectionDsl.all]`().`[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order").`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`().`[distinct][ColumnSet.distinct]`() }`
      *
      * @return A new [ColumnSet] containing only distinct columns (by path).
      */

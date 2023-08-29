@@ -19,6 +19,7 @@ public interface ColumnSet<out C> : ColumnsResolver<C>
 internal fun <C> ColumnsResolver<C>.asColumnSet(): ColumnSet<C> =
     object : ColumnSet<C>, ColumnsResolver<C> by this {}
 
+@PublishedApi
 internal fun <C> SingleColumn<C>.asColumnSet(): ColumnSet<C> =
     object : ColumnSet<C>, SingleColumn<C> by this {}
 

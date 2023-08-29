@@ -231,13 +231,13 @@ open class ColumnsSelectionDslTests : TestBase() {
         ).shouldAllBeEqual()
 
         listOf(
-            df.select { all().rec() },
+            df.select { all().atAnyDepth() },
 
-//            df.select { children().rec() },
+//            df.select { children().atAnyDepth() },
 
-            df.select { cols().rec() },
+            df.select { cols().atAnyDepth() },
 
-//            df.select { filter { true }.rec() }
+//            df.select { filter { true }.atAnyDepth() }
         ).shouldAllBeEqual()
 
         listOf(

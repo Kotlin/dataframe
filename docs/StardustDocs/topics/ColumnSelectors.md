@@ -10,7 +10,7 @@ Column selectors are used in many operations:
 
 ```kotlin
 df.select { age and name }
-df.fillNaNs { colsOf<Double>().recursively() }.withZero()
+df.fillNaNs { colsOf<Double>().atAnyDepth() }.withZero()
 df.remove { cols { it.hasNulls() } }
 df.group { cols { it.data != name } }.into { "nameless" }
 df.update { city }.notNull { it.lowercase() }
@@ -54,7 +54,7 @@ df.select { name..age }
 df.select { name.all() }
 
 // recursive traversal of all children columns excluding ColumnGroups
-df.select { name.cols { !it.isColumnGroup() }.recursively() }
+df.select { name.cols { !it.isColumnGroup() }.atAnyDepth() }
 ```
 
 </tab>
@@ -90,7 +90,7 @@ df.select { name..age }
 df.select { name.all() }
 
 // recursive traversal of all children columns excluding ColumnGroups
-df.select { name.cols { !it.isColumnGroup() }.recursively() }
+df.select { name.cols { !it.isColumnGroup() }.atAnyDepth() }
 ```
 
 </tab>
@@ -123,7 +123,7 @@ df.select { "name".."age" }
 df.select { "name".all() }
 
 // recursive traversal of all children columns excluding groups
-df.select { "name".cols { !it.isColumnGroup() }.recursively() }
+df.select { "name".cols { !it.isColumnGroup() }.atAnyDepth() }
 ```
 
 </tab></tabs>
@@ -188,16 +188,16 @@ df.select {
 }
 
 // recursive traversal of all columns, excluding ColumnGroups from result
-df.select { cols { !it.isColumnGroup() }.recursively() }
+df.select { cols { !it.isColumnGroup() }.atAnyDepth() }
 
 // depth-first-search traversal of all columns, including ColumnGroups in result
-df.select { all().recursively() }
+df.select { all().atAnyDepth() }
 
 // recursive traversal with condition
-df.select { cols { it.name().contains(":") }.recursively() }
+df.select { cols { it.name().contains(":") }.atAnyDepth() }
 
 // recursive traversal of columns of given type
-df.select { colsOf<String>().rec() }
+df.select { colsOf<String>().atAnyDepth() }
 
 // all columns except given column set
 df.select { except { colsOf<String>() } }
@@ -215,18 +215,18 @@ df.select { take(2) and col(3) }
 
 ```kotlin
 // first/last n value- and frame columns in column set
-df.select { cols { !it.isColumnGroup() }.recursively().take(3) }
-df.select { cols { !it.isColumnGroup() }.recursively().takeLast(3) }
+df.select { cols { !it.isColumnGroup() }.atAnyDepth().take(3) }
+df.select { cols { !it.isColumnGroup() }.atAnyDepth().takeLast(3) }
 
 // all except first/last n value- and frame columns in column set
-df.select { cols { !it.isColumnGroup() }.recursively().drop(3) }
-df.select { cols { !it.isColumnGroup() }.recursively().dropLast(3) }
+df.select { cols { !it.isColumnGroup() }.atAnyDepth().drop(3) }
+df.select { cols { !it.isColumnGroup() }.atAnyDepth().dropLast(3) }
 
 // filter column set by condition
-df.select { cols { !it.isColumnGroup() }.rec().filter { it.name().startsWith("year") } }
+df.select { cols { !it.isColumnGroup() }.atAnyDepth().filter { it.name().startsWith("year") } }
 
 // exclude columns from column set
-df.select { cols { !it.isColumnGroup() }.rec().except { age } }
+df.select { cols { !it.isColumnGroup() }.atAnyDepth().except { age } }
 
 // keep only unique columns
 df.select { (colsOf<Int>() and age).distinct() }

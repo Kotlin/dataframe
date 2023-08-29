@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.explodeImpl
 import kotlin.reflect.KProperty
 
-private val defaultExplodeColumns: ColumnsSelector<*, *> = { cols { it.isList() || it.isFrameColumn() }.rec() }
+private val defaultExplodeColumns: ColumnsSelector<*, *> = { cols { it.isList() || it.isFrameColumn() }.atAnyDepth() }
 
 // region explode DataFrame
 

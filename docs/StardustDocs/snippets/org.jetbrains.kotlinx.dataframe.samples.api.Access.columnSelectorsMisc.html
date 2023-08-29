@@ -499,7 +499,7 @@ summary {
                             </details>
                             <br>
                             <details>
-                            <summary>df.select { cols { !it.isColumnGroup() }.recursively() }</summary>
+                            <summary>df.select { cols { !it.isColumnGroup() }.atAnyDepth() }</summary>
                             
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
@@ -516,7 +516,7 @@ summary {
                             </details>
                             <br>
                             <details>
-                            <summary>df.select { all().recursively() }</summary>
+                            <summary>df.select { all().atAnyDepth() }</summary>
                             
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
@@ -533,7 +533,7 @@ summary {
                             </details>
                             <br>
                             <details>
-                            <summary>df.select { cols { it.name().contains(&quot;:&quot;) }.recursively() }</summary>
+                            <summary>df.select { cols { it.name().contains(&quot;:&quot;) }.atAnyDepth() }</summary>
                             
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
@@ -550,7 +550,7 @@ summary {
                             </details>
                             <br>
                             <details>
-                            <summary>df.select { colsOf&amp;lt;String&amp;gt;().rec() }</summary>
+                            <summary>df.select { colsOf&amp;lt;String&amp;gt;().atAnyDepth() }</summary>
                             
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>

@@ -16,6 +16,17 @@ internal const val DF_READ_REPLACE_MESSAGE = "this.unfold(*columns)"
 
 internal const val ITERABLE_COLUMNS_DEPRECATION_MESSAGE = "Replaced with `toColumnSet()` operation. $message_0_12_0"
 
+internal const val COL_SELECT_DSL_DFS = "`dfs` is deprecated, use `atAnyDepth()` instead. $message_0_12_0"
+internal const val COL_SELECT_DSL_DFS_REPLACE = "this.cols(predicate).atAnyDepth()"
+
+internal const val COL_SELECT_DSL_ALL_DFS = "`allDfs` is deprecated, use `atAnyDepth()` instead. $message_0_12_0"
+internal const val COL_SELECT_DSL_ALL_DFS_REPLACE = "this.cols { includeGroups || !it.isColumnGroup() }.atAnyDepth()"
+
+internal const val COL_SELECT_DSL_DFS_OF = "`dfsOf` is deprecated, use `atAnyDepth()` instead. $message_0_12_0"
+internal const val COL_SELECT_DSL_DFS_OF_REPLACE = "this.colsOf(type, predicate).atAnyDepth()"
+internal const val COL_SELECT_DSL_DFS_OF_TYPED_REPLACE = "this.colsOf<C>(filter).atAnyDepth()"
+
+
 // endregion
 
 // region WARNING in 0.12.0, ERROR in 0.13.0
@@ -58,6 +69,9 @@ internal const val COL_SELECT_DSL_ALL_UP_TO_REPLACE = "this.allUpTo(column)"
 
 internal const val COL_SELECT_DSL_ALL_COLS_UP_TO = "Use `allColsUpTo()` instead. $message_0_13_0"
 internal const val COL_SELECT_DSL_ALL_COLS_UP_TO_REPLACE = "this.allColsUpTo(column)"
+
+internal const val COL_SELECT_DSL_AT_ANY_DEPTH = "Use `atAnyDepth()` instead. $message_0_13_0"
+internal const val COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE = "this.atAnyDepth()"
 // endregion
 
 // region WARNING in 0.13.0, ERROR in 0.14.0

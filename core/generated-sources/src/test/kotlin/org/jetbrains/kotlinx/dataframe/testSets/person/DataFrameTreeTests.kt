@@ -66,9 +66,9 @@ class DataFrameTreeTests : BaseTest() {
     }
 
     @Test
-    fun `select recursively under group`() {
-        df2.select { nameAndCity.colsOf<String>().recursively() } shouldBe typed2.select { nameAndCity.name }
-        df2.select { nameAndCity.colsOf<String?>().recursively() } shouldBe typed2.select { nameAndCity.name and nameAndCity.city }
+    fun `select atAnyDepth under group`() {
+        df2.select { nameAndCity.colsOf<String>().atAnyDepth() } shouldBe typed2.select { nameAndCity.name }
+        df2.select { nameAndCity.colsOf<String?>().atAnyDepth() } shouldBe typed2.select { nameAndCity.name and nameAndCity.city }
     }
 
     @Test
@@ -172,8 +172,8 @@ class DataFrameTreeTests : BaseTest() {
     }
 
     @Test
-    fun `select recursively`() {
-        val cols = typed2.select { cols { it.hasNulls }.rec() }
+    fun `select atAnyDepth`() {
+        val cols = typed2.select { cols { it.hasNulls }.atAnyDepth() }
         cols shouldBe typed2.select { nameAndCity.city and weight }
     }
 
@@ -382,14 +382,14 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun parentColumnTest() {
-        val res = typed2.move { cols { it.depth > 0 }.rec() }.toTop { it.parentName + "-" + it.name }
+        val res = typed2.move { cols { it.depth > 0 }.atAnyDepth() }.toTop { it.parentName + "-" + it.name }
         res.columnsCount() shouldBe 4
         res.columnNames() shouldBe listOf("nameAndCity-name", "nameAndCity-city", "age", "weight")
     }
 
     @Test
     fun `group cols`() {
-        val joined = typed2.move { cols { !it.isColumnGroup() }.rec() }.into { pathOf(it.path.joinToString(".")) }
+        val joined = typed2.move { cols { !it.isColumnGroup() }.atAnyDepth() }.into { pathOf(it.path.joinToString(".")) }
         val grouped = joined.group { nameContains(".") }.into { it.name().substringBefore(".") }
         val expected = typed2.rename { nameAndCity.allCols() }.into { it.path.joinToString(".") }
         grouped shouldBe expected

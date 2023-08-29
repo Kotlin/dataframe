@@ -39,7 +39,7 @@ public fun <T, C> DataFrame<T>.replace(columns: Iterable<ColumnReference<C>>): R
 
 public fun <T> DataFrame<T>.replaceAll(
     vararg valuePairs: Pair<Any?, Any?>,
-    columns: ColumnsSelector<T, *> = { cols { !it.isColumnGroup() }.recursively() },
+    columns: ColumnsSelector<T, *> = { cols { !it.isColumnGroup() }.atAnyDepth() },
 ): DataFrame<T> {
     val map = valuePairs.toMap()
     return update(columns).with { map[it] ?: it }

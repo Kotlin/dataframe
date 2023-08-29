@@ -627,6 +627,7 @@ public interface ColGroupColumnsSelectionDsl {
  * by adding a check to see it's a [ColumnGroup] (so, a [SingleColumn]<*>)
  * and throwing an [IllegalArgumentException] if it's not.
  */
+@PublishedApi
 internal fun <C> SingleColumn<DataRow<C>>.ensureIsColumnGroup(): SingleColumn<DataRow<C>> =
     onResolve { col: ColumnWithPath<*>? ->
         require(col?.isColumnGroup() != false) {
