@@ -21,7 +21,7 @@ import kotlin.reflect.typeOf
 
 // region ColumnsSelectionDsl
 // TODO make path modification optional
-// TODO rename to atAllDepths()?
+// TODO rename to atAnyDepth()?
 // TODO explore scoping function
 public interface RecursivelyColumnsSelectionDsl {
 
@@ -53,7 +53,7 @@ public interface RecursivelyColumnsSelectionDsl {
      *
      * More examples:
      *
-     * `df.`[select][DataFrame.select]` { `[first][ColumnsSelectionDsl.firstChild]` { col -> col.`[any][DataColumn.any]` { it == "Alice" } }.`[recursively][TransformableSingleColumn.recursively]`() }`
+     * `df.`[select][DataFrame.select]` { `[first][ColumnsSelectionDsl.firstCol]` { col -> col.`[any][DataColumn.any]` { it == "Alice" } }.`[recursively][TransformableSingleColumn.recursively]`() }`
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "name" in it.`[name][ColumnReference.name]` }.`[rec][TransformableColumnSet.rec]`() }`
      *
@@ -92,9 +92,9 @@ public interface RecursivelyColumnsSelectionDsl {
      * @include [CommonRecursivelyDocs]
      * @setArg [CommonRecursivelyDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { `[first][ColumnsSelectionDsl.firstChild]` { col -> col.`[any][DataColumn.any]` { it == "Alice" } }.`[recursively][TransformableSingleColumn.recursively]`() }`
+     * `df.`[select][DataFrame.select]` { `[first][ColumnsSelectionDsl.firstCol]` { col -> col.`[any][DataColumn.any]` { it == "Alice" } }.`[recursively][TransformableSingleColumn.recursively]`() }`
      *
-     * `df.`[select][DataFrame.select]` { `[single][ColumnsSelectionDsl.singleChild]` { it.name == "myCol" }.`[rec][TransformableSingleColumn.rec]`() }`
+     * `df.`[select][DataFrame.select]` { `[single][ColumnsSelectionDsl.singleCol]` { it.name == "myCol" }.`[rec][TransformableSingleColumn.rec]`() }`
      */
     public fun TransformableSingleColumn<*>.recursively(): SingleColumn<*> =
         recursivelyImpl(includeTopLevel = true, includeGroups = true)

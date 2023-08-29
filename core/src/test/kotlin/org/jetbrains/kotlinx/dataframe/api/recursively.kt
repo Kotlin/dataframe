@@ -68,14 +68,14 @@ class Recursively : TestBase() {
     fun groups() {
         listOf(
             df.select { name },
-            df.select { groups().recursively() },
-            df.select { groups() },
-            df.select { all().groups() },
-            df.select { all().groups().rec() },
+            df.select { colGroups().recursively() },
+            df.select { colGroups() },
+            df.select { all().colGroups() },
+            df.select { all().colGroups().rec() },
         ).shouldAllBeEqual()
 
-        dfGroup.select { groups() } shouldBe dfGroup.select { name }
-        dfGroup.select { groups().rec() } shouldBe dfGroup.select { name and name.firstName }
+        dfGroup.select { colGroups() } shouldBe dfGroup.select { name }
+        dfGroup.select { colGroups().rec() } shouldBe dfGroup.select { name and name.firstName }
     }
 
     @Test

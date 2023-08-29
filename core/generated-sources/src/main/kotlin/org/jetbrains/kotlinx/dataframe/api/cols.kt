@@ -284,8 +284,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[String][String]`>().`[cols][ColumnSet.cols]`() }`
      *
-     * @see [all]
-     * @see [filter]
+     * @see [ColumnsSelectionDsl.all]
+     * @see [ColumnsSelectionDsl.filter]
      *
      *
      * #### Filter vs. Cols:
@@ -349,8 +349,8 @@ public interface ColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
-     * @see [all]
-     * @see [filter] */
+     * @see [ColumnsSelectionDsl.all]
+     * @see [ColumnsSelectionDsl.filter] */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.cols(
         predicate: ColumnFilter<C> = { true },
@@ -402,8 +402,8 @@ public interface ColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
-     * @see [all]
-     * @see [filter] */
+     * @see [ColumnsSelectionDsl.all]
+     * @see [ColumnsSelectionDsl.filter] */
     public operator fun <C> ColumnSet<C>.get(
         predicate: ColumnFilter<C> = { true },
     ): TransformableColumnSet<C> = cols(predicate)
@@ -436,7 +436,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][ColumnsSelectionDsl.cols]` }`
      *
-     *  `// same as `[all][ColumnsSelectionDsl.all]`()`
+     * `// same as `[all][ColumnsSelectionDsl.all]`()`
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`() }`
      *
@@ -444,7 +444,7 @@ public interface ColsColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     * @see [all]
+     * @see [ColumnsSelectionDsl.all]
      *
      *
      * #### Filter vs. Cols:
@@ -489,7 +489,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`{ it.`[any][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
-     *  `// same as `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`()`
+     * `// same as `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`()`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() }`
      *
@@ -510,7 +510,7 @@ public interface ColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
-     * @see [all] */
+     * @see [ColumnsSelectionDsl.all] */
     public fun ColumnsSelectionDsl<*>.cols(
         predicate: ColumnFilter<*> = { true },
     ): TransformableColumnSet<*> = this.asSingleColumn().colsInternal(predicate)
@@ -542,7 +542,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`{ it.`[any][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
-     *  `// same as `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`()`
+     * `// same as `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`()`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() }`
      *
@@ -563,7 +563,7 @@ public interface ColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
-     * @see [all] */
+     * @see [ColumnsSelectionDsl.all] */
     public operator fun ColumnsSelectionDsl<*>.get(
         predicate: ColumnFilter<*> = { true },
     ): TransformableColumnSet<*> = cols(predicate)
@@ -594,7 +594,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup`.[cols][SingleColumn.cols]` { "e" `[in][String.contains]` it.`[name][ColumnPath.name]`() } }`
      *
-     * `// same as `[all][ColumnsSelectionDsl.all]`()`
+     * `// same as `[allCols][ColumnsSelectionDsl.allCols]`()`
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`() }`
      *
@@ -603,7 +603,7 @@ public interface ColsColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     * @see [all]
+     * @see [ColumnsSelectionDsl.allCols]
      *
      *
      * #### Filter vs. Cols:
@@ -646,7 +646,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`.[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "e" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
      *
-     * `// same as `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`()`
+     * `// same as `[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`() }`
      *
@@ -668,7 +668,7 @@ public interface ColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
-     * @see [all] */
+     * @see [ColumnsSelectionDsl.allCols] */
     public fun SingleColumn<DataRow<*>>.cols(
         predicate: ColumnFilter<*> = { true },
     ): TransformableColumnSet<*> = this.ensureIsColumnGroup().colsInternal(predicate)
@@ -699,7 +699,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`.[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` { "e" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
      *
-     * `// same as `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`()`
+     * `// same as `[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`() }`
      *
@@ -721,7 +721,7 @@ public interface ColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
-     * @see [all]
+     * @see [ColumnsSelectionDsl.allCols]
      */
     public operator fun SingleColumn<DataRow<*>>.get(
         predicate: ColumnFilter<*> = { true },
@@ -755,7 +755,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "myGroupCol"`[`[`][String.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][String.cols]` }`
      *
-     * `// same as `[all][all]`()`
+     * `// same as `[allCols][allCols]`()`
      *
      * `df.`[select][DataFrame.select]` { "myGroupCol".`[cols][String.cols]`() }`
      *
@@ -802,7 +802,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myGroupCol"`[`[`][kotlin.String.cols]`{ it.`[any][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }`[`]`][kotlin.String.cols]` }`
      *
-     * `// same as `[all][org.jetbrains.kotlinx.dataframe.api.all]`()`
+     * `// same as `[allCols][allCols]`()`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myGroupCol".`[cols][kotlin.String.cols]`() }`
      *
@@ -851,7 +851,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myGroupCol"`[`[`][kotlin.String.cols]`{ it.`[any][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }`[`]`][kotlin.String.cols]` }`
      *
-     * `// same as `[all][org.jetbrains.kotlinx.dataframe.api.all]`()`
+     * `// same as `[allCols][allCols]`()`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myGroupCol".`[cols][kotlin.String.cols]`() }`
      *
@@ -901,11 +901,11 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { Type::columnGroup`[`[`][SingleColumn.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][SingleColumn.cols]` }`
      *
-     * `// same as `[all][all]`()`
+     * `// same as `[allCols][ColumnsSelectionDsl.allCols]`()`
      *
      * `df.`[select][DataFrame.select]` { Type::columnGroup.`[cols][SingleColumn.cols]`() }`
      *
-     * @see [all]
+     * @see [ColumnsSelectionDsl.allCols]
      *
      *
      * #### Filter vs. Cols:
@@ -950,7 +950,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`{ it.`[any][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
-     * `// same as `[all][org.jetbrains.kotlinx.dataframe.api.all]`()`
+     * `// same as `[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`() }`
      *
@@ -967,7 +967,7 @@ public interface ColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
-     * @see [all] */
+     * @see [ColumnsSelectionDsl.allCols] */
     public fun KProperty<*>.cols(
         predicate: ColumnFilter<*> = { true },
     ): TransformableColumnSet<*> = columnGroup(this).cols(predicate)
@@ -999,7 +999,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`{ it.`[any][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
-     * `// same as `[all][org.jetbrains.kotlinx.dataframe.api.all]`()`
+     * `// same as `[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`() }`
      *
@@ -1016,7 +1016,7 @@ public interface ColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
-     * @see [all] */
+     * @see [ColumnsSelectionDsl.allCols] */
     public operator fun KProperty<*>.get(
         predicate: ColumnFilter<*> = { true },
     ): TransformableColumnSet<*> = cols(predicate)
@@ -1049,7 +1049,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"]`[`[`][ColumnPath.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][ColumnPath.cols]` }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[cols][ColumnPath.cols]`() } // identity call, same as `[all][all]
+     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[cols][ColumnPath.cols]`() } // identity call, same as `[allCols][ColumnsSelectionDsl.allCols]
      *
      *
      * #### Filter vs. Cols:
@@ -1094,7 +1094,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`{ it.`[any][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`() } // identity call, same as `[all][org.jetbrains.kotlinx.dataframe.api.all]
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`() } // identity call, same as `[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]
      *
      *
      * #### Filter vs. Cols:
@@ -1141,7 +1141,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`{ it.`[any][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`() } // identity call, same as `[all][org.jetbrains.kotlinx.dataframe.api.all]
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`() } // identity call, same as `[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]
      *
      *
      * #### Filter vs. Cols:

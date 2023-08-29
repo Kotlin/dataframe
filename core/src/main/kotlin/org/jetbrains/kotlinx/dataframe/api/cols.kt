@@ -163,8 +163,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[String][String]`>().`[cols][ColumnSet.cols]`() }`
      *
-     * @see [all\]
-     * @see [filter\]
+     * @see [ColumnsSelectionDsl.all\]
+     * @see [ColumnsSelectionDsl.filter\]
      */
     private interface ColumnSetColsPredicateDocs
 
@@ -187,13 +187,13 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][ColumnsSelectionDsl.cols]` }`
      *
-     *  `// same as `[all][ColumnsSelectionDsl.all]`()`
+     * `// same as `[all][ColumnsSelectionDsl.all]`()`
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`() }`
      *
      * {@include [LineBreak]}
      *
-     * @see [all\]
+     * @see [ColumnsSelectionDsl.all\]
      */
     private interface ColumnsSelectionDslColsPredicateDocs
 
@@ -213,14 +213,14 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup`.[cols][SingleColumn.cols]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
      *
-     * `// same as `[all][ColumnsSelectionDsl.all]`()`
+     * `// same as `[allCols][ColumnsSelectionDsl.allCols]`()`
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`() }`
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`{ ... }`[`]`][SingleColumn.cols]` }`
      * {@include [LineBreak]}
      *
-     * @see [all\]
+     * @see [ColumnsSelectionDsl.allCols\]
      */
     private interface SingleColumnAnyRowColsPredicateDocs
 
@@ -244,7 +244,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "myGroupCol"`[`[`][String.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][String.cols]` }`
      *
-     * `// same as `[all][all]`()`
+     * `// same as `[allCols][allCols]`()`
      *
      * `df.`[select][DataFrame.select]` { "myGroupCol".`[cols][String.cols]`() }`
      */
@@ -268,11 +268,11 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { Type::columnGroup`[`[`][SingleColumn.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][SingleColumn.cols]` }`
      *
-     * `// same as `[all][all]`()`
+     * `// same as `[allCols][ColumnsSelectionDsl.allCols]`()`
      *
      * `df.`[select][DataFrame.select]` { Type::columnGroup.`[cols][SingleColumn.cols]`() }`
      *
-     * @see [all\]
+     * @see [ColumnsSelectionDsl.allCols\]
      */
     private interface KPropertyColsPredicateDocs
 
@@ -294,7 +294,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"]`[`[`][ColumnPath.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][ColumnPath.cols]` }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[cols][ColumnPath.cols]`() } // identity call, same as `[all][all]
+     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[cols][ColumnPath.cols]`() } // identity call, same as `[allCols][ColumnsSelectionDsl.allCols]
      */
     private interface ColumnPathPredicateDocs
 

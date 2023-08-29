@@ -27,7 +27,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.isSingleColumnWithGroup
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
@@ -714,7 +713,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allAfter][ColumnSet.allAfter]`({@getArg [ColumnSetAllAfterDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allAfter][ColumnSet.allAfter]`{@getArg [ColumnSetAllAfterDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -768,7 +767,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { .. }.`[allAfter][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.allAfter]`({ myColumn }) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { .. }.`[allAfter][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.allAfter]` { myColumn } }` 
      *
      * #### Flavors of All (Cols):
      *
@@ -799,17 +798,9 @@ public interface AllColumnsSelectionDsl {
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.allAfter(column: ColumnSelector<*, *>): ColumnSet<C> {
         var resolvedColumn: DataColumn<C>? = null
-        var take = false
         return this
             .onResolve { resolvedColumn = it.toColumnGroup("").getColumn(column) as DataColumn<C> }
-            .colsInternal {
-                if (take) {
-                    true
-                } else {
-                    take = it.data == resolvedColumn!!
-                    false
-                }
-            } as ColumnSet<C>
+            .allAfterInternal { it.data == resolvedColumn!! } as ColumnSet<C>
     }
 
     /** ## All (Cols) After
@@ -861,17 +852,8 @@ public interface AllColumnsSelectionDsl {
      * @param [column] The specified column after which all columns should be taken.
      */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.allAfter(column: ColumnPath): ColumnSet<C> {
-        var take = false
-        return colsInternal {
-            if (take) {
-                true
-            } else {
-                take = column == it.path
-                false
-            }
-        } as ColumnSet<C>
-    }
+    public fun <C> ColumnSet<C>.allAfter(column: ColumnPath): ColumnSet<C> =
+        allAfterInternal { it.path == column } as ColumnSet<C>
 
     /** ## All (Cols) After
      *
@@ -1047,7 +1029,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[allAfter][ColumnsSelectionDsl.allAfter]`({@getArg [ColumnsSelectionDslAllAfterDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { `[allAfter][ColumnsSelectionDsl.allAfter]`{@getArg [ColumnsSelectionDslAllAfterDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -1101,7 +1083,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`({ myColumn }) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`{ myColumn } }` 
      *
      * #### Flavors of All (Cols):
      *
@@ -1357,7 +1339,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsAfter][SingleColumn.allColsAfter]`({@getArg [SingleColumnAllAfterDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsAfter][SingleColumn.allColsAfter]`{@getArg [SingleColumnAllAfterDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -1411,7 +1393,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allColsAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsAfter]`({ myColumn }) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allColsAfter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsAfter]`{ myColumn } }` 
      *
      * #### Flavors of All (Cols):
      *
@@ -1441,18 +1423,10 @@ public interface AllColumnsSelectionDsl {
      */
     public fun <T> SingleColumn<DataRow<T>>.allColsAfter(column: ColumnSelector<T, *>): ColumnSet<*> {
         var resolvedCol: DataColumn<*>? = null
-        var take = false
         return this
             .ensureIsColumnGroup()
             .onResolve { resolvedCol = it!!.asColumnGroup().getColumn(column) }
-            .colsInternal {
-                if (take) {
-                    true
-                } else {
-                    take = it.data == resolvedCol
-                    false
-                }
-            }
+            .allAfterInternal { it.data == resolvedCol!! }
     }
 
     /** ## All (Cols) After
@@ -1505,18 +1479,12 @@ public interface AllColumnsSelectionDsl {
      */
     public fun SingleColumn<DataRow<*>>.allColsAfter(column: ColumnPath): ColumnSet<*> {
         var path: ColumnPath? = null
-        var take = false
         return this
             .ensureIsColumnGroup()
             .onResolve { path = it!!.path }
-            .colsInternal {
-                if (take) {
-                    true
-                } else {
-                    // accept both relative and full column path
-                    take = it.path == path!! + column || it.path == column
-                    false
-                }
+            .allAfterInternal {
+                // accept both relative and full column path
+                it.path == path!! + column || it.path == column
             }
     }
 
@@ -1694,7 +1662,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsAfter][String.allColsAfter]`({@getArg [StringAllAfterDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsAfter][String.allColsAfter]`{@getArg [StringAllAfterDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -1748,7 +1716,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someColGroup".`[allColsAfter][kotlin.String.allColsAfter]`({ myColumn }) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someColGroup".`[allColsAfter][kotlin.String.allColsAfter]` { myColumn } }` 
      *
      * #### Flavors of All (Cols):
      *
@@ -2004,7 +1972,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup.`[allColsAfter][KProperty.allColsAfter]`({@getArg [KPropertyAllAfterDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup.`[allColsAfter][KProperty.allColsAfter]`{@getArg [KPropertyAllAfterDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -2059,7 +2027,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColGroup.`[allColsAfter][kotlin.reflect.KProperty.allColsAfter]`({ myColumn }) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColGroup.`[allColsAfter][kotlin.reflect.KProperty.allColsAfter]` { myColumn } }` 
      *
      *
      * #### Flavors of All (Cols):
@@ -2315,7 +2283,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allColsAfter][ColumnPath.allColsAfter]`({@getArg [ColumnPathAllAfterDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allColsAfter][ColumnPath.allColsAfter]`{@getArg [ColumnPathAllAfterDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -2369,7 +2337,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allColsAfter][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allColsAfter]`({ myColumn }) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allColsAfter][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allColsAfter]` { myColumn } }` 
      *
      * #### Flavors of All (Cols):
      *
@@ -2681,7 +2649,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allFrom][ColumnSet.allFrom]`({@getArg [ColumnSetAllFromDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allFrom][ColumnSet.allFrom]`{@getArg [ColumnSetAllFromDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -2735,7 +2703,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { .. }.`[allFrom][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.allFrom]`({ myColumns }) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { .. }.`[allFrom][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.allFrom]`{ myColumns } }` 
      *
      * #### Flavors of All (Cols):
      *
@@ -2766,17 +2734,9 @@ public interface AllColumnsSelectionDsl {
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.allFrom(column: ColumnSelector<*, *>): ColumnSet<C> {
         var resolvedColumn: DataColumn<C>? = null
-        var take = false
         return this
             .onResolve { resolvedColumn = it.toColumnGroup("").getColumn(column) as DataColumn<C> }
-            .colsInternal {
-                if (take) {
-                    true
-                } else {
-                    take = it.data == resolvedColumn!!
-                    take
-                }
-            } as ColumnSet<C>
+            .allFromInternal { it.data == resolvedColumn!! } as ColumnSet<C>
     }
 
     /** ## All (Cols) From
@@ -2828,17 +2788,8 @@ public interface AllColumnsSelectionDsl {
      * @param [column] The specified column from which all columns should be taken.
      */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.allFrom(column: ColumnPath): ColumnSet<C> {
-        var take = false
-        return colsInternal {
-            if (take) {
-                true
-            } else {
-                take = column == it.path
-                take
-            }
-        } as ColumnSet<C>
-    }
+    public fun <C> ColumnSet<C>.allFrom(column: ColumnPath): ColumnSet<C> =
+        allFromInternal { it.path == column } as ColumnSet<C>
 
     /** ## All (Cols) From
      *
@@ -3014,7 +2965,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[allFrom][ColumnsSelectionDsl.allFrom]`({@getArg [ColumnsSelectionDslAllFromDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { `[allFrom][ColumnsSelectionDsl.allFrom]`{@getArg [ColumnsSelectionDslAllFromDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -3068,7 +3019,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allFrom]`({ myColumn }) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allFrom]` { myColumn } }` 
      *
      * #### Flavors of All (Cols):
      *
@@ -3324,7 +3275,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsFrom][SingleColumn.allColsFrom]`({@getArg [SingleColumnAllFromDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsFrom][SingleColumn.allColsFrom]`{@getArg [SingleColumnAllFromDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -3378,7 +3329,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allColsFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsFrom]`({ myColumn }) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allColsFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsFrom]` { myColumn } }` 
      *
      * #### Flavors of All (Cols):
      *
@@ -3408,18 +3359,10 @@ public interface AllColumnsSelectionDsl {
      */
     public fun <T> SingleColumn<DataRow<T>>.allColsFrom(column: ColumnSelector<T, *>): ColumnSet<*> {
         var resolvedCol: DataColumn<*>? = null
-        var take = false
         return this
             .ensureIsColumnGroup()
             .onResolve { resolvedCol = it!!.asColumnGroup().getColumn(column) }
-            .colsInternal {
-                if (take) {
-                    true
-                } else {
-                    take = it.data == resolvedCol
-                    take
-                }
-            }
+            .allFromInternal { it.data == resolvedCol!! }
     }
 
     /** ## All (Cols) From
@@ -3472,18 +3415,12 @@ public interface AllColumnsSelectionDsl {
      */
     public fun SingleColumn<DataRow<*>>.allColsFrom(column: ColumnPath): ColumnSet<*> {
         var path: ColumnPath? = null
-        var take = false
         return this
             .ensureIsColumnGroup()
             .onResolve { path = it!!.path }
-            .colsInternal {
-                if (take) {
-                    true
-                } else {
-                    // accept both relative and full column path
-                    take = it.path == path!! + column || it.path == column
-                    take
-                }
+            .allFromInternal {
+                // accept both relative and full column path
+                it.path == path!! + column || it.path == column
             }
     }
 
@@ -3661,7 +3598,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsFrom][String.allColsFrom]`({@getArg [StringAllFromDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsFrom][String.allColsFrom]`{@getArg [StringAllFromDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -3715,7 +3652,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someColGroup".`[allColsFrom][kotlin.String.allColsFrom]`({ myColumn }) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someColGroup".`[allColsFrom][kotlin.String.allColsFrom]` { myColumn } }` 
      *
      * #### Flavors of All (Cols):
      *
@@ -3971,7 +3908,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::someColGroup.`[allColsFrom][KProperty.allColsFrom]`({@getArg [KPropertyAllFromDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::someColGroup.`[allColsFrom][KProperty.allColsFrom]`{@getArg [KPropertyAllFromDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -4026,7 +3963,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::someColGroup.`[allColsFrom][kotlin.reflect.KProperty.allColsFrom]`({ myColumn }) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::someColGroup.`[allColsFrom][kotlin.reflect.KProperty.allColsFrom]` { myColumn } }` 
      *
      *
      * #### Flavors of All (Cols):
@@ -4283,7 +4220,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allFrom][ColumnPath.allColsFrom]`({@getArg [ColumnPathAllFromDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allFrom][ColumnPath.allColsFrom]`{@getArg [ColumnPathAllFromDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -4337,7 +4274,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allFrom][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allColsFrom]`({ myColumn }) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allFrom][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allColsFrom]` { myColumn } }` 
      *
      * #### Flavors of All (Cols):
      *
@@ -4649,7 +4586,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allBefore][ColumnSet.allBefore]`({@getArg [ColumnSetAllBeforeDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allBefore][ColumnSet.allBefore]`{@getArg [ColumnSetAllBeforeDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -4703,7 +4640,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { .. }.`[allBefore][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.allBefore]`({ myColumn }) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { .. }.`[allBefore][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.allBefore]` { myColumn } }` 
      *
      * #### Flavors of All (Cols):
      *
@@ -4734,17 +4671,9 @@ public interface AllColumnsSelectionDsl {
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.allBefore(column: ColumnSelector<*, *>): ColumnSet<C> {
         var resolvedColumn: DataColumn<C>? = null
-        var take = true
         return this
             .onResolve { resolvedColumn = it.toColumnGroup("").getColumn(column) as DataColumn<C> }
-            .colsInternal {
-                if (!take) {
-                    false
-                } else {
-                    take = it.data != resolvedColumn!!
-                    take
-                }
-            } as ColumnSet<C>
+            .allBeforeInternal { it.data == resolvedColumn!! } as ColumnSet<C>
     }
 
     /** ## All (Cols) Before
@@ -4796,17 +4725,8 @@ public interface AllColumnsSelectionDsl {
      * @param [column] The specified column before which all columns should be taken
      */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.allBefore(column: ColumnPath): ColumnSet<C> {
-        var take = true
-        return colsInternal {
-            if (!take) {
-                false
-            } else {
-                take = column != it.path
-                take
-            }
-        } as ColumnSet<C>
-    }
+    public fun <C> ColumnSet<C>.allBefore(column: ColumnPath): ColumnSet<C> =
+        allBeforeInternal { it.path == column } as ColumnSet<C>
 
     /** ## All (Cols) Before
      *
@@ -4982,7 +4902,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[allBefore][ColumnsSelectionDsl.allBefore]`({@getArg [ColumnsSelectionDslAllBeforeDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { `[allBefore][ColumnsSelectionDsl.allBefore]`{@getArg [ColumnsSelectionDslAllBeforeDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -5036,7 +4956,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allBefore]`({ myColumn }) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allBefore]` { myColumn } }` 
      *
      * #### Flavors of All (Cols):
      *
@@ -5292,7 +5212,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsBefore][SingleColumn.allColsBefore]`({@getArg [SingleColumnAllBeforeDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsBefore][SingleColumn.allColsBefore]`{@getArg [SingleColumnAllBeforeDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -5346,7 +5266,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allColsBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsBefore]`({ myColumn }) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allColsBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsBefore]` { myColumn } }` 
      *
      * #### Flavors of All (Cols):
      *
@@ -5376,18 +5296,10 @@ public interface AllColumnsSelectionDsl {
      */
     public fun <T> SingleColumn<DataRow<T>>.allColsBefore(column: ColumnSelector<T, *>): ColumnSet<*> {
         var resolvedCol: DataColumn<*>? = null
-        var take = true
         return this
             .ensureIsColumnGroup()
             .onResolve { resolvedCol = it!!.asColumnGroup().getColumn(column) }
-            .colsInternal {
-                if (!take) {
-                    false
-                } else {
-                    take = it.data != resolvedCol
-                    take
-                }
-            }
+            .allBeforeInternal { it.data == resolvedCol }
     }
 
     /** ## All (Cols) Before
@@ -5440,19 +5352,10 @@ public interface AllColumnsSelectionDsl {
      */
     public fun SingleColumn<DataRow<*>>.allColsBefore(column: ColumnPath): ColumnSet<*> {
         var path: ColumnPath? = null
-        var take = true
         return this
             .ensureIsColumnGroup()
             .onResolve { path = it!!.path }
-            .colsInternal {
-                if (!take) {
-                    false
-                } else {
-                    // accept both relative and full column path
-                    take = it.path != path!! + column && it.path != column
-                    take
-                }
-            }
+            .allBeforeInternal { it.path == path!! + column || it.path == column }
     }
 
     /** ## All (Cols) Before
@@ -5629,7 +5532,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsBefore][String.allColsBefore]`({@getArg [StringAllBeforeDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsBefore][String.allColsBefore]`{@getArg [StringAllBeforeDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -5683,7 +5586,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someColGroup".`[allColsBefore][kotlin.String.allColsBefore]`({ myColumn }) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someColGroup".`[allColsBefore][kotlin.String.allColsBefore]` { myColumn } }` 
      *
      * #### Flavors of All (Cols):
      *
@@ -5939,7 +5842,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::someColGroup.`[allColsBefore][KProperty.allColsBefore]`({@getArg [KPropertyAllBeforeDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::someColGroup.`[allColsBefore][KProperty.allColsBefore]`{@getArg [KPropertyAllBeforeDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -5994,7 +5897,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::someColGroup.`[allColsBefore][kotlin.reflect.KProperty.allColsBefore]`({ myColumn }) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::someColGroup.`[allColsBefore][kotlin.reflect.KProperty.allColsBefore]` { myColumn } }` 
      *
      *
      * #### Flavors of All (Cols):
@@ -6251,7 +6154,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allColsBefore][ColumnPath.allColsBefore]`({@getArg [ColumnPathAllBeforeDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allColsBefore][ColumnPath.allColsBefore]`{@getArg [ColumnPathAllBeforeDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -6305,7 +6208,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allColsBefore][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allColsBefore]`({ myColumn }) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allColsBefore][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allColsBefore]` { myColumn } }` 
      *
      * #### Flavors of All (Cols):
      *
@@ -6617,7 +6520,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allUpTo][ColumnSet.allUpTo]`({@getArg [ColumnSetAllUpToDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allUpTo][ColumnSet.allUpTo]`{@getArg [ColumnSetAllUpToDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -6671,7 +6574,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { .. }.`[allUpTo][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.allUpTo]`({ myColumn }) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { .. }.`[allUpTo][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.allUpTo]` { myColumn } }` 
      *
      * #### Flavors of All (Cols):
      *
@@ -6702,17 +6605,9 @@ public interface AllColumnsSelectionDsl {
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.allUpTo(column: ColumnSelector<*, *>): ColumnSet<C> {
         var resolvedColumn: DataColumn<C>? = null
-        var take = true
         return this
             .onResolve { resolvedColumn = it.toColumnGroup("").getColumn(column) as DataColumn<C> }
-            .colsInternal {
-                if (!take) {
-                    false
-                } else {
-                    take = it.data != resolvedColumn!!
-                    true
-                }
-            } as ColumnSet<C>
+            .allUpToInternal { it.data == resolvedColumn!! } as ColumnSet<C>
     }
 
     /** ## All (Cols) Up To
@@ -6764,17 +6659,8 @@ public interface AllColumnsSelectionDsl {
      * @param [column] The specified column up to which all columns should be taken.
      */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.allUpTo(column: ColumnPath): ColumnSet<C> {
-        var take = true
-        return colsInternal {
-            if (!take) {
-                false
-            } else {
-                take = column != it.path
-                true
-            }
-        } as ColumnSet<C>
-    }
+    public fun <C> ColumnSet<C>.allUpTo(column: ColumnPath): ColumnSet<C> =
+        allUpToInternal { it.path == column } as ColumnSet<C>
 
     /** ## All (Cols) Up To
      *
@@ -6950,7 +6836,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[allUpTo][ColumnsSelectionDsl.allColsUpTo]`({@getArg [ColumnsSelectionDslAllUpToDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { `[allUpTo][ColumnsSelectionDsl.allColsUpTo]`{@getArg [ColumnsSelectionDslAllUpToDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -7004,7 +6890,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`({ myColumn }) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]` { myColumn } }` 
      *
      * #### Flavors of All (Cols):
      *
@@ -7260,7 +7146,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsUpTo][SingleColumn.allColsUpTo]`({@getArg [SingleColumnAllUpToDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsUpTo][SingleColumn.allColsUpTo]`{@getArg [SingleColumnAllUpToDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -7314,7 +7200,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allColsUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsUpTo]`({ myColumn }) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allColsUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsUpTo]` { myColumn } }` 
      *
      * #### Flavors of All (Cols):
      *
@@ -7344,18 +7230,10 @@ public interface AllColumnsSelectionDsl {
      */
     public fun <T> SingleColumn<DataRow<T>>.allColsUpTo(column: ColumnSelector<T, *>): ColumnSet<*> {
         var resolvedCol: DataColumn<*>? = null
-        var take = true
         return this
             .ensureIsColumnGroup()
             .onResolve { resolvedCol = it!!.asColumnGroup().getColumn(column) }
-            .colsInternal {
-                if (!take) {
-                    false
-                } else {
-                    take = it.data != resolvedCol!!
-                    true
-                }
-            }
+            .allUpToInternal { it.data == resolvedCol!! }
     }
 
     /** ## All (Cols) Up To
@@ -7408,18 +7286,12 @@ public interface AllColumnsSelectionDsl {
      */
     public fun SingleColumn<DataRow<*>>.allColsUpTo(column: ColumnPath): ColumnSet<*> {
         var path: ColumnPath? = null
-        var take = true
         return this
             .ensureIsColumnGroup()
             .onResolve { path = it!!.path }
-            .colsInternal {
-                if (!take) {
-                    false
-                } else {
-                    // accept both relative and full column path
-                    take = it.path != path!! + column && it.path != column
-                    true
-                }
+            .allUpToInternal {
+                // accept both relative and full column path
+                it.path == path!! + column || it.path == column
             }
     }
 
@@ -7597,7 +7469,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsUpTo][String.allColsUpTo]`({@getArg [StringAllUpToDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsUpTo][String.allColsUpTo]`{@getArg [StringAllUpToDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -7651,7 +7523,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someColGroup".`[allColsUpTo][kotlin.String.allColsUpTo]`({ myColumn }) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someColGroup".`[allColsUpTo][kotlin.String.allColsUpTo]` { myColumn } }` 
      *
      * #### Flavors of All (Cols):
      *
@@ -7907,7 +7779,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::someColGroup.`[allColsUpTo][KProperty.allColsUpTo]`({@getArg [KPropertyAllUpToDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::someColGroup.`[allColsUpTo][KProperty.allColsUpTo]`{@getArg [KPropertyAllUpToDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -7962,7 +7834,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::someColGroup.`[allColsUpTo][kotlin.reflect.KProperty.allColsUpTo]`({ myColumn }) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::someColGroup.`[allColsUpTo][kotlin.reflect.KProperty.allColsUpTo]` { myColumn } }` 
      *
      *
      * #### Flavors of All (Cols):
@@ -8219,7 +8091,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allColsUpTo][ColumnPath.allColsUpTo]`({@getArg [ColumnPathAllUpToDocs.Arg]}) }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allColsUpTo][ColumnPath.allColsUpTo]`{@getArg [ColumnPathAllUpToDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -8273,7 +8145,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allColsUpTo][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allColsUpTo]`({ myColumn }) }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allColsUpTo][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allColsUpTo]` { myColumn } }` 
      *
      * #### Flavors of All (Cols):
      *
@@ -8588,5 +8460,77 @@ internal fun ColumnsResolver<*>.allColumnsInternal(): TransformableColumnSet<*> 
             it
         }
     }
+
+/**
+ * Returns a new ColumnSet containing all columns after the first column that matches the given predicate.
+ *
+ * @param colByPredicate a function that takes a ColumnWithPath and returns true if the column matches the predicate, false otherwise
+ * @return a new ColumnSet containing all columns after the first column that matches the given predicate
+ */
+internal fun ColumnsResolver<*>.allAfterInternal(colByPredicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> {
+    var take = false
+    return colsInternal {
+        if (take) {
+            true
+        } else {
+            take = colByPredicate(it)
+            false
+        }
+    }
+}
+
+/**
+ * Returns a column set containing all columns from the internal column set that satisfy the given predicate.
+ *
+ * @param colByPredicate the predicate used to determine if a column should be included in the resulting set
+ * @return a column set containing all columns that satisfy the predicate
+ */
+internal fun ColumnsResolver<*>.allFromInternal(colByPredicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> {
+    var take = false
+    return colsInternal {
+        if (take) {
+            true
+        } else {
+            take = colByPredicate(it)
+            take
+        }
+    }
+}
+
+/**
+ * Returns a new ColumnSet containing all columns before the first column that satisfies the given predicate.
+ *
+ * @param colByPredicate the predicate function used to determine if a column should be included in the returned ColumnSet
+ * @return a new ColumnSet containing all columns that come before the first column that satisfies the given predicate
+ */
+internal fun ColumnsResolver<*>.allBeforeInternal(colByPredicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> {
+    var take = true
+    return colsInternal {
+        if (!take) {
+            false
+        } else {
+            take = !colByPredicate(it)
+            take
+        }
+    }
+}
+
+/**
+ * Returns a ColumnSet containing all columns up to (and including) the first column that satisfies the given predicate.
+ *
+ * @param colByPredicate a predicate function that takes a ColumnWithPath and returns true if the column satisfies the desired condition.
+ * @return a ColumnSet containing all columns up to the first column that satisfies the given predicate.
+ */
+internal fun ColumnsResolver<*>.allUpToInternal(colByPredicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> {
+    var take = true
+    return colsInternal {
+        if (!take) {
+            false
+        } else {
+            take = !colByPredicate(it)
+            true
+        }
+    }
+}
 
 // endregion
