@@ -13,9 +13,9 @@ import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.*
 
-const val URL = "jdbc:mariadb://localhost:3306/imdb"
-const val USER_NAME = "root"
-const val PASSWORD = "pass"
+private const val URL = "jdbc:mariadb://localhost:3306/imdb"
+private const val USER_NAME = "root"
+private const val PASSWORD = "pass"
 
 @DataSchema
 interface ActorKDF {
