@@ -106,11 +106,11 @@ internal fun <T> DataColumn<T>.assertIsComparable(): DataColumn<T> {
  * One use case is to check that a column is actually a [ColumnGroup], which is handled by
  * [org.jetbrains.kotlinx.dataframe.api.ensureIsColumnGroup].
  */
-internal fun <A> SingleColumn<A>.performCheck(
+internal fun <A> SingleColumn<A>.onResolve(
     check: (ColumnWithPath<A>?) -> Unit,
 ): SingleColumn<A> = object : SingleColumn<A> {
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<A>? =
-        this@performCheck.resolveSingle(context).also(check)
+        this@onResolve.resolveSingle(context).also(check)
 }
 
 /**
@@ -119,53 +119,53 @@ internal fun <A> SingleColumn<A>.performCheck(
  * One use case is to check that a column is actually a [ValueColumn], which is handled by
  * [org.jetbrains.kotlinx.dataframe.api.ensureIsValueColumn].
  */
-internal fun <A> ColumnAccessor<A>.performCheck(
+internal fun <A> ColumnAccessor<A>.onResolve(
     check: (ColumnWithPath<*>?) -> Unit,
 ): ColumnAccessor<A> = object : ColumnAccessor<A> {
     override fun <C> get(column: ColumnReference<C>): ColumnAccessor<C> =
-        this@performCheck.get(column).performCheck(check)
+        this@onResolve.get(column).onResolve(check)
 
     override fun rename(newName: String): ColumnAccessor<A> =
-        this@performCheck.rename(newName).performCheck(check)
+        this@onResolve.rename(newName).onResolve(check)
 
     override fun name(): String =
-        this@performCheck.name()
+        this@onResolve.name()
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<A>? =
-        this@performCheck.resolveSingle(context).also(check)
+        this@onResolve.resolveSingle(context).also(check)
 }
 
-internal fun <A> TransformableSingleColumn<A>.performCheck(
+internal fun <A> TransformableSingleColumn<A>.onResolve(
     check: (ColumnWithPath<A>?) -> Unit,
 ): TransformableSingleColumn<A> = object : TransformableSingleColumn<A> {
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<A>? =
-        this@performCheck.resolveSingle(context).also(check)
+        this@onResolve.resolveSingle(context).also(check)
 
     override fun transformResolveSingle(
         context: ColumnResolutionContext,
         transformer: ColumnsResolverTransformer,
     ): ColumnWithPath<A>? =
-        this@performCheck.transformResolveSingle(context, transformer).also(check)
+        this@onResolve.transformResolveSingle(context, transformer).also(check)
 }
 
-internal fun <A> ColumnSet<A>.performCheck(
+internal fun <A> ColumnSet<A>.onResolve(
     check: (List<ColumnWithPath<A>>) -> Unit,
 ): ColumnSet<A> = object : ColumnSet<A> {
     override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<A>> =
-        this@performCheck.resolve(context).also(check)
+        this@onResolve.resolve(context).also(check)
 }
 
-internal fun <A> TransformableColumnSet<A>.performCheck(
+internal fun <A> TransformableColumnSet<A>.onResolve(
     check: (List<ColumnWithPath<A>>) -> Unit,
 ): TransformableColumnSet<A> = object : TransformableColumnSet<A> {
     override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<A>> =
-        this@performCheck.resolve(context).also(check)
+        this@onResolve.resolve(context).also(check)
 
     override fun transformResolve(
         context: ColumnResolutionContext,
         transformer: ColumnsResolverTransformer,
     ): List<ColumnWithPath<A>> =
-        this@performCheck.transformResolve(context, transformer).also(check)
+        this@onResolve.transformResolve(context, transformer).also(check)
 }
 
 /**

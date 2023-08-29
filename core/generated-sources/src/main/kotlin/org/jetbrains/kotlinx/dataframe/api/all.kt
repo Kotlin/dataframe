@@ -35,7 +35,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.columns.performCheck
+import org.jetbrains.kotlinx.dataframe.impl.columns.onResolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_ALL_COLS
@@ -361,7 +361,7 @@ public interface AllColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.cols]
      */
     public fun ColumnsSelectionDsl<*>.all(): TransformableColumnSet<*> =
-        this.asSingleColumn().allColumnsInternal()
+        asSingleColumn().allColumnsInternal()
 
     /**
      * ## All (Cols)
@@ -411,7 +411,7 @@ public interface AllColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.cols]
      */
     public fun SingleColumn<DataRow<*>>.allCols(): TransformableColumnSet<*> =
-        this.ensureIsColumnGroup().allColumnsInternal()
+        ensureIsColumnGroup().allColumnsInternal()
 
     /**
      * ## All (Cols)
@@ -460,7 +460,8 @@ public interface AllColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.allUpTo]
      * @see [ColumnsSelectionDsl.cols]
      */
-    public fun String.allCols(): TransformableColumnSet<*> = columnGroup(this).allCols()
+    public fun String.allCols(): TransformableColumnSet<*> =
+        columnGroup(this).allCols()
 
     /**
      * ## All (Cols)
@@ -509,7 +510,8 @@ public interface AllColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.allUpTo]
      * @see [ColumnsSelectionDsl.cols]
      */
-    public fun KProperty<*>.allCols(): TransformableColumnSet<*> = columnGroup(this).allCols()
+    public fun KProperty<*>.allCols(): TransformableColumnSet<*> =
+        columnGroup(this).allCols()
 
     /**
      * ## All (Cols)
@@ -558,7 +560,8 @@ public interface AllColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.allUpTo]
      * @see [ColumnsSelectionDsl.cols]
      */
-    public fun ColumnPath.allCols(): TransformableColumnSet<*> = columnGroup(this).allCols()
+    public fun ColumnPath.allCols(): TransformableColumnSet<*> =
+        columnGroup(this).allCols()
 
     // endregion
 
@@ -796,19 +799,17 @@ public interface AllColumnsSelectionDsl {
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.allAfter(column: ColumnSelector<*, *>): ColumnSet<C> {
         var resolvedColumn: DataColumn<C>? = null
-        val set = performCheck {
-            resolvedColumn = it.toColumnGroup("").getColumn(column) as DataColumn<C>
-        }
-
         var take = false
-        return set.colsInternal {
-            if (take) {
-                true
-            } else {
-                take = it.data == resolvedColumn!!
-                false
-            }
-        } as ColumnSet<C>
+        return this
+            .onResolve { resolvedColumn = it.toColumnGroup("").getColumn(column) as DataColumn<C> }
+            .colsInternal {
+                if (take) {
+                    true
+                } else {
+                    take = it.data == resolvedColumn!!
+                    false
+                }
+            } as ColumnSet<C>
     }
 
     /** ## All (Cols) After
@@ -920,7 +921,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken.
      */
-    public fun <C> ColumnSet<C>.allAfter(column: String): ColumnSet<C> = allAfter(pathOf(column))
+    public fun <C> ColumnSet<C>.allAfter(column: String): ColumnSet<C> =
+        allAfter(pathOf(column))
 
     /** ## All (Cols) After
      *
@@ -970,7 +972,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken.
      */
-    public fun <C> ColumnSet<C>.allAfter(column: AnyColumnReference): ColumnSet<C> = allAfter(column.path())
+    public fun <C> ColumnSet<C>.allAfter(column: AnyColumnReference): ColumnSet<C> =
+        allAfter(column.path())
 
     /** ## All (Cols) After
      *
@@ -1127,7 +1130,7 @@ public interface AllColumnsSelectionDsl {
      * @param [column] The specified column after which all columns should be taken.
      */
     public fun <T> ColumnsSelectionDsl<T>.allAfter(column: ColumnSelector<T, *>): ColumnSet<*> =
-        this.asSingleColumn().allColsAfter(column)
+        asSingleColumn().allColsAfter(column)
 
     /** ## All (Cols) After
      *
@@ -1178,7 +1181,7 @@ public interface AllColumnsSelectionDsl {
      * @param [column] The specified column after which all columns should be taken.
      */
     public fun ColumnsSelectionDsl<*>.allAfter(column: ColumnPath): ColumnSet<*> =
-        this.asSingleColumn().allColsAfter(column)
+        asSingleColumn().allColsAfter(column)
 
     /** ## All (Cols) After
      *
@@ -1228,7 +1231,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken.
      */
-    public fun ColumnsSelectionDsl<*>.allAfter(column: String): ColumnSet<*> = allAfter(pathOf(column))
+    public fun ColumnsSelectionDsl<*>.allAfter(column: String): ColumnSet<*> =
+        allAfter(pathOf(column))
 
     /** ## All (Cols) After
      *
@@ -1278,7 +1282,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken.
      */
-    public fun ColumnsSelectionDsl<*>.allAfter(column: AnyColumnReference): ColumnSet<*> = allAfter(column.path())
+    public fun ColumnsSelectionDsl<*>.allAfter(column: AnyColumnReference): ColumnSet<*> =
+        allAfter(column.path())
 
     /** ## All (Cols) After
      *
@@ -1437,8 +1442,9 @@ public interface AllColumnsSelectionDsl {
     public fun <T> SingleColumn<DataRow<T>>.allColsAfter(column: ColumnSelector<T, *>): ColumnSet<*> {
         var resolvedCol: DataColumn<*>? = null
         var take = false
-        return ensureIsColumnGroup()
-            .performCheck { resolvedCol = it!!.asColumnGroup().getColumn(column) }
+        return this
+            .ensureIsColumnGroup()
+            .onResolve { resolvedCol = it!!.asColumnGroup().getColumn(column) }
             .colsInternal {
                 if (take) {
                     true
@@ -1500,8 +1506,9 @@ public interface AllColumnsSelectionDsl {
     public fun SingleColumn<DataRow<*>>.allColsAfter(column: ColumnPath): ColumnSet<*> {
         var path: ColumnPath? = null
         var take = false
-        return ensureIsColumnGroup()
-            .performCheck { path = it!!.path }
+        return this
+            .ensureIsColumnGroup()
+            .onResolve { path = it!!.path }
             .colsInternal {
                 if (take) {
                     true
@@ -1561,7 +1568,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken.
      */
-    public fun SingleColumn<DataRow<*>>.allColsAfter(column: String): ColumnSet<*> = allColsAfter(pathOf(column))
+    public fun SingleColumn<DataRow<*>>.allColsAfter(column: String): ColumnSet<*> =
+        allColsAfter(pathOf(column))
 
     /** ## All (Cols) After
      *
@@ -2727,6 +2735,70 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { .. }.`[allFrom][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.allFrom]`({ myColumns }) }` 
+     *
+     * #### Flavors of All (Cols):
+     *
+     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
+     *     All columns
+     *
+     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [cols]
+     * @param [column] The specified column from which all columns should be taken.
+     */
+    @Suppress("UNCHECKED_CAST")
+    public fun <C> ColumnSet<C>.allFrom(column: ColumnSelector<*, *>): ColumnSet<C> {
+        var resolvedColumn: DataColumn<C>? = null
+        var take = false
+        return this
+            .onResolve { resolvedColumn = it.toColumnGroup("").getColumn(column) as DataColumn<C> }
+            .colsInternal {
+                if (take) {
+                    true
+                } else {
+                    take = it.data == resolvedColumn!!
+                    take
+                }
+            } as ColumnSet<C>
+    }
+
+    /** ## All (Cols) From
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
+     * containing all columns from [column], including [column] itself.
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][ColumnsSelectionDsl.allFrom]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allColsFrom][SingleColumn.allColsFrom]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[allFrom][ColumnSet.allFrom]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { .. }.`[allFrom][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.allFrom]`("pathTo"["myColumn"]) }` 
      *
      * #### Flavors of All (Cols):
@@ -2816,7 +2888,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken.
      */
-    public fun <C> ColumnSet<C>.allFrom(column: String): ColumnSet<C> = allFrom(pathOf(column))
+    public fun <C> ColumnSet<C>.allFrom(column: String): ColumnSet<C> =
+        allFrom(pathOf(column))
 
     /** ## All (Cols) From
      *
@@ -2866,7 +2939,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken.
      */
-    public fun <C> ColumnSet<C>.allFrom(column: AnyColumnReference): ColumnSet<C> = allFrom(column.path())
+    public fun <C> ColumnSet<C>.allFrom(column: AnyColumnReference): ColumnSet<C> =
+        allFrom(column.path())
 
     /** ## All (Cols) From
      *
@@ -2994,6 +3068,57 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allFrom]`({ myColumn }) }` 
+     *
+     * #### Flavors of All (Cols):
+     *
+     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
+     *     All columns
+     *
+     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [cols]
+     * @param [column] The specified column from which all columns should be taken.
+     */
+    public fun <T> ColumnsSelectionDsl<T>.allFrom(column: ColumnSelector<T, *>): ColumnSet<*> =
+        asSingleColumn().allColsFrom(column)
+
+    /** ## All (Cols) From
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
+     * containing all columns from [column], including [column] itself.
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][ColumnsSelectionDsl.allFrom]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allColsFrom][SingleColumn.allColsFrom]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[allFrom][ColumnSet.allFrom]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allFrom]`("pathTo"["myColumn"]) }` 
      *
      * #### Flavors of All (Cols):
@@ -3023,7 +3148,7 @@ public interface AllColumnsSelectionDsl {
      * @param [column] The specified column from which all columns should be taken.
      */
     public fun ColumnsSelectionDsl<*>.allFrom(column: ColumnPath): ColumnSet<*> =
-        this.asSingleColumn().allColsFrom(column)
+        asSingleColumn().allColsFrom(column)
 
     /** ## All (Cols) From
      *
@@ -3074,7 +3199,7 @@ public interface AllColumnsSelectionDsl {
      * @param [column] The specified column from which all columns should be taken.
      */
     public fun ColumnsSelectionDsl<*>.allFrom(column: String): ColumnSet<*> =
-        this.asSingleColumn().allColsFrom(column)
+        asSingleColumn().allColsFrom(column)
 
     /** ## All (Cols) From
      *
@@ -3125,7 +3250,7 @@ public interface AllColumnsSelectionDsl {
      * @param [column] The specified column from which all columns should be taken.
      */
     public fun ColumnsSelectionDsl<*>.allFrom(column: AnyColumnReference): ColumnSet<*> =
-        this.asSingleColumn().allColsFrom(column)
+        asSingleColumn().allColsFrom(column)
 
     /** ## All (Cols) From
      *
@@ -3176,7 +3301,7 @@ public interface AllColumnsSelectionDsl {
      * @param [column] The specified column from which all columns should be taken.
      */
     public fun ColumnsSelectionDsl<*>.allFrom(column: KProperty<*>): ColumnSet<*> =
-        this.asSingleColumn().allColsFrom(column)
+        asSingleColumn().allColsFrom(column)
 
     /**
      * ## All (Cols) From
@@ -3253,6 +3378,70 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allColsFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsFrom]`({ myColumn }) }` 
+     *
+     * #### Flavors of All (Cols):
+     *
+     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
+     *     All columns
+     *
+     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [cols]
+     * @param [column] The specified column from which all columns should be taken.
+     */
+    public fun <T> SingleColumn<DataRow<T>>.allColsFrom(column: ColumnSelector<T, *>): ColumnSet<*> {
+        var resolvedCol: DataColumn<*>? = null
+        var take = false
+        return this
+            .ensureIsColumnGroup()
+            .onResolve { resolvedCol = it!!.asColumnGroup().getColumn(column) }
+            .colsInternal {
+                if (take) {
+                    true
+                } else {
+                    take = it.data == resolvedCol
+                    take
+                }
+            }
+    }
+
+    /** ## All (Cols) From
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
+     * containing all columns from [column], including [column] itself.
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][ColumnsSelectionDsl.allFrom]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allColsFrom][SingleColumn.allColsFrom]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[allFrom][ColumnSet.allFrom]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allColsFrom][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsFrom]`("pathTo"["myColumn"]) }` 
      *
      * #### Flavors of All (Cols):
@@ -3281,8 +3470,22 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken.
      */
-    public fun SingleColumn<DataRow<*>>.allColsFrom(column: ColumnPath): ColumnSet<*> =
-        this.ensureIsColumnGroup().asColumnSet().allFrom(column)
+    public fun SingleColumn<DataRow<*>>.allColsFrom(column: ColumnPath): ColumnSet<*> {
+        var path: ColumnPath? = null
+        var take = false
+        return this
+            .ensureIsColumnGroup()
+            .onResolve { path = it!!.path }
+            .colsInternal {
+                if (take) {
+                    true
+                } else {
+                    // accept both relative and full column path
+                    take = it.path == path!! + column || it.path == column
+                    take
+                }
+            }
+    }
 
     /** ## All (Cols) From
      *
@@ -3332,7 +3535,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken.
      */
-    public fun SingleColumn<DataRow<*>>.allColsFrom(column: String): ColumnSet<*> = allColsFrom(pathOf(column))
+    public fun SingleColumn<DataRow<*>>.allColsFrom(column: String): ColumnSet<*> =
+        allColsFrom(pathOf(column))
 
     /** ## All (Cols) From
      *
@@ -3511,6 +3715,57 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someColGroup".`[allColsFrom][kotlin.String.allColsFrom]`({ myColumn }) }` 
+     *
+     * #### Flavors of All (Cols):
+     *
+     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
+     *     All columns
+     *
+     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [cols]
+     * @param [column] The specified column from which all columns should be taken.
+     */
+    public fun String.allColsFrom(column: ColumnSelector<*, *>): ColumnSet<*> =
+        columnGroup(this).allColsFrom(column)
+
+    /** ## All (Cols) From
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
+     * containing all columns from [column], including [column] itself.
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][ColumnsSelectionDsl.allFrom]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allColsFrom][SingleColumn.allColsFrom]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[allFrom][ColumnSet.allFrom]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someColGroup".`[allColsFrom][kotlin.String.allColsFrom]`("pathTo"["myColumn"]) }` 
      *
      * #### Flavors of All (Cols):
@@ -3539,7 +3794,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken.
      */
-    public fun String.allColsFrom(column: ColumnPath): ColumnSet<*> = columnGroup(this).allColsFrom(column)
+    public fun String.allColsFrom(column: ColumnPath): ColumnSet<*> =
+        columnGroup(this).allColsFrom(column)
 
     /** ## All (Cols) From
      *
@@ -3589,7 +3845,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken.
      */
-    public fun String.allColsFrom(column: String): ColumnSet<*> = columnGroup(this).allColsFrom(column)
+    public fun String.allColsFrom(column: String): ColumnSet<*> =
+        columnGroup(this).allColsFrom(column)
 
     /** ## All (Cols) From
      *
@@ -3690,7 +3947,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken.
      */
-    public fun String.allColsFrom(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allColsFrom(column)
+    public fun String.allColsFrom(column: KProperty<*>): ColumnSet<*> =
+        columnGroup(this).allColsFrom(column)
 
     /**
      * ## All (Cols) From
@@ -3746,6 +4004,59 @@ public interface AllColumnsSelectionDsl {
         /** Example argument to use */
         interface Arg
     }
+
+    /**
+     * ## All (Cols) From
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
+     * containing all columns from [column], including [column] itself.
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][ColumnsSelectionDsl.allFrom]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allColsFrom][SingleColumn.allColsFrom]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[allFrom][ColumnSet.allFrom]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::someColGroup.`[allColsFrom][kotlin.reflect.KProperty.allColsFrom]`({ myColumn }) }` 
+     *
+     *
+     * #### Flavors of All (Cols):
+     *
+     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
+     *     All columns
+     *
+     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [cols]
+     * @param [column] The specified column from which all columns should be taken.
+     */
+    public fun KProperty<*>.allColsFrom(column: ColumnSelector<*, *>): ColumnSet<*> =
+        columnGroup(this).allColsFrom(column)
 
     /** ## All (Cols) From
      *
@@ -3846,7 +4157,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken.
      */
-    public fun KProperty<*>.allColsFrom(column: String): ColumnSet<*> = columnGroup(this).allColsFrom(column)
+    public fun KProperty<*>.allColsFrom(column: String): ColumnSet<*> =
+        columnGroup(this).allColsFrom(column)
 
     /** ## All (Cols) From
      *
@@ -4025,6 +4337,57 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allFrom][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allColsFrom]`({ myColumn }) }` 
+     *
+     * #### Flavors of All (Cols):
+     *
+     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
+     *     All columns
+     *
+     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [cols]
+     * @param [column] The specified column from which all columns should be taken.
+     */
+    public fun ColumnPath.allColsFrom(column: ColumnSelector<*, *>): ColumnSet<*> =
+        columnGroup(this).allColsFrom(column)
+
+    /** ## All (Cols) From
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
+     * containing all columns from [column], including [column] itself.
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][ColumnsSelectionDsl.allFrom]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allColsFrom][SingleColumn.allColsFrom]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[allFrom][ColumnSet.allFrom]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allFrom][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allColsFrom]`("pathTo"["myColumn"]) }` 
      *
      * #### Flavors of All (Cols):
@@ -4053,7 +4416,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken.
      */
-    public fun ColumnPath.allColsFrom(column: ColumnPath): ColumnSet<*> = columnGroup(this).allColsFrom(column)
+    public fun ColumnPath.allColsFrom(column: ColumnPath): ColumnSet<*> =
+        columnGroup(this).allColsFrom(column)
 
     /** ## All (Cols) From
      *
@@ -4103,7 +4467,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken.
      */
-    public fun ColumnPath.allColsFrom(column: String): ColumnSet<*> = columnGroup(this).allColsFrom(column)
+    public fun ColumnPath.allColsFrom(column: String): ColumnSet<*> =
+        columnGroup(this).allColsFrom(column)
 
     /** ## All (Cols) From
      *
@@ -4153,7 +4518,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken.
      */
-    public fun ColumnPath.allColsFrom(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allColsFrom(column)
+    public fun ColumnPath.allColsFrom(column: AnyColumnReference): ColumnSet<*> =
+        columnGroup(this).allColsFrom(column)
 
     /** ## All (Cols) From
      *
@@ -4203,7 +4569,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken.
      */
-    public fun ColumnPath.allColsFrom(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allColsFrom(column)
+    public fun ColumnPath.allColsFrom(column: KProperty<*>): ColumnSet<*> =
+        columnGroup(this).allColsFrom(column)
 
     // endregion
 
@@ -4336,6 +4703,70 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { .. }.`[allBefore][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.allBefore]`({ myColumn }) }` 
+     *
+     * #### Flavors of All (Cols):
+     *
+     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
+     *     All columns
+     *
+     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [cols]
+     * @param [column] The specified column before which all columns should be taken
+     */
+    @Suppress("UNCHECKED_CAST")
+    public fun <C> ColumnSet<C>.allBefore(column: ColumnSelector<*, *>): ColumnSet<C> {
+        var resolvedColumn: DataColumn<C>? = null
+        var take = true
+        return this
+            .onResolve { resolvedColumn = it.toColumnGroup("").getColumn(column) as DataColumn<C> }
+            .colsInternal {
+                if (!take) {
+                    false
+                } else {
+                    take = it.data != resolvedColumn!!
+                    take
+                }
+            } as ColumnSet<C>
+    }
+
+    /** ## All (Cols) Before
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
+     * containing all columns before [column], excluding [column] itself.
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][ColumnsSelectionDsl.allBefore]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allColsBefore][SingleColumn.allColsBefore]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[allBefore][ColumnSet.allBefore]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { .. }.`[allBefore][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.allBefore]`("pathTo"["myColumn"]) }` 
      *
      * #### Flavors of All (Cols):
@@ -4425,7 +4856,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken
      */
-    public fun <C> ColumnSet<C>.allBefore(column: String): ColumnSet<C> = allBefore(pathOf(column))
+    public fun <C> ColumnSet<C>.allBefore(column: String): ColumnSet<C> =
+        allBefore(pathOf(column))
 
     /** ## All (Cols) Before
      *
@@ -4475,7 +4907,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken
      */
-    public fun <C> ColumnSet<C>.allBefore(column: AnyColumnReference): ColumnSet<C> = allBefore(column.path())
+    public fun <C> ColumnSet<C>.allBefore(column: AnyColumnReference): ColumnSet<C> =
+        allBefore(column.path())
 
     /** ## All (Cols) Before
      *
@@ -4603,6 +5036,57 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allBefore]`({ myColumn }) }` 
+     *
+     * #### Flavors of All (Cols):
+     *
+     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
+     *     All columns
+     *
+     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [cols]
+     * @param [column] The specified column before which all columns should be taken
+     */
+    public fun <T> ColumnsSelectionDsl<T>.allBefore(column: ColumnSelector<T, *>): ColumnSet<*> =
+        asSingleColumn().allColsBefore(column)
+
+    /** ## All (Cols) Before
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
+     * containing all columns before [column], excluding [column] itself.
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][ColumnsSelectionDsl.allBefore]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allColsBefore][SingleColumn.allColsBefore]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[allBefore][ColumnSet.allBefore]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allBefore]`("pathTo"["myColumn"]) }` 
      *
      * #### Flavors of All (Cols):
@@ -4682,7 +5166,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken
      */
-    public fun ColumnsSelectionDsl<*>.allBefore(column: String): ColumnSet<*> = allBefore(pathOf(column))
+    public fun ColumnsSelectionDsl<*>.allBefore(column: String): ColumnSet<*> =
+        allBefore(pathOf(column))
 
     /** ## All (Cols) Before
      *
@@ -4732,7 +5217,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken
      */
-    public fun ColumnsSelectionDsl<*>.allBefore(column: AnyColumnReference): ColumnSet<*> = allBefore(column.path())
+    public fun ColumnsSelectionDsl<*>.allBefore(column: AnyColumnReference): ColumnSet<*> =
+        allBefore(column.path())
 
     /** ## All (Cols) Before
      *
@@ -4860,6 +5346,70 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allColsBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsBefore]`({ myColumn }) }` 
+     *
+     * #### Flavors of All (Cols):
+     *
+     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
+     *     All columns
+     *
+     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [cols]
+     * @param [column] The specified column before which all columns should be taken
+     */
+    public fun <T> SingleColumn<DataRow<T>>.allColsBefore(column: ColumnSelector<T, *>): ColumnSet<*> {
+        var resolvedCol: DataColumn<*>? = null
+        var take = true
+        return this
+            .ensureIsColumnGroup()
+            .onResolve { resolvedCol = it!!.asColumnGroup().getColumn(column) }
+            .colsInternal {
+                if (!take) {
+                    false
+                } else {
+                    take = it.data != resolvedCol
+                    take
+                }
+            }
+    }
+
+    /** ## All (Cols) Before
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
+     * containing all columns before [column], excluding [column] itself.
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][ColumnsSelectionDsl.allBefore]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allColsBefore][SingleColumn.allColsBefore]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[allBefore][ColumnSet.allBefore]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allColsBefore][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsBefore]`("pathTo"["myColumn"]) }` 
      *
      * #### Flavors of All (Cols):
@@ -4888,8 +5438,22 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken
      */
-    public fun SingleColumn<DataRow<*>>.allColsBefore(column: ColumnPath): ColumnSet<*> =
-        this.ensureIsColumnGroup().asColumnSet().allBefore(column)
+    public fun SingleColumn<DataRow<*>>.allColsBefore(column: ColumnPath): ColumnSet<*> {
+        var path: ColumnPath? = null
+        var take = true
+        return this
+            .ensureIsColumnGroup()
+            .onResolve { path = it!!.path }
+            .colsInternal {
+                if (!take) {
+                    false
+                } else {
+                    // accept both relative and full column path
+                    take = it.path != path!! + column && it.path != column
+                    take
+                }
+            }
+    }
 
     /** ## All (Cols) Before
      *
@@ -4939,7 +5503,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken
      */
-    public fun SingleColumn<DataRow<*>>.allColsBefore(column: String): ColumnSet<*> = allColsBefore(pathOf(column))
+    public fun SingleColumn<DataRow<*>>.allColsBefore(column: String): ColumnSet<*> =
+        allColsBefore(pathOf(column))
 
     /** ## All (Cols) Before
      *
@@ -5118,6 +5683,57 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someColGroup".`[allColsBefore][kotlin.String.allColsBefore]`({ myColumn }) }` 
+     *
+     * #### Flavors of All (Cols):
+     *
+     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
+     *     All columns
+     *
+     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [cols]
+     * @param [column] The specified column before which all columns should be taken
+     */
+    public fun String.allColsBefore(column: ColumnSelector<*, *>): ColumnSet<*> =
+        columnGroup(this).allColsBefore(column)
+
+    /** ## All (Cols) Before
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
+     * containing all columns before [column], excluding [column] itself.
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][ColumnsSelectionDsl.allBefore]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allColsBefore][SingleColumn.allColsBefore]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[allBefore][ColumnSet.allBefore]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someColGroup".`[allColsBefore][kotlin.String.allColsBefore]`("pathTo"["myColumn"]) }` 
      *
      * #### Flavors of All (Cols):
@@ -5146,7 +5762,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken
      */
-    public fun String.allColsBefore(column: ColumnPath): ColumnSet<*> = columnGroup(this).allColsBefore(column)
+    public fun String.allColsBefore(column: ColumnPath): ColumnSet<*> =
+        columnGroup(this).allColsBefore(column)
 
     /** ## All (Cols) Before
      *
@@ -5196,7 +5813,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken
      */
-    public fun String.allColsBefore(column: String): ColumnSet<*> = columnGroup(this).allColsBefore(column)
+    public fun String.allColsBefore(column: String): ColumnSet<*> =
+        columnGroup(this).allColsBefore(column)
 
     /** ## All (Cols) Before
      *
@@ -5354,6 +5972,59 @@ public interface AllColumnsSelectionDsl {
         /** Example argument to use */
         interface Arg
     }
+
+    /**
+     * ## All (Cols) Before
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
+     * containing all columns before [column], excluding [column] itself.
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][ColumnsSelectionDsl.allBefore]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allColsBefore][SingleColumn.allColsBefore]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[allBefore][ColumnSet.allBefore]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::someColGroup.`[allColsBefore][kotlin.reflect.KProperty.allColsBefore]`({ myColumn }) }` 
+     *
+     *
+     * #### Flavors of All (Cols):
+     *
+     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
+     *     All columns
+     *
+     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [cols]
+     * @param [column] The specified column before which all columns should be taken
+     */
+    public fun KProperty<*>.allColsBefore(column: ColumnSelector<*, *>): ColumnSet<*> =
+        columnGroup(this).allColsBefore(column)
 
     /** ## All (Cols) Before
      *
@@ -5613,6 +6284,57 @@ public interface AllColumnsSelectionDsl {
         /** Example argument to use */
         interface Arg
     }
+
+    /** ## All (Cols) Before
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
+     * containing all columns before [column], excluding [column] itself.
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][ColumnsSelectionDsl.allBefore]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allColsBefore][SingleColumn.allColsBefore]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[allBefore][ColumnSet.allBefore]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allColsBefore][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allColsBefore]`({ myColumn }) }` 
+     *
+     * #### Flavors of All (Cols):
+     *
+     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
+     *     All columns
+     *
+     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [cols]
+     * @param [column] The specified column before which all columns should be taken
+     */
+    public fun ColumnPath.allColsBefore(column: ColumnSelector<*, *>): ColumnSet<*> =
+        columnGroup(this).allColsBefore(column)
 
     /** ## All (Cols) Before
      *
@@ -5949,6 +6671,70 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { .. }.`[allUpTo][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.allUpTo]`({ myColumn }) }` 
+     *
+     * #### Flavors of All (Cols):
+     *
+     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
+     *     All columns
+     *
+     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [cols]
+     * @param [column] The specified column up to which all columns should be taken.
+     */
+    @Suppress("UNCHECKED_CAST")
+    public fun <C> ColumnSet<C>.allUpTo(column: ColumnSelector<*, *>): ColumnSet<C> {
+        var resolvedColumn: DataColumn<C>? = null
+        var take = true
+        return this
+            .onResolve { resolvedColumn = it.toColumnGroup("").getColumn(column) as DataColumn<C> }
+            .colsInternal {
+                if (!take) {
+                    false
+                } else {
+                    take = it.data != resolvedColumn!!
+                    true
+                }
+            } as ColumnSet<C>
+    }
+
+    /** ## All (Cols) Up To
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
+     * containing all columns up to [column], including [column] itself.
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][ColumnsSelectionDsl.allUpTo]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allColsUpTo][SingleColumn.allColsUpTo]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[allUpTo][ColumnSet.allUpTo]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { .. }.`[allUpTo][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.allUpTo]`("pathTo"["myColumn"]) }` 
      *
      * #### Flavors of All (Cols):
@@ -6038,7 +6824,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken.
      */
-    public fun <C> ColumnSet<C>.allUpTo(column: String): ColumnSet<C> = allUpTo(pathOf(column))
+    public fun <C> ColumnSet<C>.allUpTo(column: String): ColumnSet<C> =
+        allUpTo(pathOf(column))
 
     /** ## All (Cols) Up To
      *
@@ -6088,7 +6875,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken.
      */
-    public fun <C> ColumnSet<C>.allUpTo(column: AnyColumnReference): ColumnSet<C> = allUpTo(column.path())
+    public fun <C> ColumnSet<C>.allUpTo(column: AnyColumnReference): ColumnSet<C> =
+        allUpTo(column.path())
 
     /** ## All (Cols) Up To
      *
@@ -6216,6 +7004,57 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`({ myColumn }) }` 
+     *
+     * #### Flavors of All (Cols):
+     *
+     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
+     *     All columns
+     *
+     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [cols]
+     * @param [column] The specified column up to which all columns should be taken.
+     */
+    public fun <T> ColumnsSelectionDsl<T>.allUpTo(column: ColumnSelector<T, *>): ColumnSet<*> =
+        asSingleColumn().allColsUpTo(column)
+
+    /** ## All (Cols) Up To
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
+     * containing all columns up to [column], including [column] itself.
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][ColumnsSelectionDsl.allUpTo]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allColsUpTo][SingleColumn.allColsUpTo]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[allUpTo][ColumnSet.allUpTo]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`("pathTo"["myColumn"]) }` 
      *
      * #### Flavors of All (Cols):
@@ -6245,7 +7084,7 @@ public interface AllColumnsSelectionDsl {
      * @param [column] The specified column up to which all columns should be taken.
      */
     public fun ColumnsSelectionDsl<*>.allUpTo(column: ColumnPath): ColumnSet<*> =
-        this.asSingleColumn().allColsUpTo(column)
+        asSingleColumn().allColsUpTo(column)
 
     /** ## All (Cols) Up To
      *
@@ -6296,7 +7135,7 @@ public interface AllColumnsSelectionDsl {
      * @param [column] The specified column up to which all columns should be taken.
      */
     public fun ColumnsSelectionDsl<*>.allUpTo(column: String): ColumnSet<*> =
-        this.asSingleColumn().allColsUpTo(column)
+        asSingleColumn().allColsUpTo(column)
 
     /** ## All (Cols) Up To
      *
@@ -6347,7 +7186,7 @@ public interface AllColumnsSelectionDsl {
      * @param [column] The specified column up to which all columns should be taken.
      */
     public fun ColumnsSelectionDsl<*>.allUpTo(column: AnyColumnReference): ColumnSet<*> =
-        this.asSingleColumn().allColsUpTo(column)
+        asSingleColumn().allColsUpTo(column)
 
     /** ## All (Cols) Up To
      *
@@ -6398,7 +7237,7 @@ public interface AllColumnsSelectionDsl {
      * @param [column] The specified column up to which all columns should be taken.
      */
     public fun ColumnsSelectionDsl<*>.allUpTo(column: KProperty<*>): ColumnSet<*> =
-        this.asSingleColumn().allColsUpTo(column)
+        asSingleColumn().allColsUpTo(column)
 
     /**
      * ## All (Cols) Up To
@@ -6475,6 +7314,70 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allColsUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsUpTo]`({ myColumn }) }` 
+     *
+     * #### Flavors of All (Cols):
+     *
+     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
+     *     All columns
+     *
+     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [cols]
+     * @param [column] The specified column up to which all columns should be taken.
+     */
+    public fun <T> SingleColumn<DataRow<T>>.allColsUpTo(column: ColumnSelector<T, *>): ColumnSet<*> {
+        var resolvedCol: DataColumn<*>? = null
+        var take = true
+        return this
+            .ensureIsColumnGroup()
+            .onResolve { resolvedCol = it!!.asColumnGroup().getColumn(column) }
+            .colsInternal {
+                if (!take) {
+                    false
+                } else {
+                    take = it.data != resolvedCol!!
+                    true
+                }
+            }
+    }
+
+    /** ## All (Cols) Up To
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
+     * containing all columns up to [column], including [column] itself.
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][ColumnsSelectionDsl.allUpTo]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allColsUpTo][SingleColumn.allColsUpTo]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[allUpTo][ColumnSet.allUpTo]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { someColumnGroup.`[allColsUpTo][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsUpTo]`("pathTo"["myColumn"]) }` 
      *
      * #### Flavors of All (Cols):
@@ -6503,8 +7406,22 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken.
      */
-    public fun SingleColumn<DataRow<*>>.allColsUpTo(column: ColumnPath): ColumnSet<*> =
-        this.ensureIsColumnGroup().asColumnSet().allUpTo(column)
+    public fun SingleColumn<DataRow<*>>.allColsUpTo(column: ColumnPath): ColumnSet<*> {
+        var path: ColumnPath? = null
+        var take = true
+        return this
+            .ensureIsColumnGroup()
+            .onResolve { path = it!!.path }
+            .colsInternal {
+                if (!take) {
+                    false
+                } else {
+                    // accept both relative and full column path
+                    take = it.path != path!! + column && it.path != column
+                    true
+                }
+            }
+    }
 
     /** ## All (Cols) Up To
      *
@@ -6554,7 +7471,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken.
      */
-    public fun SingleColumn<DataRow<*>>.allColsUpTo(column: String): ColumnSet<*> = allColsUpTo(pathOf(column))
+    public fun SingleColumn<DataRow<*>>.allColsUpTo(column: String): ColumnSet<*> =
+        allColsUpTo(pathOf(column))
 
     /** ## All (Cols) Up To
      *
@@ -6733,6 +7651,57 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someColGroup".`[allColsUpTo][kotlin.String.allColsUpTo]`({ myColumn }) }` 
+     *
+     * #### Flavors of All (Cols):
+     *
+     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
+     *     All columns
+     *
+     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [cols]
+     * @param [column] The specified column up to which all columns should be taken.
+     */
+    public fun String.allColsUpTo(column: ColumnSelector<*, *>): ColumnSet<*> =
+        columnGroup(this).allColsUpTo(column)
+
+    /** ## All (Cols) Up To
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
+     * containing all columns up to [column], including [column] itself.
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][ColumnsSelectionDsl.allUpTo]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allColsUpTo][SingleColumn.allColsUpTo]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[allUpTo][ColumnSet.allUpTo]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someColGroup".`[allColsUpTo][kotlin.String.allColsUpTo]`("pathTo"["myColumn"]) }` 
      *
      * #### Flavors of All (Cols):
@@ -6761,7 +7730,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken.
      */
-    public fun String.allColsUpTo(column: ColumnPath): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
+    public fun String.allColsUpTo(column: ColumnPath): ColumnSet<*> =
+        columnGroup(this).allColsUpTo(column)
 
     /** ## All (Cols) Up To
      *
@@ -6811,7 +7781,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken.
      */
-    public fun String.allColsUpTo(column: String): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
+    public fun String.allColsUpTo(column: String): ColumnSet<*> =
+        columnGroup(this).allColsUpTo(column)
 
     /** ## All (Cols) Up To
      *
@@ -6912,7 +7883,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken.
      */
-    public fun String.allColsUpTo(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
+    public fun String.allColsUpTo(column: KProperty<*>): ColumnSet<*> =
+        columnGroup(this).allColsUpTo(column)
 
     /**
      * ## All (Cols) Up To
@@ -6968,6 +7940,59 @@ public interface AllColumnsSelectionDsl {
         /** Example argument to use */
         interface Arg
     }
+
+    /**
+     * ## All (Cols) Up To
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
+     * containing all columns up to [column], including [column] itself.
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][ColumnsSelectionDsl.allUpTo]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allColsUpTo][SingleColumn.allColsUpTo]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[allUpTo][ColumnSet.allUpTo]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::someColGroup.`[allColsUpTo][kotlin.reflect.KProperty.allColsUpTo]`({ myColumn }) }` 
+     *
+     *
+     * #### Flavors of All (Cols):
+     *
+     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
+     *     All columns
+     *
+     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [cols]
+     * @param [column] The specified column up to which all columns should be taken.
+     */
+    public fun KProperty<*>.allColsUpTo(column: ColumnSelector<*, *>): ColumnSet<*> =
+        columnGroup(this).allColsUpTo(column)
 
     /** ## All (Cols) Up To
      *
@@ -7068,7 +8093,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken.
      */
-    public fun KProperty<*>.allColsUpTo(column: String): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
+    public fun KProperty<*>.allColsUpTo(column: String): ColumnSet<*> =
+        columnGroup(this).allColsUpTo(column)
 
     /** ## All (Cols) Up To
      *
@@ -7247,6 +8273,57 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allColsUpTo][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allColsUpTo]`({ myColumn }) }` 
+     *
+     * #### Flavors of All (Cols):
+     *
+     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
+     *     All columns
+     *
+     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
+     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
+     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
+     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
+     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
+     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [cols]
+     * @param [column] The specified column up to which all columns should be taken.
+     */
+    public fun ColumnPath.allColsUpTo(column: ColumnSelector<*, *>): ColumnSet<*> =
+        columnGroup(this).allColsUpTo(column)
+
+    /** ## All (Cols) Up To
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
+     * containing all columns up to [column], including [column] itself.
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then the function will take columns from its children.
+     *
+     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][ColumnsSelectionDsl.allUpTo]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allColsUpTo][SingleColumn.allColsUpTo]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[allUpTo][ColumnSet.allUpTo]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[allColsUpTo][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allColsUpTo]`("pathTo"["myColumn"]) }` 
      *
      * #### Flavors of All (Cols):
@@ -7276,7 +8353,7 @@ public interface AllColumnsSelectionDsl {
      * @param [column] The specified column up to which all columns should be taken.
      */
     public fun ColumnPath.allColsUpTo(column: ColumnPath): ColumnSet<*> =
-        allColsUpTo(column.toColumnAccessor().path())
+        columnGroup(this).allColsUpTo(column)
 
     /** ## All (Cols) Up To
      *
@@ -7326,7 +8403,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken.
      */
-    public fun ColumnPath.allColsUpTo(column: String): ColumnSet<*> = allColsUpTo(pathOf(column))
+    public fun ColumnPath.allColsUpTo(column: String): ColumnSet<*> =
+        columnGroup(this).allColsUpTo(column)
 
     /** ## All (Cols) Up To
      *
@@ -7376,7 +8454,8 @@ public interface AllColumnsSelectionDsl {
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken.
      */
-    public fun ColumnPath.allColsUpTo(column: AnyColumnReference): ColumnSet<*> = allColsUpTo(column.path())
+    public fun ColumnPath.allColsUpTo(column: AnyColumnReference): ColumnSet<*> =
+        columnGroup(this).allColsUpTo(column)
 
     /** ## All (Cols) Up To
      *
@@ -7427,7 +8506,7 @@ public interface AllColumnsSelectionDsl {
      * @param [column] The specified column up to which all columns should be taken.
      */
     public fun ColumnPath.allColsUpTo(column: KProperty<*>): ColumnSet<*> =
-        allColsUpTo(column.toColumnAccessor().path())
+        columnGroup(this).allColsUpTo(column)
 
     // endregion
 
@@ -7503,7 +8582,7 @@ public interface AllColumnsSelectionDsl {
  */
 internal fun ColumnsResolver<*>.allColumnsInternal(): TransformableColumnSet<*> =
     transform {
-        if (this.isSingleColumnWithGroup(it)) {
+        if (isSingleColumnWithGroup(it)) {
             it.single().children()
         } else {
             it

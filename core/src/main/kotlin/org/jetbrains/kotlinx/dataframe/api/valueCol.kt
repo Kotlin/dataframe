@@ -18,7 +18,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
-import org.jetbrains.kotlinx.dataframe.impl.columns.performCheck
+import org.jetbrains.kotlinx.dataframe.impl.columns.onResolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import kotlin.reflect.KProperty
@@ -557,7 +557,7 @@ public interface ValueColColumnsSelectionDsl {
  * and throwing an [IllegalArgumentException] if it's not.
  */
 internal fun <C> SingleColumn<C>.ensureIsValueColumn(): SingleColumn<C> =
-    performCheck { col: ColumnWithPath<*>? ->
+    onResolve { col: ColumnWithPath<*>? ->
         require(col?.isValueColumn() != false) {
             "Column at ${col?.path} is not a ValueColumn, but a ${col?.kind()}."
         }
@@ -565,7 +565,7 @@ internal fun <C> SingleColumn<C>.ensureIsValueColumn(): SingleColumn<C> =
 
 /** @include [SingleColumn.ensureIsValueColumn] */
 internal fun <C> ColumnAccessor<C>.ensureIsValueColumn(): ColumnAccessor<C> =
-    performCheck { col: ColumnWithPath<*>? ->
+    onResolve { col: ColumnWithPath<*>? ->
         require(col?.isValueColumn() != false) {
             "Column at ${col?.path} is not a ValueColumn, but a ${col?.kind()}."
         }

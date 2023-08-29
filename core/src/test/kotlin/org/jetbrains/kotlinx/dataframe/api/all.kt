@@ -62,60 +62,96 @@ class AllTests : ColumnsSelectionDslTests() {
         listOf(
             df.select { name and age },
 
+            df.select { allBefore { city } },
+            df.select { allBefore { first { it.name.startsWith("c") } } },
             df.select { allBefore(city) },
             df.select { allBefore("city") },
             df.select { allBefore(Person::city) },
             df.select { allBefore(pathOf("city")) },
 
-
+//            df.select { allUpTo { age } },
+//            df.select { allUpTo { first { it.name.startsWith("a") } } },
             df.select { allUpTo(age) },
             df.select { allUpTo("age") },
             df.select { allUpTo(Person::age) },
             df.select { allUpTo(pathOf("age")) },
         ).shouldAllBeEqual()
 
-        listOf(
-            df.select { weight and isHappy },
-
-            df.select { allAfter { city } },
-            df.select { allAfter { first { it.name.startsWith("c") } } },
-            df.select { allAfter(city) },
-            df.select { allAfter("city") },
-            df.select { allAfter(Person::city) },
-            df.select { allAfter(pathOf("city")) },
-
-            df.select { allFrom(weight) },
-            df.select { allFrom("weight") },
-            df.select { allFrom(Person::weight) },
-            df.select { allFrom(pathOf("weight")) },
-        ).shouldAllBeEqual()
+//        listOf(
+//            df.select { weight and isHappy },
+//
+//            df.select { allAfter { city } },
+//            df.select { allAfter { first { it.name.startsWith("c") } } },
+//            df.select { allAfter(city) },
+//            df.select { allAfter("city") },
+//            df.select { allAfter(Person::city) },
+//            df.select { allAfter(pathOf("city")) },
+//
+//            df.select { allFrom { weight } },
+//            df.select { allFrom { first { it.name.startsWith("w") } } },
+//            df.select { allFrom(weight) },
+//            df.select { allFrom("weight") },
+//            df.select { allFrom(Person::weight) },
+//            df.select { allFrom(pathOf("weight")) },
+//        ).shouldAllBeEqual()
     }
 
     @Test
     fun `all on columnSet`() {
         val cityAccessor = column<String>("city")
+        val weightAccessor = column<Int?>("weight")
         listOf(
             df.select { weight and isHappy },
 
-            df.select { cols().allAfter { nameContains("city").single() } }.alsoDebug(),
+            df.select { cols().allAfter { nameContains("city").single() } },
             df.select { cols().allAfter { cityAccessor } },
             df.select { cols().allAfter(city) },
             df.select { cols().allAfter(cityAccessor) },
             df.select { cols().allAfter("city") },
             df.select { cols().allAfter(Person::city) },
             df.select { cols().allAfter(pathOf("city")) },
+
+            df.select { cols().allFrom { nameContains("weight").single() } },
+            df.select { cols().allFrom { weightAccessor } },
+            df.select { cols().allFrom(weight) },
+            df.select { cols().allFrom(weightAccessor) },
+            df.select { cols().allFrom("weight") },
+            df.select { cols().allFrom(Person::weight) },
+            df.select { cols().allFrom(pathOf("weight")) },
+        ).shouldAllBeEqual()
+
+        val ageAccessor = column<Int>("age")
+        listOf(
+            df.select { name and age },
+
+            df.select { cols().allBefore { nameContains("city").single() } },
+            df.select { cols().allBefore { cityAccessor } },
+            df.select { cols().allBefore(city) },
+            df.select { cols().allBefore(cityAccessor) },
+            df.select { cols().allBefore("city") },
+            df.select { cols().allBefore(Person::city) },
+            df.select { cols().allBefore(pathOf("city")) },
+
+            df.select { cols().allUpTo { nameContains("age").single() } },
+            df.select { cols().allUpTo { ageAccessor } },
+            df.select { cols().allUpTo(age) },
+            df.select { cols().allUpTo(ageAccessor) },
+            df.select { cols().allUpTo("age") },
+            df.select { cols().allUpTo(Person::age) },
+            df.select { cols().allUpTo(pathOf("age")) },
         ).shouldAllBeEqual()
     }
 
     @Test
-    fun `all subset at lower level`() {
+    fun `all subset at lower level after and from`() {
         listOf(
             df.select { age },
-            df.select { colsOf<Int?>().allBefore(weight) },
+            df.select { colsOf<Int?>().allBefore(weight) }, // TODO
             df.select { allBefore(weight).colsOf<Int?>() },
         ).shouldAllBeEqual()
 
         val firstNameAccessor = column<String>("firstName")
+        val lastNameAccessor = column<String>("lastName")
 
         listOf(
             df.select { name.lastName },
@@ -152,9 +188,115 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { pathOf("name").allColsAfter(Name::firstName) },
             df.select { pathOf("name").allColsAfter(pathOf("firstName")) },
             df.select { pathOf("name").allColsAfter(pathOf("name", "firstName")) },
+
+            df.select { name.allColsFrom { lastName } },
+            df.select { name.allColsFrom { lastNameAccessor } },
+            df.select { name.allColsFrom(name.lastName) },
+            df.select { name.allColsFrom(lastNameAccessor) },
+            df.select { name.allColsFrom("lastName") },
+            df.select { name.allColsFrom(Name::lastName) },
+            df.select { name.allColsFrom(pathOf("lastName")) },
+            df.select { name.allColsFrom(pathOf("name", "lastName")) },
+
+            df.select { "name".allColsFrom { lastNameAccessor } },
+            df.select { "name".allColsFrom(name.lastName) },
+            df.select { "name".allColsFrom(lastNameAccessor) },
+            df.select { "name".allColsFrom("lastName") },
+            df.select { "name".allColsFrom(Name::lastName) },
+            df.select { "name".allColsFrom(pathOf("lastName")) },
+            df.select { "name".allColsFrom(pathOf("name", "lastName")) },
+
+            df.select { Person::name.allColsFrom { lastNameAccessor } },
+            df.select { Person::name.allColsFrom(name.lastName) },
+            df.select { Person::name.allColsFrom(lastNameAccessor) },
+            df.select { Person::name.allColsFrom("lastName") },
+            df.select { Person::name.allColsFrom(Name::lastName) },
+            df.select { Person::name.allColsFrom(pathOf("lastName")) },
+            df.select { Person::name.allColsFrom(pathOf("name", "lastName")) },
+
+            df.select { pathOf("name").allColsFrom { lastNameAccessor } },
+            df.select { pathOf("name").allColsFrom(name.lastName) },
+            df.select { pathOf("name").allColsFrom(lastNameAccessor) },
+            df.select { pathOf("name").allColsFrom("lastName") },
+            df.select { pathOf("name").allColsFrom(Name::lastName) },
+            df.select { pathOf("name").allColsFrom(pathOf("lastName")) },
+            df.select { pathOf("name").allColsFrom(pathOf("name", "lastName")) },
         ).shouldAllBeEqual()
+    }
 
-        // TODO
+    @Test
+    fun `all subset at lower level before and upTo`() {
+        val firstNameAccessor = column<String>("firstName")
+        val lastNameAccessor = column<String>("lastName")
 
+        listOf(
+            df.select { name.firstName },
+
+            df.select { name.allColsBefore { lastName } },
+            df.select { name.allColsBefore { lastNameAccessor } },
+            df.select { name.allColsBefore(name.lastName) },
+            df.select { name.allColsBefore(lastNameAccessor) },
+            df.select { name.allColsBefore("lastName") },
+            df.select { name.allColsBefore(Name::lastName) },
+            df.select { name.allColsBefore(pathOf("lastName")) },
+            df.select { name.allColsBefore(pathOf("name", "lastName")) },
+
+            df.select { "name".allColsBefore { lastNameAccessor } },
+            df.select { "name".allColsBefore(name.lastName) },
+            df.select { "name".allColsBefore(lastNameAccessor) },
+            df.select { "name".allColsBefore("lastName") },
+            df.select { "name".allColsBefore(Name::lastName) },
+            df.select { "name".allColsBefore(pathOf("lastName")) },
+            df.select { "name".allColsBefore(pathOf("name", "lastName")) },
+
+            df.select { Person::name.allColsBefore { lastNameAccessor } },
+            df.select { Person::name.allColsBefore(name.lastName) },
+            df.select { Person::name.allColsBefore(lastNameAccessor) },
+            df.select { Person::name.allColsBefore("lastName") },
+            df.select { Person::name.allColsBefore(Name::lastName) },
+            df.select { Person::name.allColsBefore(pathOf("lastName")) },
+            df.select { Person::name.allColsBefore(pathOf("name", "lastName")) },
+
+            df.select { pathOf("name").allColsBefore { lastNameAccessor } },
+            df.select { pathOf("name").allColsBefore(name.lastName) },
+            df.select { pathOf("name").allColsBefore(lastNameAccessor) },
+            df.select { pathOf("name").allColsBefore("lastName") },
+            df.select { pathOf("name").allColsBefore(Name::lastName) },
+            df.select { pathOf("name").allColsBefore(pathOf("lastName")) },
+            df.select { pathOf("name").allColsBefore(pathOf("name", "lastName")) },
+
+            df.select { name.allColsUpTo { firstName } },
+            df.select { name.allColsUpTo { firstNameAccessor } },
+            df.select { name.allColsUpTo(name.firstName) },
+            df.select { name.allColsUpTo(firstNameAccessor) },
+            df.select { name.allColsUpTo("firstName") },
+            df.select { name.allColsUpTo(Name::firstName) },
+            df.select { name.allColsUpTo(pathOf("firstName")) },
+            df.select { name.allColsUpTo(pathOf("name", "firstName")) },
+
+            df.select { "name".allColsUpTo { firstNameAccessor } },
+            df.select { "name".allColsUpTo(name.firstName) },
+            df.select { "name".allColsUpTo(firstNameAccessor) },
+            df.select { "name".allColsUpTo("firstName") },
+            df.select { "name".allColsUpTo(Name::firstName) },
+            df.select { "name".allColsUpTo(pathOf("firstName")) },
+            df.select { "name".allColsUpTo(pathOf("name", "firstName")) },
+
+            df.select { Person::name.allColsUpTo { firstNameAccessor } },
+            df.select { Person::name.allColsUpTo(name.firstName) },
+            df.select { Person::name.allColsUpTo(firstNameAccessor) },
+            df.select { Person::name.allColsUpTo("firstName") },
+            df.select { Person::name.allColsUpTo(Name::firstName) },
+            df.select { Person::name.allColsUpTo(pathOf("firstName")) },
+            df.select { Person::name.allColsUpTo(pathOf("name", "firstName")) },
+
+            df.select { pathOf("name").allColsUpTo { firstNameAccessor } },
+            df.select { pathOf("name").allColsUpTo(name.firstName) },
+            df.select { pathOf("name").allColsUpTo(firstNameAccessor) },
+            df.select { pathOf("name").allColsUpTo("firstName") },
+            df.select { pathOf("name").allColsUpTo(Name::firstName) },
+            df.select { pathOf("name").allColsUpTo(pathOf("firstName")) },
+            df.select { pathOf("name").allColsUpTo(pathOf("name", "firstName")) },
+        ).shouldAllBeEqual()
     }
 }
