@@ -4,6 +4,10 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage.After
+import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage.Before
+import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage.From
+import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage.UpTo
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -139,6 +143,8 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *  {@include [UsageTemplate.IndexRangeDef]}
      *  {@include [LineBreak]}
      *  {@include [UsageTemplate.ColumnKindDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.ColumnSelectorDef]}
      * }
      * {@comment -------------------------------------------------------------------------------------------- }
      * {@setArg [UsageTemplate.PlainDslFunctionsArg]
@@ -173,7 +179,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  `|` {@include [AllColumnsSelectionDsl.Usage.PlainDslName]}**`()`**` [ `{@include [RecursivelyColumnsSelectionDsl.Usage.Name]} ` ]`
      *
-     *  `|` **`all`** `( `{@include [AllColumnsSelectionDsl.Usage.Before]}` | `{@include [AllColumnsSelectionDsl.Usage.After]}` | `{@include [AllColumnsSelectionDsl.Usage.From]}` | `{@include [AllColumnsSelectionDsl.Usage.UpTo]}`)`**`(`**{@include [UsageTemplate.ColumnRef]}**`)`**
+     *  `|` **`all`**`(`{@include [AllColumnsSelectionDsl.Usage.Before]}`|`{@include [AllColumnsSelectionDsl.Usage.After]}`|`{@include [AllColumnsSelectionDsl.Usage.From]}`|`{@include [AllColumnsSelectionDsl.Usage.UpTo]}`)` `(` **`(`**{@include [UsageTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [UsageTemplate.ColumnSelectorRef]} **`\\}`** `)`
      *
      *  `|` TODO
      * }
@@ -209,7 +215,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  {@include [Indent]}`|` {@include [AllColumnsSelectionDsl.Usage.ColumnSetName]}**`()`**` [ `{@include [RecursivelyColumnsSelectionDsl.Usage.Name]} ` ]`
      *
-     *  {@include [Indent]}`|` .**`all`** `( `{@include [AllColumnsSelectionDsl.Usage.Before]}` | `{@include [AllColumnsSelectionDsl.Usage.After]}` | `{@include [AllColumnsSelectionDsl.Usage.From]}` | `{@include [AllColumnsSelectionDsl.Usage.UpTo]}`)`**`(`**{@include [UsageTemplate.ColumnRef]}**`)`**
+     *  {@include [Indent]}`|` .**`all`**`(`{@include [AllColumnsSelectionDsl.Usage.Before]}`|`{@include [AllColumnsSelectionDsl.Usage.After]}`|`{@include [AllColumnsSelectionDsl.Usage.From]}`|`{@include [AllColumnsSelectionDsl.Usage.UpTo]}`)` `(` **`(`**{@include [UsageTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [UsageTemplate.ColumnSelectorRef]} **`\\}`** `)`
      *  TODO debate whether these overloads make sense. They didn't exist in 0.9.0
      *
      *  {@include [Indent]}`|` TODO
@@ -245,7 +251,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  {@include [Indent]}`|` {@include [AllColumnsSelectionDsl.Usage.ColumnGroupName]}**`()`**` [ `{@include [RecursivelyColumnsSelectionDsl.Usage.Name]} ` ]`
      *
-     *  {@include [Indent]}`|` .**`allCols`** `( `{@include [AllColumnsSelectionDsl.Usage.Before]}` | `{@include [AllColumnsSelectionDsl.Usage.After]}` | `{@include [AllColumnsSelectionDsl.Usage.From]}` | `{@include [AllColumnsSelectionDsl.Usage.UpTo]}`)`**`(`**{@include [UsageTemplate.ColumnRef]}**`)`**
+     *  {@include [Indent]}`|` .**`allCols`**`(`{@include [AllColumnsSelectionDsl.Usage.Before]}`|`{@include [AllColumnsSelectionDsl.Usage.After]}`|`{@include [AllColumnsSelectionDsl.Usage.From]}`|`{@include [AllColumnsSelectionDsl.Usage.UpTo]}`)` `(` **`(`**{@include [UsageTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [UsageTemplate.ColumnSelectorRef]} **`\\}`** `)`
      *
      *  {@include [Indent]}`|` TODO
      * }
