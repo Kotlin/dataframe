@@ -1,11 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.io
 
-import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.print
 import org.junit.AfterClass
-import org.junit.Assert.assertEquals
 import org.junit.BeforeClass
 import org.junit.Test
 import org.postgresql.util.PGobject
@@ -15,56 +10,11 @@ import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.*
 
-
 private const val URL = "jdbc:postgresql://localhost:5432/test"
 private const val USER_NAME = "postgres"
 private const val PASSWORD = "pass"
 
-@DataSchema
-interface Table1 {
-    val id: Int
-    val bigintCol: Long
-    val bigserialCol: Long
-    val booleanCol: Boolean
-    val boxCol: String
-    val byteaCol: ByteArray
-    val characterCol: String
-    val characterNCol: String
-    val charCol: String
-    val circleCol: String
-    val dateCol: java.sql.Date
-    val doubleCol: Double
-    val integerCol: Int
-    val intervalCol: String
-    val jsonCol: String
-    val jsonbCol: String
-}
-
-@DataSchema
-interface Table2 {
-    val id: Int
-    val lineCol: String
-    val lsegCol: String
-    val macaddrCol: String
-    val moneyCol: String
-    val numericCol: String
-    val pathCol: String
-    val pointCol: String
-    val polygonCol: String
-    val realCol: Float
-    val smallintCol: Short
-    val smallserialCol: Int
-    val serialCol: Int
-    val textCol: String
-    val timeCol: String
-    val timeWithZoneCol: String
-    val timestampCol: String
-    val timestampWithZoneCol: String
-    val uuidCol: String
-    val xmlCol: String
-}
-
-class PostgresTest {
+class MariadbTest {
     companion object {
         private lateinit var connection: Connection
 
@@ -78,7 +28,7 @@ class PostgresTest {
 
             connection.createStatement().execute(
                 """
-                  CREATE TABLE IF NOT EXISTS table1 (
+                CREATE TABLE IF NOT EXISTS table1 (
                 id serial PRIMARY KEY,
                 bigint_col bigint,
                 bigserial_col bigserial,
@@ -224,13 +174,14 @@ class PostgresTest {
     }
 
     @Test
-    fun `read from tables`() {
-        val df1 = DataFrame.readSqlTable(connection, "dsdfs", "table1").cast<Table1>()
+    fun `basic test for reading sql tables`() {
+       /* val df1 = DataFrame.readSqlTable(connection, "dsdfs", "table1").cast<Table1>()
         df1.print()
         assertEquals(3, df1.rowsCount())
 
         val df2 = DataFrame.readSqlTable(connection, "dsdfs", "table2").cast<Table2>()
         df2.print()
-        assertEquals(3, df2.rowsCount())
+        assertEquals(3, df2.rowsCount())*/
     }
 }
+

@@ -11,12 +11,12 @@ public sealed class DbType(public val jdbcName: String) {
     public abstract fun toColumnSchema(jdbcColumn: JdbcColumn): ColumnSchema
 }
 
-
 /**
  * NOTE: all date and timestamp related types converted to String to avoid java.sql.* types
  */
 public object PostgreSql : DbType("postgresql") {
     override fun convertDataFromResultSet(rs: ResultSet, jdbcColumn: JdbcColumn): Any? {
+        // TODO: improve mapping with the https://www.instaclustr.com/blog/postgresql-data-types-mappings-to-sql-jdbc-and-java-data-types/
         return when (jdbcColumn.type) {
             "serial" -> rs.getInt(jdbcColumn.name)
             "int8", "bigint", "bigserial" -> rs.getLong(jdbcColumn.name)
@@ -189,21 +189,69 @@ public object Sqlite : DbType("sqlite") {
 public object MariaDb : DbType("mariadb") {
     override fun convertDataFromResultSet(rs: ResultSet, jdbcColumn: JdbcColumn): Any? {
         return when (jdbcColumn.type) {
+            "BIT" -> rs.getBytes(jdbcColumn.name)
+            "TINYINT" -> rs.getInt(jdbcColumn.name)
+            "SMALLINT" -> rs.getInt(jdbcColumn.name)
+            "MEDIUMINT"-> rs.getInt(jdbcColumn.name)
+            "MEDIUMINT UNSIGNED" -> rs.getLong(jdbcColumn.name)
             "INTEGER", "INT" -> rs.getInt(jdbcColumn.name)
-            "VARCHAR", "CHAR" -> rs.getString(jdbcColumn.name)
+            "INTEGER UNSIGNED" -> rs.getLong(jdbcColumn.name)
+            "BIGINT" -> rs.getLong(jdbcColumn.name)
             "FLOAT" -> rs.getFloat(jdbcColumn.name)
+            "DOUBLE" -> rs.getDouble(jdbcColumn.name)
+            "DECIMAL" -> rs.getBigDecimal(jdbcColumn.name)
+            "DATE" -> rs.getDate(jdbcColumn.name).toString()
+            "DATETIME" -> rs.getTimestamp(jdbcColumn.name).toString()
+            "TIMESTAMP" -> rs.getTimestamp(jdbcColumn.name).toString()
+            "TIME"-> rs.getTime(jdbcColumn.name).toString()
+            "YEAR" -> rs.getDate(jdbcColumn.name).toString()
+            "VARCHAR", "CHAR" -> rs.getString(jdbcColumn.name)
+            "BINARY" -> rs.getBytes(jdbcColumn.name)
+            "VARBINARY" -> rs.getBytes(jdbcColumn.name)
+            "TINYBLOB"-> rs.getBytes(jdbcColumn.name)
+            "BLOB"-> rs.getBytes(jdbcColumn.name)
+            "MEDIUMBLOB" -> rs.getBytes(jdbcColumn.name)
+            "LONGBLOB" -> rs.getBytes(jdbcColumn.name)
+            "TEXT" -> rs.getString(jdbcColumn.name)
             "MEDIUMTEXT" -> rs.getString(jdbcColumn.name)
-            else -> null
+            "LONGTEXT" -> rs.getString(jdbcColumn.name)
+            "ENUM" -> rs.getString(jdbcColumn.name)
+            "SET" -> rs.getString(jdbcColumn.name)
+            else -> throw IllegalArgumentException("Unsupported MariaDB type: ${jdbcColumn.type}")
         }
     }
 
     override fun toColumnSchema(jdbcColumn: JdbcColumn): ColumnSchema {
         return when (jdbcColumn.type) {
+            "BIT" -> ColumnSchema.Value(typeOf<ByteArray>())
+            "TINYINT" -> ColumnSchema.Value(typeOf<Int>())
+            "SMALLINT" -> ColumnSchema.Value(typeOf<Int>())
+            "MEDIUMINT"-> ColumnSchema.Value(typeOf<Int>())
+            "MEDIUMINT UNSIGNED" -> ColumnSchema.Value(typeOf<Long>())
             "INTEGER", "INT" -> ColumnSchema.Value(typeOf<Int>())
-            "VARCHAR", "CHAR" -> ColumnSchema.Value(typeOf<String>())
+            "INTEGER UNSIGNED" -> ColumnSchema.Value(typeOf<Long>())
+            "BIGINT" -> ColumnSchema.Value(typeOf<Long>())
             "FLOAT" -> ColumnSchema.Value(typeOf<Float>())
+            "DOUBLE" -> ColumnSchema.Value(typeOf<Double>())
+            "DECIMAL" -> ColumnSchema.Value(typeOf<Long>())
+            "DATE" -> ColumnSchema.Value(typeOf<String>())
+            "DATETIME" -> ColumnSchema.Value(typeOf<String>())
+            "TIMESTAMP" -> ColumnSchema.Value(typeOf<String>())
+            "TIME"-> ColumnSchema.Value(typeOf<String>())
+            "YEAR" -> ColumnSchema.Value(typeOf<String>())
+            "VARCHAR", "CHAR" -> ColumnSchema.Value(typeOf<String>())
+            "BINARY" -> ColumnSchema.Value(typeOf<ByteArray>())
+            "VARBINARY" -> ColumnSchema.Value(typeOf<ByteArray>())
+            "TINYBLOB"-> ColumnSchema.Value(typeOf<ByteArray>())
+            "BLOB"-> ColumnSchema.Value(typeOf<ByteArray>())
+            "MEDIUMBLOB" -> ColumnSchema.Value(typeOf<ByteArray>())
+            "LONGBLOB" -> ColumnSchema.Value(typeOf<ByteArray>())
+            "TEXT" -> ColumnSchema.Value(typeOf<String>())
             "MEDIUMTEXT" -> ColumnSchema.Value(typeOf<String>())
-            else -> ColumnSchema.Value(typeOf<Any>())
+            "LONGTEXT" -> ColumnSchema.Value(typeOf<String>())
+            "ENUM" -> ColumnSchema.Value(typeOf<String>())
+            "SET" -> ColumnSchema.Value(typeOf<String>())
+            else -> throw IllegalArgumentException("Unsupported MariaDB type: ${jdbcColumn.type}")
         }
     }
 }
@@ -211,21 +259,75 @@ public object MariaDb : DbType("mariadb") {
 public object MySql : DbType("mysql") {
     override fun convertDataFromResultSet(rs: ResultSet, jdbcColumn: JdbcColumn): Any? {
         return when (jdbcColumn.type) {
-            "INTEGER" -> rs.getInt(jdbcColumn.name)
-            "VARCHAR" -> rs.getString(jdbcColumn.name)
+            "BIT" -> rs.getBytes(jdbcColumn.name)
+            "TINYINT" -> rs.getInt(jdbcColumn.name)
+            "SMALLINT" -> rs.getInt(jdbcColumn.name)
+            "MEDIUMINT"-> rs.getInt(jdbcColumn.name)
+            "MEDIUMINT UNSIGNED" -> rs.getLong(jdbcColumn.name)
+            "INTEGER", "INT" -> rs.getInt(jdbcColumn.name)
+            "INTEGER UNSIGNED" -> rs.getLong(jdbcColumn.name)
+            "BIGINT" -> rs.getLong(jdbcColumn.name)
             "FLOAT" -> rs.getFloat(jdbcColumn.name)
+            "DOUBLE" -> rs.getDouble(jdbcColumn.name)
+            "DECIMAL" -> rs.getBigDecimal(jdbcColumn.name)
+            "DATE" -> rs.getDate(jdbcColumn.name).toString()
+            "DATETIME" -> rs.getTimestamp(jdbcColumn.name).toString()
+            "TIMESTAMP" -> rs.getTimestamp(jdbcColumn.name).toString()
+            "TIME"-> rs.getTime(jdbcColumn.name).toString()
+            "YEAR" -> rs.getDate(jdbcColumn.name).toString()
+            "VARCHAR", "CHAR" -> rs.getString(jdbcColumn.name)
+            "BINARY" -> rs.getBytes(jdbcColumn.name)
+            "VARBINARY" -> rs.getBytes(jdbcColumn.name)
+            "TINYBLOB"-> rs.getBytes(jdbcColumn.name)
+            "BLOB"-> rs.getBytes(jdbcColumn.name)
+            "MEDIUMBLOB" -> rs.getBytes(jdbcColumn.name)
+            "LONGBLOB" -> rs.getBytes(jdbcColumn.name)
+            "TEXT" -> rs.getString(jdbcColumn.name)
             "MEDIUMTEXT" -> rs.getString(jdbcColumn.name)
-            else -> null
+            "LONGTEXT" -> rs.getString(jdbcColumn.name)
+            "ENUM" -> rs.getString(jdbcColumn.name)
+            "SET" -> rs.getString(jdbcColumn.name)
+            // special mysql types
+            "JSON" -> rs.getString(jdbcColumn.name)
+            "GEOMETRY" -> rs.getBytes(jdbcColumn.name)
+            else -> throw IllegalArgumentException("Unsupported MySQL type: ${jdbcColumn.type}")
         }
     }
 
     override fun toColumnSchema(jdbcColumn: JdbcColumn): ColumnSchema {
         return when (jdbcColumn.type) {
-            "INTEGER" -> ColumnSchema.Value(typeOf<Int>())
-            "VARCHAR" -> ColumnSchema.Value(typeOf<String>())
+            "BIT" -> ColumnSchema.Value(typeOf<ByteArray>())
+            "TINYINT" -> ColumnSchema.Value(typeOf<Int>())
+            "SMALLINT" -> ColumnSchema.Value(typeOf<Int>())
+            "MEDIUMINT"-> ColumnSchema.Value(typeOf<Int>())
+            "MEDIUMINT UNSIGNED" -> ColumnSchema.Value(typeOf<Long>())
+            "INTEGER", "INT" -> ColumnSchema.Value(typeOf<Int>())
+            "INTEGER UNSIGNED" -> ColumnSchema.Value(typeOf<Long>())
+            "BIGINT" -> ColumnSchema.Value(typeOf<Long>())
             "FLOAT" -> ColumnSchema.Value(typeOf<Float>())
+            "DOUBLE" -> ColumnSchema.Value(typeOf<Double>())
+            "DECIMAL" -> ColumnSchema.Value(typeOf<Long>())
+            "DATE" -> ColumnSchema.Value(typeOf<String>())
+            "DATETIME" -> ColumnSchema.Value(typeOf<String>())
+            "TIMESTAMP" -> ColumnSchema.Value(typeOf<String>())
+            "TIME"-> ColumnSchema.Value(typeOf<String>())
+            "YEAR" -> ColumnSchema.Value(typeOf<String>())
+            "VARCHAR", "CHAR" -> ColumnSchema.Value(typeOf<String>())
+            "BINARY" -> ColumnSchema.Value(typeOf<ByteArray>())
+            "VARBINARY" -> ColumnSchema.Value(typeOf<ByteArray>())
+            "TINYBLOB"-> ColumnSchema.Value(typeOf<ByteArray>())
+            "BLOB"-> ColumnSchema.Value(typeOf<ByteArray>())
+            "MEDIUMBLOB" -> ColumnSchema.Value(typeOf<ByteArray>())
+            "LONGBLOB" -> ColumnSchema.Value(typeOf<ByteArray>())
+            "TEXT" -> ColumnSchema.Value(typeOf<String>())
             "MEDIUMTEXT" -> ColumnSchema.Value(typeOf<String>())
-            else -> ColumnSchema.Value(typeOf<Any>())
+            "LONGTEXT" -> ColumnSchema.Value(typeOf<String>())
+            "ENUM" -> ColumnSchema.Value(typeOf<String>())
+            "SET" -> ColumnSchema.Value(typeOf<String>())
+            // special mysql types
+            "JSON" -> ColumnSchema.Value(typeOf<String>())
+            "GEOMETRY" -> ColumnSchema.Value(typeOf<ByteArray>())
+            else -> throw IllegalArgumentException("Unsupported MySQL type: ${jdbcColumn.type}")
         }
     }
 }

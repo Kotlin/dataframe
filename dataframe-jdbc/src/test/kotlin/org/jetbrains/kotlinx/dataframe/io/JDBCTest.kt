@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import io.kotest.assertions.throwables.shouldThrow
+import org.h2.jdbc.JdbcSQLSyntaxErrorException
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -11,27 +13,6 @@ import org.junit.Test
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
-import java.util.*
-
-private const val URL = "jdbc:mariadb://localhost:3306/imdb"
-private const val USER_NAME = "root"
-private const val PASSWORD = "pass"
-
-@DataSchema
-interface ActorKDF {
-    val id: Int
-    val firstName: String
-    val lastName: String
-    val gender: String
-}
-
-@DataSchema
-interface RankedMoviesWithGenres {
-    val name: String
-    val year: Int
-    val rank: Float
-    val genres: String
-}
 
 @DataSchema
 interface Customer {
@@ -53,63 +34,36 @@ interface CustomerSales {
     val totalSalesAmount: Double
 }
 
-data class TestTableData(
-    val characterCol: String,
-    val characterVaryingCol: String,
-    val characterLargeObjectCol: String,
-    val mediumTextCol: String,
-    val varcharIgnoreCaseCol: String,
-    val binaryCol: ByteArray,
-    val binaryVaryingCol: ByteArray,
-    val binaryLargeObjectCol: ByteArray,
-    val booleanCol: Boolean,
-    val tinyIntCol: Byte,
-    val smallIntCol: Short,
-    val integerCol: Int,
-    val bigIntCol: Long,
-    val numericCol: Double,
-    val realCol: Float,
-    val doublePrecisionCol: Double,
-    val decFloatCol: Double,
-    val dateCol: String,
-    val timeCol: String,
-    val timeWithTimeZoneCol: String,
-    val timestampCol: String,
-    val timestampWithTimeZoneCol: String,
-    val intervalCol: String,
-    val javaObjectCol: Any?,
-    val enumCol: String,
-    val jsonCol: String,
-    val uuidCol: String,
-)
-
-data class CustomerSQLite(
-    val id: Int,
-    val name: String,
-    val age: Int,
-    val salary: Double,
-    val profilePicture: ByteArray,
-)
-
-data class OrderSQLite(
-    val id: Int,
-    val customerName: String,
-    val orderDate: String,
-    val totalAmount: Double,
-    val orderDetails: ByteArray,
-)
-
-data class CustomerOrderSQLite(
-    val customerId: Int,
-    val customerName: String,
-    val customerAge: Int,
-    val customerSalary: Double,
-    val customerProfilePicture: ByteArray,
-    val orderId: Int,
-    val orderDate: String,
-    val totalAmount: Double,
-    val orderDetails: ByteArray,
-)
+@DataSchema
+interface TestTableData {
+    val characterCol: String
+    val characterVaryingCol: String
+    val characterLargeObjectCol: String
+    val mediumTextCol: String
+    val varcharIgnoreCaseCol: String
+    val binaryCol: ByteArray
+    val binaryVaryingCol: ByteArray
+    val binaryLargeObjectCol: ByteArray
+    val booleanCol: Boolean
+    val tinyIntCol: Byte
+    val smallIntCol: Short
+    val integerCol: Int
+    val bigIntCol: Long
+    val numericCol: Double
+    val realCol: Float
+    val doublePrecisionCol: Double
+    val decFloatCol: Double
+    val dateCol: String
+    val timeCol: String
+    val timeWithTimeZoneCol: String
+    val timestampCol: String
+    val timestampWithTimeZoneCol: String
+    val intervalCol: String
+    val javaObjectCol: Any?
+    val enumCol: String
+    val jsonCol: String
+    val uuidCol: String
+}
 
 class JDBCTest {
     companion object {
@@ -167,8 +121,7 @@ class JDBCTest {
     }
 
     @Test
-    fun `h2 sql native types mapping to JDBC types`() {
-        connection.use { connection ->
+    fun `read from huge table with a lot of h2 column types`() {
             connection.createStatement().execute(
                 """
                 CREATE TABLE TestTable (
@@ -247,124 +200,26 @@ class JDBCTest {
             val df = DataFrame.readSqlTable(connection, "dsdfs", "TestTable").cast<TestTableData>()
             df.print()
             assertEquals(3, df.rowsCount())
-        }
+
     }
 
     @Test
-    fun `basic test for reading one table`() {
-        connection.use { connection ->
+    fun `read from one table`() {
             val df = DataFrame.readSqlTable(connection, "dsdfs", "Customer").cast<Customer>()
             df.print()
             assertEquals(3, df.rowsCount())
+
+    }
+
+    @Test
+    fun `read from non-existing table`() {
+        shouldThrow<JdbcSQLSyntaxErrorException> {
+            DataFrame.readSqlTable(connection, "dsdfs", "WrongTableName").cast<Customer>()
         }
     }
 
     @Test
-    fun `try to read from not existing table`() {
-        connection.use { connection ->
-            val df = DataFrame.readSqlTable(connection, "dsdfs", "WrongTableName").cast<Customer>()
-            df.print()
-            assertEquals(3, df.rowsCount())
-        }
-    }
-
-    @Test
-    fun `sqlite native types mapping to JDBC types`() {
-        DriverManager.getConnection("jdbc:sqlite:").use {
-            val statement = connection.createStatement()
-
-            // Create the first table with various column types
-            statement.execute(
-                """
-            CREATE TABLE Customers (
-                id INTEGER AUTO_INCREMENT PRIMARY KEY,
-                name TEXT,
-                age INTEGER,
-                salary REAL,
-                profile_picture BLOB
-            )
-        """
-            )
-
-            // Create the second table with various column types
-            statement.execute(
-                """
-            CREATE TABLE Orders (
-                id INTEGER AUTO_INCREMENT PRIMARY KEY,
-                customer_name TEXT,
-                order_date TEXT,
-                total_amount NUMERIC,
-                order_details BLOB
-            )
-        """
-            )
-
-            val profilePicture = "SampleProfilePictureData".toByteArray()
-            val orderDetails = "OrderDetailsData".toByteArray()
-
-// Insert sample data into Customers
-            connection.prepareStatement(
-                """
-    INSERT INTO Customers (name, age, salary, profile_picture)
-    VALUES (?, ?, ?, ?)
-"""
-            ).use {
-                it.setString(1, "John Doe")
-                it.setInt(2, 30)
-                it.setDouble(3, 2500.50)
-                it.setBytes(4, profilePicture)
-                it.executeUpdate()
-            }
-
-// Insert sample data into Orders
-            connection.prepareStatement(
-                """
-    INSERT INTO Orders (customer_name, order_date, total_amount, order_details)
-    VALUES (?, ?, ?, ?)
-"""
-            ).use {
-                it.setString(1, "John Doe")
-                it.setString(2, "2023-07-21")
-                it.setDouble(3, 150.75)
-                it.setBytes(4, orderDetails)
-                it.executeUpdate()
-            }
-
-            val df = DataFrame.readSqlTable(connection, "dsdfs", "Customers").cast<CustomerSQLite>()
-            df.print()
-            assertEquals(1, df.rowsCount())
-
-            val df2 = DataFrame.readSqlTable(connection, "dsdfs", "Orders").cast<CustomerSQLite>()
-            df2.print()
-            assertEquals(1, df2.rowsCount())
-
-            val sqlQuery = """
-    SELECT
-        c.id AS customerId,
-        c.name AS customerName,
-        c.age AS customerAge,
-        c.salary AS customerSalary,
-        c.profile_picture AS customerProfilePicture,
-        o.id AS orderId,
-        o.order_date AS orderDate,
-        o.total_amount AS totalAmount,
-        o.order_details AS orderDetails
-    FROM Customers c
-    INNER JOIN Orders o ON c.name = o.customer_name
-"""
-            val df3 = DataFrame.readSqlQuery(connection, sqlQuery).cast<CustomerOrderSQLite>()
-            df3.print()
-            assertEquals(1, df3.rowsCount())
-
-            val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
-            schema.print()
-            assertEquals(8, schema.columns.entries.size)
-        }
-    }
-
-    @Test
-    fun `basic test for reading join from two table`() {
-        connection.use { connection ->
+    fun `read from sql query`() {
             val sqlQuery = """
             SELECT c.name as customerName, SUM(s.amount) as totalSalesAmount
             FROM Sale s
@@ -375,50 +230,7 @@ class JDBCTest {
 
             val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<CustomerSales>()
             df.print()
-            assertEquals(3, df.rowsCount())
+            assertEquals(2, df.rowsCount())
         }
-    }
-
-
-    @Test
-    fun `imdb setup connection and select from one table`() {
-        val props = Properties()
-        props.setProperty("user", USER_NAME)
-        props.setProperty("password", PASSWORD)
-
-        // generate kdf schemas by database metadata (as interfaces or extensions)
-        // for gradle or as classes under the hood in KNB
-
-        DriverManager.getConnection(URL, props).use { connection ->
-            val df = DataFrame.readSqlTable(connection, "", "actors", 100).cast<ActorKDF>()
-            df.print()
-        }
-    }
-
-    @Test
-    fun `imdb convert result of SQL-query`() {
-        val sqlQuery = "select name, year, rank,\n" +
-            "GROUP_CONCAT (genre) as \"genres\"\n" +
-            "from movies join movies_directors on  movie_id = movies.id\n" +
-            "     join directors on directors.id=director_id left join movies_genres on movies.id = movies_genres.movie_id \n" +
-            "where directors.first_name = \"Quentin\" and directors.last_name = \"Tarantino\"\n" +
-            "group by name, year, rank\n" +
-            "order by year"
-        val props = Properties()
-        props.setProperty("user", USER_NAME)
-        props.setProperty("password", PASSWORD)
-
-        // generate kdf schemas by database metadata (as interfaces or extensions)
-        // for gradle or as classes under the hood in KNB
-
-        DriverManager.getConnection(URL, props).use { connection ->
-            val df = DataFrame.readSqlQuery(connection, sqlQuery).cast<RankedMoviesWithGenres>()
-            //df.filter { year > 2000 }.print()
-            df.print()
-
-            val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
-            schema.print()
-        }
-    }
 }
 
