@@ -70,6 +70,9 @@ class PostgresTest {
         fun setUpClass() {
             connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD)
 
+            connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS table1") }
+            connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS table2") }
+
             connection.createStatement().execute(
                 """
                   CREATE TABLE IF NOT EXISTS table1 (
@@ -139,66 +142,67 @@ class PostgresTest {
             ) VALUES (?, ?, ?, ?, ?, ?,  ?, ?, ?, ?,  ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
 
-            connection.prepareStatement(insertData1).use { statement1 ->
+            connection.prepareStatement(insertData1).use { st ->
                 // Insert data into table1
                 for (i in 1..3) {
-                    statement1.setLong(1, i * 1000L)
-                    statement1.setLong(2, 1000000000L + i)
-                    statement1.setBoolean(3, i % 2 == 1)
-                    statement1.setObject(4, org.postgresql.geometric.PGbox("(1,1),(2,2)"))
-                    statement1.setBytes(5, byteArrayOf(1, 2, 3))
-                    statement1.setString(6, "A")
-                    statement1.setString(7, "Hello")
-                    statement1.setString(8, "A")
-                    statement1.setObject(9, org.postgresql.geometric.PGcircle("<(1,2),3>"))
-                    statement1.setDate(10, java.sql.Date.valueOf("2023-08-01"))
-                    statement1.setDouble(11, 12.34)
-                    statement1.setInt(12, 12345)
-                    statement1.setObject(13, org.postgresql.util.PGInterval("1 year"))
+                    st.setLong(1, i * 1000L)
+                    st.setLong(2, 1000000000L + i)
+                    st.setBoolean(3, i % 2 == 1)
+                    st.setObject(4, org.postgresql.geometric.PGbox("(1,1),(2,2)"))
+                    st.setBytes(5, byteArrayOf(1, 2, 3))
+                    st.setString(6, "A")
+                    st.setString(7, "Hello")
+                    st.setString(8, "A")
+                    st.setObject(9, org.postgresql.geometric.PGcircle("<(1,2),3>"))
+                    st.setDate(10, java.sql.Date.valueOf("2023-08-01"))
+                    st.setDouble(11, 12.34)
+                    st.setInt(12, 12345)
+                    st.setObject(13, org.postgresql.util.PGInterval("1 year"))
 
                     val jsonbObject = PGobject()
                     jsonbObject.type = "jsonb"
                     jsonbObject.value = "{\"key\": \"value\"}"
 
-                    statement1.setObject(14, jsonbObject)
-                    statement1.setObject(15, jsonbObject)
-                    statement1.executeUpdate()
+                    st.setObject(14, jsonbObject)
+                    st.setObject(15, jsonbObject)
+                    st.executeUpdate()
                 }
             }
-            connection.prepareStatement(insertData2).use { statement2 ->
+
+            connection.prepareStatement(insertData2).use { st ->
                 // Insert data into table2
                 for (i in 1..3) {
-                    statement2.setObject(1, org.postgresql.geometric.PGline("{1,2,3}"))
-                    statement2.setObject(2, org.postgresql.geometric.PGlseg("[(-1,0),(1,0)]"))
+                    st.setObject(1, org.postgresql.geometric.PGline("{1,2,3}"))
+                    st.setObject(2, org.postgresql.geometric.PGlseg("[(-1,0),(1,0)]"))
 
                     val macaddrObject = PGobject()
                     macaddrObject.type = "macaddr"
                     macaddrObject.value = "00:00:00:00:00:0$i"
 
-                    statement2.setObject(3, macaddrObject)
-                    statement2.setBigDecimal(4, BigDecimal("123.45"))
-                    statement2.setBigDecimal(5, BigDecimal("12.34"))
-                    statement2.setObject(6, org.postgresql.geometric.PGpath("((1,2),(3,4))"))
-                    statement2.setObject(7, org.postgresql.geometric.PGpoint("(1,2)"))
-                    statement2.setObject(8, org.postgresql.geometric.PGpolygon("((1,1),(2,2),(3,3))"))
-                    statement2.setFloat(9, 12.34f)
-                    statement2.setShort(10, (i * 100).toShort())
-                    statement2.setInt(11, 1000 + i)
-                    statement2.setInt(12, 1000000 + i)
-                    statement2.setString(13, "Text data $i")
-                    statement2.setTime(14, java.sql.Time.valueOf("12:34:56"))
+                    st.setObject(3, macaddrObject)
+                    st.setBigDecimal(4, BigDecimal("123.45"))
+                    st.setBigDecimal(5, BigDecimal("12.34"))
+                    st.setObject(6, org.postgresql.geometric.PGpath("((1,2),(3,4))"))
+                    st.setObject(7, org.postgresql.geometric.PGpoint("(1,2)"))
+                    st.setObject(8, org.postgresql.geometric.PGpolygon("((1,1),(2,2),(3,3))"))
+                    st.setFloat(9, 12.34f)
+                    st.setShort(10, (i * 100).toShort())
+                    st.setInt(11, 1000 + i)
+                    st.setInt(12, 1000000 + i)
+                    st.setString(13, "Text data $i")
+                    st.setTime(14, java.sql.Time.valueOf("12:34:56"))
 
-                    statement2.setTimestamp(15, java.sql.Timestamp(System.currentTimeMillis()))
-                    statement2.setTimestamp(16, java.sql.Timestamp(System.currentTimeMillis()))
-                    statement2.setTimestamp(17, java.sql.Timestamp(System.currentTimeMillis()))
+                    st.setTimestamp(15, java.sql.Timestamp(System.currentTimeMillis()))
+                    st.setTimestamp(16, java.sql.Timestamp(System.currentTimeMillis()))
+                    st.setTimestamp(17, java.sql.Timestamp(System.currentTimeMillis()))
 
-                    statement2.setObject(18, UUID.randomUUID(), java.sql.Types.OTHER)
+                    st.setObject(18, UUID.randomUUID(), java.sql.Types.OTHER)
                     val xmlObject = PGobject()
                     xmlObject.type = "xml"
                     xmlObject.value = "<root><element>data</element></root>"
 
-                    statement2.setObject(19, xmlObject)
-                    statement2.executeUpdate()
+                    st.setObject(19, xmlObject)
+                    st.executeUpdate()
                 }
             }
         }
@@ -207,12 +211,8 @@ class PostgresTest {
         @JvmStatic
         fun tearDownClass() {
             try {
-                val dropTable1Query = "DROP TABLE IF EXISTS table1"
-                val dropTable2Query = "DROP TABLE IF EXISTS table2"
-
-                val statement = connection.createStatement()
-                statement.execute(dropTable1Query)
-                statement.execute(dropTable2Query)
+                connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS table1") }
+                connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS table2") }
                 connection.close()
             } catch (e: SQLException) {
                 e.printStackTrace()
