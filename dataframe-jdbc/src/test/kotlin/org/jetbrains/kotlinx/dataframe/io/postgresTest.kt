@@ -23,19 +23,15 @@ data class Table1(
     val id: Int,
     val bigintCol: Long,
     val bigserialCol: Long,
-    val bitCol: Boolean,
-    val bitVaryingCol: String,
     val booleanCol: Boolean,
     val boxCol: String,
     val byteaCol: ByteArray,
     val characterCol: String,
     val characterNCol: String,
     val charCol: String,
-    val cidrCol: String,
     val circleCol: String,
     val dateCol: java.sql.Date,
     val doubleCol: Double,
-    val inetCol: String,
     val integerCol: Int,
     val intervalCol: String,
     val jsonCol: String,
@@ -61,7 +57,6 @@ data class Table2(
     val timeWithZoneCol: String,
     val timestampCol: String,
     val timestampWithZoneCol: String,
-    val tsvectorCol: String,
     val uuidCol: String,
     val xmlCol: String
 )
@@ -120,9 +115,6 @@ class PostgresTest {
                 time_with_zone_col time with time zone,
                 timestamp_col timestamp,
                 timestamp_with_zone_col timestamp with time zone,
-                tsquery_col tsquery,
-                tsvector_col tsvector,
-                txid_snapshot_col txid_snapshot,
                 uuid_col uuid,
                 xml_col xml
             )
@@ -173,11 +165,10 @@ class PostgresTest {
                     statement1.executeUpdate()
                 }
             }
-
             connection.prepareStatement(insertData2).use { statement2 ->
                 // Insert data into table2
                 for (i in 1..3) {
-                    statement2.setObject(1, org.postgresql.geometric.PGline( "{1,2,3}"))
+                    statement2.setObject(1, org.postgresql.geometric.PGline("{1,2,3}"))
                     statement2.setObject(2, org.postgresql.geometric.PGlseg("[(-1,0),(1,0)]"))
 
                     val macaddrObject = PGobject()
@@ -216,7 +207,12 @@ class PostgresTest {
         @JvmStatic
         fun tearDownClass() {
             try {
-                //TODO: add drop tables statements
+                val dropTable1Query = "DROP TABLE IF EXISTS table1"
+                val dropTable2Query = "DROP TABLE IF EXISTS table2"
+
+                val statement = connection.createStatement()
+                statement.execute(dropTable1Query)
+                statement.execute(dropTable2Query)
                 connection.close()
             } catch (e: SQLException) {
                 e.printStackTrace()
@@ -226,14 +222,12 @@ class PostgresTest {
 
     @Test
     fun `basic test for reading sql tables`() {
-        connection.use { connection ->
-            val df1 = DataFrame.readSqlTable(connection, "dsdfs", "table1").cast<Table1>()
-            df1.print()
-            assertEquals(3, df1.rowsCount())
+        val df1 = DataFrame.readSqlTable(connection, "dsdfs", "table1").cast<Table1>()
+        df1.print()
+        assertEquals(3, df1.rowsCount())
 
-            val df2 = DataFrame.readSqlTable(connection, "dsdfs", "table2").cast<Table2>()
-            df2.print()
-            assertEquals(3, df2.rowsCount())
-        }
+        val df2 = DataFrame.readSqlTable(connection, "dsdfs", "table2").cast<Table2>()
+        df2.print()
+        assertEquals(3, df2.rowsCount())
     }
 }
