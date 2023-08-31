@@ -231,6 +231,6 @@ class JDBCTest {
             val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<CustomerSales>()
             df.print()
             assertEquals(2, df.rowsCount())
-        }
+    }
 }
 

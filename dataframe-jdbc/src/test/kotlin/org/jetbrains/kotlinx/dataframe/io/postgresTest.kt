@@ -64,6 +64,14 @@ interface Table2 {
     val xmlCol: String
 }
 
+@DataSchema
+interface ViewTable {
+    val id: Int
+    val bigintCol: Long
+    val lineCol: String
+    val numericCol: String
+}
+
 class PostgresTest {
     companion object {
         private lateinit var connection: Connection
@@ -232,5 +240,22 @@ class PostgresTest {
         val df2 = DataFrame.readSqlTable(connection, "dsdfs", "table2").cast<Table2>()
         df2.print()
         assertEquals(3, df2.rowsCount())
+    }
+
+    @Test
+    fun `read from sql query`() {
+        val sqlQuery = """
+SELECT
+    t1.id AS t1_id,
+    t1.bigint_col,
+    t2.line_col,
+    t2.numeric_col
+FROM table1 t1
+JOIN table2 t2 ON t1.id = t2.id;
+        """.trimIndent()
+
+        val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<TestTableData>()
+        df.print()
+        assertEquals(3, df.rowsCount())
     }
 }
