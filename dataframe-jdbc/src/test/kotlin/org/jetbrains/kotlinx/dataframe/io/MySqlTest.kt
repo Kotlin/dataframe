@@ -5,23 +5,21 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.junit.AfterClass
-import org.junit.Assert.assertEquals
+import org.junit.Assert
 import org.junit.BeforeClass
 import org.junit.Test
-import org.postgresql.util.PGobject
 import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
-import java.util.*
 
-private const val URL = "jdbc:mariadb://localhost:3307"
+private const val URL = "jdbc:mysql://localhost:3306"
 private const val USER_NAME = "root"
 private const val PASSWORD = "pass"
 private const val TEST_DATABASE_NAME = "testKDFdatabase"
 
 @DataSchema
-interface Table1MariaDb {
+interface Table1MySql {
     val id: Int
     val bitCol: Boolean
     val tinyintCol: Int
@@ -56,14 +54,13 @@ interface Table1MariaDb {
 }
 
 @DataSchema
-interface Table2MariaDb {
+interface Table2MySql {
     val id: Int
     val enumCol: String
     val setCol: String
 }
 
-
-class MariadbTest {
+class MySqlTest {
     companion object {
         private lateinit var connection: Connection
 
@@ -122,7 +119,9 @@ class MariadbTest {
                 mediumtextCol MEDIUMTEXT,
                 longtextCol LONGTEXT,
                 enumCol ENUM('Value1', 'Value2', 'Value3'),
-                setCol SET('Option1', 'Option2', 'Option3')
+                setCol SET('Option1', 'Option2', 'Option3'),
+                location GEOMETRY,
+                data JSON
             )
         """.trimIndent()
             )
@@ -162,7 +161,9 @@ class MariadbTest {
                 mediumtextCol MEDIUMTEXT,
                 longtextCol LONGTEXT,
                 enumCol ENUM('Value1', 'Value2', 'Value3'),
-                setCol SET('Option1', 'Option2', 'Option3')
+                setCol SET('Option1', 'Option2', 'Option3'),
+                location GEOMETRY,
+                data JSON
             )
             """.trimIndent()
             )
@@ -172,8 +173,8 @@ class MariadbTest {
                 bitCol, tinyintCol, smallintCol, mediumintCol, mediumintUnsignedCol, integerCol, intCol, 
                 integerUnsignedCol, bigintCol, floatCol, doubleCol, decimalCol, dateCol, datetimeCol, timestampCol,
                 timeCol, yearCol, varcharCol, charCol, binaryCol, varbinaryCol, tinyblobCol, blobCol,
-                mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol, location, data
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ST_GeomFromText('POINT(1 1)'), ?)
         """.trimIndent()
 
 
@@ -182,8 +183,8 @@ class MariadbTest {
                 bitCol, tinyintCol, smallintCol, mediumintCol, mediumintUnsignedCol, integerCol, intCol, 
                 integerUnsignedCol, bigintCol, floatCol, doubleCol, decimalCol, dateCol, datetimeCol, timestampCol,
                 timeCol, yearCol, varcharCol, charCol, binaryCol, varbinaryCol, tinyblobCol, blobCol,
-                mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol, location, data
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ST_GeomFromText('POINT(1 1)'), ?)
         """.trimIndent()
 
             connection.prepareStatement(insertData1).use { st ->
@@ -206,20 +207,20 @@ class MariadbTest {
                     st.setTimestamp(15, java.sql.Timestamp(System.currentTimeMillis()))
                     st.setTime(16, java.sql.Time(System.currentTimeMillis()))
                     st.setInt(17, 2023)
-                    st.setString(18, "varcharValue" + i)
-                    st.setString(19, "charValue" + i)
+                    st.setString(18, "varcharValue$i")
+                    st.setString(19, "charValue$i")
                     st.setBytes(20, "binaryValue".toByteArray())
                     st.setBytes(21, "varbinaryValue".toByteArray())
                     st.setBytes(22, "tinyblobValue".toByteArray())
                     st.setBytes(23, "blobValue".toByteArray())
                     st.setBytes(24, "mediumblobValue".toByteArray())
                     st.setBytes(25, "longblobValue".toByteArray())
-                    st.setString(26, "textValue" + i)
-                    st.setString(27, "mediumtextValue" + i)
-                    st.setString(28, "longtextValue" + i)
-                    st.setString(29, "Value" + i)
-                    st.setString(30, "Option" + i)
-
+                    st.setString(26, "textValue$i")
+                    st.setString(27, "mediumtextValue$i")
+                    st.setString(28, "longtextValue$i")
+                    st.setString(29, "Value$i")
+                    st.setString(30, "Option$i")
+                    st.setString(31, "{\"key\": \"value\"}")
                     st.executeUpdate()
                 }
             }
@@ -244,19 +245,20 @@ class MariadbTest {
                     st.setTimestamp(15, java.sql.Timestamp(System.currentTimeMillis()))
                     st.setTime(16, java.sql.Time(System.currentTimeMillis()))
                     st.setInt(17, 2023)
-                    st.setString(18, "varcharValue" + i)
-                    st.setString(19, "charValue" + i)
+                    st.setString(18, "varcharValue$i")
+                    st.setString(19, "charValue$i")
                     st.setBytes(20, "binaryValue".toByteArray())
                     st.setBytes(21, "varbinaryValue".toByteArray())
                     st.setBytes(22, "tinyblobValue".toByteArray())
                     st.setBytes(23, "blobValue".toByteArray())
                     st.setBytes(24, "mediumblobValue".toByteArray())
                     st.setBytes(25, "longblobValue".toByteArray())
-                    st.setString(26, "textValue" + i)
-                    st.setString(27, "mediumtextValue" + i)
-                    st.setString(28, "longtextValue" + i)
-                    st.setString(29, "Value" + i)
-                    st.setString(30, "Option" + i)
+                    st.setString(26, "textValue$i")
+                    st.setString(27, "mediumtextValue$i")
+                    st.setString(28, "longtextValue$i")
+                    st.setString(29, "Value$i")
+                    st.setString(30, "Option$i")
+                    st.setString(31, "{\"key\": \"value\"}")
                     st.executeUpdate()
                 }
             }
@@ -280,11 +282,11 @@ class MariadbTest {
     fun `basic test for reading sql tables`() {
         val df1 = DataFrame.readSqlTable(connection, "dsdfs", "table1").cast<Table1MariaDb>()
         df1.print()
-        assertEquals(3, df1.rowsCount())
+        Assert.assertEquals(3, df1.rowsCount())
 
         val df2 = DataFrame.readSqlTable(connection, "dsdfs", "table2").cast<Table1MariaDb>()
         df2.print()
-        assertEquals(3, df2.rowsCount())
+        Assert.assertEquals(3, df2.rowsCount())
     }
 
     @Test
@@ -300,7 +302,6 @@ JOIN table2 t2 ON t1.id = t2.id;
 
         val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<Table2MariaDb>()
         df.print()
-        assertEquals(3, df.rowsCount())
+        Assert.assertEquals(3, df.rowsCount())
     }
 }
-

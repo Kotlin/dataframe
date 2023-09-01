@@ -17,7 +17,7 @@ public sealed class DbType(public val jdbcName: String) {
 public object PostgreSql : DbType("postgresql") {
     override fun convertDataFromResultSet(rs: ResultSet, jdbcColumn: JdbcColumn): Any? {
         // TODO: improve mapping with the https://www.instaclustr.com/blog/postgresql-data-types-mappings-to-sql-jdbc-and-java-data-types/
-        return when (jdbcColumn.type) {
+        return when (jdbcColumn.sqlType) {
             "serial" -> rs.getInt(jdbcColumn.name)
             "int8", "bigint", "bigserial" -> rs.getLong(jdbcColumn.name)
             "bool" -> rs.getBoolean(jdbcColumn.name)
@@ -48,12 +48,12 @@ public object PostgreSql : DbType("postgresql") {
             "timestamptz", "timestamp with time zone" -> rs.getString(jdbcColumn.name)
             "uuid" -> rs.getString(jdbcColumn.name)
             "xml" -> rs.getString(jdbcColumn.name)
-            else -> throw IllegalArgumentException("Unsupported PostgreSQL type: ${jdbcColumn.type}")
+            else -> throw IllegalArgumentException("Unsupported PostgreSQL type: ${jdbcColumn.sqlType}")
         }
     }
 
     override fun toColumnSchema(jdbcColumn: JdbcColumn): ColumnSchema {
-        return when (jdbcColumn.type) {
+        return when (jdbcColumn.sqlType) {
             "serial" -> ColumnSchema.Value(typeOf<Int>())
             "int8", "bigint", "bigserial" -> ColumnSchema.Value(typeOf<Long>())
             "bool" -> ColumnSchema.Value(typeOf<Boolean>())
@@ -84,7 +84,7 @@ public object PostgreSql : DbType("postgresql") {
             "timestamptz", "timestamp with time zone" -> ColumnSchema.Value(typeOf<String>())
             "uuid" -> ColumnSchema.Value(typeOf<String>())
             "xml" -> ColumnSchema.Value(typeOf<String>())
-            else -> throw IllegalArgumentException("Unsupported PostgreSQL type: ${jdbcColumn.type}")
+            else -> throw IllegalArgumentException("Unsupported PostgreSQL type: ${jdbcColumn.sqlType}")
         }
     }
 }
@@ -94,7 +94,7 @@ public object PostgreSql : DbType("postgresql") {
  */
 public object H2 : DbType("h2") {
     override fun convertDataFromResultSet(rs: ResultSet, jdbcColumn: JdbcColumn): Any? {
-        return when (jdbcColumn.type) {
+        return when (jdbcColumn.sqlType) {
             "CHARACTER", "CHAR" -> rs.getString(jdbcColumn.name)
             "CHARACTER VARYING", "CHAR VARYING",  "VARCHAR" -> rs.getString(jdbcColumn.name)
             "CHARACTER LARGE OBJECT", "CHAR LARGE OBJECT", "CLOB" -> rs.getString(jdbcColumn.name)
@@ -123,12 +123,12 @@ public object H2 : DbType("h2") {
             "JSON" -> rs.getString(jdbcColumn.name)
             "UUID" -> rs.getString(jdbcColumn.name)
             //"ARRAY" -> rs.getArray(jdbcColumn.name)
-            else -> throw IllegalArgumentException("Unsupported H2 type: ${jdbcColumn.type}")
+            else -> throw IllegalArgumentException("Unsupported H2 type: ${jdbcColumn.sqlType}")
         }
     }
 
     override fun toColumnSchema(jdbcColumn: JdbcColumn): ColumnSchema {
-        return when (jdbcColumn.type) {
+        return when (jdbcColumn.sqlType) {
             "CHARACTER", "CHAR" -> ColumnSchema.Value(typeOf<String>())
             "CHARACTER VARYING", "CHAR VARYING",  "VARCHAR" -> ColumnSchema.Value(typeOf<String>())
             "CHARACTER LARGE OBJECT", "CHAR LARGE OBJECT", "CLOB" -> ColumnSchema.Value(typeOf<String>())
@@ -157,45 +157,45 @@ public object H2 : DbType("h2") {
             "JSON" -> ColumnSchema.Value(typeOf<String>())
             "UUID" -> ColumnSchema.Value(typeOf<String>())
             //"ARRAY" -> rs.getArray(jdbcColumn.name)
-            else -> throw IllegalArgumentException("Unsupported H2 type: ${jdbcColumn.type}")
+            else -> throw IllegalArgumentException("Unsupported H2 type: ${jdbcColumn.sqlType}")
         }
     }
 }
 
 public object Sqlite : DbType("sqlite") {
     override fun convertDataFromResultSet(rs: ResultSet, jdbcColumn: JdbcColumn): Any? {
-        return when (jdbcColumn.type) {
+        return when (jdbcColumn.sqlType) {
             "INTEGER" -> rs.getInt(jdbcColumn.name)
             "TEXT" -> rs.getString(jdbcColumn.name)
             "REAL" -> rs.getDouble(jdbcColumn.name)
             "NUMERIC" -> rs.getDouble(jdbcColumn.name)
             "BLOB" -> rs.getBytes(jdbcColumn.name)
-            else -> throw IllegalArgumentException("Unsupported SQLite type: ${jdbcColumn.type}")
+            else -> throw IllegalArgumentException("Unsupported SQLite type: ${jdbcColumn.sqlType}")
         }
     }
 
     override fun toColumnSchema(jdbcColumn: JdbcColumn): ColumnSchema {
-        return when (jdbcColumn.type) {
+        return when (jdbcColumn.sqlType) {
             "INTEGER" -> ColumnSchema.Value(typeOf<Int>())
             "TEXT" -> ColumnSchema.Value(typeOf<String>())
             "REAL" -> ColumnSchema.Value(typeOf<Double>())
             "NUMERIC" -> ColumnSchema.Value(typeOf<Double>())
             "BLOB" -> ColumnSchema.Value(typeOf<ByteArray>())
-            else -> throw IllegalArgumentException("Unsupported SQLite type: ${jdbcColumn.type}")
+            else -> throw IllegalArgumentException("Unsupported SQLite type: ${jdbcColumn.sqlType}")
         }
     }
 }
 
 public object MariaDb : DbType("mariadb") {
     override fun convertDataFromResultSet(rs: ResultSet, jdbcColumn: JdbcColumn): Any? {
-        return when (jdbcColumn.type) {
+        return when (jdbcColumn.sqlType) {
             "BIT" -> rs.getBytes(jdbcColumn.name)
             "TINYINT" -> rs.getInt(jdbcColumn.name)
             "SMALLINT" -> rs.getInt(jdbcColumn.name)
             "MEDIUMINT"-> rs.getInt(jdbcColumn.name)
             "MEDIUMINT UNSIGNED" -> rs.getLong(jdbcColumn.name)
             "INTEGER", "INT" -> rs.getInt(jdbcColumn.name)
-            "INTEGER UNSIGNED" -> rs.getLong(jdbcColumn.name)
+            "INTEGER UNSIGNED", "INT UNSIGNED" -> rs.getLong(jdbcColumn.name)
             "BIGINT" -> rs.getLong(jdbcColumn.name)
             "FLOAT" -> rs.getFloat(jdbcColumn.name)
             "DOUBLE" -> rs.getDouble(jdbcColumn.name)
@@ -217,23 +217,23 @@ public object MariaDb : DbType("mariadb") {
             "LONGTEXT" -> rs.getString(jdbcColumn.name)
             "ENUM" -> rs.getString(jdbcColumn.name)
             "SET" -> rs.getString(jdbcColumn.name)
-            else -> throw IllegalArgumentException("Unsupported MariaDB type: ${jdbcColumn.type}")
+            else -> throw IllegalArgumentException("Unsupported MariaDB type: ${jdbcColumn.sqlType}")
         }
     }
 
     override fun toColumnSchema(jdbcColumn: JdbcColumn): ColumnSchema {
-        return when (jdbcColumn.type) {
+        return when (jdbcColumn.sqlType) {
             "BIT" -> ColumnSchema.Value(typeOf<ByteArray>())
             "TINYINT" -> ColumnSchema.Value(typeOf<Int>())
             "SMALLINT" -> ColumnSchema.Value(typeOf<Int>())
             "MEDIUMINT"-> ColumnSchema.Value(typeOf<Int>())
             "MEDIUMINT UNSIGNED" -> ColumnSchema.Value(typeOf<Long>())
             "INTEGER", "INT" -> ColumnSchema.Value(typeOf<Int>())
-            "INTEGER UNSIGNED" -> ColumnSchema.Value(typeOf<Long>())
+            "INTEGER UNSIGNED", "INT UNSIGNED" -> ColumnSchema.Value(typeOf<Long>())
             "BIGINT" -> ColumnSchema.Value(typeOf<Long>())
             "FLOAT" -> ColumnSchema.Value(typeOf<Float>())
             "DOUBLE" -> ColumnSchema.Value(typeOf<Double>())
-            "DECIMAL" -> ColumnSchema.Value(typeOf<Long>())
+            "DECIMAL" -> ColumnSchema.Value(typeOf<Double>())
             "DATE" -> ColumnSchema.Value(typeOf<String>())
             "DATETIME" -> ColumnSchema.Value(typeOf<String>())
             "TIMESTAMP" -> ColumnSchema.Value(typeOf<String>())
@@ -251,21 +251,21 @@ public object MariaDb : DbType("mariadb") {
             "LONGTEXT" -> ColumnSchema.Value(typeOf<String>())
             "ENUM" -> ColumnSchema.Value(typeOf<String>())
             "SET" -> ColumnSchema.Value(typeOf<String>())
-            else -> throw IllegalArgumentException("Unsupported MariaDB type: ${jdbcColumn.type}")
+            else -> throw IllegalArgumentException("Unsupported MariaDB type: ${jdbcColumn.sqlType}")
         }
     }
 }
 
 public object MySql : DbType("mysql") {
     override fun convertDataFromResultSet(rs: ResultSet, jdbcColumn: JdbcColumn): Any? {
-        return when (jdbcColumn.type) {
+        return when (jdbcColumn.sqlType) {
             "BIT" -> rs.getBytes(jdbcColumn.name)
             "TINYINT" -> rs.getInt(jdbcColumn.name)
             "SMALLINT" -> rs.getInt(jdbcColumn.name)
             "MEDIUMINT"-> rs.getInt(jdbcColumn.name)
             "MEDIUMINT UNSIGNED" -> rs.getLong(jdbcColumn.name)
             "INTEGER", "INT" -> rs.getInt(jdbcColumn.name)
-            "INTEGER UNSIGNED" -> rs.getLong(jdbcColumn.name)
+            "INTEGER UNSIGNED", "INT UNSIGNED" -> rs.getLong(jdbcColumn.name)
             "BIGINT" -> rs.getLong(jdbcColumn.name)
             "FLOAT" -> rs.getFloat(jdbcColumn.name)
             "DOUBLE" -> rs.getDouble(jdbcColumn.name)
@@ -290,23 +290,23 @@ public object MySql : DbType("mysql") {
             // special mysql types
             "JSON" -> rs.getString(jdbcColumn.name)
             "GEOMETRY" -> rs.getBytes(jdbcColumn.name)
-            else -> throw IllegalArgumentException("Unsupported MySQL type: ${jdbcColumn.type}")
+            else -> throw IllegalArgumentException("Unsupported MySQL type: ${jdbcColumn.sqlType}")
         }
     }
 
     override fun toColumnSchema(jdbcColumn: JdbcColumn): ColumnSchema {
-        return when (jdbcColumn.type) {
+        return when (jdbcColumn.sqlType) {
             "BIT" -> ColumnSchema.Value(typeOf<ByteArray>())
             "TINYINT" -> ColumnSchema.Value(typeOf<Int>())
             "SMALLINT" -> ColumnSchema.Value(typeOf<Int>())
             "MEDIUMINT"-> ColumnSchema.Value(typeOf<Int>())
             "MEDIUMINT UNSIGNED" -> ColumnSchema.Value(typeOf<Long>())
             "INTEGER", "INT" -> ColumnSchema.Value(typeOf<Int>())
-            "INTEGER UNSIGNED" -> ColumnSchema.Value(typeOf<Long>())
+            "INTEGER UNSIGNED", "INT UNSIGNED" -> ColumnSchema.Value(typeOf<Long>())
             "BIGINT" -> ColumnSchema.Value(typeOf<Long>())
             "FLOAT" -> ColumnSchema.Value(typeOf<Float>())
             "DOUBLE" -> ColumnSchema.Value(typeOf<Double>())
-            "DECIMAL" -> ColumnSchema.Value(typeOf<Long>())
+            "DECIMAL" -> ColumnSchema.Value(typeOf<Double>())
             "DATE" -> ColumnSchema.Value(typeOf<String>())
             "DATETIME" -> ColumnSchema.Value(typeOf<String>())
             "TIMESTAMP" -> ColumnSchema.Value(typeOf<String>())
@@ -327,7 +327,7 @@ public object MySql : DbType("mysql") {
             // special mysql types
             "JSON" -> ColumnSchema.Value(typeOf<String>())
             "GEOMETRY" -> ColumnSchema.Value(typeOf<ByteArray>())
-            else -> throw IllegalArgumentException("Unsupported MySQL type: ${jdbcColumn.type}")
+            else -> throw IllegalArgumentException("Unsupported MySQL type: ${jdbcColumn.sqlType}")
         }
     }
 }

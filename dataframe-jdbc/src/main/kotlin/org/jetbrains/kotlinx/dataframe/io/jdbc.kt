@@ -59,7 +59,7 @@ internal class DefaultReadJdbcMethod(path: String?) : AbstractDefaultReadMethod(
 
 private const val readJDBC = "readJDBC"
 
-public data class JdbcColumn(val name: String, val type: String, val size: Int)
+public data class JdbcColumn(val name: String, val sqlType: String, val jdbcType: Int, val size: Int)
 
 public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, dbType: DbType): AnyFrame {
     val tableColumns = getTableColumns(resultSet)
@@ -252,8 +252,9 @@ private fun getTableColumns(rs: ResultSet): MutableMap<String, JdbcColumn> {
         val name = metaData.getColumnName(i)
         val size = metaData.getColumnDisplaySize(i)
         val type = metaData.getColumnTypeName(i)
+        val jdbcType = metaData.getColumnType(i)
 
-        tableColumns += Pair(name, JdbcColumn(name, type, size))
+        tableColumns += Pair(name, JdbcColumn(name, type, jdbcType, size))
     }
     return tableColumns
 }
@@ -266,8 +267,9 @@ private fun getTableColumns(connection: Connection, tableName: String): MutableM
     while (columns.next()) {
         val name = columns.getString("COLUMN_NAME")
         val type = columns.getString("TYPE_NAME")
+        val jdbcType = columns.getInt("DATA_TYPE")
         val size = columns.getInt("COLUMN_SIZE")
-        tableColumns += Pair(name, JdbcColumn(name, type, size))
+        tableColumns += Pair(name, JdbcColumn(name, type, jdbcType, size))
     }
     return tableColumns
 }
