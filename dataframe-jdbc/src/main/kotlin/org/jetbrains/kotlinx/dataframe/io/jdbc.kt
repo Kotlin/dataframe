@@ -7,6 +7,8 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
+import org.jetbrains.kotlinx.dataframe.io.db.DbType
+import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromURL
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.jupyter.api.Code
 import java.io.File

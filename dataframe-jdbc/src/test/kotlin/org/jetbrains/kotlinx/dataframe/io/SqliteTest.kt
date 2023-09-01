@@ -144,6 +144,6 @@ class SqliteTest {
 
         val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
         schema.print()
-        assertEquals(8, schema.columns.entries.size)
+        assertEquals(9, schema.columns.entries.size)
     }
 }
