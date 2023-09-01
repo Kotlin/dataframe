@@ -67,7 +67,7 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.AtAnyDepthColumnsSelectionDsl.atAnyDepth]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
@@ -100,7 +100,7 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.AtAnyDepthColumnsSelectionDsl.atAnyDepth]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
@@ -130,7 +130,7 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.AtAnyDepthColumnsSelectionDsl.atAnyDepth]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
@@ -160,7 +160,7 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.AtAnyDepthColumnsSelectionDsl.atAnyDepth]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
@@ -190,7 +190,7 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.AtAnyDepthColumnsSelectionDsl.atAnyDepth]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
@@ -225,7 +225,7 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.AtAnyDepthColumnsSelectionDsl.atAnyDepth]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
@@ -258,7 +258,7 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.AtAnyDepthColumnsSelectionDsl.atAnyDepth]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
@@ -288,7 +288,7 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.AtAnyDepthColumnsSelectionDsl.atAnyDepth]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
@@ -318,7 +318,7 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.AtAnyDepthColumnsSelectionDsl.atAnyDepth]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
@@ -348,7 +348,7 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.AtAnyDepthColumnsSelectionDsl.atAnyDepth]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
@@ -383,7 +383,7 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.AtAnyDepthColumnsSelectionDsl.atAnyDepth]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
@@ -416,7 +416,7 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.AtAnyDepthColumnsSelectionDsl.atAnyDepth]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
@@ -446,7 +446,7 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.AtAnyDepthColumnsSelectionDsl.atAnyDepth]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
@@ -476,7 +476,7 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.AtAnyDepthColumnsSelectionDsl.atAnyDepth]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
@@ -507,7 +507,7 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.AtAnyDepthColumnsSelectionDsl.atAnyDepth]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
@@ -542,7 +542,7 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.AtAnyDepthColumnsSelectionDsl.atAnyDepth]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
@@ -577,7 +577,7 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.AtAnyDepthColumnsSelectionDsl.atAnyDepth]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
@@ -609,7 +609,7 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.AtAnyDepthColumnsSelectionDsl.atAnyDepth]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
@@ -641,7 +641,7 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.AtAnyDepthColumnsSelectionDsl.atAnyDepth]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
@@ -673,7 +673,7 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.AtAnyDepthColumnsSelectionDsl.atAnyDepth]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "price" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *

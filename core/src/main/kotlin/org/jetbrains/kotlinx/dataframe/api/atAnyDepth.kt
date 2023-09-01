@@ -1,8 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -24,6 +26,7 @@ import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_DFS_OF
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_DFS_OF_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_DFS_OF_TYPED_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_DFS_REPLACE
+import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -103,6 +106,88 @@ public interface AtAnyDepthColumnsSelectionDsl {
      */
     public fun TransformableSingleColumn<*>.atAnyDepth(): SingleColumn<*> =
         atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
+
+    // endregion
+
+    // region scope
+
+    // TODO Keep?
+    @OptIn(ExperimentalTypeInference::class)
+    @OverloadResolutionByLambdaReturnType
+    public fun <C> ColumnSet<C>.atAnyDepth(
+        filter: ColumnFilter<C>,
+    ): ColumnSet<C> =
+        with(this@AtAnyDepthColumnsSelectionDsl as ColumnsSelectionDsl<*>) {
+            this@atAnyDepth.cols(filter).atAnyDepth()
+        }
+
+    @OptIn(ExperimentalTypeInference::class)
+    @OverloadResolutionByLambdaReturnType
+    public fun <T, C> ColumnsSelectionDsl<T>.atAnyDepth(
+        selector: Selector<ColumnsSelectionDsl<T>, TransformableColumnSet<C>>,
+    ): ColumnSet<C> = selector(this).atAnyDepth()
+
+    @OptIn(ExperimentalTypeInference::class)
+    @OverloadResolutionByLambdaReturnType
+    public fun <T> ColumnsSelectionDsl<T>.atAnyDepth(
+        selector: Selector<ColumnsSelectionDsl<T>, TransformableSingleColumn<*>>,
+    ): SingleColumn<*> = selector(this).atAnyDepth()
+
+    @OptIn(ExperimentalTypeInference::class)
+    @OverloadResolutionByLambdaReturnType
+    public fun <C, R> SingleColumn<DataRow<C>>.atAnyDepth(
+        selector: Selector<ColumnsSelectionDsl<C>, TransformableColumnSet<R>>,
+    ): ColumnSet<R> =
+        with(this@AtAnyDepthColumnsSelectionDsl as ColumnsSelectionDsl<*>) {
+            this@atAnyDepth.ensureIsColumnGroup().select { selector(this).atAnyDepth() }
+        }
+
+    @OptIn(ExperimentalTypeInference::class)
+    @OverloadResolutionByLambdaReturnType
+    public fun <C> SingleColumn<DataRow<C>>.atAnyDepth(
+        selector: Selector<ColumnsSelectionDsl<C>, TransformableSingleColumn<*>>,
+    ): SingleColumn<*> =
+        with(this@AtAnyDepthColumnsSelectionDsl as ColumnsSelectionDsl<*>) {
+            this@atAnyDepth.ensureIsColumnGroup().select { selector(this).atAnyDepth() }.single()
+        }
+
+    @OptIn(ExperimentalTypeInference::class)
+    @OverloadResolutionByLambdaReturnType
+    public fun <R> String.atAnyDepth(
+        selector: Selector<ColumnsSelectionDsl<*>, TransformableColumnSet<R>>,
+    ): ColumnSet<R> = columnGroup(this).atAnyDepth(selector)
+
+    @Suppress("FINAL_UPPER_BOUND")
+    @OptIn(ExperimentalTypeInference::class)
+    @OverloadResolutionByLambdaReturnType
+    public fun <S : String> S.atAnyDepth(
+        selector: Selector<ColumnsSelectionDsl<*>, TransformableSingleColumn<*>>,
+    ): SingleColumn<*> = columnGroup(this).atAnyDepth(selector)
+
+    @OptIn(ExperimentalTypeInference::class)
+    @OverloadResolutionByLambdaReturnType
+    public fun <R> KProperty<R>.atAnyDepth(
+        selector: Selector<ColumnsSelectionDsl<*>, TransformableColumnSet<R>>,
+    ): ColumnSet<R> = columnGroup(this).atAnyDepth(selector)
+
+    @OptIn(ExperimentalTypeInference::class)
+    @OverloadResolutionByLambdaReturnType
+    public fun <K : KProperty<*>> K.atAnyDepth(
+        selector: Selector<ColumnsSelectionDsl<*>, TransformableSingleColumn<*>>,
+    ): SingleColumn<*> = columnGroup(this).atAnyDepth(selector)
+
+    @OptIn(ExperimentalTypeInference::class)
+    @OverloadResolutionByLambdaReturnType
+    public fun <R> ColumnPath.atAnyDepth(
+        selector: Selector<ColumnsSelectionDsl<*>, TransformableColumnSet<R>>,
+    ): ColumnSet<R> = columnGroup(this).atAnyDepth(selector)
+
+    @Suppress("FINAL_UPPER_BOUND")
+    @OptIn(ExperimentalTypeInference::class)
+    @OverloadResolutionByLambdaReturnType
+    public fun <C : ColumnPath> C.atAnyDepth(
+        selector: Selector<ColumnsSelectionDsl<*>, TransformableSingleColumn<*>>,
+    ): SingleColumn<*> = columnGroup(this).atAnyDepth(selector)
 
     // endregion
 

@@ -500,7 +500,8 @@ public interface AllColumnsSelectionDsl {
         columnGroup(this).allColsAfter(column)
 
     /** @include [KPropertyAllAfterDocs] {@setArg [KPropertyAllAfterDocs.Arg] ("myColumn")} */
-    public fun KProperty<*>.allColsAfter(column: String): ColumnSet<*> = columnGroup(this).allColsAfter(column)
+    public fun KProperty<*>.allColsAfter(column: String): ColumnSet<*> =
+        columnGroup(this).allColsAfter(column)
 
     /** @include [KPropertyAllAfterDocs] {@setArg [KPropertyAllAfterDocs.Arg] (myColumn)} */
     public fun KProperty<*>.allColsAfter(column: AnyColumnReference): ColumnSet<*> =
