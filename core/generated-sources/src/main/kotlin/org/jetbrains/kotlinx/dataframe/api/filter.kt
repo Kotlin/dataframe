@@ -55,7 +55,7 @@ internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) 
 // region ColumnsSelectionDsl
 
 // TODO remove confusing overloads
-public interface FilterColumnsSelectionDsl {
+public interface FilterColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T> {
 
     /**
      * ## Filter (Children)

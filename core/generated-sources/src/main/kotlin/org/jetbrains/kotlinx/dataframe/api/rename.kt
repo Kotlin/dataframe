@@ -112,7 +112,7 @@ public infix fun <T, C : ColumnReference<T>> C.named(name: ColumnAccessor<*>): C
 // endregion
 
 // region ColumnsSelectionDsl
-public interface RenameColumnsSelectionDsl {
+public interface RenameColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T> {
 
     /**
      * ## Rename: `named` / `into`

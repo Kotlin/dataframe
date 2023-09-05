@@ -78,7 +78,7 @@ public fun <T> DataFrame<T>.all(predicate: RowFilter<T>): Boolean = rows().all {
 
 // region ColumnsSelectionDsl
 
-public interface AllColumnsSelectionDsl {
+public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T> {
 
     /**
      * ## Usage of all Flavors of All (Cols):

@@ -27,7 +27,7 @@ import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
 
-public interface ColGroupColumnsSelectionDsl {
+public interface ColGroupColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T> {
 
     /**
      * ## Col Group Usage

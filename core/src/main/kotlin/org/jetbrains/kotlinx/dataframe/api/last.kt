@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowFilter
+import org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.CommonLastDocs
 import org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.CommonLastDocs.Examples
 import org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Usage
 import org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Usage.ColumnGroupName
@@ -14,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.size
@@ -23,6 +25,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.atAnyDepthImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -87,7 +90,7 @@ public fun <T> PivotGroupBy<T>.last(predicate: RowFilter<T>): ReducedPivotGroupB
 /**
  * See [Usage].
  */
-public interface LastColumnsSelectionDsl {
+public interface LastColumnsSelectionDsl<out T> : LastAtAnyDepthDsl<T>, ColumnsSelectionDslExtension<T> {
 
     /**
      * ## Last (Col) Usage
@@ -160,41 +163,19 @@ public interface LastColumnsSelectionDsl {
     /**
      * @include [CommonLastDocs]
      * @setArg [CommonLastDocs.Examples]
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[last][ColumnSet.last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[last][ColumnSet.last]`() }`
-     */
-    @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.last(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
-        (allColumnsInternal() as TransformableColumnSet<C>)
-            .transform { listOf(it.last(condition)) }
-            .singleOrNullWithTransformerImpl()
-
-    /**
-     * @include [CommonLastDocs]
-     * @setArg [CommonLastDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { `[last][ColumnsSelectionDsl.last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun ColumnsSelectionDsl<*>.last(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        asSingleColumn().lastCol(condition)
-
-    /**
-     * @include [CommonLastDocs]
-     * @setArg [CommonLastDocs.Examples]
-     *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[lastCol][SingleColumn.lastCol]`() }`
-     */
-    public fun SingleColumn<DataRow<*>>.lastCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        this.ensureIsColumnGroup().asColumnSet().last(condition)
+    public fun ColumnsSelectionDsl<*>.last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+        asSingleColumn().ensureIsColumnGroup().lastInternal(scope, condition)
 
     /**
      * @include [CommonLastDocs]
      * @setArg [CommonLastDocs.Examples]
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[lastCol][String.lastCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun String.lastCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        columnGroup(this).lastCol(condition)
+    public fun String.lastCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+        columnGroup(this).ensureIsColumnGroup().lastInternal(scope, condition)
 
     /**
      * @include [CommonLastDocs]
@@ -203,16 +184,63 @@ public interface LastColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[lastCol][KProperty.lastCol]`() }`
      */
-    public fun KProperty<*>.lastCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        columnGroup(this).lastCol(condition)
+    public fun KProperty<*>.lastCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+        columnGroup(this).ensureIsColumnGroup().lastInternal(scope, condition)
 
     /**
      * @include [CommonLastDocs]
      * @setArg [CommonLastDocs.Examples]
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[lastCol][ColumnPath.lastCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun ColumnPath.lastCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
-        columnGroup(this).lastCol(condition)
+    public fun ColumnPath.lastCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+        columnGroup(this).ensureIsColumnGroup().lastInternal(scope, condition)
 }
 
+public interface LastAtAnyDepthDsl<out T> : ColumnsSelectionDslExtension<T> {
+
+    /**
+     * @include [LastColumnsSelectionDsl.CommonLastDocs]
+     * @setArg [LastColumnsSelectionDsl.CommonLastDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[lastCol][SingleColumn.lastCol]`() }`
+     */
+    @AtAnyDepthDslMarker
+    public fun SingleColumn<DataRow<*>>.lastCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+        ensureIsColumnGroup().lastInternal(scope, condition)
+
+    /**
+     * @include [LastColumnsSelectionDsl.CommonLastDocs]
+     * @setArg [LastColumnsSelectionDsl.CommonLastDocs.Examples]
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[last][ColumnSet.last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[last][ColumnSet.last]`() }`
+     */
+    @AtAnyDepthDslMarker
+    public fun <C> ColumnSet<C>.last(condition: ColumnFilter<C> = { true }): SingleColumn<C> =
+        lastInternal(scope, condition)
+
+    /**
+     * TODO
+     */
+    @AtAnyDepthDslMarker
+    public fun AtAnyDepthDsl<*>.last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+        context
+            .asSingleColumn()
+            .lastInternal(scope, condition)
+}
+
+@Suppress("UNCHECKED_CAST")
+internal fun <C> ColumnsResolver<C>.lastInternal(scope: Scope, condition: ColumnFilter<C> = { true }): SingleColumn<C> =
+    (allColumnsInternal() as ColumnSet<C>)
+        .transform { listOf(it.last(condition)) }
+        .singleOrNullWithTransformerImpl()
+        .let {
+            when (scope) {
+                Scope.COLUMNS_SELECTION_DSL -> it
+                Scope.AT_ANY_DEPTH_DSL -> it.atAnyDepthImpl(includeGroups = true, includeTopLevel = true)
+            }
+        }
+
 // endregion
+
+

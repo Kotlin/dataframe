@@ -69,7 +69,7 @@ public fun <T> DataFrame<T>.dropWhile(predicate: RowFilter<T>): DataFrame<T> =
 // endregion
 
 // region ColumnsSelectionDsl
-public interface DropColumnsSelectionDsl {
+public interface DropColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T> {
 
     // region drop
 

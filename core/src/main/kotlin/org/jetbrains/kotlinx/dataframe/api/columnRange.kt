@@ -15,7 +15,7 @@ import kotlin.reflect.KProperty
 /**
  * See [Usage].
  */
-public interface ColumnRangeColumnsSelectionDsl {
+public interface ColumnRangeColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T> {
 
     /**
      * ## Range of Columns Usage

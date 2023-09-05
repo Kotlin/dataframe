@@ -15,7 +15,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
-public interface ChildrenColumnsSelectionDsl {
+public interface ChildrenColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T> {
 
     /**
      * ## Children

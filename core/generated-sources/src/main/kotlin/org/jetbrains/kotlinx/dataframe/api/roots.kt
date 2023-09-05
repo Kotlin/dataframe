@@ -11,7 +11,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
-public interface RootsColumnsSelectionDsl {
+public interface RootsColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T> {
 
     @Deprecated("Use roots() instead", ReplaceWith("roots()"))
     public fun <C> ColumnSet<C>.top(): ColumnSet<C> = roots()

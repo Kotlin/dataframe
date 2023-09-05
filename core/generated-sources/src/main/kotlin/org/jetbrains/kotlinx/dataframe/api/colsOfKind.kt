@@ -20,7 +20,7 @@ import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
 
-public interface ColsOfKindColumnsSelectionDsl {
+public interface ColsOfKindColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T> {
 
     /**
      * ## Cols Of Kind Usage

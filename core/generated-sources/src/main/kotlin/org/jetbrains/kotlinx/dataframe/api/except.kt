@@ -18,7 +18,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
-public interface ExceptColumnsSelectionDsl<out T> {
+public interface ExceptColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T> {
     // region except
 
     /** TODO tbd */

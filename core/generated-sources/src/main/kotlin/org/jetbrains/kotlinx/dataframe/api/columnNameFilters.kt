@@ -11,7 +11,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
-public interface ColumnNameFiltersColumnsSelectionDsl {
+public interface ColumnNameFiltersColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T> {
     // region nameContains
 
     /**

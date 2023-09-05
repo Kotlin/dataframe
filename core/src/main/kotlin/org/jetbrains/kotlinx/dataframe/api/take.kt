@@ -60,7 +60,7 @@ public fun <T> DataFrame<T>.takeWhile(predicate: RowFilter<T>): DataFrame<T> = f
 // endregion
 
 // region ColumnsSelectionDsl
-public interface TakeColumnsSelectionDsl {
+public interface TakeColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T> {
 
     // region take
 

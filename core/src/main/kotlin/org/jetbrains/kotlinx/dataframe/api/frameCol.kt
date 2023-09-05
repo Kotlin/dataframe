@@ -25,7 +25,7 @@ import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
 
-public interface FrameColColumnsSelectionDsl {
+public interface FrameColColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T> {
 
     /**
      * ## Frame Col Usage

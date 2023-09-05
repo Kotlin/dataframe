@@ -15,7 +15,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
-public interface AndColumnsSelectionDsl<out T> {
+public interface AndColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T> {
 
     /**
      * ## And Operator

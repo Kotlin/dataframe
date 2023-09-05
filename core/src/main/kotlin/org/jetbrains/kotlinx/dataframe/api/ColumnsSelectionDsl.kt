@@ -22,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelecti
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
+import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
 /**
@@ -43,7 +44,29 @@ internal interface ColumnsSelectionDslLink
 
 @Suppress("UNCHECKED_CAST")
 @PublishedApi
-internal fun <T> ColumnsSelectionDsl<T>.asSingleColumn(): SingleColumn<DataRow<T>> = this as SingleColumn<DataRow<T>>
+internal fun <T> ColumnsSelectionDsl<T>.asSingleColumn(): SingleColumn<DataRow<T>> =
+    this as SingleColumn<DataRow<T>>
+
+/** Interface reserved for all extensions of [ColumnsSelectionDslExtension] (and [AtAnyDepthDsl]). */
+public sealed interface ColumnsSelectionDslExtension<out T> {
+    public val scope: Scope
+}
+
+public enum class Scope(public val kClass: KClass<*>) {
+    COLUMNS_SELECTION_DSL(ColumnSelectionDsl::class),
+    AT_ANY_DEPTH_DSL(AtAnyDepthDsl::class)
+}
+
+@PublishedApi
+internal val <T> ColumnsSelectionDslExtension<T>.context: ColumnsSelectionDsl<T>
+    get() = when (scope) {
+        Scope.COLUMNS_SELECTION_DSL -> this as ColumnsSelectionDsl<T>
+        Scope.AT_ANY_DEPTH_DSL -> (this as AtAnyDepthDsl<T>).context
+    }
+
+@DslMarker
+@Target(AnnotationTarget.CLASS, AnnotationTarget.TYPE, AnnotationTarget.FUNCTION)
+public annotation class ColumnsSelectionDslMarker
 
 /**
  * @include [CommonColumnSelectionDocs]
@@ -53,70 +76,76 @@ internal fun <T> ColumnsSelectionDsl<T>.asSingleColumn(): SingleColumn<DataRow<T
  *
  * See [Usage] for the DSL Grammar of the ColumnsSelectionDsl.
  */
+@ColumnsSelectionDslMarker
 public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     ColumnSelectionDsl<T>,
 
     // first {}, firstCol()
-    FirstColumnsSelectionDsl,
+    FirstColumnsSelectionDsl<T>,
     // last {}, lastCol()
-    LastColumnsSelectionDsl,
+    LastColumnsSelectionDsl<T>,
     // single {}, singleCol()
-    SingleColumnsSelectionDsl,
+    SingleColumnsSelectionDsl<T>,
 
     // col(name), col(5), [5]
-    ColColumnsSelectionDsl,
+    ColColumnsSelectionDsl<T>,
     // valueCol(name), valueCol(5)
-    ValueColColumnsSelectionDsl,
+    ValueColColumnsSelectionDsl<T>,
     // frameCol(name), frameCol(5)
-    FrameColColumnsSelectionDsl,
+    FrameColColumnsSelectionDsl<T>,
     // colGroup(name), colGroup(5)
-    ColGroupColumnsSelectionDsl,
+    ColGroupColumnsSelectionDsl<T>,
 
     // cols {}, cols(), cols(colA, colB), cols(1, 5), cols(1..5), [{}]
-    ColsColumnsSelectionDsl,
+    ColsColumnsSelectionDsl<T>,
 
     // colA.."colB"
-    ColumnRangeColumnsSelectionDsl,
+    ColumnRangeColumnsSelectionDsl<T>,
 
     // valueCols {}, valueCols()
-    ValueColsColumnsSelectionDsl,
+    ValueColsColumnsSelectionDsl<T>,
     // frameCols {}, frameCols()
-    FrameColsColumnsSelectionDsl,
+    FrameColsColumnsSelectionDsl<T>,
     // colGroups {}, colGroups()
-    ColGroupsColumnsSelectionDsl,
+    ColGroupsColumnsSelectionDsl<T>,
     // colsOfKind(Value, Frame) {}, colsOfKind(Value, Frame)
-    ColsOfKindColumnsSelectionDsl,
+    ColsOfKindColumnsSelectionDsl<T>,
 
     // all(), allAfter(colA), allBefore(colA), allFrom(colA), allUpTo(colA)
-    AllColumnsSelectionDsl,
+    AllColumnsSelectionDsl<T>,
     // .atAnyDepth()
-    AtAnyDepthColumnsSelectionDsl,
+    AtAnyDepthColumnsSelectionDsl<T>,
+    // TODO
+    AtAnyDepth2ColumnsSelectionDsl<T>,
     // children {}, children()
-    ChildrenColumnsSelectionDsl,
+    ChildrenColumnsSelectionDsl<T>,
     // take(5), takeLastChildren(2), takeLastWhile {}, takeChildrenWhile {}
-    TakeColumnsSelectionDsl,
+    TakeColumnsSelectionDsl<T>,
     // drop(5), dropLastChildren(2), dropLastWhile {}, dropChildrenWhile {}
-    DropColumnsSelectionDsl,
+    DropColumnsSelectionDsl<T>,
     // except(), allExcept {}
     ExceptColumnsSelectionDsl<T>,
     // nameContains(""), childrenNameContains(""), nameStartsWith(""), childrenNameEndsWith("")
-    ColumnNameFiltersColumnsSelectionDsl,
+    ColumnNameFiltersColumnsSelectionDsl<T>,
     // withoutNulls(), childrenWithoutNulls()
-    WithoutNullsColumnsSelectionDsl,
+    WithoutNullsColumnsSelectionDsl<T>,
     // distinct()
-    DistinctColumnsSelectionDsl,
+    DistinctColumnsSelectionDsl<T>,
     // none()
-    NoneColumnsSelectionDsl,
+    NoneColumnsSelectionDsl<T>,
     // colsOf<>(), colsOf<> {}
-    ColsOfColumnsSelectionDsl,
+    ColsOfColumnsSelectionDsl<T>,
     // roots()
-    RootsColumnsSelectionDsl,
+    RootsColumnsSelectionDsl<T>,
     // filter {}, filterChildren {}
-    FilterColumnsSelectionDsl,
+    FilterColumnsSelectionDsl<T>,
     // colSet and colB
     AndColumnsSelectionDsl<T>,
     // colA named "colB", colA into "colB"
-    RenameColumnsSelectionDsl {
+    RenameColumnsSelectionDsl<T> {
+
+    override val scope: Scope
+        get() = Scope.COLUMNS_SELECTION_DSL
 
     /**
      * ## [ColumnsSelectionDsl] Usage

@@ -6,7 +6,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 
 // region ColumnsSelectionDsl
 
-public interface NoneColumnsSelectionDsl {
+public interface NoneColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T> {
 
     /**
      * ## None

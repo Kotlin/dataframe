@@ -14,7 +14,7 @@ import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 // region ColumnsSelectionDsl
-public interface ColsOfColumnsSelectionDsl {
+public interface ColsOfColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T> {
 
     /**
      * @include [CommonColsOfDocs]
@@ -175,6 +175,12 @@ public inline fun <reified C> ColumnsSelectionDsl<*>.colsOf(
     noinline filter: (DataColumn<C>) -> Boolean = { true },
 ): TransformableColumnSet<C> =
     asSingleColumn().colsOf(typeOf<C>(), filter)
+
+// TODO
+public inline fun <reified C> AtAnyDepthDsl<*>.colsOf(
+    noinline filter: (DataColumn<C>) -> Boolean = { true },
+): TransformableColumnSet<C> =
+    context.asSingleColumn().colsOf(typeOf<C>(), filter)
 
 /**
  * @include [CommonColsOfDocs]

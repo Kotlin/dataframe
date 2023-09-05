@@ -57,7 +57,7 @@ public fun <T> DataFrame<T>.singleOrNull(predicate: RowExpression<T, Boolean>): 
 /**
  * See [Usage].
  */
-public interface SingleColumnsSelectionDsl {
+public interface SingleColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T> {
 
     /**
      * ## Single (Col) Usage

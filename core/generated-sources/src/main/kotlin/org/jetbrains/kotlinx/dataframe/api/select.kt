@@ -9,7 +9,7 @@ import kotlin.reflect.KProperty
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T> =
+public fun <T> DataFrame<T>.select(columns: ColumnsSelector<@ColumnsSelectionDslMarker T, *>): DataFrame<T> =
     get(columns).toDataFrame().cast()
 
 public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> = select { columns.toColumnSet() }

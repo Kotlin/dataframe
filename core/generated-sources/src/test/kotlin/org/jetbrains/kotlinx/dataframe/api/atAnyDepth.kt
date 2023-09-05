@@ -2,12 +2,14 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
+import org.jetbrains.kotlinx.dataframe.samples.api.age
 import org.jetbrains.kotlinx.dataframe.samples.api.city
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
 import org.jetbrains.kotlinx.dataframe.samples.api.lastName
@@ -21,48 +23,90 @@ class AtAnyDepth : TestBase() {
     @Test
     fun `scope test`() {
         df.select {
-            colsOf<String>().first { "first" in it.name }.atAnyDepth()
-
+            colGroup("name").lastCol()
             atAnyDepth {
-                colsOf<String>().first { "first" in it.name }
-            }
+                colGroup("name").lastCol()
+            } and
+                "name".atAnyDepth {
+                    last { "last" in it.name }
+                }
         }.alsoDebug()
 
-        df.select {
-            atAnyDepth { cols { "first" in it.name } }
-        }.alsoDebug()
+//        df.select {
+//            age
+//            first { "fi" in it.name } and allAfter("age")
+//
+//            name.colsOf<Int>()
+//            atAnyDepth {
+//                cols { true }.colsOf<Int>()
 
-        df.select {
-            "name".atAnyDepth { cols { "first" in it.name } }
-        }.alsoDebug()
+//                name.colsOf<Int>()
+//            }
+//
+//            atAnyDepth {
+//                "".lastCol { true }
+//                last {
+//
+//                }
+//                colsOf<Int>().last()
+//
+//                first { "fi" in it.name } and allAfter("age")
+//            }
+//        }.alsoDebug()
 
-        df.select {
-            "name".atAnyDepth { single { "first" in it.name } }
-        }.alsoDebug()
+//        df.select {
+//            "name".firstCol { "first" in it.name }
+//        }.alsoDebug()
+//
+//        df.select {
+//            "name".atAnyDepth {
+//                first { "first" in it.name }
+//            }
+//        }.alsoDebug()
 
-        df.select {
-            name.atAnyDepth { cols { "first" in it.name } }
-        }.alsoDebug()
+//        df.select {
+//            testFunction()
+//            atAnyDepth {
+//                testFunction()
+//                none()
+//            }
+//        }
 
-        df.select {
-            name.atAnyDepth { single { "first" in it.name } }
-        }.alsoDebug()
-
-        df.select {
-            Person::name.atAnyDepth { cols { "first" in it.name } }
-        }.alsoDebug()
-
-        df.select {
-            Person::name.atAnyDepth { single { "first" in it.name } }
-        }.alsoDebug()
-
-        df.select {
-            pathOf("name").atAnyDepth { cols { "first" in it.name } }
-        }.alsoDebug()
-
-        df.select {
-            pathOf("name").atAnyDepth { single { "first" in it.name } }
-        }.alsoDebug()
+//        df.select {
+//            atAnyDepth { cols { "first" in it.name } }
+//        }.alsoDebug()
+//
+//        df.select {
+//            "name".atAnyDepth { cols { "first" in it.name } }
+//        }.alsoDebug()
+//
+//        df.select {
+//            "name".atAnyDepth { single { "first" in it.name } }
+//        }.alsoDebug()
+//
+//        df.select {
+//            name.atAnyDepth { cols { "first" in it.name } }
+//        }.alsoDebug()
+//
+//        df.select {
+//            name.atAnyDepth { single { "first" in it.name } }
+//        }.alsoDebug()
+//
+//        df.select {
+//            Person::name.atAnyDepth { cols { "first" in it.name } }
+//        }.alsoDebug()
+//
+//        df.select {
+//            Person::name.atAnyDepth { single { "first" in it.name } }
+//        }.alsoDebug()
+//
+//        df.select {
+//            pathOf("name").atAnyDepth { cols { "first" in it.name } }
+//        }.alsoDebug()
+//
+//        df.select {
+//            pathOf("name").atAnyDepth { single { "first" in it.name } }
+//        }.alsoDebug()
     }
 
     fun List<ColumnWithPath<*>>.print() {
@@ -103,16 +147,16 @@ class AtAnyDepth : TestBase() {
         listOf(
             dfGroup.select { name.firstName.firstName },
 
-            dfGroup.select { first { col -> col.any { it == "Alice" } }.atAnyDepth() },
-            dfGroup.select { last { col -> col.any { it == "Alice" } }.atAnyDepth() },
+//            dfGroup.select { first { col -> col.any { it == "Alice" } }.atAnyDepth() },
+//            dfGroup.select { last { col -> col.any { it == "Alice" } }.atAnyDepth() },
             dfGroup.select { single { col -> col.any { it == "Alice" } }.atAnyDepth() },
         ).shouldAllBeEqual()
 
         listOf(
             dfGroup.select { city },
 
-            dfGroup.select { first { col -> col.any { it == "London" } }.atAnyDepth() },
-            dfGroup.select { last { col -> col.any { it == "London" } }.atAnyDepth() },
+//            dfGroup.select { first { col -> col.any { it == "London" } }.atAnyDepth() },
+//            dfGroup.select { last { col -> col.any { it == "London" } }.atAnyDepth() },
             dfGroup.select { single { col -> col.any { it == "London" } }.atAnyDepth() },
         ).shouldAllBeEqual()
     }

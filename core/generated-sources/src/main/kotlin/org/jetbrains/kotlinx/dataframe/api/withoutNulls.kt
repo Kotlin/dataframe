@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
-public interface WithoutNullsColumnsSelectionDsl {
+public interface WithoutNullsColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T> {
 
     /**
      * ## (Children) Without Nulls
