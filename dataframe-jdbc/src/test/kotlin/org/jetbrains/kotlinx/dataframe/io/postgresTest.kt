@@ -233,11 +233,11 @@ class PostgresTest {
 
     @Test
     fun `read from tables`() {
-        val df1 = DataFrame.readSqlTable(connection, "dsdfs", "table1").cast<Table1>()
+        val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1>()
         df1.print()
         assertEquals(3, df1.rowsCount())
 
-        val df2 = DataFrame.readSqlTable(connection, "dsdfs", "table2").cast<Table2>()
+        val df2 = DataFrame.readSqlTable(connection, "table2").cast<Table2>()
         df2.print()
         assertEquals(3, df2.rowsCount())
     }

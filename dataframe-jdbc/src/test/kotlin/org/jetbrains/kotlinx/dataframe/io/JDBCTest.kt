@@ -5,7 +5,7 @@ import org.h2.jdbc.JdbcSQLSyntaxErrorException
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.print
+import org.jetbrains.kotlinx.dataframe.api.filter
 import org.junit.AfterClass
 import org.junit.Assert.assertEquals
 import org.junit.BeforeClass
@@ -13,6 +13,9 @@ import org.junit.Test
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
+import kotlin.reflect.typeOf
+
+private const val URL = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false"
 
 @DataSchema
 interface Customer {
@@ -73,7 +76,7 @@ class JDBCTest {
         @JvmStatic
         fun setUpClass() {
             connection =
-                DriverManager.getConnection("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false")
+                DriverManager.getConnection(URL)
 
             // Crate table Customer
             connection.createStatement().execute(
@@ -121,9 +124,9 @@ class JDBCTest {
     }
 
     @Test
-    fun `read from huge table with a lot of h2 column types`() {
-            connection.createStatement().execute(
-                """
+    fun `read from huge table`() {
+        connection.createStatement().execute(
+            """
                 CREATE TABLE TestTable (
                     characterCol CHAR(10),
                     characterVaryingCol VARCHAR(20),
@@ -153,10 +156,10 @@ class JDBCTest {
                     uuidCol UUID
                 )
             """.trimIndent()
-            )
+        )
 
-            connection.prepareStatement(
-                """
+        connection.prepareStatement(
+            """
                 INSERT INTO TestTable VALUES (
                     'ABC', 'XYZ', 'Long text data for CLOB', 'Medium text data for CLOB',
                     'Varchar IgnoreCase', X'010203', X'040506', X'070809',
@@ -167,10 +170,10 @@ class JDBCTest {
                     'Option1', '{"key": "value"}', '123e4567-e89b-12d3-a456-426655440000'
                 )
             """.trimIndent()
-            ).executeUpdate()
+        ).executeUpdate()
 
-            connection.prepareStatement(
-                """
+        connection.prepareStatement(
+            """
                 INSERT INTO TestTable VALUES (
                     'DEF', 'LMN', 'Another CLOB data', 'Different CLOB data',
                     'Another Varchar', X'101112', X'131415', X'161718',
@@ -181,10 +184,10 @@ class JDBCTest {
                     'Option2', '{"key": "another_value"}', '234e5678-e89b-12d3-a456-426655440001'
                 )
             """.trimIndent()
-            ).executeUpdate()
+        ).executeUpdate()
 
-            connection.prepareStatement(
-                """
+        connection.prepareStatement(
+            """
                 INSERT INTO TestTable VALUES (
                     'GHI', 'OPQ', 'Third CLOB entry', 'Yet another CLOB data',
                     'Yet Another Varchar', X'192021', X'222324', X'252627',
@@ -195,32 +198,61 @@ class JDBCTest {
                     'Option3', '{"key": "yet_another_value"}', '345e6789-e89b-12d3-a456-426655440002'
                 )
             """.trimIndent()
-            ).executeUpdate()
+        ).executeUpdate()
 
-            val df = DataFrame.readSqlTable(connection, "dsdfs", "TestTable").cast<TestTableData>()
-            df.print()
-            assertEquals(3, df.rowsCount())
-
+        val df = DataFrame.readSqlTable(connection, "TestTable").cast<TestTableData>()
+        assertEquals(3, df.rowsCount())
+        assertEquals(2, df.filter { it[TestTableData::integerCol] > 1000}.rowsCount())
     }
 
     @Test
-    fun `read from one table`() {
-            val df = DataFrame.readSqlTable(connection, "dsdfs", "Customer").cast<Customer>()
-            df.print()
-            assertEquals(3, df.rowsCount())
+    fun `read from table`() {
+        val tableName = "Customer"
+        val df = DataFrame.readSqlTable(connection, tableName).cast<Customer>()
 
+        assertEquals(3, df.rowsCount())
+        assertEquals(2, df.filter { it[Customer::age] > 30 }.rowsCount())
+        assertEquals("John", df[0][1])
+
+        val df1 = DataFrame.readSqlTable(connection, tableName, 1).cast<Customer>()
+
+        assertEquals(1, df1.rowsCount())
+        assertEquals(1, df1.filter { it[Customer::age] > 30 }.rowsCount())
+        assertEquals("John", df1[0][1])
+
+        val dataSchema = DataFrame.getSchemaForSqlTable(connection, tableName)
+        assertEquals(3, dataSchema.columns.size)
+        assertEquals(typeOf<String>(), dataSchema.columns["name"]!!.type)
+
+        val dbConfig = DatabaseConfiguration(url = URL)
+        val df2 = DataFrame.readSqlTable(dbConfig, tableName).cast<Customer>()
+
+        assertEquals(3, df2.rowsCount())
+        assertEquals(2, df2.filter { it[Customer::age] > 30 }.rowsCount())
+        assertEquals("John", df2[0][1])
+
+        val df3 = DataFrame.readSqlTable(dbConfig, tableName, 1).cast<Customer>()
+
+        assertEquals(1, df3.rowsCount())
+        assertEquals(1, df3.filter { it[Customer::age] > 30 }.rowsCount())
+        assertEquals("John", df3[0][1])
+
+        val dataSchema1 = DataFrame.getSchemaForSqlTable(dbConfig, tableName)
+        assertEquals(3, dataSchema1.columns.size)
+        assertEquals(typeOf<String>(), dataSchema.columns["name"]!!.type)
     }
 
     @Test
     fun `read from non-existing table`() {
         shouldThrow<JdbcSQLSyntaxErrorException> {
-            DataFrame.readSqlTable(connection, "dsdfs", "WrongTableName").cast<Customer>()
+            DataFrame.readSqlTable(connection, "WrongTableName").cast<Customer>()
         }
     }
 
+    // TODO: a bug, probably from jdbc side, the synonym for column is "customerName", but it returns just "name"
     @Test
     fun `read from sql query`() {
-            val sqlQuery = """
+        val sqlQuery = """
             SELECT c.name as customerName, SUM(s.amount) as totalSalesAmount
             FROM Sale s
             INNER JOIN Customer c ON s.customerId = c.id
@@ -228,9 +260,42 @@ class JDBCTest {
             GROUP BY s.customerId, c.name
         """.trimIndent()
 
-            val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<CustomerSales>()
-            df.print()
-            assertEquals(2, df.rowsCount())
+        val df = DataFrame.readSqlQuery(connection, sqlQuery).cast<CustomerSales>()
+
+        assertEquals(2, df.rowsCount())
+        assertEquals(1, df.filter { it[CustomerSales::totalSalesAmount] > 100 }.rowsCount())
+        assertEquals("John", df[0][0])
+
+        val df1 = DataFrame.readSqlQuery(connection, sqlQuery, 1).cast<CustomerSales>()
+
+        assertEquals(1, df1.rowsCount())
+        assertEquals(1, df1.filter { it[CustomerSales::totalSalesAmount] > 100 }.rowsCount())
+        assertEquals("John", df1[0][0])
+
+        val dataSchema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
+        assertEquals(2, dataSchema.columns.size)
+        assertEquals(typeOf<String>(), dataSchema.columns["name"]!!.type)
+
+        val dbConfig = DatabaseConfiguration(url = URL)
+        val df2 = DataFrame.readSqlQuery(dbConfig, sqlQuery).cast<CustomerSales>()
+
+        assertEquals(2, df2.rowsCount())
+        assertEquals(1, df2.filter { it[CustomerSales::totalSalesAmount] > 100 }.rowsCount())
+        assertEquals("John", df2[0][0])
+
+        val df3 = DataFrame.readSqlQuery(dbConfig, sqlQuery, 1).cast<CustomerSales>()
+
+        assertEquals(1, df3.rowsCount())
+        assertEquals(1, df3.filter { it[CustomerSales::totalSalesAmount] > 100 }.rowsCount())
+        assertEquals("John", df3[0][0])
+
+        val dataSchema1 = DataFrame.getSchemaForSqlQuery(dbConfig, sqlQuery)
+        assertEquals(2, dataSchema1.columns.size)
+        assertEquals(typeOf<String>(), dataSchema.columns["name"]!!.type)
     }
+
+    // TODO: add table with unknown types
+    // TODO: add test with reverse mapping
+    // TODO: add tests for ResultSets
 }
 

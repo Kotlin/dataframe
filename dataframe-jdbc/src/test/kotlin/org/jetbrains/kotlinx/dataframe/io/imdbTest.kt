@@ -39,7 +39,7 @@ fun `read table`() {
     // for gradle or as classes under the hood in KNB
 
     DriverManager.getConnection(URL, props).use { connection ->
-        val df = DataFrame.readSqlTable(connection, "", "actors", 100).cast<ActorKDF>()
+        val df = DataFrame.readSqlTable(connection, "actors", 100).cast<ActorKDF>()
         df.print()
     }
 }

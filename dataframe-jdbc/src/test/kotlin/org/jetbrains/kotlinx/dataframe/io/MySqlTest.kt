@@ -280,11 +280,11 @@ class MySqlTest {
 
     @Test
     fun `basic test for reading sql tables`() {
-        val df1 = DataFrame.readSqlTable(connection, "dsdfs", "table1").cast<Table1MariaDb>()
+        val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MariaDb>()
         df1.print()
         Assert.assertEquals(3, df1.rowsCount())
 
-        val df2 = DataFrame.readSqlTable(connection, "dsdfs", "table2").cast<Table1MariaDb>()
+        val df2 = DataFrame.readSqlTable(connection, "table2").cast<Table1MariaDb>()
         df2.print()
         Assert.assertEquals(3, df2.rowsCount())
     }

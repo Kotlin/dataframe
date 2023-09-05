@@ -113,11 +113,11 @@ class SqliteTest {
 
     @Test
     fun `read from tables`() {
-        val df = DataFrame.readSqlTable(connection, "dsdfs", "Customers").cast<CustomerSQLite>()
+        val df = DataFrame.readSqlTable(connection, "Customers").cast<CustomerSQLite>()
         df.print()
         assertEquals(1, df.rowsCount())
 
-        val df2 = DataFrame.readSqlTable(connection, "dsdfs", "Orders").cast<CustomerSQLite>()
+        val df2 = DataFrame.readSqlTable(connection, "Orders").cast<CustomerSQLite>()
         df2.print()
         assertEquals(1, df2.rowsCount())
     }

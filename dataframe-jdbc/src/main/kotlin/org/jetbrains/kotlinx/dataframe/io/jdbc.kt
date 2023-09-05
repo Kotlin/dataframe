@@ -63,10 +63,16 @@ private const val readJDBC = "readJDBC"
 
 public data class JdbcColumn(val name: String, val sqlType: String, val jdbcType: Int, val size: Int)
 
+public data class DatabaseConfiguration(val user: String = "", val password: String = "", val url:String)
+
 public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, dbType: DbType): AnyFrame {
     val tableColumns = getTableColumns(resultSet)
     val data = fetchAndConvertDataFromResultSet(tableColumns, resultSet, dbType, Int.MIN_VALUE)
     return data.toDataFrame()
+}
+
+public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, dbType: DbType, limit: Int): AnyFrame {
+    return readResultSet(resultSet, dbType, limit)
 }
 
 public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, connection: Connection, limit: Int): AnyFrame {
@@ -92,11 +98,23 @@ public fun DataFrame.Companion.readAllTables(connection: Connection, limit: Int)
 
     while (tables.next()) {
         val tableName = tables.getString("TABLE_NAME")
-        val dataFrame = readSqlTable(connection, "",tableName, limit)
+        val dataFrame = readSqlTable(connection, tableName, limit)
         dataFrames += dataFrame
     }
 
     return dataFrames
+}
+
+public fun DataFrame.Companion.readSqlQuery(dbConfig: DatabaseConfiguration, sqlQuery: String): AnyFrame {
+    DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
+        return readSqlQuery(connection, sqlQuery, Int.MIN_VALUE)
+    }
+}
+
+public fun DataFrame.Companion.readSqlQuery(dbConfig: DatabaseConfiguration, sqlQuery: String, limit: Int): AnyFrame {
+    DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
+        return readSqlQuery(connection, sqlQuery, limit)
+    }
 }
 
 public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: String): AnyFrame {
@@ -119,29 +137,25 @@ public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: St
     }
 }
 
-public data class DatabaseConfiguration(val user: String = "", val password: String = "", val url:String)
-
 public fun DataFrame.Companion.readSqlTable(dbConfig: DatabaseConfiguration, tableName: String): AnyFrame {
-    Class.forName("org.mariadb.jdbc.Driver")
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return readSqlTable(connection, "", tableName, Int.MIN_VALUE)
+        return readSqlTable(connection, tableName, Int.MIN_VALUE)
     }
 }
 
 public fun DataFrame.Companion.readSqlTable(dbConfig: DatabaseConfiguration, tableName: String, limit: Int): AnyFrame {
-    Class.forName("org.mariadb.jdbc.Driver")
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return readSqlTable(connection, "", tableName, limit)
+        return readSqlTable(connection, tableName, limit)
     }
 }
 
 // TODO: add methods for stats for SQL tables as dataframe or intermediate objects like Table (name, count)
 
-public fun DataFrame.Companion.readSqlTable(connection: Connection, catalogName: String, tableName: String): AnyFrame {
-    return readSqlTable(connection, catalogName, tableName, Int.MIN_VALUE)
+public fun DataFrame.Companion.readSqlTable(connection: Connection, tableName: String): AnyFrame {
+    return readSqlTable(connection, tableName, Int.MIN_VALUE)
 }
 
-public fun DataFrame.Companion.readSqlTable(connection: Connection, catalogName: String, tableName: String, limit: Int): AnyFrame {
+public fun DataFrame.Companion.readSqlTable(connection: Connection, tableName: String, limit: Int): AnyFrame {
     var preparedQuery = "SELECT * FROM $tableName"
     if (limit > 0) preparedQuery += " LIMIT $limit"
 
@@ -191,7 +205,7 @@ public fun DataFrame.Companion.getSchemaForAllTables(connection: Connection): Li
 
     while (tables.next()) {
         val tableName = tables.getString("TABLE_NAME")
-        val dataFrameSchema = getSchemaForSqlTable(connection, "",tableName)
+        val dataFrameSchema = getSchemaForSqlTable(connection, tableName)
         dataFrameSchemas += dataFrameSchema
     }
 
@@ -201,13 +215,12 @@ public fun DataFrame.Companion.getSchemaForAllTables(connection: Connection): Li
 public fun DataFrame.Companion.getSchemaForSqlTable(dbConfig: DatabaseConfiguration, tableName: String): DataFrameSchema {
     Class.forName("org.mariadb.jdbc.Driver") // TODO: doesn't work because mariadb or special dependency could not be added to the module
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return getSchemaForSqlTable(connection, "", tableName)
+        return getSchemaForSqlTable(connection, tableName)
     }
 }
 
 public fun DataFrame.Companion.getSchemaForSqlTable(
     connection: Connection,
-    catalogName: String,
     tableName: String
 ): DataFrameSchema {
     val url = connection.metaData.url
@@ -219,6 +232,12 @@ public fun DataFrame.Companion.getSchemaForSqlTable(
         val tableColumns = getTableColumns(connection, tableName)
 
         return buildSchemaByTableColumns(tableColumns, dbType)
+    }
+}
+
+public fun DataFrame.Companion.getSchemaForSqlQuery(dbConfig: DatabaseConfiguration, sqlQuery: String): DataFrameSchema {
+    DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
+        return getSchemaForSqlQuery(connection, sqlQuery)
     }
 }
 
