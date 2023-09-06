@@ -16,14 +16,14 @@ import java.util.*
 fun KotlinTypeFacade.generateSchemaTestStub(name: String, expression: () -> DataFrame<*>): PluginDataFrameSchema {
         val approximation by column<String>()
         fun writeInterpreter(s: String) {
-            // val root = File("/home/nikitak/IdeaProjects/dataframe/core/src/main")
+            // val root = File("/home/nikita/IdeaProjects/dataframe/core/src/main")
 //            val schemaRender = File(root, "kotlin/org/jetbrains/kotlinx/dataframe/plugin/testing/schemaRender").also { it.mkdirs() }
 //            File(schemaRender, "$name.kt").writeText(s)
             println(s)
         }
 
         fun writeTestStub(s: String) {
-            // val root = File("/home/nikitak/Downloads/kotlin/plugins/kotlin-dataframe")
+            // val root = File("/home/nikita/Downloads/kotlin/plugins/kotlin-dataframe")
 //            val schemaRender = File(root, "testData/diagnostics/schemaRender").also { it.mkdirs() }
 //            File(schemaRender, "$name.kt")
             println(s)
