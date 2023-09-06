@@ -6,12 +6,15 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.io.db.DbType
+import org.jetbrains.kotlinx.dataframe.io.db.H2
 import org.junit.AfterClass
 import org.junit.Assert.assertEquals
 import org.junit.BeforeClass
 import org.junit.Test
 import java.sql.Connection
 import java.sql.DriverManager
+import java.sql.ResultSet
 import java.sql.SQLException
 import kotlin.reflect.typeOf
 
@@ -243,6 +246,55 @@ class JDBCTest {
     }
 
     @Test
+    fun `read from ResultSet`() {
+        connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).use { st ->
+            st.executeQuery("SELECT * FROM Customer").use { rs ->
+                val df = DataFrame.readResultSet(rs, H2).cast<Customer>()
+
+                assertEquals(3, df.rowsCount())
+                assertEquals(2, df.filter { it[Customer::age] > 30 }.rowsCount())
+                assertEquals("John", df[0][1])
+
+                rs.beforeFirst()
+
+                val df1 =  DataFrame.readResultSet(rs, H2, 1).cast<Customer>()
+
+                assertEquals(1, df1.rowsCount())
+                assertEquals(1, df1.filter { it[Customer::age] > 30 }.rowsCount())
+                assertEquals("John", df1[0][1])
+
+                rs.beforeFirst()
+
+                val dataSchema = DataFrame.getSchemaForResultSet(rs, H2)
+                assertEquals(3, dataSchema.columns.size)
+                assertEquals(typeOf<String>(), dataSchema.columns["name"]!!.type)
+
+                rs.beforeFirst()
+
+                val df2 = DataFrame.readResultSet(rs, connection).cast<Customer>()
+
+                assertEquals(3, df2.rowsCount())
+                assertEquals(2, df2.filter { it[Customer::age] > 30 }.rowsCount())
+                assertEquals("John", df2[0][1])
+
+                rs.beforeFirst()
+
+                val df3 = DataFrame.readResultSet(rs, connection, 1).cast<Customer>()
+
+                assertEquals(1, df3.rowsCount())
+                assertEquals(1, df3.filter { it[Customer::age] > 30 }.rowsCount())
+                assertEquals("John", df3[0][1])
+
+                rs.beforeFirst()
+
+                val dataSchema1 = DataFrame.getSchemaForResultSet(rs, connection)
+                assertEquals(3, dataSchema1.columns.size)
+                assertEquals(typeOf<String>(), dataSchema.columns["name"]!!.type)
+            }
+        }
+    }
+
+    @Test
     fun `read from non-existing table`() {
         shouldThrow<JdbcSQLSyntaxErrorException> {
             DataFrame.readSqlTable(connection, "WrongTableName").cast<Customer>()
@@ -293,9 +345,87 @@ class JDBCTest {
         assertEquals(2, dataSchema1.columns.size)
         assertEquals(typeOf<String>(), dataSchema.columns["name"]!!.type)
     }
-
-    // TODO: add table with unknown types
     // TODO: add test with reverse mapping
-    // TODO: add tests for ResultSets
+
+    @Test
+    fun `read from all tables`() {
+        val dataframes = DataFrame.readAllTables(connection)
+
+        val customerDf = dataframes[0].cast<Customer>()
+
+        assertEquals(3, customerDf.rowsCount())
+        assertEquals(2, customerDf.filter { it[Customer::age] > 30 }.rowsCount())
+        assertEquals("John", customerDf[0][1])
+
+        val saleDf = dataframes[1].cast<Sale>()
+
+        assertEquals(4, saleDf.rowsCount())
+        assertEquals(3, saleDf.filter { it[Sale::amount] > 40 }.rowsCount())
+        assertEquals(100.5f, saleDf[0][2])
+
+        val dataframes1 = DataFrame.readAllTables(connection, 1)
+
+        val customerDf1 = dataframes1[0].cast<Customer>()
+
+        assertEquals(1, customerDf1.rowsCount())
+        assertEquals(1, customerDf1.filter { it[Customer::age] > 30 }.rowsCount())
+        assertEquals("John", customerDf1[0][1])
+
+        val saleDf1 = dataframes1[1].cast<Sale>()
+
+        assertEquals(1, saleDf1.rowsCount())
+        assertEquals(1, saleDf1.filter { it[Sale::amount] > 40 }.rowsCount())
+        assertEquals(100.5f, saleDf1[0][2])
+
+        val dataSchemas = DataFrame.getSchemaForAllTables(connection)
+
+        val customerDataSchema = dataSchemas[0]
+        assertEquals(3, customerDataSchema.columns.size)
+        assertEquals(typeOf<String>(), customerDataSchema.columns["name"]!!.type)
+
+        val saleDataSchema = dataSchemas[1]
+        assertEquals(3, saleDataSchema.columns.size)
+        assertEquals(typeOf<Float>(), saleDataSchema.columns["amount"]!!.type)
+
+        val dbConfig = DatabaseConfiguration(url = URL)
+        val dataframes2 = DataFrame.readAllTables(dbConfig)
+
+        val customerDf2 = dataframes2[0].cast<Customer>()
+
+        assertEquals(3, customerDf2.rowsCount())
+        assertEquals(2, customerDf2.filter { it[Customer::age] > 30 }.rowsCount())
+        assertEquals("John", customerDf2[0][1])
+
+        val saleDf2 = dataframes2[1].cast<Sale>()
+
+        assertEquals(4, saleDf2.rowsCount())
+        assertEquals(3, saleDf2.filter { it[Sale::amount] > 40 }.rowsCount())
+        assertEquals(100.5f, saleDf2[0][2])
+
+        val dataframes3 = DataFrame.readAllTables(dbConfig, 1)
+
+        val customerDf3 = dataframes3[0].cast<Customer>()
+
+        assertEquals(1, customerDf3.rowsCount())
+        assertEquals(1, customerDf3.filter { it[Customer::age] > 30 }.rowsCount())
+        assertEquals("John", customerDf3[0][1])
+
+        val saleDf3 = dataframes3[1].cast<Sale>()
+
+        assertEquals(1, saleDf3.rowsCount())
+        assertEquals(1, saleDf3.filter { it[Sale::amount] > 40 }.rowsCount())
+        assertEquals(100.5f, saleDf3[0][2])
+
+        val dataSchemas1 = DataFrame.getSchemaForAllTables(dbConfig)
+
+        val customerDataSchema1 = dataSchemas1[0]
+        assertEquals(3, customerDataSchema1.columns.size)
+        assertEquals(typeOf<String>(), customerDataSchema1.columns["name"]!!.type)
+
+        val saleDataSchema1 = dataSchemas1[1]
+        assertEquals(3, saleDataSchema1.columns.size)
+        assertEquals(typeOf<Float>(), saleDataSchema1.columns["amount"]!!.type)
+    }
+
 }
 

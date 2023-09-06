@@ -7,8 +7,7 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
-import org.jetbrains.kotlinx.dataframe.io.db.DbType
-import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromURL
+import org.jetbrains.kotlinx.dataframe.io.db.*
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.jupyter.api.Code
 import java.io.File
@@ -65,14 +64,17 @@ public data class JdbcColumn(val name: String, val sqlType: String, val jdbcType
 
 public data class DatabaseConfiguration(val user: String = "", val password: String = "", val url:String)
 
+private const val DEFAULT_LIMIT = Int.MIN_VALUE
+
 public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, dbType: DbType): AnyFrame {
-    val tableColumns = getTableColumns(resultSet)
-    val data = fetchAndConvertDataFromResultSet(tableColumns, resultSet, dbType, Int.MIN_VALUE)
-    return data.toDataFrame()
+    return readResultSet(resultSet, dbType, DEFAULT_LIMIT)
 }
 
 public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, dbType: DbType, limit: Int): AnyFrame {
-    return readResultSet(resultSet, dbType, limit)
+    val tableColumns = getTableColumns(resultSet)
+    val data = fetchAndConvertDataFromResultSet(tableColumns, resultSet, dbType, limit)
+    return data.toDataFrame()
+
 }
 
 public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, connection: Connection, limit: Int): AnyFrame {
@@ -85,29 +87,65 @@ public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, connection: C
 }
 
 public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, connection: Connection): AnyFrame {
-    return readResultSet(resultSet, connection, Int.MIN_VALUE)
+    return readResultSet(resultSet, connection, DEFAULT_LIMIT)
 }
 
-// TODO: need to filter standard tables for each database
+public fun DataFrame.Companion.readAllTables(connection: Connection): List<AnyFrame> {
+    return readAllTables(connection, DEFAULT_LIMIT)
+}
+
 public fun DataFrame.Companion.readAllTables(connection: Connection, limit: Int): List<AnyFrame> {
     val metaData = connection.metaData
+    val url = connection.metaData.url
+    val dbType = extractDBTypeFromURL(url)
 
-    val tables = metaData.getTables(null, null, "%", null)
+    val tableTypes = arrayOf("TABLE")
+    val tables = metaData.getTables(null, null, "%", tableTypes) // exclude system and other tables without data
 
     val dataFrames = mutableListOf<AnyFrame>()
 
     while (tables.next()) {
-        val tableName = tables.getString("TABLE_NAME")
-        val dataFrame = readSqlTable(connection, tableName, limit)
-        dataFrames += dataFrame
+        val table = readTable(dbType, tables) // TODO: add object Table with mapping some fields tables.getString("TABLE_SCHEM") to filter it later
+        if (!isSystemTableName(table, dbType)) {
+            // we filter her second time because of specific logic with SQLite and possible issues with future databases
+            val dataFrame = readSqlTable(connection, table.name, limit)
+            dataFrames += dataFrame
+        }
     }
 
     return dataFrames
 }
 
+public fun DataFrame.Companion.readAllTables(dbConfig: DatabaseConfiguration): List<AnyFrame> {
+    return readAllTables(dbConfig, DEFAULT_LIMIT)
+}
+
+public fun DataFrame.Companion.readAllTables(dbConfig: DatabaseConfiguration, limit: Int): List<AnyFrame> {
+    DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
+        return readAllTables(connection, limit)
+    }
+}
+
+private fun isSystemTableName(jdbcTable: JDBCTable, dbType: DbType): Boolean {
+    return when(dbType) {
+        H2 -> jdbcTable.name.startsWith("SYS_") || jdbcTable.schemaName.contains("INFORMATION_SCHEMA")
+        MariaDb -> jdbcTable.name.startsWith("mysql.") // TODO: add test
+        MySql -> jdbcTable.name.startsWith("mysql.") // TODO: add test
+        PostgreSql -> jdbcTable.name.startsWith("pg_catalog.") // TODO: add test
+        Sqlite -> jdbcTable.name.startsWith("sqlite_") // TODO: add test
+    }
+}
+
+
+public data class JDBCTable(val name: String, val schemaName: String)
+// TODO: https://www.h2database.com/html/systemtables.html
+// TODO: need to filter from schemas probably
+private fun readTable(dbType: DbType, tables: ResultSet): JDBCTable =
+    if (dbType is H2) JDBCTable(tables.getString("TABLE_NAME"), tables.getString("TABLE_SCHEM")) else JDBCTable(tables.getString("table_name"), tables.getString("table_schem"))
+
 public fun DataFrame.Companion.readSqlQuery(dbConfig: DatabaseConfiguration, sqlQuery: String): AnyFrame {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return readSqlQuery(connection, sqlQuery, Int.MIN_VALUE)
+        return readSqlQuery(connection, sqlQuery, DEFAULT_LIMIT)
     }
 }
 
@@ -118,7 +156,7 @@ public fun DataFrame.Companion.readSqlQuery(dbConfig: DatabaseConfiguration, sql
 }
 
 public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: String): AnyFrame {
-    return readSqlQuery(connection, sqlQuery, Int.MIN_VALUE)
+    return readSqlQuery(connection, sqlQuery, DEFAULT_LIMIT)
 }
 
 public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: String, limit: Int): AnyFrame {
@@ -131,7 +169,7 @@ public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: St
     connection.createStatement().use { st ->
         st.executeQuery(internalSqlQuery).use { rs ->
             val tableColumns = getTableColumns(rs)
-            val data = fetchAndConvertDataFromResultSet(tableColumns, rs, dbType, Int.MIN_VALUE)
+            val data = fetchAndConvertDataFromResultSet(tableColumns, rs, dbType, DEFAULT_LIMIT)
             return data.toDataFrame()
         }
     }
@@ -139,7 +177,7 @@ public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: St
 
 public fun DataFrame.Companion.readSqlTable(dbConfig: DatabaseConfiguration, tableName: String): AnyFrame {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return readSqlTable(connection, tableName, Int.MIN_VALUE)
+        return readSqlTable(connection, tableName, DEFAULT_LIMIT)
     }
 }
 
@@ -152,10 +190,12 @@ public fun DataFrame.Companion.readSqlTable(dbConfig: DatabaseConfiguration, tab
 // TODO: add methods for stats for SQL tables as dataframe or intermediate objects like Table (name, count)
 
 public fun DataFrame.Companion.readSqlTable(connection: Connection, tableName: String): AnyFrame {
-    return readSqlTable(connection, tableName, Int.MIN_VALUE)
+    return readSqlTable(connection, tableName, DEFAULT_LIMIT)
 }
 
 public fun DataFrame.Companion.readSqlTable(connection: Connection, tableName: String, limit: Int): AnyFrame {
+    // TODO: check that passed table name in the list of table names
+    // TODO: check with regular expressions
     var preparedQuery = "SELECT * FROM $tableName"
     if (limit > 0) preparedQuery += " LIMIT $limit"
 
@@ -196,24 +236,35 @@ public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet, dbTyp
     return buildSchemaByTableColumns(tableColumns, dbType)
 }
 
+public fun DataFrame.Companion.getSchemaForAllTables(dbConfig: DatabaseConfiguration): List<DataFrameSchema> {
+    DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
+        return getSchemaForAllTables(connection)
+    }
+}
+
 public fun DataFrame.Companion.getSchemaForAllTables(connection: Connection): List<DataFrameSchema> {
     val metaData = connection.metaData
+    val url = connection.metaData.url
+    val dbType = extractDBTypeFromURL(url)
 
-    val tables = metaData.getTables(null, null, "%", null)
+    val tableTypes = arrayOf("TABLE")
+    val tables = metaData.getTables(null, null, "%", tableTypes) // exclude system and other tables without data
 
     val dataFrameSchemas = mutableListOf<DataFrameSchema>()
 
     while (tables.next()) {
-        val tableName = tables.getString("TABLE_NAME")
-        val dataFrameSchema = getSchemaForSqlTable(connection, tableName)
-        dataFrameSchemas += dataFrameSchema
+        val jdbcTable = readTable(dbType, tables)
+        if (!isSystemTableName(jdbcTable, dbType)) {
+            // we filter her second time because of specific logic with SQLite and possible issues with future databases
+            val dataFrameSchema = getSchemaForSqlTable(connection, jdbcTable.name)
+            dataFrameSchemas += dataFrameSchema
+        }
     }
 
     return dataFrameSchemas
 }
 
 public fun DataFrame.Companion.getSchemaForSqlTable(dbConfig: DatabaseConfiguration, tableName: String): DataFrameSchema {
-    Class.forName("org.mariadb.jdbc.Driver") // TODO: doesn't work because mariadb or special dependency could not be added to the module
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return getSchemaForSqlTable(connection, tableName)
     }
