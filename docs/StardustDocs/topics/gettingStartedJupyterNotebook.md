@@ -33,3 +33,8 @@ If you want to use a specific version of the Kotlin DataFrame library, you can s
 ```
 
 After loading, all essential types will be already imported, so you can start using the Kotlin DataFrame library. Enjoy!
+
+### Note
+Combining Kotlin DataFrame with out of date-, or similar libraries (such as [Krangl](https://github.com/holgerbrandl/krangl))
+in the same notebook might result in unexpected behavior, such as a `NoSuchMethodException`. This could be due
+to overlapping dependencies. Try removing the other library, restart the kernel, and see if the problem persists.
