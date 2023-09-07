@@ -8,13 +8,14 @@ group = "org.jetbrains.kotlinx.dataframe"
 version = "0.9.0-dev"
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/bootstrap")
 }
 
 dependencies {
     //compileOnly(kotlin("compiler-embeddable"))
-    compileOnly("org.jetbrains.kotlin:kotlin-compiler:1.7.10")
+    compileOnly("org.jetbrains.kotlin:kotlin-compiler:1.9.255-SNAPSHOT")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
 }
