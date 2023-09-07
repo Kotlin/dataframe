@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.io.db.DbType
 import org.jetbrains.kotlinx.dataframe.io.db.H2
 import org.junit.AfterClass
 import org.junit.Assert.assertEquals
@@ -426,6 +425,5 @@ class JDBCTest {
         assertEquals(3, saleDataSchema1.columns.size)
         assertEquals(typeOf<Float>(), saleDataSchema1.columns["amount"]!!.type)
     }
-
 }
 

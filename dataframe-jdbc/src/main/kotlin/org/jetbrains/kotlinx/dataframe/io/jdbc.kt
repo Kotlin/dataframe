@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.jupyter.api.Code
 import java.io.File
 import java.io.InputStream
 import java.sql.*
+import java.util.*
 
 private val logger = KotlinLogging.logger {}
 
@@ -62,6 +63,8 @@ private const val readJDBC = "readJDBC"
 
 public data class JdbcColumn(val name: String, val sqlType: String, val jdbcType: Int, val size: Int)
 
+public data class JDBCTable(val name: String, val schemaName: String?, val catalogue: String?)
+
 public data class DatabaseConfiguration(val user: String = "", val password: String = "", val url:String)
 
 private const val DEFAULT_LIMIT = Int.MIN_VALUE
@@ -100,12 +103,12 @@ public fun DataFrame.Companion.readAllTables(connection: Connection, limit: Int)
     val dbType = extractDBTypeFromURL(url)
 
     val tableTypes = arrayOf("TABLE")
-    val tables = metaData.getTables(null, null, "%", tableTypes) // exclude system and other tables without data
+    val tables = metaData.getTables(null, null, null, tableTypes) // exclude system and other tables without data, but looks like it supported badly for many databases
 
     val dataFrames = mutableListOf<AnyFrame>()
 
     while (tables.next()) {
-        val table = readTable(dbType, tables) // TODO: add object Table with mapping some fields tables.getString("TABLE_SCHEM") to filter it later
+        val table = readTable(dbType, tables)
         if (!isSystemTableName(table, dbType)) {
             // we filter her second time because of specific logic with SQLite and possible issues with future databases
             val dataFrame = readSqlTable(connection, table.name, limit)
@@ -128,20 +131,46 @@ public fun DataFrame.Companion.readAllTables(dbConfig: DatabaseConfiguration, li
 
 private fun isSystemTableName(jdbcTable: JDBCTable, dbType: DbType): Boolean {
     return when(dbType) {
-        H2 -> jdbcTable.name.startsWith("SYS_") || jdbcTable.schemaName.contains("INFORMATION_SCHEMA")
-        MariaDb -> jdbcTable.name.startsWith("mysql.") // TODO: add test
-        MySql -> jdbcTable.name.startsWith("mysql.") // TODO: add test
-        PostgreSql -> jdbcTable.name.startsWith("pg_catalog.") // TODO: add test
-        Sqlite -> jdbcTable.name.startsWith("sqlite_") // TODO: add test
+        H2 -> isH2SystemTable(jdbcTable)
+        MariaDb -> isMariaDbSystemTable(jdbcTable)
+        MySql -> isMySqlSystemTable(jdbcTable)
+        PostgreSql -> isPostgreSqlSystemTable(jdbcTable)
+        Sqlite -> isSqliteSystemTable(jdbcTable)
     }
 }
 
+private fun isMariaDbSystemTable(jdbcTable: JDBCTable) = isMySqlSystemTable(jdbcTable)
 
-public data class JDBCTable(val name: String, val schemaName: String)
-// TODO: https://www.h2database.com/html/systemtables.html
-// TODO: need to filter from schemas probably
+private fun isPostgreSqlSystemTable(jdbcTable: JDBCTable) =
+    jdbcTable.name.lowercase(Locale.getDefault()).contains("pg_")
+            || jdbcTable.schemaName?.lowercase(Locale.getDefault())?.contains("pg_catalog.") ?: false
+
+private fun isSqliteSystemTable(jdbcTable: JDBCTable) = jdbcTable.name.startsWith("sqlite_")
+
+private fun isMySqlSystemTable(jdbcTable: JDBCTable):Boolean {
+    val schemaName = jdbcTable.schemaName
+    val name = jdbcTable.name
+
+     return schemaName?.lowercase(Locale.getDefault())?.contains("information_schema") ?: false
+            || jdbcTable.catalogue?.lowercase(Locale.getDefault())?.contains("performance_schema") ?: false
+            || jdbcTable.catalogue?.lowercase(Locale.getDefault())?.contains("mysql") ?: false
+            || schemaName?.contains("mysql.") ?: false
+            || name.contains("mysql.")
+            || name.contains("sys_config")
+}
+
+
+private fun isH2SystemTable(jdbcTable: JDBCTable) =
+    jdbcTable.name.lowercase(Locale.getDefault()).contains("sys_")
+            || jdbcTable.schemaName?.lowercase(Locale.getDefault())?.contains("information_schema") ?: false
+
+
 private fun readTable(dbType: DbType, tables: ResultSet): JDBCTable =
-    if (dbType is H2) JDBCTable(tables.getString("TABLE_NAME"), tables.getString("TABLE_SCHEM")) else JDBCTable(tables.getString("table_name"), tables.getString("table_schem"))
+    if (dbType is H2) JDBCTable(tables.getString("TABLE_NAME"), tables.getString("TABLE_SCHEM"), tables.getString("TABLE_CAT"))
+    else if (dbType is Sqlite) JDBCTable(tables.getString("TABLE_NAME"), tables.getString("TABLE_SCHEM"), tables.getString("TABLE_CAT"))
+    else {
+        JDBCTable(tables.getString("table_name"), tables.getString("table_schem"), tables.getString("table_cat"))
+    }
 
 public fun DataFrame.Companion.readSqlQuery(dbConfig: DatabaseConfiguration, sqlQuery: String): AnyFrame {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
@@ -248,7 +277,7 @@ public fun DataFrame.Companion.getSchemaForAllTables(connection: Connection): Li
     val dbType = extractDBTypeFromURL(url)
 
     val tableTypes = arrayOf("TABLE")
-    val tables = metaData.getTables(null, null, "%", tableTypes) // exclude system and other tables without data
+    val tables = metaData.getTables(null, null, null, tableTypes) // exclude system and other tables without data
 
     val dataFrameSchemas = mutableListOf<DataFrameSchema>()
 
@@ -366,13 +395,13 @@ private fun fetchAndConvertDataFromResultSet(
         while (rs.next() && counter < limit) {
             handleRow(tableColumns, data, dbType, rs)
             counter++
-            if (counter % 1000 == 0) logger.debug { "Loaded $counter rows." }
+            if (counter % 1000 == 0) logger.debug { "Loaded $counter rows." } // TODO: add log messages with more info
         }
     } else {
         while (rs.next()) {
             handleRow(tableColumns, data, dbType, rs)
             counter++
-            if (counter % 1000 == 0) logger.debug { "Loaded $counter rows." }
+            if (counter % 1000 == 0) logger.debug { "Loaded $counter rows." } // TODO: add log messages with more info
         }
     }
 

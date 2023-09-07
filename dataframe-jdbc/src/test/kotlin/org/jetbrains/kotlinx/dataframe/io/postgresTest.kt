@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.io
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.junit.AfterClass
 import org.junit.Assert.assertEquals
@@ -23,53 +24,53 @@ private const val PASSWORD = "pass"
 @DataSchema
 interface Table1 {
     val id: Int
-    val bigintCol: Long
-    val bigserialCol: Long
-    val booleanCol: Boolean
-    val boxCol: String
-    val byteaCol: ByteArray
-    val characterCol: String
-    val characterNCol: String
-    val charCol: String
-    val circleCol: String
-    val dateCol: java.sql.Date
-    val doubleCol: Double
-    val integerCol: Int
-    val intervalCol: String
-    val jsonCol: String
-    val jsonbCol: String
+    val bigintcol: Long
+    val bigserialcol: Long
+    val booleancol: Boolean
+    val boxcol: String
+    val byteacol: ByteArray
+    val charactercol: String
+    val characterncol: String
+    val charcol: String
+    val circlecol: String
+    val datecol: java.sql.Date
+    val doublecol: Double
+    val integercol: Int
+    val intervalcol: String
+    val jsoncol: String
+    val jsonbcol: String
 }
 
 @DataSchema
 interface Table2 {
     val id: Int
-    val lineCol: String
-    val lsegCol: String
-    val macaddrCol: String
-    val moneyCol: String
-    val numericCol: String
-    val pathCol: String
-    val pointCol: String
-    val polygonCol: String
-    val realCol: Float
-    val smallintCol: Short
-    val smallserialCol: Int
-    val serialCol: Int
-    val textCol: String
-    val timeCol: String
-    val timeWithZoneCol: String
-    val timestampCol: String
-    val timestampWithZoneCol: String
-    val uuidCol: String
-    val xmlCol: String
+    val linecol: String
+    val lsegcol: String
+    val macaddrcol: String
+    val moneycol: String
+    val numericcol: String
+    val pathcol: String
+    val pointcol: String
+    val polygoncol: String
+    val realcol: Float
+    val smallintcol: Short
+    val smallserialcol: Int
+    val serialcol: Int
+    val textcol: String
+    val timecol: String
+    val timewithzonecol: String
+    val timestampcol: String
+    val timestampwithzonecol: String
+    val uuidcol: String
+    val xmlcol: String
 }
 
 @DataSchema
 interface ViewTable {
     val id: Int
-    val bigintCol: Long
-    val lineCol: String
-    val numericCol: String
+    val bigintcol: Long
+    val linecol: String
+    val numericcol: String
 }
 
 class PostgresTest {
@@ -88,21 +89,21 @@ class PostgresTest {
                 """
                   CREATE TABLE IF NOT EXISTS table1 (
                 id serial PRIMARY KEY,
-                bigint_col bigint,
-                bigserial_col bigserial,
-                boolean_col boolean,
-                box_col box,
-                bytea_col bytea,
-                character_col character,
-                character_n_col character(10),
-                char_col char,
-                circle_col circle,
-                date_col date,
-                double_col double precision,
-                integer_col integer,
-                interval_col interval,
-                json_col json,
-                jsonb_col jsonb
+                bigintCol bigint,
+                bigserialCol bigserial,
+                booleanCol boolean,
+                boxCol box,
+                byteaCol bytea,
+                characterCol character,
+                characterNCol character(10),
+                charCol char,
+                circleCol circle,
+                dateCol date,
+                doubleCol double precision,
+                integerCol integer,
+                intervalCol interval,
+                jsonCol json,
+                jsonbCol jsonb
             )
             """.trimIndent()
             )
@@ -112,45 +113,45 @@ class PostgresTest {
                 """
                 CREATE TABLE IF NOT EXISTS table2 (
                 id serial PRIMARY KEY,
-                line_col line,
-                lseg_col lseg,
-                macaddr_col macaddr,
-                money_col money,
-                numeric_col numeric,
-                path_col path,
-                point_col point,
-                polygon_col polygon,
-                real_col real,
-                smallint_col smallint,
-                smallserial_col smallserial,
-                serial_col serial,
-                text_col text,
-                time_col time,
-                time_with_zone_col time with time zone,
-                timestamp_col timestamp,
-                timestamp_with_zone_col timestamp with time zone,
-                uuid_col uuid,
-                xml_col xml
+                lineCol line,
+                lsegCol lseg,
+                macaddrCol macaddr,
+                moneyCol money,
+                numericCol numeric,
+                pathCol path,
+                pointCol point,
+                polygonCol polygon,
+                realCol real,
+                smallintCol smallint,
+                smallserialCol smallserial,
+                serialCol serial,
+                textCol text,
+                timeCol time,
+                timeWithZoneCol time with time zone,
+                timestampCol timestamp,
+                timestampWithZoneCol timestamp with time zone,
+                uuidCol uuid,
+                xmlCol xml
             )
             """.trimIndent()
             )
 
             val insertData1 = """
             INSERT INTO table1 (
-                bigint_col, bigserial_col,  boolean_col, 
-                box_col, bytea_col, character_col, character_n_col, char_col, 
-                 circle_col, date_col, double_col, 
-                integer_col, interval_col, json_col, jsonb_col
-            ) VALUES (?, ?,  ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                bigintCol, bigserialCol,  booleanCol, 
+                boxCol, byteaCol, characterCol, characterNCol, charCol, 
+                 circleCol, dateCol, doubleCol, 
+                integerCol, intervalCol, jsonCol, jsonbCol
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
             val insertData2 = """
             INSERT INTO table2 (
-                line_col, lseg_col, macaddr_col, money_col, numeric_col, 
-                path_col, point_col, polygon_col, real_col, smallint_col, 
-                smallserial_col, serial_col, text_col, time_col, 
-                time_with_zone_col, timestamp_col, timestamp_with_zone_col, 
-                uuid_col, xml_col
-            ) VALUES (?, ?, ?, ?, ?, ?,  ?, ?, ?, ?,  ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                lineCol, lsegCol, macaddrCol, moneyCol, numericCol, 
+                pathCol, pointCol, polygonCol, realCol, smallintCol, 
+                smallserialCol, serialCol, textCol, timeCol, 
+                timeWithZoneCol, timestampCol, timestampWithZoneCol, 
+                uuidCol, xmlCol
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,  ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
 
             connection.prepareStatement(insertData1).use { st ->
@@ -167,7 +168,7 @@ class PostgresTest {
                     st.setObject(9, org.postgresql.geometric.PGcircle("<(1,2),3>"))
                     st.setDate(10, java.sql.Date.valueOf("2023-08-01"))
                     st.setDouble(11, 12.34)
-                    st.setInt(12, 12345)
+                    st.setInt(12, 12345 * i)
                     st.setObject(13, org.postgresql.util.PGInterval("1 year"))
 
                     val jsonbObject = PGobject()
@@ -193,7 +194,7 @@ class PostgresTest {
                     st.setObject(3, macaddrObject)
                     st.setBigDecimal(4, BigDecimal("123.45"))
                     st.setBigDecimal(5, BigDecimal("12.34"))
-                    st.setObject(6, org.postgresql.geometric.PGpath("((1,2),(3,4))"))
+                    st.setObject(6, org.postgresql.geometric.PGpath("((1,2),(3,$i))"))
                     st.setObject(7, org.postgresql.geometric.PGpoint("(1,2)"))
                     st.setObject(8, org.postgresql.geometric.PGpolygon("((1,1),(2,2),(3,3))"))
                     st.setFloat(9, 12.34f)
@@ -247,9 +248,9 @@ class PostgresTest {
         val sqlQuery = """
 SELECT
     t1.id AS t1_id,
-    t1.bigint_col,
-    t2.line_col,
-    t2.numeric_col
+    t1.bigintCol,
+    t2.lineCol,
+    t2.numericCol
 FROM table1 t1
 JOIN table2 t2 ON t1.id = t2.id;
         """.trimIndent()
@@ -257,5 +258,22 @@ JOIN table2 t2 ON t1.id = t2.id;
         val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<TestTableData>()
         df.print()
         assertEquals(3, df.rowsCount())
+    }
+
+    @Test
+    fun `read from all tables`() {
+        val dataframes = DataFrame.readAllTables(connection)
+
+        val table1Df = dataframes[0].cast<Table1>()
+
+        assertEquals(3, table1Df.rowsCount())
+        assertEquals(2, table1Df.filter { it[Table1::integercol] > 12345 }.rowsCount())
+        assertEquals(1000L, table1Df[0][1])
+
+        val table2Df = dataframes[1].cast<Table2>()
+
+        assertEquals(3, table2Df.rowsCount())
+        assertEquals(1, table2Df.filter { it[Table2::pathcol] == "((1,2),(3,1))" }.rowsCount())
+        assertEquals(1001, table2Df[0][11])
     }
 }
