@@ -165,7 +165,7 @@ class DataSchemaGenerator(
             connection.use {
                 // TODO: check if schema exists and add a test here
                 val schema = if(importStatement.jdbcOptions.sqlQuery.isBlank())
-                    DataFrame.getSchemaForSqlTable(connection, "", importStatement.name)
+                    DataFrame.getSchemaForSqlTable(connection, importStatement.name)
                 else DataFrame.getSchemaForSqlQuery(connection, importStatement.jdbcOptions.sqlQuery)
 
 
