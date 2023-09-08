@@ -11,6 +11,7 @@
 * `prev(): DataRow?` — previous row (`null` for the first row)
 * `next(): DataRow?` — next row (`null` for the last row)
 * `diff(T) { rowExpression }: T / diffOrNull { rowExpression }: T?` — difference between the results of a [row expression](DataRow.md#row-expressions) calculated for current and previous rows
+* `explode(columns): DataFrame<T>` — spread lists and [`DataFrames`](DataFrame.md) vertically into new rows
 * `values(): List<Any?>` — list of all cell values from the current row
 * `valuesOf<T>(): List<T>` — list of values of the given type 
 * `columnsCount(): Int` — number of columns
@@ -23,7 +24,12 @@
 * `getRow(Int): DataRow` — row from [`DataFrame`](DataFrame.md) by row index
 * `getRows(Iterable<Int>): DataFrame` — dataframe with subset of rows selected by absolute row index. 
 * `relative(Iterable<Int>): DataFrame` — dataframe with subset of rows selected by relative row index: `relative(-1..1)` will return previous, current and next row. Requested indices will be coerced to the valid range and invalid indices will be skipped
+* `getValue<T>(columnName)` — cell value of type `T` by this row and given `columnName`
+* `getValueOrNull<T>(columnName)` — cell value of type `T?` by this row and given `columnName` or `null` if there's no such column
 * `get(column): T` — cell value by this row and given `column`
+* `String.invoke<T>(): T` — cell value of type `T` by this row and given `this` column name
+* `ColumnPath.invoke<T>(): T` — cell value of type `T` by this row and given `this` column path
+* `ColumnReference.invoke(): T` — cell value of type `T` by this row and given `this` column
 * `df()` — [`DataFrame`](DataFrame.md) that current row belongs to
 
 </snippet>

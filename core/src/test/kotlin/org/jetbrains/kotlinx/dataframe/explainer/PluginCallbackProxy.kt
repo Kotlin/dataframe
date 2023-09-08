@@ -52,6 +52,11 @@ object PluginCallbackProxy : PluginCallback {
     val names = mutableMapOf<String, List<String>>()
     val expressionsByStatement = mutableMapOf<Int, List<Expression>>()
 
+    private var manualOutput: DataFrameHtmlData? = null
+    fun overrideHtmlOutput(manualOutput: DataFrameHtmlData) {
+        this.manualOutput = manualOutput
+    }
+
     data class Expression(
         val source: String,
         val containingClassFqName: String?,
@@ -61,69 +66,76 @@ object PluginCallbackProxy : PluginCallback {
 
     fun start() {
         expressionsByStatement.clear()
+        manualOutput = null
     }
 
     fun save() {
         // ensure stable table ids across test invocation
         sessionId = 0
         tableInSessionId = 0
-        var output = DataFrameHtmlData.tableDefinitions() + DataFrameHtmlData(
-            // copy writerside stlyles
-            style = """
-                body {
-                    font-family: "JetBrains Mono",SFMono-Regular,Consolas,"Liberation Mono",Menlo,Courier,monospace;
-                }       
-                
-                :root {
-                    color: #19191C;
-                    background-color: #fff;
-                }
-                
-                :root[theme="dark"] {
-                    background-color: #19191C;
-                    color: #FFFFFFCC
-                }
-                
-                details details {
-                    margin-left: 20px; 
-                }
-                
-                summary {
-                    padding: 6px;
-                }
-            """.trimIndent()
-        )
+        var output: DataFrameHtmlData
+        val manualOutput = this.manualOutput
+        if (manualOutput == null) {
+            output = DataFrameHtmlData.tableDefinitions() + DataFrameHtmlData(
+                // copy writerside stlyles
+                style = """
+                    body {
+                        font-family: "JetBrains Mono",SFMono-Regular,Consolas,"Liberation Mono",Menlo,Courier,monospace;
+                    }       
+                    
+                    :root {
+                        color: #19191C;
+                        background-color: #fff;
+                    }
+                    
+                    :root[theme="dark"] {
+                        background-color: #19191C;
+                        color: #FFFFFFCC
+                    }
+                    
+                    details details {
+                        margin-left: 20px; 
+                    }
+                    
+                    summary {
+                        padding: 6px;
+                    }
+                """.trimIndent()
+            )
 
-        // make copy to avoid concurrent modification exception
-        val statements = expressionsByStatement.toMap()
-        when (statements.size) {
-            0 -> error("function doesn't have any dataframe expression")
-            1 -> {
-                output += statementOutput(statements.values.single())
+            // make copy to avoid concurrent modification exception
+            val statements = expressionsByStatement.toMap()
+            when (statements.size) {
+                0 -> error("function doesn't have any dataframe expression")
+                1 -> {
+                    output += statementOutput(statements.values.single())
+                }
+                else -> {
+                    statements.forEach { (index, expressions) ->
+                        var details: DataFrameHtmlData = statementOutput(expressions)
+
+                        details = details.copy(
+                            body =
+                            """
+                            <details>
+                            <summary>${expressions.joinToString(".") { it.source }
+                                .also {
+                                    if (it.length > 95) TODO("expression is too long ${it.length}. better to split sample in multiple snippets")
+                                }
+                                .escapeHtmlForIFrame()}</summary>
+                            ${details.body}
+                            </details>
+                            <br>
+                            """.trimIndent()
+                        )
+                        output += details
+                    }
+                }
             }
-            else -> {
-                statements.forEach { (index, expressions) ->
-                    var details: DataFrameHtmlData = statementOutput(expressions)
-
-                    details = details.copy(
-                        body =
-                        """
-                        <details>
-                        <summary>${expressions.joinToString(".") { it.source }
-                            .also {
-                                if (it.length > 95) TODO("expression is too long ${it.length}. better to split sample in multiple snippets")
-                            }
-                            .escapeHtmlForIFrame()}</summary>
-                        ${details.body}
-                        </details>
-                        <br>
-                        """.trimIndent()
-                    )
-
-                    output += details
-                }
-            }
+        } else {
+            output = manualOutput
         }
+
         val input = expressionsByStatement.values.first().first()
         val name = "${input.containingClassFqName}.${input.containingFunName}"
         val destination = File("build/dataframes").also {
@@ -143,50 +155,67 @@ object PluginCallbackProxy : PluginCallback {
         )
     }
 
+    private fun List<Expression>.joinToSource(): String =
+        joinToString(".") { it.source }
+
     private fun statementOutput(
         expressions: List<Expression>,
     ): DataFrameHtmlData {
         var data = DataFrameHtmlData()
-        if (expressions.size < 2) error("Sample without output or input (i.e. function returns some value)")
-        for ((i, expression) in expressions.withIndex()) {
-            when (i) {
-                0 -> {
-                    val table = convertToHTML(expression.df)
-                    val description = table.copy(
-                        body = """
+        val allow = setOf(
+            "toDataFrame", "peek(dataFrameOf(col), dataFrameOf(col))"
+        )
+        if (expressions.isEmpty()) {
+            error("No dataframe expressions in sample")
+        }
+        if (expressions.size == 1) {
+            if (allow.any { expressions[0].source.contains(it) }) {
+                val expression = expressions[0]
+                data += convertToHTML(expression.df)
+            } else {
+                error("${expressions.joinToSource()} Sample without output or input (i.e. function returns some value)")
+            }
+        } else {
+            for ((i, expression) in expressions.withIndex()) {
+                when (i) {
+                    0 -> {
+                        val table = convertToHTML(expression.df)
+                        val description = table.copy(
+                            body = """
                                     <details>
                                     <summary>Input ${convertToDescription(expression.df)}</summary>
                                      ${table.body}
                                     </details>
-                        """.trimIndent()
-                    )
-                    data += description
-                }
+                            """.trimIndent()
+                        )
+                        data += description
+                    }
 
-                expressions.lastIndex -> {
-                    val table = convertToHTML(expression.df)
-                    val description = table.copy(
-                        body = """
+                    expressions.lastIndex -> {
+                        val table = convertToHTML(expression.df)
+                        val description = table.copy(
+                            body = """
                                     <details>
                                     <summary>Output ${convertToDescription(expression.df)}</summary>
                                      ${table.body}
                                     </details>
-                        """.trimIndent()
-                    )
-                    data += description
-                }
+                            """.trimIndent()
+                        )
+                        data += description
+                    }
 
-                else -> {
-                    val table = convertToHTML(expression.df)
-                    val description = table.copy(
-                        body = """
+                    else -> {
+                        val table = convertToHTML(expression.df)
+                        val description = table.copy(
+                            body = """
                                     <details>
                                     <summary>Step $i: ${convertToDescription(expression.df)}</summary>
                                      ${table.body}
                                     </details>
-                        """.trimIndent()
-                    )
-                    data += description
+                            """.trimIndent()
+                        )
+                        data += description
+                    }
                 }
             }
         }

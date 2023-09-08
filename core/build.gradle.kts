@@ -154,6 +154,28 @@ tasks.withType<KorroTask> {
     dependsOn(copySamplesOutputs)
 }
 
+// This task installs the pre-commit hook to the local machine the first time the project is built
+// The pre-commit hook contains the command to run processKDocsMain before each commit
+val installGitPreCommitHook by tasks.creating(Copy::class) {
+    doNotTrackState(/* reasonNotToTrackState = */ "Fails on TeamCity otherwise.")
+
+    val gitHooksDir = File(rootProject.rootDir, ".git/hooks")
+    if (gitHooksDir.exists()) {
+        from(File(rootProject.rootDir, "gradle/scripts/pre-commit"))
+        into(gitHooksDir)
+        fileMode = 755
+    } else {
+        logger.lifecycle("'.git/hooks' directory not found. Skipping installation of pre-commit hook.")
+    }
+
+}
+tasks.named("assemble") {
+    dependsOn(installGitPreCommitHook)
+}
+
+// region docPreprocessor
+
+// This task is used to add all generated sources (from processKDocsMain) to git
 val generatedSourcesFolderName = "generated-sources"
 val addGeneratedSourcesToGit by tasks.creating(GitTask::class) {
     directory.set(file("."))
@@ -162,8 +184,8 @@ val addGeneratedSourcesToGit by tasks.creating(GitTask::class) {
 }
 
 // Backup the kotlin source files location
-val kotlinMainSources = kotlin.sourceSets.main.get().kotlin.sourceDirectories
-val kotlinTestSources = kotlin.sourceSets.test.get().kotlin.sourceDirectories
+val kotlinMainSources: FileCollection = kotlin.sourceSets.main.get().kotlin.sourceDirectories
+val kotlinTestSources: FileCollection = kotlin.sourceSets.test.get().kotlin.sourceDirectories
 
 fun pathOf(vararg parts: String) = parts.joinToString(File.separator)
 
@@ -176,12 +198,15 @@ val processKDocsMain by creatingProcessDocTask(
     processors = listOf(
         INCLUDE_DOC_PROCESSOR,
         INCLUDE_FILE_DOC_PROCESSOR,
-        INCLUDE_ARG_DOC_PROCESSOR,
+        ARG_DOC_PROCESSOR,
         COMMENT_DOC_PROCESSOR,
         SAMPLE_DOC_PROCESSOR,
     )
 
+    arguments += ARG_DOC_PROCESSOR_LOG_NOT_FOUND to false
+
     task {
+        group = "KDocs"
         doLast {
             // ensure generated sources are added to git
             addGeneratedSourcesToGit.executeCommand()
@@ -223,6 +248,18 @@ tasks.withType<Jar> {
         }
     }
 }
+
+// If we want to use Dokka, make sure to use the preprocessed sources
+tasks.withType<org.jetbrains.dokka.gradle.AbstractDokkaLeafTask> {
+    dependsOn(processKDocsMain)
+    dokkaSourceSets {
+        all {
+            sourceRoot(processKDocsMain.target.get())
+        }
+    }
+}
+
+// endregion
 
 korro {
     docs = fileTree(rootProject.rootDir) {
@@ -368,15 +405,5 @@ dataframes {
         visibility = org.jetbrains.dataframe.gradle.DataSchemaVisibility.IMPLICIT_PUBLIC
         data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
         name = "org.jetbrains.kotlinx.dataframe.samples.api.Repository"
-    }
-}
-
-// If we want to use Dokka, make sure to use the preprocessed sources
-tasks.withType<org.jetbrains.dokka.gradle.AbstractDokkaLeafTask> {
-    dependsOn(processKDocsMain)
-    dokkaSourceSets {
-        all {
-            sourceRoot(processKDocsMain.target.get())
-        }
     }
 }

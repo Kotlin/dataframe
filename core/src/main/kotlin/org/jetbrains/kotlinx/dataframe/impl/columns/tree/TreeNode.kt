@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.impl.columns.tree
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 
 internal class TreeNode<T>(
-    override val name: String,
+    override var name: String,
     override val depth: Int,
     override var data: T,
     override val parent: TreeNode<T>? = null,

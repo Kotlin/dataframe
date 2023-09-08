@@ -12,6 +12,10 @@ import org.jetbrains.kotlinx.dataframe.impl.api.updateImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateWithValuePerColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.util.ITERABLE_COLUMNS_DEPRECATION_MESSAGE
+import org.jetbrains.kotlinx.dataframe.util.UPDATE_AS_NULLABLE_MESSAGE
+import org.jetbrains.kotlinx.dataframe.util.UPDATE_AS_NULLABLE_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.UPDATE_WITH_VALUE
+import org.jetbrains.kotlinx.dataframe.util.UPDATE_WITH_VALUE_REPLACE
 import kotlin.reflect.KProperty
 
 /**
@@ -86,7 +90,9 @@ private interface SetSelectingColumnsOperationArg
  * Check out the [`update` Operation Usage][org.jetbrains.kotlinx.dataframe.api.Update.Usage].
  *
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns] for all the selecting options. 
  * ## This Update Overload
  */
@@ -108,7 +114,9 @@ private interface UpdateWithNote
  * Check out the [`update` Operation Usage][org.jetbrains.kotlinx.dataframe.api.Update.Usage].
  *
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns] for all the selecting options. 
  * ## This Update Overload
  * Select or express columns using the Column(s) Selection DSL.
@@ -140,7 +148,9 @@ public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): Update<T,
  * Check out the [`update` Operation Usage][org.jetbrains.kotlinx.dataframe.api.Update.Usage].
  *
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns] for all the selecting options. 
  * ## This Update Overload
  * Select columns using their [column names][String]
@@ -166,7 +176,9 @@ public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = up
  * Check out the [`update` Operation Usage][org.jetbrains.kotlinx.dataframe.api.Update.Usage].
  *
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns] for all the selecting options. 
  * ## This Update Overload
  * Select columns using [KProperties][KProperty] ([KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]).
@@ -194,7 +206,9 @@ public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C
  * Check out the [`update` Operation Usage][org.jetbrains.kotlinx.dataframe.api.Update.Usage].
  *
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns] for all the selecting options. 
  * ## This Update Overload
  * Select columns using [column accessors][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]
@@ -403,8 +417,9 @@ public fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameExpressi
     asFrameImpl(expression)
 
 @Deprecated(
-    "Useless unless in combination with `withValue(null)`, but then users can just use `with { null }`...",
-    ReplaceWith("this as Update<T, C?>")
+    UPDATE_AS_NULLABLE_MESSAGE,
+    ReplaceWith(UPDATE_AS_NULLABLE_REPLACE),
+    DeprecationLevel.WARNING,
 )
 public fun <T, C> Update<T, C>.asNullable(): Update<T, C?> = this as Update<T, C?>
 
@@ -443,7 +458,7 @@ private interface UpdatePerColMap
  *
  * For example:
  *
- * `val defaults = {@includeArg [CommonUpdatePerColMapDoc]}`
+ * `val defaults = {@getArg [CommonUpdatePerColMapDoc]}`
  *
  * `df.`[update][update]` { name and age }.`[where][Update.where]` { ... }.`[perCol][perCol]`(defaults)`
  *
@@ -608,7 +623,9 @@ public fun <T, C> Update<T, C?>.notNull(expression: UpdateExpression<T, C, C>): 
  * Check out the [`update` Operation Usage][org.jetbrains.kotlinx.dataframe.api.Update.Usage].
  *
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns] for all the selecting options. 
  * ## This Update Overload
  * ### This overload is a combination of [update] and [with][Update.with].
@@ -646,7 +663,9 @@ public fun <T, C> DataFrame<T>.update(
  * Check out the [`update` Operation Usage][org.jetbrains.kotlinx.dataframe.api.Update.Usage].
  *
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns] for all the selecting options. 
  * ## This Update Overload
  * ### This overload is a combination of [update] and [with][Update.with].
@@ -683,7 +702,9 @@ public fun <T, C> DataFrame<T>.update(
  * Check out the [`update` Operation Usage][org.jetbrains.kotlinx.dataframe.api.Update.Usage].
  *
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns] for all the selecting options. 
  * ## This Update Overload
  * ### This overload is a combination of [update] and [with][Update.with].
@@ -713,11 +734,11 @@ public fun <T> DataFrame<T>.update(
     update(*headPlusArray(firstCol, cols)).with(expression)
 
 /**
- * Specific version of [with] that simply sets the value of each selected row to {@includeArg [CommonSpecificWithDocFirstArg]}.
+ * Specific version of [with] that simply sets the value of each selected row to {@getArg [CommonSpecificWithDocFirstArg]}.
  *
  * For example:
  *
- * `df.`[update][update]` { id }.`[where][Update.where]` { it < 0 }.`{@includeArg [CommonSpecificWithDocSecondArg]}`
+ * `df.`[update][update]` { id }.`[where][Update.where]` { it < 0 }.`{@getArg [CommonSpecificWithDocSecondArg]}`
  */
 private interface CommonSpecificWithDoc
 
@@ -752,7 +773,7 @@ public fun <T, C> Update<T, C>.withNull(): DataFrame<T> = with { null }
 public fun <T, C> Update<T, C>.withZero(): DataFrame<T> = updateWithValuePerColumnImpl { 0 as C }
 
 /**
- * ## With Value
+ * ## With Value (Deprecated)
  * Specific version of [with][org.jetbrains.kotlinx.dataframe.api.with] that simply sets the value of each selected row to [value].
  *
  * For example:
@@ -763,5 +784,5 @@ public fun <T, C> Update<T, C>.withZero(): DataFrame<T> = updateWithValuePerColu
  *
  * @param [value] The value to set the selected rows to. In contrast to [with][Update.with], this must be the same exact type.
  */
-@Deprecated("Use with { value } instead", ReplaceWith("this.with { value }"))
+@Deprecated(UPDATE_WITH_VALUE, ReplaceWith(UPDATE_WITH_VALUE_REPLACE), DeprecationLevel.WARNING)
 public fun <T, C> Update<T, C>.withValue(value: C): DataFrame<T> = with { value }

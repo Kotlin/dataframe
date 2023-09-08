@@ -238,7 +238,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### For example:
      *
-     * {@includeArg [Examples]}
+     * {@getArg [Examples]}
      *
      * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn] containing the first column that adheres to the given [condition\].
@@ -327,7 +327,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### For example:
      *
-     * {@includeArg [Examples]}
+     * {@getArg [Examples]}
      *
      * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn] containing the last column that adheres to the given [condition\].
@@ -416,7 +416,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### For example:
      *
-     * {@includeArg [Examples]}
+     * {@getArg [Examples]}
      *
      * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn] containing the single column that adheres to the given [condition\].
@@ -505,7 +505,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { `{@includeArg [CommonSubsetOfColumnsDocs.Example]}` }`
+     * `df.`[select][DataFrame.select]` { `{@getArg [CommonSubsetOfColumnsDocs.Example]}` }`
      *
      * @param [endInclusive\] The last column in the subset.
      * @receiver The first column in the subset.
@@ -717,9 +717,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### For example:
      *
-     * `df.`[select][select]` { `[col][col]`({@includeArg [CommonColDocs.Arg]}) }`
+     * `df.`[select][select]` { `[col][col]`({@getArg [CommonColDocs.Arg]}) }`
      *
-     * `df.`[select][select]` { myColGroup.`[col][col]`<SomeType>({@includeArg [CommonColDocs.Arg]}) }`
+     * `df.`[select][select]` { myColGroup.`[col][col]`<SomeType>({@getArg [CommonColDocs.Arg]}) }`
      *
      * @return A [ColumnAccessor] for the column with the given argument.
      * @see [column\]
@@ -1020,9 +1020,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### For example:
      *
-     * `df.`[select][select]` { `[colGroup][colGroup]`({@includeArg [CommonColGroupDocs.Arg]}) }`
+     * `df.`[select][select]` { `[colGroup][colGroup]`({@getArg [CommonColGroupDocs.Arg]}) }`
      *
-     * `df.`[select][select]` { myColGroup.`[colGroup][colGroup]`<SomeType>({@includeArg [CommonColGroupDocs.Arg]}) }`
+     * `df.`[select][select]` { myColGroup.`[colGroup][colGroup]`<SomeType>({@getArg [CommonColGroupDocs.Arg]}) }`
      *
      * @return A [ColumnAccessor] for the column group with the given argument.
      * @see [columnGroup\]
@@ -1327,9 +1327,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * an accessor for a frame column inside a [ColumnGroup].
      *
      * #### For example:
-     * `df.`[select][select]` { `[frameCol][frameCol]`({@includeArg [CommonFrameColDocs.Arg]}) }`
+     * `df.`[select][select]` { `[frameCol][frameCol]`({@getArg [CommonFrameColDocs.Arg]}) }`
      *
-     * `df.`[select][select]` { myColGroup.`[frameCol][frameCol]`<SomeType>({@includeArg [CommonFrameColDocs.Arg]}) }`
+     * `df.`[select][select]` { myColGroup.`[frameCol][frameCol]`<SomeType>({@getArg [CommonFrameColDocs.Arg]}) }`
      *
      * @return A [ColumnAccessor] for the frame column with the given argument.
      * @see [frameColumn\]
@@ -1636,7 +1636,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [CommonColsDocs.Examples]}
+     * {@getArg [CommonColsDocs.Examples]}
      *
      */
     private interface CommonColsDocs {
@@ -1664,7 +1664,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
          *
          * #### Examples for this overload:
          *
-         * {@includeArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.CommonColsDocs.Examples]}
+         * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.CommonColsDocs.Examples]}
          *
          *
          * @param [predicate\] A [ColumnFilter function][ColumnFilter] that takes a [ColumnReference] and returns a [Boolean].
@@ -1695,11 +1695,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
          *
          * #### Examples for this overload:
          *
-         * {@includeArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.CommonColsDocs.Examples]}
+         * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.CommonColsDocs.Examples]}
          *
          *
-         * @param [firstCol\] A {@includeArg [AccessorType]} that points to a column.
-         * @param [otherCols\] Optional additional {@includeArg [AccessorType]}s that point to columns.
+         * @param [firstCol\] A {@getArg [AccessorType]} that points to a column.
+         * @param [otherCols\] Optional additional {@getArg [AccessorType]}s that point to columns.
          * @return A [ColumnSet] containing the columns that [firstCol\] and [otherCols\] point to.
          */
         interface Vararg {
@@ -3777,7 +3777,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [CommonAllDocs.Examples]}
+     * {@getArg [CommonAllDocs.Examples]}
      *
      * @see [cols\]
      */
@@ -3804,7 +3804,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * #### Examples for this overload:
      *
      * `df.`[select][select]` { `[cols][cols]` { "a" in `[name][ColumnWithPath.name]` }.`[all][all]`() }`
-     * ## ‎
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
      * NOTE: This is an identity call and can be omitted in most cases. However, it can still prove useful
      * for readability or in combination with [recursively].
      *
@@ -3938,7 +3940,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      *
      * #### Examples for this overload:
      *
-     * {@includeArg [CommonRecursivelyDocs.Examples]}
+     * {@getArg [CommonRecursivelyDocs.Examples]}
      *
      * @param [includeTopLevel\] Whether to include the top-level columns in the result. `true` by default.
      */
@@ -4440,7 +4442,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
-     * ## ‎
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
      * Alternatively, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also be called on existing columns:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
@@ -4448,7 +4452,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { (Type::myColumnGroup)().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Double][Double]`>() }`
-     * ## ‎
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
      * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also take a [KType] argument instead of a reified type.
      * This is useful when the type is not known at compile time or when the API function cannot be inlined.
      *
@@ -4479,7 +4485,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
-     * ## ‎
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
      * Alternatively, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also be called on existing columns:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
@@ -4487,7 +4495,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { (Type::myColumnGroup)().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Double][Double]`>() }`
-     * ## ‎
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
      * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also take a [KType] argument instead of a reified type.
      * This is useful when the type is not known at compile time or when the API function cannot be inlined.
      *
@@ -4640,7 +4650,9 @@ public inline fun <reified C> SingleColumn<*>.dfsOf(noinline filter: (ColumnWith
  * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`<`[Int][Int]`>() }`
  *
  * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`<`[Int][Int]`> { it.`[size][DataColumn.size]` > 10 } }`
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * Alternatively, [colsOf] can also be called on existing columns:
  *
  * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][colsOf]`<`[Int][Int]`>() }`
@@ -4648,7 +4660,9 @@ public inline fun <reified C> SingleColumn<*>.dfsOf(noinline filter: (ColumnWith
  * `df.`[select][DataFrame.select]` { "myColumnGroup"<Type>().`[colsOf][colsOf]`<`[Int][Int]`> { it.`[size][DataColumn.size]` > 10 } }`
  *
  * `df.`[select][DataFrame.select]` { (Type::myColumnGroup)().`[colsOf][colsOf]`<`[Double][Double]`>() }`
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * Finally, [colsOf] can also take a [KType] argument instead of a reified type.
  * This is useful when the type is not known at compile time or when the API function cannot be inlined.
  *
@@ -4668,7 +4682,9 @@ internal interface ColsOf
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * Alternatively, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also be called on existing columns:
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
@@ -4676,7 +4692,9 @@ internal interface ColsOf
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { (Type::myColumnGroup)().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Double][Double]`>() }`
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also take a [KType] argument instead of a reified type.
  * This is useful when the type is not known at compile time or when the API function cannot be inlined.
  *
@@ -4704,7 +4722,9 @@ private interface CommonColsOfDocs {
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * Alternatively, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also be called on existing columns:
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
@@ -4712,7 +4732,9 @@ private interface CommonColsOfDocs {
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { (Type::myColumnGroup)().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Double][Double]`>() }`
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also take a [KType] argument instead of a reified type.
  * This is useful when the type is not known at compile time or when the API function cannot be inlined.
  *
@@ -4748,7 +4770,9 @@ public fun <C> ColumnSet<*>.colsOf(
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * Alternatively, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also be called on existing columns:
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
@@ -4756,7 +4780,9 @@ public fun <C> ColumnSet<*>.colsOf(
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { (Type::myColumnGroup)().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Double][Double]`>() }`
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also take a [KType] argument instead of a reified type.
  * This is useful when the type is not known at compile time or when the API function cannot be inlined.
  *
@@ -4789,7 +4815,9 @@ public inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: (DataColumn<C
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * Alternatively, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also be called on existing columns:
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
@@ -4797,7 +4825,9 @@ public inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: (DataColumn<C
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { (Type::myColumnGroup)().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Double][Double]`>() }`
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also take a [KType] argument instead of a reified type.
  * This is useful when the type is not known at compile time or when the API function cannot be inlined.
  *
@@ -4833,7 +4863,9 @@ public fun <C> SingleColumn<*>.colsOf(
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * Alternatively, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also be called on existing columns:
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() }`
@@ -4841,7 +4873,9 @@ public fun <C> SingleColumn<*>.colsOf(
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { (Type::myColumnGroup)().`[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Double][Double]`>() }`
- * ## ‎
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf] can also take a [KType] argument instead of a reified type.
  * This is useful when the type is not known at compile time or when the API function cannot be inlined.
  *

@@ -4,6 +4,7 @@
 [![Kotlin](https://img.shields.io/badge/kotlin-1.8.20-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![Maven Central](https://img.shields.io/maven-central/v/org.jetbrains.kotlinx/dataframe?color=blue&label=Maven%20Central)](https://search.maven.org/artifact/org.jetbrains.kotlinx/dataframe)
 [![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Kotlin/dataframe/HEAD)
 
 Kotlin Dataframe aims to reconcile Kotlin's static typing with the dynamic nature of data by utilizing both the full power of the Kotlin language and the opportunities provided by intermittent code execution in Jupyter notebooks and REPL.   
 
@@ -30,7 +31,7 @@ Explore [**documentation**](https://kotlin.github.io/dataframe/overview.html) fo
 plugins {
     // Optional Gradle plugin for enhanced type safety and schema generation
     // https://kotlin.github.io/dataframe/gradle.html
-    id 'org.jetbrains.kotlinx.dataframe' version '0.11.0'
+    id 'org.jetbrains.kotlinx.dataframe' version '0.11.1'
 }
 
 repositories {
@@ -38,7 +39,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.jetbrains.kotlinx:dataframe:0.11.0'
+    implementation 'org.jetbrains.kotlinx:dataframe:0.11.1'
 }
 ```
 
@@ -48,7 +49,7 @@ dependencies {
 plugins {
     // Optional Gradle plugin for enhanced type safety and schema generation
     // https://kotlin.github.io/dataframe/gradle.html
-    id("org.jetbrains.kotlinx.dataframe") version "0.11.0"
+    id("org.jetbrains.kotlinx.dataframe") version "0.11.1"
 }
 
 repositories {
@@ -56,7 +57,7 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:dataframe:0.11.0")
+    implementation("org.jetbrains.kotlinx:dataframe:0.11.1")
 }
 ```
 
@@ -67,11 +68,11 @@ dependencies {
 plugins {
     // Optional Gradle plugin for enhanced type safety and schema generation
     // https://kotlin.github.io/dataframe/gradle.html
-    id 'org.jetbrains.kotlinx.dataframe' version '0.11.0'
+    id 'org.jetbrains.kotlinx.dataframe' version '0.11.1'
 }
 
 dependencies {
-    implementation 'org.jetbrains.kotlinx:dataframe:0.11.0'
+    implementation 'org.jetbrains.kotlinx:dataframe:0.11.1'
 }
 
 android {
@@ -115,11 +116,11 @@ tasks.withType(KotlinCompile).configureEach {
 plugins {
     // Optional Gradle plugin for enhanced type safety and schema generation
     // https://kotlin.github.io/dataframe/gradle.html
-    id("org.jetbrains.kotlinx.dataframe") version "0.11.0"
+    id("org.jetbrains.kotlinx.dataframe") version "0.11.1"
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:dataframe:0.11.0")
+    implementation("org.jetbrains.kotlinx:dataframe:0.11.1")
 }
 
 android {
@@ -189,6 +190,7 @@ This table shows the mapping between main library component versions and minimum
 | 0.10.0                   | 8                    | 1.8.20         | 0.11.0-358             | 3.0.0           | 11.0.0               |
 | 0.10.1                   | 8                    | 1.8.20         | 0.11.0-358             | 3.0.0           | 11.0.0               |
 | 0.11.0                   | 8                    | 1.8.20         | 0.11.0-358             | 3.0.0           | 11.0.0               |
+| 0.11.1                   | 8                    | 1.8.20         | 0.11.0-358             | 3.0.0           | 11.0.0               |
 ## Usage example
 
 **Create:**

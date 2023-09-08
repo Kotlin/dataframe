@@ -29,3 +29,8 @@
 17. Create Release from the release tag on GitHub 
 18. Update a KDF version in the [Kotlin Jupyter Descriptor](https://github.com/Kotlin/kotlin-jupyter-libraries/blob/master/dataframe.json). Now the Renovate bot doing this 
 19. Update DataFrame version in gradle.properties file for next release cycle (i.e. 0.10.0 -> 0.11.0)
+20. Update deprecated functions in [deprecationMessages.kt](/core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/util/deprecationMessages.kt)
+    such that 
+    - `Level.WARNING` messages are changed to `Level.ERROR`
+    - `Level.ERROR` messages and their functions are removed.
+    - Update regions in the file accordingly.

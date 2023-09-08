@@ -94,6 +94,7 @@ df.join(other)
 
 Supported join types:
 * `Inner` (default) — only matched rows from left and right [`DataFrames`](DataFrame.md)
+* `Filter` — only matched rows from left [`DataFrame`](DataFrame.md)
 * `Left` — all rows from left [`DataFrame`](DataFrame.md), mismatches from right [`DataFrame`](DataFrame.md) filled with `null`
 * `Right` — all rows from right [`DataFrame`](DataFrame.md), mismatches from left [`DataFrame`](DataFrame.md) filled with `null`
 * `Full` — all rows from left and right [`DataFrames`](DataFrame.md), any mismatches filled with `null`
