@@ -1,12 +1,22 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
-import org.jetbrains.kotlinx.dataframe.io.JdbcColumn
+import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
 
-// TODO: lools like we need here more then enum, but hierarchy of sealed classes with some fields
-// Basic Type: supported database with mapping of types and jdbcProtocol names
-public sealed class DbType(public val jdbcUrlDatabaseName: String) {
-    public abstract fun convertDataFromResultSet(rs: ResultSet, jdbcColumn: JdbcColumn): Any?
-    public abstract fun toColumnSchema(jdbcColumn: JdbcColumn): ColumnSchema
+/**
+ * The `DbType` class represents a database type used for reading dataframe from the database.
+ *
+ * @property [dbTypeInJdbcUrl] The name of the database as specified in the JDBC URL.
+ */
+public sealed class DbType(public val dbTypeInJdbcUrl: String) {
+    /**
+     * Converts the data from the given [ResultSet] into the specified [TableColumnMetadata] type.
+     *
+     * @param rs The [ResultSet] containing the data to be converted.
+     * @param tableColumn The [TableColumnMetadata] representing the target type of the conversion.
+     * @return The converted data as an instance of [Any].
+     */
+    public abstract fun convertDataFromResultSet(rs: ResultSet, tableColumn: TableColumnMetadata): Any?
+    public abstract fun toColumnSchema(tableColumn: TableColumnMetadata): ColumnSchema
 }

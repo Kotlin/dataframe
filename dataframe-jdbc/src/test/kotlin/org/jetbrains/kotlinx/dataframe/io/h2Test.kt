@@ -70,7 +70,7 @@ interface TestTableData {
     val uuidCol: String
 }
 
-class JDBCTest {
+class JdbcTest {
     companion object {
         private lateinit var connection: Connection
 

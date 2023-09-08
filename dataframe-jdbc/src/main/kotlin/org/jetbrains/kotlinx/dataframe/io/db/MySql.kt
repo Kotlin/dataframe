@@ -1,14 +1,20 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
-import org.jetbrains.kotlinx.dataframe.io.JdbcColumn
+import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
 import kotlin.reflect.typeOf
 
+/**
+ * Represents the MySql database type.
+ *
+ * This class provides methods to convert data from a ResultSet to the appropriate type for MySql,
+ * and to generate the corresponding column schema.
+ */
 public object MySql : DbType("mysql") {
-    override fun convertDataFromResultSet(rs: ResultSet, jdbcColumn: JdbcColumn): Any? {
-        val name = jdbcColumn.name
-        return when (jdbcColumn.sqlType) {
+    override fun convertDataFromResultSet(rs: ResultSet, tableColumn: TableColumnMetadata): Any? {
+        val name = tableColumn.name
+        return when (tableColumn.sqlType) {
             "BIT" -> rs.getBytes(name)
             "TINYINT" -> rs.getInt(name)
             "SMALLINT" -> rs.getInt(name)
@@ -40,12 +46,12 @@ public object MySql : DbType("mysql") {
             // special mysql types
             "JSON" -> rs.getString(name)
             "GEOMETRY" -> rs.getBytes(name)
-            else -> throw IllegalArgumentException("Unsupported MySQL type: ${jdbcColumn.sqlType}")
+            else -> throw IllegalArgumentException("Unsupported MySQL type: ${tableColumn.sqlType}")
         }
     }
 
-    override fun toColumnSchema(jdbcColumn: JdbcColumn): ColumnSchema {
-        return when (jdbcColumn.sqlType) {
+    override fun toColumnSchema(tableColumn: TableColumnMetadata): ColumnSchema {
+        return when (tableColumn.sqlType) {
             "BIT" -> ColumnSchema.Value(typeOf<ByteArray>())
             "TINYINT" -> ColumnSchema.Value(typeOf<Int>())
             "SMALLINT" -> ColumnSchema.Value(typeOf<Int>())
@@ -77,7 +83,7 @@ public object MySql : DbType("mysql") {
             // special mysql types
             "JSON" -> ColumnSchema.Value(typeOf<String>())
             "GEOMETRY" -> ColumnSchema.Value(typeOf<ByteArray>())
-            else -> throw IllegalArgumentException("Unsupported MySQL type: ${jdbcColumn.sqlType}")
+            else -> throw IllegalArgumentException("Unsupported MySQL type: ${tableColumn.sqlType}")
         }
     }
 }

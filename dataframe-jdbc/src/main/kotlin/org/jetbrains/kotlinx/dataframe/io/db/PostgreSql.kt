@@ -1,18 +1,21 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
-import org.jetbrains.kotlinx.dataframe.io.JdbcColumn
+import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
 import kotlin.reflect.typeOf
 
 /**
- * NOTE: all date and timestamp related types converted to String to avoid java.sql.* types
+ * Represents the PostgreSql database type.
+ *
+ * This class provides methods to convert data from a ResultSet to the appropriate type for PostgreSql,
+ * and to generate the corresponding column schema.
  */
 public object PostgreSql : DbType("postgresql") {
-    override fun convertDataFromResultSet(rs: ResultSet, jdbcColumn: JdbcColumn): Any? {
+    override fun convertDataFromResultSet(rs: ResultSet, tableColumnMetadata: TableColumnMetadata): Any? {
         // TODO: improve mapping with the https://www.instaclustr.com/blog/postgresql-data-types-mappings-to-sql-jdbc-and-java-data-types/
-        val name = jdbcColumn.name
-        return when (jdbcColumn.sqlType) {
+        val name = tableColumnMetadata.name
+        return when (tableColumnMetadata.sqlType) {
             "serial" -> rs.getInt(name)
             "int8", "bigint", "bigserial" -> rs.getLong(name)
             "bool" -> rs.getBoolean(name)
@@ -43,12 +46,12 @@ public object PostgreSql : DbType("postgresql") {
             "timestamptz", "timestamp with time zone" -> rs.getString(name)
             "uuid" -> rs.getString(name)
             "xml" -> rs.getString(name)
-            else -> throw IllegalArgumentException("Unsupported PostgreSQL type: ${jdbcColumn.sqlType}")
+            else -> throw IllegalArgumentException("Unsupported PostgreSQL type: ${tableColumnMetadata.sqlType}")
         }
     }
 
-    override fun toColumnSchema(jdbcColumn: JdbcColumn): ColumnSchema {
-        return when (jdbcColumn.sqlType) {
+    override fun toColumnSchema(tableColumn: TableColumnMetadata): ColumnSchema {
+        return when (tableColumn.sqlType) {
             "serial" -> ColumnSchema.Value(typeOf<Int>())
             "int8", "bigint", "bigserial" -> ColumnSchema.Value(typeOf<Long>())
             "bool" -> ColumnSchema.Value(typeOf<Boolean>())
@@ -79,7 +82,7 @@ public object PostgreSql : DbType("postgresql") {
             "timestamptz", "timestamp with time zone" -> ColumnSchema.Value(typeOf<String>())
             "uuid" -> ColumnSchema.Value(typeOf<String>())
             "xml" -> ColumnSchema.Value(typeOf<String>())
-            else -> throw IllegalArgumentException("Unsupported PostgreSQL type: ${jdbcColumn.sqlType}")
+            else -> throw IllegalArgumentException("Unsupported PostgreSQL type: ${tableColumn.sqlType}")
         }
     }
 }
