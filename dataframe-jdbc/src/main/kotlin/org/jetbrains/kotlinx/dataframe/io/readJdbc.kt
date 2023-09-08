@@ -1,5 +1,3 @@
-@file:JvmName("JdbcKt")
-
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.github.oshai.kotlinlogging.KotlinLogging
