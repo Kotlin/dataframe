@@ -76,7 +76,7 @@ public interface ChildrenColumnsSelectionDsl<out T> : ColumnsSelectionDslExtensi
      * @include [ChildrenDocs]
      * @setArg [ChildrenDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[children][ColumnSet.children]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[children][ColumnSet.children]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[DataRow][DataRow]`<MyGroupType>>().`[children][ColumnSet.children]`() }`
      */
@@ -87,7 +87,7 @@ public interface ChildrenColumnsSelectionDsl<out T> : ColumnsSelectionDslExtensi
      * @include [ChildrenDocs]
      * @setArg [ChildrenDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[children][SingleColumn.children]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[children][SingleColumn.children]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * `df.`[select][DataFrame.select]` { `[children][SingleColumn.children]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
@@ -98,7 +98,7 @@ public interface ChildrenColumnsSelectionDsl<out T> : ColumnsSelectionDslExtensi
      * @include [ChildrenDocs]
      * @setArg [ChildrenDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[children][String.children]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[children][String.children]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      */
     public fun String.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         columnGroup(this).children(predicate)
@@ -118,7 +118,7 @@ public interface ChildrenColumnsSelectionDsl<out T> : ColumnsSelectionDslExtensi
      * @include [ChildrenDocs]
      * @setArg [ChildrenDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[children][ColumnPath.children]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[children][ColumnPath.children]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      */
     public fun ColumnPath.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         columnGroup(this).children(predicate)

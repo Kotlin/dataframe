@@ -1165,7 +1165,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `gather bool`() {
         val pivoted = typed.pivot { city }.groupBy { name }.matches()
-        val res = pivoted.gather { colsOf<Boolean>().atAnyDepth() }.where { it }.keysInto("city")
+        val res = pivoted.gather { atAnyDepth2 { colsOf<Boolean>() } }.where { it }.keysInto("city")
         val sorted = res.sortBy { name and city }
         sorted shouldBe typed.select { name and city.map { it.toString() } }.distinct().sortBy { name and city }
     }

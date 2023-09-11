@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.RowFilter
+import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllDocs
 import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.BehaviorArg
 import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.ColumnDoesNotExistArg
 import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.ExampleArg
@@ -34,6 +35,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.columns.atAnyDepthImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.onResolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.owner
@@ -114,7 +116,7 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [**all**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]**`()`**` [ `.[**atAnyDepth**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()` ` ]`
+     *  [**all**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]**`()`**` [ `.[**atAnyDepth**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`()` ` ]`
      *
      *  `|` **`all`**`(`[**Before**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`|`[**After**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`|`[**From**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`|`[**UpTo**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`)` `(` **`(`**[column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]**`)`** `|` **`{`** [colSelector][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSelectorDef] **`}`** `)`
      *
@@ -127,7 +129,7 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
      *
      *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**all**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]**`()`**` [ `.[**atAnyDepth**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()` ` ]`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**all**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]**`()`**` [ `.[**atAnyDepth**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`()` ` ]`
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .**`all`**`(`[**Before**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`|`[**After**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`|`[**From**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`|`[**UpTo**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`)` `(` **`(`**[column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]**`)`** `|` **`{`** [colSelector][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSelectorDef] **`}`** `)`
      *  TODO debate whether these overloads make sense. They didn't exist in 0.9.0
@@ -141,7 +143,7 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
      *
      *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**allCols**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]**`()`**` [ `.[**atAnyDepth**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()` ` ]`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**allCols**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]**`()`**` [ `.[**atAnyDepth**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`()` ` ]`
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .**`allCols`**`(`[**Before**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`|`[**After**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`|`[**From**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`|`[**UpTo**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`)` `(` **`(`**[column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]**`)`** `|` **`{`** [colSelector][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSelectorDef] **`}`** `)`
      *
@@ -218,7 +220,7 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
      * Check out [Usage] for how to use [all]/[allCols].
      *
      * #### For example:
-     * `df.`[move][DataFrame.move]` { `[all][ColumnsSelectionDsl.all]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }.`[under][MoveClause.under]`("info")`
+     * `df.`[move][DataFrame.move]` { `[all][ColumnsSelectionDsl.all]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }.`[under][MoveClause.under]`("info")`
      *
      * `df.`[select][DataFrame.select]` { myGroup.`[allCols][SingleColumn.allCols]`() }`
      *
@@ -271,7 +273,7 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
      * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]/[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols].
      *
      * #### For example:
-     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[allCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allCols]`() }`
      *
@@ -282,7 +284,7 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * NOTE: This is an identity call and can be omitted in most cases. However, it can still prove useful
-     * for readability or in combination with [atAnyDepth][ColumnsSelectionDsl.atAnyDepth].
+     * for readability or in combination with [atAnyDepth][ColumnsSelectionDsl.atAnyDepth2].
      *
      * #### Flavors of All (Cols):
      *
@@ -309,8 +311,8 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
      * @see [ColumnsSelectionDsl.cols]
      */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.all(): TransformableColumnSet<C> =
-        allColumnsInternal() as TransformableColumnSet<C>
+    public fun <C> ColumnSet<C>.all(): ColumnSet<C> =
+        allColumnsInternal(scope) as ColumnSet<C>
 
     /**
      * ## All (Cols)
@@ -327,7 +329,7 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
      * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]/[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols].
      *
      * #### For example:
-     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[allCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allCols]`() }`
      *
@@ -359,8 +361,8 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
      * @see [ColumnsSelectionDsl.allUpTo]
      * @see [ColumnsSelectionDsl.cols]
      */
-    public fun ColumnsSelectionDsl<*>.all(): TransformableColumnSet<*> =
-        asSingleColumn().allColumnsInternal()
+    public fun ColumnsSelectionDsl<*>.all(): ColumnSet<*> =
+        asSingleColumn().allColumnsInternal(scope)
 
     /**
      * ## All (Cols)
@@ -377,7 +379,7 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
      * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]/[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols].
      *
      * #### For example:
-     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[allCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allCols]`() }`
      *
@@ -409,8 +411,8 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
      * @see [ColumnsSelectionDsl.allUpTo]
      * @see [ColumnsSelectionDsl.cols]
      */
-    public fun SingleColumn<DataRow<*>>.allCols(): TransformableColumnSet<*> =
-        ensureIsColumnGroup().allColumnsInternal()
+    public fun SingleColumn<DataRow<*>>.allCols(): ColumnSet<*> =
+        ensureIsColumnGroup().allColumnsInternal(scope)
 
     /**
      * ## All (Cols)
@@ -427,7 +429,7 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
      * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]/[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols].
      *
      * #### For example:
-     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[allCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allCols]`() }`
      *
@@ -459,8 +461,8 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
      * @see [ColumnsSelectionDsl.allUpTo]
      * @see [ColumnsSelectionDsl.cols]
      */
-    public fun String.allCols(): TransformableColumnSet<*> =
-        columnGroup(this).allCols()
+    public fun String.allCols(): ColumnSet<*> =
+        columnGroup(this).ensureIsColumnGroup().allColumnsInternal(scope)
 
     /**
      * ## All (Cols)
@@ -477,7 +479,7 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
      * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]/[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols].
      *
      * #### For example:
-     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[allCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allCols]`() }`
      *
@@ -509,8 +511,8 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
      * @see [ColumnsSelectionDsl.allUpTo]
      * @see [ColumnsSelectionDsl.cols]
      */
-    public fun KProperty<*>.allCols(): TransformableColumnSet<*> =
-        columnGroup(this).allCols()
+    public fun KProperty<*>.allCols(): ColumnSet<*> =
+        columnGroup(this).ensureIsColumnGroup().allColumnsInternal(scope)
 
     /**
      * ## All (Cols)
@@ -527,7 +529,7 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
      * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]/[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols].
      *
      * #### For example:
-     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[allCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allCols]`() }`
      *
@@ -559,8 +561,8 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
      * @see [ColumnsSelectionDsl.allUpTo]
      * @see [ColumnsSelectionDsl.cols]
      */
-    public fun ColumnPath.allCols(): TransformableColumnSet<*> =
-        columnGroup(this).allCols()
+    public fun ColumnPath.allCols(): ColumnSet<*> =
+        columnGroup(this).ensureIsColumnGroup().allColumnsInternal(scope)
 
     // endregion
 
@@ -8386,10 +8388,10 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
     // region deprecated
 
     @Deprecated(COL_SELECT_DSL_ALL_COLS, ReplaceWith(COL_SELECT_DSL_ALL_COLS_REPLACE))
-    public fun SingleColumn<DataRow<*>>.all(): TransformableColumnSet<*> = allCols()
+    public fun SingleColumn<DataRow<*>>.all(): ColumnSet<*> = allCols()
 
     @Deprecated(COL_SELECT_DSL_ALL_COLS, ReplaceWith(COL_SELECT_DSL_ALL_COLS_REPLACE))
-    public fun String.all(): TransformableColumnSet<*> = allCols()
+    public fun String.all(): ColumnSet<*> = allCols()
 
     @Deprecated(COL_SELECT_DSL_ALL_COLS_AFTER, ReplaceWith(COL_SELECT_DSL_ALL_COLS_AFTER_REPLACE))
     public fun SingleColumn<DataRow<*>>.allAfter(column: ColumnPath): ColumnSet<*> = allColsAfter(column)
@@ -8448,17 +8450,184 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
     // endregion
 }
 
+public interface AllAtAnyDepthDsl<out T> : ColumnsSelectionDslExtension<T> {
+
+    /**
+     * ## All (Cols)
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all columns from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `all` will create a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] consisting of its children.
+     *
+     * This makes the function equivalent to [cols()][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols].
+     *
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `all` is named `allCols` instead to avoid confusion.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]/[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols].
+     *
+     * #### For example:
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[allCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allCols]`() }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "a" in `[name][ColumnWithPath.name]` }.`[all][ColumnSet.all]`() }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * NOTE: This is an identity call and can be omitted in most cases. However, it can still prove useful
+     * for readability or in combination with [atAnyDepth][ColumnsSelectionDsl.atAnyDepth2].
+     *
+     * #### Flavors of All (Cols):
+     *
+     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
+     *     All columns
+     *
+     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @see [ColumnsSelectionDsl.rangeTo]
+     * @see [ColumnsSelectionDsl.allBefore]
+     * @see [ColumnsSelectionDsl.allAfter]
+     * @see [ColumnsSelectionDsl.allFrom]
+     * @see [ColumnsSelectionDsl.allUpTo]
+     * @see [ColumnsSelectionDsl.cols]
+     */
+    @AtAnyDepthDslMarker
+    @Suppress("UNCHECKED_CAST")
+    public fun <C> ColumnSet<C>.all(): ColumnSet<C> =
+        allColumnsInternal(scope) as ColumnSet<C>
+
+    /**
+     * ## All (Cols)
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all columns from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `all` will create a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] consisting of its children.
+     *
+     * This makes the function equivalent to [cols()][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols].
+     *
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `all` is named `allCols` instead to avoid confusion.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]/[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols].
+     *
+     * #### For example:
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[allCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allCols]`() }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[all][ColumnsSelectionDsl.all]`() }`
+     *
+     * #### Flavors of All (Cols):
+     *
+     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
+     *     All columns
+     *
+     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @see [ColumnsSelectionDsl.rangeTo]
+     * @see [ColumnsSelectionDsl.allBefore]
+     * @see [ColumnsSelectionDsl.allAfter]
+     * @see [ColumnsSelectionDsl.allFrom]
+     * @see [ColumnsSelectionDsl.allUpTo]
+     * @see [ColumnsSelectionDsl.cols]
+     */
+    @AtAnyDepthDslMarker
+    public fun AtAnyDepthDsl<*>.all(): ColumnSet<*> =
+        context.asSingleColumn().allColumnsInternal(scope)
+
+    /**
+     * ## All (Cols)
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all columns from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
+     *
+     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * then `all` will create a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] consisting of its children.
+     *
+     * This makes the function equivalent to [cols()][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols].
+     *
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `all` is named `allCols` instead to avoid confusion.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]/[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols].
+     *
+     * #### For example:
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[allCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allCols]`() }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { myGroup.`[allCols][SingleColumn.allCols]`() }`
+     *
+     * #### Flavors of All (Cols):
+     *
+     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
+     *     All columns
+     *
+     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @see [ColumnsSelectionDsl.rangeTo]
+     * @see [ColumnsSelectionDsl.allBefore]
+     * @see [ColumnsSelectionDsl.allAfter]
+     * @see [ColumnsSelectionDsl.allFrom]
+     * @see [ColumnsSelectionDsl.allUpTo]
+     * @see [ColumnsSelectionDsl.cols]
+     */
+    @AtAnyDepthDslMarker
+    public fun SingleColumn<DataRow<*>>.allCols(): ColumnSet<*> =
+        ensureIsColumnGroup().allColumnsInternal(scope)
+}
+
 /**
  * If [this] is a [SingleColumn] containing a single [ColumnGroup], it
  * returns a [(transformable) ColumnSet][TransformableColumnSet] containing the children of this [ColumnGroup],
  * else it simply returns a [(transformable) ColumnSet][TransformableColumnSet] from [this].
  */
-internal fun ColumnsResolver<*>.allColumnsInternal(): TransformableColumnSet<*> =
+internal fun ColumnsResolver<*>.allColumnsInternal(scope: Scope?): ColumnSet<*> =
     transform {
         if (isSingleColumnWithGroup(it)) {
             it.single().children()
         } else {
             it
+        }
+    }.let {
+        when (scope) {
+            Scope.COLUMNS_SELECTION_DSL, null -> it
+            Scope.AT_ANY_DEPTH_DSL -> it.atAnyDepthImpl(includeGroups = true, includeTopLevel = true)
         }
     }
 

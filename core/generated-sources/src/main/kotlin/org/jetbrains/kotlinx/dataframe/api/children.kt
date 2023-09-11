@@ -113,7 +113,7 @@ public interface ChildrenColumnsSelectionDsl<out T> : ColumnsSelectionDslExtensi
      *
      * #### Examples of this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[children][ColumnSet.children]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[children][ColumnSet.children]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[DataRow][DataRow]`<MyGroupType>>().`[children][ColumnSet.children]`() }`
      *
@@ -167,7 +167,7 @@ public interface ChildrenColumnsSelectionDsl<out T> : ColumnsSelectionDslExtensi
      *
      * #### Examples of this overload:
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[children][SingleColumn.children]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[children][SingleColumn.children]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * `df.`[select][DataFrame.select]` { `[children][SingleColumn.children]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
@@ -221,7 +221,7 @@ public interface ChildrenColumnsSelectionDsl<out T> : ColumnsSelectionDslExtensi
      *
      * #### Examples of this overload:
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[children][String.children]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[children][String.children]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * @see [cols]
      * @see [filter]
@@ -327,7 +327,7 @@ public interface ChildrenColumnsSelectionDsl<out T> : ColumnsSelectionDslExtensi
      *
      * #### Examples of this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[children][ColumnPath.children]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[children][ColumnPath.children]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * @see [cols]
      * @see [filter]

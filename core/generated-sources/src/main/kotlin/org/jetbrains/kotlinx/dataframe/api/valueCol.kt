@@ -2681,7 +2681,7 @@ public interface ValueColColumnsSelectionDsl<out T> : ColumnsSelectionDslExtensi
      */
     public fun <C> SingleColumn<DataRow<*>>.valueCol(index: Int): SingleColumn<C> =
         this.ensureIsColumnGroup()
-            .allColumnsInternal()
+            .allColumnsInternal(scope)
             .getAt(index)
             .ensureIsValueColumn()
             .cast()

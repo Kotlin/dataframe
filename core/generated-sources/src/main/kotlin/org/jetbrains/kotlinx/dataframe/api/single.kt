@@ -86,7 +86,7 @@ public interface SingleColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [**single**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `] [ `.[**atAnyDepth**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()` ` ]`
+     *  [**single**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `] [ `.[**atAnyDepth**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`()` ` ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -97,7 +97,7 @@ public interface SingleColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension
      *
      *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**single**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `] [ `.[**atAnyDepth**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()` ` ]`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**single**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `] [ `.[**atAnyDepth**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`()` ` ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -108,7 +108,7 @@ public interface SingleColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension
      *
      *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**singleCol**][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.singleCol]` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `] [ `.[**atAnyDepth**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()` ` ]`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**singleCol**][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.singleCol]` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `] [ `.[**atAnyDepth**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`()` ` ]`
      *
      *
      *
@@ -150,7 +150,7 @@ public interface SingleColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension
      *
      * `df.`[select][DataFrame.select]` { `[single][ColumnsSelectionDsl.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[singleCol][String.singleCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[singleCol][String.singleCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * #### Examples for this overload:
      *
@@ -182,7 +182,7 @@ public interface SingleColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[singleCol][kotlin.String.singleCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[singleCol][kotlin.String.singleCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * #### Examples for this overload:
      *
@@ -213,7 +213,7 @@ public interface SingleColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[singleCol][kotlin.String.singleCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[singleCol][kotlin.String.singleCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * #### Examples for this overload:
      *
@@ -242,7 +242,7 @@ public interface SingleColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[singleCol][kotlin.String.singleCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[singleCol][kotlin.String.singleCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * #### Examples for this overload:
      *
@@ -271,7 +271,7 @@ public interface SingleColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[singleCol][kotlin.String.singleCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[singleCol][kotlin.String.singleCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * #### Examples for this overload:
      *
@@ -300,7 +300,7 @@ public interface SingleColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[singleCol][kotlin.String.singleCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[singleCol][kotlin.String.singleCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * #### Examples for this overload:
      *
@@ -331,7 +331,7 @@ public interface SingleColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[singleCol][kotlin.String.singleCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[singleCol][kotlin.String.singleCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * #### Examples for this overload:
      *
@@ -348,7 +348,7 @@ public interface SingleColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension
 
 @Suppress("UNCHECKED_CAST")
 internal fun <C> ColumnSet<C>.singleInternal(condition: ColumnFilter<C> = { true }) =
-    (allColumnsInternal() as TransformableColumnSet<C>)
+    (allColumnsInternal(null) as TransformableColumnSet<C>)
         .transform { listOf(it.single(condition)) }
         .singleOrNullWithTransformerImpl()
 

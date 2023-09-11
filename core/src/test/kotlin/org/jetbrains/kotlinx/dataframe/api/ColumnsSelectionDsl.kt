@@ -1,22 +1,16 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.jetbrains.kotlinx.dataframe.samples.api.age
-import org.jetbrains.kotlinx.dataframe.samples.api.city
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
-import org.jetbrains.kotlinx.dataframe.samples.api.isHappy
 import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.jetbrains.kotlinx.dataframe.samples.api.secondName
-import org.jetbrains.kotlinx.dataframe.samples.api.weight
 import org.junit.Test
 
 open class ColumnsSelectionDslTests : TestBase() {
@@ -231,7 +225,7 @@ open class ColumnsSelectionDslTests : TestBase() {
         ).shouldAllBeEqual()
 
         listOf(
-            df.select { all().atAnyDepth() },
+            df.select { atAnyDepth2 { all() } },
 
 //            df.select { children().atAnyDepth() },
 

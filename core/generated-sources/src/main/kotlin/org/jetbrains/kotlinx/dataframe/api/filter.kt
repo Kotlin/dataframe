@@ -164,7 +164,7 @@ public interface FilterColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[filter][SingleColumn.filter]` { "e" `[in][String.contains]` it.`[name][ColumnPath.name]`() }.`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { `[filter][SingleColumn.filter]` { "e" `[in][String.contains]` it.`[name][ColumnPath.name]`() }.`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * `df.`[select][DataFrame.select]` { this`[`[`][SingleColumn.filter]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][SingleColumn.filter]` }`
      *

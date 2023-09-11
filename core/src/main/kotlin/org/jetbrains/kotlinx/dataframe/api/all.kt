@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.RowFilter
+import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllDocs
 import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.BehaviorArg
 import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.ColumnDoesNotExistArg
 import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.ExampleArg
@@ -34,6 +35,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.columns.atAnyDepthImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.onResolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.owner
@@ -173,7 +175,7 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
      * Check out [Usage] for how to use [all]/[allCols].
      *
      * #### For example:
-     * `df.`[move][DataFrame.move]` { `[all][ColumnsSelectionDsl.all]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }.`[under][MoveClause.under]`("info")`
+     * `df.`[move][DataFrame.move]` { `[all][ColumnsSelectionDsl.all]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }.`[under][MoveClause.under]`("info")`
      *
      * `df.`[select][DataFrame.select]` { myGroup.`[allCols][SingleColumn.allCols]`() }`
      *
@@ -203,11 +205,11 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "a" in `[name][ColumnWithPath.name]` }.`[all][ColumnSet.all]`() }`
      * {@include [LineBreak]}
      * NOTE: This is an identity call and can be omitted in most cases. However, it can still prove useful
-     * for readability or in combination with [atAnyDepth][ColumnsSelectionDsl.atAnyDepth].
+     * for readability or in combination with [atAnyDepth][ColumnsSelectionDsl.atAnyDepth2].
      */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.all(): TransformableColumnSet<C> =
-        allColumnsInternal() as TransformableColumnSet<C>
+    public fun <C> ColumnSet<C>.all(): ColumnSet<C> =
+        allColumnsInternal(scope) as ColumnSet<C>
 
     /**
      * @include [CommonAllDocs]
@@ -215,8 +217,8 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
      *
      * `df.`[select][DataFrame.select]` { `[all][ColumnsSelectionDsl.all]`() }`
      */
-    public fun ColumnsSelectionDsl<*>.all(): TransformableColumnSet<*> =
-        asSingleColumn().allColumnsInternal()
+    public fun ColumnsSelectionDsl<*>.all(): ColumnSet<*> =
+        asSingleColumn().allColumnsInternal(scope)
 
     /**
      * @include [CommonAllDocs]
@@ -224,8 +226,8 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
      *
      * `df.`[select][DataFrame.select]` { myGroup.`[allCols][SingleColumn.allCols]`() }`
      */
-    public fun SingleColumn<DataRow<*>>.allCols(): TransformableColumnSet<*> =
-        ensureIsColumnGroup().allColumnsInternal()
+    public fun SingleColumn<DataRow<*>>.allCols(): ColumnSet<*> =
+        ensureIsColumnGroup().allColumnsInternal(scope)
 
     /**
      * @include [CommonAllDocs]
@@ -233,8 +235,8 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
      *
      * `df.`[select][DataFrame.select]` { "myGroupCol".`[allCols][String.allCols]`() }`
      */
-    public fun String.allCols(): TransformableColumnSet<*> =
-        columnGroup(this).allCols()
+    public fun String.allCols(): ColumnSet<*> =
+        columnGroup(this).ensureIsColumnGroup().allColumnsInternal(scope)
 
     /**
      * @include [CommonAllDocs]
@@ -242,8 +244,8 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::columnGroup.`[allCols][KProperty.allCols]`() }`
      */
-    public fun KProperty<*>.allCols(): TransformableColumnSet<*> =
-        columnGroup(this).allCols()
+    public fun KProperty<*>.allCols(): ColumnSet<*> =
+        columnGroup(this).ensureIsColumnGroup().allColumnsInternal(scope)
 
     /**
      * @include [CommonAllDocs]
@@ -251,8 +253,8 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroup"].`[allCols][ColumnPath.allCols]`() }`
      */
-    public fun ColumnPath.allCols(): TransformableColumnSet<*> =
-        columnGroup(this).allCols()
+    public fun ColumnPath.allCols(): ColumnSet<*> =
+        columnGroup(this).ensureIsColumnGroup().allColumnsInternal(scope)
 
     // endregion
 
@@ -1235,10 +1237,10 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
     // region deprecated
 
     @Deprecated(COL_SELECT_DSL_ALL_COLS, ReplaceWith(COL_SELECT_DSL_ALL_COLS_REPLACE))
-    public fun SingleColumn<DataRow<*>>.all(): TransformableColumnSet<*> = allCols()
+    public fun SingleColumn<DataRow<*>>.all(): ColumnSet<*> = allCols()
 
     @Deprecated(COL_SELECT_DSL_ALL_COLS, ReplaceWith(COL_SELECT_DSL_ALL_COLS_REPLACE))
-    public fun String.all(): TransformableColumnSet<*> = allCols()
+    public fun String.all(): ColumnSet<*> = allCols()
 
     @Deprecated(COL_SELECT_DSL_ALL_COLS_AFTER, ReplaceWith(COL_SELECT_DSL_ALL_COLS_AFTER_REPLACE))
     public fun SingleColumn<DataRow<*>>.allAfter(column: ColumnPath): ColumnSet<*> = allColsAfter(column)
@@ -1297,17 +1299,59 @@ public interface AllColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
     // endregion
 }
 
+public interface AllAtAnyDepthDsl<out T> : ColumnsSelectionDslExtension<T> {
+
+    /**
+     * @include [CommonAllDocs]
+     * @setArg [CommonAllDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "a" in `[name][ColumnWithPath.name]` }.`[all][ColumnSet.all]`() }`
+     * {@include [LineBreak]}
+     * NOTE: This is an identity call and can be omitted in most cases. However, it can still prove useful
+     * for readability or in combination with [atAnyDepth][ColumnsSelectionDsl.atAnyDepth2].
+     */
+    @AtAnyDepthDslMarker
+    @Suppress("UNCHECKED_CAST")
+    public fun <C> ColumnSet<C>.all(): ColumnSet<C> =
+        allColumnsInternal(scope) as ColumnSet<C>
+
+    /**
+     * @include [CommonAllDocs]
+     * @setArg [CommonAllDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { `[all][ColumnsSelectionDsl.all]`() }`
+     */
+    @AtAnyDepthDslMarker
+    public fun AtAnyDepthDsl<*>.all(): ColumnSet<*> =
+        context.asSingleColumn().allColumnsInternal(scope)
+
+    /**
+     * @include [CommonAllDocs]
+     * @setArg [CommonAllDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { myGroup.`[allCols][SingleColumn.allCols]`() }`
+     */
+    @AtAnyDepthDslMarker
+    public fun SingleColumn<DataRow<*>>.allCols(): ColumnSet<*> =
+        ensureIsColumnGroup().allColumnsInternal(scope)
+}
+
 /**
  * If [this] is a [SingleColumn] containing a single [ColumnGroup], it
  * returns a [(transformable) ColumnSet][TransformableColumnSet] containing the children of this [ColumnGroup],
  * else it simply returns a [(transformable) ColumnSet][TransformableColumnSet] from [this].
  */
-internal fun ColumnsResolver<*>.allColumnsInternal(): TransformableColumnSet<*> =
+internal fun ColumnsResolver<*>.allColumnsInternal(scope: Scope?): ColumnSet<*> =
     transform {
         if (isSingleColumnWithGroup(it)) {
             it.single().children()
         } else {
             it
+        }
+    }.let {
+        when (scope) {
+            Scope.COLUMNS_SELECTION_DSL, null -> it
+            Scope.AT_ANY_DEPTH_DSL -> it.atAnyDepthImpl(includeGroups = true, includeTopLevel = true)
         }
     }
 

@@ -75,7 +75,7 @@ public interface FrameColsColumnsSelectionDsl<out T> : ColumnsSelectionDslExtens
      *
      * `df.`[select][DataFrame.select]` { `[frameCols][SingleColumn.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
-     * `df.`[select][DataFrame.select]` { `[frameCols][SingleColumn.frameCols]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { `[frameCols][SingleColumn.frameCols]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[frameCols][String.frameCols]`() }`
      *
@@ -150,7 +150,7 @@ public interface FrameColsColumnsSelectionDsl<out T> : ColumnsSelectionDslExtens
      *
      * `df.`[select][DataFrame.select]` { Type::myColGroup.`[frameCols][SingleColumn.frameCols]`() }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup.`[frameCols][KProperty.frameCols]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup.`[frameCols][KProperty.frameCols]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      */
     public fun KProperty<*>.frameCols(filter: Predicate<FrameColumn<*>> = { true }): TransformableColumnSet<DataFrame<*>> =
         columnGroup(this).frameCols(filter)
@@ -159,7 +159,7 @@ public interface FrameColsColumnsSelectionDsl<out T> : ColumnsSelectionDslExtens
      * @include [CommonFrameColsDocs]
      * @setArg [CommonFrameColsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[frameCols][ColumnPath.frameCols]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[frameCols][ColumnPath.frameCols]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      */
     public fun ColumnPath.frameCols(filter: Predicate<FrameColumn<*>> = { true }): TransformableColumnSet<DataFrame<*>> =
         columnGroup(this).frameCols(filter)

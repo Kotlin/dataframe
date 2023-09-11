@@ -114,7 +114,7 @@ public interface ExceptColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension
         allExcept(*other)
 
     public infix fun SingleColumn<DataRow<*>>.allExcept(other: ColumnsResolver<*>): ColumnSet<*> =
-        this.ensureIsColumnGroup().allColumnsInternal().except(other)
+        this.ensureIsColumnGroup().allColumnsInternal(scope).except(other)
 
     public fun SingleColumn<DataRow<*>>.allExcept(vararg other: ColumnsResolver<*>): ColumnSet<*> =
         allExcept(other.toColumnSet())

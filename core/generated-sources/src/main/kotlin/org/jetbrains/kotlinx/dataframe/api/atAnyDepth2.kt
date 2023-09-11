@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.ColumnFilter
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -8,7 +9,10 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.atAnyDepthImpl
+import org.jetbrains.kotlinx.dataframe.impl.columns.transformWithContext
+import org.jetbrains.kotlinx.dataframe.impl.getColumnsWithPaths
 import kotlin.reflect.KProperty
+import kotlin.reflect.typeOf
 
 // region ColumnsSelectionDsl
 
@@ -18,44 +22,61 @@ public annotation class AtAnyDepthDslMarker
 
 @AtAnyDepthDslMarker
 @ColumnsSelectionDslMarker // TODO?
-public class AtAnyDepthDsl<T>(@PublishedApi internal val context: ColumnsSelectionDsl<T>) : //ColumnsSelectionDsl<T> /* by context */,
-    FirstColumnsSelectionDsl<T>,
+public open class AtAnyDepthDsl<T>(@PublishedApi internal val context: ColumnsSelectionDsl<T>) : //ColumnsSelectionDsl<T> /* by context */,
+    FirstAtAnyDepthDsl<T>,
     LastAtAnyDepthDsl<T>,
 //    LastColumnsSelectionDsl,
 //    SingleColumnsSelectionDsl,
-    ColsOfColumnsSelectionDsl<T>,
+    ColsOfAtAnyDepthDsl<T>,
+    AllAtAnyDepthDsl<T>,
     AndColumnsSelectionDsl<T> {
 
     override val scope: Scope
         get() = Scope.AT_ANY_DEPTH_DSL
 
-//    override fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> = context.get(columns)
-//    override fun columns(): List<AnyCol> = context.columns()
-//    override fun columnsCount(): Int = context.columnsCount()
-//    override fun containsColumn(name: String): Boolean = context.containsColumn(name)
-//    override fun containsColumn(path: ColumnPath): Boolean = context.containsColumn(path)
-//    override fun getColumnIndex(name: String): Int = context.getColumnIndex(name)
-//    override fun getColumnOrNull(name: String): AnyCol? = context.getColumnOrNull(name)
-//    override fun getColumnOrNull(index: Int): AnyCol? = context.getColumnOrNull(index)
-//    override fun <R> getColumnOrNull(column: ColumnReference<R>): DataColumn<R>? = context.getColumnOrNull(column)
-//    override fun <R> getColumnOrNull(column: KProperty<R>): DataColumn<R>? = context.getColumnOrNull(column)
-//    override fun getColumnOrNull(path: ColumnPath): AnyCol? = context.getColumnOrNull(path)
-//    override fun <R> getColumnOrNull(column: ColumnSelector<T, R>): DataColumn<R>? = context.getColumnOrNull(column)
+
+    // region inline functions
+
+    @AtAnyDepthDslMarker
+    public inline fun <reified C> ColumnSet<*>.colsOf(
+        noinline filter: (DataColumn<C>) -> Boolean = { true },
+    ): ColumnSet<C> = colsOfInternal(typeOf<C>(), scope, filter)
+
+    @AtAnyDepthDslMarker
+    public inline fun <reified C> SingleColumn<DataRow<*>>.colsOf(
+        noinline filter: (DataColumn<C>) -> Boolean = { true },
+    ): ColumnSet<C> = ensureIsColumnGroup().colsOfInternal(typeOf<C>(), scope, filter)
+
+    // TODO
+    @AtAnyDepthDslMarker
+    public inline fun <reified C> AtAnyDepthDsl<*>.colsOf(
+        noinline filter: (DataColumn<C>) -> Boolean = { true },
+    ): ColumnSet<C> = context.asSingleColumn().colsOfInternal(typeOf<C>(), scope, filter)
+
+    // endregion
 }
 
 public interface AtAnyDepth2ColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T> {
 
-    public fun <R : ColumnsResolver<*>> ColumnsSelectionDsl<*>.atAnyDepth(
+    @AtAnyDepthDslMarker
+    public fun <R : ColumnsResolver<*>> ColumnsSelectionDsl<*>.atAnyDepth2(
         selector: Selector<AtAnyDepthDsl<@UnsafeVariance T>, R>,
     ): R = AtAnyDepthDsl(this@AtAnyDepth2ColumnsSelectionDsl as ColumnsSelectionDsl<T>).let { selector(it, it) }
 
-    public fun <C, R : ColumnsResolver<*>> ColumnSet<C>.atAnyDepth(
-        selector: ColumnFilter<C>,
-    ): ColumnSet<C> = with(this@AtAnyDepth2ColumnsSelectionDsl as ColumnsSelectionDsl<T>) {
-        this@atAnyDepth.cols(selector).atAnyDepthImpl()
+    @AtAnyDepthDslMarker
+    public fun <C, R : ColumnsResolver<*>> ColumnSet<C>.atAnyDepth2(
+        selector: Selector<AtAnyDepthDsl<*>, R>,
+    ): ColumnSet<*> = with(this@AtAnyDepth2ColumnsSelectionDsl as ColumnsSelectionDsl<T>) {
+        this@atAnyDepth2.transformWithContext {
+            it.toColumnGroup("")
+                .getColumnsWithPaths {
+                    AtAnyDepthDsl(it).let { selector(it, it) }
+                }
+        }
     }
 
-    public fun <C, S, R : ColumnsResolver<S>> SingleColumn<DataRow<C>>.atAnyDepth(
+    @AtAnyDepthDslMarker
+    public fun <C, S, R : ColumnsResolver<S>> SingleColumn<DataRow<C>>.atAnyDepth2(
         selector: Selector<AtAnyDepthDsl<@UnsafeVariance C>, R>,
     ): ColumnSet<S> = with(this@AtAnyDepth2ColumnsSelectionDsl as ColumnsSelectionDsl<T>) {
         select {
@@ -63,7 +84,19 @@ public interface AtAnyDepth2ColumnsSelectionDsl<out T> : ColumnsSelectionDslExte
         }
     }
 
-    public fun <C, S, R : ColumnsResolver<S>> KProperty<DataRow<C>>.atAnyDepth(
+    @AtAnyDepthDslMarker
+    public fun <C, S, R : ColumnsResolver<S>> KProperty<C>.atAnyDepth2(
+        selector: Selector<AtAnyDepthDsl<@UnsafeVariance C>, R>,
+    ): ColumnSet<S> = with(this@AtAnyDepth2ColumnsSelectionDsl as ColumnsSelectionDsl<T>) {
+        (this@atAnyDepth2 as KProperty<DataRow<C>>).select {
+            AtAnyDepthDsl(this).let { selector(it, it) }
+        }
+    }
+
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("atAnyDepth2KPropertyDataRow")
+    @AtAnyDepthDslMarker
+    public fun <C, S, R : ColumnsResolver<S>> KProperty<DataRow<C>>.atAnyDepth2(
         selector: Selector<AtAnyDepthDsl<@UnsafeVariance C>, R>,
     ): ColumnSet<S> = with(this@AtAnyDepth2ColumnsSelectionDsl as ColumnsSelectionDsl<T>) {
         select {
@@ -71,7 +104,8 @@ public interface AtAnyDepth2ColumnsSelectionDsl<out T> : ColumnsSelectionDslExte
         }
     }
 
-    public fun <S, R : ColumnsResolver<S>> String.atAnyDepth(
+    @AtAnyDepthDslMarker
+    public fun <S, R : ColumnsResolver<S>> String.atAnyDepth2(
         selector: Selector<AtAnyDepthDsl<*>, R>,
     ): ColumnSet<S> = with(this@AtAnyDepth2ColumnsSelectionDsl as ColumnsSelectionDsl<T>) {
         select {
@@ -79,7 +113,8 @@ public interface AtAnyDepth2ColumnsSelectionDsl<out T> : ColumnsSelectionDslExte
         }
     }
 
-    public fun <S, R : ColumnsResolver<S>> ColumnPath.atAnyDepth(
+    @AtAnyDepthDslMarker
+    public fun <S, R : ColumnsResolver<S>> ColumnPath.atAnyDepth2(
         selector: Selector<AtAnyDepthDsl<*>, R>,
     ): ColumnSet<S> = with(this@AtAnyDepth2ColumnsSelectionDsl as ColumnsSelectionDsl<T>) {
         select {

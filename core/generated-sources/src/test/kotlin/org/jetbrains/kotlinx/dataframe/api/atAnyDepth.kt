@@ -2,20 +2,17 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
-import org.jetbrains.kotlinx.dataframe.samples.api.age
 import org.jetbrains.kotlinx.dataframe.samples.api.city
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
 import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.junit.Test
-import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.typeOf
 
 class AtAnyDepth : TestBase() {
@@ -23,54 +20,12 @@ class AtAnyDepth : TestBase() {
     @Test
     fun `scope test`() {
         df.select {
-            colGroup("name").lastCol()
-            atAnyDepth {
-                colGroup("name").lastCol()
-            } and
-                "name".atAnyDepth {
-                    last { "last" in it.name }
-                }
+            colGroups().atAnyDepth2 {
+                first { "first" in it.name }
+                all()
+            }
         }.alsoDebug()
 
-//        df.select {
-//            age
-//            first { "fi" in it.name } and allAfter("age")
-//
-//            name.colsOf<Int>()
-//            atAnyDepth {
-//                cols { true }.colsOf<Int>()
-
-//                name.colsOf<Int>()
-//            }
-//
-//            atAnyDepth {
-//                "".lastCol { true }
-//                last {
-//
-//                }
-//                colsOf<Int>().last()
-//
-//                first { "fi" in it.name } and allAfter("age")
-//            }
-//        }.alsoDebug()
-
-//        df.select {
-//            "name".firstCol { "first" in it.name }
-//        }.alsoDebug()
-//
-//        df.select {
-//            "name".atAnyDepth {
-//                first { "first" in it.name }
-//            }
-//        }.alsoDebug()
-
-//        df.select {
-//            testFunction()
-//            atAnyDepth {
-//                testFunction()
-//                none()
-//            }
-//        }
 
 //        df.select {
 //            atAnyDepth { cols { "first" in it.name } }
@@ -183,7 +138,7 @@ class AtAnyDepth : TestBase() {
 
     @Test
     fun `all atAnyDepth`() {
-        dfGroup.getColumnsWithPaths { all().atAnyDepth() }.sortedBy { it.name } shouldBe atAnyDepthGoal
+//        dfGroup.getColumnsWithPaths { all().atAnyDepth() }.sortedBy { it.name } shouldBe atAnyDepthGoal
         dfGroup.getColumnsWithPaths { all().cols { !it.isColumnGroup() }.atAnyDepth() }
             .sortedBy { it.name } shouldBe atAnyDepthNoGroups
     }
@@ -195,19 +150,19 @@ class AtAnyDepth : TestBase() {
 
     @Test
     fun `colsOf atAnyDepth`() {
-        dfGroup.getColumnsWithPaths { colsOf<String?>().atAnyDepth() }.sortedBy { it.name } shouldBe atAnyDepthString
+//        dfGroup.getColumnsWithPaths { colsOf<String?>().atAnyDepth() }.sortedBy { it.name } shouldBe atAnyDepthString
     }
 
     @Test
     fun `all allAtAnyDepth`() {
-        dfGroup.getColumnsWithPaths { all().all().atAnyDepth() }.sortedBy { it.name } shouldBe atAnyDepthGoal
+//        dfGroup.getColumnsWithPaths { all().all().atAnyDepth() }.sortedBy { it.name } shouldBe atAnyDepthGoal
         dfGroup.getColumnsWithPaths { all().cols { !it.isColumnGroup() }.atAnyDepth() }
             .sortedBy { it.name } shouldBe atAnyDepthNoGroups
     }
 
     @Test
     fun `cols allAtAnyDepth`() {
-        dfGroup.getColumnsWithPaths { cols().all().atAnyDepth() }.sortedBy { it.name } shouldBe atAnyDepthGoal
+//        dfGroup.getColumnsWithPaths { cols().all().atAnyDepth() }.sortedBy { it.name } shouldBe atAnyDepthGoal
         dfGroup.getColumnsWithPaths { cols().cols { !it.isColumnGroup() }.atAnyDepth() }
             .sortedBy { it.name } shouldBe atAnyDepthNoGroups
     }

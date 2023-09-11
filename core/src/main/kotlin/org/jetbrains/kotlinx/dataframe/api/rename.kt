@@ -61,7 +61,8 @@ public fun <T> DataFrame<T>.renameToCamelCase(): DataFrame<T> = this
 
     // take all frame columns at any depth and call renameToCamelCase() on all dataframes inside
     .update {
-        colsOf<AnyFrame>().atAnyDepth()
+        atAnyDepth2 { colsOf<AnyFrame>() }
+//        colsOf<AnyFrame>().atAnyDepth()
     }.with { it.renameToCamelCase() }
 
 public fun <T, C> RenameClause<T, C>.into(vararg newColumns: ColumnReference<*>): DataFrame<T> =

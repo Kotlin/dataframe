@@ -92,7 +92,7 @@ private class AtAnyDepthTransformer(
 internal fun ColumnsResolver<*>.flattenRecursively(
     includeGroups: Boolean = true,
     includeTopLevel: Boolean = true,
-): ColumnsResolver<*> = allColumnsInternal().transform { cols ->
+): ColumnsResolver<*> = allColumnsInternal(null).transform { cols ->
     if (includeTopLevel) {
         cols.flattenRecursively()
     } else {

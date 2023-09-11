@@ -184,7 +184,7 @@ private interface SingleColumnAsColumnGroupDocs
  *
  * #### For example:
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.first]`().`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`().`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
  *
  * @receiver The column reference to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
  * @param [C] The type of the (group) column.
@@ -204,7 +204,7 @@ public fun <C> SingleColumn<C>.asColumnGroup(): SingleColumn<DataRow<C>> = this 
  *
  * #### For example:
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.first]`().`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`().`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
  *
  * @receiver The column reference to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
  * @param [C] The type of the (group) column.

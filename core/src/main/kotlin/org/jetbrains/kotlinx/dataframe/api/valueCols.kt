@@ -78,7 +78,7 @@ public interface ValueColsColumnsSelectionDsl<out T> : ColumnsSelectionDslExtens
      *
      * `df.`[select][DataFrame.select]` { `[valueCols][ColumnsSelectionDsl.valueCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
-     * `df.`[select][DataFrame.select]` { `[valueCols][ColumnsSelectionDsl.valueCols]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { `[valueCols][ColumnsSelectionDsl.valueCols]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[valueCols][String.valueCols]`() }`
      *
@@ -153,7 +153,7 @@ public interface ValueColsColumnsSelectionDsl<out T> : ColumnsSelectionDslExtens
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[valueCols][KProperty.valueCols]`() }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[valueCols][KProperty.valueCols]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[valueCols][KProperty.valueCols]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      */
     public fun KProperty<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
         columnGroup(this).valueCols(filter)
@@ -162,7 +162,7 @@ public interface ValueColsColumnsSelectionDsl<out T> : ColumnsSelectionDslExtens
      * @include [CommonValueColsDocs]
      * @setArg [CommonValueColsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[valueCols][ColumnPath.valueCols]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[valueCols][ColumnPath.valueCols]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      */
     public fun ColumnPath.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
         columnGroup(this).valueCols(filter)

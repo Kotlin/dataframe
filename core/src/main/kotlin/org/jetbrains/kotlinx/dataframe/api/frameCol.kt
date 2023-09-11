@@ -559,7 +559,7 @@ public interface FrameColColumnsSelectionDsl<out T> : ColumnsSelectionDslExtensi
      */
     public fun <C> SingleColumn<DataRow<*>>.frameCol(index: Int): SingleColumn<DataFrame<C>> =
         this.ensureIsColumnGroup()
-            .allColumnsInternal()
+            .allColumnsInternal(scope)
             .getAt(index)
             .cast<DataFrame<C>>()
             .ensureIsFrameColumn()

@@ -702,7 +702,7 @@ class Access : TestBase() {
     fun columnSelectorsUsages() {
         // SampleStart
         df.select { age and name }
-        df.fillNaNs { colsOf<Double>().atAnyDepth() }.withZero()
+        df.fillNaNs { atAnyDepth2 { colsOf<Double>() } }.withZero()
         df.remove { cols { it.hasNulls() } }
         df.group { cols { it.data != name } }.into { "nameless" }
         df.update { city }.notNull { it.lowercase() }
@@ -910,13 +910,13 @@ class Access : TestBase() {
         df.select { cols { !it.isColumnGroup() }.atAnyDepth() }
 
         // depth-first-search traversal of all columns, including ColumnGroups in result
-        df.select { all().atAnyDepth() }
+        df.select { atAnyDepth2 { all() } }
 
         // recursive traversal with condition
         df.select { cols { it.name().contains(":") }.atAnyDepth() }
 
         // recursive traversal of columns of given type
-        df.select { colsOf<String>().atAnyDepth() }
+        df.select { atAnyDepth2 { colsOf<String>() } }
 
         // all columns except given column set
         df.select { except { colsOf<String>() } }

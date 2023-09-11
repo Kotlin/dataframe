@@ -67,8 +67,8 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun `select atAnyDepth under group`() {
-        df2.select { nameAndCity.colsOf<String>().atAnyDepth() } shouldBe typed2.select { nameAndCity.name }
-        df2.select { nameAndCity.colsOf<String?>().atAnyDepth() } shouldBe typed2.select { nameAndCity.name and nameAndCity.city }
+        df2.select { atAnyDepth2 { nameAndCity.colsOf<String>() } } shouldBe typed2.select { nameAndCity.name }
+        df2.select { atAnyDepth2 { nameAndCity.colsOf<String?>() } } shouldBe typed2.select { nameAndCity.name and nameAndCity.city }
     }
 
     @Test

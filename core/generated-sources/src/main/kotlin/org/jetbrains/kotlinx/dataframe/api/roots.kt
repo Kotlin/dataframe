@@ -30,7 +30,7 @@ public interface RootsColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<
      *
      */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.roots(): ColumnSet<C> = rootsInternal() as ColumnSet<C>
+    public fun <C> ColumnSet<C>.roots(): ColumnSet<C> = rootsInternal(scope) as ColumnSet<C>
 
     /** ## Roots
      *
@@ -43,7 +43,7 @@ public interface RootsColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<
      * else it simply runs on the columns in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] itself.
      *
      */
-    public fun SingleColumn<DataRow<*>>.roots(): ColumnSet<*> = this.ensureIsColumnGroup().rootsInternal()
+    public fun SingleColumn<DataRow<*>>.roots(): ColumnSet<*> = this.ensureIsColumnGroup().rootsInternal(scope)
 
     /** todo */
     public fun ColumnsSelectionDsl<*>.roots(): ColumnSet<*> = asSingleColumn().roots()
@@ -88,7 +88,7 @@ public interface RootsColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<
     public fun ColumnPath.roots(): ColumnSet<*> = columnGroup(this).roots()
 }
 
-internal fun ColumnsResolver<*>.rootsInternal(): ColumnSet<*> =
-    allColumnsInternal().transform { it.roots() }
+internal fun ColumnsResolver<*>.rootsInternal(scope: Scope?): ColumnSet<*> =
+    allColumnsInternal(scope).transform { it.roots() }
 
 // endregion

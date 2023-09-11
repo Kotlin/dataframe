@@ -562,7 +562,7 @@ public interface ColGroupColumnsSelectionDsl<out T> : ColumnsSelectionDslExtensi
      */
     public fun <C> SingleColumn<DataRow<*>>.colGroup(index: Int): SingleColumn<DataRow<C>> =
         this.ensureIsColumnGroup()
-            .allColumnsInternal()
+            .allColumnsInternal(scope)
             .getAt(index)
             .cast<DataRow<C>>()
             .ensureIsColumnGroup()

@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowFilter
+import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.CommonFirstDocs
 import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.CommonFirstDocs.Examples
 import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage
 import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage.ColumnGroupName
@@ -16,13 +17,11 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
-import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.atAnyDepthImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
@@ -118,7 +117,7 @@ public interface FirstColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [**first**][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.first]` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `] [ `.[**atAnyDepth**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()` ` ]`
+     *  [**first**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `] [ `.[**atAnyDepth**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`()` ` ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -129,7 +128,7 @@ public interface FirstColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<
      *
      *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**first**][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.first]` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `] [ `.[**atAnyDepth**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()` ` ]`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**first**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `] [ `.[**atAnyDepth**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`()` ` ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -140,7 +139,7 @@ public interface FirstColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<
      *
      *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**firstCol**][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `] [ `.[**atAnyDepth**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()` ` ]`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**firstCol**][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `] [ `.[**atAnyDepth**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`()` ` ]`
      *
      *
      *
@@ -181,7 +180,7 @@ public interface FirstColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<
      *
      * `df.`[select][DataFrame.select]` { `[first][ColumnsSelectionDsl.first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[firstCol][String.firstCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") }.`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[firstCol][String.firstCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") }.`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * #### Examples for this overload:
      *
@@ -211,9 +210,9 @@ public interface FirstColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstCol][kotlin.String.firstCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstCol][kotlin.String.firstCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * #### Examples for this overload:
      *
@@ -228,7 +227,7 @@ public interface FirstColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<
      * @see [ColumnsSelectionDsl.last]
      */
     public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C> = { true }): SingleColumn<C> =
-        firstInternal(this@FirstColumnsSelectionDsl, condition)
+        firstInternal(scope, condition)
 
     /**
      * ## First (Col)
@@ -242,9 +241,9 @@ public interface FirstColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstCol][kotlin.String.firstCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstCol][kotlin.String.firstCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * #### Examples for this overload:
      *
@@ -256,8 +255,8 @@ public interface FirstColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.last]
      */
-    public fun first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
-        context.asSingleColumn().firstInternal(this@FirstColumnsSelectionDsl, condition)
+    public fun ColumnsSelectionDsl<*>.first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+        asSingleColumn().firstInternal(scope, condition)
 
     /**
      * ## First (Col)
@@ -271,9 +270,9 @@ public interface FirstColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstCol][kotlin.String.firstCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstCol][kotlin.String.firstCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * #### Examples for this overload:
      *
@@ -286,7 +285,7 @@ public interface FirstColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<
      * @see [ColumnsSelectionDsl.last]
      */
     public fun SingleColumn<DataRow<*>>.firstCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
-        ensureIsColumnGroup().firstInternal(this@FirstColumnsSelectionDsl, condition)
+        ensureIsColumnGroup().firstInternal(scope, condition)
 
     /**
      * ## First (Col)
@@ -300,9 +299,9 @@ public interface FirstColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstCol][kotlin.String.firstCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstCol][kotlin.String.firstCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * #### Examples for this overload:
      *
@@ -315,7 +314,7 @@ public interface FirstColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<
      * @see [ColumnsSelectionDsl.last]
      */
     public fun String.firstCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
-        columnGroup(this).firstCol(condition)
+        columnGroup(this).ensureIsColumnGroup().firstInternal(scope, condition)
 
     /**
      * ## First (Col)
@@ -329,9 +328,9 @@ public interface FirstColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstCol][kotlin.String.firstCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstCol][kotlin.String.firstCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * #### Examples for this overload:
      *
@@ -346,7 +345,7 @@ public interface FirstColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<
      * @see [ColumnsSelectionDsl.last]
      */
     public fun KProperty<*>.firstCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
-        columnGroup(this).firstCol(condition)
+        columnGroup(this).ensureIsColumnGroup().firstInternal(scope, condition)
 
     /**
      * ## First (Col)
@@ -360,9 +359,9 @@ public interface FirstColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstCol][kotlin.String.firstCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstCol][kotlin.String.firstCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * #### Examples for this overload:
      *
@@ -375,21 +374,114 @@ public interface FirstColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<
      * @see [ColumnsSelectionDsl.last]
      */
     public fun ColumnPath.firstCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
-        columnGroup(this).firstCol(condition)
+        columnGroup(this).ensureIsColumnGroup().firstInternal(scope, condition)
+}
+
+public interface FirstAtAnyDepthDsl<out T> : ColumnsSelectionDslExtension<T> {
+
+    /**
+     * ## First (Col)
+     * Returns the first ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * that adheres to the given [condition].
+     * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
+     *
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage] for how to use [first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.first]/[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol].
+     *
+     * #### Examples:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstCol][kotlin.String.firstCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[first][ColumnSet.first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[first][ColumnSet.first]`() }`
+     *
+     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
+     *   that adheres to the given [condition].
+     * @throws [NoSuchElementException] if no column adheres to the given [condition].
+     * @see [ColumnsSelectionDsl.last]
+     */
+    @AtAnyDepthDslMarker
+    public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C> = { true }): SingleColumn<C> =
+        firstInternal(scope, condition)
+
+    /**
+     * ## First (Col)
+     * Returns the first ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * that adheres to the given [condition].
+     * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
+     *
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage] for how to use [first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.first]/[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol].
+     *
+     * #### Examples:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstCol][kotlin.String.firstCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[first][ColumnsSelectionDsl.first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     *
+     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
+     *   that adheres to the given [condition].
+     * @throws [NoSuchElementException] if no column adheres to the given [condition].
+     * @see [ColumnsSelectionDsl.last]
+     */
+    @AtAnyDepthDslMarker
+    public fun AtAnyDepthDsl<*>.first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+        context.asSingleColumn().firstInternal(scope, condition)
+
+    /**
+     * ## First (Col)
+     * Returns the first ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * that adheres to the given [condition].
+     * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
+     *
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
+     *
+     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage] for how to use [first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.first]/[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol].
+     *
+     * #### Examples:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstCol][kotlin.String.firstCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") }.`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[firstCol][SingleColumn.firstCol]`() }`
+     *
+     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
+     *   that adheres to the given [condition].
+     * @throws [NoSuchElementException] if no column adheres to the given [condition].
+     * @see [ColumnsSelectionDsl.last]
+     */
+    @AtAnyDepthDslMarker
+    public fun SingleColumn<DataRow<*>>.firstCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+        ensureIsColumnGroup().firstInternal(scope, condition)
+
 }
 
 @Suppress("UNCHECKED_CAST")
-internal fun <C> ColumnsResolver<C>.firstInternal(context: Any?, condition: ColumnFilter<C> = { true }): SingleColumn<C> =
-    (allColumnsInternal() as ColumnSet<C>)
+internal fun <C> ColumnsResolver<C>.firstInternal(scope: Scope?, condition: ColumnFilter<C> = { true }): SingleColumn<C> =
+    (allColumnsInternal(null) as ColumnSet<C>)
         .transform { listOf(it.first(condition)) }
         .singleOrNullWithTransformerImpl()
         .let {
-            when (context) {
-                is AtAnyDepthDsl<*> -> it.atAnyDepthImpl(includeGroups = true, includeTopLevel = true)
-                    .also { println("ran atAnyDepth") }
-                is ColumnsSelectionDsl<*> -> it
-                    .also { println("ran in CS-DSL") }
-                else -> it
+            when (scope) {
+                Scope.COLUMNS_SELECTION_DSL, null -> it
+                Scope.AT_ANY_DEPTH_DSL -> it.atAnyDepthImpl(includeGroups = true, includeTopLevel = true)
             }
         }
 

@@ -25,7 +25,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl<out T> : ColumnsSelectionD
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { `[nameContains][SingleColumn.childrenNameContains]`("my").`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { `[nameContains][SingleColumn.childrenNameContains]`("my").`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * `df.`[select][DataFrame.select]` { "someGroupCol".`[nameContains][String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
@@ -76,7 +76,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl<out T> : ColumnsSelectionD
      * @include [NameContainsTextDocs]
      * @setArg [CommonNameContainsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { someGroupCol.`[childrenNameContains][SingleColumn.childrenNameContains]`("my").`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { someGroupCol.`[childrenNameContains][SingleColumn.childrenNameContains]`("my").`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      */
     public fun SingleColumn<DataRow<*>>.childrenNameContains(text: CharSequence): TransformableColumnSet<*> =
         this.ensureIsColumnGroup().colsInternal { it.name.contains(text) }
@@ -85,7 +85,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl<out T> : ColumnsSelectionD
      * @include [NameContainsTextDocs]
      * @setArg [CommonNameContainsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "someGroupCol".`[childrenNameContains][String.childrenNameContains]`("my").`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { "someGroupCol".`[childrenNameContains][String.childrenNameContains]`("my").`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * `df.`[select][DataFrame.select]` { "someGroupCol".`[childrenNameContains][String.childrenNameContains]`("my") }`
      *
@@ -99,7 +99,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl<out T> : ColumnsSelectionD
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameContains][SingleColumn.childrenNameContains]`("my") }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[childrenNameContains][KProperty.childrenNameContains]`("my").`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[childrenNameContains][KProperty.childrenNameContains]`("my").`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      */
     public fun KProperty<DataRow<*>>.childrenNameContains(text: CharSequence): TransformableColumnSet<*> =
         columnGroup(this).childrenNameContains(text)
@@ -110,7 +110,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl<out T> : ColumnsSelectionD
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[childrenNameContains][ColumnPath.childrenNameContains]`("my") }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[childrenNameContains][ColumnPath.childrenNameContains]`("my").`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[childrenNameContains][ColumnPath.childrenNameContains]`("my").`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      */
     public fun ColumnPath.childrenNameContains(text: CharSequence): TransformableColumnSet<*> =
         columnGroup(this).childrenNameContains(text)
@@ -145,7 +145,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl<out T> : ColumnsSelectionD
      * @include [NameContainsRegexDocs]
      * @setArg [CommonNameContainsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { someGroupCol.`[childrenNameContains][SingleColumn.childrenNameContains]`(`[Regex][Regex]`("order-[0-9]+")).`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { someGroupCol.`[childrenNameContains][SingleColumn.childrenNameContains]`(`[Regex][Regex]`("order-[0-9]+")).`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      */
     public fun SingleColumn<DataRow<*>>.childrenNameContains(regex: Regex): TransformableColumnSet<*> =
         this.ensureIsColumnGroup().colsInternal { it.name.contains(regex) }
@@ -154,7 +154,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl<out T> : ColumnsSelectionD
      * @include [NameContainsRegexDocs]
      * @setArg [CommonNameContainsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "someGroupCol".`[childrenNameContains][String.childrenNameContains]`(`[Regex][Regex]`("order-[0-9]+")).`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { "someGroupCol".`[childrenNameContains][String.childrenNameContains]`(`[Regex][Regex]`("order-[0-9]+")).`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * `df.`[select][DataFrame.select]` { "someGroupCol".`[childrenNameContains][String.childrenNameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
      */
@@ -167,7 +167,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl<out T> : ColumnsSelectionD
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameContains][SingleColumn.childrenNameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[childrenNameContains][KProperty.childrenNameContains]`(`[Regex][Regex]`("order-[0-9]+")).`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[childrenNameContains][KProperty.childrenNameContains]`(`[Regex][Regex]`("order-[0-9]+")).`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      */
     public fun KProperty<DataRow<*>>.childrenNameContains(regex: Regex): TransformableColumnSet<*> =
         columnGroup(this).childrenNameContains(regex)
@@ -178,7 +178,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl<out T> : ColumnsSelectionD
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[childrenNameContains][ColumnPath.childrenNameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[childrenNameContains][ColumnPath.childrenNameContains]`(`[Regex][Regex]`("order-[0-9]+")).`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[childrenNameContains][ColumnPath.childrenNameContains]`(`[Regex][Regex]`("order-[0-9]+")).`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      */
     public fun ColumnPath.childrenNameContains(regex: Regex): TransformableColumnSet<*> =
         columnGroup(this).childrenNameContains(regex)
@@ -197,7 +197,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl<out T> : ColumnsSelectionD
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { `[{@getArg [NameOperationName]}][ColumnsSelectionDsl.{@getArg [NameOperationName]}]`("order").`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { `[{@getArg [NameOperationName]}][ColumnsSelectionDsl.{@getArg [NameOperationName]}]`("order").`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * `df.`[select][DataFrame.select]` { "someGroupCol".`[{@getArg [ChildrenNameOperationName]}][String.{@getArg [ChildrenNameOperationName]}]`("b") }`
      *

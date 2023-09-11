@@ -77,7 +77,7 @@ public interface ColsOfKindColumnsSelectionDsl<out T> : ColumnsSelectionDslExten
      *
      * `df.`[select][DataFrame.select]` { `[colsOfKind][ColumnsSelectionDsl.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
-     *  `df.`[select][DataFrame.select]` { `[colsOfKind][ColumnsSelectionDsl.colsOfKind]`(`[Group][ColumnKind.Group]`).`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     *  `df.`[select][DataFrame.select]` { `[colsOfKind][ColumnsSelectionDsl.colsOfKind]`(`[Group][ColumnKind.Group]`).`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      *  `df.`[select][DataFrame.select]` { "myColGroup".`[colsOfKind][String.colsOfKind]`(`[Frame][ColumnKind.Frame]`) }`
      *

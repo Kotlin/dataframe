@@ -81,7 +81,7 @@ public interface ColGroupsColumnsSelectionDsl<out T> : ColumnsSelectionDslExtens
      *
      * `df.`[select][DataFrame.select]` { `[colGroups][ColumnsSelectionDsl.colGroups]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
-     * `df.`[select][DataFrame.select]` { `[colGroups][ColumnsSelectionDsl.colGroups]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { `[colGroups][ColumnsSelectionDsl.colGroups]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[colGroups][String.colGroups]`() }`
      *
@@ -154,7 +154,7 @@ public interface ColGroupsColumnsSelectionDsl<out T> : ColumnsSelectionDslExtens
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[colGroups][SingleColumn.colGroups]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup.`[colGroups][KProperty.colGroups]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup.`[colGroups][KProperty.colGroups]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      */
     public fun KProperty<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
         columnGroup(this).colGroups(filter)
@@ -163,7 +163,7 @@ public interface ColGroupsColumnsSelectionDsl<out T> : ColumnsSelectionDslExtens
      * @include [CommonColGroupsDocs]
      * @setArg [CommonColGroupsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[colGroups][ColumnPath.colGroups]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[colGroups][ColumnPath.colGroups]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      */
     public fun ColumnPath.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
         columnGroup(this).colGroups(filter)

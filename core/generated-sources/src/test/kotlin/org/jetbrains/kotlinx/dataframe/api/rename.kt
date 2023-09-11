@@ -48,7 +48,7 @@ class RenameTests {
         ).group { "a_renamed" and "b_renamed" }.into("group_renamed")
 
         groupedDf
-            .rename { all().atAnyDepth() }
+            .rename { atAnyDepth2 { all() } }
             .into { it.name + "_renamed" } shouldBe renamedDf
     }
 
@@ -61,7 +61,7 @@ class RenameTests {
             .group { "group_renamed"["a_renamed"] }.into { "group_renamed"["aGroup_renamed"] }
 
         doubleGroupedDf
-            .rename { all().atAnyDepth() }
+            .rename { atAnyDepth2 { all() } }
             .into { it.name + "_renamed" } shouldBe renamedDf
     }
 }

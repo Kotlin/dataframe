@@ -5,19 +5,20 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 // region ColumnsSelectionDsl
+
 public interface ColsOfColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T> {
 
     /**
-     * ## (Children) Cols Of
+     * ## Cols Of
      * Get columns by a given type and an optional filter.
      *
      * #### For example:
@@ -64,7 +65,7 @@ public interface ColsOfColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension
     ): ColumnSet<*> = columnGroup(this).colsOf(type, filter)
 
     /**
-     * ## (Children) Cols Of
+     * ## Cols Of
      * Get columns by a given type and an optional filter.
      *
      * #### For example:
@@ -111,7 +112,7 @@ public interface ColsOfColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension
     ): ColumnSet<*> = columnGroup(this).colsOf(type, filter)
 
     /**
-     * ## (Children) Cols Of
+     * ## Cols Of
      * Get columns by a given type and an optional filter.
      *
      * #### For example:
@@ -158,8 +159,39 @@ public interface ColsOfColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension
     ): ColumnSet<*> = columnGroup(this).colsOf(type, filter)
 }
 
+public interface ColsOfAtAnyDepthDsl<out T> : ColumnsSelectionDslExtension<T> {
+
+    @AtAnyDepthDslMarker
+    public fun <C> ColumnSet<*>.colsOf(
+        type: KType,
+        filter: (DataColumn<C>) -> Boolean = { true },
+    ): ColumnSet<C> = colsOfInternal(type, scope, filter)
+
+    @AtAnyDepthDslMarker
+    public fun <C> AtAnyDepthDsl<*>.colsOf(
+        type: KType,
+        filter: (DataColumn<C>) -> Boolean = { true },
+    ): ColumnSet<C> = context.asSingleColumn().colsOfInternal(type, scope, filter)
+
+    @AtAnyDepthDslMarker
+    public fun <C> SingleColumn<DataRow<*>>.colsOf(
+        type: KType,
+        filter: (DataColumn<C>) -> Boolean = { true },
+    ): ColumnSet<C> = ensureIsColumnGroup().colsOfInternal(type, scope, filter)
+
+}
+
+@Suppress("UNCHECKED_CAST")
+@PublishedApi
+internal fun <C> ColumnsResolver<*>.colsOfInternal(
+    type: KType,
+    scope: Scope?,
+    filter: (DataColumn<C>) -> Boolean = { true },
+): ColumnSet<C> =
+    colsInternal(scope) { it.isSubtypeOf(type) && filter(it.cast()) } as ColumnSet<C>
+
 /**
- * ## (Children) Cols Of
+ * ## Cols Of
  * Get columns by a given type and an optional filter.
  *
  * #### For example:
@@ -200,7 +232,7 @@ private interface CommonColsOfDocs {
 }
 
 /**
- * ## (Children) Cols Of
+ * ## Cols Of
  * Get columns by a given type and an optional filter.
  *
  * #### For example:
@@ -244,11 +276,10 @@ private interface CommonColsOfDocs {
 public fun <C> ColumnSet<*>.colsOf(
     type: KType,
     filter: (DataColumn<C>) -> Boolean = { true },
-): TransformableColumnSet<C> =
-    colsInternal { it.isSubtypeOf(type) && filter(it.cast()) } as TransformableColumnSet<C>
+): ColumnSet<C> = colsOfInternal(type, Scope.COLUMNS_SELECTION_DSL, filter)
 
 /**
- * ## (Children) Cols Of
+ * ## Cols Of
  * Get columns by a given type and an optional filter.
  *
  * #### For example:
@@ -290,11 +321,10 @@ public fun <C> ColumnSet<*>.colsOf(
  */
 public inline fun <reified C> ColumnSet<*>.colsOf(
     noinline filter: (DataColumn<C>) -> Boolean = { true },
-): TransformableColumnSet<C> =
-    colsOf(typeOf<C>(), filter)
+): ColumnSet<C> = colsOfInternal(typeOf<C>(), Scope.COLUMNS_SELECTION_DSL, filter)
 
 /**
- * ## (Children) Cols Of
+ * ## Cols Of
  * Get columns by a given type and an optional filter.
  *
  * #### For example:
@@ -336,11 +366,11 @@ public inline fun <reified C> ColumnSet<*>.colsOf(
 public fun <C> ColumnsSelectionDsl<*>.colsOf(
     type: KType,
     filter: (DataColumn<C>) -> Boolean = { true },
-): TransformableColumnSet<C> =
-    asSingleColumn().colsOf(type, filter)
+): ColumnSet<C> =
+    asSingleColumn().colsOfInternal(type, Scope.COLUMNS_SELECTION_DSL, filter)
 
 /**
- * ## (Children) Cols Of
+ * ## Cols Of
  * Get columns by a given type and an optional filter.
  *
  * #### For example:
@@ -380,17 +410,11 @@ public fun <C> ColumnsSelectionDsl<*>.colsOf(
  */
 public inline fun <reified C> ColumnsSelectionDsl<*>.colsOf(
     noinline filter: (DataColumn<C>) -> Boolean = { true },
-): TransformableColumnSet<C> =
-    asSingleColumn().colsOf(typeOf<C>(), filter)
-
-// TODO
-public inline fun <reified C> AtAnyDepthDsl<*>.colsOf(
-    noinline filter: (DataColumn<C>) -> Boolean = { true },
-): TransformableColumnSet<C> =
-    context.asSingleColumn().colsOf(typeOf<C>(), filter)
+): ColumnSet<C> =
+    asSingleColumn().colsOfInternal(typeOf<C>(), Scope.COLUMNS_SELECTION_DSL, filter)
 
 /**
- * ## (Children) Cols Of
+ * ## Cols Of
  * Get columns by a given type and an optional filter.
  *
  * #### For example:
@@ -431,15 +455,15 @@ public inline fun <reified C> AtAnyDepthDsl<*>.colsOf(
  * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
  * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
  */
-@Suppress("UNCHECKED_CAST")
 public fun <C> SingleColumn<DataRow<*>>.colsOf(
     type: KType,
     filter: (DataColumn<C>) -> Boolean = { true },
-): TransformableColumnSet<C> =
-    this.ensureIsColumnGroup().colsInternal { it.isSubtypeOf(type) && filter(it.cast()) } as TransformableColumnSet<C>
+): ColumnSet<C> =
+    ensureIsColumnGroup()
+        .colsOfInternal(type, Scope.COLUMNS_SELECTION_DSL, filter)
 
 /**
- * ## (Children) Cols Of
+ * ## Cols Of
  * Get columns by a given type and an optional filter.
  *
  * #### For example:
@@ -481,8 +505,9 @@ public fun <C> SingleColumn<DataRow<*>>.colsOf(
  */
 public inline fun <reified C> SingleColumn<DataRow<*>>.colsOf(
     noinline filter: (DataColumn<C>) -> Boolean = { true },
-): TransformableColumnSet<C> =
-    colsOf(typeOf<C>(), filter)
+): ColumnSet<C> =
+    ensureIsColumnGroup()
+        .colsOfInternal(typeOf<C>(), Scope.COLUMNS_SELECTION_DSL, filter)
 
 /* TODO: [Issue: #325, context receiver support](https://github.com/Kotlin/dataframe/issues/325)
 context(ColumnsSelectionDsl)

@@ -2646,7 +2646,7 @@ public interface ColColumnsSelectionDsl<out T> : ColumnsSelectionDslExtension<T>
      */
     public fun <C> SingleColumn<DataRow<*>>.col(index: Int): SingleColumn<C> =
         this.ensureIsColumnGroup()
-            .allColumnsInternal()
+            .allColumnsInternal(scope)
             .getAt(index)
             .cast()
 

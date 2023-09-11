@@ -53,7 +53,7 @@ public interface ColsOfKindColumnsSelectionDsl<out T> : ColumnsSelectionDslExten
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [**colsOfKind**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]**`(`**[kind][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnKindDef]`, ..`**`)`**` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `]` `[ `.[**atAnyDepth**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()` ` ]`
+     *  [**colsOfKind**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]**`(`**[kind][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnKindDef]`, ..`**`)`**` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `]` `[ `.[**atAnyDepth**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`()` ` ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -64,7 +64,7 @@ public interface ColsOfKindColumnsSelectionDsl<out T> : ColumnsSelectionDslExten
      *
      *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**colsOfKind**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]**`(`**[kind][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnKindDef]`, ..`**`)`**` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `]` `[ `.[**atAnyDepth**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()` ` ]`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**colsOfKind**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]**`(`**[kind][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnKindDef]`, ..`**`)`**` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `]` `[ `.[**atAnyDepth**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`()` ` ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -75,7 +75,7 @@ public interface ColsOfKindColumnsSelectionDsl<out T> : ColumnsSelectionDslExten
      *
      *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**colsOfKind**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]**`(`**[kind][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnKindDef]`, ..`**`)`**` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `]` `[ `.[**atAnyDepth**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`()` ` ]`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**colsOfKind**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]**`(`**[kind][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnKindDef]`, ..`**`)`**` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `]` `[ `.[**atAnyDepth**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`()` ` ]`
      *
      *
      *
@@ -119,7 +119,7 @@ public interface ColsOfKindColumnsSelectionDsl<out T> : ColumnsSelectionDslExten
      *
      * `df.`[select][DataFrame.select]` { `[colsOfKind][ColumnsSelectionDsl.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
-     *  `df.`[select][DataFrame.select]` { `[colsOfKind][ColumnsSelectionDsl.colsOfKind]`(`[Group][ColumnKind.Group]`).`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     *  `df.`[select][DataFrame.select]` { `[colsOfKind][ColumnsSelectionDsl.colsOfKind]`(`[Group][ColumnKind.Group]`).`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      *  `df.`[select][DataFrame.select]` { "myColGroup".`[colsOfKind][String.colsOfKind]`(`[Frame][ColumnKind.Frame]`) }`
      *
@@ -159,7 +159,7 @@ public interface ColsOfKindColumnsSelectionDsl<out T> : ColumnsSelectionDslExten
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]`, `[Frame][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Group][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group]`).`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`() }`
+     *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Group][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group]`).`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[colsOfKind][kotlin.String.colsOfKind]`(`[Frame][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) }`
      *
@@ -207,7 +207,7 @@ public interface ColsOfKindColumnsSelectionDsl<out T> : ColumnsSelectionDslExten
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]`, `[Frame][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Group][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group]`).`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`() }`
+     *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Group][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group]`).`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[colsOfKind][kotlin.String.colsOfKind]`(`[Frame][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) }`
      *
@@ -251,7 +251,7 @@ public interface ColsOfKindColumnsSelectionDsl<out T> : ColumnsSelectionDslExten
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]`, `[Frame][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Group][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group]`).`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`() }`
+     *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Group][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group]`).`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[colsOfKind][kotlin.String.colsOfKind]`(`[Frame][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) }`
      *
@@ -295,7 +295,7 @@ public interface ColsOfKindColumnsSelectionDsl<out T> : ColumnsSelectionDslExten
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]`, `[Frame][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Group][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group]`).`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`() }`
+     *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Group][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group]`).`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[colsOfKind][kotlin.String.colsOfKind]`(`[Frame][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) }`
      *
@@ -336,7 +336,7 @@ public interface ColsOfKindColumnsSelectionDsl<out T> : ColumnsSelectionDslExten
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]`, `[Frame][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Group][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group]`).`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`() }`
+     *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Group][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group]`).`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[colsOfKind][kotlin.String.colsOfKind]`(`[Frame][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) }`
      *
@@ -377,7 +377,7 @@ public interface ColsOfKindColumnsSelectionDsl<out T> : ColumnsSelectionDslExten
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]`, `[Frame][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Group][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group]`).`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth]`() }`
+     *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Group][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group]`).`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.atAnyDepth2]`() }`
      *
      *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[colsOfKind][kotlin.String.colsOfKind]`(`[Frame][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) }`
      *

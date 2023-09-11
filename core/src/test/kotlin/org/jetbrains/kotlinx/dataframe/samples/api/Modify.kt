@@ -118,7 +118,7 @@ class Modify : TestBase() {
     fun update() {
         // SampleStart
         df.update { age }.with { it * 2 }
-        df.update { colsOf<String>().atAnyDepth() }.with { it.uppercase() }
+        df.update { atAnyDepth2 { colsOf<String>() } }.with { it.uppercase() }
         df.update { weight }.at(1..4).notNull { it / 2 }
         df.update { name.lastName and age }.at(1, 3, 4).withNull()
         // SampleEnd
@@ -179,7 +179,7 @@ class Modify : TestBase() {
     fun convert() {
         // SampleStart
         df.convert { age }.with { it.toDouble() }
-        df.convert { colsOf<String>().atAnyDepth() }.with { it.toCharArray().toList() }
+        df.convert { atAnyDepth2 { colsOf<String>() } }.with { it.toCharArray().toList() }
         // SampleEnd
     }
 

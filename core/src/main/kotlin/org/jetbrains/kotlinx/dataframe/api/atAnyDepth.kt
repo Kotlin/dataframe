@@ -1,10 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -26,7 +24,6 @@ import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_DFS_OF
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_DFS_OF_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_DFS_OF_TYPED_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_DFS_REPLACE
-import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -43,7 +40,7 @@ public interface AtAnyDepthColumnsSelectionDsl<out T> : ColumnsSelectionDslExten
      */
     public interface Usage {
 
-        /** .[**atAnyDepth**][ColumnsSelectionDsl.atAnyDepth]`()` */
+        /** .[**atAnyDepth**][ColumnsSelectionDsl.atAnyDepth2]`()` */
         public interface Name
     }
 
