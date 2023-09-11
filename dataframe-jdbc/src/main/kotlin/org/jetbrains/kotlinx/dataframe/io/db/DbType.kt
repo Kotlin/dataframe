@@ -18,5 +18,9 @@ public sealed class DbType(public val dbTypeInJdbcUrl: String) {
      * @return The converted data as an instance of [Any].
      */
     public abstract fun convertDataFromResultSet(rs: ResultSet, tableColumn: TableColumnMetadata): Any?
-    public abstract fun toColumnSchema(tableColumn: TableColumnMetadata): ColumnSchema
+
+    /**
+     * Returns a [ColumnSchema] produced from [tableColumnMetadata].
+     */
+    public abstract fun toColumnSchema(tableColumnMetadata: TableColumnMetadata): ColumnSchema
 }

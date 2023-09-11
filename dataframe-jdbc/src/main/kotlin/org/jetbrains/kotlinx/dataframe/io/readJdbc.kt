@@ -136,8 +136,10 @@ public fun DataFrame.Companion.readAllTables(connection: Connection, limit: Int)
         val table = buildTableMetadata(dbType, tables)
         if (!isSystemTableName(table, dbType)) {
             // we filter her second time because of specific logic with SQLite and possible issues with future databases
+            logger.debug { "Reading table: ${table.name}" }
             val dataFrame = readSqlTable(connection, table.name, limit)
             dataFrames += dataFrame
+            logger.debug { "Finished reading table: ${table.name}" }
         }
     }
 
@@ -282,10 +284,15 @@ public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: St
     var internalSqlQuery = sqlQuery
     if (limit > 0) internalSqlQuery += " LIMIT $limit"
 
+    logger.debug { "Executing SQL query: $internalSqlQuery" }
+
     connection.createStatement().use { st ->
         st.executeQuery(internalSqlQuery).use { rs ->
             val tableColumns = getTableColumnsMetadata(rs)
             val data = fetchAndConvertDataFromResultSet(tableColumns, rs, dbType, DEFAULT_LIMIT)
+
+            logger.debug { "SQL query executed successfully. Converting data to DataFrame." }
+
             return data.toDataFrame()
         }
     }
@@ -360,7 +367,6 @@ public fun DataFrame.Companion.readSqlTable(connection: Connection, tableName: S
         // ask the COUNT(*) for full table
         st.executeQuery(
             preparedQuery // TODO: work with limits correctly
-            //
         ).use { rs ->
             val data = fetchAndConvertDataFromResultSet(tableColumns, rs, dbType, limit)
             return data.toDataFrame()
@@ -604,13 +610,13 @@ private fun fetchAndConvertDataFromResultSet(
         while (rs.next() && counter < limit) {
             handleRow(tableColumns, data, dbType, rs)
             counter++
-            if (counter % 1000 == 0) logger.debug { "Loaded $counter rows." } // TODO: add log messages with more info
+            // if (counter % 1000 == 0) logger.debug { "Loaded $counter rows." } // TODO: https://github.com/Kotlin/dataframe/issues/455
         }
     } else {
         while (rs.next()) {
             handleRow(tableColumns, data, dbType, rs)
             counter++
-            if (counter % 1000 == 0) logger.debug { "Loaded $counter rows." } // TODO: add log messages with more info
+            // if (counter % 1000 == 0) logger.debug { "Loaded $counter rows." } // TODO: https://github.com/Kotlin/dataframe/issues/455
         }
     }
 
@@ -627,31 +633,6 @@ private fun handleRow(
         data[columnName] = (data[columnName]!! + dbType.convertDataFromResultSet(rs, jdbcColumn)).toMutableList()
     }
 }
-
-
-// TODO: slow solution could be optimized with batches control and fetching
-// also better to manipulate whole row instead of asking by column, need to go to the rowset
-// be sure that all the stuff is closed
-
-// TODO: parser https://docs.oracle.com/javase/8/docs/api/java/sql/JDBCType.html
-
-// TODO: counter
-/*
-// Your original query
-String originalQuery = "SELECT * FROM your_table_name WHERE column_name = 'some_value'";
-
-// Query to count the number of rows
-String countQuery = "SELECT COUNT(*) as count FROM (" + originalQuery + ") AS count_query";
-
-// Create a statement and execute the count query
-Statement countStatement = connection.createStatement();
-ResultSet countResultSet = countStatement.executeQuery(countQuery);
-
-// Get the row count
-int rowCount = 0;
-if (countResultSet.next()) {
-    rowCount = countResultSet.getInt("count");
-}*/
 
 
 

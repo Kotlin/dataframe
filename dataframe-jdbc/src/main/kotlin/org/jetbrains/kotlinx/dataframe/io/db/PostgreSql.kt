@@ -50,8 +50,8 @@ public object PostgreSql : DbType("postgresql") {
         }
     }
 
-    override fun toColumnSchema(tableColumn: TableColumnMetadata): ColumnSchema {
-        return when (tableColumn.sqlType) {
+    override fun toColumnSchema(tableColumnMetadata: TableColumnMetadata): ColumnSchema {
+        return when (tableColumnMetadata.sqlType) {
             "serial" -> ColumnSchema.Value(typeOf<Int>())
             "int8", "bigint", "bigserial" -> ColumnSchema.Value(typeOf<Long>())
             "bool" -> ColumnSchema.Value(typeOf<Boolean>())
@@ -82,7 +82,7 @@ public object PostgreSql : DbType("postgresql") {
             "timestamptz", "timestamp with time zone" -> ColumnSchema.Value(typeOf<String>())
             "uuid" -> ColumnSchema.Value(typeOf<String>())
             "xml" -> ColumnSchema.Value(typeOf<String>())
-            else -> throw IllegalArgumentException("Unsupported PostgreSQL type: ${tableColumn.sqlType}")
+            else -> throw IllegalArgumentException("Unsupported PostgreSQL type: ${tableColumnMetadata.sqlType}")
         }
     }
 }

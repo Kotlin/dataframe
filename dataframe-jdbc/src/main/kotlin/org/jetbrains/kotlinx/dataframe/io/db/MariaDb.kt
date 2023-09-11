@@ -47,8 +47,8 @@ public object MariaDb : DbType("mariadb") {
         }
     }
 
-    override fun toColumnSchema(tableColumn: TableColumnMetadata): ColumnSchema {
-        return when (tableColumn.sqlType) {
+    override fun toColumnSchema(tableColumnMetadata: TableColumnMetadata): ColumnSchema {
+        return when (tableColumnMetadata.sqlType) {
             "BIT" -> ColumnSchema.Value(typeOf<ByteArray>())
             "TINYINT" -> ColumnSchema.Value(typeOf<Int>())
             "SMALLINT" -> ColumnSchema.Value(typeOf<Int>())
@@ -77,7 +77,7 @@ public object MariaDb : DbType("mariadb") {
             "LONGTEXT" -> ColumnSchema.Value(typeOf<String>())
             "ENUM" -> ColumnSchema.Value(typeOf<String>())
             "SET" -> ColumnSchema.Value(typeOf<String>())
-            else -> throw IllegalArgumentException("Unsupported MariaDB type: ${tableColumn.sqlType}")
+            else -> throw IllegalArgumentException("Unsupported MariaDB type: ${tableColumnMetadata.sqlType}")
         }
     }
 }

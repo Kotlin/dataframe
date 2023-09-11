@@ -17,13 +17,13 @@ repositories {
 dependencies {
     api(project(":core"))
     implementation(libs.mariadb)
-    implementation("io.github.oshai:kotlin-logging:5.0.1")
-    testImplementation("org.xerial:sqlite-jdbc:3.42.0.1")
-    testImplementation("org.postgresql:postgresql:42.6.0")
-    testImplementation("mysql:mysql-connector-java:8.0.33")
+    implementation(libs.kotlinLogging)
+    testImplementation(libs.sqlite)
+    testImplementation(libs.postgresql)
+    testImplementation(libs.mysql)
     testImplementation(libs.h2db)
     testImplementation(libs.junit)
-    testImplementation("org.slf4j:slf4j-simple:2.0.7")
+    testImplementation(libs.sl4j)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }

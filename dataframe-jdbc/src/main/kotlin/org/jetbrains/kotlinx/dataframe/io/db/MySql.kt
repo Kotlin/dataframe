@@ -50,8 +50,8 @@ public object MySql : DbType("mysql") {
         }
     }
 
-    override fun toColumnSchema(tableColumn: TableColumnMetadata): ColumnSchema {
-        return when (tableColumn.sqlType) {
+    override fun toColumnSchema(tableColumnMetadata: TableColumnMetadata): ColumnSchema {
+        return when (tableColumnMetadata.sqlType) {
             "BIT" -> ColumnSchema.Value(typeOf<ByteArray>())
             "TINYINT" -> ColumnSchema.Value(typeOf<Int>())
             "SMALLINT" -> ColumnSchema.Value(typeOf<Int>())
@@ -83,7 +83,7 @@ public object MySql : DbType("mysql") {
             // special mysql types
             "JSON" -> ColumnSchema.Value(typeOf<String>())
             "GEOMETRY" -> ColumnSchema.Value(typeOf<ByteArray>())
-            else -> throw IllegalArgumentException("Unsupported MySQL type: ${tableColumn.sqlType}")
+            else -> throw IllegalArgumentException("Unsupported MySQL type: ${tableColumnMetadata.sqlType}")
         }
     }
 }

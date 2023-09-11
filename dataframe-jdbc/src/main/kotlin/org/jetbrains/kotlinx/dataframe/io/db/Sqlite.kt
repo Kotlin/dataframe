@@ -24,14 +24,14 @@ public object Sqlite : DbType("sqlite") {
         }
     }
 
-    override fun toColumnSchema(tableColumn: TableColumnMetadata): ColumnSchema {
-        return when (tableColumn.sqlType) {
+    override fun toColumnSchema(tableColumnMetadata: TableColumnMetadata): ColumnSchema {
+        return when (tableColumnMetadata.sqlType) {
             "INTEGER", "INTEGER AUTO_INCREMENT" -> ColumnSchema.Value(typeOf<Int>())
             "TEXT" -> ColumnSchema.Value(typeOf<String>())
             "REAL" -> ColumnSchema.Value(typeOf<Double>())
             "NUMERIC" -> ColumnSchema.Value(typeOf<Double>())
             "BLOB" -> ColumnSchema.Value(typeOf<ByteArray>())
-            else -> throw IllegalArgumentException("Unsupported SQLite type: ${tableColumn.sqlType}")
+            else -> throw IllegalArgumentException("Unsupported SQLite type: ${tableColumnMetadata.sqlType}")
         }
     }
 }

@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.impl.codeGen.CodeGenerationReadResult
 import org.jetbrains.kotlinx.jupyter.api.Code
 import java.net.URL
 
+// TODO: helper functions created to support existing hierarchy https://github.com/Kotlin/dataframe/issues/450
 public val CodeGenerator.Companion.databaseCodeGenReader: (
     url: URL,
     name: String
@@ -13,7 +14,6 @@ public val CodeGenerator.Companion.databaseCodeGenReader: (
     get() = { url, name ->
         try {
             val code = buildCodeForDB(url, name)
-            // TODO: rewrite it
             throw RuntimeException()
             CodeGenerationReadResult.Success(code, Jdbc())
         } catch (e: Throwable) {
@@ -21,7 +21,6 @@ public val CodeGenerator.Companion.databaseCodeGenReader: (
         }
     }
 
-// TODO:
 public fun buildCodeForDB(url: URL, name: String): Code {
     val annotationName = DataSchema::class.simpleName
     val visibility = "public "

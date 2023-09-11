@@ -44,13 +44,12 @@ public object H2 : DbType("h2") {
             "ENUM" -> rs.getString(name)
             "JSON" -> rs.getString(name)
             "UUID" -> rs.getString(name)
-            //"ARRAY" -> rs.getArray(jdbcColumn.name)
             else -> throw IllegalArgumentException("Unsupported H2 type: ${tableColumn.sqlType}")
         }
     }
 
-    override fun toColumnSchema(tableColumn: TableColumnMetadata): ColumnSchema {
-        return when (tableColumn.sqlType) {
+    override fun toColumnSchema(tableColumnMetadata: TableColumnMetadata): ColumnSchema {
+        return when (tableColumnMetadata.sqlType) {
             "CHARACTER", "CHAR" -> ColumnSchema.Value(typeOf<String>())
             "CHARACTER VARYING", "CHAR VARYING",  "VARCHAR" -> ColumnSchema.Value(typeOf<String>())
             "CHARACTER LARGE OBJECT", "CHAR LARGE OBJECT", "CLOB" -> ColumnSchema.Value(typeOf<String>())
@@ -78,8 +77,7 @@ public object H2 : DbType("h2") {
             "ENUM" -> ColumnSchema.Value(typeOf<String>())
             "JSON" -> ColumnSchema.Value(typeOf<String>())
             "UUID" -> ColumnSchema.Value(typeOf<String>())
-            //"ARRAY" -> rs.getArray(jdbcColumn.name)
-            else -> throw IllegalArgumentException("Unsupported H2 type: ${tableColumn.sqlType}")
+            else -> throw IllegalArgumentException("Unsupported H2 type: ${tableColumnMetadata.sqlType}")
         }
     }
 }
