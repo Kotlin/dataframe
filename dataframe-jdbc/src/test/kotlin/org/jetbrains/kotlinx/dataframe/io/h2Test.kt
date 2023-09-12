@@ -300,7 +300,6 @@ class JdbcTest {
         }
     }
 
-    // TODO: a bug, probably from jdbc side, the synonym for column is "customerName", but it returns just "name"
     @Test
     fun `read from sql query`() {
         val sqlQuery = """
@@ -344,7 +343,6 @@ class JdbcTest {
         assertEquals(2, dataSchema1.columns.size)
         assertEquals(typeOf<String>(), dataSchema.columns["name"]!!.type)
     }
-    // TODO: add test with reverse mapping
 
     @Test
     fun `read from all tables`() {

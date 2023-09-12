@@ -75,7 +75,8 @@ class DataSchemaGenerator(
                 return ImportDataSchemaStatement(
                     origin = file,
                     name = name,
-                    dataSource = CodeGeneratorDataSource(this.path, URL("http://example.com/pages/")), // URL better to make nullable or make hierarchy here
+                    // URL better to make nullable or make hierarchy here
+                    dataSource = CodeGeneratorDataSource(this.path, URL("http://example.com/pages/")),
                     visibility = visibility.toMarkerVisibility(),
                     normalizationDelimiters = normalizationDelimiters.toList(),
                     withDefaultPath = withDefaultPath,
@@ -156,27 +157,20 @@ class DataSchemaGenerator(
         if (importStatement.isJdbc) {
             val url = importStatement.dataSource.pathRepresentation
 
-            // TODO: load different classes for different databases
-            Class.forName("org.mariadb.jdbc.Driver")
-            // TODO: handle this situation - give a tip for a user
-            // test with wrong connections and catch the SQL exception
-            // java.sql.SQLInvalidAuthorizationSpecException: (conn=26) Access denied for user 'Alexey.Zinoviev'@'localhost'
-            val connection = DriverManager.getConnection(url, importStatement.jdbcOptions.user, importStatement.jdbcOptions.password)
+            val connection = DriverManager.getConnection(
+                url,
+                importStatement.jdbcOptions.user,
+                importStatement.jdbcOptions.password
+            )
+
             connection.use {
-                // TODO: check if schema exists and add a test here
                 val schema = if(importStatement.jdbcOptions.sqlQuery.isBlank())
                     DataFrame.getSchemaForSqlTable(connection, importStatement.name)
                 else DataFrame.getSchemaForSqlQuery(connection, importStatement.jdbcOptions.sqlQuery)
 
-
                 val codeGenerator = CodeGenerator.create(useFqNames = false)
 
-                // DataFrameSchema.createEmptyDataFrame() createEmptyColumn
-
-                val additionalImports: List<String> = listOf(
-                    //"import org.jetbrains.kotlinx.dataframe.DataFrame",
-                    //"import org.jetbrains.kotlinx.dataframe.api.cast"
-                )
+                val additionalImports: List<String> = listOf()
 
                 val codeGenResult = codeGenerator.generate(
                     schema = schema,
