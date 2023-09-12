@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
+import java.sql.SQLException
+
 /**
  * Extracts the database type from the given JDBC URL.
  *
@@ -15,9 +17,10 @@ public fun extractDBTypeFromURL(url: String?): DbType {
             MySql.dbTypeInJdbcUrl in url -> MySql
             Sqlite.dbTypeInJdbcUrl in url -> Sqlite
             PostgreSql.dbTypeInJdbcUrl in url -> PostgreSql
-            else -> throw IllegalArgumentException("Unsupported database type in the url: $url. Only H2, MariaDB, MySQL, SQLite and PostgreSQL are supported!")
+            else -> throw IllegalArgumentException("Unsupported database type in the url: $url. " +
+                "Only H2, MariaDB, MySQL, SQLite and PostgreSQL are supported!")
         }
     } else {
-        throw RuntimeException("Database URL could not be null. The existing value is $url")
+        throw SQLException("Database URL could not be null. The existing value is $url")
     }
 }

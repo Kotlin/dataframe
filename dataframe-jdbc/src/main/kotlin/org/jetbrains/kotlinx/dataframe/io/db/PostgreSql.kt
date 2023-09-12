@@ -13,7 +13,6 @@ import kotlin.reflect.typeOf
  */
 public object PostgreSql : DbType("postgresql") {
     override fun convertDataFromResultSet(rs: ResultSet, tableColumnMetadata: TableColumnMetadata): Any? {
-        // TODO: improve mapping with the https://www.instaclustr.com/blog/postgresql-data-types-mappings-to-sql-jdbc-and-java-data-types/
         val name = tableColumnMetadata.name
         return when (tableColumnMetadata.sqlType) {
             "serial" -> rs.getInt(name)

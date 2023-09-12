@@ -128,7 +128,8 @@ public fun DataFrame.Companion.readAllTables(connection: Connection, limit: Int)
     val dbType = extractDBTypeFromURL(url)
 
     val tableTypes = arrayOf("TABLE")
-    val tables = metaData.getTables(null, null, null, tableTypes) // exclude system and other tables without data, but looks like it supported badly for many databases
+    // exclude system and other tables without data, but looks like it supported badly for many databases
+    val tables = metaData.getTables(null, null, null, tableTypes)
 
     val dataFrames = mutableListOf<AnyFrame>()
 
@@ -224,10 +225,15 @@ public fun DataFrame.Companion.readAllTables(dbConfig: DatabaseConfiguration, li
  */
 private fun buildTableMetadata(dbType: DbType, tableResultSet: ResultSet): TableMetadata =
     when (dbType) {
-        is H2 -> TableMetadata(tableResultSet.getString("TABLE_NAME"), tableResultSet.getString("TABLE_SCHEM"), tableResultSet.getString("TABLE_CAT"))
-        is Sqlite -> TableMetadata(tableResultSet.getString("TABLE_NAME"), tableResultSet.getString("TABLE_SCHEM"), tableResultSet.getString("TABLE_CAT"))
+        is H2, Sqlite -> TableMetadata(
+            tableResultSet.getString("TABLE_NAME"),
+            tableResultSet.getString("TABLE_SCHEM"),
+            tableResultSet.getString("TABLE_CAT"))
         else -> {
-            TableMetadata(tableResultSet.getString("table_name"), tableResultSet.getString("table_schem"), tableResultSet.getString("table_cat"))
+            TableMetadata(
+                tableResultSet.getString("table_name"),
+                tableResultSet.getString("table_schem"),
+                tableResultSet.getString("table_cat"))
         }
     }
 
@@ -420,7 +426,8 @@ public fun DataFrame.Companion.getSchemaForAllTables(connection: Connection): Li
     val dbType = extractDBTypeFromURL(url)
 
     val tableTypes = arrayOf("TABLE")
-    val tables = metaData.getTables(null, null, null, tableTypes) // exclude system and other tables without data
+    // exclude system and other tables without data
+    val tables = metaData.getTables(null, null, null, tableTypes)
 
     val dataFrameSchemas = mutableListOf<DataFrameSchema>()
 

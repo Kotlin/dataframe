@@ -6,16 +6,13 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.junit.AfterClass
-import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.BeforeClass
 import org.junit.Test
-import org.postgresql.util.PGobject
 import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
-import java.util.*
 
 private const val URL = "jdbc:mariadb://localhost:3307"
 private const val USER_NAME = "root"
@@ -208,19 +205,19 @@ class MariadbTest {
                     st.setTimestamp(15, java.sql.Timestamp(System.currentTimeMillis()))
                     st.setTime(16, java.sql.Time(System.currentTimeMillis()))
                     st.setInt(17, 2023)
-                    st.setString(18, "varcharValue" + i)
-                    st.setString(19, "charValue" + i)
+                    st.setString(18, "varcharValue$i")
+                    st.setString(19, "charValue$i")
                     st.setBytes(20, "binaryValue".toByteArray())
                     st.setBytes(21, "varbinaryValue".toByteArray())
                     st.setBytes(22, "tinyblobValue".toByteArray())
                     st.setBytes(23, "blobValue".toByteArray())
                     st.setBytes(24, "mediumblobValue".toByteArray())
                     st.setBytes(25, "longblobValue".toByteArray())
-                    st.setString(26, "textValue" + i)
-                    st.setString(27, "mediumtextValue" + i)
-                    st.setString(28, "longtextValue" + i)
-                    st.setString(29, "Value" + i)
-                    st.setString(30, "Option" + i)
+                    st.setString(26, "textValue$i")
+                    st.setString(27, "mediumtextValue$i")
+                    st.setString(28, "longtextValue$i")
+                    st.setString(29, "Value$i")
+                    st.setString(30, "Option$i")
 
                     st.executeUpdate()
                 }
@@ -246,19 +243,19 @@ class MariadbTest {
                     st.setTimestamp(15, java.sql.Timestamp(System.currentTimeMillis()))
                     st.setTime(16, java.sql.Time(System.currentTimeMillis()))
                     st.setInt(17, 2023)
-                    st.setString(18, "varcharValue" + i)
-                    st.setString(19, "charValue" + i)
+                    st.setString(18, "varcharValue$i")
+                    st.setString(19, "charValue$i")
                     st.setBytes(20, "binaryValue".toByteArray())
                     st.setBytes(21, "varbinaryValue".toByteArray())
                     st.setBytes(22, "tinyblobValue".toByteArray())
                     st.setBytes(23, "blobValue".toByteArray())
                     st.setBytes(24, "mediumblobValue".toByteArray())
                     st.setBytes(25, "longblobValue".toByteArray())
-                    st.setString(26, "textValue" + i)
-                    st.setString(27, "mediumtextValue" + i)
-                    st.setString(28, "longtextValue" + i)
-                    st.setString(29, "Value" + i)
-                    st.setString(30, "Option" + i)
+                    st.setString(26, "textValue$i")
+                    st.setString(27, "mediumtextValue$i")
+                    st.setString(28, "longtextValue$i")
+                    st.setString(29, "Value$i")
+                    st.setString(30, "Option$i")
                     st.executeUpdate()
                 }
             }
