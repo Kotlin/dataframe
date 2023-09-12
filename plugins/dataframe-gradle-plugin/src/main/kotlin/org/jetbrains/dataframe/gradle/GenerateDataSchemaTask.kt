@@ -71,23 +71,18 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
         val escapedPackageName = escapePackageName(packageName.get())
 
         val rawUrl = data.get().toString()
+
+        // revisit architecture for an addition of the new data source https://github.com/Kotlin/dataframe/issues/450
         if (rawUrl.startsWith("jdbc")) {
             val connection = DriverManager.getConnection(rawUrl, jdbcOptions.user, jdbcOptions.password)
             connection.use {
                 val schema = if(jdbcOptions.sqlQuery.isBlank())
                     DataFrame.getSchemaForSqlTable(connection,  interfaceName.get())
                 else DataFrame.getSchemaForSqlQuery(connection, jdbcOptions.sqlQuery)
-                // TODO: check if schema exists and add a test here
-                // TODO: support result set and all tables, but it looks that this is not possible
 
                 val codeGenerator = CodeGenerator.create(useFqNames = false)
 
-                // DataFrameSchema.createEmptyDataFrame() createEmptyColumn
-
-                val additionalImports: List<String> = listOf(
-                    //"import org.jetbrains.kotlinx.dataframe.DataFrame",
-                    //"import org.jetbrains.kotlinx.dataframe.api.cast"
-                )
+                val additionalImports: List<String> = listOf()
 
                 val delimiters = delimiters.get()
                 val codeGenResult = codeGenerator.generate(

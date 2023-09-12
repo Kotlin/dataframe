@@ -345,9 +345,6 @@ public fun DataFrame.Companion.readSqlTable(connection: Connection, tableName: S
  * @return the DataFrame containing the data from the SQL table.
  */
 public fun DataFrame.Companion.readSqlTable(connection: Connection, tableName: String, limit: Int): AnyFrame {
-    // TODO: add methods for stats for SQL tables as dataframe or intermediate objects like Table (name, count)
-    // TODO: check that passed table name in the list of table names
-    // TODO: check with regular expressions
     var preparedQuery = "SELECT * FROM $tableName"
     if (limit > 0) preparedQuery += " LIMIT $limit"
 
@@ -358,15 +355,8 @@ public fun DataFrame.Companion.readSqlTable(connection: Connection, tableName: S
         logger.debug { "Connection with url:${url} is established successfully." }
         val tableColumns = getTableColumnsMetadata(connection, tableName)
 
-        // TODO: dynamic SQL names - no protection from SQL injection
-        // What if just try to match it before to the known SQL table names and if not to reject
-        // What if check the name on the SQL commands and ;; commas to reject and throw exception
-
-        // LIMIT 1000 because is very slow to copy into dataframe the whole table (do we need a fetch here? or limit)
-        // or progress bar
-        // ask the COUNT(*) for full table
         st.executeQuery(
-            preparedQuery // TODO: work with limits correctly
+            preparedQuery
         ).use { rs ->
             val data = fetchAndConvertDataFromResultSet(tableColumns, rs, dbType, limit)
             return data.toDataFrame()

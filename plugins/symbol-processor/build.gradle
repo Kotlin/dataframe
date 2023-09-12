@@ -20,6 +20,7 @@ dependencies {
     implementation(project(":dataframe-jdbc"))
     implementation(libs.ksp.api)
     implementation(libs.kotlin.reflect)
+    implementation(libs.h2db)
     testImplementation(libs.h2db)
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("com.github.tschuchortdev:kotlin-compile-testing:1.5.0")

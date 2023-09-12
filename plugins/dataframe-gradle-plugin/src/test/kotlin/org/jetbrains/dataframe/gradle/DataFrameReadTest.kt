@@ -98,46 +98,46 @@ class DataFrameReadTest {
 
     @Test
     fun `jdbcSample is valid jdbc`() {
-        DriverManager.getConnection("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false").use {
-            connection ->
-
-            // Create table Customer
-            connection.createStatement().execute("""
+        DriverManager.getConnection("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false")
+            .use { connection ->
+                // Create table Customer
+                connection.createStatement().execute(
+                    """
                 CREATE TABLE Customer (
                     id INT PRIMARY KEY,
                     name VARCHAR(50),
                     age INT
                 )
-            """.trimIndent())
+            """.trimIndent()
+                )
 
-            // Create table Sale
-            connection.createStatement().execute("""
+                // Create table Sale
+                connection.createStatement().execute(
+                    """
                 CREATE TABLE Sale (
                     id INT PRIMARY KEY,
                     customerId INT,
                     amount DECIMAL(10, 2)
                 )
-            """.trimIndent())
+            """.trimIndent()
+                )
 
-            // add data to the Customer table
-            connection.createStatement().execute("INSERT INTO Customer (id, name, age) VALUES (1, 'John', 40)")
-            connection.createStatement().execute("INSERT INTO Customer (id, name, age) VALUES (2, 'Alice', 25)")
-            connection.createStatement().execute("INSERT INTO Customer (id, name, age) VALUES (3, 'Bob', 47)")
+                // add data to the Customer table
+                connection.createStatement().execute("INSERT INTO Customer (id, name, age) VALUES (1, 'John', 40)")
+                connection.createStatement().execute("INSERT INTO Customer (id, name, age) VALUES (2, 'Alice', 25)")
+                connection.createStatement().execute("INSERT INTO Customer (id, name, age) VALUES (3, 'Bob', 47)")
 
-            // add data to the Sale table
-            connection.createStatement().execute("INSERT INTO Sale (id, customerId, amount) VALUES (1, 1, 100.50)")
-            connection.createStatement().execute("INSERT INTO Sale (id, customerId, amount) VALUES (2, 2, 50.00)")
-            connection.createStatement().execute("INSERT INTO Sale (id, customerId, amount) VALUES (3, 1, 75.25)")
-            connection.createStatement().execute("INSERT INTO Sale (id, customerId, amount) VALUES (4, 3, 35.15)")
+                // add data to the Sale table
+                connection.createStatement().execute("INSERT INTO Sale (id, customerId, amount) VALUES (1, 1, 100.50)")
+                connection.createStatement().execute("INSERT INTO Sale (id, customerId, amount) VALUES (2, 2, 50.00)")
+                connection.createStatement().execute("INSERT INTO Sale (id, customerId, amount) VALUES (3, 1, 75.25)")
+                connection.createStatement().execute("INSERT INTO Sale (id, customerId, amount) VALUES (4, 3, 35.15)")
 
-            val dfCustomer = DataFrame.readSqlTable(connection, "", "Customer")
-            dfCustomer.columnNames() shouldBe listOf("id", "name", "age")
+                val dfCustomer = DataFrame.readSqlTable(connection, "Customer")
+                dfCustomer.columnNames() shouldBe listOf("id", "name", "age")
 
-            val dfSale = DataFrame.readSqlTable(connection, "", "Sale")
-            dfSale.columnNames() shouldBe listOf("id", "customerId", "amount")
-
-            // TODO: refactor test data population
-            // TODO: cover all the api methods here
-        }
+                val dfSale = DataFrame.readSqlTable(connection, "Sale")
+                dfSale.columnNames() shouldBe listOf("id", "customerId", "amount")
+            }
     }
 }

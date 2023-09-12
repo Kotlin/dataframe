@@ -71,6 +71,7 @@ class DataSchemaGenerator(
                 return null
             }
         } else {
+            // revisit architecture for an addition of the new data source https://github.com/Kotlin/dataframe/issues/450
             if(path.startsWith("jdbc")) {
                 return ImportDataSchemaStatement(
                     origin = file,
@@ -154,8 +155,11 @@ class DataSchemaGenerator(
             OpenApi(),
         )
 
+        // revisit architecture for an addition of the new data source https://github.com/Kotlin/dataframe/issues/450
         if (importStatement.isJdbc) {
             val url = importStatement.dataSource.pathRepresentation
+
+            if(url.contains("h2")) Class.forName("org.h2.Driver")
 
             val connection = DriverManager.getConnection(
                 url,
@@ -191,8 +195,9 @@ class DataSchemaGenerator(
             }
         }
 
+        // revisit architecture for an addition of the new data source https://github.com/Kotlin/dataframe/issues/450
         // works for JDBC and OpenAPI only
-        // first try without creating dataframe
+        // first try without creating a dataframe
         when (val codeGenResult = if (importStatement.isJdbc) {
             CodeGenerator.databaseCodeGenReader(importStatement.dataSource.data, name)
         } else {

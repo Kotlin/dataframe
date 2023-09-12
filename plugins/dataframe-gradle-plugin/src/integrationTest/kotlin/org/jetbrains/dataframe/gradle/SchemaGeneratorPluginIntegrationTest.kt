@@ -376,35 +376,68 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
     }
 
     @Test
+    // TODO: test is broken
+    /*
+    e: file:///C:/Users/zaleslaw/AppData/Local/Temp/test3901867314473689900/src/main/kotlin/Main.kt:12:43 Unresolved reference: readSqlTable
+e: file:///C:/Users/zaleslaw/AppData/Local/Temp/test3901867314473689900/src/main/kotlin/Main.kt:13:43 Unresolved reference: DatabaseConfiguration
+e: file:///C:/Users/zaleslaw/AppData/Local/Temp/test3901867314473689900/src/main/kotlin/Main.kt:19:28 Unresolved reference: readSqlTable
+e: file:///C:/Users/zaleslaw/AppData/Local/Temp/test3901867314473689900/src/main/kotlin/Main.kt:20:21 Unresolved reference: age
+e: file:///C:/Users/zaleslaw/AppData/Local/Temp/test3901867314473689900/src/main/kotlin/Main.kt:22:29 Unresolved reference: readSqlTable
+e: file:///C:/Users/zaleslaw/AppData/Local/Temp/test3901867314473689900/src/main/kotlin/Main.kt:23:22 Unresolved reference: age
+e: file:///C:/Users/zaleslaw/AppData/Local/Temp/test3901867314473689900/src/main/kotlin/Main.kt:25:24 Unresolved reference: DatabaseConfiguration
+e: file:///C:/Users/zaleslaw/AppData/Local/Temp/test3901867314473689900/src/main/kotlin/Main.kt:26:29 Unresolved reference: readSqlTable
+e: file:///C:/Users/zaleslaw/AppData/Local/Temp/test3901867314473689900/src/main/kotlin/Main.kt:27:22 Unresolved reference: age
+e: file:///C:/Users/zaleslaw/AppData/Local/Temp/test3901867314473689900/src/main/kotlin/Main.kt:29:29 Unresolved reference: readSqlTable
+e: file:///C:/Users/zaleslaw/AppData/Local/Temp/test3901867314473689900/src/main/kotlin/Main.kt:30:22 Unresolved reference: age
+
+     */
     fun `preprocessor imports schema from database`() {
         val connectionUrl = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false"
-        //val connection = DriverManager.getConnection(connectionUrl)
+        DriverManager.getConnection(connectionUrl).use {
+            val (_, result) = runGradleBuild(":build") { buildDir ->
+                createTestDatabase(it)
 
-        val (_, result) = runGradleBuild(":build") { buildDir ->
-           // createTestDatabase(connection)
-
-            val kotlin = File(buildDir, "src/main/kotlin").also { it.mkdirs() }
-            val main = File(kotlin, "Main.kt")
-            main.writeText("""
+                val kotlin = File(buildDir, "src/main/kotlin").also { it.mkdirs() }
+                val main = File(kotlin, "Main.kt")
+                // this is a copy of the code snippet in the
+                // DataFrameJdbcSymbolProcessorTest.`schema extracted via readFromDB method is resolved`
+                main.writeText("""
                 @file:ImportDataSchema(name = "Customer", path = "$connectionUrl")
                 
                 package test
                 
                 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
                 import org.jetbrains.kotlinx.dataframe.api.filter
+                import org.jetbrains.kotlinx.dataframe.DataFrame
+                import org.jetbrains.kotlinx.dataframe.api.cast
                 import java.sql.Connection
                 import java.sql.DriverManager
                 import java.sql.SQLException
+                import org.jetbrains.kotlinx.dataframe.io.readSqlTable
+                import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
                 
                 fun main() {    
+                    Class.forName("org.h2.Driver")
+                    val tableName = "Customer"
                     DriverManager.getConnection("$connectionUrl").use { connection ->
-                        val df = DataFrame.readFromDB(connection, "fakeCatalogue", "Customer").cast<Customer>()
-                        val df1 = df.filter { age > 35 }
+                        val df = DataFrame.readSqlTable(connection, tableName).cast<Customer>()
+                        df.filter { age > 30 }
+
+                        val df1 = DataFrame.readSqlTable(connection, tableName, 1).cast<Customer>()
+                        df1.filter { age > 30 }
+                        
+                        val dbConfig = DatabaseConfiguration(url = "$connectionUrl")
+                        val df2 = DataFrame.readSqlTable(dbConfig, tableName).cast<Customer>()
+                        df2.filter { age > 30 }
+                        
+                        val df3 = DataFrame.readSqlTable(dbConfig, tableName, 1).cast<Customer>()
+                        df3.filter { age > 30 }
+ 
                     }
                 }
-            """.trimIndent()) // TODO: this snippet should be correct
+            """.trimIndent())
 
-            """
+                """
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                     
                 plugins {
@@ -423,15 +456,9 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                 
                 kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotlin/")
             """.trimIndent()
+            }
+            result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
         }
-        result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
-
-        // TODO: think about best place to close resources
-        /*try {
-            connection.close()
-        } catch (e: SQLException) {
-            e.printStackTrace()
-        }*/
     }
 
     private fun createTestDatabase(connection: Connection) {
