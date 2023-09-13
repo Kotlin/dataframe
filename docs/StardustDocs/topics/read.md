@@ -3,7 +3,9 @@
 
 The Kotlin DataFrame library supports CSV, TSV, JSON, XLS and XLSX, and Apache Arrow input formats.
 
-The `.read()` function automatically detects the input format based on file extension and content:
+The reading from SQL databases is also supported. Read [here](readSqlDatabases.md) to know more.
+
+The `.read()` function automatically detects the input format based on a file extension and content:
 
 ```kotlin
 DataFrame.read("input.csv")
@@ -129,7 +131,7 @@ val df = DataFrame.readCSV(
 
 <!---END-->
 
-2) Disable type inference for specific column and convert it yourself
+2) Disable type inference for a specific column and convert it yourself
 
 <!---FUN readNumbersWithColType-->
 

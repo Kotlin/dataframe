@@ -80,6 +80,7 @@ class JdbcTest {
             connection =
                 DriverManager.getConnection(URL)
 
+
             // Crate table Customer
             connection.createStatement().execute(
                 """
