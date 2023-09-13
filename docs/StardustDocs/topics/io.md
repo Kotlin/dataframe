@@ -3,7 +3,7 @@
 When you work with data, you have to [read](read.md) it from disk or from remote URLs and [write](write.md) it on disk.
 This section describes how to do it. For now, CSV, TSV, JSON, XLS, XLSX, Apache Arrow formats are supported.
 
-Also, we 
+The reading from SQL databases is also supported. Read [here](readSqlDatabases.md) to know more.
 
 Working with [Apache Spark](https://spark.apache.org/) directly from Kotlin DataFrame is not possible at the time of 
 writing. However, there is a [Kotlin Spark API](https://github.com/Kotlin/kotlin-spark-api) which we can recommend in

@@ -14,6 +14,41 @@ There are two main blocks of available functionality:
   * for rows reading through the given ResultSet
   * for all non-system tables
 
+
+## Getting started with reading from SQL database
+
+In the first, you need to add a dependency
+
+```kotlin
+implementation("org.jetbrains.kotlinx:dataframe-jdbc:$dataframe_version")
+```
+
+In the second, be sure that you can establish a connection to the database.
+
+For this, usually, you need to have three things: a URL to a database, a username and a password.
+
+Call one of the following functions to obtain data from a database and transform it to the dataframe.
+
+For example, if you have a local PostgreSQL database named as `testDatabase` with table `Customer`,
+you could read first 100 rows and print the data just copying the code below:
+
+```kotlin
+import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
+import org.jetbrains.kotlinx.dataframe.api.print
+
+val url = "jdbc:postgresql://localhost:5432/testDatabase"
+val username = "postgres"
+val password = "password"
+
+val dbConfig = DatabaseConfiguration(url, username, password)
+
+val tableName = "Customer"
+
+val df = DataFrame.readSqlTable(dbConfig, tableName, 100)
+
+df.print()
+```
+
  
 ## Reading Specific Tables
 
