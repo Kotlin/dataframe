@@ -219,39 +219,6 @@ open class ColumnsSelectionDslTests : TestBase() {
     }
 
     @Test
-    fun children() {
-        listOf(
-            df.select { all() },
-
-//            df.select { children() },
-
-            df.select { cols() },
-
-//            df.select { filter { true } }
-        ).shouldAllBeEqual()
-
-        listOf(
-            df.select { all().atAnyDepth() },
-
-//            df.select { children().atAnyDepth() },
-
-            df.select { cols().atAnyDepth() },
-
-//            df.select { filter { true }.atAnyDepth() }
-        ).shouldAllBeEqual()
-
-        listOf(
-            df.select { name.firstName and name.lastName },
-
-            df.select { all().children() },
-
-            df.select { colGroups().children() },
-
-            df.select { name.children() },
-        ).shouldAllBeEqual()
-    }
-
-    @Test
     fun `take and takeLast`() {
         listOf(
             df.select { name.firstName },

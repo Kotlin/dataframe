@@ -26,7 +26,6 @@ internal const val COL_SELECT_DSL_DFS_OF = "`dfsOf` is deprecated, use `atAnyDep
 internal const val COL_SELECT_DSL_DFS_OF_REPLACE = "this.colsOf(type, predicate).atAnyDepth()"
 internal const val COL_SELECT_DSL_DFS_OF_TYPED_REPLACE = "this.colsOf<C>(filter).atAnyDepth()"
 
-
 // endregion
 
 // region WARNING in 0.12.0, ERROR in 0.13.0
@@ -72,6 +71,12 @@ internal const val COL_SELECT_DSL_ALL_COLS_UP_TO_REPLACE = "this.allColsUpTo(col
 
 internal const val COL_SELECT_DSL_AT_ANY_DEPTH = "Use `atAnyDepth()` instead. $message_0_13_0"
 internal const val COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE = "this.atAnyDepth()"
+
+internal const val COL_SELECT_DSL_CHILDREN = "Use colsInGroups {} instead. $message_0_13_0"
+internal const val COL_SELECT_DSL_CHILDREN_REPLACE = "this.colsInGroups(predicate)"
+
+internal const val COL_SELECT_DSL_CHILDREN_SINGLE_COL = "Use cols {} instead. $message_0_13_0"
+internal const val COL_SELECT_DSL_CHILDREN_SINGLE_COL_REPLACE = "this.cols(predicate)"
 // endregion
 
 // region WARNING in 0.13.0, ERROR in 0.14.0

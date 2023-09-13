@@ -370,7 +370,8 @@ internal fun ColumnSet<*>.dfsInternal(
 @Suppress("DEPRECATION")
 @Deprecated(COL_SELECT_DSL_DFS_OF, ReplaceWith(COL_SELECT_DSL_DFS_OF_REPLACE), DeprecationLevel.ERROR)
 public fun <C> ColumnSet<*>.dfsOf(
-    type: KType, predicate: (ColumnWithPath<C>) -> Boolean = { true },
+    type: KType,
+    predicate: (ColumnWithPath<C>) -> Boolean = { true },
 ): ColumnSet<*> =
     dfsInternal { it.isSubtypeOf(type) && predicate(it.cast()) }
 

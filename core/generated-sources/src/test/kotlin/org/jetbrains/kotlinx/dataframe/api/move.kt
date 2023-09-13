@@ -29,7 +29,7 @@ class MoveTests {
     @Test
     fun `select all atAnyDepth`() {
         val selected = grouped
-            .getColumnsWithPaths { all().children { !it.isColumnGroup() }.atAnyDepth() }
+            .getColumnsWithPaths { colsInGroups { !it.isColumnGroup() }.atAnyDepth() }
             .map { it.path.joinToString(".") }
         selected shouldBe listOf("a.b", "a.c.d", "b.c", "b.d", "e.f")
     }

@@ -125,8 +125,6 @@ public interface FilterColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][ColumnsSelectionDsl.cols]`{ ... }`[`]`][ColumnsSelectionDsl.cols]` }`
      * {@include [LineBreak]}
-     * NOTE: On a [SingleColumn], [filter][SingleColumn.filter] behaves exactly the same as
-     * [children][ColumnsSelectionDsl.children].
      *
      * @see [children\]
      */

@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -13,57 +12,56 @@ import org.jetbrains.kotlinx.dataframe.samples.api.firstName
 import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.junit.Test
-import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.typeOf
 
 class AtAnyDepth : TestBase() {
 
-    @Test
-    fun `scope test`() {
-        df.select {
-            colsOf<String>().first { "first" in it.name }.atAnyDepth()
-
-            atAnyDepth {
-                colsOf<String>().first { "first" in it.name }
-            }
-        }.alsoDebug()
-
-        df.select {
-            atAnyDepth { cols { "first" in it.name } }
-        }.alsoDebug()
-
-        df.select {
-            "name".atAnyDepth { cols { "first" in it.name } }
-        }.alsoDebug()
-
-        df.select {
-            "name".atAnyDepth { single { "first" in it.name } }
-        }.alsoDebug()
-
-        df.select {
-            name.atAnyDepth { cols { "first" in it.name } }
-        }.alsoDebug()
-
-        df.select {
-            name.atAnyDepth { single { "first" in it.name } }
-        }.alsoDebug()
-
-        df.select {
-            Person::name.atAnyDepth { cols { "first" in it.name } }
-        }.alsoDebug()
-
-        df.select {
-            Person::name.atAnyDepth { single { "first" in it.name } }
-        }.alsoDebug()
-
-        df.select {
-            pathOf("name").atAnyDepth { cols { "first" in it.name } }
-        }.alsoDebug()
-
-        df.select {
-            pathOf("name").atAnyDepth { single { "first" in it.name } }
-        }.alsoDebug()
-    }
+//    @Test
+//    fun `scope test`() {
+//        df.select {
+//            colsOf<String>().first { "first" in it.name }.atAnyDepth()
+//
+//            atAnyDepth {
+//                colsOf<String>().first { "first" in it.name }
+//            }
+//        }.alsoDebug()
+//
+//        df.select {
+//            atAnyDepth { cols { "first" in it.name } }
+//        }.alsoDebug()
+//
+//        df.select {
+//            "name".atAnyDepth { cols { "first" in it.name } }
+//        }.alsoDebug()
+//
+//        df.select {
+//            "name".atAnyDepth { single { "first" in it.name } }
+//        }.alsoDebug()
+//
+//        df.select {
+//            name.atAnyDepth { cols { "first" in it.name } }
+//        }.alsoDebug()
+//
+//        df.select {
+//            name.atAnyDepth { single { "first" in it.name } }
+//        }.alsoDebug()
+//
+//        df.select {
+//            Person::name.atAnyDepth { cols { "first" in it.name } }
+//        }.alsoDebug()
+//
+//        df.select {
+//            Person::name.atAnyDepth { single { "first" in it.name } }
+//        }.alsoDebug()
+//
+//        df.select {
+//            pathOf("name").atAnyDepth { cols { "first" in it.name } }
+//        }.alsoDebug()
+//
+//        df.select {
+//            pathOf("name").atAnyDepth { single { "first" in it.name } }
+//        }.alsoDebug()
+//    }
 
     fun List<ColumnWithPath<*>>.print() {
         forEach {

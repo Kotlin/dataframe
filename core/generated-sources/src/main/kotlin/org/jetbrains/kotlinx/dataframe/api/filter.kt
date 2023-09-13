@@ -176,8 +176,6 @@ public interface FilterColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: On a [SingleColumn], [filter][SingleColumn.filter] behaves exactly the same as
-     * [children][ColumnsSelectionDsl.children].
      *
      * #### Filter vs. Cols:
      * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] with predicate functions exactly like [filter][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.filter].
