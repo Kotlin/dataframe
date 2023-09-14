@@ -102,15 +102,15 @@ public interface FirstColumnsSelectionDsl {
      * }
      *
      * {@setArg [UsageTemplate.PlainDslFunctionsArg]
-     *  {@include [PlainDslName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `] [ `{@include [AtAnyDepthColumnsSelectionDsl.Usage.Name]} ` ]`
+     *  {@include [PlainDslName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `] [ `{@include [ColsAtAnyDepthColumnsSelectionDsl.Usage.Name]} ` ]`
      * }
      *
      * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnSetName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `] [ `{@include [AtAnyDepthColumnsSelectionDsl.Usage.Name]} ` ]`
+     *  {@include [Indent]}{@include [ColumnSetName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `] [ `{@include [ColsAtAnyDepthColumnsSelectionDsl.Usage.Name]} ` ]`
      * }
      *
      * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnGroupName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `] [ `{@include [AtAnyDepthColumnsSelectionDsl.Usage.Name]} ` ]`
+     *  {@include [Indent]}{@include [ColumnGroupName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `] [ `{@include [ColsAtAnyDepthColumnsSelectionDsl.Usage.Name]} ` ]`
      * }
      */
     public interface Usage {

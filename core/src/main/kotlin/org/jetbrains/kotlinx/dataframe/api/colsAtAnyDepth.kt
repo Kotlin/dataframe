@@ -4,12 +4,12 @@ import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
+import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
@@ -26,15 +26,13 @@ import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_DFS_OF
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_DFS_OF_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_DFS_OF_TYPED_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_DFS_REPLACE
-import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 // region ColumnsSelectionDsl
-// TODO make path modification optional
-// TODO explore scoping function
-public interface AtAnyDepthColumnsSelectionDsl {
+
+public interface ColsAtAnyDepthColumnsSelectionDsl {
 
     // region atAnyDepth
 
@@ -43,7 +41,7 @@ public interface AtAnyDepthColumnsSelectionDsl {
      */
     public interface Usage {
 
-        /** .[**atAnyDepth**][ColumnsSelectionDsl.atAnyDepth]`()` */
+        /** .[**colsAtAnyDepth**][ColumnsSelectionDsl.colsAtAnyDepth]`()` */
         public interface Name
     }
 
@@ -83,6 +81,28 @@ public interface AtAnyDepthColumnsSelectionDsl {
         interface Examples
     }
 
+    public fun ColumnSet<*>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+        colsAtAnyDepthInternal(predicate)
+
+    public fun ColumnsSelectionDsl<*>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+        asSingleColumn().colsAtAnyDepthInternal(predicate)
+
+    public fun SingleColumn<DataRow<*>>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+        ensureIsColumnGroup().colsAtAnyDepthInternal(predicate)
+
+    public fun String.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+        columnGroup(this).colsAtAnyDepth(predicate)
+
+    public fun KProperty<*>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+        columnGroup(this).colsAtAnyDepth(predicate)
+
+    public fun ColumnPath.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+        columnGroup(this).colsAtAnyDepth(predicate)
+
+    // endregion
+
+    // region deprecated
+
     /**
      * @include [CommonAtAnyDepthDocs]
      * @setArg [CommonAtAnyDepthDocs.Examples]
@@ -93,6 +113,7 @@ public interface AtAnyDepthColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { `[groups][ColumnsSelectionDsl.groups]`().`[atAnyDepth][TransformableColumnSet.atAnyDepth]`() }`
      */
+    @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.WARNING)
     public fun <C> TransformableColumnSet<C>.atAnyDepth(): ColumnSet<C> =
         atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
 
@@ -104,106 +125,21 @@ public interface AtAnyDepthColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { `[single][ColumnsSelectionDsl.singleCol]` { it.name == "myCol" }.`[atAnyDepth][TransformableSingleColumn.atAnyDepth]`() }`
      */
+    @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.WARNING)
     public fun TransformableSingleColumn<*>.atAnyDepth(): SingleColumn<*> =
         atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
 
-    // endregion
-
-    // region scope
-
-    // TODO Keep?
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
-    public fun <C> ColumnSet<C>.atAnyDepth(
-        filter: ColumnFilter<C>,
-    ): ColumnSet<C> =
-        with(this@AtAnyDepthColumnsSelectionDsl as ColumnsSelectionDsl<*>) {
-            this@atAnyDepth.cols(filter).atAnyDepth()
-        }
-
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
-    public fun <T, C> ColumnsSelectionDsl<T>.atAnyDepth(
-        selector: Selector<ColumnsSelectionDsl<T>, TransformableColumnSet<C>>,
-    ): ColumnSet<C> = selector(this).atAnyDepth()
-
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
-    public fun <T> ColumnsSelectionDsl<T>.atAnyDepth(
-        selector: Selector<ColumnsSelectionDsl<T>, TransformableSingleColumn<*>>,
-    ): SingleColumn<*> = selector(this).atAnyDepth()
-
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
-    public fun <C, R> SingleColumn<DataRow<C>>.atAnyDepth(
-        selector: Selector<ColumnsSelectionDsl<C>, TransformableColumnSet<R>>,
-    ): ColumnSet<R> =
-        with(this@AtAnyDepthColumnsSelectionDsl as ColumnsSelectionDsl<*>) {
-            this@atAnyDepth.ensureIsColumnGroup().select { selector(this).atAnyDepth() }
-        }
-
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
-    public fun <C> SingleColumn<DataRow<C>>.atAnyDepth(
-        selector: Selector<ColumnsSelectionDsl<C>, TransformableSingleColumn<*>>,
-    ): SingleColumn<*> =
-        with(this@AtAnyDepthColumnsSelectionDsl as ColumnsSelectionDsl<*>) {
-            this@atAnyDepth.ensureIsColumnGroup().select { selector(this).atAnyDepth() }.single()
-        }
-
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
-    public fun <R> String.atAnyDepth(
-        selector: Selector<ColumnsSelectionDsl<*>, TransformableColumnSet<R>>,
-    ): ColumnSet<R> = columnGroup(this).atAnyDepth(selector)
-
-    @Suppress("FINAL_UPPER_BOUND")
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
-    public fun <S : String> S.atAnyDepth(
-        selector: Selector<ColumnsSelectionDsl<*>, TransformableSingleColumn<*>>,
-    ): SingleColumn<*> = columnGroup(this).atAnyDepth(selector)
-
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
-    public fun <R> KProperty<R>.atAnyDepth(
-        selector: Selector<ColumnsSelectionDsl<*>, TransformableColumnSet<R>>,
-    ): ColumnSet<R> = columnGroup(this).atAnyDepth(selector)
-
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
-    public fun <K : KProperty<*>> K.atAnyDepth(
-        selector: Selector<ColumnsSelectionDsl<*>, TransformableSingleColumn<*>>,
-    ): SingleColumn<*> = columnGroup(this).atAnyDepth(selector)
-
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
-    public fun <R> ColumnPath.atAnyDepth(
-        selector: Selector<ColumnsSelectionDsl<*>, TransformableColumnSet<R>>,
-    ): ColumnSet<R> = columnGroup(this).atAnyDepth(selector)
-
-    @Suppress("FINAL_UPPER_BOUND")
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
-    public fun <C : ColumnPath> C.atAnyDepth(
-        selector: Selector<ColumnsSelectionDsl<*>, TransformableSingleColumn<*>>,
-    ): SingleColumn<*> = columnGroup(this).atAnyDepth(selector)
-
-    // endregion
-
-    // region deprecated
+    @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.WARNING)
+    public fun <C> TransformableColumnSet<C>.recursively(): ColumnSet<C> = atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
 
     @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.WARNING)
-    public fun <C> TransformableColumnSet<C>.recursively(): ColumnSet<C> = atAnyDepth()
+    public fun <C> TransformableColumnSet<C>.rec(): ColumnSet<C> = atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
 
     @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.WARNING)
-    public fun <C> TransformableColumnSet<C>.rec(): ColumnSet<C> = atAnyDepth()
+    public fun TransformableSingleColumn<*>.recursively(): SingleColumn<*> = atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
 
     @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.WARNING)
-    public fun TransformableSingleColumn<*>.recursively(): SingleColumn<*> = atAnyDepth()
-
-    @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.WARNING)
-    public fun TransformableSingleColumn<*>.rec(): SingleColumn<*> = atAnyDepth()
+    public fun TransformableSingleColumn<*>.rec(): SingleColumn<*> = atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
 
     // endregion
 
@@ -307,6 +243,14 @@ public interface AtAnyDepthColumnsSelectionDsl {
 
     // endregion
 }
+
+/**
+ * Returns all columns inside this [ColumnsResolver] at any depth if they satisfy the
+ * given predicate.
+ */
+internal fun ColumnsResolver<*>.colsAtAnyDepthInternal(predicate: ColumnFilter<*>): ColumnSet<*> =
+    colsInternal(predicate)
+        .atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
 
 @Suppress("DeprecatedCallableAddReplaceWith")
 @Deprecated("Replaced with atAnyDepth()")

@@ -911,7 +911,7 @@ class DataFrameTests : BaseTest() {
         df["e"].kind() shouldBe ColumnKind.Group
         df.getColumnGroup("d").columnNames() shouldBe listOf("f")
         df.getColumnGroup("e").getColumnGroup("g").columnNames() shouldBe listOf("h")
-        val cols = df.getColumns { cols { !it.isColumnGroup() }.atAnyDepth() }
+        val cols = df.getColumns { colsAtAnyDepth { !it.isColumnGroup() } }
         cols.size shouldBe 5
         cols.forEach {
             it.toList() shouldBe expected
@@ -1165,7 +1165,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `gather bool`() {
         val pivoted = typed.pivot { city }.groupBy { name }.matches()
-        val res = pivoted.gather { colsOf<Boolean>().atAnyDepth() }.where { it }.keysInto("city")
+        val res = pivoted.gather { colsAtAnyDepth().colsOf<Boolean>() }.where { it }.keysInto("city")
         val sorted = res.sortBy { name and city }
         sorted shouldBe typed.select { name and city.map { it.toString() } }.distinct().sortBy { name and city }
     }

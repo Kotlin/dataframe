@@ -39,7 +39,7 @@ public fun <T> DataColumn<T>.describe(): DataFrame<ColumnDescription> = describe
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.describe(): DataFrame<ColumnDescription> = describe { cols { !it.isColumnGroup() }.atAnyDepth() }
+public fun <T> DataFrame<T>.describe(): DataFrame<ColumnDescription> = describe { colsAtAnyDepth { !it.isColumnGroup() } }
 
 public fun <T> DataFrame<T>.describe(columns: ColumnsSelector<T, *>): DataFrame<ColumnDescription> =
     describeImpl(getColumnsWithPaths(columns))

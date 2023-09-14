@@ -183,7 +183,7 @@ class PivotTests {
         val leafColumns = pivoted.getColumnsWithPaths {
             all()
                 .drop(1)
-                .cols { !it.isColumnGroup() }.atAnyDepth()
+                .colsAtAnyDepth { !it.isColumnGroup() }
         }
         leafColumns.size shouldBe typed.name.countDistinct() * typed.key.countDistinct() - 1
         leafColumns.forEach { it.path.size shouldBe 2 }
@@ -239,7 +239,7 @@ class PivotTests {
 //        nullGroup.columnTypes() shouldBe listOf(typeOf<Comparable<*>?>(), typeOf<KClass<Any>?>())
         nullGroup.columnTypes() shouldBe listOf(nothingType(true), nothingType(true))
 
-        val cols = pivotedDf.getColumnsWithPaths { cols { !it.isColumnGroup() }.atAnyDepth() }
+        val cols = pivotedDf.getColumnsWithPaths { colsAtAnyDepth { !it.isColumnGroup() } }
         cols.size shouldBe 2 * typed.name.countDistinct() * typed.key.countDistinct() - 2
 
         cols.forEach {

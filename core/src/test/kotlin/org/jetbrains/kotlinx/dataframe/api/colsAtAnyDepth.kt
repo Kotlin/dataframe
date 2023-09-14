@@ -3,9 +3,12 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame
+import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.columns.atAnyDepthImpl
+import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.jetbrains.kotlinx.dataframe.samples.api.city
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
@@ -15,53 +18,6 @@ import org.junit.Test
 import kotlin.reflect.typeOf
 
 class AtAnyDepth : TestBase() {
-
-//    @Test
-//    fun `scope test`() {
-//        df.select {
-//            colsOf<String>().first { "first" in it.name }.atAnyDepth()
-//
-//            atAnyDepth {
-//                colsOf<String>().first { "first" in it.name }
-//            }
-//        }.alsoDebug()
-//
-//        df.select {
-//            atAnyDepth { cols { "first" in it.name } }
-//        }.alsoDebug()
-//
-//        df.select {
-//            "name".atAnyDepth { cols { "first" in it.name } }
-//        }.alsoDebug()
-//
-//        df.select {
-//            "name".atAnyDepth { single { "first" in it.name } }
-//        }.alsoDebug()
-//
-//        df.select {
-//            name.atAnyDepth { cols { "first" in it.name } }
-//        }.alsoDebug()
-//
-//        df.select {
-//            name.atAnyDepth { single { "first" in it.name } }
-//        }.alsoDebug()
-//
-//        df.select {
-//            Person::name.atAnyDepth { cols { "first" in it.name } }
-//        }.alsoDebug()
-//
-//        df.select {
-//            Person::name.atAnyDepth { single { "first" in it.name } }
-//        }.alsoDebug()
-//
-//        df.select {
-//            pathOf("name").atAnyDepth { cols { "first" in it.name } }
-//        }.alsoDebug()
-//
-//        df.select {
-//            pathOf("name").atAnyDepth { single { "first" in it.name } }
-//        }.alsoDebug()
-//    }
 
     fun List<ColumnWithPath<*>>.print() {
         forEach {
@@ -100,81 +56,82 @@ class AtAnyDepth : TestBase() {
     fun `first, last, and single`() {
         listOf(
             dfGroup.select { name.firstName.firstName },
-
-            dfGroup.select { first { col -> col.any { it == "Alice" } }.atAnyDepth() },
-            dfGroup.select { last { col -> col.any { it == "Alice" } }.atAnyDepth() },
-            dfGroup.select { single { col -> col.any { it == "Alice" } }.atAnyDepth() },
+            dfGroup.select { first { col -> col.any { it == "Alice" } }.atAnyDepthImpl() },
+            dfGroup.select { colsAtAnyDepth().first { col -> col.any { it == "Alice" } } },
+            dfGroup.select { colsAtAnyDepth { col -> col.any { it == "Alice" } }.first() },
+            dfGroup.select { colsAtAnyDepth().last { col -> col.any { it == "Alice" } } },
+            dfGroup.select { colsAtAnyDepth { col -> col.any { it == "Alice" } }.last() },
+            dfGroup.select { colsAtAnyDepth().single { col -> col.any { it == "Alice" } } },
+            dfGroup.select { colsAtAnyDepth { col -> col.any { it == "Alice" } }.single() },
         ).shouldAllBeEqual()
 
         listOf(
             dfGroup.select { city },
 
-            dfGroup.select { first { col -> col.any { it == "London" } }.atAnyDepth() },
-            dfGroup.select { last { col -> col.any { it == "London" } }.atAnyDepth() },
-            dfGroup.select { single { col -> col.any { it == "London" } }.atAnyDepth() },
+            dfGroup.select { colsAtAnyDepth().first { col -> col.any { it == "London" } } },
+            dfGroup.select { colsAtAnyDepth { col -> col.any { it == "London" } }.first() },
+            dfGroup.select { colsAtAnyDepth().last { col -> col.any { it == "London" } } },
+            dfGroup.select { colsAtAnyDepth { col -> col.any { it == "London" } }.last() },
+            dfGroup.select { colsAtAnyDepth().single { col -> col.any { it == "London" } } },
+            dfGroup.select { colsAtAnyDepth { col -> col.any { it == "London" } }.single() },
         ).shouldAllBeEqual()
-    }
-
-    @Test
-    fun children() {
-//        dfGroup.getColumnsWithPaths { children().atAnyDepth() }.print()
-        dfGroup.getColumnsWithPaths { name.children() }.print()
     }
 
     @Test
     fun groups() {
         listOf(
             df.select { name },
-            df.select { colGroups().atAnyDepth() },
+            df.select { colsAtAnyDepth().colGroups() },
+            df.select { colsAtAnyDepth { it.kind == Group } },
             df.select { colGroups() },
             df.select { all().colGroups() },
-            df.select { all().colGroups().atAnyDepth() },
+            df.select { all().colsAtAnyDepth().colGroups() },
         ).shouldAllBeEqual()
 
         dfGroup.select { colGroups() } shouldBe dfGroup.select { name }
-        dfGroup.select { colGroups().atAnyDepth() } shouldBe dfGroup.select { name and name.firstName }
+        dfGroup.select { colsAtAnyDepth().colGroups() } shouldBe dfGroup.select { name and name.firstName }
     }
 
     @Test
     fun `all atAnyDepth`() {
-        dfGroup.getColumnsWithPaths { all().atAnyDepth() }.sortedBy { it.name } shouldBe atAnyDepthGoal
-        dfGroup.getColumnsWithPaths { all().cols { !it.isColumnGroup() }.atAnyDepth() }
+        dfGroup.getColumnsWithPaths { colsAtAnyDepth().all() }.sortedBy { it.name } shouldBe atAnyDepthGoal
+        dfGroup.getColumnsWithPaths { all().colsAtAnyDepth().cols { !it.isColumnGroup() } }
             .sortedBy { it.name } shouldBe atAnyDepthNoGroups
     }
 
     @Test
     fun `cols atAnyDepth`() {
-        dfGroup.getColumnsWithPaths { cols().atAnyDepth() }.sortedBy { it.name } shouldBe atAnyDepthGoal
+        dfGroup.getColumnsWithPaths { colsAtAnyDepth().cols() }.sortedBy { it.name } shouldBe atAnyDepthGoal
     }
 
     @Test
     fun `colsOf atAnyDepth`() {
-        dfGroup.getColumnsWithPaths { colsOf<String?>().atAnyDepth() }.sortedBy { it.name } shouldBe atAnyDepthString
+        dfGroup.getColumnsWithPaths { colsAtAnyDepth().colsOf<String?>() }.sortedBy { it.name } shouldBe atAnyDepthString
     }
 
     @Test
     fun `all allAtAnyDepth`() {
-        dfGroup.getColumnsWithPaths { all().all().atAnyDepth() }.sortedBy { it.name } shouldBe atAnyDepthGoal
-        dfGroup.getColumnsWithPaths { all().cols { !it.isColumnGroup() }.atAnyDepth() }
+        dfGroup.getColumnsWithPaths { all().colsAtAnyDepth().all() }.sortedBy { it.name } shouldBe atAnyDepthGoal
+        dfGroup.getColumnsWithPaths { all().colsAtAnyDepth { !it.isColumnGroup() } }
             .sortedBy { it.name } shouldBe atAnyDepthNoGroups
     }
 
     @Test
     fun `cols allAtAnyDepth`() {
-        dfGroup.getColumnsWithPaths { cols().all().atAnyDepth() }.sortedBy { it.name } shouldBe atAnyDepthGoal
-        dfGroup.getColumnsWithPaths { cols().cols { !it.isColumnGroup() }.atAnyDepth() }
+        dfGroup.getColumnsWithPaths { cols().colsAtAnyDepth().all() }.sortedBy { it.name } shouldBe atAnyDepthGoal
+        dfGroup.getColumnsWithPaths { cols().colsAtAnyDepth { !it.isColumnGroup() } }
             .sortedBy { it.name } shouldBe atAnyDepthNoGroups
     }
 
     @Test
     fun `valueCols atAnyDepth`() {
-        dfGroup.getColumnsWithPaths { valueCols().atAnyDepth() }.sortedBy { it.name } shouldBe
+        dfGroup.getColumnsWithPaths { colsAtAnyDepth().valueCols() }.sortedBy { it.name } shouldBe
             atAnyDepthNoGroups
     }
 
     @Test
     fun `colGroups atAnyDepth`() {
-        dfGroup.getColumnsWithPaths { colGroups().atAnyDepth() } shouldBe
+        dfGroup.getColumnsWithPaths { colsAtAnyDepth().colGroups() } shouldBe
             dfGroup.getColumnsWithPaths { name and name.firstName }
     }
 
@@ -196,7 +153,7 @@ class AtAnyDepth : TestBase() {
                 dataFrameOf(firstName, lastName, frameCol).asColumnGroup("name")
             }
 
-        dfWithFrames.getColumnsWithPaths { frameCols().atAnyDepth() } shouldBe
+        dfWithFrames.getColumnsWithPaths { colsAtAnyDepth().frameCols() } shouldBe
             dfWithFrames.getColumnsWithPaths { name[frameCol] and frameCol }
     }
 
@@ -204,7 +161,7 @@ class AtAnyDepth : TestBase() {
     fun `cols of kind atAnyDepth`() {
         listOf(
             dfGroup.getColumnsWithPaths {
-                colsOfKind(Frame, Value) { "e" in it.name }.atAnyDepth()
+                colsAtAnyDepth().colsOfKind(Frame, Value) { "e" in it.name }
             },
             dfGroup.getColumnsWithPaths {
                 asSingleColumn().ensureIsColumnGroup().asColumnSet().dfsInternal { "e" in it.name }

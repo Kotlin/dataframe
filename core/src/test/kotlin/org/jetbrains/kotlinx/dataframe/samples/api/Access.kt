@@ -702,7 +702,7 @@ class Access : TestBase() {
     fun columnSelectorsUsages() {
         // SampleStart
         df.select { age and name }
-        df.fillNaNs { colsOf<Double>().atAnyDepth() }.withZero()
+        df.fillNaNs { colsAtAnyDepth().colsOf<Double>() }.withZero()
         df.remove { cols { it.hasNulls() } }
         df.group { cols { it.data != name } }.into { "nameless" }
         df.update { city }.notNull { it.lowercase() }
@@ -740,8 +740,8 @@ class Access : TestBase() {
         // all columns of ColumnGroup
         df.select { name.allCols() }
 
-        // recursive traversal of all children columns excluding ColumnGroups
-        df.select { name.cols { !it.isColumnGroup() }.atAnyDepth() }
+        // traversal of columns at any depth from here excluding ColumnGroups
+        df.select { name.colsAtAnyDepth { !it.isColumnGroup() } }
 
         // SampleEnd
     }
@@ -778,8 +778,8 @@ class Access : TestBase() {
         // all columns of ColumnGroup
         df.select { name.allCols() }
 
-        // recursive traversal of all children columns excluding ColumnGroups
-        df.select { name.cols { !it.isColumnGroup() }.atAnyDepth() }
+        // traversal of columns at any depth from here excluding ColumnGroups
+        df.select { name.colsAtAnyDepth { !it.isColumnGroup() } }
         // SampleEnd
     }
 
@@ -813,8 +813,8 @@ class Access : TestBase() {
         // all columns of ColumnGroup
         df.select { Person::name.allCols() }
 
-        // recursive traversal of all children columns excluding groups
-        df.select { Person::name.cols { !it.isColumnGroup() }.atAnyDepth() }
+        // traversal of columns at any depth from here excluding ColumnGroups
+        df.select { Person::name.colsAtAnyDepth { !it.isColumnGroup() } }
         // SampleEnd
     }
 
@@ -847,8 +847,8 @@ class Access : TestBase() {
         // all columns of ColumnGroup
         df.select { "name".allCols() }
 
-        // recursive traversal of all children columns excluding groups
-        df.select { "name".cols { !it.isColumnGroup() }.atAnyDepth() }
+        // traversal of columns at any depth from here excluding ColumnGroups
+        df.select { "name".colsAtAnyDepth { !it.isColumnGroup() } }
         // SampleEnd
     }
 
@@ -906,17 +906,17 @@ class Access : TestBase() {
             Person::name.singleCol { it.name().startsWith("first") }
         }
 
-        // recursive traversal of all columns, excluding ColumnGroups from result
-        df.select { cols { !it.isColumnGroup() }.atAnyDepth() }
+        // traversal of columns at any depth from here excluding ColumnGroups
+        df.select { colsAtAnyDepth { !it.isColumnGroup() } }
 
-        // depth-first-search traversal of all columns, including ColumnGroups in result
-        df.select { all().atAnyDepth() }
+        // traversal of columns at any depth from here including ColumnGroups
+        df.select { colsAtAnyDepth() }
 
-        // recursive traversal with condition
-        df.select { cols { it.name().contains(":") }.atAnyDepth() }
+        // traversal of columns at any depth with condition
+        df.select { colsAtAnyDepth { it.name().contains(":") } }
 
-        // recursive traversal of columns of given type
-        df.select { colsOf<String>().atAnyDepth() }
+        // traversal of columns at any depth to find columns of given type
+        df.select { colsAtAnyDepth().colsOf<String>() }
 
         // all columns except given column set
         df.select { except { colsOf<String>() } }
@@ -931,18 +931,18 @@ class Access : TestBase() {
     fun columnSelectorsModifySet() {
         // SampleStart
         // first/last n value- and frame columns in column set
-        df.select { cols { !it.isColumnGroup() }.atAnyDepth().take(3) }
-        df.select { cols { !it.isColumnGroup() }.atAnyDepth().takeLast(3) }
+        df.select { colsAtAnyDepth { !it.isColumnGroup() }.take(3) }
+        df.select { colsAtAnyDepth { !it.isColumnGroup() }.takeLast(3) }
 
         // all except first/last n value- and frame columns in column set
-        df.select { cols { !it.isColumnGroup() }.atAnyDepth().drop(3) }
-        df.select { cols { !it.isColumnGroup() }.atAnyDepth().dropLast(3) }
+        df.select { colsAtAnyDepth { !it.isColumnGroup() }.drop(3) }
+        df.select { colsAtAnyDepth { !it.isColumnGroup() }.dropLast(3) }
 
         // filter column set by condition
-        df.select { cols { !it.isColumnGroup() }.atAnyDepth().filter { it.name().startsWith("year") } }
+        df.select { colsAtAnyDepth { !it.isColumnGroup() }.filter { it.name().startsWith("year") } }
 
         // exclude columns from column set
-        df.select { cols { !it.isColumnGroup() }.atAnyDepth().except { age } }
+        df.select { colsAtAnyDepth { !it.isColumnGroup() }.except { age } }
 
         // keep only unique columns
         df.select { (colsOf<Int>() and age).distinct() }

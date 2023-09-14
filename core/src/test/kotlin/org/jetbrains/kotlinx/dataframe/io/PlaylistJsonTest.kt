@@ -136,7 +136,7 @@ class PlaylistJsonTest {
     @Test
     fun `deep batch update all`() {
         val updated = item
-            .convert { cols { it.name() == "url" }.atAnyDepth() }
+            .convert { colsAtAnyDepth { it.name() == "url" } }
             .with { (it as? String)?.let { IMG(it) } }
         updated.snippet.thumbnails.default.url.type() shouldBe typeOf<IMG>()
         updated.snippet.thumbnails.maxres.url.type() shouldBe typeOf<IMG?>()

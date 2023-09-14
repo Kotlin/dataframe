@@ -41,7 +41,7 @@ class PivotTests {
         }
         pivoted.columnsCount() shouldBe 3
         pivoted.rowsCount() shouldBe 2
-        val cols = pivoted.getColumns { except(a).cols { !it.isColumnGroup() }.atAnyDepth() }
+        val cols = pivoted.getColumns { except(a).colsAtAnyDepth { !it.isColumnGroup() } }
         cols.size shouldBe 4
         cols.forEach {
             it.type() shouldBe typeOf<Char>()

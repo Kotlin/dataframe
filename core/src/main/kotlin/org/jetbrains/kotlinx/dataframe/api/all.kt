@@ -95,20 +95,20 @@ public interface AllColumnsSelectionDsl {
      * }
      *
      * {@setArg [UsageTemplate.PlainDslFunctionsArg]
-     *  {@include [PlainDslName]}**`()`**` [ `{@include [AtAnyDepthColumnsSelectionDsl.Usage.Name]} ` ]`
+     *  {@include [PlainDslName]}**`()`**` [ `{@include [ColsAtAnyDepthColumnsSelectionDsl.Usage.Name]} ` ]`
      *
      *  `|` **`all`**`(`{@include [Before]}`|`{@include [After]}`|`{@include [From]}`|`{@include [UpTo]}`)` `(` **`(`**{@include [UsageTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [UsageTemplate.ColumnSelectorRef]} **`\\}`** `)`
      * }
      *
      * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnSetName]}**`()`**` [ `{@include [AtAnyDepthColumnsSelectionDsl.Usage.Name]} ` ]`
+     *  {@include [Indent]}{@include [ColumnSetName]}**`()`**` [ `{@include [ColsAtAnyDepthColumnsSelectionDsl.Usage.Name]} ` ]`
      *
      *  {@include [Indent]}`|` .**`all`**`(`{@include [Before]}`|`{@include [After]}`|`{@include [From]}`|`{@include [UpTo]}`)` `(` **`(`**{@include [UsageTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [UsageTemplate.ColumnSelectorRef]} **`\\}`** `)`
      *  TODO debate whether these overloads make sense. They didn't exist in 0.9.0
      * }
      *
      * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnGroupName]}**`()`**` [ `{@include [AtAnyDepthColumnsSelectionDsl.Usage.Name]} ` ]`
+     *  {@include [Indent]}{@include [ColumnGroupName]}**`()`**` [ `{@include [ColsAtAnyDepthColumnsSelectionDsl.Usage.Name]} ` ]`
      *
      *  {@include [Indent]}`|` .**`allCols`**`(`{@include [Before]}`|`{@include [After]}`|`{@include [From]}`|`{@include [UpTo]}`)` `(` **`(`**{@include [UsageTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [UsageTemplate.ColumnSelectorRef]} **`\\}`** `)`
      * }

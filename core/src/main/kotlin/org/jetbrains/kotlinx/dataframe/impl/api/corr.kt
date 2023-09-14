@@ -24,7 +24,7 @@ internal fun <T, C, R> Corr<T, C>.corrImpl(otherColumns: ColumnsSelector<T, R>):
         // extract nested number columns from ColumnGroups
         if (it.isColumnGroup()) {
             val groupPath = it.path
-            df.getColumnsWithPaths { groupPath.cols { it.isSuitableForCorr() }.atAnyDepth() }.map { it.cast() }
+            df.getColumnsWithPaths { groupPath.colsAtAnyDepth { it.isSuitableForCorr() } }.map { it.cast() }
         } else listOf(it)
     }
 

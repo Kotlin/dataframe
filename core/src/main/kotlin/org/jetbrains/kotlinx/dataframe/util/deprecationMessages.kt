@@ -16,15 +16,15 @@ internal const val DF_READ_REPLACE_MESSAGE = "this.unfold(*columns)"
 
 internal const val ITERABLE_COLUMNS_DEPRECATION_MESSAGE = "Replaced with `toColumnSet()` operation. $message_0_12_0"
 
-internal const val COL_SELECT_DSL_DFS = "`dfs` is deprecated, use `atAnyDepth()` instead. $message_0_12_0"
-internal const val COL_SELECT_DSL_DFS_REPLACE = "this.cols(predicate).atAnyDepth()"
+internal const val COL_SELECT_DSL_DFS = "`dfs` is deprecated, use `colsAtAnyDepth { }` instead. $message_0_12_0"
+internal const val COL_SELECT_DSL_DFS_REPLACE = "this.colsAtAnyDepth(predicate)"
 
-internal const val COL_SELECT_DSL_ALL_DFS = "`allDfs` is deprecated, use `atAnyDepth()` instead. $message_0_12_0"
-internal const val COL_SELECT_DSL_ALL_DFS_REPLACE = "this.cols { includeGroups || !it.isColumnGroup() }.atAnyDepth()"
+internal const val COL_SELECT_DSL_ALL_DFS = "`allDfs` is deprecated, use `colsAtAnyDepth()` instead. $message_0_12_0"
+internal const val COL_SELECT_DSL_ALL_DFS_REPLACE = "this.colsAtAnyDepth { includeGroups || !it.isColumnGroup() }"
 
-internal const val COL_SELECT_DSL_DFS_OF = "`dfsOf` is deprecated, use `atAnyDepth()` instead. $message_0_12_0"
-internal const val COL_SELECT_DSL_DFS_OF_REPLACE = "this.colsOf(type, predicate).atAnyDepth()"
-internal const val COL_SELECT_DSL_DFS_OF_TYPED_REPLACE = "this.colsOf<C>(filter).atAnyDepth()"
+internal const val COL_SELECT_DSL_DFS_OF = "`dfsOf` is deprecated, use `colsAtAnyDepth()` instead. $message_0_12_0"
+internal const val COL_SELECT_DSL_DFS_OF_REPLACE = "this.colsAtAnyDepth().colsOf(type, predicate)"
+internal const val COL_SELECT_DSL_DFS_OF_TYPED_REPLACE = "this.colsAtAnyDepth().colsOf<C>(filter)"
 
 // endregion
 
@@ -69,8 +69,10 @@ internal const val COL_SELECT_DSL_ALL_UP_TO_REPLACE = "this.allUpTo(column)"
 internal const val COL_SELECT_DSL_ALL_COLS_UP_TO = "Use `allColsUpTo()` instead. $message_0_13_0"
 internal const val COL_SELECT_DSL_ALL_COLS_UP_TO_REPLACE = "this.allColsUpTo(column)"
 
-internal const val COL_SELECT_DSL_AT_ANY_DEPTH = "Use `atAnyDepth()` instead. $message_0_13_0"
-internal const val COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE = "this.atAnyDepth()"
+internal const val COL_SELECT_DSL_AT_ANY_DEPTH = "This postfix notation is now deprecated. Use `colsAtAnyDepth().YOUR_OPERATION` instead (NOTE: ReplaceWith is incorrect). $message_0_13_0"
+
+// TODO https://youtrack.jetbrains.com/issue/KTIJ-27052/ReplaceWith-Deprecated-this-after-call-bug
+internal const val COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE = "this"
 
 internal const val COL_SELECT_DSL_CHILDREN = "Use colsInGroups {} instead. $message_0_13_0"
 internal const val COL_SELECT_DSL_CHILDREN_REPLACE = "this.colsInGroups(predicate)"

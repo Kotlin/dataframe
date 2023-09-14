@@ -24,7 +24,7 @@ internal fun <T, C> RenameClause<T, C>.renameImpl(transform: (ColumnWithPath<C>)
     val selectedColumnsWithPath = df.getColumnsWithPaths(columns)
         .associateBy { it.data }
     // gather a tree of all columns where the nodes will be renamed
-    val tree = df.getColumnsWithPaths { all().atAnyDepth() }.collectTree()
+    val tree = df.getColumnsWithPaths { colsAtAnyDepth() }.collectTree()
 
     // perform rename in nodes
     tree.allChildrenNotNull().forEach { node ->

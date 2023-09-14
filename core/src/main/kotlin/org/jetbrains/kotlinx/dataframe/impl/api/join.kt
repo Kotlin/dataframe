@@ -75,8 +75,8 @@ internal fun <A, B> DataFrame<A>.joinImpl(
         val leftCol = leftJoinColumns[i]
         val rightCol = rightJoinColumns[i]
         if (leftCol.isColumnGroup() && rightCol.isColumnGroup()) {
-            val leftColumns = getColumnsWithPaths { leftCol.asColumnGroup().cols { !it.isColumnGroup() }.atAnyDepth()}
-            val rightColumns = other.getColumnsWithPaths { rightCol.asColumnGroup().cols { !it.isColumnGroup() }.atAnyDepth() }
+            val leftColumns = getColumnsWithPaths { leftCol.asColumnGroup().colsAtAnyDepth { !it.isColumnGroup() } }
+            val rightColumns = other.getColumnsWithPaths { rightCol.asColumnGroup().colsAtAnyDepth { !it.isColumnGroup() } }
 
             val leftPrefixLength = leftCol.path.size
             val rightPrefixLength = rightCol.path.size
@@ -148,12 +148,12 @@ internal fun <A, B> DataFrame<A>.joinImpl(
         outputRowsCount += rightUnmatchedCount
     }
 
-    val leftColumns = getColumnsWithPaths { cols { !it.isColumnGroup() }.atAnyDepth() }
+    val leftColumns = getColumnsWithPaths { colsAtAnyDepth { !it.isColumnGroup() } }
 
     val rightJoinColumnPaths = allRightJoinColumns.associate { it.path to it.data }
 
     val newRightColumns =
-        if (addNewColumns) other.getColumnsWithPaths { cols { !it.isColumnGroup() && !rightJoinColumnPaths.contains(it.path) }.atAnyDepth() }
+        if (addNewColumns) other.getColumnsWithPaths { colsAtAnyDepth { !it.isColumnGroup() && !rightJoinColumnPaths.contains(it.path) } }
         else emptyList()
 
     // for every column index from the left dataframe store matching column from the right dataframe
