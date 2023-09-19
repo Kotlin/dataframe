@@ -4,14 +4,18 @@ import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Usage.ColumnGroupName
+import org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Usage.ColumnSetName
+import org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Usage.PlainDslName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
-import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.atAnyDepthImpl
@@ -37,42 +41,85 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
     // region atAnyDepth
 
     /**
-     * TODO
+     * ## Cols At Any Depth Usage
+     *
+     * @include [UsageTemplate]
+     * {@setArg [UsageTemplate.DefinitionsArg]
+     *  {@include [UsageTemplate.ColumnSetDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.ColumnGroupDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.ConditionDef]}
+     * }
+     *
+     * {@setArg [UsageTemplate.PlainDslFunctionsArg]
+     *  {@include [PlainDslName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     * }
+     * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
+     *  {@include [Indent]}{@include [ColumnSetName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     * }
+     * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
+     *  {@include [Indent]}{@include [ColumnGroupName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     * }
      */
     public interface Usage {
 
-        /** .[**colsAtAnyDepth**][ColumnsSelectionDsl.colsAtAnyDepth]`()` */
-        public interface Name
+        /** [**colsAtAnyDepth**][ColumnsSelectionDsl.colsAtAnyDepth] */
+        public interface PlainDslName
+
+        /** .[**colsAtAnyDepth**][ColumnsSelectionDsl.colsAtAnyDepth] */
+        public interface ColumnSetName
+
+        /** .[**colsAtAnyDepth**][ColumnsSelectionDsl.colsAtAnyDepth] */
+        public interface ColumnGroupName
     }
 
     /**
-     * ## At Any Depth
+     * ## Cols At Any Depth
      *
-     * Modifies the previous call to run not only on the current column set,
-     * but also on all columns inside [column groups][ColumnGroup].
+     * Returns the columns of this [ColumnsResolver] at any depth if they satisfy the optional given predicate.
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() }`
+     * This function is especially powerful if followed by another filter function such as
+     * [colsOf][ColumnsSelectionDsl.colsOf], [single][ColumnsSelectionDsl.single], and [valueCols][ColumnsSelectionDsl.valueCols].
+     * {@include [LineBreak]}
+     * For usage, check out [Usage].
+     * {@include [LineBreak]}
+     * For example:
+     * {@include [LineBreak]}
+     * `// Depth-first search to a column containing the value "Alice"`
      *
-     * returns all columns of type [String] in the top-level, as expected. However, what if you want ALL
-     * columns of type [String] even if they are inside a nested [column group][ColumnGroup]? Then you can use [atAnyDepth]:
+     * `df.`[select][DataFrame.select]` { `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().`[first][ColumnsSelectionDsl.firstCol]` { "Alice" `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
+     * {@include [LineBreak]}
+     * `// The columns at any depth excluding the top-level`
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[atAnyDepth][TransformableColumnSet.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { `[colGroups][ColumnsSelectionDsl.colGroups]`().`[colsAtAnyDepth][ColumnSet.colsAtAnyDepth]`() }`
+     * {@include [LineBreak]}
+     * `// All value- and frame columns at any depth`
      *
-     * This will return the columns of type [String] in all levels.
+     * `df.`[select][DataFrame.select]` { `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]` { !it.`[isColumnGroup][DataColumn.isColumnGroup]` } }`
+     * {@include [LineBreak]}
+     * `// All value columns at any depth nested under a column group named "myColGroup"`
      *
-     * More examples:
-     *
-     * `df.`[select][DataFrame.select]` { `[first][ColumnsSelectionDsl.firstCol]` { col -> col.`[any][DataColumn.any]` { it == "Alice" } }.`[atAnyDepth][TransformableSingleColumn.atAnyDepth]`() }`
-     *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "name" in it.`[name][ColumnReference.name]` }.`[atAnyDepth][TransformableColumnSet.atAnyDepth]`() }`
-     *
-     * `df.`[select][DataFrame.select]` { `[valueCols][ColumnsSelectionDsl.valueCols]`().`[atAnyDepth][TransformableColumnSet.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { myColGroup.`[colsAtAnyDepth][SingleColumn.colsAtAnyDepth]`().`[valueCols][ColumnsSelectionDsl.valueCols]`() }`
      *
      * #### Examples for this overload:
      *
      * {@getArg [CommonAtAnyDepthDocs.Examples]}
      *
-     * @param [includeTopLevel\] Whether to include the top-level columns in the result. `true` by default.
+     * #### Converting from deprecated syntax:
+     *
+     * [dfs][dfs]` { condition } -> `[colsAtAnyDepth][colsAtAnyDepth]` { condition }`
+     *
+     * [allDfs][allDfs]`(includeGroups = false) -> `[colsAtAnyDepth][colsAtAnyDepth]` { includeGroups || !it.`[isColumnGroup][DataColumn.isColumnGroup]`() }`
+     *
+     * [dfsOf][dfsOf]`<Type> { condition } -> `[colsAtAnyDepth][colsAtAnyDepth]`().`[colsOf][ColumnsSelectionDsl.colsOf]`<Type> { condition } }`
+     *
+     * [cols][ColumnsSelectionDsl.cols]` { condition }.`[recursively][recursively]`() -> `[colsAtAnyDepth][colsAtAnyDepth]` { condition }`
+     *
+     * [first][ColumnsSelectionDsl.first]` { condition }.`[rec][rec]`() -> `[colsAtAnyDepth][colsAtAnyDepth]` { condition }.`[first][ColumnsSelectionDsl.first]`()`
+     *
+     * [all][ColumnsSelectionDsl.all]`().`[recursively][recursively]`() -> `[colsAtAnyDepth][colsAtAnyDepth]`()`
+     *
      * @see [DataFrame.flatten\]
      */
     private interface CommonAtAnyDepthDocs {
@@ -81,21 +128,59 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
         interface Examples
     }
 
+    /**
+     * @include [CommonAtAnyDepthDocs]
+     * @setArg [CommonAtAnyDepthDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroups][ColumnsSelectionDsl.colGroups]`().`[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]` { "Alice" `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
+     */
     public fun ColumnSet<*>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         colsAtAnyDepthInternal(predicate)
 
+    /**
+     * @include [CommonAtAnyDepthDocs]
+     * @setArg [CommonAtAnyDepthDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]` { "Alice" `[in][Iterable.contains]` it.`[values][DataColumn.values]`() }.`[first][ColumnsSelectionDsl.first]`() }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]` { !it.`[isColumnGroup][DataColumn.isColumnGroup]` } }`
+     */
     public fun ColumnsSelectionDsl<*>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         asSingleColumn().colsAtAnyDepthInternal(predicate)
 
+    /**
+     * @include [CommonAtAnyDepthDocs]
+     * @setArg [CommonAtAnyDepthDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { myColGroup.`[colsAtAnyDepth][SingleColumn.colsAtAnyDepth]` { "Alice" `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
+     */
     public fun SingleColumn<DataRow<*>>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         ensureIsColumnGroup().colsAtAnyDepthInternal(predicate)
 
+    /**
+     * @include [CommonAtAnyDepthDocs]
+     * @setArg [CommonAtAnyDepthDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsAtAnyDepth][String.colsAtAnyDepth]` { "Alice" `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
+     */
     public fun String.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         columnGroup(this).colsAtAnyDepth(predicate)
 
+    /**
+     * @include [CommonAtAnyDepthDocs]
+     * @setArg [CommonAtAnyDepthDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsAtAnyDepth][KProperty.colsAtAnyDepth]` { "Alice" `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
+     */
     public fun KProperty<*>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         columnGroup(this).colsAtAnyDepth(predicate)
 
+    /**
+     * @include [CommonAtAnyDepthDocs]
+     * @setArg [CommonAtAnyDepthDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]` { "Alice" `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
+     */
     public fun ColumnPath.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         columnGroup(this).colsAtAnyDepth(predicate)
 

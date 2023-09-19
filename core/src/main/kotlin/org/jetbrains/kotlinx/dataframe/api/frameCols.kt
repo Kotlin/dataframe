@@ -35,15 +35,15 @@ public interface FrameColsColumnsSelectionDsl {
      * }
      *
      * {@setArg [UsageTemplate.PlainDslFunctionsArg]
-     *  {@include [PlainDslName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]` `[ `{@include [ColsAtAnyDepthColumnsSelectionDsl.Usage.Name]} ` ]`
+     *  {@include [PlainDslName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
      * }
      *
      * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnSetName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]` `[ `{@include [ColsAtAnyDepthColumnsSelectionDsl.Usage.Name]} ` ]`
+     *  {@include [Indent]}{@include [ColumnSetName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
      * }
      *
      * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnGroupName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]` `[ `{@include [ColsAtAnyDepthColumnsSelectionDsl.Usage.Name]} ` ]`
+     *  {@include [Indent]}{@include [ColumnGroupName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
      * }
      */
     public interface Usage {
