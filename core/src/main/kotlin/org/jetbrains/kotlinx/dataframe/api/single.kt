@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.values
@@ -110,7 +111,7 @@ public interface SingleColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { `[single][ColumnsSelectionDsl.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[singleCol][String.singleCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") }.`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[singleCol][String.singleCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
      *
      * #### Examples for this overload:
      *
@@ -183,7 +184,7 @@ public interface SingleColumnsSelectionDsl {
 }
 
 @Suppress("UNCHECKED_CAST")
-internal fun <C> ColumnSet<C>.singleInternal(condition: ColumnFilter<C> = { true }) =
+internal fun <C> ColumnsResolver<C>.singleInternal(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
     (allColumnsInternal() as TransformableColumnSet<C>)
         .transform { listOf(it.single(condition)) }
         .singleOrNullWithTransformerImpl()

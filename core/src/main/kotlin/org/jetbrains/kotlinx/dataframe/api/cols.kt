@@ -100,7 +100,7 @@ public interface ColsColumnsSelectionDsl {
      * Check out [Usage] for how to use [cols].
      *
      * #### For example:
-     * `df.`[remove][DataFrame.remove]` { `[cols][ColumnsSelectionDsl.cols]` { it.`[hasNulls][DataColumn.hasNulls]`() }.`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[remove][DataFrame.remove]` { `[cols][ColumnsSelectionDsl.cols]` { it.`[hasNulls][DataColumn.hasNulls]`() } }`
      *
      * `df.`[select][DataFrame.select]` { myGroupCol.`[cols][SingleColumn.cols]`(columnA, columnB) }`
      *
@@ -183,7 +183,7 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Predicate]
      * @setArg [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() }.`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
      *
      * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][ColumnsSelectionDsl.cols]` }`
      *

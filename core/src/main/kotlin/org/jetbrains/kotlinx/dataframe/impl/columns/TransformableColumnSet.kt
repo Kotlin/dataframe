@@ -1,6 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
+import org.jetbrains.kotlinx.dataframe.api.colsInternal
+import org.jetbrains.kotlinx.dataframe.api.singleInternal
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -12,9 +14,9 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
  * This type of [ColumnsResolver] can be [transformed][transformResolve] before being resolved.
  *
  * This is especially useful for calls like
- * [cols { }][ColumnsSelectionDsl.cols].[atAnyDepth()][ColumnsSelectionDsl.atAnyDepth],
- * where [atAnyDepth][ColumnsSelectionDsl.atAnyDepth] modifies the [ColumnSet][ColumnsResolver]
- * that [cols { }][ColumnsSelectionDsl.cols] operates on to include ALL columns, including those inside
+ * [colsInternal { }][ColumnsResolver.colsInternal].[atAnyDepthImpl()][atAnyDepthImpl],
+ * where [atAnyDepthImpl][atAnyDepthImpl] modifies the [ColumnSet][ColumnsResolver]
+ * that [colsInternal { }][ColumnsResolver.colsInternal] operates on to include ALL columns, including those inside
  * column groups, before it's evaluated.
  *
  * @see [ColumnsResolver]
@@ -33,9 +35,9 @@ public interface TransformableColumnSet<out C> : ColumnSet<C> {
  * This type of [SingleColumn] can be [transformed][transformResolveSingle] before being resolved.
  *
  * This is especially useful for calls like
- * [first { }][ColumnsSelectionDsl.firstCol].[atAnyDepth()][ColumnsSelectionDsl.atAnyDepth],
- * where [atAnyDepth][ColumnsSelectionDsl.atAnyDepth] modifies the [SingleColumn]
- * that [first { }][ColumnsSelectionDsl.firstCol] operates on to include ALL columns, including those inside
+ * [singleInternal { }][ColumnsResolver.singleInternal].[atAnyDepthImpl()][atAnyDepthImpl],
+ * where [atAnyDepthImpl][atAnyDepthImpl] modifies the [SingleColumn]
+ * that [singleInternal { }][ColumnsResolver.singleInternal] operates on to include ALL columns, including those inside
  * column groups, before it's evaluated.
  *
  * @see [SingleColumn]

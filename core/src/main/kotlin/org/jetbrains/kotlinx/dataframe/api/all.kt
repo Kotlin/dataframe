@@ -173,7 +173,7 @@ public interface AllColumnsSelectionDsl {
      * Check out [Usage] for how to use [all]/[allCols].
      *
      * #### For example:
-     * `df.`[move][DataFrame.move]` { `[all][ColumnsSelectionDsl.all]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }.`[under][MoveClause.under]`("info")`
+     * `df.`[move][DataFrame.move]` { `[all][ColumnsSelectionDsl.all]`() }.`[under][MoveClause.under]`("info")`
      *
      * `df.`[select][DataFrame.select]` { myGroup.`[allCols][SingleColumn.allCols]`() }`
      *
@@ -202,8 +202,7 @@ public interface AllColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "a" in `[name][ColumnWithPath.name]` }.`[all][ColumnSet.all]`() }`
      * {@include [LineBreak]}
-     * NOTE: This is an identity call and can be omitted in most cases. However, it can still prove useful
-     * for readability or in combination with [atAnyDepth][ColumnsSelectionDsl.atAnyDepth].
+     * NOTE: This is an identity call and can be omitted in most cases.
      */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.all(): TransformableColumnSet<C> =

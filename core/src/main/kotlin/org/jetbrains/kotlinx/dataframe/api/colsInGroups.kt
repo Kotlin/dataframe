@@ -99,7 +99,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * @include [ColsInGroupsDocs]
      * @setArg [ColsInGroupsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[colsInGroups][ColumnSet.colsInGroups]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[colsInGroups][ColumnSet.colsInGroups]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` } }`
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[DataRow][DataRow]`<MyGroupType>>().`[colsInGroups][ColumnSet.colsInGroups]`() }`
      */
@@ -110,7 +110,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * @include [ColsInGroupsDocs]
      * @setArg [ColsInGroupsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[colsInGroups][ColumnSet.colsInGroups]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { `[colsInGroups][ColumnSet.colsInGroups]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` } }`
      *
      * `df.`[select][DataFrame.select]` { `[colsInGroups][ColumnSet.colsInGroups]`() }`
      */
@@ -121,7 +121,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * @include [ColsInGroupsDocs]
      * @setArg [ColsInGroupsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsInGroups][SingleColumn.colsInGroups]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsInGroups][SingleColumn.colsInGroups]`() }`
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsInGroups][SingleColumn.colsInGroups]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
@@ -132,7 +132,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * @include [ColsInGroupsDocs]
      * @setArg [ColsInGroupsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsInGroups][String.colsInGroups]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsInGroups][String.colsInGroups]`() }`
      */
     public fun String.colsInGroups(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         columnGroup(this).colsInGroups(predicate)
@@ -141,7 +141,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * @include [ColsInGroupsDocs]
      * @setArg [ColsInGroupsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { (Type::myColumnGroup.`[colsInGroups][KProperty.colsInGroups]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsInGroups][KProperty.colsInGroups]`() }`
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[colsInGroups][KProperty.colsInGroups]`() }`
      */
@@ -152,7 +152,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * @include [ColsInGroupsDocs]
      * @setArg [ColsInGroupsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[colsInGroups][ColumnPath.colsInGroups]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[colsInGroups][ColumnPath.colsInGroups]`() }`
      */
     public fun ColumnPath.colsInGroups(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         columnGroup(this).colsInGroups(predicate)

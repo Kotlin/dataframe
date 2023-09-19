@@ -218,7 +218,7 @@ public interface AllColumnsSelectionDsl {
      * Check out [Usage] for how to use [all]/[allCols].
      *
      * #### For example:
-     * `df.`[move][DataFrame.move]` { `[all][ColumnsSelectionDsl.all]`().`[atAnyDepth][ColumnsSelectionDsl.atAnyDepth]`() }.`[under][MoveClause.under]`("info")`
+     * `df.`[move][DataFrame.move]` { `[all][ColumnsSelectionDsl.all]`() }.`[under][MoveClause.under]`("info")`
      *
      * `df.`[select][DataFrame.select]` { myGroup.`[allCols][SingleColumn.allCols]`() }`
      *
@@ -271,7 +271,7 @@ public interface AllColumnsSelectionDsl {
      * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]/[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols].
      *
      * #### For example:
-     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.atAnyDepth]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[allCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allCols]`() }`
      *
@@ -281,8 +281,7 @@ public interface AllColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: This is an identity call and can be omitted in most cases. However, it can still prove useful
-     * for readability or in combination with [atAnyDepth][ColumnsSelectionDsl.atAnyDepth].
+     * NOTE: This is an identity call and can be omitted in most cases.
      *
      * #### Flavors of All (Cols):
      *
@@ -327,7 +326,7 @@ public interface AllColumnsSelectionDsl {
      * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]/[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols].
      *
      * #### For example:
-     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.atAnyDepth]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[allCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allCols]`() }`
      *
@@ -377,7 +376,7 @@ public interface AllColumnsSelectionDsl {
      * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]/[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols].
      *
      * #### For example:
-     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.atAnyDepth]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[allCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allCols]`() }`
      *
@@ -427,7 +426,7 @@ public interface AllColumnsSelectionDsl {
      * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]/[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols].
      *
      * #### For example:
-     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.atAnyDepth]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[allCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allCols]`() }`
      *
@@ -477,7 +476,7 @@ public interface AllColumnsSelectionDsl {
      * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]/[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols].
      *
      * #### For example:
-     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.atAnyDepth]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[allCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allCols]`() }`
      *
@@ -527,7 +526,7 @@ public interface AllColumnsSelectionDsl {
      * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]/[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols].
      *
      * #### For example:
-     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[atAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.atAnyDepth]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
+     * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myGroup.`[allCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allCols]`() }`
      *

@@ -338,7 +338,7 @@ internal fun ColumnsResolver<*>.colsAtAnyDepthInternal(predicate: ColumnFilter<*
         .atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
 
 @Suppress("DeprecatedCallableAddReplaceWith")
-@Deprecated("Replaced with atAnyDepth()")
+@Deprecated("Replaced with colsAtAnyDepth()")
 @PublishedApi
 internal fun ColumnSet<*>.dfsInternal(
     predicate: (ColumnWithPath<*>) -> Boolean,
