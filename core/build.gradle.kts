@@ -79,7 +79,10 @@ val samplesImplementation by configurations.getting {
 }
 
 val compileSamplesKotlin = tasks.named<KotlinCompile>("compileSamplesKotlin") {
-    friendPaths.from(sourceSets["main"].output.classesDirs)
+    tasks.named<KotlinCompile>("compileTestKotlin").get().let {
+        friendPaths.from(it.friendPaths)
+        libraries.from(it.libraries)
+    }
     source(sourceSets["test"].kotlin)
     destinationDirectory.set(file("$buildDir/classes/testWithOutputs/kotlin"))
 }
