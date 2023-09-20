@@ -365,7 +365,7 @@ summary {
                             </details>
                             <br>
                             <details>
-                            <summary>df.select { name.all() }</summary>
+                            <summary>df.select { name.allCols() }</summary>
                             
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
@@ -382,7 +382,7 @@ summary {
                             </details>
                             <br>
                             <details>
-                            <summary>df.select { name.cols { !it.isColumnGroup() }.atAnyDepth() }</summary>
+                            <summary>df.select { name.colsAtAnyDepth { !it.isColumnGroup() } }</summary>
                             
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>

@@ -68,7 +68,7 @@ campaigns.innerJoinWith(visits) {
 
 ```kotlin
 campaigns.innerJoinWith(visits) {
-    right[{ "date"<LocalDate>() }] in "startDate"<LocalDate>().."endDate"<LocalDate>()
+    right.getValue<LocalDate>("date") in "startDate"<LocalDate>().."endDate"<LocalDate>()
 }
 ```
 
@@ -108,7 +108,7 @@ campaigns.filterJoinWith(visits) {
 
 ```kotlin
 campaigns.filterJoinWith(visits) {
-    right[{ "date"<LocalDate>() }] in "startDate"<LocalDate>().."endDate"<LocalDate>()
+    right.getValue<LocalDate>("date") in "startDate"<LocalDate>().."endDate"<LocalDate>()
 }
 ```
 
@@ -146,7 +146,7 @@ campaigns.leftJoinWith(visits) {
 
 ```kotlin
 campaigns.leftJoinWith(visits) {
-    right[{ "date"<LocalDate>() }] in "startDate"<LocalDate>().."endDate"<LocalDate>()
+    right.getValue<LocalDate>("date") in "startDate"<LocalDate>().."endDate"<LocalDate>()
 }
 ```
 
@@ -184,7 +184,7 @@ campaigns.rightJoinWith(visits) {
 
 ```kotlin
 campaigns.rightJoinWith(visits) {
-    right[{ "date"<LocalDate>() }] in "startDate"<LocalDate>().."endDate"<LocalDate>()
+    right.getValue<LocalDate>("date") in "startDate"<LocalDate>().."endDate"<LocalDate>()
 }
 ```
 
@@ -222,7 +222,7 @@ campaigns.fullJoinWith(visits) {
 
 ```kotlin
 campaigns.fullJoinWith(visits) {
-    right[{ "date"<LocalDate>() }] in "startDate"<LocalDate>().."endDate"<LocalDate>()
+    right.getValue<LocalDate>("date") in "startDate"<LocalDate>().."endDate"<LocalDate>()
 }
 ```
 
@@ -262,7 +262,7 @@ campaigns.excludeJoinWith(visits) {
 
 ```kotlin
 campaigns.excludeJoinWith(visits) {
-    right[{ "date"<LocalDate>() }] in "startDate"<LocalDate>().."endDate"<LocalDate>()
+    right.getValue<LocalDate>("date") in "startDate"<LocalDate>().."endDate"<LocalDate>()
 }
 ```
 
