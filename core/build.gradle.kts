@@ -46,6 +46,7 @@ kotlin.sourceSets {
 }
 
 sourceSets {
+    // Gradle creates configurations and compilation task for each source set
     create("samples") {
         kotlin.srcDir("src/test/kotlin")
     }
@@ -79,7 +80,10 @@ val samplesImplementation by configurations.getting {
 }
 
 val compileSamplesKotlin = tasks.named<KotlinCompile>("compileSamplesKotlin") {
-    friendPaths.from(sourceSets["main"].output.classesDirs)
+    tasks.named<KotlinCompile>("compileTestKotlin").get().let {
+        friendPaths.from(it.friendPaths)
+        libraries.from(it.libraries)
+    }
     source(sourceSets["test"].kotlin)
     destinationDirectory.set(file("$buildDir/classes/testWithOutputs/kotlin"))
 }
@@ -103,7 +107,7 @@ val clearTestResults by tasks.creating(Delete::class) {
 
 val samplesTest = tasks.register<Test>("samplesTest") {
     group = "Verification"
-    description = "Runs the custom tests."
+    description = "Runs all samples that are used in the documentation, but modified to save their outputs to a file."
 
     dependsOn(compileSamplesKotlin)
     dependsOn(clearTestResults)
