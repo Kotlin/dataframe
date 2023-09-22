@@ -104,7 +104,6 @@ public interface AllColumnsSelectionDsl {
      *  {@include [Indent]}{@include [ColumnSetName]}**`()`**
      *
      *  {@include [Indent]}`|` .**`all`**`(`{@include [Before]}`|`{@include [After]}`|`{@include [From]}`|`{@include [UpTo]}`)` `(` **`(`**{@include [UsageTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [UsageTemplate.ColumnSelectorRef]} **`\\}`** `)`
-     *  TODO debate whether these overloads make sense. They didn't exist in 0.9.0
      * }
      *
      * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
@@ -1304,7 +1303,7 @@ public interface AllColumnsSelectionDsl {
 internal fun ColumnsResolver<*>.allColumnsInternal(): TransformableColumnSet<*> =
     transform {
         if (isSingleColumnWithGroup(it)) {
-            it.single().children()
+            it.single().cols()
         } else {
             it
         }

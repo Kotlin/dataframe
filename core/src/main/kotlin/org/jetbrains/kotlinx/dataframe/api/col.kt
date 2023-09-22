@@ -163,7 +163,7 @@ public interface ColColumnsSelectionDsl {
      */
     public fun <C> SingleColumn<DataRow<*>>.col(col: ColumnAccessor<C>): SingleColumn<C> =
         this.ensureIsColumnGroup().transformSingle {
-            val child = it.getChild(col)
+            val child = it.getCol(col)
                 ?: throw IllegalStateException("Column '${col.path()}' not found in column group '${it.path}'")
             listOf(child)
         }.singleImpl()
@@ -231,7 +231,7 @@ public interface ColColumnsSelectionDsl {
      */
     public fun <C> SingleColumn<DataRow<*>>.col(name: String): SingleColumn<C> =
         this.ensureIsColumnGroup().transformSingle {
-            val child = it.getChild(name)?.cast<C>()
+            val child = it.getCol(name)?.cast<C>()
                 ?: throw IllegalStateException("Column '$name' not found in column group '${it.path}'")
             listOf(child)
         }.singleImpl()
@@ -337,7 +337,7 @@ public interface ColColumnsSelectionDsl {
      */
     public fun <C> SingleColumn<DataRow<*>>.col(path: ColumnPath): SingleColumn<C> =
         this.ensureIsColumnGroup().transformSingle {
-            val child = it.getChild(path)?.cast<C>()
+            val child = it.getCol(path)?.cast<C>()
                 ?: throw IllegalStateException("Column '$path' not found in column group '${it.path}'")
             listOf(child)
         }.singleImpl()

@@ -104,7 +104,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[DataRow][DataRow]`<MyGroupType>>().`[colsInGroups][ColumnSet.colsInGroups]`() }`
      */
     public fun ColumnSet<*>.colsInGroups(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
-        transform { it.flatMap { it.children().filter { predicate(it) } } }
+        transform { it.flatMap { it.cols().filter { predicate(it) } } }
 
     /**
      * @include [ColsInGroupsDocs]

@@ -186,33 +186,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
 
     // endregion
 
-    // region deprecated
-
-    /**
-     * @include [CommonAtAnyDepthDocs]
-     * @setArg [CommonAtAnyDepthDocs.Examples]
-     *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[atAnyDepth][TransformableColumnSet.atAnyDepth]`() }`
-     *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[allCols][ColumnsSelectionDsl.allCols]`().`[atAnyDepth][TransformableColumnSet.atAnyDepth]`() }`
-     *
-     * `df.`[select][DataFrame.select]` { `[groups][ColumnsSelectionDsl.groups]`().`[atAnyDepth][TransformableColumnSet.atAnyDepth]`() }`
-     */
-    @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.WARNING)
-    public fun <C> TransformableColumnSet<C>.atAnyDepth(): ColumnSet<C> =
-        atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
-
-    /**
-     * @include [CommonAtAnyDepthDocs]
-     * @setArg [CommonAtAnyDepthDocs.Examples]
-     *
-     * `df.`[select][DataFrame.select]` { `[first][ColumnsSelectionDsl.firstCol]` { col -> col.`[any][DataColumn.any]` { it == "Alice" } }.`[atAnyDepth][TransformableSingleColumn.atAnyDepth]`() }`
-     *
-     * `df.`[select][DataFrame.select]` { `[single][ColumnsSelectionDsl.singleCol]` { it.name == "myCol" }.`[atAnyDepth][TransformableSingleColumn.atAnyDepth]`() }`
-     */
-    @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.WARNING)
-    public fun TransformableSingleColumn<*>.atAnyDepth(): SingleColumn<*> =
-        atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
+    // region deprecated recursively
 
     @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.WARNING)
     public fun <C> TransformableColumnSet<C>.recursively(): ColumnSet<C> = atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
@@ -345,7 +319,7 @@ internal fun ColumnSet<*>.dfsInternal(
 ): TransformableColumnSet<*> =
     transform {
         it.filter { it.isColumnGroup() }
-            .flatMap { it.children().flattenRecursively().filter(predicate) }
+            .flatMap { it.cols().flattenRecursively().filter(predicate) }
     }
 
 @Suppress("DEPRECATION")

@@ -1346,7 +1346,7 @@ public interface ColsColumnsSelectionDsl {
         vararg otherCols: ColumnReference<C>,
     ): ColumnSet<C> = headPlusArray(firstCol, otherCols).let { refs ->
         this.ensureIsColumnGroup().asColumnSet().transform {
-            it.flatMap { col -> refs.mapNotNull { col.getChild(it) } }
+            it.flatMap { col -> refs.mapNotNull { col.getCol(it) } }
         }
     }
 
@@ -1992,7 +1992,7 @@ public interface ColsColumnsSelectionDsl {
         vararg otherCols: String,
     ): ColumnSet<T> = headPlusArray(firstCol, otherCols).let { names ->
         this.ensureIsColumnGroup().asColumnSet()
-            .transform { it.flatMap { col -> names.mapNotNull { col.getChild(it) } } }
+            .transform { it.flatMap { col -> names.mapNotNull { col.getCol(it) } } }
     }.cast()
 
     /**
@@ -2754,7 +2754,7 @@ public interface ColsColumnsSelectionDsl {
         vararg otherCols: ColumnPath,
     ): ColumnSet<T> = headPlusArray(firstCol, otherCols).let { names ->
         this.ensureIsColumnGroup().asColumnSet()
-            .transform { it.flatMap { col -> names.mapNotNull { col.getChild(it) } } }
+            .transform { it.flatMap { col -> names.mapNotNull { col.getCol(it) } } }
     }.cast()
 
     /**
@@ -3450,7 +3450,7 @@ public interface ColsColumnsSelectionDsl {
         vararg otherCols: KProperty<C>,
     ): ColumnSet<C> = headPlusArray(firstCol, otherCols).let { props ->
         this.ensureIsColumnGroup().asColumnSet()
-            .transform { it.flatMap { col -> props.mapNotNull { col.getChild(it) } } }
+            .transform { it.flatMap { col -> props.mapNotNull { col.getCol(it) } } }
     }
 
     /** ## Cols

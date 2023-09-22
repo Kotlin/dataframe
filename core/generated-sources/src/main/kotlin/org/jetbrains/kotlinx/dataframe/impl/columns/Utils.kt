@@ -324,7 +324,7 @@ internal fun <T> ColumnSet<T>.getAtOrNull(index: Int): SingleColumn<T> = object 
 }
 
 internal fun ColumnSet<*>.getChildrenAt(index: Int): ColumnSet<*> =
-    transform { it.mapNotNull { it.getChild(index) } }
+    transform { it.mapNotNull { it.getCol(index) } }
 
 internal fun <C> ColumnsContainer<*>.getColumn(name: String, policy: UnresolvedColumnsPolicy) =
     getColumnOrNull(name)?.cast()

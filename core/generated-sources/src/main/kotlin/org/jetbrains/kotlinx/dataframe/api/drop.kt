@@ -203,7 +203,7 @@ public interface DropColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
      */
     public fun SingleColumn<DataRow<*>>.dropChildren(n: Int): ColumnSet<*> =
-        this.ensureIsColumnGroup().transformSingle { it.children().drop(n) }
+        this.ensureIsColumnGroup().transformSingle { it.cols().drop(n) }
 
     /**
      * ## Drop (Children)
@@ -439,7 +439,7 @@ public interface DropColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
      */
     public fun SingleColumn<DataRow<*>>.dropLastChildren(n: Int): ColumnSet<*> =
-        this.ensureIsColumnGroup().transformSingle { it.children().dropLast(n) }
+        this.ensureIsColumnGroup().transformSingle { it.cols().dropLast(n) }
 
     /**
      * ## Drop Last (Children)
@@ -684,7 +684,7 @@ public interface DropColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
      */
     public fun SingleColumn<DataRow<*>>.dropChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        this.ensureIsColumnGroup().transformSingle { it.children().dropWhile(predicate) }
+        this.ensureIsColumnGroup().transformSingle { it.cols().dropWhile(predicate) }
 
     /**
      * ## Drop (Children) While
@@ -936,7 +936,7 @@ public interface DropColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
      */
     public fun SingleColumn<DataRow<*>>.dropLastChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        this.ensureIsColumnGroup().transformSingle { it.children().dropLastWhile(predicate) }
+        this.ensureIsColumnGroup().transformSingle { it.cols().dropLastWhile(predicate) }
 
     /**
      * ## Drop Last (Children) While

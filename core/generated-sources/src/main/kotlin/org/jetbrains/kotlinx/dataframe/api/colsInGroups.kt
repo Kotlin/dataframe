@@ -183,7 +183,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * @return A [TransformableColumnSet][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet] containing the (filtered) cols.
      */
     public fun ColumnSet<*>.colsInGroups(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
-        transform { it.flatMap { it.children().filter { predicate(it) } } }
+        transform { it.flatMap { it.cols().filter { predicate(it) } } }
 
     /**
      * ## Cols in Groups

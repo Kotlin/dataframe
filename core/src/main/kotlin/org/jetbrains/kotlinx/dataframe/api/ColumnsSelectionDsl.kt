@@ -91,7 +91,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     AllColumnsSelectionDsl,
     // colsAtAnyDepth {}, colsAtAnyDepth()
     ColsAtAnyDepthColumnsSelectionDsl,
-    // children {}, children()
+    // colsInGroups {}, colsInGroups()
     ColsInGroupsColumnsSelectionDsl,
     // take(5), takeLastChildren(2), takeLastWhile {}, takeChildrenWhile {}
     TakeColumnsSelectionDsl,
@@ -216,7 +216,6 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *  {@include [Indent]}`|` {@include [AllColumnsSelectionDsl.Usage.ColumnSetName]}**`()`**
      *
      *  {@include [Indent]}`|` .**`all`**`(`{@include [AllColumnsSelectionDsl.Usage.Before]}`|`{@include [AllColumnsSelectionDsl.Usage.After]}`|`{@include [AllColumnsSelectionDsl.Usage.From]}`|`{@include [AllColumnsSelectionDsl.Usage.UpTo]}`)` `(` **`(`**{@include [UsageTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [UsageTemplate.ColumnSelectorRef]} **`\\}`** `)`
-     *  TODO debate whether these overloads make sense. They didn't exist in 0.9.0
      *
      *  {@include [Indent]}`|` {@include [ColsAtAnyDepthColumnsSelectionDsl.Usage.ColumnSetName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
      *

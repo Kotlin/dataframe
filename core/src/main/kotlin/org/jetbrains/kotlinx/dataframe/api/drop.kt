@@ -108,7 +108,7 @@ public interface DropColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropChildren][SingleColumn.dropChildren]`(1) }`
      */
     public fun SingleColumn<DataRow<*>>.dropChildren(n: Int): ColumnSet<*> =
-        this.ensureIsColumnGroup().transformSingle { it.children().drop(n) }
+        this.ensureIsColumnGroup().transformSingle { it.cols().drop(n) }
 
     /**
      * @include [CommonDropFirstDocs]
@@ -177,7 +177,7 @@ public interface DropColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropLastChildren][SingleColumn.dropLastChildren]`() }`
      */
     public fun SingleColumn<DataRow<*>>.dropLastChildren(n: Int): ColumnSet<*> =
-        this.ensureIsColumnGroup().transformSingle { it.children().dropLast(n) }
+        this.ensureIsColumnGroup().transformSingle { it.cols().dropLast(n) }
 
     /**
      * @include [CommonDropLastDocs]
@@ -247,7 +247,7 @@ public interface DropColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropChildrenWhile][SingleColumn.dropChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     public fun SingleColumn<DataRow<*>>.dropChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        this.ensureIsColumnGroup().transformSingle { it.children().dropWhile(predicate) }
+        this.ensureIsColumnGroup().transformSingle { it.cols().dropWhile(predicate) }
 
     /**
      * @include [CommonDropWhileDocs]
@@ -318,7 +318,7 @@ public interface DropColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropLastChildrenWhile][SingleColumn.dropLastChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     public fun SingleColumn<DataRow<*>>.dropLastChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        this.ensureIsColumnGroup().transformSingle { it.children().dropLastWhile(predicate) }
+        this.ensureIsColumnGroup().transformSingle { it.cols().dropLastWhile(predicate) }
 
     /**
      * @include [CommonDropLastWhileDocs]

@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.assertions.throwables.shouldThrow
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
 import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
@@ -10,7 +11,20 @@ import org.junit.Test
 class ColsInGroupsTests : ColumnsSelectionDslTests() {
 
     @Test
-    fun `cols In Groups`() {
+    fun exceptions() {
+        shouldThrow<IllegalArgumentException> {
+            df.select { "age".colsInGroups() }
+        }
+        shouldThrow<IllegalArgumentException> {
+            df.select { columnGroup(Person::age).colsInGroups() }
+        }
+        shouldThrow<IllegalArgumentException> {
+            df.select { Person::age.colsInGroups() }
+        }
+    }
+
+    @Test
+    fun `cols in groups`() {
         listOf(
             df.select { name { firstName and lastName } },
 

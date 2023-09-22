@@ -562,141 +562,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
 
     // endregion
 
-    // region deprecated
-
-    /**
-     * ## Cols At Any Depth
-     *
-     * Returns the columns of this [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] at any depth if they satisfy the optional given predicate.
-     *
-     * This function is especially powerful if followed by another filter function such as
-     * [colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf], [single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single], and [valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * For usage, check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Usage].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * For example:
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * `// Depth-first search to a column containing the value "Alice"`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]` { "Alice" `[in][Iterable.contains]` it.`[values][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() } }`
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * `// The columns at any depth excluding the top-level`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`().`[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsAtAnyDepth]`() }`
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * `// All value- and frame columns at any depth`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]` { !it.`[isColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.isColumnGroup]` } }`
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * `// All value columns at any depth nested under a column group named "myColGroup"`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsAtAnyDepth]`().`[valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`() }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[atAnyDepth][TransformableColumnSet.atAnyDepth]`() }`
-     *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[allCols][ColumnsSelectionDsl.allCols]`().`[atAnyDepth][TransformableColumnSet.atAnyDepth]`() }`
-     *
-     * `df.`[select][DataFrame.select]` { `[groups][ColumnsSelectionDsl.groups]`().`[atAnyDepth][TransformableColumnSet.atAnyDepth]`() }`
-     *
-     * #### Converting from deprecated syntax:
-     *
-     * [dfs][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.dfs]` { condition } -> `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.colsAtAnyDepth]` { condition }`
-     *
-     * [allDfs][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.allDfs]`(includeGroups = false) -> `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.colsAtAnyDepth]` { includeGroups || !it.`[isColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.isColumnGroup]`() }`
-     *
-     * [dfsOf][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.dfsOf]`<Type> { condition } -> `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.colsAtAnyDepth]`().`[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<Type> { condition } }`
-     *
-     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { condition }.`[recursively][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.recursively]`() -> `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.colsAtAnyDepth]` { condition }`
-     *
-     * [first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { condition }.`[rec][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.rec]`() -> `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.colsAtAnyDepth]` { condition }.`[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`()`
-     *
-     * [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[recursively][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.recursively]`() -> `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.colsAtAnyDepth]`()`
-     *
-     * @see [DataFrame.flatten]
-     */
-    @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.WARNING)
-    public fun <C> TransformableColumnSet<C>.atAnyDepth(): ColumnSet<C> =
-        atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
-
-    /**
-     * ## Cols At Any Depth
-     *
-     * Returns the columns of this [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] at any depth if they satisfy the optional given predicate.
-     *
-     * This function is especially powerful if followed by another filter function such as
-     * [colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf], [single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single], and [valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * For usage, check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Usage].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * For example:
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * `// Depth-first search to a column containing the value "Alice"`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]` { "Alice" `[in][Iterable.contains]` it.`[values][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() } }`
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * `// The columns at any depth excluding the top-level`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`().`[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsAtAnyDepth]`() }`
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * `// All value- and frame columns at any depth`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]` { !it.`[isColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.isColumnGroup]` } }`
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * `// All value columns at any depth nested under a column group named "myColGroup"`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsAtAnyDepth]`().`[valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`() }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][DataFrame.select]` { `[first][ColumnsSelectionDsl.firstCol]` { col -> col.`[any][DataColumn.any]` { it == "Alice" } }.`[atAnyDepth][TransformableSingleColumn.atAnyDepth]`() }`
-     *
-     * `df.`[select][DataFrame.select]` { `[single][ColumnsSelectionDsl.singleCol]` { it.name == "myCol" }.`[atAnyDepth][TransformableSingleColumn.atAnyDepth]`() }`
-     *
-     * #### Converting from deprecated syntax:
-     *
-     * [dfs][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.dfs]` { condition } -> `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.colsAtAnyDepth]` { condition }`
-     *
-     * [allDfs][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.allDfs]`(includeGroups = false) -> `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.colsAtAnyDepth]` { includeGroups || !it.`[isColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.isColumnGroup]`() }`
-     *
-     * [dfsOf][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.dfsOf]`<Type> { condition } -> `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.colsAtAnyDepth]`().`[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<Type> { condition } }`
-     *
-     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { condition }.`[recursively][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.recursively]`() -> `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.colsAtAnyDepth]` { condition }`
-     *
-     * [first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { condition }.`[rec][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.rec]`() -> `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.colsAtAnyDepth]` { condition }.`[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`()`
-     *
-     * [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[recursively][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.recursively]`() -> `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.colsAtAnyDepth]`()`
-     *
-     * @see [DataFrame.flatten]
-     */
-    @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.WARNING)
-    public fun TransformableSingleColumn<*>.atAnyDepth(): SingleColumn<*> =
-        atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
+    // region deprecated recursively
 
     @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.WARNING)
     public fun <C> TransformableColumnSet<C>.recursively(): ColumnSet<C> = atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
@@ -829,7 +695,7 @@ internal fun ColumnSet<*>.dfsInternal(
 ): TransformableColumnSet<*> =
     transform {
         it.filter { it.isColumnGroup() }
-            .flatMap { it.children().flattenRecursively().filter(predicate) }
+            .flatMap { it.cols().flattenRecursively().filter(predicate) }
     }
 
 @Suppress("DEPRECATION")

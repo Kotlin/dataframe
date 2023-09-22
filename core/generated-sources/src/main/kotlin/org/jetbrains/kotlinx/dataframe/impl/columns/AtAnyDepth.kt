@@ -98,6 +98,6 @@ internal fun ColumnsResolver<*>.flattenRecursively(
     } else {
         cols
             .filter { it.isColumnGroup() }
-            .flatMap { it.children().flattenRecursively() }
+            .flatMap { it.cols().flattenRecursively() }
     }.filter { includeGroups || !it.isColumnGroup() }
 }
