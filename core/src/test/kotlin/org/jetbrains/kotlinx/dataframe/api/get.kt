@@ -6,6 +6,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.junit.Test
 
@@ -91,6 +92,21 @@ class GetTests {
     }
 
     @Test
+    fun `select data column with same name as in df`() {
+        val df = dataFrameOf("a")(1, 2, 3)
+
+        val aColumnAccessor = column<String>("a")
+        df.select { aColumnAccessor } shouldBe df
+
+        val directColumn = columnOf(4, 5, 6) named "a"
+        // TODO issue #457:
+        //  df.select { directColumn } shouldBe dataFrameOf(directColumn)
+
+        val otherDfColumn = dataFrameOf("a")(4, 5, 6)["a"]
+        df.select { otherDfColumn } shouldBe dataFrameOf(otherDfColumn)
+    }
+
+    @Test
     fun `Get column from a data row`() {
         val df1 = dataFrameOf("a")(1, 2, 3)
         val a by column<String>()
@@ -98,14 +114,22 @@ class GetTests {
 
         val df2 = dataFrameOf("a")(4, 5, 6)
 
-        df1.rows().forEach {
-            it["a"] shouldBe df1[it.index()][0]
-            it[a] shouldBe df1[it.index()][0]
-            it[aPath] shouldBe df1[it.index()][0]
-            it[df2["a"].name()] shouldBe df1[it.index()][0]
-            it[df2["a"]] shouldNotBe df2["a"][it]
-            it[df2["a"]] shouldBe it[df2["a"].name()]
-            it[df2["a"]] shouldBe df1[it.index()][0]
+        df1.rows().forEach { df1Row ->
+            val df2Col = df2["a"]
+
+            df1Row["a"] shouldBe df1[df1Row.index()][0]
+
+            df1Row[a] shouldBe df1[df1Row.index()][0]
+
+            df1Row[aPath] shouldBe df1[df1Row.index()][0]
+
+            df1Row[df2Col.name()] shouldBe df1[df1Row.index()][0]
+
+            df1Row[df2Col] shouldNotBe df2Col[df1Row] // old
+
+            df1Row[df2Col] shouldBe df1Row[df2Col.name()] // new
+
+            df1Row[df2Col] shouldBe df1[df1Row.index()][0]
         }
     }
 }
