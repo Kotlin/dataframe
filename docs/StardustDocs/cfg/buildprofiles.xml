@@ -16,10 +16,18 @@
         <search-scopes-provider>https://www.jetbrains.com/search/json/</search-scopes-provider>
         <generate-sitemap-url-prefix>https://kotlin.github.io/dataframe/</generate-sitemap-url-prefix>
         <analytics-head-script-file>resize-iframes.js</analytics-head-script-file>
+        <enable-browser-edits>true</enable-browser-edits>
+        <browser-edits-url>https://github.com/Kotlin/dataframe/edit/master/docs/StardustDocs/</browser-edits-url>
     </variables>
     <build-profile instance="d">
         <variables>
             <noindex-content>false</noindex-content>
         </variables>
     </build-profile>
+    <footer>
+        <social type="twitter" href="https://twitter.com/KotlinForData"/>
+        <social type="youtube" href="https://www.youtube.com/@Kotlin"/>
+        <link href="https://github.com/Kotlin/dataframe">GitHub</link>
+        <link href="https://kotlinlang.slack.com/archives/C4W52CFEZ">Slack Community</link>
+    </footer>
 </buildprofiles>

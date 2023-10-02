@@ -2383,4 +2383,28 @@ class DataFrameTests : BaseTest() {
         val newName by column<String>()
         typed.select { name into newName and age }.columnNames() shouldBe listOf("newName", "age")
     }
+
+    @Test
+    fun `api for creating GroupBy with empty groups which can be aggregated using statistics`() {
+        val df1 = dataFrameOf("a", "b")(1, "c")
+        val df2 = DataFrame.empty()
+        val groupBy = dataFrameOf(columnOf("group1", "group2") named "group", columnOf(df1, df2)).asGroupBy()
+
+        val exception = shouldThrow<IllegalStateException> {
+            groupBy.aggregate {
+                sum("a")
+            }
+        }
+
+        exception.message shouldBe "Column [a] not found"
+
+        val groupBy1 = groupBy
+            .updateGroups { if (it.isEmpty()) DataFrame.empty(groupBy.groups.schema.value) else it }
+
+        val res = groupBy1.aggregate {
+            sum("a")
+        }
+
+        res["aggregated"].values() shouldBe listOf(1, 0)
+    }
 }
