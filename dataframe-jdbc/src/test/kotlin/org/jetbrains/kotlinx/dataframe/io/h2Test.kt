@@ -81,6 +81,7 @@ class JdbcTest {
             connection =
                 DriverManager.getConnection(URL)
 
+
             // Crate table Customer
             @Language("SQL")
             val createCustomerTableQuery = """
