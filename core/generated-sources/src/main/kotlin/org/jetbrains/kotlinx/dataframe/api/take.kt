@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs
 import org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslUsage
+import org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslUsage.OperationArg
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.index
@@ -27,7 +28,7 @@ public fun <T> DataColumn<T>.take(n: Int): DataColumn<T> = when {
     else -> get(0 until n)
 }
 
-public fun <T> DataColumn<T>.takeLast(n: Int): DataColumn<T> = drop(size - n)
+public fun <T> DataColumn<T>.takeLast(n: Int = 1): DataColumn<T> = drop(size - n)
 
 // endregion
 
@@ -48,7 +49,7 @@ public fun <T> DataFrame<T>.take(n: Int): DataFrame<T> {
  *
  * @throws IllegalArgumentException if [n] is negative.
  */
-public fun <T> DataFrame<T>.takeLast(n: Int): DataFrame<T> {
+public fun <T> DataFrame<T>.takeLast(n: Int = 1): DataFrame<T> {
     require(n >= 0) { "Requested rows count $n is less than zero." }
     return drop((nrow - n).coerceAtLeast(0))
 }
@@ -64,8 +65,6 @@ public fun <T> DataFrame<T>.takeWhile(predicate: RowFilter<T>): DataFrame<T> =
 // region ColumnsSelectionDsl
 
 public interface TakeColumnsSelectionDsl {
-
-    // region take
 
     /**
      * ## Take (Last) (Cols) (While) Usage
@@ -140,11 +139,8 @@ public interface TakeColumnsSelectionDsl {
      *
      *
      *
-     *
      */
     public interface Usage {
-
-        private interface Args
 
         /** [**take**][ColumnsSelectionDsl.take]`(`[**Last**][ColumnsSelectionDsl.takeLast]`)` */
         public interface PlainDslName
@@ -164,6 +160,8 @@ public interface TakeColumnsSelectionDsl {
         /** .[**take**][ColumnsSelectionDsl.takeColsWhile]`(`[**Last**][ColumnsSelectionDsl.takeLastColsWhile]`)`[**ColsWhile**][ColumnsSelectionDsl.takeColsWhile] */
         public interface ColumnGroupWhileName
     }
+
+    // region take
 
     /**
      * ## Take (Cols)
@@ -368,8 +366,6 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[takeCols][SingleColumn.takeCols]`(1) }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[takeCols][SingleColumn.takeCols]`(1) }`
-     *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[takeCols][KProperty.takeCols]`(1) }`
      *
      * @param [n] The number of columns to take.
@@ -483,7 +479,7 @@ public interface TakeColumnsSelectionDsl {
      * @param [n] The number of columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
      */
-    public fun <C> ColumnSet<C>.takeLast(n: Int): ColumnSet<C> = transform { it.takeLast(n) }
+    public fun <C> ColumnSet<C>.takeLast(n: Int = 1): ColumnSet<C> = transform { it.takeLast(n) }
 
     /**
      * ## Take Last (Cols)
@@ -517,7 +513,7 @@ public interface TakeColumnsSelectionDsl {
      * @param [n] The number of columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
      */
-    public fun ColumnsSelectionDsl<*>.takeLast(n: Int): ColumnSet<*> =
+    public fun ColumnsSelectionDsl<*>.takeLast(n: Int = 1): ColumnSet<*> =
         asSingleColumn().takeLastCols(n)
 
     /**
@@ -615,8 +611,6 @@ public interface TakeColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[takeLastCols][String.takeLastCols]`(3) }`
      *
      * #### Examples for this overload:
-     *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[takeLastCols][SingleColumn.takeLastCols]`(1) }`
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[takeLastCols][SingleColumn.takeLastCols]`(1) }`
      *

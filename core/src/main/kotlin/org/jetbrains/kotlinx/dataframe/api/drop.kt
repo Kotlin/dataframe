@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs
+import org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslUsage
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.index
@@ -69,7 +70,34 @@ public fun <T> DataFrame<T>.dropWhile(predicate: RowFilter<T>): DataFrame<T> =
 // endregion
 
 // region ColumnsSelectionDsl
+
 public interface DropColumnsSelectionDsl {
+
+    /**
+     * @include [TakeAndDropColumnsSelectionDslUsage]
+     * @setArg [TakeAndDropColumnsSelectionDslUsage.TitleArg] Drop
+     * @setArg [TakeAndDropColumnsSelectionDslUsage.OperationArg] drop
+     */
+    public interface Usage {
+
+        /** [**drop**][ColumnsSelectionDsl.drop]`(`[**Last**][ColumnsSelectionDsl.dropLast]`)` */
+        public interface PlainDslName
+
+        /** .[**drop**][ColumnsSelectionDsl.drop]`(`[**Last**][ColumnSet.dropLast]`)` */
+        public interface ColumnSetName
+
+        /** .[**drop**][ColumnsSelectionDsl.dropCols]`(`[**Last**][ColumnsSelectionDsl.dropLastCols]`)`[**Cols**][ColumnsSelectionDsl.dropCols] */
+        public interface ColumnGroupName
+
+        /** [**drop**][ColumnsSelectionDsl.dropWhile]`(`[**Last**][ColumnsSelectionDsl.dropLastWhile]`)`[**While**][ColumnsSelectionDsl.dropWhile] */
+        public interface PlainDslWhileName
+
+        /** .[**drop**][ColumnsSelectionDsl.dropWhile]`(`[**Last**][ColumnsSelectionDsl.dropLastWhile]`)`[**While**][ColumnsSelectionDsl.dropWhile] */
+        public interface ColumnSetWhileName
+
+        /** .[**drop**][ColumnsSelectionDsl.dropColsWhile]`(`[**Last**][ColumnsSelectionDsl.dropLastColsWhile]`)`[**ColsWhile**][ColumnsSelectionDsl.dropColsWhile] */
+        public interface ColumnGroupWhileName
+    }
 
     // region drop
 
@@ -99,44 +127,40 @@ public interface DropColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { `[drop][ColumnsSelectionDsl.drop]`(5) }`
      */
     public fun ColumnsSelectionDsl<*>.drop(n: Int): ColumnSet<*> =
-        asSingleColumn().dropChildren(n)
+        asSingleColumn().dropCols(n)
 
     /**
      * @include [CommonDropFirstDocs]
      * @setArg [CommonTakeAndDropDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropChildren][SingleColumn.dropChildren]`(1) }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropCols][SingleColumn.dropCols]`(1) }`
      */
-    public fun SingleColumn<DataRow<*>>.dropChildren(n: Int): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.dropCols(n: Int): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().drop(n) }
 
     /**
      * @include [CommonDropFirstDocs]
      * @setArg [CommonTakeAndDropDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropChildren][String.dropChildren]`(1) }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropCols][String.dropCols]`(1) }`
      */
-    public fun String.dropChildren(n: Int): ColumnSet<*> = columnGroup(this).dropChildren(n)
+    public fun String.dropCols(n: Int): ColumnSet<*> = columnGroup(this).dropCols(n)
 
     /**
      * @include [CommonDropFirstDocs]
      * @setArg [CommonTakeAndDropDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[dropChildren][SingleColumn.dropChildren]`(1) }`
-     *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[dropChildren][SingleColumn.dropChildren]`(1) }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[dropChildren][KProperty.dropChildren]`(1) }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[dropCols][KProperty.dropCols]`(1) }`
      */
-    public fun KProperty<DataRow<*>>.dropChildren(n: Int): ColumnSet<*> = columnGroup(this).dropChildren(n)
+    public fun KProperty<*>.dropCols(n: Int): ColumnSet<*> = columnGroup(this).dropCols(n)
 
     /**
      * @include [CommonDropFirstDocs]
      * @setArg [CommonTakeAndDropDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropChildren][ColumnPath.dropChildren]`(1) }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropCols][ColumnPath.dropCols]`(1) }`
      */
-    public fun ColumnPath.dropChildren(n: Int): ColumnSet<*> = columnGroup(this).dropChildren(n)
+    public fun ColumnPath.dropCols(n: Int): ColumnSet<*> = columnGroup(this).dropCols(n)
 
     // endregion
 
@@ -168,44 +192,40 @@ public interface DropColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { `[dropLast][ColumnsSelectionDsl.dropLast]`(5) }`
      */
     public fun ColumnsSelectionDsl<*>.dropLast(n: Int = 1): ColumnSet<*> =
-        this.asSingleColumn().dropLastChildren(n)
+        this.asSingleColumn().dropLastCols(n)
 
     /**
      * @include [CommonDropLastDocs]
      * @setArg [CommonTakeAndDropDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropLastChildren][SingleColumn.dropLastChildren]`() }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropLastCols][SingleColumn.dropLastCols]`() }`
      */
-    public fun SingleColumn<DataRow<*>>.dropLastChildren(n: Int): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.dropLastCols(n: Int): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().dropLast(n) }
 
     /**
      * @include [CommonDropLastDocs]
      * @setArg [CommonTakeAndDropDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropLastChildren][String.dropLastChildren]`(1) }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropLastCols][String.dropLastCols]`(1) }`
      */
-    public fun String.dropLastChildren(n: Int): ColumnSet<*> = columnGroup(this).dropLastChildren(n)
+    public fun String.dropLastCols(n: Int): ColumnSet<*> = columnGroup(this).dropLastCols(n)
 
     /**
      * @include [CommonDropLastDocs]
      * @setArg [CommonTakeAndDropDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[dropLastChildren][SingleColumn.dropLastChildren]`(1) }`
-     *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[dropLastChildren][SingleColumn.dropLastChildren]`(1) }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[dropLastChildren][KProperty.dropLastChildren]`(1) }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[dropLastCols][KProperty.dropLastCols]`(1) }`
      */
-    public fun KProperty<DataRow<*>>.dropLastChildren(n: Int): ColumnSet<*> = columnGroup(this).dropLastChildren(n)
+    public fun KProperty<*>.dropLastCols(n: Int): ColumnSet<*> = columnGroup(this).dropLastCols(n)
 
     /**
      * @include [CommonDropLastDocs]
      * @setArg [CommonTakeAndDropDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropLastChildren][ColumnPath.dropLastChildren]`(1) }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropLastCols][ColumnPath.dropLastCols]`(1) }`
      */
-    public fun ColumnPath.dropLastChildren(n: Int): ColumnSet<*> = columnGroup(this).dropLastChildren(n)
+    public fun ColumnPath.dropLastCols(n: Int): ColumnSet<*> = columnGroup(this).dropLastCols(n)
 
     // endregion
 
@@ -238,45 +258,43 @@ public interface DropColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { `[dropWhile][ColumnsSelectionDsl.dropWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
     public fun ColumnsSelectionDsl<*>.dropWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        this.asSingleColumn().dropChildrenWhile(predicate)
+        this.asSingleColumn().dropColsWhile(predicate)
 
     /**
      * @include [CommonDropWhileDocs]
      * @setArg [CommonTakeAndDropWhileDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropChildrenWhile][SingleColumn.dropChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropColsWhile][SingleColumn.dropColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
-    public fun SingleColumn<DataRow<*>>.dropChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.dropColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().dropWhile(predicate) }
 
     /**
      * @include [CommonDropWhileDocs]
      * @setArg [CommonTakeAndDropWhileDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropChildrenWhile][String.dropChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropColsWhile][String.dropColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
-    public fun String.dropChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        columnGroup(this).dropChildrenWhile(predicate)
+    public fun String.dropColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        columnGroup(this).dropColsWhile(predicate)
 
     /**
      * @include [CommonDropWhileDocs]
      * @setArg [CommonTakeAndDropWhileDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[dropChildrenWhile][SingleColumn.dropChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[dropChildrenWhile][KProperty.dropChildrenWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[dropColsWhile][KProperty.dropColsWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
-    public fun KProperty<DataRow<*>>.dropChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        columnGroup(this).dropChildrenWhile(predicate)
+    public fun KProperty<*>.dropColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        columnGroup(this).dropColsWhile(predicate)
 
     /**
      * @include [CommonDropWhileDocs]
      * @setArg [CommonTakeAndDropWhileDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropChildrenWhile][ColumnPath.dropChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropColsWhile][ColumnPath.dropColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
-    public fun ColumnPath.dropChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        columnGroup(this).dropChildrenWhile(predicate)
+    public fun ColumnPath.dropColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        columnGroup(this).dropColsWhile(predicate)
 
     // endregion
 
@@ -309,46 +327,47 @@ public interface DropColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { `[dropLastWhile][ColumnsSelectionDsl.dropLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
     public fun ColumnsSelectionDsl<*>.dropLastWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        this.asSingleColumn().dropLastChildrenWhile(predicate)
+        this.asSingleColumn().dropLastColsWhile(predicate)
 
     /**
      * @include [CommonDropLastWhileDocs]
      * @setArg [CommonTakeAndDropWhileDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropLastChildrenWhile][SingleColumn.dropLastChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropLastColsWhile][SingleColumn.dropLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
-    public fun SingleColumn<DataRow<*>>.dropLastChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.dropLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().dropLastWhile(predicate) }
 
     /**
      * @include [CommonDropLastWhileDocs]
      * @setArg [CommonTakeAndDropWhileDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropLastChildrenWhile][String.dropLastChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropLastColsWhile][String.dropLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
-    public fun String.dropLastChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        columnGroup(this).dropLastChildrenWhile(predicate)
+    public fun String.dropLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        columnGroup(this).dropLastColsWhile(predicate)
 
     /**
      * @include [CommonDropLastWhileDocs]
      * @setArg [CommonTakeAndDropWhileDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[dropLastChildrenWhile][SingleColumn.dropLastChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[dropLastColsWhile][SingleColumn.dropLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[dropLastChildrenWhile][KProperty.dropLastChildrenWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[dropLastColsWhile][KProperty.dropLastColsWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
-    public fun KProperty<DataRow<*>>.dropLastChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        columnGroup(this).dropLastChildrenWhile(predicate)
+    public fun KProperty<*>.dropLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        columnGroup(this).dropLastColsWhile(predicate)
 
     /**
      * @include [CommonDropLastWhileDocs]
      * @setArg [CommonTakeAndDropWhileDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropLastChildrenWhile][ColumnPath.dropLastChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropLastColsWhile][ColumnPath.dropLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
-    public fun ColumnPath.dropLastChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        columnGroup(this).dropLastChildrenWhile(predicate)
+    public fun ColumnPath.dropLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        columnGroup(this).dropLastColsWhile(predicate)
 
     // endregion
 }
+
 // endregion

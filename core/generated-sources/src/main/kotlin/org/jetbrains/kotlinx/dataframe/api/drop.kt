@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs
+import org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslUsage
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.index
@@ -69,7 +70,103 @@ public fun <T> DataFrame<T>.dropWhile(predicate: RowFilter<T>): DataFrame<T> =
 // endregion
 
 // region ColumnsSelectionDsl
+
 public interface DropColumnsSelectionDsl {
+
+    /**
+     * ## Drop (Last) (Cols) (While) Usage
+     *
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `[KProperty][KProperty]`<*>` | `[ColumnPath][ColumnPath]
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  `condition: `[ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter]
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  `number: `[Int][Int]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### In the plain DSL:
+     *
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  [**drop**][ColumnsSelectionDsl.drop]`(`[**Last**][ColumnsSelectionDsl.dropLast]`)`**`(`**[number][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.NumberDef]**`)`**
+     *
+     *  `|` [**drop**][ColumnsSelectionDsl.dropWhile]`(`[**Last**][ColumnsSelectionDsl.dropLastWhile]`)`[**While**][ColumnsSelectionDsl.dropWhile]**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`**
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**drop**][ColumnsSelectionDsl.drop]`(`[**Last**][ColumnSet.dropLast]`)`**`(`**[number][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.NumberDef]**`)`**
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**drop**][ColumnsSelectionDsl.dropWhile]`(`[**Last**][ColumnsSelectionDsl.dropLastWhile]`)`[**While**][ColumnsSelectionDsl.dropWhile]**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`**
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### On a column group reference:
+     *
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**drop**][ColumnsSelectionDsl.dropCols]`(`[**Last**][ColumnsSelectionDsl.dropLastCols]`)`[**Cols**][ColumnsSelectionDsl.dropCols]**`(`**[number][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.NumberDef]**`)`**
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**drop**][ColumnsSelectionDsl.dropColsWhile]`(`[**Last**][ColumnsSelectionDsl.dropLastColsWhile]`)`[**ColsWhile**][ColumnsSelectionDsl.dropColsWhile]**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`**
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
+    public interface Usage {
+
+        /** [**drop**][ColumnsSelectionDsl.drop]`(`[**Last**][ColumnsSelectionDsl.dropLast]`)` */
+        public interface PlainDslName
+
+        /** .[**drop**][ColumnsSelectionDsl.drop]`(`[**Last**][ColumnSet.dropLast]`)` */
+        public interface ColumnSetName
+
+        /** .[**drop**][ColumnsSelectionDsl.dropCols]`(`[**Last**][ColumnsSelectionDsl.dropLastCols]`)`[**Cols**][ColumnsSelectionDsl.dropCols] */
+        public interface ColumnGroupName
+
+        /** [**drop**][ColumnsSelectionDsl.dropWhile]`(`[**Last**][ColumnsSelectionDsl.dropLastWhile]`)`[**While**][ColumnsSelectionDsl.dropWhile] */
+        public interface PlainDslWhileName
+
+        /** .[**drop**][ColumnsSelectionDsl.dropWhile]`(`[**Last**][ColumnsSelectionDsl.dropLastWhile]`)`[**While**][ColumnsSelectionDsl.dropWhile] */
+        public interface ColumnSetWhileName
+
+        /** .[**drop**][ColumnsSelectionDsl.dropColsWhile]`(`[**Last**][ColumnsSelectionDsl.dropLastColsWhile]`)`[**ColsWhile**][ColumnsSelectionDsl.dropColsWhile] */
+        public interface ColumnGroupWhileName
+    }
 
     // region drop
 
@@ -176,7 +273,7 @@ public interface DropColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
      */
     public fun ColumnsSelectionDsl<*>.drop(n: Int): ColumnSet<*> =
-        asSingleColumn().dropChildren(n)
+        asSingleColumn().dropCols(n)
 
     /**
      * ## Drop (Cols)
@@ -205,12 +302,12 @@ public interface DropColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropChildren][SingleColumn.dropChildren]`(1) }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropCols][SingleColumn.dropCols]`(1) }`
      *
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
      */
-    public fun SingleColumn<DataRow<*>>.dropChildren(n: Int): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.dropCols(n: Int): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().drop(n) }
 
     /**
@@ -240,12 +337,12 @@ public interface DropColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropChildren][String.dropChildren]`(1) }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropCols][String.dropCols]`(1) }`
      *
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
      */
-    public fun String.dropChildren(n: Int): ColumnSet<*> = columnGroup(this).dropChildren(n)
+    public fun String.dropCols(n: Int): ColumnSet<*> = columnGroup(this).dropCols(n)
 
     /**
      * ## Drop (Cols)
@@ -274,16 +371,12 @@ public interface DropColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[dropChildren][SingleColumn.dropChildren]`(1) }`
-     *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[dropChildren][SingleColumn.dropChildren]`(1) }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[dropChildren][KProperty.dropChildren]`(1) }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[dropCols][KProperty.dropCols]`(1) }`
      *
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
      */
-    public fun KProperty<DataRow<*>>.dropChildren(n: Int): ColumnSet<*> = columnGroup(this).dropChildren(n)
+    public fun KProperty<*>.dropCols(n: Int): ColumnSet<*> = columnGroup(this).dropCols(n)
 
     /**
      * ## Drop (Cols)
@@ -312,12 +405,12 @@ public interface DropColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropChildren][ColumnPath.dropChildren]`(1) }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropCols][ColumnPath.dropCols]`(1) }`
      *
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
      */
-    public fun ColumnPath.dropChildren(n: Int): ColumnSet<*> = columnGroup(this).dropChildren(n)
+    public fun ColumnPath.dropCols(n: Int): ColumnSet<*> = columnGroup(this).dropCols(n)
 
     // endregion
 
@@ -426,7 +519,7 @@ public interface DropColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
      */
     public fun ColumnsSelectionDsl<*>.dropLast(n: Int = 1): ColumnSet<*> =
-        this.asSingleColumn().dropLastChildren(n)
+        this.asSingleColumn().dropLastCols(n)
 
     /**
      * ## Drop Last (Cols)
@@ -455,12 +548,12 @@ public interface DropColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropLastChildren][SingleColumn.dropLastChildren]`() }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropLastCols][SingleColumn.dropLastCols]`() }`
      *
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
      */
-    public fun SingleColumn<DataRow<*>>.dropLastChildren(n: Int): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.dropLastCols(n: Int): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().dropLast(n) }
 
     /**
@@ -490,12 +583,12 @@ public interface DropColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropLastChildren][String.dropLastChildren]`(1) }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropLastCols][String.dropLastCols]`(1) }`
      *
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
      */
-    public fun String.dropLastChildren(n: Int): ColumnSet<*> = columnGroup(this).dropLastChildren(n)
+    public fun String.dropLastCols(n: Int): ColumnSet<*> = columnGroup(this).dropLastCols(n)
 
     /**
      * ## Drop Last (Cols)
@@ -524,16 +617,12 @@ public interface DropColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[dropLastChildren][SingleColumn.dropLastChildren]`(1) }`
-     *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[dropLastChildren][SingleColumn.dropLastChildren]`(1) }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[dropLastChildren][KProperty.dropLastChildren]`(1) }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[dropLastCols][KProperty.dropLastCols]`(1) }`
      *
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
      */
-    public fun KProperty<DataRow<*>>.dropLastChildren(n: Int): ColumnSet<*> = columnGroup(this).dropLastChildren(n)
+    public fun KProperty<*>.dropLastCols(n: Int): ColumnSet<*> = columnGroup(this).dropLastCols(n)
 
     /**
      * ## Drop Last (Cols)
@@ -562,12 +651,12 @@ public interface DropColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropLastChildren][ColumnPath.dropLastChildren]`(1) }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropLastCols][ColumnPath.dropLastCols]`(1) }`
      *
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
      */
-    public fun ColumnPath.dropLastChildren(n: Int): ColumnSet<*> = columnGroup(this).dropLastChildren(n)
+    public fun ColumnPath.dropLastCols(n: Int): ColumnSet<*> = columnGroup(this).dropLastCols(n)
 
     // endregion
 
@@ -683,7 +772,7 @@ public interface DropColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
      */
     public fun ColumnsSelectionDsl<*>.dropWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        this.asSingleColumn().dropChildrenWhile(predicate)
+        this.asSingleColumn().dropColsWhile(predicate)
 
     /**
      * ## Drop (Cols) While
@@ -714,12 +803,12 @@ public interface DropColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropChildrenWhile][SingleColumn.dropChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropColsWhile][SingleColumn.dropColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
      */
-    public fun SingleColumn<DataRow<*>>.dropChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.dropColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().dropWhile(predicate) }
 
     /**
@@ -751,13 +840,13 @@ public interface DropColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropChildrenWhile][String.dropChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropColsWhile][String.dropColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
      */
-    public fun String.dropChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        columnGroup(this).dropChildrenWhile(predicate)
+    public fun String.dropColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        columnGroup(this).dropColsWhile(predicate)
 
     /**
      * ## Drop (Cols) While
@@ -788,15 +877,13 @@ public interface DropColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[dropChildrenWhile][SingleColumn.dropChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[dropChildrenWhile][KProperty.dropChildrenWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[dropColsWhile][KProperty.dropColsWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
      */
-    public fun KProperty<DataRow<*>>.dropChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        columnGroup(this).dropChildrenWhile(predicate)
+    public fun KProperty<*>.dropColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        columnGroup(this).dropColsWhile(predicate)
 
     /**
      * ## Drop (Cols) While
@@ -827,13 +914,13 @@ public interface DropColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropChildrenWhile][ColumnPath.dropChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropColsWhile][ColumnPath.dropColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
      */
-    public fun ColumnPath.dropChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        columnGroup(this).dropChildrenWhile(predicate)
+    public fun ColumnPath.dropColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        columnGroup(this).dropColsWhile(predicate)
 
     // endregion
 
@@ -949,7 +1036,7 @@ public interface DropColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
      */
     public fun ColumnsSelectionDsl<*>.dropLastWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        this.asSingleColumn().dropLastChildrenWhile(predicate)
+        this.asSingleColumn().dropLastColsWhile(predicate)
 
     /**
      * ## Drop Last (Cols) While
@@ -980,12 +1067,12 @@ public interface DropColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropLastChildrenWhile][SingleColumn.dropLastChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropLastColsWhile][SingleColumn.dropLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
      */
-    public fun SingleColumn<DataRow<*>>.dropLastChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.dropLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().dropLastWhile(predicate) }
 
     /**
@@ -1017,13 +1104,13 @@ public interface DropColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropLastChildrenWhile][String.dropLastChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropLastColsWhile][String.dropLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
      */
-    public fun String.dropLastChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        columnGroup(this).dropLastChildrenWhile(predicate)
+    public fun String.dropLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        columnGroup(this).dropLastColsWhile(predicate)
 
     /**
      * ## Drop Last (Cols) While
@@ -1054,15 +1141,15 @@ public interface DropColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[dropLastChildrenWhile][SingleColumn.dropLastChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[dropLastColsWhile][SingleColumn.dropLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[dropLastChildrenWhile][KProperty.dropLastChildrenWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[dropLastColsWhile][KProperty.dropLastColsWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
      */
-    public fun KProperty<DataRow<*>>.dropLastChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        columnGroup(this).dropLastChildrenWhile(predicate)
+    public fun KProperty<*>.dropLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        columnGroup(this).dropLastColsWhile(predicate)
 
     /**
      * ## Drop Last (Cols) While
@@ -1093,14 +1180,15 @@ public interface DropColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropLastChildrenWhile][ColumnPath.dropLastChildrenWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropLastColsWhile][ColumnPath.dropLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
      */
-    public fun ColumnPath.dropLastChildrenWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
-        columnGroup(this).dropLastChildrenWhile(predicate)
+    public fun ColumnPath.dropLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+        columnGroup(this).dropLastColsWhile(predicate)
 
     // endregion
 }
+
 // endregion

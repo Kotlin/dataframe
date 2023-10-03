@@ -17,7 +17,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslUsage.PlainDslName
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
@@ -98,6 +97,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     TakeColumnsSelectionDsl,
     // drop(5), dropLastChildren(2), dropLastWhile {}, dropChildrenWhile {}
     DropColumnsSelectionDsl,
+
     // except(), allExcept {}
     ExceptColumnsSelectionDsl<T>,
     // nameContains(""), childrenNameContains(""), nameStartsWith(""), childrenNameEndsWith("")
@@ -190,6 +190,10 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  `|` {@include [TakeColumnsSelectionDsl.Usage.PlainDslWhileName]}**` { `**{@include [UsageTemplate.ConditionRef]}**` \\}`**
      *
+     *  `|` {@include [DropColumnsSelectionDsl.Usage.PlainDslName]}**`(`**{@include [UsageTemplate.NumberRef]}**`)`**
+     *
+     *  `|` {@include [DropColumnsSelectionDsl.Usage.PlainDslWhileName]}**` { `**{@include [UsageTemplate.ConditionRef]}**` \\}`**
+     *
      *  `|` TODO
      * }
      * {@comment -------------------------------------------------------------------------------------------- }
@@ -234,6 +238,10 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  {@include [Indent]}`|` {@include [TakeColumnsSelectionDsl.Usage.ColumnSetWhileName]}**` { `**{@include [UsageTemplate.ConditionRef]}**` \\}`**
      *
+     *  {@include [Indent]}`|` {@include [DropColumnsSelectionDsl.Usage.ColumnSetName]}**`(`**{@include [UsageTemplate.NumberRef]}**`)`**
+     *
+     *  {@include [Indent]}`|` {@include [DropColumnsSelectionDsl.Usage.ColumnSetWhileName]}**` { `**{@include [UsageTemplate.ConditionRef]}**` \\}`**
+     *
      *  {@include [Indent]}`|` TODO
      * }
      * {@comment -------------------------------------------------------------------------------------------- }
@@ -276,6 +284,10 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *  {@include [Indent]}`|` {@include [TakeColumnsSelectionDsl.Usage.ColumnGroupName]}**`(`**{@include [UsageTemplate.NumberRef]}**`)`**
      *
      *  {@include [Indent]}`|` {@include [TakeColumnsSelectionDsl.Usage.ColumnGroupWhileName]}**` { `**{@include [UsageTemplate.ConditionRef]}**` \\}`**
+     *
+     *  {@include [Indent]}`|` {@include [DropColumnsSelectionDsl.Usage.ColumnGroupName]}**`(`**{@include [UsageTemplate.NumberRef]}**`)`**
+     *
+     *  {@include [Indent]}`|` {@include [DropColumnsSelectionDsl.Usage.ColumnGroupWhileName]}**` { `**{@include [UsageTemplate.ConditionRef]}**` \\}`**
      *
      *  {@include [Indent]}`|` TODO
      * }

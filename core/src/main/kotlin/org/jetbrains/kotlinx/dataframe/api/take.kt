@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs
 import org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslUsage
+import org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslUsage.OperationArg
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.index
@@ -27,7 +28,7 @@ public fun <T> DataColumn<T>.take(n: Int): DataColumn<T> = when {
     else -> get(0 until n)
 }
 
-public fun <T> DataColumn<T>.takeLast(n: Int): DataColumn<T> = drop(size - n)
+public fun <T> DataColumn<T>.takeLast(n: Int = 1): DataColumn<T> = drop(size - n)
 
 // endregion
 
@@ -48,7 +49,7 @@ public fun <T> DataFrame<T>.take(n: Int): DataFrame<T> {
  *
  * @throws IllegalArgumentException if [n] is negative.
  */
-public fun <T> DataFrame<T>.takeLast(n: Int): DataFrame<T> {
+public fun <T> DataFrame<T>.takeLast(n: Int = 1): DataFrame<T> {
     require(n >= 0) { "Requested rows count $n is less than zero." }
     return drop((nrow - n).coerceAtLeast(0))
 }
@@ -65,35 +66,33 @@ public fun <T> DataFrame<T>.takeWhile(predicate: RowFilter<T>): DataFrame<T> =
 
 public interface TakeColumnsSelectionDsl {
 
-    // region take
-
     /**
      * @include [TakeAndDropColumnsSelectionDslUsage]
-     * @include [Args]
+     * @setArg [TakeAndDropColumnsSelectionDslUsage.TitleArg] Take
+     * @setArg [TakeAndDropColumnsSelectionDslUsage.OperationArg] take
      */
     public interface Usage {
 
-        /** {@setArg [TakeAndDropColumnsSelectionDslUsage.TitleArg] Take}{@setArg [TakeAndDropColumnsSelectionDslUsage.OperationArg] take} */
-        private interface Args
-
-        /** {@include [TakeAndDropColumnsSelectionDslUsage.PlainDslName]}{@include [Args]} */
+        /** [**take**][ColumnsSelectionDsl.take]`(`[**Last**][ColumnsSelectionDsl.takeLast]`)` */
         public interface PlainDslName
 
-        /** {@include [TakeAndDropColumnsSelectionDslUsage.ColumnSetName]}{@include [Args]} */
+        /** .[**take**][ColumnsSelectionDsl.take]`(`[**Last**][ColumnSet.takeLast]`)` */
         public interface ColumnSetName
 
-        /** {@include [TakeAndDropColumnsSelectionDslUsage.ColumnGroupName]}{@include [Args]} */
+        /** .[**take**][ColumnsSelectionDsl.takeCols]`(`[**Last**][ColumnsSelectionDsl.takeLastCols]`)`[**Cols**][ColumnsSelectionDsl.takeCols] */
         public interface ColumnGroupName
 
-        /** {@include [TakeAndDropColumnsSelectionDslUsage.PlainDslWhileName]}{@include [Args]} */
+        /** [**take**][ColumnsSelectionDsl.takeWhile]`(`[**Last**][ColumnsSelectionDsl.takeLastWhile]`)`[**While**][ColumnsSelectionDsl.takeWhile] */
         public interface PlainDslWhileName
 
-        /** {@include [TakeAndDropColumnsSelectionDslUsage.ColumnSetWhileName]}{@include [Args]} */
+        /** .[**take**][ColumnsSelectionDsl.takeWhile]`(`[**Last**][ColumnsSelectionDsl.takeLastWhile]`)`[**While**][ColumnsSelectionDsl.takeWhile] */
         public interface ColumnSetWhileName
 
-        /** {@include [TakeAndDropColumnsSelectionDslUsage.ColumnGroupWhileName]}{@include [Args]} */
+        /** .[**take**][ColumnsSelectionDsl.takeColsWhile]`(`[**Last**][ColumnsSelectionDsl.takeLastColsWhile]`)`[**ColsWhile**][ColumnsSelectionDsl.takeColsWhile] */
         public interface ColumnGroupWhileName
     }
+
+    // region take
 
     /**
      * @include [CommonTakeAndDropDocs]
@@ -146,8 +145,6 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[takeCols][SingleColumn.takeCols]`(1) }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[takeCols][SingleColumn.takeCols]`(1) }`
-     *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[takeCols][KProperty.takeCols]`(1) }`
      */
     public fun KProperty<*>.takeCols(n: Int): ColumnSet<*> = columnGroup(this).takeCols(n)
@@ -181,7 +178,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[takeLast][ColumnSet.takeLast]`(2) }`
      */
-    public fun <C> ColumnSet<C>.takeLast(n: Int): ColumnSet<C> = transform { it.takeLast(n) }
+    public fun <C> ColumnSet<C>.takeLast(n: Int = 1): ColumnSet<C> = transform { it.takeLast(n) }
 
     /**
      * @include [CommonTakeLastDocs]
@@ -189,7 +186,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { `[takeLast][ColumnsSelectionDsl.takeLast]`(5) }`
      */
-    public fun ColumnsSelectionDsl<*>.takeLast(n: Int): ColumnSet<*> =
+    public fun ColumnsSelectionDsl<*>.takeLast(n: Int = 1): ColumnSet<*> =
         asSingleColumn().takeLastCols(n)
 
     /**
@@ -212,8 +209,6 @@ public interface TakeColumnsSelectionDsl {
     /**
      * @include [CommonTakeLastDocs]
      * @setArg [CommonTakeAndDropDocs.ExampleArg]
-     *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[takeLastCols][SingleColumn.takeLastCols]`(1) }`
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[takeLastCols][SingleColumn.takeLastCols]`(1) }`
      *
