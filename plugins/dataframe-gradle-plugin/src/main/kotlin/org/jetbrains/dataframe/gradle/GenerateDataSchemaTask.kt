@@ -17,11 +17,19 @@ import org.jetbrains.kotlinx.dataframe.impl.codeGen.from
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.toStandaloneSnippet
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlCodeGenReader
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlDfReader
-import org.jetbrains.kotlinx.dataframe.io.*
 import java.io.File
 import java.net.URL
 import java.nio.file.Paths
 import java.sql.DriverManager
+import org.jetbrains.kotlinx.dataframe.io.ArrowFeather
+import org.jetbrains.kotlinx.dataframe.io.CSV
+import org.jetbrains.kotlinx.dataframe.io.Excel
+import org.jetbrains.kotlinx.dataframe.io.JSON
+import org.jetbrains.kotlinx.dataframe.io.OpenApi
+import org.jetbrains.kotlinx.dataframe.io.TSV
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
+import org.jetbrains.kotlinx.dataframe.io.isURL
 
 abstract class GenerateDataSchemaTask : DefaultTask() {
 

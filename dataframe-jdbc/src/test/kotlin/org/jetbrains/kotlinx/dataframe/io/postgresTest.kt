@@ -1,12 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import io.kotest.matchers.shouldBe
+import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.api.print
 import org.junit.AfterClass
-import org.junit.Assert.assertEquals
 import org.junit.BeforeClass
 import org.junit.Test
 import org.postgresql.util.PGobject
@@ -14,8 +14,7 @@ import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
-import java.util.*
-
+import java.util.UUID
 
 private const val URL = "jdbc:postgresql://localhost:5432/test"
 private const val USER_NAME = "postgres"
@@ -85,9 +84,9 @@ class PostgresTest {
             connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS table1") }
             connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS table2") }
 
-            connection.createStatement().execute(
-                """
-                  CREATE TABLE IF NOT EXISTS table1 (
+            @Language("SQL")
+            val createTableStatement = """
+                CREATE TABLE IF NOT EXISTS table1 (
                 id serial PRIMARY KEY,
                 bigintCol bigint,
                 bigserialCol bigserial,
@@ -105,12 +104,13 @@ class PostgresTest {
                 jsonCol json,
                 jsonbCol jsonb
             )
-            """.trimIndent()
+            """
+            connection.createStatement().execute(
+                createTableStatement.trimIndent()
             )
 
-            // Create table Sale
-            connection.createStatement().execute(
-                """
+            @Language("SQL")
+            val createTableQuery = """
                 CREATE TABLE IF NOT EXISTS table2 (
                 id serial PRIMARY KEY,
                 lineCol line,
@@ -133,9 +133,12 @@ class PostgresTest {
                 uuidCol uuid,
                 xmlCol xml
             )
-            """.trimIndent()
+            """
+            connection.createStatement().execute(
+                createTableQuery.trimIndent()
             )
 
+            @Language("SQL")
             val insertData1 = """
             INSERT INTO table1 (
                 bigintCol, bigserialCol,  booleanCol, 
@@ -143,7 +146,9 @@ class PostgresTest {
                  circleCol, dateCol, doubleCol, 
                 integerCol, intervalCol, jsonCol, jsonbCol
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """
+            """
+
+            @Language("SQL")
             val insertData2 = """
             INSERT INTO table2 (
                 lineCol, lsegCol, macaddrCol, moneyCol, numericCol, 
@@ -152,7 +157,7 @@ class PostgresTest {
                 timeWithZoneCol, timestampCol, timestampWithZoneCol, 
                 uuidCol, xmlCol
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,  ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """
+            """
 
             connection.prepareStatement(insertData1).use { st ->
                 // Insert data into table1
@@ -235,29 +240,27 @@ class PostgresTest {
     @Test
     fun `read from tables`() {
         val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1>()
-        df1.print()
-        assertEquals(3, df1.rowsCount())
+        df1.rowsCount() shouldBe 3
 
         val df2 = DataFrame.readSqlTable(connection, "table2").cast<Table2>()
-        df2.print()
-        assertEquals(3, df2.rowsCount())
+        df2.rowsCount() shouldBe 3
     }
 
     @Test
     fun `read from sql query`() {
+        @Language("SQL")
         val sqlQuery = """
-SELECT
-    t1.id AS t1_id,
-    t1.bigintCol,
-    t2.lineCol,
-    t2.numericCol
-FROM table1 t1
-JOIN table2 t2 ON t1.id = t2.id;
+            SELECT
+                t1.id AS t1_id,
+                t1.bigintCol,
+                t2.lineCol,
+                t2.numericCol
+            FROM table1 t1
+            JOIN table2 t2 ON t1.id = t2.id;
         """.trimIndent()
 
         val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<TestTableData>()
-        df.print()
-        assertEquals(3, df.rowsCount())
+        df.rowsCount() shouldBe 3
     }
 
     @Test
@@ -266,14 +269,14 @@ JOIN table2 t2 ON t1.id = t2.id;
 
         val table1Df = dataframes[0].cast<Table1>()
 
-        assertEquals(3, table1Df.rowsCount())
-        assertEquals(2, table1Df.filter { it[Table1::integercol] > 12345 }.rowsCount())
-        assertEquals(1000L, table1Df[0][1])
+        table1Df.rowsCount() shouldBe 3
+        table1Df.filter { it[Table1::integercol] > 12345 }.rowsCount() shouldBe 2
+        table1Df[0][1] shouldBe 1000L
 
         val table2Df = dataframes[1].cast<Table2>()
 
-        assertEquals(3, table2Df.rowsCount())
-        assertEquals(1, table2Df.filter { it[Table2::pathcol] == "((1,2),(3,1))" }.rowsCount())
-        assertEquals(1001, table2Df[0][11])
+        table2Df.rowsCount() shouldBe 3
+        table2Df.filter { it[Table2::pathcol] == "((1,2),(3,1))" }.rowsCount() shouldBe 1
+        table2Df[0][11] shouldBe 1001
     }
 }

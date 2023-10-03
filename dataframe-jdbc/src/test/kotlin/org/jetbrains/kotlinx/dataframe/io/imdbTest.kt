@@ -6,8 +6,7 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.junit.Test
 import java.sql.DriverManager
-import java.util.*
-
+import java.util.Properties
 
 private const val URL = "jdbc:mariadb://localhost:3306/imdb"
 private const val USER_NAME = "root"

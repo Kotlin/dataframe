@@ -1,14 +1,24 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import java.sql.Connection
+import java.sql.DatabaseMetaData
+import java.sql.DriverManager
+import java.sql.ResultSet
+import java.sql.ResultSetMetaData
+import java.util.Locale
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
-import org.jetbrains.kotlinx.dataframe.io.db.*
+import org.jetbrains.kotlinx.dataframe.io.db.DbType
+import org.jetbrains.kotlinx.dataframe.io.db.H2
+import org.jetbrains.kotlinx.dataframe.io.db.MariaDb
+import org.jetbrains.kotlinx.dataframe.io.db.MySql
+import org.jetbrains.kotlinx.dataframe.io.db.PostgreSql
+import org.jetbrains.kotlinx.dataframe.io.db.Sqlite
+import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromURL
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
-import java.sql.*
-import java.util.*
 
 private val logger = KotlinLogging.logger {}
 

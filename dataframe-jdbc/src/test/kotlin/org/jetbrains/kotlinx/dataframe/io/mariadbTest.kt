@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
@@ -293,18 +294,18 @@ class MariadbTest {
 
     @Test
     fun `read from sql query`() {
+        @Language("SQL")
         val sqlQuery = """
-SELECT
-    t1.id,
-    t2.enumCol,
-    t2.setCol
-FROM table1 t1
-JOIN table2 t2 ON t1.id = t2.id;
+            SELECT
+               t1.id,
+               t2.enumCol,
+               t2.setCol
+            FROM table1 t1
+            JOIN table2 t2 ON t1.id = t2.id;
         """.trimIndent()
 
         val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<Table2MariaDb>()
-        df.print()
-        assertEquals(3, df.rowsCount())
+        df.rowsCount() shouldBe 3
     }
 
     @Test
@@ -313,15 +314,14 @@ JOIN table2 t2 ON t1.id = t2.id;
 
         val table1Df = dataframes[0].cast<Table1MariaDb>()
 
-        assertEquals(3, table1Df.rowsCount())
-        assertEquals(2, table1Df.filter { it[Table1MariaDb::integerCol] > 100 }.rowsCount())
-        assertEquals(10.0, table1Df[0][11])
+        table1Df.rowsCount() shouldBe 3
+        table1Df.filter { it[Table1MariaDb::integerCol] > 100 }.rowsCount() shouldBe 2
+        table1Df[0][11] shouldBe 10.0
 
         val table2Df = dataframes[1].cast<Table1MariaDb>()
 
-        assertEquals(3, table2Df.rowsCount())
-        assertEquals(1, table2Df.filter { it[Table1MariaDb::integerCol] > 400 }.rowsCount())
-        assertEquals(20.0, table2Df[0][11])
+        table2Df.rowsCount() shouldBe 3
+        table2Df.filter { it[Table1MariaDb::integerCol] > 400 }.rowsCount() shouldBe 1
+        table2Df[0][11] shouldBe 20.0
     }
 }
-

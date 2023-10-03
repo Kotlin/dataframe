@@ -1,18 +1,19 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import io.kotest.matchers.shouldBe
+import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.api.print
 import org.junit.AfterClass
-import org.junit.Assert.assertEquals
 import org.junit.BeforeClass
 import org.junit.Test
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 
+private const val DATABASE_URL = "jdbc:sqlite:"
 
 @DataSchema
 interface CustomerSQLite {
@@ -52,10 +53,10 @@ class SqliteTest {
         @BeforeClass
         @JvmStatic
         fun setUpClass() {
-            connection = DriverManager.getConnection("jdbc:sqlite:")
+            connection = DriverManager.getConnection(DATABASE_URL)
 
-            connection.createStatement().execute(
-                """
+            @Language("SQL")
+            val createCustomersTableQuery = """
             CREATE TABLE Customers (
                 id INTEGER AUTO_INCREMENT PRIMARY KEY,
                 name TEXT,
@@ -64,11 +65,13 @@ class SqliteTest {
                 profilePicture BLOB
             )
             """
+
+            connection.createStatement().execute(
+                createCustomersTableQuery
             )
 
-            // Create the second table with various column types
-            connection.createStatement().execute(
-                """
+            @Language("SQL")
+            val createOrderTableQuery = """
             CREATE TABLE Orders (
                 id INTEGER AUTO_INCREMENT PRIMARY KEY,
                 customerName TEXT,
@@ -77,6 +80,9 @@ class SqliteTest {
                 orderDetails BLOB
             )
             """
+
+            connection.createStatement().execute(
+                createOrderTableQuery
             )
 
             val profilePicture = "SampleProfilePictureData".toByteArray()
@@ -133,37 +139,35 @@ class SqliteTest {
     @Test
     fun `read from tables`() {
         val df = DataFrame.readSqlTable(connection, "Customers").cast<CustomerSQLite>()
-        df.print()
-        assertEquals(2, df.rowsCount())
+        df.rowsCount() shouldBe 2
 
         val df2 = DataFrame.readSqlTable(connection, "Orders").cast<CustomerSQLite>()
-        df2.print()
-        assertEquals(2, df2.rowsCount())
+        df2.rowsCount() shouldBe 2
     }
 
     @Test
     fun `read from sql query`() {
+        @Language("SQL")
         val sqlQuery = """
-    SELECT
-        c.id AS customerId,
-        c.name AS customerName,
-        c.age AS customerAge,
-        c.salary AS customerSalary,
-        c.profilePicture AS customerProfilePicture,
-        o.id AS orderId,
-        o.orderDate AS orderDate,
-        o.totalAmount AS totalAmount,
-        o.orderDetails AS orderDetails
-    FROM Customers c
-    INNER JOIN Orders o ON c.name = o.customerName
-"""
+            SELECT
+                c.id AS customerId,
+                c.name AS customerName,
+                c.age AS customerAge,
+                c.salary AS customerSalary,
+                c.profilePicture AS customerProfilePicture,
+                o.id AS orderId,
+                o.orderDate AS orderDate,
+                o.totalAmount AS totalAmount,
+                o.orderDetails AS orderDetails
+            FROM Customers c
+            INNER JOIN Orders o ON c.name = o.customerName
+            """
+
         val df = DataFrame.readSqlQuery(connection, sqlQuery).cast<CustomerOrderSQLite>()
-        df.print()
-        assertEquals(2, df.rowsCount())
+        df.rowsCount() shouldBe 2
 
         val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
-        schema.print()
-        assertEquals(9, schema.columns.entries.size)
+        schema.columns.entries.size shouldBe 9
     }
 
     @Test
@@ -172,14 +176,14 @@ class SqliteTest {
 
         val customerDf = dataframes[0].cast<CustomerSQLite>()
 
-        assertEquals(2, customerDf.rowsCount())
-        assertEquals(1, customerDf.filter { it[CustomerSQLite::age] > 30 }.rowsCount())
-        assertEquals("John Doe", customerDf[0][1])
+        customerDf.rowsCount() shouldBe 2
+        customerDf.filter { it[CustomerSQLite::age] > 30 }.rowsCount() shouldBe 1
+        customerDf[0][1] shouldBe "John Doe"
 
         val orderDf = dataframes[1].cast<OrderSQLite>()
 
-        assertEquals(2, orderDf.rowsCount())
-        assertEquals(1, orderDf.filter { it[OrderSQLite::totalAmount] > 200 }.rowsCount())
-        assertEquals("John Doe", orderDf[0][1])
+        orderDf.rowsCount() shouldBe 2
+        orderDf.filter { it[OrderSQLite::totalAmount] > 200 }.rowsCount() shouldBe 1
+        orderDf[0][1] shouldBe "John Doe"
     }
 }
