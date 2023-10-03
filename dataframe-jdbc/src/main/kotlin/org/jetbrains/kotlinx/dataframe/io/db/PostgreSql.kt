@@ -3,6 +3,10 @@ package org.jetbrains.kotlinx.dataframe.io.db
 import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
+import java.util.Locale
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import kotlin.reflect.typeOf
 
 /**
@@ -62,7 +66,7 @@ public object PostgreSql : DbType("postgresql") {
             "float8", "double precision" -> ColumnSchema.Value(typeOf<Double>())
             "int4", "integer" -> ColumnSchema.Value(typeOf<Int>())
             "interval" -> ColumnSchema.Value(typeOf<String>())
-            "json", "jsonb" -> ColumnSchema.Value(typeOf<String>())
+            "json", "jsonb" -> ColumnSchema.Value(typeOf<ColumnGroup<DataRow<String>>>())
             "line" -> ColumnSchema.Value(typeOf<String>())
             "lseg" -> ColumnSchema.Value(typeOf<String>())
             "macaddr" -> ColumnSchema.Value(typeOf<String>())
@@ -83,5 +87,10 @@ public object PostgreSql : DbType("postgresql") {
             "xml" -> ColumnSchema.Value(typeOf<String>())
             else -> throw IllegalArgumentException("Unsupported PostgreSQL type: ${tableColumnMetadata.sqlTypeName}")
         }
+    }
+
+    override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
+        return tableMetadata.name.lowercase(Locale.getDefault()).contains("pg_")
+            || tableMetadata.schemaName?.lowercase(Locale.getDefault())?.contains("pg_catalog.") ?: false
     }
 }

@@ -6,16 +6,12 @@ import java.sql.DatabaseMetaData
 import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.ResultSetMetaData
-import java.util.Locale
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
 import org.jetbrains.kotlinx.dataframe.io.db.H2
-import org.jetbrains.kotlinx.dataframe.io.db.MariaDb
-import org.jetbrains.kotlinx.dataframe.io.db.MySql
-import org.jetbrains.kotlinx.dataframe.io.db.PostgreSql
 import org.jetbrains.kotlinx.dataframe.io.db.Sqlite
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromURL
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
@@ -97,6 +93,8 @@ public fun DataFrame.Companion.readSqlTable(dbConfig: DatabaseConfiguration, tab
  * @param [connection] the database connection to read tables from.
  * @param [tableName] the name of the table to read data from.
  * @return the DataFrame containing the data from the SQL table.
+ *
+ * @see DriverManager.getConnection
  */
 public fun DataFrame.Companion.readSqlTable(connection: Connection, tableName: String): AnyFrame {
     return readSqlTable(connection, tableName, DEFAULT_LIMIT)
@@ -109,6 +107,8 @@ public fun DataFrame.Companion.readSqlTable(connection: Connection, tableName: S
  * @param [tableName] the name of the table to read data from.
  * @param [limit] the maximum number of rows to retrieve from the table.
  * @return the DataFrame containing the data from the SQL table.
+ *
+ * @see DriverManager.getConnection
  */
 public fun DataFrame.Companion.readSqlTable(connection: Connection, tableName: String, limit: Int): AnyFrame {
     var preparedQuery = "SELECT * FROM $tableName"
@@ -163,6 +163,8 @@ public fun DataFrame.Companion.readSqlQuery(dbConfig: DatabaseConfiguration, sql
  * @param [connection] the database connection to execute the SQL query.
  * @param [sqlQuery] the SQL query to execute.
  * @return the DataFrame containing the result of the SQL query.
+ *
+ * @see DriverManager.getConnection
  */
 public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: String): AnyFrame {
     return readSqlQuery(connection, sqlQuery, DEFAULT_LIMIT)
@@ -175,6 +177,8 @@ public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: St
  * @param [sqlQuery] the SQL query to execute.
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
  * @return the DataFrame containing the result of the SQL query.
+ *
+ * @see DriverManager.getConnection
  */
 public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: String, limit: Int): AnyFrame {
     val url = connection.metaData.url
@@ -198,7 +202,7 @@ public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: St
 }
 
 /**
- * Reads the data from a ResultSet and converts it into a DataFrame.
+ * Reads the data from a [ResultSet] and converts it into a DataFrame.
  *
  * @param [resultSet] the ResultSet containing the data to read.
  * @param [dbType] the type of database that the ResultSet belongs to.
@@ -255,8 +259,8 @@ public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, connection: C
  * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
  * @return a list of [AnyFrame] objects representing the non-system tables from the database.
  */
-public fun DataFrame.Companion.readAllTables(dbConfig: DatabaseConfiguration): List<AnyFrame> {
-    return readAllTables(dbConfig, DEFAULT_LIMIT)
+public fun DataFrame.Companion.readAllSqlTables(dbConfig: DatabaseConfiguration): List<AnyFrame> {
+    return readAllSqlTables(dbConfig, DEFAULT_LIMIT)
 }
 
 /**
@@ -266,9 +270,9 @@ public fun DataFrame.Companion.readAllTables(dbConfig: DatabaseConfiguration): L
  * @param [limit] the maximum number of rows to read from each table.
  * @return a list of [AnyFrame] objects representing the non-system tables from the database.
  */
-public fun DataFrame.Companion.readAllTables(dbConfig: DatabaseConfiguration, limit: Int): List<AnyFrame> {
+public fun DataFrame.Companion.readAllSqlTables(dbConfig: DatabaseConfiguration, limit: Int): List<AnyFrame> {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return readAllTables(connection, limit)
+        return readAllSqlTables(connection, limit)
     }
 }
 
@@ -277,9 +281,11 @@ public fun DataFrame.Companion.readAllTables(dbConfig: DatabaseConfiguration, li
  *
  * @param [connection] the database connection to read tables from.
  * @return a list of [AnyFrame] objects representing the non-system tables from the database.
+ *
+ * @see DriverManager.getConnection
  */
-public fun DataFrame.Companion.readAllTables(connection: Connection): List<AnyFrame> {
-    return readAllTables(connection, DEFAULT_LIMIT)
+public fun DataFrame.Companion.readAllSqlTables(connection: Connection): List<AnyFrame> {
+    return readAllSqlTables(connection, DEFAULT_LIMIT)
 }
 
 /**
@@ -288,21 +294,22 @@ public fun DataFrame.Companion.readAllTables(connection: Connection): List<AnyFr
  * @param [connection] the database connection to read tables from.
  * @param [limit] the maximum number of rows to read from each table.
  * @return a list of [AnyFrame] objects representing the non-system tables from the database.
+ *
+ * @see DriverManager.getConnection
  */
-public fun DataFrame.Companion.readAllTables(connection: Connection, limit: Int): List<AnyFrame> {
+public fun DataFrame.Companion.readAllSqlTables(connection: Connection, limit: Int): List<AnyFrame> {
     val metaData = connection.metaData
     val url = connection.metaData.url
     val dbType = extractDBTypeFromURL(url)
 
-    val tableTypes = arrayOf("TABLE")
-    // exclude system and other tables without data, but looks like it supported badly for many databases
-    val tables = metaData.getTables(null, null, null, tableTypes)
+    // exclude a system and other tables without data, but it looks like it supported badly for many databases
+    val tables = metaData.getTables(null, null, null, arrayOf("TABLE"))
 
     val dataFrames = mutableListOf<AnyFrame>()
 
     while (tables.next()) {
         val table = buildTableMetadata(dbType, tables)
-        if (!isSystemTableName(table, dbType)) {
+        if (!dbType.isSystemTable(table)) {
             // we filter her second time because of specific logic with SQLite and possible issues with future databases
             logger.debug { "Reading table: ${table.name}" }
             val dataFrame = readSqlTable(connection, table.name, limit)
@@ -315,57 +322,13 @@ public fun DataFrame.Companion.readAllTables(connection: Connection, limit: Int)
 }
 
 /**
- * Checks if the given table name is a system table for the specified database type.
- *
- * @param [table] the table object representing the table from the database.
- * @param [dbType] the database type to check against.
- * @return True if the table is a system table for the specified database type, false otherwise.
- */
-private fun isSystemTableName(table: TableMetadata, dbType: DbType): Boolean {
-    return when(dbType) {
-        H2 -> isH2SystemTable(table)
-        MariaDb -> isMariaDbSystemTable(table)
-        MySql -> isMySqlSystemTable(table)
-        PostgreSql -> isPostgreSqlSystemTable(table)
-        Sqlite -> isSqliteSystemTable(table)
-    }
-}
-
-private fun isMariaDbSystemTable(table: TableMetadata) = isMySqlSystemTable(table)
-
-private fun isPostgreSqlSystemTable(table: TableMetadata) =
-    table.name.lowercase(Locale.getDefault()).contains("pg_")
-        || table.schemaName?.lowercase(Locale.getDefault())?.contains("pg_catalog.") ?: false
-
-private fun isSqliteSystemTable(tableMetadata: TableMetadata) = tableMetadata.name.startsWith("sqlite_")
-
-private fun isMySqlSystemTable(table: TableMetadata): Boolean {
-    val locale = Locale.getDefault()
-
-    fun String?.containsWithLowercase(substr: String) = this?.lowercase(locale)?.contains(substr) == true
-
-    val schemaName = table.schemaName
-    val name = table.name
-
-    return schemaName.containsWithLowercase("information_schema")
-        || table.catalogue.containsWithLowercase("performance_schema")
-        || table.catalogue.containsWithLowercase("mysql")
-        || schemaName?.contains("mysql.") == true
-        || name.contains("mysql.")
-        || name.contains("sys_config")
-}
-
-private fun isH2SystemTable(table: TableMetadata) =
-    table.name.lowercase(Locale.getDefault()).contains("sys_")
-        || table.schemaName?.lowercase(Locale.getDefault())?.contains("information_schema") ?: false
-
-/**
  * Builds the table metadata based on the database type and the ResultSet from the query.
  *
  * @param [dbType] the type of the database being used.
  * @param [tableResultSet] the ResultSet containing the table's meta-information.
  * @return the TableMetadata object representing the table metadata.
  */
+// TODO: move to DB abstract method
 private fun buildTableMetadata(dbType: DbType, tableResultSet: ResultSet): TableMetadata =
     when (dbType) {
         is H2, Sqlite -> TableMetadata(
@@ -399,6 +362,8 @@ public fun DataFrame.Companion.getSchemaForSqlTable(dbConfig: DatabaseConfigurat
  * @param [connection] the database connection.
  * @param [tableName] the name of the SQL table for which to retrieve the schema.
  * @return the schema of the SQL table as a [DataFrameSchema] object.
+ *
+ * @see DriverManager.getConnection
  */
 public fun DataFrame.Companion.getSchemaForSqlTable(
     connection: Connection,
@@ -435,6 +400,8 @@ public fun DataFrame.Companion.getSchemaForSqlQuery(dbConfig: DatabaseConfigurat
  * @param [connection] the database connection.
  * @param [sqlQuery] the SQL query to execute and retrieve the schema from.
  * @return the schema of the SQL query as a [DataFrameSchema] object.
+ *
+ * @see DriverManager.getConnection
  */
 public fun DataFrame.Companion.getSchemaForSqlQuery(connection: Connection, sqlQuery: String): DataFrameSchema {
     val url = connection.metaData.url
@@ -486,9 +453,9 @@ public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet, conne
  * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
  * @return a list of DataFrameSchema objects representing the schema of each non-system table.
  */
-public fun DataFrame.Companion.getSchemaForAllTables(dbConfig: DatabaseConfiguration): List<DataFrameSchema> {
+public fun DataFrame.Companion.getSchemaForAllSqlTables(dbConfig: DatabaseConfiguration): List<DataFrameSchema> {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return getSchemaForAllTables(connection)
+        return getSchemaForAllSqlTables(connection)
     }
 }
 
@@ -498,7 +465,7 @@ public fun DataFrame.Companion.getSchemaForAllTables(dbConfig: DatabaseConfigura
  * @param [connection] the database connection.
  * @return a list of DataFrameSchema objects representing the schema of each non-system table.
  */
-public fun DataFrame.Companion.getSchemaForAllTables(connection: Connection): List<DataFrameSchema> {
+public fun DataFrame.Companion.getSchemaForAllSqlTables(connection: Connection): List<DataFrameSchema> {
     val metaData = connection.metaData
     val url = connection.metaData.url
     val dbType = extractDBTypeFromURL(url)
@@ -511,7 +478,7 @@ public fun DataFrame.Companion.getSchemaForAllTables(connection: Connection): Li
 
     while (tables.next()) {
         val jdbcTable = buildTableMetadata(dbType, tables)
-        if (!isSystemTableName(jdbcTable, dbType)) {
+        if (!dbType.isSystemTable(jdbcTable)) {
             // we filter her second time because of specific logic with SQLite and possible issues with future databases
             val dataFrameSchema = getSchemaForSqlTable(connection, jdbcTable.name)
             dataFrameSchemas += dataFrameSchema

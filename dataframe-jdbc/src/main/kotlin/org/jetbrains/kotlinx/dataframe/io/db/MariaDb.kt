@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.io.db
 import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
+import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import kotlin.reflect.typeOf
 
 /**
@@ -12,9 +13,9 @@ import kotlin.reflect.typeOf
  * and to generate the corresponding column schema.
  */
 public object MariaDb : DbType("mariadb") {
-    override fun convertDataFromResultSet(rs: ResultSet, tableColumn: TableColumnMetadata): Any? {
-        val name = tableColumn.name
-        return when (tableColumn.sqlTypeName) {
+    override fun convertDataFromResultSet(rs: ResultSet, tableColumnMetadata: TableColumnMetadata): Any? {
+        val name = tableColumnMetadata.name
+        return when (tableColumnMetadata.sqlTypeName) {
             "BIT" -> rs.getBytes(name)
             "TINYINT" -> rs.getInt(name)
             "SMALLINT" -> rs.getInt(name)
@@ -43,7 +44,7 @@ public object MariaDb : DbType("mariadb") {
             "LONGTEXT" -> rs.getString(name)
             "ENUM" -> rs.getString(name)
             "SET" -> rs.getString(name)
-            else -> throw IllegalArgumentException("Unsupported MariaDB type: ${tableColumn.sqlTypeName}")
+            else -> throw IllegalArgumentException("Unsupported MariaDB type: ${tableColumnMetadata.sqlTypeName}")
         }
     }
 
@@ -79,5 +80,9 @@ public object MariaDb : DbType("mariadb") {
             "SET" -> ColumnSchema.Value(typeOf<String>())
             else -> throw IllegalArgumentException("Unsupported MariaDB type: ${tableColumnMetadata.sqlTypeName}")
         }
+    }
+
+    override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
+        return MySql.isSystemTable(tableMetadata)
     }
 }

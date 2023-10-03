@@ -10,7 +10,6 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.io.db.H2
 import org.junit.AfterClass
-import org.junit.Assert.assertEquals
 import org.junit.BeforeClass
 import org.junit.Test
 import java.sql.Connection
@@ -113,6 +112,7 @@ class JdbcTest {
             connection.createStatement().execute("INSERT INTO Customer (id, name, age) VALUES (1, 'John', 40)")
             connection.createStatement().execute("INSERT INTO Customer (id, name, age) VALUES (2, 'Alice', 25)")
             connection.createStatement().execute("INSERT INTO Customer (id, name, age) VALUES (3, 'Bob', 47)")
+            connection.createStatement().execute("INSERT INTO Customer (id, name, age) VALUES (4, NULL, NULL)")
 
             // add data to the Sale table
             connection.createStatement().execute("INSERT INTO Sale (id, customerId, amount) VALUES (1, 1, 100.50)")
@@ -213,6 +213,7 @@ class JdbcTest {
         val df = DataFrame.readSqlTable(connection, "TestTable").cast<TestTableData>()
         df.rowsCount() shouldBe 3
         df.filter { it[TestTableData::integerCol] > 1000}.rowsCount() shouldBe 2
+        //TODO: add test for JSON column
     }
 
     @Test
@@ -220,7 +221,7 @@ class JdbcTest {
         val tableName = "Customer"
         val df = DataFrame.readSqlTable(connection, tableName).cast<Customer>()
 
-        df.rowsCount() shouldBe 3
+        df.rowsCount() shouldBe 4
         df.filter { it[Customer::age] > 30 }.rowsCount() shouldBe 2
         df[0][1] shouldBe "John"
 
@@ -237,7 +238,7 @@ class JdbcTest {
         val dbConfig = DatabaseConfiguration(url = URL)
         val df2 = DataFrame.readSqlTable(dbConfig, tableName).cast<Customer>()
 
-        df2.rowsCount() shouldBe 3
+        df2.rowsCount() shouldBe 4
         df2.filter { it[Customer::age] > 30 }.rowsCount() shouldBe 2
         df2[0][1] shouldBe "John"
 
@@ -261,7 +262,7 @@ class JdbcTest {
             st.executeQuery(selectStatement).use { rs ->
                 val df = DataFrame.readResultSet(rs, H2).cast<Customer>()
 
-                df.rowsCount() shouldBe 3
+                df.rowsCount() shouldBe 4
                 df.filter { it[Customer::age] > 30 }.rowsCount() shouldBe 2
                 df[0][1] shouldBe "John"
 
@@ -283,7 +284,7 @@ class JdbcTest {
 
                 val df2 = DataFrame.readResultSet(rs, connection).cast<Customer>()
 
-                df2.rowsCount() shouldBe 3
+                df2.rowsCount() shouldBe 4
                 df2.filter { it[Customer::age] > 30 }.rowsCount() shouldBe 2
                 df2[0][1] shouldBe "John"
 
@@ -358,11 +359,11 @@ class JdbcTest {
 
     @Test
     fun `read from all tables`() {
-        val dataframes = DataFrame.readAllTables(connection)
+        val dataframes = DataFrame.readAllSqlTables(connection)
 
         val customerDf = dataframes[0].cast<Customer>()
 
-        customerDf.rowsCount() shouldBe 3
+        customerDf.rowsCount() shouldBe 4
         customerDf.filter { it[Customer::age] > 30 }.rowsCount() shouldBe 2
         customerDf[0][1] shouldBe "John"
 
@@ -372,7 +373,7 @@ class JdbcTest {
         saleDf.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 3
         saleDf[0][2] shouldBe 100.5f
 
-        val dataframes1 = DataFrame.readAllTables(connection, 1)
+        val dataframes1 = DataFrame.readAllSqlTables(connection, 1)
 
         val customerDf1 = dataframes1[0].cast<Customer>()
 
@@ -386,7 +387,7 @@ class JdbcTest {
         saleDf1.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 1
         saleDf1[0][2] shouldBe 100.5f
 
-        val dataSchemas = DataFrame.getSchemaForAllTables(connection)
+        val dataSchemas = DataFrame.getSchemaForAllSqlTables(connection)
 
         val customerDataSchema = dataSchemas[0]
         customerDataSchema.columns.size shouldBe 3
@@ -397,11 +398,11 @@ class JdbcTest {
         saleDataSchema.columns["amount"]!!.type shouldBe typeOf<Float>()
 
         val dbConfig = DatabaseConfiguration(url = URL)
-        val dataframes2 = DataFrame.readAllTables(dbConfig)
+        val dataframes2 = DataFrame.readAllSqlTables(dbConfig)
 
         val customerDf2 = dataframes2[0].cast<Customer>()
 
-        customerDf2.rowsCount() shouldBe 3
+        customerDf2.rowsCount() shouldBe 4
         customerDf2.filter { it[Customer::age] > 30 }.rowsCount() shouldBe 2
         customerDf2[0][1] shouldBe "John"
 
@@ -411,7 +412,7 @@ class JdbcTest {
         saleDf2.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 3
         saleDf2[0][2] shouldBe 100.5f
 
-        val dataframes3 = DataFrame.readAllTables(dbConfig, 1)
+        val dataframes3 = DataFrame.readAllSqlTables(dbConfig, 1)
 
         val customerDf3 = dataframes3[0].cast<Customer>()
 
@@ -425,7 +426,7 @@ class JdbcTest {
         saleDf3.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 1
         saleDf3[0][2] shouldBe 100.5f
 
-        val dataSchemas1 = DataFrame.getSchemaForAllTables(dbConfig)
+        val dataSchemas1 = DataFrame.getSchemaForAllSqlTables(dbConfig)
 
         val customerDataSchema1 = dataSchemas1[0]
         customerDataSchema1.columns.size shouldBe 3

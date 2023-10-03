@@ -3,6 +3,10 @@ package org.jetbrains.kotlinx.dataframe.io.db
 import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
+import java.util.Locale
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import kotlin.reflect.typeOf
 
 /**
@@ -14,9 +18,9 @@ import kotlin.reflect.typeOf
  * NOTE: All date and timestamp related types are converted to String to avoid java.sql.* types.
  */
 public object H2 : DbType("h2") {
-    override fun convertDataFromResultSet(rs: ResultSet, tableColumn: TableColumnMetadata): Any? {
-        val name = tableColumn.name
-        return when (tableColumn.sqlTypeName) {
+    override fun convertDataFromResultSet(rs: ResultSet, tableColumnMetadata: TableColumnMetadata): Any? {
+        val name = tableColumnMetadata.name
+        return when (tableColumnMetadata.sqlTypeName) {
             "CHARACTER", "CHAR" -> rs.getString(name)
             "CHARACTER VARYING", "CHAR VARYING",  "VARCHAR" -> rs.getString(name)
             "CHARACTER LARGE OBJECT", "CHAR LARGE OBJECT", "CLOB" -> rs.getString(name)
@@ -44,7 +48,7 @@ public object H2 : DbType("h2") {
             "ENUM" -> rs.getString(name)
             "JSON" -> rs.getString(name)
             "UUID" -> rs.getString(name)
-            else -> throw IllegalArgumentException("Unsupported H2 type: ${tableColumn.sqlTypeName}")
+            else -> throw IllegalArgumentException("Unsupported H2 type: ${tableColumnMetadata.sqlTypeName}")
         }
     }
 
@@ -75,9 +79,14 @@ public object H2 : DbType("h2") {
             "INTERVAL" -> ColumnSchema.Value(typeOf<String>())
             "JAVA_OBJECT" -> ColumnSchema.Value(typeOf<Any>())
             "ENUM" -> ColumnSchema.Value(typeOf<String>())
-            "JSON" -> ColumnSchema.Value(typeOf<String>())
+            "JSON" -> ColumnSchema.Value(typeOf<ColumnGroup<DataRow<String>>>())
             "UUID" -> ColumnSchema.Value(typeOf<String>())
             else -> throw IllegalArgumentException("Unsupported H2 type: ${tableColumnMetadata.sqlTypeName}")
         }
+    }
+
+    override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
+        return tableMetadata.name.lowercase(Locale.getDefault()).contains("sys_")
+            || tableMetadata.schemaName?.lowercase(Locale.getDefault())?.contains("information_schema") ?: false
     }
 }

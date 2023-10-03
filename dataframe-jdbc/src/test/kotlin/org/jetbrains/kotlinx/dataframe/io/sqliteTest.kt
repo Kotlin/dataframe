@@ -172,7 +172,7 @@ class SqliteTest {
 
     @Test
     fun `read from all tables`() {
-        val dataframes = DataFrame.readAllTables(connection)
+        val dataframes = DataFrame.readAllSqlTables(connection)
 
         val customerDf = dataframes[0].cast<CustomerSQLite>()
 

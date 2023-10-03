@@ -291,6 +291,8 @@ class MySqlTest {
 
         val df2 = DataFrame.readSqlTable(connection, "table2").cast<Table1MariaDb>()
         df2.rowsCount() shouldBe 3
+
+        //TODO: add test for JSON column
     }
 
     @Test
@@ -311,7 +313,7 @@ class MySqlTest {
 
     @Test
     fun `read from all tables`() {
-        val dataframes = DataFrame.readAllTables(connection)
+        val dataframes = DataFrame.readAllSqlTables(connection)
 
         val table1Df = dataframes[0].cast<Table1MySql>()
 

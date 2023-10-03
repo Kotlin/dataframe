@@ -3,6 +3,10 @@ package org.jetbrains.kotlinx.dataframe.io.db
 import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
+import java.util.Locale
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import kotlin.reflect.typeOf
 
 /**
@@ -12,9 +16,9 @@ import kotlin.reflect.typeOf
  * and to generate the corresponding column schema.
  */
 public object MySql : DbType("mysql") {
-    override fun convertDataFromResultSet(rs: ResultSet, tableColumn: TableColumnMetadata): Any? {
-        val name = tableColumn.name
-        return when (tableColumn.sqlTypeName) {
+    override fun convertDataFromResultSet(rs: ResultSet, tableColumnMetadata: TableColumnMetadata): Any? {
+        val name = tableColumnMetadata.name
+        return when (tableColumnMetadata.sqlTypeName) {
             "BIT" -> rs.getBytes(name)
             "TINYINT" -> rs.getInt(name)
             "SMALLINT" -> rs.getInt(name)
@@ -46,7 +50,7 @@ public object MySql : DbType("mysql") {
             // special mysql types
             "JSON" -> rs.getString(name)
             "GEOMETRY" -> rs.getBytes(name)
-            else -> throw IllegalArgumentException("Unsupported MySQL type: ${tableColumn.sqlTypeName}")
+            else -> throw IllegalArgumentException("Unsupported MySQL type: ${tableColumnMetadata.sqlTypeName}")
         }
     }
 
@@ -81,9 +85,25 @@ public object MySql : DbType("mysql") {
             "ENUM" -> ColumnSchema.Value(typeOf<String>())
             "SET" -> ColumnSchema.Value(typeOf<String>())
             // special mysql types
-            "JSON" -> ColumnSchema.Value(typeOf<String>())
+            "JSON" -> ColumnSchema.Value(typeOf<ColumnGroup<DataRow<String>>>())
             "GEOMETRY" -> ColumnSchema.Value(typeOf<ByteArray>())
             else -> throw IllegalArgumentException("Unsupported MySQL type: ${tableColumnMetadata.sqlTypeName}")
         }
+    }
+
+    override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
+        val locale = Locale.getDefault()
+
+        fun String?.containsWithLowercase(substr: String) = this?.lowercase(locale)?.contains(substr) == true
+
+        val schemaName = tableMetadata.schemaName
+        val name = tableMetadata.name
+
+        return schemaName.containsWithLowercase("information_schema")
+            || tableMetadata.catalogue.containsWithLowercase("performance_schema")
+            || tableMetadata.catalogue.containsWithLowercase("mysql")
+            || schemaName?.contains("mysql.") == true
+            || name.contains("mysql.")
+            || name.contains("sys_config")
     }
 }

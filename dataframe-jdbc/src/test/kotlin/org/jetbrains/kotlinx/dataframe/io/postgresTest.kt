@@ -265,7 +265,7 @@ class PostgresTest {
 
     @Test
     fun `read from all tables`() {
-        val dataframes = DataFrame.readAllTables(connection)
+        val dataframes = DataFrame.readAllSqlTables(connection)
 
         val table1Df = dataframes[0].cast<Table1>()
 
@@ -278,5 +278,7 @@ class PostgresTest {
         table2Df.rowsCount() shouldBe 3
         table2Df.filter { it[Table2::pathcol] == "((1,2),(3,1))" }.rowsCount() shouldBe 1
         table2Df[0][11] shouldBe 1001
+
+        //TODO: add test for JSON column
     }
 }

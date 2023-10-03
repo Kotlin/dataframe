@@ -250,7 +250,7 @@ connection.close()
 These functions read all data from all tables in the connected database. 
 Variants with a limit parameter restrict how many rows will be read from each table.
 
-**readAllTables(connection: Connection): List<AnyFrame>**
+**readAllSqlTables(connection: Connection): List<AnyFrame>**
 
 Retrieves data from all the non-system tables in the SQL database and returns them as a list of AnyFrame objects.
 
@@ -262,10 +262,10 @@ import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
 
 val dbConfig = DatabaseConfiguration("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWORD")
 
-val dataframes = DataFrame.readAllTables(dbConfig)
+val dataframes = DataFrame.readAllSqlTables(dbConfig)
 ```
 
-**readAllTables(connection: Connection, limit: Int): List<AnyFrame>**
+**readAllSqlTables(connection: Connection, limit: Int): List<AnyFrame>**
 
 A variant of the previous function,
 but with an added `limit: Int` parameter that allows setting the maximum number of records to be read from each table.
@@ -277,10 +277,10 @@ import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
 
 val dbConfig = DatabaseConfiguration("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWORD")
 
-val dataframes = DataFrame.readAllTables(dbConfig, 100)
+val dataframes = DataFrame.readAllSqlTables(dbConfig, 100)
 ```
 
-**readAllTables(connection: Connection): AnyFrame**
+**readAllSqlTables(connection: Connection): List<AnyFrame>**
 
 Another variant, where instead of `dbConfig: DatabaseConfiguration` we use a JDBC connection: `Connection` object.
 
@@ -290,12 +290,12 @@ import java.sql.DriverManager
 
 val connection = DriverManager.getConnection("URL_TO_CONNECT_DATABASE")
 
-val dataframes = DataFrame.readAllTables(connection)
+val dataframes = DataFrame.readAllSqlTables(connection)
 
 connection.close()
 ```
 
-**readAllTables(connection: Connection, limit: Int): List<AnyFrame>**
+**readAllSqlTables(connection: Connection, limit: Int): List<AnyFrame>**
 
 A variant of the previous function,
 but with an added `limit: Int` parameter that allows setting the maximum number of records to be read from each table.
@@ -308,7 +308,7 @@ import java.sql.DriverManager
 
 val connection = DriverManager.getConnection("URL_TO_CONNECT_DATABASE")
 
-val dataframes = DataFrame.readAllTables(connection, 100)
+val dataframes = DataFrame.readAllSqlTables(connection, 100)
 
 connection.close()
 ```
@@ -428,7 +428,7 @@ connection.close()
 These functions return a list of all [`DataFrameSchema`](schema.md) from all the non-system tables in the SQL database. 
 They can be called with either a database configuration or a connection.
 
-**getSchemaForAllTables(dbConfig: DatabaseConfiguration): List<DataFrameSchema>**
+**getSchemaForAllSqlTables(dbConfig: DatabaseConfiguration): List<DataFrameSchema>**
 
 This function retrieves the schema of all tables from an SQL database 
 and returns them as a list of [`DataFrameSchema`](schema.md).
@@ -441,10 +441,10 @@ import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
 
 val dbConfig = DatabaseConfiguration("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWORD")
 
-val schemas = DataFrame.getSchemaForAllTables(dbConfig)
+val schemas = DataFrame.getSchemaForAllSqlTables(dbConfig)
 ```
 
-**getSchemaForAllTables(connection: Connection): List<DataFrameSchema**
+**getSchemaForAllSqlTables(connection: Connection): List<DataFrameSchema**
 
 This function retrieves the schema of all tables using a JDBC connection: `Connection` object 
 and returns them as a list of [`DataFrameSchema`](schema.md).
@@ -455,7 +455,7 @@ import java.sql.DriverManager
 
 val connection = DriverManager.getConnection("URL_TO_CONNECT_DATABASE")
 
-val schemas = DataFrame.getSchemaForAllTables(connection)
+val schemas = DataFrame.getSchemaForAllSqlTables(connection)
 
 connection.close()
 ```
