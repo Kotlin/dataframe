@@ -119,6 +119,7 @@ val age by columnOf(15, 20, 22)
 listOf(name, age).toDataFrame()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFromIterable.html"/>
 <!---END-->
 
 `DataFrame` from `Map<String, List<*>>`:
@@ -132,6 +133,7 @@ val map = mapOf("name" to listOf("Alice", "Bob", "Charlie"), "age" to listOf(15,
 map.toDataFrame()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFromMap.html"/>
 <!---END-->
 
 Creates a [`DataFrame`](DataFrame.md) from an [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of [basic types](https://kotlinlang.org/docs/basic-types.html) (except arrays):
@@ -213,3 +215,28 @@ val df = students.toDataFrame {
 ```
 
 <!---END-->
+
+### DynamicDataFrameBuilder
+
+Previously mentioned dataframe constructors throw an exception when column names are duplicated. 
+When implementing a custom operation involving multiple dataframes, or computed columns or when parsing some third-party data,
+it might be desirable to disambiguate column names instead of throwing an exception. 
+
+<!---FUN duplicatedColumns-->
+
+```kotlin
+fun peek(vararg dataframes: AnyFrame): AnyFrame {
+    val builder = DynamicDataFrameBuilder()
+    for (df in dataframes) {
+        df.columns().firstOrNull()?.let { builder.add(it) }
+    }
+    return builder.toDataFrame()
+}
+
+val col by columnOf(1, 2, 3)
+peek(dataFrameOf(col), dataFrameOf(col))
+```
+
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.duplicatedColumns.html"/>
+<!---END-->
+

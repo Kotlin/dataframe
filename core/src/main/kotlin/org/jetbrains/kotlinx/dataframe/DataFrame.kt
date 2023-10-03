@@ -17,7 +17,9 @@ import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsImpl
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.impl.headPlusIterable
+import org.jetbrains.kotlinx.dataframe.impl.schema.createEmptyDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.schema.createEmptyDataFrameOf
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KType
 
 /**
@@ -33,7 +35,18 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
         public val Empty: AnyFrame = DataFrameImpl<Unit>(emptyList(), 0)
         public fun empty(nrow: Int = 0): AnyFrame = if (nrow == 0) Empty else DataFrameImpl<Unit>(emptyList(), nrow)
 
+        /**
+         * Creates a DataFrame with empty columns (rows = 0).
+         * Can be used as a "null object" in aggregation operations, operations that work on columns (select, reorder, ...)
+         *
+         */
         public inline fun <reified T> emptyOf(): DataFrame<T> = createEmptyDataFrameOf(T::class).cast()
+
+        /**
+         * Creates a DataFrame with empty columns (rows = 0).
+         * Can be used as a "null object" in aggregation operations, operations that work on columns (select, reorder, ...)
+         */
+        public fun empty(schema: DataFrameSchema): AnyFrame = schema.createEmptyDataFrame()
     }
 
     // region columns

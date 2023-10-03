@@ -30,7 +30,7 @@ Use `.inplace()` terminal operation in `split` configuration to spread split val
 <tab title="Properties">
 
 ```kotlin
-df.split { name.firstName }.by { it.chars().toList() }.inplace()
+df.split { name.firstName }.by { it.asIterable() }.inplace()
 ```
 
 </tab>
@@ -40,14 +40,14 @@ df.split { name.firstName }.by { it.chars().toList() }.inplace()
 val name by columnGroup()
 val firstName by name.column<String>()
 
-df.split { firstName }.by { it.chars().toList() }.inplace()
+df.split { firstName }.by { it.asIterable() }.inplace()
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-df.split { "name"["firstName"]<String>() }.by { it.chars().toList() }.inplace()
+df.split { "name"["firstName"]<String>() }.by { it.asIterable() }.inplace()
 ```
 
 </tab></tabs>
@@ -72,9 +72,7 @@ Default `columnNamesGenerator` generates column names `split1`, `split2`...
 <tab title="Properties">
 
 ```kotlin
-df.split { name }.by { it.values() }.into("nameParts")
-
-df.split { name.lastName }.by(" ").default("").inward { "word$it" }
+df.split { name.lastName }.by { it.asIterable() }.into("char1", "char2")
 ```
 
 </tab>
@@ -84,22 +82,53 @@ df.split { name.lastName }.by(" ").default("").inward { "word$it" }
 val name by columnGroup()
 val lastName by name.column<String>()
 
-df.split { name }.by { it.values() }.into("nameParts")
-
-df.split { lastName }.by(" ").default("").inward { "word$it" }
+df.split { lastName }.by { it.asIterable() }.into("char1", "char2")
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-df.split { name }.by { it.values() }.into("nameParts")
-
-df.split { "name"["lastName"] }.by(" ").default("").inward { "word$it" }
+df.split { "name"["lastName"]<String>() }.by { it.asIterable() }.into("char1", "char2")
 ```
 
 </tab></tabs>
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.split.html"/>
+<!---END-->
+
+<!---FUN split1-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.split { name.lastName }
+    .by { it.asIterable() }.default(' ')
+    .inward { "char$it" }
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val name by columnGroup()
+val lastName by name.column<String>()
+
+df.split { lastName }
+    .by { it.asIterable() }.default(' ')
+    .inward { "char$it" }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.split { "name"["lastName"]<String>() }
+    .by { it.asIterable() }.default(' ')
+    .inward { "char$it" }
+```
+
+</tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.split1.html"/>
 <!---END-->
 
 `String` columns can also be split into group matches of [`Regex`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/-regex/) pattern:
@@ -107,12 +136,25 @@ df.split { "name"["lastName"] }.by(" ").default("").inward { "word$it" }
 <!---FUN splitRegex-->
 
 ```kotlin
+val merged = df.merge { name.lastName and name.firstName }
+    .by { it[0] + " (" + it[1] + ")" }
+    .into("name")
+```
+
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitRegex.html"/>
+<!---END-->
+
+<!---FUN splitRegex1-->
+
+```kotlin
+val name by column<String>()
+
 merged.split { name }
     .match("""(.*) \((.*)\)""")
     .inward("firstName", "lastName")
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitRegex.html"/>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitRegex1.html"/>
 <!---END-->
 
 [`FrameColumn`](DataColumn.md#framecolumn) can be split into columns:
@@ -151,7 +193,7 @@ Use `.intoRows()` terminal operation in `split` configuration to spread split va
 <tab title="Properties">
 
 ```kotlin
-df.split { name.firstName }.by { it.chars().toList() }.intoRows()
+df.split { name.firstName }.by { it.asIterable() }.intoRows()
 
 df.split { name }.by { it.values() }.intoRows()
 ```
@@ -163,7 +205,7 @@ df.split { name }.by { it.values() }.intoRows()
 val name by columnGroup()
 val firstName by name.column<String>()
 
-df.split { firstName }.by { it.chars().toList() }.intoRows()
+df.split { firstName }.by { it.asIterable() }.intoRows()
 
 df.split { name }.by { it.values() }.intoRows()
 ```
@@ -172,7 +214,7 @@ df.split { name }.by { it.values() }.intoRows()
 <tab title="Strings">
 
 ```kotlin
-df.split { "name"["firstName"]<String>() }.by { it.chars().toList() }.intoRows()
+df.split { "name"["firstName"]<String>() }.by { it.asIterable() }.intoRows()
 
 df.split { colGroup("name") }.by { it.values() }.intoRows()
 ```
