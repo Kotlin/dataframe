@@ -107,6 +107,8 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * all [column groups][ColumnGroup] in [this\]. This is useful if you want to select all columns that are
      * "one level downwards".
      *
+     * See [Usage] for how to use [colsInGroups].
+     *
      * #### For example:
      *
      * To get only the columns inside all column groups in a [DataFrame], you can do:
@@ -150,6 +152,8 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
      * "one level downwards".
      *
+     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Usage] for how to use [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups].
+     *
      * #### For example:
      *
      * To get only the columns inside all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
@@ -191,6 +195,8 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups] is a function that returns (optionally filtered) columns contained directly inside
      * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
      * "one level downwards".
+     *
+     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Usage] for how to use [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups].
      *
      * #### For example:
      *
@@ -234,6 +240,8 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
      * "one level downwards".
      *
+     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Usage] for how to use [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups].
+     *
      * #### For example:
      *
      * To get only the columns inside all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
@@ -276,6 +284,8 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
      * "one level downwards".
      *
+     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Usage] for how to use [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups].
+     *
      * #### For example:
      *
      * To get only the columns inside all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
@@ -315,6 +325,8 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups] is a function that returns (optionally filtered) columns contained directly inside
      * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
      * "one level downwards".
+     *
+     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Usage] for how to use [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups].
      *
      * #### For example:
      *
@@ -357,6 +369,8 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups] is a function that returns (optionally filtered) columns contained directly inside
      * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
      * "one level downwards".
+     *
+     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Usage] for how to use [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups].
      *
      * #### For example:
      *

@@ -128,6 +128,9 @@ public interface UsageTemplateColumnsSelectionDsl {
         /** `colSelector: `[ColumnSelector][ColumnSelector] */
         public interface ColumnSelectorDef
 
+        /** `number: `[Int][Int] */
+        public interface NumberDef
+
         // endregion
 
         // region References to the definitions
@@ -158,6 +161,9 @@ public interface UsageTemplateColumnsSelectionDsl {
 
         /** [colSelector][ColumnSelectorDef] */
         public interface ColumnSelectorRef
+
+        /** [number][NumberDef] */
+        public interface NumberRef
 
         // endregion
     }

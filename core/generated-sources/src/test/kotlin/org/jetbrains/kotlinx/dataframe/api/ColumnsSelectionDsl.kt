@@ -1,22 +1,16 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.jetbrains.kotlinx.dataframe.samples.api.age
-import org.jetbrains.kotlinx.dataframe.samples.api.city
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
-import org.jetbrains.kotlinx.dataframe.samples.api.isHappy
 import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.jetbrains.kotlinx.dataframe.samples.api.secondName
-import org.jetbrains.kotlinx.dataframe.samples.api.weight
 import org.junit.Test
 
 open class ColumnsSelectionDslTests : TestBase() {
@@ -222,18 +216,18 @@ open class ColumnsSelectionDslTests : TestBase() {
     fun `take and takeLast`() {
         listOf(
             df.select { name.firstName },
-            df.select { name.takeChildren(1) },
-            df.select { "name".takeChildren(1) },
-            df.select { Person::name.takeChildren(1) },
-            df.select { pathOf("name").takeChildren(1) },
+            df.select { name.takeCols(1) },
+            df.select { "name".takeCols(1) },
+            df.select { Person::name.takeCols(1) },
+            df.select { pathOf("name").takeCols(1) },
         ).shouldAllBeEqual()
 
         listOf(
             df.select { name.lastName },
-            df.select { name.takeLastChildren(1) },
-            df.select { "name".takeLastChildren(1) },
-            df.select { Person::name.takeLastChildren(1) },
-            df.select { pathOf("name").takeLastChildren(1) },
+            df.select { name.takeLastCols(1) },
+            df.select { "name".takeLastCols(1) },
+            df.select { Person::name.takeLastCols(1) },
+            df.select { pathOf("name").takeLastCols(1) },
         ).shouldAllBeEqual()
     }
 
@@ -260,18 +254,18 @@ open class ColumnsSelectionDslTests : TestBase() {
     fun `takeWhile and takeLastWhile`() {
         listOf(
             df.select { name.firstName },
-            df.select { name.takeChildrenWhile { it.name == "firstName" } },
-            df.select { "name".takeChildrenWhile { it.name == "firstName" } },
-            df.select { Person::name.takeChildrenWhile { it.name == "firstName" } },
-            df.select { pathOf("name").takeChildrenWhile { it.name == "firstName" } },
+            df.select { name.takeColsWhile { it.name == "firstName" } },
+            df.select { "name".takeColsWhile { it.name == "firstName" } },
+            df.select { Person::name.takeColsWhile { it.name == "firstName" } },
+            df.select { pathOf("name").takeColsWhile { it.name == "firstName" } },
         ).shouldAllBeEqual()
 
         listOf(
             df.select { name.lastName },
-            df.select { name.takeLastChildrenWhile { it.name == "lastName" } },
-            df.select { "name".takeLastChildrenWhile { it.name == "lastName" } },
-            df.select { Person::name.takeLastChildrenWhile { it.name == "lastName" } },
-            df.select { pathOf("name").takeLastChildrenWhile { it.name == "lastName" } },
+            df.select { name.takeLastColsWhile { it.name == "lastName" } },
+            df.select { "name".takeLastColsWhile { it.name == "lastName" } },
+            df.select { Person::name.takeLastColsWhile { it.name == "lastName" } },
+            df.select { pathOf("name").takeLastColsWhile { it.name == "lastName" } },
         ).shouldAllBeEqual()
     }
 

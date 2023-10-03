@@ -19,13 +19,13 @@ import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs.
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs.TitleArg
 
 /**
- * ## {@getArg [TitleArg]} (Children) While
+ * ## {@getArg [TitleArg]} (Cols) While
  * This function {@getArg [NounArg]}s the {@getArg [FirstOrLastArg]} columns of a [ColumnGroup] or
  * [ColumnSet] adhering to the given [predicate\].
  *
  * If called on a [SingleColumn] containing a [ColumnGroup],
- * [{@getArg [OperationArg]}While][SingleColumn.{@getArg [OperationArg]}While] will {@getArg [NounArg]} the
- * {@getArg [FirstOrLastArg]} children of that column group adhering to the given [predicate\].
+ * [{@getArg [OperationArg]}While][SingleColumn.{@getArg [OperationArg]}ColsWhile] will {@getArg [NounArg]} the
+ * {@getArg [FirstOrLastArg]} cols of that column group adhering to the given [predicate\].
  *
  * Else, if called on a [ColumnSet], [{@getArg [OperationArg]}While][ColumnSet.{@getArg [OperationArg]}While] will
  * {@getArg [NounArg]} the {@getArg [FirstOrLastArg]} columns of that column set adhering to the given [predicate\].
@@ -33,15 +33,17 @@ import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs.
  * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
  *
  * NOTE: To avoid ambiguity, `{@getArg [CommonTakeAndDropWhileDocs.OperationArg]}While` is called
- * `{@getArg [CommonTakeAndDropWhileDocs.OperationArg]}ChildrenWhile` when called on a [String] or [ColumnPath] resembling
+ * `{@getArg [CommonTakeAndDropWhileDocs.OperationArg]}ColsWhile` when called on a [String] or [ColumnPath] resembling
  * a [ColumnGroup].
+ *
+ * See [Usage\] for how to use these functions.
  *
  * #### Examples:
  * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[{@getArg [OperationArg]}While][ColumnSet.{@getArg [OperationArg]}While]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` } }`
  *
- * `df.`[select][DataFrame.select]` { myColumnGroup.`[{@getArg [OperationArg]}While][SingleColumn.{@getArg [OperationArg]}While]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+ * `df.`[select][DataFrame.select]` { myColumnGroup.`[{@getArg [OperationArg]}While][SingleColumn.{@getArg [OperationArg]}ColsWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
  *
- * `df.`[select][DataFrame.select]` { "myColumnGroup".`[{@getArg [OperationArg]}ChildrenWhile][String.{@getArg [OperationArg]}ChildrenWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][ColumnKind.Value]` } }`
+ * `df.`[select][DataFrame.select]` { "myColumnGroup".`[{@getArg [OperationArg]}ColsWhile][String.{@getArg [OperationArg]}ColsWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][ColumnKind.Value]` } }`
  *
  * #### Examples for this overload:
  *

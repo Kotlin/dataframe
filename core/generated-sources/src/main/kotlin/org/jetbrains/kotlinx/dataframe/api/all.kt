@@ -158,6 +158,7 @@ public interface AllColumnsSelectionDsl {
      *
      */
     public interface Usage {
+
         /** [**all**][ColumnsSelectionDsl.all] */
         public interface PlainDslName
 

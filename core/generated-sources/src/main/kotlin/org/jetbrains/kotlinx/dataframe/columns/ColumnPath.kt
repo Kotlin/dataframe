@@ -45,7 +45,7 @@ public data class ColumnPath(val path: List<String>) : List<String> by path, Col
     /**
      * Returns a shortened [ColumnPath] containing just the first [first] elements.
      *
-     * NOTE: If called from the [ColumnsSelectionDsl], you might be looking for [ColumnsSelectionDsl.takeChildren]
+     * NOTE: If called from the [ColumnsSelectionDsl], you might be looking for [ColumnsSelectionDsl.takeCols]
      * instead.
      */
     public fun take(first: Int): ColumnPath = ColumnPath(path.take(first))
