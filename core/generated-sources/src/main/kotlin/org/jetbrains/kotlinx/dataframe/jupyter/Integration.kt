@@ -177,7 +177,7 @@ internal class Integration(
 
         try {
             setMinimalKernelVersion(MIN_KERNEL_VERSION)
-        } catch (_: NoSuchMethodError) { // will be thrown with a version < 0.11.0.198
+        } catch (_: NoSuchMethodError) { // will be thrown when a version < 0.11.0.198
             throw IllegalStateException(
                 getKernelUpdateMessage(notebook.kernelVersion, MIN_KERNEL_VERSION, notebook.jupyterClientType)
             )
