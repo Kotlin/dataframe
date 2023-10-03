@@ -14,7 +14,7 @@ import kotlin.reflect.typeOf
 public object PostgreSql : DbType("postgresql") {
     override fun convertDataFromResultSet(rs: ResultSet, tableColumnMetadata: TableColumnMetadata): Any? {
         val name = tableColumnMetadata.name
-        return when (tableColumnMetadata.sqlType) {
+        return when (tableColumnMetadata.sqlTypeName) {
             "serial" -> rs.getInt(name)
             "int8", "bigint", "bigserial" -> rs.getLong(name)
             "bool" -> rs.getBoolean(name)
@@ -45,12 +45,12 @@ public object PostgreSql : DbType("postgresql") {
             "timestamptz", "timestamp with time zone" -> rs.getString(name)
             "uuid" -> rs.getString(name)
             "xml" -> rs.getString(name)
-            else -> throw IllegalArgumentException("Unsupported PostgreSQL type: ${tableColumnMetadata.sqlType}")
+            else -> throw IllegalArgumentException("Unsupported PostgreSQL type: ${tableColumnMetadata.sqlTypeName}")
         }
     }
 
     override fun toColumnSchema(tableColumnMetadata: TableColumnMetadata): ColumnSchema {
-        return when (tableColumnMetadata.sqlType) {
+        return when (tableColumnMetadata.sqlTypeName) {
             "serial" -> ColumnSchema.Value(typeOf<Int>())
             "int8", "bigint", "bigserial" -> ColumnSchema.Value(typeOf<Long>())
             "bool" -> ColumnSchema.Value(typeOf<Boolean>())
@@ -81,7 +81,7 @@ public object PostgreSql : DbType("postgresql") {
             "timestamptz", "timestamp with time zone" -> ColumnSchema.Value(typeOf<String>())
             "uuid" -> ColumnSchema.Value(typeOf<String>())
             "xml" -> ColumnSchema.Value(typeOf<String>())
-            else -> throw IllegalArgumentException("Unsupported PostgreSQL type: ${tableColumnMetadata.sqlType}")
+            else -> throw IllegalArgumentException("Unsupported PostgreSQL type: ${tableColumnMetadata.sqlTypeName}")
         }
     }
 }

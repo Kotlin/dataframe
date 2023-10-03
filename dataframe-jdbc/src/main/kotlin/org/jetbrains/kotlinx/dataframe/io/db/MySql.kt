@@ -14,7 +14,7 @@ import kotlin.reflect.typeOf
 public object MySql : DbType("mysql") {
     override fun convertDataFromResultSet(rs: ResultSet, tableColumn: TableColumnMetadata): Any? {
         val name = tableColumn.name
-        return when (tableColumn.sqlType) {
+        return when (tableColumn.sqlTypeName) {
             "BIT" -> rs.getBytes(name)
             "TINYINT" -> rs.getInt(name)
             "SMALLINT" -> rs.getInt(name)
@@ -46,12 +46,12 @@ public object MySql : DbType("mysql") {
             // special mysql types
             "JSON" -> rs.getString(name)
             "GEOMETRY" -> rs.getBytes(name)
-            else -> throw IllegalArgumentException("Unsupported MySQL type: ${tableColumn.sqlType}")
+            else -> throw IllegalArgumentException("Unsupported MySQL type: ${tableColumn.sqlTypeName}")
         }
     }
 
     override fun toColumnSchema(tableColumnMetadata: TableColumnMetadata): ColumnSchema {
-        return when (tableColumnMetadata.sqlType) {
+        return when (tableColumnMetadata.sqlTypeName) {
             "BIT" -> ColumnSchema.Value(typeOf<ByteArray>())
             "TINYINT" -> ColumnSchema.Value(typeOf<Int>())
             "SMALLINT" -> ColumnSchema.Value(typeOf<Int>())
@@ -83,7 +83,7 @@ public object MySql : DbType("mysql") {
             // special mysql types
             "JSON" -> ColumnSchema.Value(typeOf<String>())
             "GEOMETRY" -> ColumnSchema.Value(typeOf<ByteArray>())
-            else -> throw IllegalArgumentException("Unsupported MySQL type: ${tableColumnMetadata.sqlType}")
+            else -> throw IllegalArgumentException("Unsupported MySQL type: ${tableColumnMetadata.sqlTypeName}")
         }
     }
 }

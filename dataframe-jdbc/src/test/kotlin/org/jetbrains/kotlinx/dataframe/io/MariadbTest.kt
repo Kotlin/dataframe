@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -88,8 +89,8 @@ class MariadbTest {
             connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS table1") }
             connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS table2") }
 
-            connection.createStatement().execute(
-                """
+            @Language("SQL")
+            val createTableQuery = """
             CREATE TABLE IF NOT EXISTS table1 (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 bitCol BIT,
@@ -123,13 +124,13 @@ class MariadbTest {
                 enumCol ENUM('Value1', 'Value2', 'Value3'),
                 setCol SET('Option1', 'Option2', 'Option3')
             )
-        """.trimIndent()
+        """
+            connection.createStatement().execute(
+                createTableQuery.trimIndent()
             )
 
-
-            // Create table Sale
-            connection.createStatement().execute(
-                """
+            @Language("SQL")
+            val createTableQuery2 = """
                 CREATE TABLE IF NOT EXISTS table2 (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 bitCol BIT,
@@ -163,9 +164,12 @@ class MariadbTest {
                 enumCol ENUM('Value1', 'Value2', 'Value3'),
                 setCol SET('Option1', 'Option2', 'Option3')
             )
-            """.trimIndent()
+            """
+            connection.createStatement().execute(
+                createTableQuery2.trimIndent()
             )
 
+            @Language("SQL")
             val insertData1 = """
             INSERT INTO table1 (
                 bitCol, tinyintCol, smallintCol, mediumintCol, mediumintUnsignedCol, integerCol, intCol, 
@@ -176,6 +180,7 @@ class MariadbTest {
         """.trimIndent()
 
 
+            @Language("SQL")
             val insertData2 = """
             INSERT INTO table2 (
                 bitCol, tinyintCol, smallintCol, mediumintCol, mediumintUnsignedCol, integerCol, intCol, 

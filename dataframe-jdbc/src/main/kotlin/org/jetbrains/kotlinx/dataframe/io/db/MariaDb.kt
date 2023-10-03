@@ -14,7 +14,7 @@ import kotlin.reflect.typeOf
 public object MariaDb : DbType("mariadb") {
     override fun convertDataFromResultSet(rs: ResultSet, tableColumn: TableColumnMetadata): Any? {
         val name = tableColumn.name
-        return when (tableColumn.sqlType) {
+        return when (tableColumn.sqlTypeName) {
             "BIT" -> rs.getBytes(name)
             "TINYINT" -> rs.getInt(name)
             "SMALLINT" -> rs.getInt(name)
@@ -43,12 +43,12 @@ public object MariaDb : DbType("mariadb") {
             "LONGTEXT" -> rs.getString(name)
             "ENUM" -> rs.getString(name)
             "SET" -> rs.getString(name)
-            else -> throw IllegalArgumentException("Unsupported MariaDB type: ${tableColumn.sqlType}")
+            else -> throw IllegalArgumentException("Unsupported MariaDB type: ${tableColumn.sqlTypeName}")
         }
     }
 
     override fun toColumnSchema(tableColumnMetadata: TableColumnMetadata): ColumnSchema {
-        return when (tableColumnMetadata.sqlType) {
+        return when (tableColumnMetadata.sqlTypeName) {
             "BIT" -> ColumnSchema.Value(typeOf<ByteArray>())
             "TINYINT" -> ColumnSchema.Value(typeOf<Int>())
             "SMALLINT" -> ColumnSchema.Value(typeOf<Int>())
@@ -77,7 +77,7 @@ public object MariaDb : DbType("mariadb") {
             "LONGTEXT" -> ColumnSchema.Value(typeOf<String>())
             "ENUM" -> ColumnSchema.Value(typeOf<String>())
             "SET" -> ColumnSchema.Value(typeOf<String>())
-            else -> throw IllegalArgumentException("Unsupported MariaDB type: ${tableColumnMetadata.sqlType}")
+            else -> throw IllegalArgumentException("Unsupported MariaDB type: ${tableColumnMetadata.sqlTypeName}")
         }
     }
 }

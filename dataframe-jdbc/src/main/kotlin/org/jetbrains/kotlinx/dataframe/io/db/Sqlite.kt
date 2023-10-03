@@ -14,24 +14,24 @@ import kotlin.reflect.typeOf
 public object Sqlite : DbType("sqlite") {
     override fun convertDataFromResultSet(rs: ResultSet, tableColumn: TableColumnMetadata): Any? {
         val name = tableColumn.name
-        return when (tableColumn.sqlType) {
+        return when (tableColumn.sqlTypeName) {
             "INTEGER", "INTEGER AUTO_INCREMENT" -> rs.getInt(name)
             "TEXT" -> rs.getString(name)
             "REAL" -> rs.getDouble(name)
             "NUMERIC" -> rs.getDouble(name)
             "BLOB" -> rs.getBytes(name)
-            else -> throw IllegalArgumentException("Unsupported SQLite type: ${tableColumn.sqlType}")
+            else -> throw IllegalArgumentException("Unsupported SQLite type: ${tableColumn.sqlTypeName}")
         }
     }
 
     override fun toColumnSchema(tableColumnMetadata: TableColumnMetadata): ColumnSchema {
-        return when (tableColumnMetadata.sqlType) {
+        return when (tableColumnMetadata.sqlTypeName) {
             "INTEGER", "INTEGER AUTO_INCREMENT" -> ColumnSchema.Value(typeOf<Int>())
             "TEXT" -> ColumnSchema.Value(typeOf<String>())
             "REAL" -> ColumnSchema.Value(typeOf<Double>())
             "NUMERIC" -> ColumnSchema.Value(typeOf<Double>())
             "BLOB" -> ColumnSchema.Value(typeOf<ByteArray>())
-            else -> throw IllegalArgumentException("Unsupported SQLite type: ${tableColumnMetadata.sqlType}")
+            else -> throw IllegalArgumentException("Unsupported SQLite type: ${tableColumnMetadata.sqlTypeName}")
         }
     }
 }

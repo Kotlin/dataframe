@@ -16,11 +16,11 @@ private val logger = KotlinLogging.logger {}
  * Represents a column in a database table to keep all required meta-information.
  *
  * @property [name] the name of the column.
- * @property [sqlType] the SQL data type of the column.
- * @property [jdbcType] the JDBC data type of the column.
+ * @property [sqlTypeName] the SQL data type of the column.
+ * @property [jdbcType] the JDBC data type of the column produced from [java.sql.Types].
  * @property [size] the size of the column.
  */
-public data class TableColumnMetadata(val name: String, val sqlType: String, val jdbcType: Int, val size: Int)
+public data class TableColumnMetadata(val name: String, val sqlTypeName: String, val jdbcType: Int, val size: Int)
 
 /**
  * Represents a table metadata to store information about a database table,
@@ -42,7 +42,7 @@ public data class TableMetadata(val name: String, val schemaName: String?, val c
  * @property [user] the username used for authentication (optional, default is empty string).
  * @property [password] the password used for authentication (optional, default is empty string).
  */
-public data class DatabaseConfiguration(val url:String, val user: String = "", val password: String = "")
+public data class DatabaseConfiguration(val url: String, val user: String = "", val password: String = "")
 
 /**
  * The default limit value.

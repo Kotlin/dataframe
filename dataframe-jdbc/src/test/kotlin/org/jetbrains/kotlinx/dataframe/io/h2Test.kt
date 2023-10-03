@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.assertions.throwables.shouldThrow
 import org.h2.jdbc.JdbcSQLSyntaxErrorException
+import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -81,25 +82,29 @@ class JdbcTest {
                 DriverManager.getConnection(URL)
 
             // Crate table Customer
-            connection.createStatement().execute(
-                """
+            @Language("SQL")
+            val createCustomerTableQuery = """
                 CREATE TABLE Customer (
                     id INT PRIMARY KEY,
                     name VARCHAR(50),
                     age INT
                 )
-            """.trimIndent()
-            )
+            """
+
+            connection.createStatement().execute(createCustomerTableQuery)
 
             // Create table Sale
-            connection.createStatement().execute(
-                """
+            @Language("SQL")
+            val createSaleTableQuery = """
                 CREATE TABLE Sale (
                     id INT PRIMARY KEY,
                     customerId INT,
                     amount DECIMAL(10, 2)
                 )
-            """.trimIndent()
+            """
+
+            connection.createStatement().execute(
+                createSaleTableQuery
             )
 
             // add data to the Customer table
@@ -127,8 +132,8 @@ class JdbcTest {
 
     @Test
     fun `read from huge table`() {
-        connection.createStatement().execute(
-            """
+        @Language("SQL")
+        val createTableQuery = """
                 CREATE TABLE TestTable (
                     characterCol CHAR(10),
                     characterVaryingCol VARCHAR(20),
@@ -157,8 +162,9 @@ class JdbcTest {
                     jsonCol JSON,
                     uuidCol UUID
                 )
-            """.trimIndent()
-        )
+            """
+
+        connection.createStatement().execute(createTableQuery.trimIndent())
 
         connection.prepareStatement(
             """
@@ -247,7 +253,10 @@ class JdbcTest {
     @Test
     fun `read from ResultSet`() {
         connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).use { st ->
-            st.executeQuery("SELECT * FROM Customer").use { rs ->
+            @Language("SQL")
+            val selectStatement = "SELECT * FROM Customer"
+
+            st.executeQuery(selectStatement).use { rs ->
                 val df = DataFrame.readResultSet(rs, H2).cast<Customer>()
 
                 assertEquals(3, df.rowsCount())
@@ -302,6 +311,7 @@ class JdbcTest {
 
     @Test
     fun `read from sql query`() {
+        @Language("SQL")
         val sqlQuery = """
             SELECT c.name as customerName, SUM(s.amount) as totalSalesAmount
             FROM Sale s

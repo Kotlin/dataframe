@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.annotations
 
+import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.api.KeyValueProperty
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -51,7 +52,7 @@ public annotation class CsvOptions(
 
 public annotation class JdbcOptions(
     public val user: String = "", // TODO: I'm not sure about the default parameters
-    public val password: String = "", // TODO: I'm not sure about the default parameters
+    public val password: String = "", // TODO: I'm not sure about the default parameters)
     public val sqlQuery: String = ""
 )
 

@@ -16,7 +16,7 @@ import kotlin.reflect.typeOf
 public object H2 : DbType("h2") {
     override fun convertDataFromResultSet(rs: ResultSet, tableColumn: TableColumnMetadata): Any? {
         val name = tableColumn.name
-        return when (tableColumn.sqlType) {
+        return when (tableColumn.sqlTypeName) {
             "CHARACTER", "CHAR" -> rs.getString(name)
             "CHARACTER VARYING", "CHAR VARYING",  "VARCHAR" -> rs.getString(name)
             "CHARACTER LARGE OBJECT", "CHAR LARGE OBJECT", "CLOB" -> rs.getString(name)
@@ -44,12 +44,12 @@ public object H2 : DbType("h2") {
             "ENUM" -> rs.getString(name)
             "JSON" -> rs.getString(name)
             "UUID" -> rs.getString(name)
-            else -> throw IllegalArgumentException("Unsupported H2 type: ${tableColumn.sqlType}")
+            else -> throw IllegalArgumentException("Unsupported H2 type: ${tableColumn.sqlTypeName}")
         }
     }
 
     override fun toColumnSchema(tableColumnMetadata: TableColumnMetadata): ColumnSchema {
-        return when (tableColumnMetadata.sqlType) {
+        return when (tableColumnMetadata.sqlTypeName) {
             "CHARACTER", "CHAR" -> ColumnSchema.Value(typeOf<String>())
             "CHARACTER VARYING", "CHAR VARYING",  "VARCHAR" -> ColumnSchema.Value(typeOf<String>())
             "CHARACTER LARGE OBJECT", "CHAR LARGE OBJECT", "CLOB" -> ColumnSchema.Value(typeOf<String>())
@@ -77,7 +77,7 @@ public object H2 : DbType("h2") {
             "ENUM" -> ColumnSchema.Value(typeOf<String>())
             "JSON" -> ColumnSchema.Value(typeOf<String>())
             "UUID" -> ColumnSchema.Value(typeOf<String>())
-            else -> throw IllegalArgumentException("Unsupported H2 type: ${tableColumnMetadata.sqlType}")
+            else -> throw IllegalArgumentException("Unsupported H2 type: ${tableColumnMetadata.sqlTypeName}")
         }
     }
 }
