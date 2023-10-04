@@ -54,7 +54,7 @@ public data class TableMetadata(val name: String, val schemaName: String?, val c
 /**
  * Represents the configuration for a database connection.
  *
- * @property [url] the URL of the database.
+ * @property [url] the URL of the database. Keep it in the following form jdbc:subprotocol:subnam
  * @property [user] the username used for authentication (optional, default is empty string).
  * @property [password] the password used for authentication (optional, default is empty string).
  */
@@ -526,7 +526,12 @@ private fun getTableColumnsMetadata(rs: ResultSet): MutableMap<String, TableColu
         val type = metaData.getColumnTypeName(i)
         val jdbcType = metaData.getColumnType(i)
 
+        // TODO: add strategy for multiple columns handling (throw exception, ignore, create columns with addtional indexes in name)
+        // column names should be unique
+        check(!tableColumns.containsKey(name)) { "Multiple columns with name $name from table ${metaData.getTableName(i)}. Rename columns to make it unique." }
+
         tableColumns += Pair(name, TableColumnMetadata(name, type, jdbcType, size))
+
     }
     return tableColumns
 }

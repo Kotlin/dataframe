@@ -85,7 +85,7 @@ public object PostgreSql : DbType("postgresql") {
             "timestamptz", "timestamp with time zone" -> ColumnSchema.Value(typeOf<String>())
             "uuid" -> ColumnSchema.Value(typeOf<String>())
             "xml" -> ColumnSchema.Value(typeOf<String>())
-            else -> throw IllegalArgumentException("Unsupported PostgreSQL type: ${tableColumnMetadata.sqlTypeName}")
+            else -> throw IllegalArgumentException("Unsupported PostgreSQL type: ${tableColumnMetadata.sqlTypeName} for column ${tableColumnMetadata.name}")
         }
     }
 

@@ -32,7 +32,7 @@ public object Sqlite : DbType("sqlite") {
             "REAL" -> ColumnSchema.Value(typeOf<Double>())
             "NUMERIC" -> ColumnSchema.Value(typeOf<Double>())
             "BLOB" -> ColumnSchema.Value(typeOf<ByteArray>())
-            else -> throw IllegalArgumentException("Unsupported SQLite type: ${tableColumnMetadata.sqlTypeName}")
+            else -> throw IllegalArgumentException("Unsupported SQLite type: ${tableColumnMetadata.sqlTypeName} for column ${tableColumnMetadata.name}")
         }
     }
 

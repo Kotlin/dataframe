@@ -81,7 +81,7 @@ public object H2 : DbType("h2") {
             "ENUM" -> ColumnSchema.Value(typeOf<String>())
             "JSON" -> ColumnSchema.Value(typeOf<ColumnGroup<DataRow<String>>>())
             "UUID" -> ColumnSchema.Value(typeOf<String>())
-            else -> throw IllegalArgumentException("Unsupported H2 type: ${tableColumnMetadata.sqlTypeName}")
+            else -> throw IllegalArgumentException("Unsupported H2 type: ${tableColumnMetadata.sqlTypeName} for column ${tableColumnMetadata.name}")
         }
     }
 

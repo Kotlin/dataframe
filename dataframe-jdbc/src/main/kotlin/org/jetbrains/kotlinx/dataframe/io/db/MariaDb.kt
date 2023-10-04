@@ -78,7 +78,7 @@ public object MariaDb : DbType("mariadb") {
             "LONGTEXT" -> ColumnSchema.Value(typeOf<String>())
             "ENUM" -> ColumnSchema.Value(typeOf<String>())
             "SET" -> ColumnSchema.Value(typeOf<String>())
-            else -> throw IllegalArgumentException("Unsupported MariaDB type: ${tableColumnMetadata.sqlTypeName}")
+            else -> throw IllegalArgumentException("Unsupported MariaDB type: ${tableColumnMetadata.sqlTypeName} for column ${tableColumnMetadata.name}")
         }
     }
 

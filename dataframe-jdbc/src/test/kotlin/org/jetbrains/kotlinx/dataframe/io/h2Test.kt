@@ -16,6 +16,7 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.SQLException
+import org.jetbrains.kotlinx.dataframe.api.print
 import kotlin.reflect.typeOf
 
 private const val URL = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false"
@@ -313,6 +314,13 @@ class JdbcTest {
     }
 
     @Test
+    fun `read from non-existing jdbc url`() {
+        shouldThrow<SQLException> {
+            DataFrame.readSqlTable(DriverManager.getConnection("ddd"), "WrongTableName")
+        }
+    }
+
+    @Test
     fun `read from sql query`() {
         @Language("SQL")
         val sqlQuery = """
@@ -355,6 +363,20 @@ class JdbcTest {
         val dataSchema1 = DataFrame.getSchemaForSqlQuery(dbConfig, sqlQuery)
         dataSchema1.columns.size shouldBe 2
         dataSchema.columns["name"]!!.type shouldBe typeOf<String>()
+    }
+
+    @Test
+    fun `read from sql query with repeated columns` () {
+        @Language("SQL")
+        val sqlQuery = """
+            SELECT c1.name, c2.name
+            FROM Customer c1
+            INNER JOIN Customer c2 ON c1.id = c2.id
+        """.trimIndent()
+
+        shouldThrow<IllegalStateException> {
+            DataFrame.readSqlQuery(connection, sqlQuery)
+        }
     }
 
     @Test

@@ -87,7 +87,7 @@ public object MySql : DbType("mysql") {
             // special mysql types
             "JSON" -> ColumnSchema.Value(typeOf<ColumnGroup<DataRow<String>>>())
             "GEOMETRY" -> ColumnSchema.Value(typeOf<ByteArray>())
-            else -> throw IllegalArgumentException("Unsupported MySQL type: ${tableColumnMetadata.sqlTypeName}")
+            else -> throw IllegalArgumentException("Unsupported MySQL type: ${tableColumnMetadata.sqlTypeName} for column ${tableColumnMetadata.name}")
         }
     }
 
