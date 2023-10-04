@@ -46,7 +46,7 @@ public object H2 : DbType("h2") {
             "INTERVAL" -> rs.getObject(name).toString()
             "JAVA_OBJECT" -> rs.getObject(name)
             "ENUM" -> rs.getString(name)
-            "JSON" -> rs.getString(name)
+            "JSON" -> rs.getString(name) // TODO: https://github.com/Kotlin/dataframe/issues/462
             "UUID" -> rs.getString(name)
             else -> throw IllegalArgumentException("Unsupported H2 type: ${tableColumnMetadata.sqlTypeName}")
         }
@@ -79,7 +79,7 @@ public object H2 : DbType("h2") {
             "INTERVAL" -> ColumnSchema.Value(typeOf<String>())
             "JAVA_OBJECT" -> ColumnSchema.Value(typeOf<Any>())
             "ENUM" -> ColumnSchema.Value(typeOf<String>())
-            "JSON" -> ColumnSchema.Value(typeOf<ColumnGroup<DataRow<String>>>())
+            "JSON" -> ColumnSchema.Value(typeOf<String>()) // TODO: https://github.com/Kotlin/dataframe/issues/462
             "UUID" -> ColumnSchema.Value(typeOf<String>())
             else -> throw IllegalArgumentException("Unsupported H2 type: ${tableColumnMetadata.sqlTypeName} for column ${tableColumnMetadata.name}")
         }
@@ -88,5 +88,12 @@ public object H2 : DbType("h2") {
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
         return tableMetadata.name.lowercase(Locale.getDefault()).contains("sys_")
             || tableMetadata.schemaName?.lowercase(Locale.getDefault())?.contains("information_schema") ?: false
+    }
+
+    override fun buildTableMetadata(tables: ResultSet): TableMetadata {
+        return TableMetadata(
+            tables.getString("TABLE_NAME"),
+            tables.getString("TABLE_SCHEM"),
+            tables.getString("TABLE_CAT"))
     }
 }

@@ -30,7 +30,7 @@ public object PostgreSql : DbType("postgresql") {
             "float8", "double precision" -> rs.getDouble(name)
             "int4", "integer" -> rs.getInt(name)
             "interval" -> rs.getString(name)
-            "json", "jsonb" -> rs.getString(name)
+            "json", "jsonb" -> rs.getString(name) // TODO: https://github.com/Kotlin/dataframe/issues/462
             "line" -> rs.getString(name)
             "lseg" -> rs.getString(name)
             "macaddr" -> rs.getString(name)
@@ -66,7 +66,7 @@ public object PostgreSql : DbType("postgresql") {
             "float8", "double precision" -> ColumnSchema.Value(typeOf<Double>())
             "int4", "integer" -> ColumnSchema.Value(typeOf<Int>())
             "interval" -> ColumnSchema.Value(typeOf<String>())
-            "json", "jsonb" -> ColumnSchema.Value(typeOf<ColumnGroup<DataRow<String>>>())
+            "json", "jsonb" -> ColumnSchema.Value(typeOf<ColumnGroup<DataRow<String>>>()) // TODO: https://github.com/Kotlin/dataframe/issues/462
             "line" -> ColumnSchema.Value(typeOf<String>())
             "lseg" -> ColumnSchema.Value(typeOf<String>())
             "macaddr" -> ColumnSchema.Value(typeOf<String>())
@@ -92,5 +92,12 @@ public object PostgreSql : DbType("postgresql") {
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
         return tableMetadata.name.lowercase(Locale.getDefault()).contains("pg_")
             || tableMetadata.schemaName?.lowercase(Locale.getDefault())?.contains("pg_catalog.") ?: false
+    }
+
+    override fun buildTableMetadata(tables: ResultSet): TableMetadata {
+        return TableMetadata(
+            tables.getString("table_name"),
+            tables.getString("table_schem"),
+            tables.getString("table_cat"))
     }
 }

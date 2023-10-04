@@ -48,7 +48,7 @@ public object MySql : DbType("mysql") {
             "ENUM" -> rs.getString(name)
             "SET" -> rs.getString(name)
             // special mysql types
-            "JSON" -> rs.getString(name)
+            "JSON" -> rs.getString(name) // TODO: https://github.com/Kotlin/dataframe/issues/462
             "GEOMETRY" -> rs.getBytes(name)
             else -> throw IllegalArgumentException("Unsupported MySQL type: ${tableColumnMetadata.sqlTypeName}")
         }
@@ -85,7 +85,7 @@ public object MySql : DbType("mysql") {
             "ENUM" -> ColumnSchema.Value(typeOf<String>())
             "SET" -> ColumnSchema.Value(typeOf<String>())
             // special mysql types
-            "JSON" -> ColumnSchema.Value(typeOf<ColumnGroup<DataRow<String>>>())
+            "JSON" -> ColumnSchema.Value(typeOf<ColumnGroup<DataRow<String>>>()) // TODO: https://github.com/Kotlin/dataframe/issues/462
             "GEOMETRY" -> ColumnSchema.Value(typeOf<ByteArray>())
             else -> throw IllegalArgumentException("Unsupported MySQL type: ${tableColumnMetadata.sqlTypeName} for column ${tableColumnMetadata.name}")
         }
@@ -105,5 +105,12 @@ public object MySql : DbType("mysql") {
             || schemaName?.contains("mysql.") == true
             || name.contains("mysql.")
             || name.contains("sys_config")
+    }
+
+    override fun buildTableMetadata(tables: ResultSet): TableMetadata {
+        return TableMetadata(
+            tables.getString("table_name"),
+            tables.getString("table_schem"),
+            tables.getString("table_cat"))
     }
 }

@@ -16,7 +16,9 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.SQLException
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.print
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import kotlin.reflect.typeOf
 
 private const val URL = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false"
@@ -68,7 +70,7 @@ interface TestTableData {
     val intervalCol: String
     val javaObjectCol: Any?
     val enumCol: String
-    val jsonCol: String
+    val jsonCol: ColumnGroup<DataRow<String>>
     val uuidCol: String
 }
 
@@ -206,7 +208,9 @@ class JdbcTest {
                     345.67, 3.45, 5.67, 4.71,
                     '2023-07-22', '20:45:00', '03:30:00', '2023-07-21 23:45:15',
                     '2023-07-20 23:45:15', NULL,
-                    'Option3', '{"key": "yet_another_value"}', '345e6789-e89b-12d3-a456-426655440002'
+                    'Option3', '{ "person": { "name": "John Doe", "age": 30 }, ' ||
+                    '"address": { "street": "123 Main St", "city": "Exampleville", "zipcode": "12345"}}', 
+                    '345e6789-e89b-12d3-a456-426655440002'
                 )
             """.trimIndent()
         ).executeUpdate()
@@ -214,7 +218,7 @@ class JdbcTest {
         val df = DataFrame.readSqlTable(connection, "TestTable").cast<TestTableData>()
         df.rowsCount() shouldBe 3
         df.filter { it[TestTableData::integerCol] > 1000}.rowsCount() shouldBe 2
-        //TODO: add test for JSON column
+        df.filter { it[TestTableData::jsonCol].columns().size > 1}.print()
     }
 
     @Test

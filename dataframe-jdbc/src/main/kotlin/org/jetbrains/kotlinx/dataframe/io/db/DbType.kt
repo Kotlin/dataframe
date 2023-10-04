@@ -33,4 +33,12 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      * @return True if the table is a system table for the specified database type, false otherwise.
      */
     public abstract fun isSystemTable(tableMetadata: TableMetadata): Boolean
+
+    /**
+     * Builds the table metadata based on the database type and the ResultSet from the query.
+     *
+     * @param [tables] the ResultSet containing the table's meta-information.
+     * @return the TableMetadata object representing the table metadata.
+     */
+    public abstract fun buildTableMetadata(tables: ResultSet): TableMetadata
 }

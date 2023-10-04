@@ -308,7 +308,7 @@ public fun DataFrame.Companion.readAllSqlTables(connection: Connection, limit: I
     val dataFrames = mutableListOf<AnyFrame>()
 
     while (tables.next()) {
-        val table = buildTableMetadata(dbType, tables)
+        val table = dbType.buildTableMetadata(tables)
         if (!dbType.isSystemTable(table)) {
             // we filter her second time because of specific logic with SQLite and possible issues with future databases
             logger.debug { "Reading table: ${table.name}" }
@@ -320,28 +320,6 @@ public fun DataFrame.Companion.readAllSqlTables(connection: Connection, limit: I
 
     return dataFrames
 }
-
-/**
- * Builds the table metadata based on the database type and the ResultSet from the query.
- *
- * @param [dbType] the type of the database being used.
- * @param [tableResultSet] the ResultSet containing the table's meta-information.
- * @return the TableMetadata object representing the table metadata.
- */
-// TODO: move to DB abstract method
-private fun buildTableMetadata(dbType: DbType, tableResultSet: ResultSet): TableMetadata =
-    when (dbType) {
-        is H2, Sqlite -> TableMetadata(
-            tableResultSet.getString("TABLE_NAME"),
-            tableResultSet.getString("TABLE_SCHEM"),
-            tableResultSet.getString("TABLE_CAT"))
-        else -> {
-            TableMetadata(
-                tableResultSet.getString("table_name"),
-                tableResultSet.getString("table_schem"),
-                tableResultSet.getString("table_cat"))
-        }
-    }
 
 /**
  * Retrieves the schema for an SQL table using the provided database configuration.
@@ -477,7 +455,7 @@ public fun DataFrame.Companion.getSchemaForAllSqlTables(connection: Connection):
     val dataFrameSchemas = mutableListOf<DataFrameSchema>()
 
     while (tables.next()) {
-        val jdbcTable = buildTableMetadata(dbType, tables)
+        val jdbcTable = dbType.buildTableMetadata(tables)
         if (!dbType.isSystemTable(jdbcTable)) {
             // we filter her second time because of specific logic with SQLite and possible issues with future databases
             val dataFrameSchema = getSchemaForSqlTable(connection, jdbcTable.name)
@@ -526,7 +504,9 @@ private fun getTableColumnsMetadata(rs: ResultSet): MutableMap<String, TableColu
         val type = metaData.getColumnTypeName(i)
         val jdbcType = metaData.getColumnType(i)
 
-        // TODO: add strategy for multiple columns handling (throw exception, ignore, create columns with addtional indexes in name)
+        // TODO:
+        //  add strategy for multiple columns handling (throw exception, ignore,
+        //  create columns with additional indexes in name)
         // column names should be unique
         check(!tableColumns.containsKey(name)) { "Multiple columns with name $name from table ${metaData.getTableName(i)}. Rename columns to make it unique." }
 
