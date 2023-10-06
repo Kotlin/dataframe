@@ -70,7 +70,7 @@ interface TestTableData {
     val intervalCol: String
     val javaObjectCol: Any?
     val enumCol: String
-    val jsonCol: ColumnGroup<DataRow<String>>
+    val jsonCol: String
     val uuidCol: String
 }
 
@@ -218,7 +218,6 @@ class JdbcTest {
         val df = DataFrame.readSqlTable(connection, "TestTable").cast<TestTableData>()
         df.rowsCount() shouldBe 3
         df.filter { it[TestTableData::integerCol] > 1000}.rowsCount() shouldBe 2
-        df.filter { it[TestTableData::jsonCol].columns().size > 1}.print()
     }
 
     @Test

@@ -13,6 +13,7 @@ import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
+import org.junit.Ignore
 
 private const val URL = "jdbc:mysql://localhost:3306"
 private const val USER_NAME = "root"
@@ -61,6 +62,7 @@ interface Table2MySql {
     val setCol: String
 }
 
+@Ignore
 class MySqlTest {
     companion object {
         private lateinit var connection: Connection

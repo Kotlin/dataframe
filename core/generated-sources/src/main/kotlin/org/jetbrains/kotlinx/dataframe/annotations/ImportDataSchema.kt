@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.annotations
 
-import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.api.KeyValueProperty
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup

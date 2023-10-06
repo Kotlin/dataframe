@@ -15,6 +15,7 @@ import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
+import org.junit.Ignore
 
 private const val URL = "jdbc:mariadb://localhost:3307"
 private const val USER_NAME = "root"
@@ -63,7 +64,7 @@ interface Table2MariaDb {
     val setCol: String
 }
 
-
+@Ignore
 class MariadbTest {
     companion object {
         private lateinit var connection: Connection

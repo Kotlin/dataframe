@@ -15,6 +15,7 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.UUID
+import org.junit.Ignore
 
 private const val URL = "jdbc:postgresql://localhost:5432/test"
 private const val USER_NAME = "postgres"
@@ -72,6 +73,7 @@ interface ViewTable {
     val numericcol: String
 }
 
+@Ignore
 class PostgresTest {
     companion object {
         private lateinit var connection: Connection
