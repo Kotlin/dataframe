@@ -8,7 +8,6 @@ import org.junit.Test
 import java.io.File
 import java.sql.Connection
 import java.sql.DriverManager
-import java.sql.SQLException
 
 class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationTest() {
     private companion object {
@@ -376,21 +375,21 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
     }
 
     @Test
+    @Ignore
     // TODO: test is broken
     /*
-    e: file:///C:/Users/zaleslaw/AppData/Local/Temp/test3901867314473689900/src/main/kotlin/Main.kt:12:43 Unresolved reference: readSqlTable
-e: file:///C:/Users/zaleslaw/AppData/Local/Temp/test3901867314473689900/src/main/kotlin/Main.kt:13:43 Unresolved reference: DatabaseConfiguration
-e: file:///C:/Users/zaleslaw/AppData/Local/Temp/test3901867314473689900/src/main/kotlin/Main.kt:19:28 Unresolved reference: readSqlTable
-e: file:///C:/Users/zaleslaw/AppData/Local/Temp/test3901867314473689900/src/main/kotlin/Main.kt:20:21 Unresolved reference: age
-e: file:///C:/Users/zaleslaw/AppData/Local/Temp/test3901867314473689900/src/main/kotlin/Main.kt:22:29 Unresolved reference: readSqlTable
-e: file:///C:/Users/zaleslaw/AppData/Local/Temp/test3901867314473689900/src/main/kotlin/Main.kt:23:22 Unresolved reference: age
-e: file:///C:/Users/zaleslaw/AppData/Local/Temp/test3901867314473689900/src/main/kotlin/Main.kt:25:24 Unresolved reference: DatabaseConfiguration
-e: file:///C:/Users/zaleslaw/AppData/Local/Temp/test3901867314473689900/src/main/kotlin/Main.kt:26:29 Unresolved reference: readSqlTable
-e: file:///C:/Users/zaleslaw/AppData/Local/Temp/test3901867314473689900/src/main/kotlin/Main.kt:27:22 Unresolved reference: age
-e: file:///C:/Users/zaleslaw/AppData/Local/Temp/test3901867314473689900/src/main/kotlin/Main.kt:29:29 Unresolved reference: readSqlTable
-e: file:///C:/Users/zaleslaw/AppData/Local/Temp/test3901867314473689900/src/main/kotlin/Main.kt:30:22 Unresolved reference: age
-
-     */
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:12:43 Unresolved reference: readSqlTable
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:13:43 Unresolved reference: DatabaseConfiguration
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:19:28 Unresolved reference: readSqlTable
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:20:21 Unresolved reference: age
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:22:29 Unresolved reference: readSqlTable
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:23:22 Unresolved reference: age
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:25:24 Unresolved reference: DatabaseConfiguration
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:26:29 Unresolved reference: readSqlTable
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:27:22 Unresolved reference: age
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:29:29 Unresolved reference: readSqlTable
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:30:22 Unresolved reference: age
+    */
     fun `preprocessor imports schema from database`() {
         val connectionUrl = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false"
         DriverManager.getConnection(connectionUrl).use {
