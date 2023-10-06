@@ -37,6 +37,7 @@ dependencies {
     api(project(":dataframe-arrow"))
     api(project(":dataframe-excel"))
     api(project(":dataframe-openapi"))
+    api(project(":dataframe-jdbc"))
 }
 
 allprojects {

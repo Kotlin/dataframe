@@ -57,7 +57,7 @@ internal class DefaultReadExcelMethod(path: String?) : AbstractDefaultReadMethod
 private const val readExcel = "readExcel"
 
 /**
- * @param sheetName sheet to read. By default, first sheet in the document
+ * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
@@ -77,7 +77,7 @@ public fun DataFrame.Companion.readExcel(
 }
 
 /**
- * @param sheetName sheet to read. By default, first sheet in the document
+ * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
@@ -97,7 +97,7 @@ public fun DataFrame.Companion.readExcel(
 }
 
 /**
- * @param sheetName sheet to read. By default, first sheet in the document
+ * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
@@ -114,7 +114,7 @@ public fun DataFrame.Companion.readExcel(
 ): AnyFrame = readExcel(asURL(fileOrUrl), sheetName, skipRows, columns, rowsCount, nameRepairStrategy)
 
 /**
- * @param sheetName sheet to read. By default, first sheet in the document
+ * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
@@ -134,7 +134,7 @@ public fun DataFrame.Companion.readExcel(
 }
 
 /**
- * @param sheetName sheet to read. By default, first sheet in the document
+ * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
@@ -446,8 +446,8 @@ private fun Cell.setCellValueByGuessedType(any: Any) {
 
 /**
  * Set LocalDateTime value correctly also if date have zero value in Excel.
- * Zero date is usually used fore storing time component only,
- * is displayed as 00.01.1900 in Excel and as 30.12.1899 in LibreOffice Calc and also in POI.
+ * Zero dates are usually used for storing a time component only,
+ * are displayed as 00.01.1900 in Excel and as 30.12.1899 in LibreOffice Calc and also in POI.
  * POI can not set 1899 year directly.
  */
 private fun Cell.setTime(localDateTime: LocalDateTime) {
@@ -455,9 +455,9 @@ private fun Cell.setTime(localDateTime: LocalDateTime) {
 }
 
 /**
- * Set Date value correctly also if date have zero value in Excel.
- * Zero date is usually used fore storing time component only,
- * is displayed as 00.01.1900 in Excel and as 30.12.1899 in LibreOffice Calc and also in POI.
+ * Set Date value correctly also if date has zero value in Excel.
+ * Zero dates are usually used for storing a time component only,
+ * are displayed as 00.01.1900 in Excel and as 30.12.1899 in LibreOffice Calc and also in POI.
  * POI can not set 1899 year directly.
  */
 private fun Cell.setDate(date: Date) {

@@ -24,6 +24,7 @@ private const val verify = "verify" // cast(true) is obscure, i think it's bette
 private const val readCSV = "readCSV"
 private const val readTSV = "readTSV"
 private const val readJson = "readJson"
+private const val readJdbc = "readJdbc"
 
 public abstract class AbstractDefaultReadMethod(
     private val path: String?,

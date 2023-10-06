@@ -169,6 +169,7 @@ internal class Integration(
         if (version != null) {
             dependencies(
                 "org.jetbrains.kotlinx:dataframe-excel:$version",
+                "org.jetbrains.kotlinx:dataframe-jdbc:$version",
                 "org.jetbrains.kotlinx:dataframe-arrow:$version",
                 "org.jetbrains.kotlinx:dataframe-openapi:$version",
             )
@@ -176,7 +177,7 @@ internal class Integration(
 
         try {
             setMinimalKernelVersion(MIN_KERNEL_VERSION)
-        } catch (_: NoSuchMethodError) { // will be thrown on version < 0.11.0.198
+        } catch (_: NoSuchMethodError) { // will be thrown when a version < 0.11.0.198
             throw IllegalStateException(
                 getKernelUpdateMessage(notebook.kernelVersion, MIN_KERNEL_VERSION, notebook.jupyterClientType)
             )

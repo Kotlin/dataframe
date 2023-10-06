@@ -5,7 +5,7 @@ import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.CompareResult
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 
-internal class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>) : DataFrameSchema {
+public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>) : DataFrameSchema {
 
     override fun compare(other: DataFrameSchema): CompareResult {
         require(other is DataFrameSchemaImpl)

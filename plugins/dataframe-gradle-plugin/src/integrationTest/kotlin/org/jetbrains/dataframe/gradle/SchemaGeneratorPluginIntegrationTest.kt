@@ -6,6 +6,8 @@ import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Ignore
 import org.junit.Test
 import java.io.File
+import java.sql.Connection
+import java.sql.DriverManager
 
 class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationTest() {
     private companion object {
@@ -370,6 +372,127 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
             """.trimIndent()
         }
         result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
+    }
+
+    @Test
+    @Ignore
+    // TODO: test is broken
+    /*
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:12:43 Unresolved reference: readSqlTable
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:13:43 Unresolved reference: DatabaseConfiguration
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:19:28 Unresolved reference: readSqlTable
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:20:21 Unresolved reference: age
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:22:29 Unresolved reference: readSqlTable
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:23:22 Unresolved reference: age
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:25:24 Unresolved reference: DatabaseConfiguration
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:26:29 Unresolved reference: readSqlTable
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:27:22 Unresolved reference: age
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:29:29 Unresolved reference: readSqlTable
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:30:22 Unresolved reference: age
+    */
+    fun `preprocessor imports schema from database`() {
+        val connectionUrl = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false"
+        DriverManager.getConnection(connectionUrl).use {
+            val (_, result) = runGradleBuild(":build") { buildDir ->
+                createTestDatabase(it)
+
+                val kotlin = File(buildDir, "src/main/kotlin").also { it.mkdirs() }
+                val main = File(kotlin, "Main.kt")
+                // this is a copy of the code snippet in the
+                // DataFrameJdbcSymbolProcessorTest.`schema extracted via readFromDB method is resolved`
+                main.writeText("""
+                @file:ImportDataSchema(name = "Customer", path = "$connectionUrl")
+                
+                package test
+                
+                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+                import org.jetbrains.kotlinx.dataframe.api.filter
+                import org.jetbrains.kotlinx.dataframe.DataFrame
+                import org.jetbrains.kotlinx.dataframe.api.cast
+                import java.sql.Connection
+                import java.sql.DriverManager
+                import java.sql.SQLException
+                import org.jetbrains.kotlinx.dataframe.io.readSqlTable
+                import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
+                
+                fun main() {    
+                    Class.forName("org.h2.Driver")
+                    val tableName = "Customer"
+                    DriverManager.getConnection("$connectionUrl").use { connection ->
+                        val df = DataFrame.readSqlTable(connection, tableName).cast<Customer>()
+                        df.filter { age > 30 }
+
+                        val df1 = DataFrame.readSqlTable(connection, tableName, 1).cast<Customer>()
+                        df1.filter { age > 30 }
+                        
+                        val dbConfig = DatabaseConfiguration(url = "$connectionUrl")
+                        val df2 = DataFrame.readSqlTable(dbConfig, tableName).cast<Customer>()
+                        df2.filter { age > 30 }
+                        
+                        val df3 = DataFrame.readSqlTable(dbConfig, tableName, 1).cast<Customer>()
+                        df3.filter { age > 30 }
+ 
+                    }
+                }
+            """.trimIndent())
+
+                """
+                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
+                    
+                plugins {
+                    kotlin("jvm") version "$kotlinVersion"
+                    id("org.jetbrains.kotlinx.dataframe")
+                }
+                
+                repositories {
+                    mavenLocal()
+                    mavenCentral()
+                }
+                
+                dependencies {
+                    implementation(files("$dataframeJarPath"))
+                }
+                
+                kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotlin/")
+            """.trimIndent()
+            }
+            result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
+        }
+    }
+
+    private fun createTestDatabase(connection: Connection) {
+        // Crate table Customer
+        connection.createStatement().execute(
+            """
+                    CREATE TABLE Customer (
+                        id INT PRIMARY KEY,
+                        name VARCHAR(50),
+                        age INT
+                    )
+                """.trimIndent()
+        )
+
+        // Create table Sale
+        connection.createStatement().execute(
+            """
+                    CREATE TABLE Sale (
+                        id INT PRIMARY KEY,
+                        customerId INT,
+                        amount DECIMAL(10, 2)
+                    )
+                """.trimIndent()
+        )
+
+        // add data to the Customer table
+        connection.createStatement().execute("INSERT INTO Customer (id, name, age) VALUES (1, 'John', 40)")
+        connection.createStatement().execute("INSERT INTO Customer (id, name, age) VALUES (2, 'Alice', 25)")
+        connection.createStatement().execute("INSERT INTO Customer (id, name, age) VALUES (3, 'Bob', 47)")
+
+        // add data to the Sale table
+        connection.createStatement().execute("INSERT INTO Sale (id, customerId, amount) VALUES (1, 1, 100.50)")
+        connection.createStatement().execute("INSERT INTO Sale (id, customerId, amount) VALUES (2, 2, 50.00)")
+        connection.createStatement().execute("INSERT INTO Sale (id, customerId, amount) VALUES (3, 1, 75.25)")
+        connection.createStatement().execute("INSERT INTO Sale (id, customerId, amount) VALUES (4, 3, 35.15)")
     }
 
     @Test

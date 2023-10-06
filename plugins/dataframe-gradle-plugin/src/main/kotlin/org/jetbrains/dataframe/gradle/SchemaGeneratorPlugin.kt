@@ -114,6 +114,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             this.schemaVisibility.set(visibility)
             this.csvOptions.set(schema.csvOptions)
             this.jsonOptions.set(schema.jsonOptions)
+            this.jdbcOptions.set(schema.jdbcOptions) // TODO: probably remove
             this.defaultPath.set(defaultPath)
             this.delimiters.set(delimiters)
         }
