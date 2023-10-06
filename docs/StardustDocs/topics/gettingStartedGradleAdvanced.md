@@ -125,6 +125,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:dataframe-core:%dataFrameVersion%")
     // Optional formats support
     implementation("org.jetbrains.kotlinx:dataframe-excel:%dataFrameVersion%")
+    implementation("org.jetbrains.kotlinx:dataframe-jdbc:%dataFrameVersion%")
     implementation("org.jetbrains.kotlinx:dataframe-arrow:%dataFrameVersion%")
     implementation("org.jetbrains.kotlinx:dataframe-openapi:%dataFrameVersion%")
 }
@@ -140,6 +141,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:dataframe-core:%dataFrameVersion%'
     // Optional formats support 
     implementation 'org.jetbrains.kotlinx:dataframe-excel:%dataFrameVersion%'
+    implementation 'org.jetbrains.kotlinx:dataframe-jdbc:%dataFrameVersion%'
     implementation 'org.jetbrains.kotlinx:dataframe-arrow:%dataFrameVersion%'
     implementation 'org.jetbrains.kotlinx:dataframe-openapi:%dataFrameVersion%'
 }

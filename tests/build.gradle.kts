@@ -18,6 +18,7 @@ repositories {
 dependencies {
     implementation(project(":core"))
     implementation(project(":dataframe-excel"))
+    implementation(project(":dataframe-jdbc"))
     implementation(project(":dataframe-arrow"))
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {

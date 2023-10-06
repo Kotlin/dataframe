@@ -10,6 +10,7 @@ include("tests")
 include("dataframe-arrow")
 include("dataframe-openapi")
 include("dataframe-excel")
+include("dataframe-jdbc")
 include("core")
 
 include("examples:idea-examples:titanic")

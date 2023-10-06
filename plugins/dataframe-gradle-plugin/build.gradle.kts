@@ -21,6 +21,7 @@ dependencies {
     implementation(project(":dataframe-arrow"))
     implementation(project(":dataframe-openapi"))
     implementation(project(":dataframe-excel"))
+    implementation(project(":dataframe-jdbc"))
     implementation(kotlin("gradle-plugin-api"))
     implementation(kotlin("gradle-plugin"))
     implementation("com.beust:klaxon:5.5")
@@ -32,6 +33,7 @@ dependencies {
     testImplementation("com.android.tools.build:gradle-api:7.3.1")
     testImplementation("com.android.tools.build:gradle:7.3.1")
     testImplementation("io.ktor:ktor-server-netty:1.6.7")
+    testImplementation(libs.h2db)
     testImplementation(gradleApi())
 }
 
@@ -125,10 +127,12 @@ val integrationTestTask = task<Test>("integrationTest") {
     dependsOn(":plugins:symbol-processor:publishToMavenLocal")
     dependsOn(":dataframe-arrow:publishToMavenLocal")
     dependsOn(":dataframe-excel:publishToMavenLocal")
+    dependsOn(":dataframe-jdbc:publishToMavenLocal")
     dependsOn(":dataframe-openapi:publishToMavenLocal")
     dependsOn(":publishApiPublicationToMavenLocal")
     dependsOn(":dataframe-arrow:publishDataframeArrowPublicationToMavenLocal")
     dependsOn(":dataframe-excel:publishDataframeExcelPublicationToMavenLocal")
+    dependsOn(":dataframe-jdbc:publishDataframeJDBCPublicationToMavenLocal")
     dependsOn(":dataframe-openapi:publishDataframeOpenApiPublicationToMavenLocal")
     dependsOn(":plugins:symbol-processor:publishMavenPublicationToMavenLocal")
     dependsOn(":core:publishCorePublicationToMavenLocal")
