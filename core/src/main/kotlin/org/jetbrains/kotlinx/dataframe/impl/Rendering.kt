@@ -48,26 +48,48 @@ internal fun renderType(column: ColumnSchema) =
         else -> throw NotImplementedError()
     }
 
-internal val classesToBeRenderedShort = setOf(URL::class, LocalDateTime::class, LocalTime::class)
+internal fun renderType(type: KType?): String {
+    return when (type?.classifier) {
+        null -> "*"
 
-internal fun renderType(type: KType): String =
-    when (type.classifier) {
         Nothing::class -> "Nothing" + if (type.isMarkedNullable) "?" else ""
-        List::class -> {
-            val argument = type.arguments[0].type?.let { renderType(it) } ?: "*"
-            "List<$argument>"
-        }
 
         else -> {
-            val result = type.toString()
-            if (classesToBeRenderedShort.contains(type.classifier) ||
-                result.startsWith("kotlin.") ||
-                result.startsWith("org.jetbrains.kotlinx.dataframe.")
-            ) {
-                (type.jvmErasure.simpleName?.let { if (type.isMarkedNullable) "$it?" else it }) ?: result
-            } else result
+            val fullName = type.jvmErasure.qualifiedName ?: return type.toString()
+            val name = when {
+                type.classifier == URL::class ->
+                    fullName.removePrefix("java.net.")
+
+                type.classifier in listOf(LocalDateTime::class, LocalTime::class) ->
+                    fullName.removePrefix("java.time.")
+
+                fullName.startsWith("kotlin.collections") ->
+                    fullName.removePrefix("kotlin.collections")
+
+                fullName.startsWith("kotlin.") ->
+                    fullName.removePrefix("kotlin.")
+
+                fullName.startsWith("org.jetbrains.kotlinx.dataframe.") ->
+                    fullName.removePrefix("org.jetbrains.kotlinx.dataframe.")
+
+                else -> fullName
+            }
+
+            buildString {
+                append(name)
+                if (type.arguments.isNotEmpty()) {
+                    val arguments = type.arguments.joinToString {
+                        renderType(it.type)
+                    }
+                    append("<$arguments>")
+                }
+                if (type.isMarkedNullable) {
+                    append("?")
+                }
+            }
         }
     }
+}
 
 internal fun renderType(column: AnyCol) =
     when (column.kind()) {
