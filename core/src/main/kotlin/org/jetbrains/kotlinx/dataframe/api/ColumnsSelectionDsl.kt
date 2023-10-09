@@ -22,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelecti
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.columns.transformWithContext
 import kotlin.reflect.KProperty
 
 /**
@@ -87,7 +88,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     // colsOfKind(Value, Frame) {}, colsOfKind(Value, Frame)
     ColsOfKindColumnsSelectionDsl,
 
-    // all(), allAfter(colA), allBefore(colA), allFrom(colA), allUpTo(colA)
+    // all(Cols)(), allAfter(colA), allBefore(colA), allFrom(colA), allUpTo(colA)
     AllColumnsSelectionDsl,
     // colsAtAnyDepth {}, colsAtAnyDepth()
     ColsAtAnyDepthColumnsSelectionDsl,
@@ -99,7 +100,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     DropColumnsSelectionDsl,
 
     // except(), allExcept {}
-    ExceptColumnsSelectionDsl<T>,
+    AllExceptColumnsSelectionDsl<T>,
     // nameContains(""), childrenNameContains(""), nameStartsWith(""), childrenNameEndsWith("")
     ColumnNameFiltersColumnsSelectionDsl,
     // withoutNulls(), childrenWithoutNulls()
@@ -342,7 +343,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      * {@include [LineBreak]}
      *
-     * See also [except][ColumnsSelectionDsl.except]/[allExcept][ColumnsSelectionDsl.allExcept] for the inverted operation of this function.
+     * See also [except][ColumnsSelectionDsl.except]/[allExcept][ColumnsSelectionDsl.allColsExcept] for the inverted operation of this function.
      *
      * @param [selector\] The [ColumnsSelector] to use for the selection.
      * @receiver The [ColumnGroup] to select from.
@@ -355,6 +356,14 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
         interface ExampleArg
     }
 
+    // TODO? can cause clashes if cols have the same name
+    public fun <C> ColumnSet<C>.select(selector: ColumnsSelector<*, *>): ColumnSet<*> =
+        transformWithContext {
+            it.toColumnGroup("")
+                .select(selector)
+                .resolve(this)
+        }
+
     /**
      * @include [CommonSelectDocs]
      * @setArg [CommonSelectDocs.ExampleArg]
@@ -365,17 +374,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      */
     @Suppress("UNCHECKED_CAST")
     public fun <C, R> SingleColumn<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> =
-        createColumnSet { context ->
-            this.ensureIsColumnGroup().resolveSingle(context)?.let { col ->
-                require(col.isColumnGroup()) {
-                    "Column ${col.path} is not a ColumnGroup and can thus not be selected from."
-                }
-
-                col.asColumnGroup()
-                    .getColumnsWithPaths(selector as ColumnsSelector<*, R>)
-                    .map { it.changePath(col.path + it.path) }
-            } ?: emptyList()
-        }
+        selectInternal(selector)
 
     /** @include [SingleColumn.select] */
     public operator fun <C, R> SingleColumn<DataRow<C>>.invoke(selector: ColumnsSelector<C, R>): ColumnSet<R> =
@@ -465,6 +464,19 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
 
     // endregion
 }
+
+internal fun <C, R> SingleColumn<DataRow<C>>.selectInternal(selector: ColumnsSelector<C, R>): ColumnSet<R> =
+    createColumnSet { context ->
+        this.ensureIsColumnGroup().resolveSingle(context)?.let { col ->
+            require(col.isColumnGroup()) {
+                "Column ${col.path} is not a ColumnGroup and can thus not be selected from."
+            }
+
+            col.asColumnGroup()
+                .getColumnsWithPaths(selector as ColumnsSelector<*, R>)
+                .map { it.changePath(col.path + it.path) }
+        } ?: emptyList()
+    }
 
 /**
  * @include [ColumnExpression.CommonDocs]

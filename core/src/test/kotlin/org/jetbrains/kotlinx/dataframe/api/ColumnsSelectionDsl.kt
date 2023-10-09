@@ -169,7 +169,7 @@ open class ColumnsSelectionDslTests : TestBase() {
         }.alsoDebug()
 
         dfGroup.select {
-            age and name.allExcept {
+            age and name.allColsExcept {
                 firstName.secondName
             }
         }.alsoDebug()
@@ -189,7 +189,7 @@ open class ColumnsSelectionDslTests : TestBase() {
                 name { firstName }
             },
             df.select {
-                name.allExcept { lastName }
+                name.allColsExcept { lastName }
             },
 //            df.select {
 //                name - { lastName }

@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
@@ -34,6 +35,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.onResolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.owner
@@ -261,6 +263,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet] that contains a subset from the current [ColumnsResolver],
      * containing all columns {@getArg [BehaviorArg]}.
      *
+     * [column\] can be specified both relative to the current [ColumnsResolver] and absolutely.
+     *
      * If the current [ColumnsResolver] is a [SingleColumn] and consists of only one [column group][ColumnGroup],
      * then the function will take columns from its children.
      *
@@ -323,7 +327,8 @@ public interface AllColumnsSelectionDsl {
      * @setArg [CommonAllSubsetDocs.FunctionColsArg] allColsAfter
      * @setArg [CommonAllSubsetDocs.BehaviorArg] after [column\], excluding [column\] itself
      * @setArg [CommonAllSubsetDocs.ColumnDoesNotExistArg] the function will return an empty [ColumnSet][ColumnSet]
-     * @param [column\] The specified column after which all columns should be taken.
+     * @param [column\] The specified column after which all columns should be taken. This column can be referenced
+     *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
     private interface AllAfterDocs
 
@@ -377,7 +382,7 @@ public interface AllColumnsSelectionDsl {
         interface Arg
     }
 
-    /** @include [ColumnsSelectionDslAllAfterDocs] {@setArg [ColumnsSelectionDslAllAfterDocs.Arg] \{ myColumn \\}} */
+    /** @include [ColumnsSelectionDslAllAfterDocs] {@setArg [ColumnsSelectionDslAllAfterDocs.Arg] \\ \{ myColumn \\}} */
     public fun <T> ColumnsSelectionDsl<T>.allAfter(column: ColumnSelector<T, *>): ColumnSet<*> =
         asSingleColumn().allColsAfter(column)
 
@@ -409,7 +414,7 @@ public interface AllColumnsSelectionDsl {
         interface Arg
     }
 
-    /** @include [SingleColumnAllAfterDocs] {@setArg [SingleColumnAllAfterDocs.Arg] \{ myColumn \\}} */
+    /** @include [SingleColumnAllAfterDocs] {@setArg [SingleColumnAllAfterDocs.Arg] \\ \{ myColumn \\}} */
     public fun <T> SingleColumn<DataRow<T>>.allColsAfter(column: ColumnSelector<T, *>): ColumnSet<*> {
         var resolvedCol: DataColumn<*>? = null
         return this
@@ -553,7 +558,8 @@ public interface AllColumnsSelectionDsl {
      * @setArg [CommonAllSubsetDocs.FunctionColsArg] allColsFrom
      * @setArg [CommonAllSubsetDocs.BehaviorArg] from [column\], including [column\] itself
      * @setArg [CommonAllSubsetDocs.ColumnDoesNotExistArg] the function will return an empty [ColumnSet][ColumnSet]
-     * @param [column\] The specified column from which all columns should be taken.
+     * @param [column\] The specified column from which all columns should be taken. This column can be referenced
+     *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
     private interface AllFromDocs
 
@@ -569,7 +575,7 @@ public interface AllColumnsSelectionDsl {
         interface Arg
     }
 
-    /** @include [ColumnSetAllFromDocs] {@setArg [ColumnSetAllFromDocs.Arg] \{ myColumns \\\}} */
+    /** @include [ColumnSetAllFromDocs] {@setArg [ColumnSetAllFromDocs.Arg] \\ \{ myColumns \\\}} */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.allFrom(column: ColumnSelector<*, *>): ColumnSet<C> {
         var resolvedColumn: DataColumn<C>? = null
@@ -783,7 +789,8 @@ public interface AllColumnsSelectionDsl {
      * @setArg [CommonAllSubsetDocs.FunctionColsArg] allColsBefore
      * @setArg [CommonAllSubsetDocs.BehaviorArg] before [column\], excluding [column\] itself
      * @setArg [CommonAllSubsetDocs.ColumnDoesNotExistArg] the function will return a [ColumnSet][ColumnSet] containing all columns
-     * @param [column\] The specified column before which all columns should be taken
+     * @param [column\] The specified column before which all columns should be taken. This column can be referenced
+     *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
     private interface AllBeforeDocs
 
@@ -1010,7 +1017,8 @@ public interface AllColumnsSelectionDsl {
      * @setArg [CommonAllSubsetDocs.FunctionColsArg] allColsUpTo
      * @setArg [CommonAllSubsetDocs.BehaviorArg] up to [column\], including [column\] itself
      * @setArg [CommonAllSubsetDocs.ColumnDoesNotExistArg] the function will return a [ColumnSet][ColumnSet] containing all columns
-     * @param [column\] The specified column up to which all columns should be taken.
+     * @param [column\] The specified column up to which all columns should be taken. This column can be referenced
+     *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
     private interface AllUpToDocs
 
@@ -1301,10 +1309,16 @@ public interface AllColumnsSelectionDsl {
  * returns a [(transformable) ColumnSet][TransformableColumnSet] containing the children of this [ColumnGroup],
  * else it simply returns a [(transformable) ColumnSet][TransformableColumnSet] from [this].
  */
-internal fun ColumnsResolver<*>.allColumnsInternal(): TransformableColumnSet<*> =
+internal fun ColumnsResolver<*>.allColumnsInternal(removePaths: Boolean = false): TransformableColumnSet<*> =
     transform {
         if (isSingleColumnWithGroup(it)) {
-            it.single().cols()
+            it.single().let {
+                if (removePaths) {
+                    it.asColumnGroup().columns().map(AnyCol::addPath)
+                } else {
+                    it.cols()
+                }
+            }
         } else {
             it
         }

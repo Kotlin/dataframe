@@ -40,12 +40,13 @@ internal open class DataFrameReceiver<T>(
     private fun <R> DataColumn<R>?.check(path: ColumnPath): DataColumn<R> =
         when (this) {
             null -> when (unresolvedColumnsPolicy) {
-                UnresolvedColumnsPolicy.Create, UnresolvedColumnsPolicy.Skip -> MissingColumnGroup<Any>(
-                    path,
-                    this@DataFrameReceiver
-                ).asDataColumn().cast()
+                UnresolvedColumnsPolicy.Create, UnresolvedColumnsPolicy.Skip ->
+                    MissingColumnGroup<Any>(
+                        path = path,
+                        host = this@DataFrameReceiver,
+                    ).asDataColumn().cast()
 
-                UnresolvedColumnsPolicy.Fail -> error("Column $path not found")
+                UnresolvedColumnsPolicy.Fail -> error("Column $path not found among ${df.columnNames()}.")
             }
 
             is MissingDataColumn -> this

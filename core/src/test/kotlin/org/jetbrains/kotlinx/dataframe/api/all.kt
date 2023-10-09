@@ -2,13 +2,18 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import org.intellij.lang.annotations.Language
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.alsoDebug
+import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.samples.api.age
 import org.jetbrains.kotlinx.dataframe.samples.api.city
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
 import org.jetbrains.kotlinx.dataframe.samples.api.isHappy
 import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
+import org.jetbrains.kotlinx.dataframe.samples.api.secondName
+import org.jetbrains.kotlinx.dataframe.samples.api.thirdName
 import org.jetbrains.kotlinx.dataframe.samples.api.weight
 import org.junit.Test
 
@@ -69,42 +74,43 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { allBefore(Person::city) },
             df.select { allBefore(pathOf("city")) },
 
-//            df.select { allUpTo { age } },
-//            df.select { allUpTo { first { it.name.startsWith("a") } } },
+            df.select { allUpTo { age } },
+            df.select { allUpTo { first { it.name.startsWith("a") } } },
             df.select { allUpTo(age) },
             df.select { allUpTo("age") },
             df.select { allUpTo(Person::age) },
             df.select { allUpTo(pathOf("age")) },
         ).shouldAllBeEqual()
 
-//        listOf(
-//            df.select { weight and isHappy },
-//
-//            df.select { allAfter { city } },
-//            df.select { allAfter { first { it.name.startsWith("c") } } },
-//            df.select { allAfter(city) },
-//            df.select { allAfter("city") },
-//            df.select { allAfter(Person::city) },
-//            df.select { allAfter(pathOf("city")) },
-//
-//            df.select { allFrom { weight } },
-//            df.select { allFrom { first { it.name.startsWith("w") } } },
-//            df.select { allFrom(weight) },
-//            df.select { allFrom("weight") },
-//            df.select { allFrom(Person::weight) },
-//            df.select { allFrom(pathOf("weight")) },
-//        ).shouldAllBeEqual()
+        listOf(
+            df.select { weight and isHappy },
+
+            df.select { allAfter { city } },
+            df.select { allAfter { first { it.name.startsWith("c") } } },
+            df.select { allAfter(city) },
+            df.select { allAfter("city") },
+            df.select { allAfter(Person::city) },
+            df.select { allAfter(pathOf("city")) },
+
+            df.select { allFrom { weight } },
+            df.select { allFrom { first { it.name.startsWith("w") } } },
+            df.select { allFrom(weight) },
+            df.select { allFrom("weight") },
+            df.select { allFrom(Person::weight) },
+            df.select { allFrom(pathOf("weight")) },
+        ).shouldAllBeEqual()
     }
 
     @Test
     fun `all on columnSet`() {
-        val cityAccessor = column<String>("city")
+        val cityAccessor = column<String?>("city")
         val weightAccessor = column<Int?>("weight")
         listOf(
             df.select { weight and isHappy },
 
             df.select { cols().allAfter { nameContains("city").single() } },
             df.select { cols().allAfter { cityAccessor } },
+            df.select { cols().allAfter { city } },
             df.select { cols().allAfter(city) },
             df.select { cols().allAfter(cityAccessor) },
             df.select { cols().allAfter("city") },
@@ -113,6 +119,7 @@ class AllTests : ColumnsSelectionDslTests() {
 
             df.select { cols().allFrom { nameContains("weight").single() } },
             df.select { cols().allFrom { weightAccessor } },
+            df.select { cols().allFrom { weight } },
             df.select { cols().allFrom(weight) },
             df.select { cols().allFrom(weightAccessor) },
             df.select { cols().allFrom("weight") },
@@ -126,6 +133,7 @@ class AllTests : ColumnsSelectionDslTests() {
 
             df.select { cols().allBefore { nameContains("city").single() } },
             df.select { cols().allBefore { cityAccessor } },
+            df.select { cols().allBefore { city } },
             df.select { cols().allBefore(city) },
             df.select { cols().allBefore(cityAccessor) },
             df.select { cols().allBefore("city") },
@@ -134,6 +142,7 @@ class AllTests : ColumnsSelectionDslTests() {
 
             df.select { cols().allUpTo { nameContains("age").single() } },
             df.select { cols().allUpTo { ageAccessor } },
+            df.select { cols().allUpTo { age } },
             df.select { cols().allUpTo(age) },
             df.select { cols().allUpTo(ageAccessor) },
             df.select { cols().allUpTo("age") },
@@ -146,7 +155,7 @@ class AllTests : ColumnsSelectionDslTests() {
     fun `all subset at lower level after and from`() {
         listOf(
             df.select { age },
-            df.select { colsOf<Int?>().allBefore(weight) }, // TODO
+            df.select { colsOf<Int?>().allBefore(weight) },
             df.select { allBefore(weight).colsOf<Int?>() },
         ).shouldAllBeEqual()
 
@@ -234,12 +243,12 @@ class AllTests : ColumnsSelectionDslTests() {
 
             df.select { name.allColsBefore { lastName } },
             df.select { name.allColsBefore { lastNameAccessor } },
-            df.select { name.allColsBefore(name.lastName) },
+            df.select { name.allColsBefore(name.lastName) }, // full path
             df.select { name.allColsBefore(lastNameAccessor) },
             df.select { name.allColsBefore("lastName") },
             df.select { name.allColsBefore(Name::lastName) },
             df.select { name.allColsBefore(pathOf("lastName")) },
-            df.select { name.allColsBefore(pathOf("name", "lastName")) },
+            df.select { name.allColsBefore(pathOf("name", "lastName")) }, // full path
 
             df.select { "name".allColsBefore { lastNameAccessor } },
             df.select { "name".allColsBefore(name.lastName) },
@@ -297,6 +306,55 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { pathOf("name").allColsUpTo(Name::firstName) },
             df.select { pathOf("name").allColsUpTo(pathOf("firstName")) },
             df.select { pathOf("name").allColsUpTo(pathOf("name", "firstName")) },
+        ).shouldAllBeEqual()
+    }
+
+    @Test
+    fun `2 levels deep`() {
+        val secondNameAccessor = column<String?>("secondName")
+        val thirdNameAccessor = column<String?>("thirdName")
+        listOf(
+            dfGroup.select { name.firstName { firstName and secondName } },
+
+            dfGroup.select { name.firstName.allColsBefore { thirdName } },
+            dfGroup.select { name.firstName.allColsBefore { thirdNameAccessor } },
+            dfGroup.select { name.firstName.allColsBefore(name.firstName.thirdName) },
+            dfGroup.select { name.firstName.allColsBefore("thirdName") },
+            dfGroup.select { name.firstName.allColsBefore(FirstNames::thirdName) },
+            dfGroup.select { name.firstName.allColsBefore(thirdNameAccessor) },
+            dfGroup.select { name.firstName.allColsBefore(pathOf("thirdName")) },
+            dfGroup.select { name.firstName.allColsBefore(pathOf("name", "firstName", "thirdName")) },
+
+            dfGroup.select { name.firstName.allColsUpTo { secondName } },
+            dfGroup.select { name.firstName.allColsUpTo { secondNameAccessor } },
+            dfGroup.select { name.firstName.allColsUpTo(name.firstName.secondName) },
+            dfGroup.select { name.firstName.allColsUpTo("secondName") },
+            dfGroup.select { name.firstName.allColsUpTo(FirstNames::secondName) },
+            dfGroup.select { name.firstName.allColsUpTo(secondNameAccessor) },
+            dfGroup.select { name.firstName.allColsUpTo(pathOf("secondName")) },
+            dfGroup.select { name.firstName.allColsUpTo(pathOf("name", "firstName", "secondName")) },
+        ).shouldAllBeEqual()
+    }
+
+    @Test
+    fun `ambiguous cases`() {
+        @Language("json")
+        val json = """
+            {
+                 "a": {
+                     "a": 1,
+                     "b": 2
+                 }
+            }
+        """.trimIndent()
+
+        val df = DataFrame.readJsonStr(json).alsoDebug()
+
+        listOf(
+            df.select { "a"["b"] }.alsoDebug(),
+
+            df.select { "a".allColsAfter("a") },
+            df.select { "a".allColsAfter("a"["a"]) },
         ).shouldAllBeEqual()
     }
 }
