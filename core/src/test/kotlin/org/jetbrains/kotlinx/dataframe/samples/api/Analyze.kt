@@ -577,7 +577,6 @@ class Analyze : TestBase() {
         df.groupBy { name }
         df.groupBy { city and name.lastName }
         df.groupBy { age / 10 named "ageDecade" }
-        df.groupBy { expr { name.firstName.length + name.lastName.length } named "nameLength" }
         // SampleEnd
     }
 
@@ -601,7 +600,6 @@ class Analyze : TestBase() {
 
         df.groupBy { age / 10 named "ageDecade" }
 
-        df.groupBy { expr { firstName().length + lastName().length } named "nameLength" }
         // SampleEnd
     }
 
@@ -612,7 +610,50 @@ class Analyze : TestBase() {
         df.groupBy("name")
         df.groupBy { "city" and "name"["lastName"] }
         df.groupBy { "age"<Int>() / 10 named "ageDecade" }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun groupByExpr_properties() {
+        // SampleStart
+        df.groupBy { expr { name.firstName.length + name.lastName.length } named "nameLength" }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun groupByExpr_accessors() {
+        // SampleStart
+        val name by columnGroup()
+        val lastName by name.column<String>()
+        val firstName by name.column<String>()
+
+        df.groupBy { expr { firstName().length + lastName().length } named "nameLength" }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun groupByExpr_strings() {
+        // SampleStart
         df.groupBy { expr { "name"["firstName"]<String>().length + "name"["lastName"]<String>().length } named "nameLength" }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun groupByMoveToTop() {
+        // SampleStart
+        df.groupBy(moveToTop = true) { name.lastName }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun groupByMoveToTopFalse() {
+        // SampleStart
+        df.groupBy(moveToTop = false) { name.lastName }
         // SampleEnd
     }
 
