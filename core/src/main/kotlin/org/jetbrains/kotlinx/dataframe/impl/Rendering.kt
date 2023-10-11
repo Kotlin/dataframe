@@ -63,8 +63,8 @@ internal fun renderType(type: KType?): String {
                 type.classifier in listOf(LocalDateTime::class, LocalTime::class) ->
                     fullName.removePrefix("java.time.")
 
-                fullName.startsWith("kotlin.collections") ->
-                    fullName.removePrefix("kotlin.collections")
+                fullName.startsWith("kotlin.collections.") ->
+                    fullName.removePrefix("kotlin.collections.")
 
                 fullName.startsWith("kotlin.") ->
                     fullName.removePrefix("kotlin.")

@@ -95,7 +95,7 @@ class PivotTests {
 
         data["age"].type() shouldBe typeOf<List<Int>>()
         data["city"].type() shouldBe typeOf<String>()
-        data["weight"].type() shouldBe typeOf<Comparable<Any>>()
+        data["weight"].type() shouldBe typeOf<Comparable<*>>() // Comparable<String + Int> -> Comparable<Nothing | *>
 
         res.renderToString(columnTypes = true, title = true) shouldBe
             defaultExpected.group { drop(1) }.into("key").renderToString(columnTypes = true, title = true)
