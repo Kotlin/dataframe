@@ -136,7 +136,9 @@ class PivotTests {
 
     @Test
     fun `pivot two values`() {
-        val pivoted = typed.pivot(inward = false) { key }.groupBy { name }
+        val pivoted = typed
+            .pivot(inward = false) { key }
+            .groupBy { name }
             .values { value and (expr { value?.toString() } into "str") default "-" }
 
         val expected = defaultExpected.replace("age", "city", "weight").with {

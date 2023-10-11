@@ -28,7 +28,7 @@ import org.jetbrains.kotlinx.dataframe.columns.*
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
-import org.jetbrains.kotlinx.dataframe.impl.eraseGenericTypeParameters
+import org.jetbrains.kotlinx.dataframe.impl.replaceGenericTypeParametersWithUpperbound
 import org.jetbrains.kotlinx.dataframe.impl.guessValueType
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -58,7 +58,7 @@ internal fun <T, R> ColumnsContainer<T>.newColumn(
         Infer.Nulls -> DataColumn.create(
             name = name,
             values = values,
-            type = type.withNullability(nullable).eraseGenericTypeParameters(),
+            type = type.withNullability(nullable).replaceGenericTypeParametersWithUpperbound(),
             infer = Infer.None,
         )
 
@@ -71,7 +71,7 @@ internal fun <T, R> ColumnsContainer<T>.newColumn(
         Infer.None -> DataColumn.create(
             name = name,
             values = values,
-            type = type.eraseGenericTypeParameters(),
+            type = type.replaceGenericTypeParametersWithUpperbound(),
             infer = Infer.None,
         )
     }

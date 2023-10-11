@@ -9,6 +9,8 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeParameter
 import kotlin.reflect.KTypeProjection
+import kotlin.reflect.KVariance
+import kotlin.reflect.KVariance.*
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.allSuperclasses
 import kotlin.reflect.full.createType
@@ -50,37 +52,46 @@ internal fun KType.projectUpTo(superClass: KClass<*>): KType {
 }
 
 /**
- * Changes generic type parameters to `Any?`, like `List<T> -> List<Any?>`.
+ * Changes generic type parameters to its upperbound, like `List<T> -> List<Any?>` and
+ * `Comparable<T> -> Comparable<Nothing>`.
  * Works recursively as well.
  */
 @PublishedApi
-internal fun KType.eraseGenericTypeParameters(): KType {
-    fun KType.eraseRecursively(): Pair<Boolean, KType> {
-        var replaced = false
-        val arguments = arguments.map {
-            val type = it.type
-            val (replacedDownwards, newType) = when {
-                type == null -> typeOf<Any?>()
+internal fun KType.replaceGenericTypeParametersWithUpperbound(): KType {
+    fun KType.replaceRecursively(): Pair<Boolean, KType> {
+        var replacedAnyArgument = false
+        val arguments = arguments.mapIndexed { i, it ->
+            val oldType = it.type ?: return@mapIndexed it // is * if null, we'll leave those be
 
-                type.classifier is KTypeParameter -> {
-                    replaced = true
-                    (type.classifier as KTypeParameter).upperBounds.firstOrNull() ?: typeOf<Any?>()
+            val type = when {
+                oldType.classifier is KTypeParameter -> { // e.g. T
+                    replacedAnyArgument = true
+
+                    // resolve the variance (`in`/`out`/``) of the argument in the original class
+                    val varianceInClass = (classifier as? KClass<*>)?.typeParameters?.getOrNull(i)?.variance
+                    when (varianceInClass) {
+                        INVARIANT, OUT, null ->
+                            (oldType.classifier as KTypeParameter).upperBounds.firstOrNull() ?: typeOf<Any?>()
+
+                        // Type<in T> cannot be replaced with Type<Any?>, instead it should be replaced with Type<Nothing>
+                        IN -> nothingType(false)
+                    }
                 }
 
-                else -> type
-            }.eraseRecursively()
-
-            if (replacedDownwards) replaced = true
+                else -> oldType
+            }
+            val (replacedDownwards, newType) = type.replaceRecursively()
+            if (replacedDownwards) replacedAnyArgument = true
 
             KTypeProjection.invariant(newType)
         }
         return Pair(
-            first = replaced,
-            second = if (replaced) jvmErasure.createType(arguments, isMarkedNullable) else this,
+            first = replacedAnyArgument,
+            second = if (replacedAnyArgument) jvmErasure.createType(arguments, isMarkedNullable) else this,
         )
     }
 
-    return eraseRecursively().second
+    return replaceRecursively().second
 }
 
 internal fun inheritanceChain(subClass: KClass<*>, superClass: KClass<*>): List<Pair<KClass<*>, KType>> {
@@ -221,12 +232,16 @@ internal fun commonParents(classes: Iterable<KClass<*>>): List<KClass<*>> =
  * @receiver the types to find the common type for
  * @return the common type including listify behaviour
  *
- * @see commonType
+ * @param useStar if true, `*` will be used to fill in generic type parameters instead of `Any?`
+ * (for invariant/out variance) or `Nothing` (for in variance)
+ *
+ * @see Iterable.commonType
  */
-internal fun Iterable<KType>.commonTypeListifyValues(): KType {
+internal fun Iterable<KType>.commonTypeListifyValues(useStar: Boolean = true): KType {
     val distinct = distinct()
+    val nullable = distinct.any { it.isMarkedNullable }
     return when {
-        distinct.isEmpty() -> Any::class.createStarProjectedType(distinct.any { it.isMarkedNullable })
+        distinct.isEmpty() -> typeOf<Any>().withNullability(nullable)
         distinct.size == 1 -> distinct.single()
         else -> {
             val classes = distinct.map {
@@ -269,20 +284,43 @@ internal fun Iterable<KType>.commonTypeListifyValues(): KType {
                 }
 
                 else -> {
-                    val kclass = commonParent(distinct.map { it.jvmErasure }) ?: return typeOf<Any>()
-                    val projections = distinct.map { it.projectUpTo(kclass).eraseGenericTypeParameters() }
-                    require(projections.all { it.jvmErasure == kclass })
-                    val arguments = List(kclass.typeParameters.size) { i ->
+                    val kClass = commonParent(distinct.map { it.jvmErasure })
+                        ?: return typeOf<Any>().withNullability(nullable)
+                    val projections = distinct
+                        .map { it.projectUpTo(kClass).replaceGenericTypeParametersWithUpperbound() }
+                    require(projections.all { it.jvmErasure == kClass })
+
+                    val arguments = List(kClass.typeParameters.size) { i ->
+                        val typeParameter = kClass.typeParameters[i]
                         val projectionTypes = projections
                             .map { it.arguments[i].type }
                             .filterNot { it in distinct } // avoid infinite recursion
 
-                        val type = projectionTypes.filterNotNull().commonTypeListifyValues()
-                        KTypeProjection.invariant(type)
+                        when {
+                            projectionTypes.isEmpty() && typeParameter.variance == KVariance.IN -> {
+                                if (useStar) {
+                                    KTypeProjection.STAR
+                                } else {
+                                    KTypeProjection.invariant(nothingType(false))
+                                }
+                            }
+
+                            else -> {
+                                val commonType = projectionTypes.filterNotNull().commonTypeListifyValues(useStar)
+                                if (commonType == typeOf<Any?>() && useStar) {
+                                    KTypeProjection.STAR
+                                } else {
+                                    KTypeProjection(typeParameter.variance, commonType)
+                                }
+                            }
+                        }
                     }
 
-                    if (kclass == Nothing::class) nothingType(nullable = distinct.any { it.isMarkedNullable })
-                    else kclass.createType(arguments, distinct.any { it.isMarkedNullable })
+                    if (kClass == Nothing::class) {
+                        nothingType(nullable)
+                    } else {
+                        kClass.createType(arguments, nullable)
+                    }
                 }
             }
         }
