@@ -160,6 +160,7 @@ class DataSchemaGenerator(
             val url = importStatement.dataSource.pathRepresentation
 
             if(url.contains("h2")) Class.forName("org.h2.Driver")
+            if(url.contains("mariadb")) Class.forName("org.mariadb.jdbc.Driver")
 
             val connection = DriverManager.getConnection(
                 url,
@@ -168,8 +169,8 @@ class DataSchemaGenerator(
             )
 
             connection.use {
-                val schema = if(importStatement.jdbcOptions.sqlQuery.isBlank())
-                    DataFrame.getSchemaForSqlTable(connection, importStatement.name)
+                val schema = if(importStatement.jdbcOptions.tableName.isNotEmpty())
+                    DataFrame.getSchemaForSqlTable(connection, importStatement.jdbcOptions.tableName)
                 else DataFrame.getSchemaForSqlQuery(connection, importStatement.jdbcOptions.sqlQuery)
 
                 val codeGenerator = CodeGenerator.create(useFqNames = false)

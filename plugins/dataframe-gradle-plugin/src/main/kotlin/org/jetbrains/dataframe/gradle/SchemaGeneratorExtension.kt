@@ -135,5 +135,6 @@ data class JsonOptionsDsl(
 data class JdbcOptionsDsl(
     var user: String = "", // TODO: I'm not sure about the default parameters
     var password: String = "", // TODO: I'm not sure about the default parameters
+    var tableName: String = "",
     var sqlQuery: String = ""
 ) : Serializable

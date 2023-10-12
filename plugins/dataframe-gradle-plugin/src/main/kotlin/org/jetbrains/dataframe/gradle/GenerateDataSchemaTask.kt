@@ -84,8 +84,8 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
         if (rawUrl.startsWith("jdbc")) {
             val connection = DriverManager.getConnection(rawUrl, jdbcOptions.user, jdbcOptions.password)
             connection.use {
-                val schema = if(jdbcOptions.sqlQuery.isBlank())
-                    DataFrame.getSchemaForSqlTable(connection,  interfaceName.get())
+                val schema = if(jdbcOptions.tableName.isNotEmpty())
+                    DataFrame.getSchemaForSqlTable(connection, jdbcOptions.tableName)
                 else DataFrame.getSchemaForSqlQuery(connection, jdbcOptions.sqlQuery)
 
                 val codeGenerator = CodeGenerator.create(useFqNames = false)
