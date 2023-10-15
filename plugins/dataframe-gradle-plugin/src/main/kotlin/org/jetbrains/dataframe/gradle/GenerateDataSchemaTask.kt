@@ -18,8 +18,10 @@ import org.jetbrains.kotlinx.dataframe.impl.codeGen.toStandaloneSnippet
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlCodeGenReader
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlDfReader
 import java.io.File
+import java.lang.RuntimeException
 import java.net.URL
 import java.nio.file.Paths
+import java.sql.Connection
 import java.sql.DriverManager
 import org.jetbrains.kotlinx.dataframe.io.ArrowFeather
 import org.jetbrains.kotlinx.dataframe.io.CSV
@@ -30,6 +32,7 @@ import org.jetbrains.kotlinx.dataframe.io.TSV
 import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
 import org.jetbrains.kotlinx.dataframe.io.isURL
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 
 abstract class GenerateDataSchemaTask : DefaultTask() {
 
@@ -84,9 +87,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
         if (rawUrl.startsWith("jdbc")) {
             val connection = DriverManager.getConnection(rawUrl, jdbcOptions.user, jdbcOptions.password)
             connection.use {
-                val schema = if(jdbcOptions.tableName.isNotEmpty())
-                    DataFrame.getSchemaForSqlTable(connection, jdbcOptions.tableName)
-                else DataFrame.getSchemaForSqlQuery(connection, jdbcOptions.sqlQuery)
+                val schema = generateSchemaByJdbcOptions(jdbcOptions, connection)
 
                 val codeGenerator = CodeGenerator.create(useFqNames = false)
 
@@ -172,6 +173,23 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
             )
             schemaFile.writeText(codeGenResult.toStandaloneSnippet(escapedPackageName, readDfMethod.additionalImports))
         }
+    }
+
+    private fun generateSchemaByJdbcOptions(
+        jdbcOptions: JdbcOptionsDsl,
+        connection: Connection
+    ): DataFrameSchema {
+        logger.debug("Table name: ${jdbcOptions.tableName}")
+        logger.debug("SQL query: ${jdbcOptions.sqlQuery}")
+
+        return if (jdbcOptions.tableName.isNotBlank())
+            DataFrame.getSchemaForSqlTable(connection, jdbcOptions.tableName)
+        else if(jdbcOptions.sqlQuery.isNotBlank())
+            DataFrame.getSchemaForSqlQuery(connection, jdbcOptions.sqlQuery)
+        else throw RuntimeException("Table name: ${jdbcOptions.tableName}, " +
+            "SQL query: ${jdbcOptions.sqlQuery} both are empty! " +
+            "Populate 'tableName' or 'sqlQuery' in jdbcOptions with value to generate schema " +
+            "for SQL table or result of SQL query!")
     }
 
     private fun stringOf(data: Any): String =

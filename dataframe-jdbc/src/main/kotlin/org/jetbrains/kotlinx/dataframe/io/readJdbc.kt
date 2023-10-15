@@ -11,9 +11,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
-import org.jetbrains.kotlinx.dataframe.io.db.H2
-import org.jetbrains.kotlinx.dataframe.io.db.Sqlite
-import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromURL
+import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromUrl
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 
 private val logger = KotlinLogging.logger {}
@@ -115,7 +113,7 @@ public fun DataFrame.Companion.readSqlTable(connection: Connection, tableName: S
     if (limit > 0) preparedQuery += " LIMIT $limit"
 
     val url = connection.metaData.url
-    val dbType = extractDBTypeFromURL(url)
+    val dbType = extractDBTypeFromUrl(url)
 
     connection.createStatement().use { st ->
         logger.debug { "Connection with url:${url} is established successfully." }
@@ -182,7 +180,7 @@ public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: St
  */
 public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: String, limit: Int): AnyFrame {
     val url = connection.metaData.url
-    val dbType = extractDBTypeFromURL(url)
+    val dbType = extractDBTypeFromUrl(url)
 
     var internalSqlQuery = sqlQuery
     if (limit > 0) internalSqlQuery += " LIMIT $limit"
@@ -247,7 +245,7 @@ public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, connection: C
  */
 public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, connection: Connection, limit: Int): AnyFrame {
     val url = connection.metaData.url
-    val dbType = extractDBTypeFromURL(url)
+    val dbType = extractDBTypeFromUrl(url)
 
     return readResultSet(resultSet, dbType, limit)
 }
@@ -300,7 +298,7 @@ public fun DataFrame.Companion.readAllSqlTables(connection: Connection): List<An
 public fun DataFrame.Companion.readAllSqlTables(connection: Connection, limit: Int): List<AnyFrame> {
     val metaData = connection.metaData
     val url = connection.metaData.url
-    val dbType = extractDBTypeFromURL(url)
+    val dbType = extractDBTypeFromUrl(url)
 
     // exclude a system and other tables without data, but it looks like it supported badly for many databases
     val tables = metaData.getTables(null, null, null, arrayOf("TABLE"))
@@ -348,7 +346,7 @@ public fun DataFrame.Companion.getSchemaForSqlTable(
     tableName: String
 ): DataFrameSchema {
     val url = connection.metaData.url
-    val dbType = extractDBTypeFromURL(url)
+    val dbType = extractDBTypeFromUrl(url)
 
     connection.createStatement().use {
         logger.debug { "Connection with url:${connection.metaData.url} is established successfully." }
@@ -383,7 +381,7 @@ public fun DataFrame.Companion.getSchemaForSqlQuery(dbConfig: DatabaseConfigurat
  */
 public fun DataFrame.Companion.getSchemaForSqlQuery(connection: Connection, sqlQuery: String): DataFrameSchema {
     val url = connection.metaData.url
-    val dbType = extractDBTypeFromURL(url)
+    val dbType = extractDBTypeFromUrl(url)
 
     connection.createStatement().use { st ->
         st.executeQuery(sqlQuery).use { rs ->
@@ -419,7 +417,7 @@ public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet, dbTyp
  */
 public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet, connection: Connection): DataFrameSchema {
     val url = connection.metaData.url
-    val dbType = extractDBTypeFromURL(url)
+    val dbType = extractDBTypeFromUrl(url)
 
     val tableColumns = getTableColumnsMetadata(resultSet)
     return buildSchemaByTableColumns(tableColumns, dbType)
@@ -446,7 +444,7 @@ public fun DataFrame.Companion.getSchemaForAllSqlTables(dbConfig: DatabaseConfig
 public fun DataFrame.Companion.getSchemaForAllSqlTables(connection: Connection): List<DataFrameSchema> {
     val metaData = connection.metaData
     val url = connection.metaData.url
-    val dbType = extractDBTypeFromURL(url)
+    val dbType = extractDBTypeFromUrl(url)
 
     val tableTypes = arrayOf("TABLE")
     // exclude system and other tables without data

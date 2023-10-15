@@ -24,9 +24,18 @@ import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlCodeGenReader
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlDfReader
 import org.jetbrains.kotlinx.dataframe.io.*
 import java.io.File
+import java.lang.RuntimeException
 import java.net.MalformedURLException
 import java.net.URL
+import java.sql.Connection
 import java.sql.DriverManager
+import org.jetbrains.kotlinx.dataframe.io.db.H2
+import org.jetbrains.kotlinx.dataframe.io.db.MariaDb
+import org.jetbrains.kotlinx.dataframe.io.db.MySql
+import org.jetbrains.kotlinx.dataframe.io.db.PostgreSql
+import org.jetbrains.kotlinx.dataframe.io.db.Sqlite
+import org.jetbrains.kotlinx.dataframe.io.db.driverClassNameFromUrl
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 
 @OptIn(KspExperimental::class)
 class DataSchemaGenerator(
@@ -159,8 +168,8 @@ class DataSchemaGenerator(
         if (importStatement.isJdbc) {
             val url = importStatement.dataSource.pathRepresentation
 
-            if(url.contains("h2")) Class.forName("org.h2.Driver")
-            if(url.contains("mariadb")) Class.forName("org.mariadb.jdbc.Driver")
+            // Force classloading
+            Class.forName(driverClassNameFromUrl(url))
 
             val connection = DriverManager.getConnection(
                 url,
@@ -169,9 +178,7 @@ class DataSchemaGenerator(
             )
 
             connection.use {
-                val schema = if(importStatement.jdbcOptions.tableName.isNotEmpty())
-                    DataFrame.getSchemaForSqlTable(connection, importStatement.jdbcOptions.tableName)
-                else DataFrame.getSchemaForSqlQuery(connection, importStatement.jdbcOptions.sqlQuery)
+                val schema = generateSchemaForImport(importStatement, connection)
 
                 val codeGenerator = CodeGenerator.create(useFqNames = false)
 
@@ -257,6 +264,23 @@ class DataSchemaGenerator(
         schemaFile.bufferedWriter().use {
             it.write(code)
         }
+    }
+
+    private fun generateSchemaForImport(
+        importStatement: ImportDataSchemaStatement,
+        connection: Connection
+    ): DataFrameSchema {
+        logger.info("Table name: ${importStatement.jdbcOptions.tableName}")
+        logger.info("SQL query: ${importStatement.jdbcOptions.sqlQuery}")
+
+        return if (importStatement.jdbcOptions.tableName.isNotBlank())
+            DataFrame.getSchemaForSqlTable(connection, importStatement.jdbcOptions.tableName)
+        else if(importStatement.jdbcOptions.sqlQuery.isNotBlank())
+            DataFrame.getSchemaForSqlQuery(connection, importStatement.jdbcOptions.sqlQuery)
+        else throw RuntimeException("Table name: ${importStatement.jdbcOptions.tableName}, " +
+            "SQL query: ${importStatement.jdbcOptions.sqlQuery} both are empty! " +
+            "Populate 'tableName' or 'sqlQuery' in jdbcOptions with value to generate schema " +
+            "for SQL table or result of SQL query!")
     }
 }
 
