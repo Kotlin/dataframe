@@ -68,16 +68,16 @@ internal fun <T : Any> convert(src: Int, tartypeOf: KClass<T>): T = when (tartyp
     else -> throw NotImplementedError("Casting int to $tartypeOf is not supported")
 }
 
-internal fun BooleanArray.toIndices(): List<Int> {
+internal fun BooleanArray.getTrueIndices(): List<Int> {
     val res = ArrayList<Int>(size)
-    for (i in 0 until size)
+    for (i in indices)
         if (this[i]) res.add(i)
     return res
 }
 
-internal fun List<Boolean>.toIndices(): List<Int> {
+internal fun List<Boolean>.getTrueIndices(): List<Int> {
     val res = ArrayList<Int>(size)
-    for (i in 0 until size)
+    for (i in indices)
         if (this[i]) res.add(i)
     return res
 }
@@ -148,15 +148,18 @@ internal fun Iterable<KType?>.commonType(useStar: Boolean = true): KType {
     return when {
         distinct.isEmpty() || distinct.contains(null) -> typeOf<Any>().withNullability(nullable)
         distinct.size == 1 -> distinct.single()!!
+
         else -> {
             // common parent class of all KTypes
             val kClass = commonParent(distinct.map { it!!.jvmErasure })
                 ?: return typeOf<Any>().withNullability(nullable)
-            // all KTypes projected to the common parent class with erased generic type parameters (no <T>
+
+            // all KTypes projected to the common parent class with filled-in generic type parameters (no <T>, but <UpperBound>)
             val projections = distinct
                 .map { it!!.projectUpTo(kClass).replaceGenericTypeParametersWithUpperbound() }
             require(projections.all { it.jvmErasure == kClass })
 
+            // make new type arguments for the common parent class
             val arguments = List(kClass.typeParameters.size) { i ->
                 val typeParameter = kClass.typeParameters[i]
                 val projectionTypes = projections
