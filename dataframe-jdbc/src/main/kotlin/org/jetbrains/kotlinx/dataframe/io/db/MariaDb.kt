@@ -13,6 +13,9 @@ import kotlin.reflect.typeOf
  * and to generate the corresponding column schema.
  */
 public object MariaDb : DbType("mariadb") {
+    override val driverClassName: String
+        get() = "org.mariadb.jdbc.Driver"
+
     override fun convertDataFromResultSet(rs: ResultSet, tableColumnMetadata: TableColumnMetadata): Any? {
         val name = tableColumnMetadata.name
         return when (tableColumnMetadata.sqlTypeName) {

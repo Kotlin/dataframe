@@ -18,6 +18,9 @@ import kotlin.reflect.typeOf
  * NOTE: All date and timestamp related types are converted to String to avoid java.sql.* types.
  */
 public object H2 : DbType("h2") {
+    override val driverClassName: String
+        get() = "org.h2.Driver"
+
     override fun convertDataFromResultSet(rs: ResultSet, tableColumnMetadata: TableColumnMetadata): Any? {
         val name = tableColumnMetadata.name
         return when (tableColumnMetadata.sqlTypeName) {
