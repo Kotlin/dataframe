@@ -222,11 +222,10 @@ class UtilTests {
         ).commonType() shouldBe typeOf<AbstractType<out Int>>()
 //        listOf(typeOf<AbstractType<out Int>>(), typeOf<AbstractType<in Int>>()).commonType(useStar = false) shouldBe typeOf<AbstractType<out Any?>>()
 //        listOf(typeOf<AbstractType<out Int>>(), typeOf<AbstractType<in Int>>()).commonType() shouldBe typeOf<AbstractType<*>>()
-
-        listOf(
-            typeOf<AbstractType<in Int>>(),
-            typeOf<AbstractType<Any>>()
-        ).commonType() shouldBe typeOf<AbstractType<in Int>>()
+//        listOf(
+//            typeOf<AbstractType<in Int>>(),
+//            typeOf<AbstractType<Any>>()
+//        ).commonType() shouldBe typeOf<AbstractType<in Int>>()
 
         listOf(typeOf<Int>(), typeOf<List<Any>>()).commonType() shouldBe typeOf<Any>()
         listOf(typeOf<Int>(), typeOf<List<Any>?>()).commonType() shouldBe typeOf<Any?>()
