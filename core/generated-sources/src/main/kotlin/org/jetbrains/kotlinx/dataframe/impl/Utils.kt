@@ -18,6 +18,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeProjection
+import kotlin.reflect.KVariance
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.isSubtypeOf
@@ -67,16 +68,16 @@ internal fun <T : Any> convert(src: Int, tartypeOf: KClass<T>): T = when (tartyp
     else -> throw NotImplementedError("Casting int to $tartypeOf is not supported")
 }
 
-internal fun BooleanArray.toIndices(): List<Int> {
+internal fun BooleanArray.getTrueIndices(): List<Int> {
     val res = ArrayList<Int>(size)
-    for (i in 0 until size)
+    for (i in indices)
         if (this[i]) res.add(i)
     return res
 }
 
-internal fun List<Boolean>.toIndices(): List<Int> {
+internal fun List<Boolean>.getTrueIndices(): List<Int> {
     val res = ArrayList<Int>(size)
-    for (i in 0 until size)
+    for (i in indices)
         if (this[i]) res.add(i)
     return res
 }
@@ -136,27 +137,55 @@ internal fun Iterable<KClass<*>>.commonType(nullable: Boolean, upperBound: KType
 /**
  * Returns the common supertype of the given types.
  *
- * @see commonTypeListifyValues
+ * @param useStar if true, `*` will be used to fill in generic type parameters instead of `Any?`
+ * (for invariant/out variance) or `Nothing` (for in variance)
+ *
+ * @see Iterable.commonTypeListifyValues
  */
-internal fun Iterable<KType?>.commonType(): KType {
+internal fun Iterable<KType?>.commonType(useStar: Boolean = true): KType {
     val distinct = distinct()
     val nullable = distinct.any { it?.isMarkedNullable ?: true }
     return when {
-        distinct.isEmpty() || distinct.contains(null) -> Any::class.createStarProjectedType(nullable)
+        distinct.isEmpty() || distinct.contains(null) -> typeOf<Any>().withNullability(nullable)
         distinct.size == 1 -> distinct.single()!!
+
         else -> {
-            val kclass = commonParent(distinct.map { it!!.jvmErasure }) ?: return typeOf<Any>()
-            val projections = distinct.map { it!!.projectUpTo(kclass).eraseGenericTypeParameters() }
-            require(projections.all { it.jvmErasure == kclass })
-            val arguments = List(kclass.typeParameters.size) { i ->
+            // common parent class of all KTypes
+            val kClass = commonParent(distinct.map { it!!.jvmErasure })
+                ?: return typeOf<Any>().withNullability(nullable)
+
+            // all KTypes projected to the common parent class with filled-in generic type parameters (no <T>, but <UpperBound>)
+            val projections = distinct
+                .map { it!!.projectUpTo(kClass).replaceGenericTypeParametersWithUpperbound() }
+            require(projections.all { it.jvmErasure == kClass })
+
+            // make new type arguments for the common parent class
+            val arguments = List(kClass.typeParameters.size) { i ->
+                val typeParameter = kClass.typeParameters[i]
                 val projectionTypes = projections
                     .map { it.arguments[i].type }
                     .filterNot { it in distinct } // avoid infinite recursion
 
-                val type = projectionTypes.commonType()
-                KTypeProjection.invariant(type)
+                when {
+                    projectionTypes.isEmpty() && typeParameter.variance == KVariance.IN -> {
+                        if (useStar) {
+                            KTypeProjection.STAR
+                        } else {
+                            KTypeProjection.invariant(nothingType(false))
+                        }
+                    }
+
+                    else -> {
+                        val commonType = projectionTypes.commonType(useStar)
+                        if (commonType == typeOf<Any?>() && useStar) {
+                            KTypeProjection.STAR
+                        } else {
+                            KTypeProjection(typeParameter.variance, commonType)
+                        }
+                    }
+                }
             }
-            kclass.createType(arguments, nullable)
+            kClass.createType(arguments, nullable)
         }
     }
 }
