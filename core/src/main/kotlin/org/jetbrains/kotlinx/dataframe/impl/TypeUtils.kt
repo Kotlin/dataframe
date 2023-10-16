@@ -74,6 +74,7 @@ internal fun KType.replaceGenericTypeParametersWithUpperbound(): KType {
                             (oldType.classifier as KTypeParameter).upperBounds.firstOrNull() ?: typeOf<Any?>()
 
                         // Type<in T> cannot be replaced with Type<Any?>, instead it should be replaced with Type<Nothing>
+                        // TODO: issue #471
                         IN -> nothingType(false)
                     }
                 }
