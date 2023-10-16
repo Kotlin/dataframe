@@ -51,8 +51,10 @@ class TypeProjectionTests {
 
     @Test
     fun `common type tests`() {
-        listOf(typeOf<List<Int>>(), typeOf<Set<Double?>>()).commonType() shouldBe typeOf<Collection<Number?>>()
-        listOf(typeOf<List<Int>>(), typeOf<Set<*>>()).commonType() shouldBe typeOf<Collection<Any?>>()
-        listOf(typeOf<List<Int>>(), typeOf<Set<*>?>()).commonType() shouldBe typeOf<Collection<Any?>?>()
+        listOf(typeOf<List<Int>>(), typeOf<Set<Double?>>()).commonType() shouldBe typeOf<Collection<out Number?>>()
+        listOf(typeOf<List<Int>>(), typeOf<Set<*>>()).commonType(false) shouldBe typeOf<Collection<out Any?>>()
+        listOf(typeOf<List<Int>>(), typeOf<Set<*>>()).commonType() shouldBe typeOf<Collection<*>>()
+        listOf(typeOf<List<Int>>(), typeOf<Set<*>?>()).commonType(false) shouldBe typeOf<Collection<out Any?>?>()
+        listOf(typeOf<List<Int>>(), typeOf<Set<*>?>()).commonType() shouldBe typeOf<Collection<*>?>()
     }
 }
