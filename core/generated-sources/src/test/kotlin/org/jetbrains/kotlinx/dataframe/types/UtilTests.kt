@@ -168,14 +168,18 @@ class UtilTests {
     interface TypeWithUpperbound1<T : UpperBound>
     interface TestType1<T : UpperBound> : TypeWithUpperbound1<T>
     interface TestTypeIn1<in T> : Comparable<T>
+    interface TestType2<S: UpperBound> : TestTypeIn1<TestType1<S>>
 
     @Test
-    fun eraseGenericTypeParameters() {
+    fun replaceGenericTypeParametersWithUpperbound() {
         val typeWithUpperboundT = TestType1::class.supertypes.first() // TypeWithUpperbound<T>
         typeWithUpperboundT.replaceGenericTypeParametersWithUpperbound() shouldBe typeOf<TypeWithUpperbound1<UpperBound>>()
 
         val comparableTypeT = TestTypeIn1::class.supertypes.first() // Comparable<T>
         comparableTypeT.replaceGenericTypeParametersWithUpperbound() shouldBe typeOf<Comparable<Nothing>>()
+
+        val nestedTypeWithUpperboundT = TestType2::class.supertypes.first() // TestTypeIn1<TestType1<S>>
+        nestedTypeWithUpperboundT.replaceGenericTypeParametersWithUpperbound() shouldBe typeOf<TestTypeIn1<TestType1<UpperBound>>>()
     }
 
     interface AbstractType<T>
