@@ -102,6 +102,7 @@ class DataFrameJdbcSymbolProcessorTest {
                 package test
                 
                 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+                import org.jetbrains.kotlinx.dataframe.annotations.JdbcOptions
                 import org.jetbrains.kotlinx.dataframe.api.filter
                 import org.jetbrains.kotlinx.dataframe.DataFrame
                 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -126,11 +127,16 @@ class DataFrameJdbcSymbolProcessorTest {
                         SourceFile.kotlin(
                             "MySources.kt",
                             """
-                @file:ImportDataSchema(name = "Customer", path = "$CONNECTION_URL")
-                
+                @file:ImportDataSchema(
+                     "Customer",
+                     "$CONNECTION_URL",
+                     jdbcOptions = JdbcOptions("", "", tableName = "Customer")
+                )
+
                 package test
                 
                 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+                import org.jetbrains.kotlinx.dataframe.annotations.JdbcOptions
                 import org.jetbrains.kotlinx.dataframe.api.filter
                 import org.jetbrains.kotlinx.dataframe.DataFrame
                 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -161,11 +167,16 @@ class DataFrameJdbcSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                @file:ImportDataSchema(name = "Customer", path = "$CONNECTION_URL")
+                @file:ImportDataSchema(
+                     "Customer",
+                     "$CONNECTION_URL",
+                     jdbcOptions = JdbcOptions("", "", tableName = "Customer")
+                )
                 
                 package test
                 
                 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+                import org.jetbrains.kotlinx.dataframe.annotations.JdbcOptions
                 import org.jetbrains.kotlinx.dataframe.api.filter
                 import org.jetbrains.kotlinx.dataframe.DataFrame
                 import org.jetbrains.kotlinx.dataframe.api.cast

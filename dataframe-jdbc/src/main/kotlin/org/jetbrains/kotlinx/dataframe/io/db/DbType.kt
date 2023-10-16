@@ -11,6 +11,17 @@ import org.jetbrains.kotlinx.dataframe.io.TableMetadata
  * @property [dbTypeInJdbcUrl] The name of the database as specified in the JDBC URL.
  */
 public abstract class DbType(public val dbTypeInJdbcUrl: String) {
+
+
+    /**
+     * Represents the JDBC driver class name for a given database type.
+     *
+     * NOTE: It's important for usage in dataframe-gradle-plugin for force class loading.
+     *
+     * @return The JDBC driver class name as a [String].
+     */
+    public abstract val driverClassName: String
+
     /**
      * Converts the data from the given [ResultSet] into the specified [TableColumnMetadata] type.
      *
