@@ -168,7 +168,7 @@ class UtilTests {
     interface TypeWithUpperbound1<T : UpperBound>
     interface TestType1<T : UpperBound> : TypeWithUpperbound1<T>
     interface TestTypeIn1<in T> : Comparable<T>
-    interface TestType2<S: UpperBound> : TestTypeIn1<TestType1<S>>
+    interface TestType2<S : UpperBound> : TestTypeIn1<TestType1<S>>
 
     @Test
     fun replaceGenericTypeParametersWithUpperbound() {
