@@ -16,6 +16,9 @@ import kotlin.reflect.typeOf
  * and to generate the corresponding column schema.
  */
 public object PostgreSql : DbType("postgresql") {
+    override val driverClassName: String
+        get() = "org.postgresql.Driver"
+
     override fun convertDataFromResultSet(rs: ResultSet, tableColumnMetadata: TableColumnMetadata): Any? {
         val name = tableColumnMetadata.name
         return when (tableColumnMetadata.sqlTypeName) {

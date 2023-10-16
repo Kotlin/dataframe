@@ -16,6 +16,9 @@ import kotlin.reflect.typeOf
  * and to generate the corresponding column schema.
  */
 public object MySql : DbType("mysql") {
+    override val driverClassName: String
+        get() = "com.mysql.jdbc.Driver"
+
     override fun convertDataFromResultSet(rs: ResultSet, tableColumnMetadata: TableColumnMetadata): Any? {
         val name = tableColumnMetadata.name
         return when (tableColumnMetadata.sqlTypeName) {
