@@ -13,8 +13,10 @@ import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.apache.poi.ss.util.CellReference
+import org.apache.poi.util.DefaultTempFileCreationStrategy
 import org.apache.poi.util.LocaleUtil
 import org.apache.poi.util.LocaleUtil.getUserTimeZone
+import org.apache.poi.util.TempFile
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
@@ -31,6 +33,7 @@ import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
 import java.net.URL
+import java.nio.file.Files
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.Calendar
@@ -57,6 +60,20 @@ internal class DefaultReadExcelMethod(path: String?) : AbstractDefaultReadMethod
 private const val readExcel = "readExcel"
 
 /**
+ * To prevent [Issue #402](https://github.com/Kotlin/dataframe/issues/402):
+ *
+ * Creates new temp directory instead of the default `/tmp/poifiles` which would
+ * cause permission issues for multiple users.
+ */
+private fun setWorkbookTempDirectory() {
+    val tempDir = Files.createTempDirectory("dataframe-excel").toFile()
+        .also { it.deleteOnExit() }
+    TempFile.setTempFileCreationStrategy(
+        DefaultTempFileCreationStrategy(tempDir)
+    )
+}
+
+/**
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  * @param skipRows number of rows before header
@@ -72,6 +89,7 @@ public fun DataFrame.Companion.readExcel(
     rowsCount: Int? = null,
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
 ): AnyFrame {
+    setWorkbookTempDirectory()
     val wb = WorkbookFactory.create(url.openStream())
     return wb.use { readExcel(wb, sheetName, skipRows, columns, rowsCount, nameRepairStrategy) }
 }
@@ -92,6 +110,7 @@ public fun DataFrame.Companion.readExcel(
     rowsCount: Int? = null,
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
 ): AnyFrame {
+    setWorkbookTempDirectory()
     val wb = WorkbookFactory.create(file)
     return wb.use { readExcel(it, sheetName, skipRows, columns, rowsCount, nameRepairStrategy) }
 }
@@ -129,6 +148,7 @@ public fun DataFrame.Companion.readExcel(
     rowsCount: Int? = null,
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
 ): AnyFrame {
+    setWorkbookTempDirectory()
     val wb = WorkbookFactory.create(inputStream)
     return wb.use { readExcel(it, sheetName, skipRows, columns, rowsCount, nameRepairStrategy) }
 }
