@@ -58,6 +58,7 @@ public class Excel : SupportedDataFrameFormat {
 internal class DefaultReadExcelMethod(path: String?) : AbstractDefaultReadMethod(path, MethodArguments.EMPTY, readExcel)
 
 private const val readExcel = "readExcel"
+private const val readExcelTempFolderPrefix = "dataframe-excel"
 
 /**
  * To prevent [Issue #402](https://github.com/Kotlin/dataframe/issues/402):
@@ -66,8 +67,14 @@ private const val readExcel = "readExcel"
  * cause permission issues for multiple users.
  */
 private fun setWorkbookTempDirectory() {
-    val tempDir = Files.createTempDirectory("dataframe-excel").toFile()
-        .also { it.deleteOnExit() }
+    val tempDir = try {
+        Files.createTempDirectory(readExcelTempFolderPrefix)
+            .toFile()
+            .also { it.deleteOnExit() }
+    } catch (e: Exception) {
+        // Ignore, let WorkbookFactory use the default temp directory instead
+        return
+    }
     TempFile.setTempFileCreationStrategy(
         DefaultTempFileCreationStrategy(tempDir)
     )
@@ -226,7 +233,8 @@ public fun DataFrame.Companion.readExcel(
         }
 
         val name = repairNameIfRequired(nameFromCell, columnNameCounters, nameRepairStrategy)
-        columnNameCounters[nameFromCell] = columnNameCounters.getOrDefault(nameFromCell, 0) + 1 // increase the counter for specific column name
+        columnNameCounters[nameFromCell] =
+            columnNameCounters.getOrDefault(nameFromCell, 0) + 1 // increase the counter for specific column name
 
         val values: List<Any?> = valueRowsRange.map {
             val row: Row? = sheet.getRow(it)
@@ -245,10 +253,17 @@ public fun DataFrame.Companion.readExcel(
  *
  * TODO: https://github.com/Kotlin/dataframe/issues/387
  */
-private fun repairNameIfRequired(nameFromCell: String, columnNameCounters: MutableMap<String, Int>, nameRepairStrategy: NameRepairStrategy): String {
+private fun repairNameIfRequired(
+    nameFromCell: String,
+    columnNameCounters: MutableMap<String, Int>,
+    nameRepairStrategy: NameRepairStrategy,
+): String {
     return when (nameRepairStrategy) {
         NameRepairStrategy.DO_NOTHING -> nameFromCell
-        NameRepairStrategy.CHECK_UNIQUE -> if (columnNameCounters.contains(nameFromCell)) throw DuplicateColumnNamesException(columnNameCounters.keys.toList()) else nameFromCell
+        NameRepairStrategy.CHECK_UNIQUE -> if (columnNameCounters.contains(nameFromCell)) throw DuplicateColumnNamesException(
+            columnNameCounters.keys.toList()
+        ) else nameFromCell
+
         NameRepairStrategy.MAKE_UNIQUE -> if (nameFromCell.isEmpty()) { // probably it's never empty because of filling empty column names earlier
             val emptyName = "Unknown column"
             if (columnNameCounters.contains(emptyName)) "${emptyName}${columnNameCounters[emptyName]}"
