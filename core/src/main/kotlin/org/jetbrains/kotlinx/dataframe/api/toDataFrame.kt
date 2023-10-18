@@ -1,9 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -15,8 +13,6 @@ import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import org.jetbrains.kotlinx.dataframe.index
-import org.jetbrains.kotlinx.dataframe.util.DF_READ_DEPRECATION_MESSAGE
-import org.jetbrains.kotlinx.dataframe.util.DF_READ_REPLACE_MESSAGE
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
@@ -33,18 +29,6 @@ public inline fun <reified T> Iterable<T>.toDataFrame(vararg props: KProperty<*>
     toDataFrame {
         properties(roots = props, maxDepth = maxDepth)
     }
-
-@Deprecated(DF_READ_DEPRECATION_MESSAGE, ReplaceWith("this.unfold(columns)"), DeprecationLevel.ERROR)
-public fun <T> DataFrame<T>.read(columns: ColumnsSelector<T, *>): DataFrame<T> = unfold(columns)
-
-@Deprecated(DF_READ_DEPRECATION_MESSAGE, ReplaceWith(DF_READ_REPLACE_MESSAGE), DeprecationLevel.ERROR)
-public fun <T> DataFrame<T>.read(vararg columns: String): DataFrame<T> = unfold(*columns)
-
-@Deprecated(DF_READ_DEPRECATION_MESSAGE, ReplaceWith(DF_READ_REPLACE_MESSAGE), DeprecationLevel.ERROR)
-public fun <T> DataFrame<T>.read(vararg columns: KProperty<*>): DataFrame<T> = unfold(*columns)
-
-@Deprecated(DF_READ_DEPRECATION_MESSAGE, ReplaceWith(DF_READ_REPLACE_MESSAGE), DeprecationLevel.ERROR)
-public fun <T> DataFrame<T>.read(vararg columns: AnyColumnReference): DataFrame<T> = unfold(*columns)
 
 @JvmName("toDataFrameT")
 public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {
