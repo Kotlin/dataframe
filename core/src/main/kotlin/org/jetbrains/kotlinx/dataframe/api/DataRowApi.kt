@@ -151,7 +151,7 @@ public fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Float>): Float
 @Deprecated(
     DIFF_DEPRECATION_MESSAGE,
     ReplaceWith(DIFF_REPLACE_MESSAGE, DIFF_OR_NULL_IMPORT),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 public fun <T> DataRow<T>.diff(expression: RowExpression<T, Double>): Double? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
@@ -159,7 +159,7 @@ public fun <T> DataRow<T>.diff(expression: RowExpression<T, Double>): Double? =
 @Deprecated(
     DIFF_DEPRECATION_MESSAGE,
     ReplaceWith(DIFF_REPLACE_MESSAGE, DIFF_OR_NULL_IMPORT),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 public fun <T> DataRow<T>.diff(expression: RowExpression<T, Int>): Int? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
@@ -167,7 +167,7 @@ public fun <T> DataRow<T>.diff(expression: RowExpression<T, Int>): Int? =
 @Deprecated(
     DIFF_DEPRECATION_MESSAGE,
     ReplaceWith(DIFF_REPLACE_MESSAGE, DIFF_OR_NULL_IMPORT),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 public fun <T> DataRow<T>.diff(expression: RowExpression<T, Long>): Long? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
@@ -175,7 +175,7 @@ public fun <T> DataRow<T>.diff(expression: RowExpression<T, Long>): Long? =
 @Deprecated(
     DIFF_DEPRECATION_MESSAGE,
     ReplaceWith(DIFF_REPLACE_MESSAGE, DIFF_OR_NULL_IMPORT),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 public fun <T> DataRow<T>.diff(expression: RowExpression<T, Float>): Float? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }

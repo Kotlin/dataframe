@@ -48,7 +48,11 @@ internal class TreeNode<T>(
         return addChild(childName, createData())
     }
 
-    @Deprecated("Use allChildren instead", ReplaceWith("allChildren(enterCondition, yieldCondition)"))
+    @Deprecated(
+        "Use allChildren instead",
+        ReplaceWith("allChildren(enterCondition, yieldCondition)"),
+        level = DeprecationLevel.ERROR
+    )
     fun dfs(
         enterCondition: (TreeNode<T>) -> Boolean = { true },
         yieldCondition: (TreeNode<T>) -> Boolean = { true },

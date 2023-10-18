@@ -1035,7 +1035,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         interface Arg
     }
 
-    @Deprecated("Use colGroup() instead.", ReplaceWith("this.colGroup(name)"))
+    @Deprecated(
+        "Use colGroup() instead.",
+        ReplaceWith("this.colGroup(name)"),
+        level = DeprecationLevel.ERROR
+    )
     public fun ColumnsContainer<*>.group(name: String): ColumnGroupReference = name.toColumnOf()
 
     /**
@@ -3731,31 +3735,31 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     @Deprecated(
         message = "dfs is deprecated, use recursively instead.",
         replaceWith = ReplaceWith("this.cols(predicate).recursively(includeTopLevel = false)"),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public fun <C> ColumnSet<C>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<Any?> = dfsInternal(predicate)
 
     @Deprecated(
         message = "dfs is deprecated, use recursively instead.",
         replaceWith = ReplaceWith("this.cols(predicate).recursively()"),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public fun SingleColumn<*>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<Any?> = dfsInternal(predicate)
 
     @Deprecated(
         message = "dfs is deprecated, use recursively instead.",
         replaceWith = ReplaceWith("this.cols(predicate).recursively()"),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
-    public fun String.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> = toColumnAccessor().dfs(predicate)
+    public fun String.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> = toColumnAccessor().cols(predicate).recursively()
 
     @Deprecated(
         message = "dfs is deprecated, use recursively instead.",
         replaceWith = ReplaceWith("this.cols(predicate).recursively()"),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public fun <C> KProperty<C>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
-        toColumnAccessor().dfs(predicate)
+        toColumnAccessor().cols(predicate).recursively()
 
     // endregion
 
@@ -3889,33 +3893,33 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     @Deprecated(
         message = "allDfs is deprecated, use recursively instead.",
         replaceWith = ReplaceWith("this.cols { includeGroups || !it.isColumnGroup() }.recursively()"),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public fun ColumnSet<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> =
-        if (includeGroups) dfs { true } else dfs { !it.isColumnGroup() }
+        if (includeGroups) cols { true }.recursively() else cols { !it.isColumnGroup() }.recursively()
 
     @Deprecated(
         message = "allDfs is deprecated, use recursively instead.",
         replaceWith = ReplaceWith("this.cols { includeGroups || !it.isColumnGroup() }.recursively()"),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public fun SingleColumn<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> =
-        if (includeGroups) dfs { true } else dfs { !it.isColumnGroup() }
+        if (includeGroups) cols { true }.recursively() else cols { !it.isColumnGroup() }.recursively()
 
     @Deprecated(
         message = "allDfs is deprecated, use recursively instead.",
         replaceWith = ReplaceWith("this.cols { includeGroups || !it.isColumnGroup() }.recursively()"),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
-    public fun String.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> = toColumnAccessor().allDfs(includeGroups)
+    public fun String.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> = toColumnAccessor().cols { includeGroups || !it.isColumnGroup() }.recursively()
 
     @Deprecated(
         message = "allDfs is deprecated, use recursively instead.",
         replaceWith = ReplaceWith("this.cols { includeGroups || !it.isColumnGroup() }.recursively()"),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public fun KProperty<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> =
-        toColumnAccessor().allDfs(includeGroups)
+        toColumnAccessor().cols { includeGroups || !it.isColumnGroup() }.recursively()
 
     /**
      * ## Recursively / Rec
@@ -4250,7 +4254,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnSet<C>.dropLast(n: Int = 1): ColumnSet<C> = transform { it.dropLast(n) }
     public fun <C> ColumnSet<C>.takeLast(n: Int): ColumnSet<C> = transform { it.takeLast(n) }
 
-    @Deprecated("Use roots() instead", ReplaceWith("roots()"))
+    @Deprecated(
+        "Use roots() instead",
+        ReplaceWith("roots()"),
+        level = DeprecationLevel.ERROR,
+    )
     public fun <C> ColumnSet<C>.top(): ColumnSet<C> = roots()
 
     /**
@@ -4418,6 +4426,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
             "org.jetbrains.kotlinx.dataframe.columns.recursively",
             "org.jetbrains.kotlinx.dataframe.api.colsOf",
         ),
+        level = DeprecationLevel.ERROR,
     )
     public fun <C> String.dfsOf(type: KType, predicate: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<*> =
         toColumnAccessor().dfsOf(type, predicate)
@@ -4429,6 +4438,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
             "org.jetbrains.kotlinx.dataframe.columns.recursively",
             "org.jetbrains.kotlinx.dataframe.api.colsOf",
         ),
+        level = DeprecationLevel.ERROR,
     )
     public fun <C> KProperty<*>.dfsOf(type: KType, predicate: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<*> =
         toColumnAccessor().dfsOf(type, predicate)

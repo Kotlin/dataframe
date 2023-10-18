@@ -174,7 +174,11 @@ internal fun AnyFrame.toHtmlData(
 
 internal fun DataFrameHtmlData.print() = println(this)
 
-@Deprecated("Clarify difference with .toHTML()", ReplaceWith("this.toStandaloneHTML().toString()", "org.jetbrains.kotlinx.dataframe.io.toStandaloneHTML"))
+@Deprecated(
+    "Clarify difference with .toHTML()",
+    ReplaceWith("this.toStandaloneHTML().toString()", "org.jetbrains.kotlinx.dataframe.io.toStandaloneHTML"),
+    level = DeprecationLevel.ERROR
+)
 public fun <T> DataFrame<T>.html(): String = toStandaloneHTML().toString()
 
 /**
