@@ -157,9 +157,9 @@ public interface AllExceptColumnsSelectionDsl<out T> {
     public fun SingleColumn<DataRow<*>>.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
         allColsExcept(others.toColumnSet())
 
-// endregion
+    // endregion
 
-// region String
+    // region String
 
     public fun String.allColsExcept(selector: ColumnsSelector<*, *>): ColumnSet<*> =
         columnGroup(this).allColsExcept(selector)
@@ -188,9 +188,9 @@ public interface AllExceptColumnsSelectionDsl<out T> {
     public fun String.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
         allColsExcept(others.toColumnSet())
 
-// endregion
+    // endregion
 
-// region KProperty
+    // region KProperty
 
     public fun <C> KProperty<DataRow<C>>.allColsExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         columnGroup(this).allColsExcept(selector)
@@ -219,9 +219,9 @@ public interface AllExceptColumnsSelectionDsl<out T> {
     public fun KProperty<*>.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
         allColsExcept(others.toColumnSet())
 
-// endregion
+    // endregion
 
-// region ColumnPath
+    // region ColumnPath
 
     public fun ColumnPath.allColsExcept(selector: ColumnsSelector<*, *>): ColumnSet<*> =
         columnGroup(this).allColsExcept(selector)

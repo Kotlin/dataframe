@@ -167,7 +167,7 @@ public interface FirstColumnsSelectionDsl {
 
     /**
      * ## First (Col)
-     * Returns the first ([transformable][TransformableSingleColumn]) column in this [ColumnSet] or [ColumnGroup]
+     * Returns the first column in this [ColumnSet] or [ColumnGroup]
      * that adheres to the given [condition\].
      * If no column adheres to the given [condition\], [NoSuchElementException] is thrown.
      *
@@ -186,7 +186,7 @@ public interface FirstColumnsSelectionDsl {
      * {@getArg [Examples]}
      *
      * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][TransformableSingleColumn]) [SingleColumn] containing the first column
+     * @return A [SingleColumn] containing the first column
      *   that adheres to the given [condition\].
      * @throws [NoSuchElementException\] if no column adheres to the given [condition\].
      * @see [ColumnsSelectionDsl.last\]
@@ -199,7 +199,7 @@ public interface FirstColumnsSelectionDsl {
 
     /**
      * ## First (Col)
-     * Returns the first ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * Returns the first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      * that adheres to the given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
@@ -220,7 +220,7 @@ public interface FirstColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[first][ColumnSet.first]`() }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
      *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.last]
@@ -233,7 +233,7 @@ public interface FirstColumnsSelectionDsl {
 
     /**
      * ## First (Col)
-     * Returns the first ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * Returns the first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      * that adheres to the given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
@@ -252,7 +252,7 @@ public interface FirstColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { `[first][ColumnsSelectionDsl.first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
      *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.last]
@@ -262,7 +262,7 @@ public interface FirstColumnsSelectionDsl {
 
     /**
      * ## First (Col)
-     * Returns the first ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * Returns the first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      * that adheres to the given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
@@ -281,7 +281,7 @@ public interface FirstColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[firstCol][SingleColumn.firstCol]`() }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
      *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.last]
@@ -291,7 +291,7 @@ public interface FirstColumnsSelectionDsl {
 
     /**
      * ## First (Col)
-     * Returns the first ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * Returns the first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      * that adheres to the given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
@@ -310,7 +310,7 @@ public interface FirstColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[firstCol][String.firstCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
      *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.last]
@@ -320,7 +320,7 @@ public interface FirstColumnsSelectionDsl {
 
     /**
      * ## First (Col)
-     * Returns the first ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * Returns the first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      * that adheres to the given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
@@ -341,7 +341,7 @@ public interface FirstColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[firstCol][KProperty.firstCol]`() }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
      *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.last]
@@ -351,7 +351,7 @@ public interface FirstColumnsSelectionDsl {
 
     /**
      * ## First (Col)
-     * Returns the first ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * Returns the first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      * that adheres to the given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
@@ -370,7 +370,7 @@ public interface FirstColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[firstCol][ColumnPath.firstCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
      *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.last]

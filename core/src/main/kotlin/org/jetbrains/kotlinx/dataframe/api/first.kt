@@ -127,7 +127,7 @@ public interface FirstColumnsSelectionDsl {
 
     /**
      * ## First (Col)
-     * Returns the first ([transformable][TransformableSingleColumn]) column in this [ColumnSet] or [ColumnGroup]
+     * Returns the first column in this [ColumnSet] or [ColumnGroup]
      * that adheres to the given [condition\].
      * If no column adheres to the given [condition\], [NoSuchElementException] is thrown.
      *
@@ -146,7 +146,7 @@ public interface FirstColumnsSelectionDsl {
      * {@getArg [Examples]}
      *
      * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][TransformableSingleColumn]) [SingleColumn] containing the first column
+     * @return A [SingleColumn] containing the first column
      *   that adheres to the given [condition\].
      * @throws [NoSuchElementException\] if no column adheres to the given [condition\].
      * @see [ColumnsSelectionDsl.last\]

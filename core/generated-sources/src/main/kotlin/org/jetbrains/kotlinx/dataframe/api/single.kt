@@ -138,7 +138,7 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * ## Single (Col)
-     * Returns the single ([transformable][TransformableSingleColumn]) column in this [ColumnSet] or [ColumnGroup]
+     * Returns the single column in this [ColumnSet] or [ColumnGroup]
      * that adheres to the given [condition\].
      * If no column adheres to the given [condition\], [NoSuchElementException] is thrown.
      * If multiple columns adhere to it, [IllegalArgumentException] is thrown.
@@ -158,7 +158,7 @@ public interface SingleColumnsSelectionDsl {
      * {@getArg [Examples]}
      *
      * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][TransformableSingleColumn]) [SingleColumn] containing the single column that adheres to the given [condition\].
+     * @return A [SingleColumn] containing the single column that adheres to the given [condition\].
      * @throws [NoSuchElementException\] if no column adheres to the given [condition\].
      * @throws [IllegalArgumentException\] if more than one column adheres to the given [condition\].
      */
@@ -170,7 +170,7 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * ## Single (Col)
-     * Returns the single ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * Returns the single column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      * that adheres to the given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      * If multiple columns adhere to it, [IllegalArgumentException] is thrown.
@@ -192,7 +192,7 @@ public interface SingleColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[single][ColumnSet.single]`() }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column that adheres to the given [condition].
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
      */
@@ -201,7 +201,7 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * ## Single (Col)
-     * Returns the single ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * Returns the single column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      * that adheres to the given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      * If multiple columns adhere to it, [IllegalArgumentException] is thrown.
@@ -221,7 +221,7 @@ public interface SingleColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { `[single][ColumnsSelectionDsl.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column that adheres to the given [condition].
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
      */
@@ -230,7 +230,7 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * ## Single (Col)
-     * Returns the single ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * Returns the single column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      * that adheres to the given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      * If multiple columns adhere to it, [IllegalArgumentException] is thrown.
@@ -250,7 +250,7 @@ public interface SingleColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[singleCol][SingleColumn.singleCol]`() }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column that adheres to the given [condition].
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
      */
@@ -259,7 +259,7 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * ## Single (Col)
-     * Returns the single ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * Returns the single column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      * that adheres to the given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      * If multiple columns adhere to it, [IllegalArgumentException] is thrown.
@@ -279,7 +279,7 @@ public interface SingleColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[singleCol][String.singleCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column that adheres to the given [condition].
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
      */
@@ -288,7 +288,7 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * ## Single (Col)
-     * Returns the single ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * Returns the single column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      * that adheres to the given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      * If multiple columns adhere to it, [IllegalArgumentException] is thrown.
@@ -310,7 +310,7 @@ public interface SingleColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[singleCol][KProperty.singleCol]`() }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column that adheres to the given [condition].
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
      */
@@ -319,7 +319,7 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * ## Single (Col)
-     * Returns the single ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * Returns the single column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      * that adheres to the given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      * If multiple columns adhere to it, [IllegalArgumentException] is thrown.
@@ -339,7 +339,7 @@ public interface SingleColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[singleCol][ColumnPath.singleCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column that adheres to the given [condition].
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
      */

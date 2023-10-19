@@ -88,7 +88,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * @param [filter\] An optional [predicate][ColumnFilter] to filter the columns of given kind(s) by.
      * @param [kind\] The [kind][ColumnKind] of columns to include.
      * @param [others\] Other optional [kinds][ColumnKind] of columns to include.
-     * @return A ([transformable][TransformableColumnSet]) [ColumnSet] of columns of the given kind(s).
+     * @return A [ColumnSet] of columns of the given kind(s).
      * @see [ColumnsSelectionDsl.valueCols\]
      * @see [ColumnsSelectionDsl.frameCols\]
      * @see [ColumnsSelectionDsl.colGroups\]

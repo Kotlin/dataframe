@@ -575,7 +575,7 @@ public interface AllColumnsSelectionDsl {
         interface Arg
     }
 
-    /** @include [ColumnSetAllFromDocs] {@setArg [ColumnSetAllFromDocs.Arg] \\ \{ myColumns \\\}} */
+    /** @include [ColumnSetAllFromDocs] {@setArg [ColumnSetAllFromDocs.Arg] \\ \{ myColumn \\\}} */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.allFrom(column: ColumnSelector<*, *>): ColumnSet<C> {
         var resolvedColumn: DataColumn<C>? = null

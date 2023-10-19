@@ -122,7 +122,7 @@ public interface ColsColumnsSelectionDsl {
          * `cols {}` on the rest.
          *
          * @param [predicate\] A [ColumnFilter function][ColumnFilter] that takes a [ColumnReference] and returns a [Boolean].
-         * @return A ([transformable][TransformableColumnSet]) [ColumnSet] containing the columns that match the given [predicate\].
+         * @return A [ColumnSet] containing the columns that match the given [predicate\].
          * @see [ColumnsSelectionDsl.filter\]
          * @see [ColumnsSelectionDsl.colsOfKind\]
          * @see [ColumnsSelectionDsl.valueCols\]
@@ -136,7 +136,7 @@ public interface ColsColumnsSelectionDsl {
          *
          * @param [firstCol\] A {@getArg [AccessorType]} that points to a column.
          * @param [otherCols\] Optional additional {@getArg [AccessorType]}s that point to columns.
-         * @return A ([transformable][TransformableColumnSet]) [ColumnSet] containing the columns that [firstCol\] and [otherCols\] point to.
+         * @return A [ColumnSet] containing the columns that [firstCol\] and [otherCols\] point to.
          */
         interface Vararg {
 

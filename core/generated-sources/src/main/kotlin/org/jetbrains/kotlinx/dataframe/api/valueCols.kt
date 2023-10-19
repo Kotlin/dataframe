@@ -127,7 +127,7 @@ public interface ValueColsColumnsSelectionDsl {
      * {@getArg [CommonValueColsDocs.ExampleArg]}
      *
      * @param [filter\] An optional [predicate][Predicate] to filter the value columns by.
-     * @return A ([transformable][TransformableColumnSet]) [ColumnSet] of [ValueColumns][ValueColumn].
+     * @return A [ColumnSet] of [ValueColumns][ValueColumn].
      * @see [ColumnsSelectionDsl.colsOfKind\]
      * @see [ColumnsSelectionDsl.frameCols\]
      * @see [ColumnsSelectionDsl.colGroups\]
@@ -169,7 +169,7 @@ public interface ValueColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { `[valueCols][ColumnsSelectionDsl.valueCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the value columns by.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn].
      * @see [ColumnsSelectionDsl.colsOfKind]
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
@@ -206,7 +206,7 @@ public interface ValueColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { `[valueCols][ColumnsSelectionDsl.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the value columns by.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn].
      * @see [ColumnsSelectionDsl.colsOfKind]
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
@@ -243,7 +243,7 @@ public interface ValueColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColGroup.`[valueCols][SingleColumn.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the value columns by.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn].
      * @see [ColumnsSelectionDsl.colsOfKind]
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
@@ -280,7 +280,7 @@ public interface ValueColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { "myColGroup".`[valueCols][String.valueCols]`() }`
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the value columns by.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn].
      * @see [ColumnsSelectionDsl.colsOfKind]
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
@@ -319,7 +319,7 @@ public interface ValueColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[valueCols][KProperty.valueCols]`() }`
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the value columns by.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn].
      * @see [ColumnsSelectionDsl.colsOfKind]
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
@@ -354,7 +354,7 @@ public interface ValueColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[valueCols][ColumnPath.valueCols]`() }`
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the value columns by.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn].
      * @see [ColumnsSelectionDsl.colsOfKind]
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]

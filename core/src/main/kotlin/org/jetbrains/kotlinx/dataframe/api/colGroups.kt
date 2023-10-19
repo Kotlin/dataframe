@@ -90,7 +90,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * {@getArg [CommonColGroupsDocs.ExampleArg]}
      *
      * @param [filter\] An optional [predicate][Predicate] to filter the column groups by.
-     * @return A ([transformable][TransformableColumnSet]) [ColumnSet] of [ColumnGroups][ColumnGroup].
+     * @return A [ColumnSet] of [ColumnGroups][ColumnGroup].
      * @see [ColumnsSelectionDsl.colsOfKind\]
      * @see [ColumnsSelectionDsl.cols\]
      * @see [ColumnsSelectionDsl.frameCols\]

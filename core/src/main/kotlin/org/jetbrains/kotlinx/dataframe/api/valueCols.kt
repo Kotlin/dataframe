@@ -87,7 +87,7 @@ public interface ValueColsColumnsSelectionDsl {
      * {@getArg [CommonValueColsDocs.ExampleArg]}
      *
      * @param [filter\] An optional [predicate][Predicate] to filter the value columns by.
-     * @return A ([transformable][TransformableColumnSet]) [ColumnSet] of [ValueColumns][ValueColumn].
+     * @return A [ColumnSet] of [ValueColumns][ValueColumn].
      * @see [ColumnsSelectionDsl.colsOfKind\]
      * @see [ColumnsSelectionDsl.frameCols\]
      * @see [ColumnsSelectionDsl.colGroups\]

@@ -167,7 +167,7 @@ public interface LastColumnsSelectionDsl {
 
     /**
      * ## Last (Col)
-     * Returns the last ([transformable][TransformableSingleColumn]) column in this [ColumnSet] or [ColumnGroup]
+     * Returns the last column in this [ColumnSet] or [ColumnGroup]
      * that adheres to the given [condition\].
      * If no column adheres to the given [condition\], [NoSuchElementException] is thrown.
      *
@@ -186,7 +186,7 @@ public interface LastColumnsSelectionDsl {
      * {@getArg [Examples]}
      *
      * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][TransformableSingleColumn]) [SingleColumn] containing the last column
+     * @return A [SingleColumn] containing the last column
      *   that adheres to the given [condition\].
      * @throws [NoSuchElementException\] if no column adheres to the given [condition\].
      * @see [ColumnsSelectionDsl.first\]
@@ -199,7 +199,7 @@ public interface LastColumnsSelectionDsl {
 
     /**
      * ## Last (Col)
-     * Returns the last ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * Returns the last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      * that adheres to the given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
@@ -220,7 +220,7 @@ public interface LastColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[last][ColumnSet.last]`() }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
      *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.first]
@@ -233,7 +233,7 @@ public interface LastColumnsSelectionDsl {
 
     /**
      * ## Last (Col)
-     * Returns the last ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * Returns the last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      * that adheres to the given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
@@ -252,7 +252,7 @@ public interface LastColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { `[last][ColumnsSelectionDsl.last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
      *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.first]
@@ -262,7 +262,7 @@ public interface LastColumnsSelectionDsl {
 
     /**
      * ## Last (Col)
-     * Returns the last ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * Returns the last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      * that adheres to the given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
@@ -281,7 +281,7 @@ public interface LastColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[lastCol][SingleColumn.lastCol]`() }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
      *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.first]
@@ -291,7 +291,7 @@ public interface LastColumnsSelectionDsl {
 
     /**
      * ## Last (Col)
-     * Returns the last ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * Returns the last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      * that adheres to the given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
@@ -310,7 +310,7 @@ public interface LastColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[lastCol][String.lastCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
      *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.first]
@@ -320,7 +320,7 @@ public interface LastColumnsSelectionDsl {
 
     /**
      * ## Last (Col)
-     * Returns the last ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * Returns the last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      * that adheres to the given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
@@ -341,7 +341,7 @@ public interface LastColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[lastCol][KProperty.lastCol]`() }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
      *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.first]
@@ -351,7 +351,7 @@ public interface LastColumnsSelectionDsl {
 
     /**
      * ## Last (Col)
-     * Returns the last ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * Returns the last column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      * that adheres to the given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
@@ -370,7 +370,7 @@ public interface LastColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[lastCol][ColumnPath.lastCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn]) [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
      *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.first]

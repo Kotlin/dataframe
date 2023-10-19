@@ -130,7 +130,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * @param [filter\] An optional [predicate][ColumnFilter] to filter the columns of given kind(s) by.
      * @param [kind\] The [kind][ColumnKind] of columns to include.
      * @param [others\] Other optional [kinds][ColumnKind] of columns to include.
-     * @return A ([transformable][TransformableColumnSet]) [ColumnSet] of columns of the given kind(s).
+     * @return A [ColumnSet] of columns of the given kind(s).
      * @see [ColumnsSelectionDsl.valueCols\]
      * @see [ColumnsSelectionDsl.frameCols\]
      * @see [ColumnsSelectionDsl.colGroups\]
@@ -174,7 +174,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.ColumnFilter] to filter the columns of given kind(s) by.
      * @param [kind] The [kind][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
      * @param [others] Other optional [kinds][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns of the given kind(s).
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns of the given kind(s).
      * @see [ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
@@ -218,7 +218,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.ColumnFilter] to filter the columns of given kind(s) by.
      * @param [kind] The [kind][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
      * @param [others] Other optional [kinds][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns of the given kind(s).
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns of the given kind(s).
      * @see [ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
@@ -262,7 +262,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.ColumnFilter] to filter the columns of given kind(s) by.
      * @param [kind] The [kind][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
      * @param [others] Other optional [kinds][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns of the given kind(s).
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns of the given kind(s).
      * @see [ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
@@ -306,7 +306,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.ColumnFilter] to filter the columns of given kind(s) by.
      * @param [kind] The [kind][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
      * @param [others] Other optional [kinds][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns of the given kind(s).
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns of the given kind(s).
      * @see [ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
@@ -347,7 +347,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.ColumnFilter] to filter the columns of given kind(s) by.
      * @param [kind] The [kind][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
      * @param [others] Other optional [kinds][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns of the given kind(s).
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns of the given kind(s).
      * @see [ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
@@ -388,7 +388,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.ColumnFilter] to filter the columns of given kind(s) by.
      * @param [kind] The [kind][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
      * @param [others] Other optional [kinds][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns of the given kind(s).
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns of the given kind(s).
      * @see [ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]

@@ -4,6 +4,11 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage.ColumnGroupNameContains
+import org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage.ColumnGroupNameStartsWith
+import org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage.ColumnSetNameContains
+import org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage.ColumnSetNameStartsEndsWith
+import org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage.PlainDslNameContains
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -92,7 +97,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     // colsOfKind(Value, Frame) {}, colsOfKind(Value, Frame)
     ColsOfKindColumnsSelectionDsl,
 
-    // all(Cols)(), allAfter(colA), allBefore(colA), allFrom(colA), allUpTo(colA)
+    // all(Cols), allAfter(colA), allBefore(colA), allFrom(colA), allUpTo(colA)
     AllColumnsSelectionDsl,
     // colsAtAnyDepth {}, colsAtAnyDepth()
     ColsAtAnyDepthColumnsSelectionDsl,
@@ -176,6 +181,18 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `number: `[Int][Int]
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  `text: `[String][String]
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  `ignoreCase: `[Boolean][Boolean]
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  `regex: `[Regex][Regex]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -228,6 +245,11 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *  `|` [**drop**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.drop]`(`[**Last**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropLast]`)`**`(`**[number][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.NumberDef]**`)`**
      *
      *  `|` [**drop**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropWhile]`(`[**Last**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropLastWhile]`)`[**While**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropWhile]**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`**
+     *
+     *  `|` [**nameContains**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]**`(`**[text][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.TextDef]`[, `[ignoreCase][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.IgnoreCaseDef]`] | `[regex][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.RegexDef]**`)`**
+     *
+     *  `|` 
+     * **name**`(`[**Starts**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`|`[**Ends**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameEndsWith]`)`**`With`****`(`**[text][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.TextDef]`[, `[ignoreCase][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.IgnoreCaseDef]`]`**`)`**
      *
      *  `|` TODO
      *
@@ -284,6 +306,10 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**drop**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropWhile]`(`[**Last**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropLastWhile]`)`[**While**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropWhile]**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`**
      *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**nameContains**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]**`(`**[text][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.TextDef]`[, `[ignoreCase][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.IgnoreCaseDef]`] | `[regex][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.RegexDef]**`)`**
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .**name**`(`[**Starts**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`|`[**Ends**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameEndsWith]`)`**`With`****`(`**[text][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.TextDef]`[, `[ignoreCase][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.IgnoreCaseDef]`]`**`)`**
+     *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`|` TODO
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -337,6 +363,10 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**drop**][org.jetbrains.kotlinx.dataframe.api.DropColumnsSelectionDsl.dropCols]`(`[**Last**][org.jetbrains.kotlinx.dataframe.api.DropColumnsSelectionDsl.dropLastCols]`)`[**Cols**][org.jetbrains.kotlinx.dataframe.api.DropColumnsSelectionDsl.dropCols]**`(`**[number][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.NumberDef]**`)`**
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**drop**][org.jetbrains.kotlinx.dataframe.api.DropColumnsSelectionDsl.dropColsWhile]`(`[**Last**][org.jetbrains.kotlinx.dataframe.api.DropColumnsSelectionDsl.dropLastColsWhile]`)`[**ColsWhile**][org.jetbrains.kotlinx.dataframe.api.DropColumnsSelectionDsl.dropColsWhile]**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`**
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**colsNameContains**][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameContains]**`(`**[text][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.TextDef]`[, `[ignoreCase][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.IgnoreCaseDef]`] | `[regex][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.RegexDef]**`)`**
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .**colsName**`(`[**Starts**][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`|`[**Ends**][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameEndsWith]`)`**`With`****`(`**[text][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.TextDef]`[, `[ignoreCase][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.IgnoreCaseDef]`]`**`)`**
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`|` TODO
      *

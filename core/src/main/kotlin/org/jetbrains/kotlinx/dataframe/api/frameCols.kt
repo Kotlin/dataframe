@@ -84,7 +84,7 @@ public interface FrameColsColumnsSelectionDsl {
      * {@getArg [CommonFrameColsDocs.ExampleArg]}
      *
      * @param [filter\] An optional [predicate][Predicate] to filter the frame columns by.
-     * @return A ([transformable][TransformableColumnSet]) [ColumnSet] of [FrameColumns][FrameColumn].
+     * @return A [ColumnSet] of [FrameColumns][FrameColumn].
      * @see [ColumnsSelectionDsl.colsOfKind\]
      * @see [ColumnsSelectionDsl.valueCols\]
      * @see [ColumnsSelectionDsl.colGroups\]

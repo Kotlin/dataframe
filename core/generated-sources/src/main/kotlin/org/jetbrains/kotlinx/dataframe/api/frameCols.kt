@@ -124,7 +124,7 @@ public interface FrameColsColumnsSelectionDsl {
      * {@getArg [CommonFrameColsDocs.ExampleArg]}
      *
      * @param [filter\] An optional [predicate][Predicate] to filter the frame columns by.
-     * @return A ([transformable][TransformableColumnSet]) [ColumnSet] of [FrameColumns][FrameColumn].
+     * @return A [ColumnSet] of [FrameColumns][FrameColumn].
      * @see [ColumnsSelectionDsl.colsOfKind\]
      * @see [ColumnsSelectionDsl.valueCols\]
      * @see [ColumnsSelectionDsl.colGroups\]
@@ -166,7 +166,7 @@ public interface FrameColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { `[frameCols][ColumnsSelectionDsl.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the frame columns by.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
      * @see [ColumnsSelectionDsl.colsOfKind]
      * @see [ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.colGroups]
@@ -203,7 +203,7 @@ public interface FrameColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { `[frameCols][ColumnsSelectionDsl.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the frame columns by.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
      * @see [ColumnsSelectionDsl.colsOfKind]
      * @see [ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.colGroups]
@@ -240,7 +240,7 @@ public interface FrameColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColGroup.`[frameCols][SingleColumn.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the frame columns by.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
      * @see [ColumnsSelectionDsl.colsOfKind]
      * @see [ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.colGroups]
@@ -277,7 +277,7 @@ public interface FrameColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { "myColGroup".`[frameCols][String.frameCols]`() }`
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the frame columns by.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
      * @see [ColumnsSelectionDsl.colsOfKind]
      * @see [ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.colGroups]
@@ -316,7 +316,7 @@ public interface FrameColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup.`[frameCols][KProperty.frameCols]`() }`
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the frame columns by.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
      * @see [ColumnsSelectionDsl.colsOfKind]
      * @see [ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.colGroups]
@@ -351,7 +351,7 @@ public interface FrameColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[frameCols][ColumnPath.frameCols]`() }`
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the frame columns by.
-     * @return A ([transformable][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet]) [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
      * @see [ColumnsSelectionDsl.colsOfKind]
      * @see [ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.colGroups]
