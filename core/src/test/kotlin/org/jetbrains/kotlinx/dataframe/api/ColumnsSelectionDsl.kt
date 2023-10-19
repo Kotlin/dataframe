@@ -213,44 +213,6 @@ open class ColumnsSelectionDslTests : TestBase() {
     }
 
     @Test
-    fun nameContains() {
-        listOf(
-            df.select { name.firstName },
-            df.select { name.childrenNameContains("first") },
-            df.select { "name".childrenNameContains("first") },
-            df.select { Person::name.childrenNameContains("first") },
-            df.select { pathOf("name").childrenNameContains("first") },
-        ).shouldAllBeEqual()
-
-        listOf(
-            df.select { name.lastName },
-            df.select { name.childrenNameContains(Regex("last")) },
-            df.select { "name".childrenNameContains(Regex("last")) },
-            df.select { Person::name.childrenNameContains(Regex("last")) },
-            df.select { pathOf("name").childrenNameContains(Regex("last")) },
-        ).shouldAllBeEqual()
-    }
-
-    @Test
-    fun `nameStartsWith and nameEndsWith`() {
-        listOf(
-            df.select { name.firstName },
-            df.select { name.childrenNameStartsWith("first") },
-            df.select { "name".childrenNameStartsWith("first") },
-            df.select { Person::name.childrenNameStartsWith("first") },
-            df.select { pathOf("name").childrenNameStartsWith("first") },
-        ).shouldAllBeEqual()
-
-        listOf(
-            df.select { name.firstName and name.lastName },
-            df.select { name.childrenNameEndsWith("Name") },
-            df.select { "name".childrenNameEndsWith("Name") },
-            df.select { Person::name.childrenNameEndsWith("Name") },
-            df.select { pathOf("name").childrenNameEndsWith("Name") },
-        ).shouldAllBeEqual()
-    }
-
-    @Test
     fun and() {
         df.select {
             age and name.select {

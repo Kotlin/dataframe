@@ -3,52 +3,132 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
+
+/**
+ * See [Usage].
+ */
 public interface ColumnNameFiltersColumnsSelectionDsl {
+
+    /**
+     * ## (Cols) Name (Contains / StartsWith / EndsWith) Usage
+     *
+     * @include [UsageTemplate]
+     * {@setArg [UsageTemplate.DefinitionsArg]
+     *  {@include [UsageTemplate.ColumnSetDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.ColumnGroupDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.TextDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.IgnoreCaseDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.RegexDef]}
+     * }
+     *
+     * {@setArg [UsageTemplate.PlainDslFunctionsArg]
+     *  {@include [PlainDslNameContains]}**`(`**{@include [UsageTemplate.TextRef]}`[, `{@include [UsageTemplate.IgnoreCaseRef]}`] | `{@include [UsageTemplate.RegexRef]}**`)`**
+     *
+     *  `|` {@include [PlainDslNameStartsEndsWith]}**`(`**{@include [UsageTemplate.TextRef]}`[, `{@include [UsageTemplate.IgnoreCaseRef]}`]`**`)`**
+     * }
+     *
+     * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
+     *  {@include [Indent]}{@include [ColumnSetNameContains]}**`(`**{@include [UsageTemplate.TextRef]}`[, `{@include [UsageTemplate.IgnoreCaseRef]}`] | `{@include [UsageTemplate.RegexRef]}**`)`**
+     *
+     *  {@include [Indent]}`|` {@include [ColumnSetNameStartsEndsWith]}**`(`**{@include [UsageTemplate.TextRef]}`[, `{@include [UsageTemplate.IgnoreCaseRef]}`]`**`)`**
+     * }
+     *
+     * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
+     *  {@include [Indent]}{@include [ColumnGroupNameContains]}**`(`**{@include [UsageTemplate.TextRef]}`[, `{@include [UsageTemplate.IgnoreCaseRef]}`] | `{@include [UsageTemplate.RegexRef]}**`)`**
+     *
+     *  {@include [Indent]}`|` {@include [ColumnGroupNameStartsWith]}**`(`**{@include [UsageTemplate.TextRef]}`[, `{@include [UsageTemplate.IgnoreCaseRef]}`]`**`)`**
+     * }
+     */
+    public interface Usage {
+
+        /** [**nameContains**][ColumnsSelectionDsl.nameContains] */
+        public interface PlainDslNameContains
+
+        /** {@comment newline because of rendering issue.}
+         * **name**`(`[**Starts**][ColumnsSelectionDsl.nameStartsWith]`|`[**Ends**][ColumnsSelectionDsl.nameEndsWith]`)`**`With`** */
+        public interface PlainDslNameStartsEndsWith
+
+        /** .[**nameContains**][ColumnsSelectionDsl.nameContains] */
+        public interface ColumnSetNameContains
+
+        /** .**name**`(`[**Starts**][ColumnsSelectionDsl.nameStartsWith]`|`[**Ends**][ColumnsSelectionDsl.nameEndsWith]`)`**`With`** */
+        public interface ColumnSetNameStartsEndsWith
+
+        /** .[**colsNameContains**][ColumnsSelectionDsl.colsNameContains] */
+        public interface ColumnGroupNameContains
+
+        /** .**colsName**`(`[**Starts**][ColumnsSelectionDsl.colsNameStartsWith]`|`[**Ends**][ColumnsSelectionDsl.colsNameEndsWith]`)`**`With`** */
+        public interface ColumnGroupNameStartsWith
+    }
+
     // region nameContains
 
     /**
-     * ## (Children) Name Contains
-     * Returns a ([transformable][TransformableColumnSet]) [ColumnSet] containing
+     * ## (Cols) Name Contains
+     * Returns a [ColumnSet] containing
      * all columns containing {@getArg [CommonNameContainsDocs.ArgumentArg]} in their name.
      *
-     * NOTE: For [column groups][ColumnGroup], `nameContains` is named `childrenNameContains` to avoid confusion.
+     * NOTE: For [column groups][ColumnGroup], `nameContains` is named `colsNameContains` to avoid confusion.
      *
      * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]` { `{@getArg [ArgumentArg]}{@getArg [ArgumentArg]}` `[in][String.contains]` it.`[name][DataColumn.name]` }`.
      *
+     * See [Usage] for how to use these functions.
+     *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { `[nameContains][SingleColumn.childrenNameContains]`("my") }`
+     * `df.`[select][DataFrame.select]` { `[nameContains][SingleColumn.colsNameContains]`("my") }`
      *
-     * `df.`[select][DataFrame.select]` { "someGroupCol".`[nameContains][String.childrenNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
+     * `df.`[select][DataFrame.select]` { "someGroupCol".`[nameContains][String.colsNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[nameContains][SingleColumn.childrenNameContains]`("my") }`
+     * `df.`[select][DataFrame.select]` { Type::someGroupCol.`[nameContains][SingleColumn.colsNameContains]`("my", ignoreCase = true) }`
      *
      * #### Examples for this overload:
      *
      * {@getArg [ExampleArg]}
      *
      * @param {@getArg [ArgumentArg]} what the column name should contain to be included in the result.
-     * @return A ([transformable][TransformableColumnSet]) [ColumnSet] containing
+     * {@getArg [ExtraParamsArg]}
+     * @return A [ColumnSet] containing
      *   all columns containing {@getArg [CommonNameContainsDocs.ArgumentArg]} in their name.
+     * @see [nameEndsWith\]
+     * @see [nameStartsWith\]
+     * {@setArg [ExtraParamsArg]}
      */
     private interface CommonNameContainsDocs {
+
+        /* Example to give */
         interface ExampleArg
 
-        /** [text\] or [regex\] */
+        /* [text\] or [regex\] */
         interface ArgumentArg
+
+        /* Optional extra params. */
+        interface ExtraParamsArg
     }
 
     /**
      * @include [CommonNameContainsDocs]
-     * @setArg [CommonNameContainsDocs.ArgumentArg] [text\] */
+     * @setArg [CommonNameContainsDocs.ArgumentArg] [text\]
+     * {@setArg [CommonNameContainsDocs.ExtraParamsArg]
+     *  @param [ignoreCase\] `true` to ignore character case when comparing strings. By default `false`.
+     * }
+     */
     private interface NameContainsTextDocs
 
     /**
@@ -57,59 +137,74 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[nameContains][ColumnSet.nameContains]`("my") }`
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameContains][ColumnSet.nameContains]`("my") }`
+     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameContains][ColumnSet.nameContains]`("my", ignoreCase = true) }`
      */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.nameContains(text: CharSequence): TransformableColumnSet<C> =
-        colsInternal { it.name.contains(text) } as TransformableColumnSet<C>
+    public fun <C> ColumnSet<C>.nameContains(
+        text: CharSequence,
+        ignoreCase: Boolean = false,
+    ): TransformableColumnSet<C> =
+        colsInternal { it.name.contains(text, ignoreCase) } as TransformableColumnSet<C>
 
     /**
      * @include [NameContainsTextDocs]
      * @setArg [CommonNameContainsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[nameContains][ColumnsSelectionDsl.childrenNameContains]`("my") }`
+     * `df.`[select][DataFrame.select]` { `[nameContains][ColumnsSelectionDsl.colsNameContains]`("my") }`
      */
-    public fun ColumnsSelectionDsl<*>.nameContains(text: CharSequence): TransformableColumnSet<*> =
-        asSingleColumn().childrenNameContains(text)
+    public fun ColumnsSelectionDsl<*>.nameContains(
+        text: CharSequence,
+        ignoreCase: Boolean = false,
+    ): TransformableColumnSet<*> =
+        asSingleColumn().colsNameContains(text, ignoreCase)
 
     /**
      * @include [NameContainsTextDocs]
      * @setArg [CommonNameContainsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { someGroupCol.`[childrenNameContains][SingleColumn.childrenNameContains]`("my") }`
+     * `df.`[select][DataFrame.select]` { someGroupCol.`[colsNameContains][SingleColumn.colsNameContains]`("my") }`
      */
-    public fun SingleColumn<DataRow<*>>.childrenNameContains(text: CharSequence): TransformableColumnSet<*> =
-        this.ensureIsColumnGroup().colsInternal { it.name.contains(text) }
+    public fun SingleColumn<DataRow<*>>.colsNameContains(
+        text: CharSequence,
+        ignoreCase: Boolean = false,
+    ): TransformableColumnSet<*> =
+        this.ensureIsColumnGroup().colsInternal { it.name.contains(text, ignoreCase) }
 
     /**
      * @include [NameContainsTextDocs]
      * @setArg [CommonNameContainsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "someGroupCol".`[childrenNameContains][String.childrenNameContains]`("my") }`
-     *
+     * `df.`[select][DataFrame.select]` { "someGroupCol".`[colsNameContains][String.colsNameContains]`("my") }`
      */
-    public fun String.childrenNameContains(text: CharSequence): TransformableColumnSet<*> =
-        columnGroup(this).childrenNameContains(text)
+    public fun String.colsNameContains(
+        text: CharSequence,
+        ignoreCase: Boolean = false,
+    ): TransformableColumnSet<*> =
+        columnGroup(this).colsNameContains(text, ignoreCase)
 
     /**
      * @include [NameContainsTextDocs]
      * @setArg [CommonNameContainsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameContains][SingleColumn.childrenNameContains]`("my") }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[childrenNameContains][KProperty.childrenNameContains]`("my") }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[colsNameContains][KProperty.colsNameContains]`("my") }`
      */
-    public fun KProperty<DataRow<*>>.childrenNameContains(text: CharSequence): TransformableColumnSet<*> =
-        columnGroup(this).childrenNameContains(text)
+    public fun KProperty<*>.colsNameContains(
+        text: CharSequence,
+        ignoreCase: Boolean = false,
+    ): TransformableColumnSet<*> =
+        columnGroup(this).colsNameContains(text, ignoreCase)
 
     /**
      * @include [NameContainsTextDocs]
      * @setArg [CommonNameContainsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[childrenNameContains][ColumnPath.childrenNameContains]`("my") }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[colsNameContains][ColumnPath.colsNameContains]`("my") }`
      */
-    public fun ColumnPath.childrenNameContains(text: CharSequence): TransformableColumnSet<*> =
-        columnGroup(this).childrenNameContains(text)
+    public fun ColumnPath.colsNameContains(
+        text: CharSequence,
+        ignoreCase: Boolean = false,
+    ): TransformableColumnSet<*> =
+        columnGroup(this).colsNameContains(text, ignoreCase)
 
     /**
      * @include [CommonNameContainsDocs]
@@ -135,92 +230,93 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { `[nameContains][ColumnsSelectionDsl.nameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
      */
     public fun ColumnsSelectionDsl<*>.nameContains(regex: Regex): TransformableColumnSet<*> =
-        asSingleColumn().childrenNameContains(regex)
+        asSingleColumn().colsNameContains(regex)
 
     /**
      * @include [NameContainsRegexDocs]
      * @setArg [CommonNameContainsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { someGroupCol.`[childrenNameContains][SingleColumn.childrenNameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
+     * `df.`[select][DataFrame.select]` { someGroupCol.`[colsNameContains][SingleColumn.colsNameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
      */
-    public fun SingleColumn<DataRow<*>>.childrenNameContains(regex: Regex): TransformableColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.colsNameContains(regex: Regex): TransformableColumnSet<*> =
         this.ensureIsColumnGroup().colsInternal { it.name.contains(regex) }
 
     /**
      * @include [NameContainsRegexDocs]
      * @setArg [CommonNameContainsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "someGroupCol".`[childrenNameContains][String.childrenNameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
+     * `df.`[select][DataFrame.select]` { "someGroupCol".`[colsNameContains][String.colsNameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
      */
-    public fun String.childrenNameContains(regex: Regex): TransformableColumnSet<*> =
-        columnGroup(this).childrenNameContains(regex)
+    public fun String.colsNameContains(regex: Regex): TransformableColumnSet<*> =
+        columnGroup(this).colsNameContains(regex)
 
     /**
      * @include [NameContainsRegexDocs]
      * @setArg [CommonNameContainsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameContains][SingleColumn.childrenNameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[childrenNameContains][KProperty.childrenNameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[colsNameContains][KProperty.colsNameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
      */
-    public fun KProperty<DataRow<*>>.childrenNameContains(regex: Regex): TransformableColumnSet<*> =
-        columnGroup(this).childrenNameContains(regex)
+    public fun KProperty<*>.colsNameContains(regex: Regex): TransformableColumnSet<*> =
+        columnGroup(this).colsNameContains(regex)
 
     /**
      * @include [NameContainsRegexDocs]
      * @setArg [CommonNameContainsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[childrenNameContains][ColumnPath.childrenNameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[colsNameContains][ColumnPath.colsNameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
      */
-    public fun ColumnPath.childrenNameContains(regex: Regex): TransformableColumnSet<*> =
-        columnGroup(this).childrenNameContains(regex)
+    public fun ColumnPath.colsNameContains(regex: Regex): TransformableColumnSet<*> =
+        columnGroup(this).colsNameContains(regex)
 
     // endregion
 
     /**
-     * ## (Children) Name {@getArg [CommonNameStartsEndsDocs.CapitalTitle]} With
-     * Returns a ([transformable][TransformableColumnSet]) [ColumnSet] containing
-     * all columns {@getArg [CommonNameStartsEndsDocs.Noun]} with {@getArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name.
+     * ## (Cols) Name {@getArg [CommonNameStartsEndsDocs.CapitalTitleArg]} With
+     * Returns a [ColumnSet] containing
+     * all columns {@getArg [CommonNameStartsEndsDocs.NounArg]} with {@getArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name.
      *
-     * If [this\] is a [SingleColumn] containing a [ColumnGroup], the function runs on the children of the [ColumnGroup].
-     * Else, if [this\] is a [ColumnSet], the function runs on the [ColumnSet] itself.
+     * NOTE: For [column groups][ColumnGroup], the function is named `{@getArg [CommonNameStartsEndsDocs.ColsNameOperationNameArg]}` to avoid confusion.
      *
-     * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]` { it.`[name][DataColumn.name]`.`[{@getArg [OperationName]}][String.{@getArg [OperationName]}]`(`{@getArg [ArgumentArg]}{@getArg [ArgumentArg]}`) }`.
+     * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]` { it.`[name][DataColumn.name]`.`[{@getArg [OperationNameArg]}][String.{@getArg [OperationNameArg]}]`(`{@getArg [ArgumentArg]}{@getArg [ArgumentArg]}`) }`.
+     *
+     * See [Usage] for how to use these functions.
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { `[{@getArg [NameOperationName]}][ColumnsSelectionDsl.{@getArg [NameOperationName]}]`("order") }`
+     * `df.`[select][DataFrame.select]` { `[{@getArg [NameOperationNameArg]}][ColumnsSelectionDsl.{@getArg [NameOperationNameArg]}]`("order") }`
      *
-     * `df.`[select][DataFrame.select]` { "someGroupCol".`[{@getArg [ChildrenNameOperationName]}][String.{@getArg [ChildrenNameOperationName]}]`("b") }`
+     * `df.`[select][DataFrame.select]` { "someGroupCol".`[{@getArg [ColsNameOperationNameArg]}][String.{@getArg [ColsNameOperationNameArg]}]`("b") }`
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[{@getArg [ChildrenNameOperationName]}][SingleColumn.{@getArg [ChildrenNameOperationName]}]`("a") }`
+     * `df.`[select][DataFrame.select]` { Type::someGroupCol.`[{@getArg [ColsNameOperationNameArg]}][SingleColumn.{@getArg [ColsNameOperationNameArg]}]`("a", ignoreCase = true) }`
      *
      * #### Examples for this overload:
      *
      * {@getArg [ExampleArg]}
      *
-     * @param {@getArg [ArgumentArg]} Columns {@getArg [CommonNameStartsEndsDocs.Noun]} with this {@getArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name will be returned.
-     * @return A ([transformable][TransformableColumnSet]) [ColumnSet] containing
-     *   all columns {@getArg [CommonNameStartsEndsDocs.Noun]} with {@getArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name.
+     * @param {@getArg [ArgumentArg]} Columns {@getArg [CommonNameStartsEndsDocs.NounArg]} with this {@getArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name will be returned.
+     * @param [ignoreCase\] `true` to ignore character case when comparing strings. By default `false`.
+     *
+     * @return A [ColumnSet] containing
+     *   all columns {@getArg [CommonNameStartsEndsDocs.NounArg]} with {@getArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name.
      */
     private interface CommonNameStartsEndsDocs {
 
-        /** "Starts" or "Ends" */
-        interface CapitalTitle
+        /* "Starts" or "Ends" */
+        interface CapitalTitleArg
 
-        /** "starting" or "ending" */
-        interface Noun
+        /* "starting" or "ending" */
+        interface NounArg
 
-        /** "startsWith" or "endsWith" */
-        interface OperationName
+        /* "startsWith" or "endsWith" */
+        interface OperationNameArg
 
-        /** "nameStartsWith" or "nameEndsWith" */
-        interface NameOperationName
+        /* "nameStartsWith" or "nameEndsWith" */
+        interface NameOperationNameArg
 
-        /** "childrenNameStartsWith" or "childrenNameEndsWith" */
-        interface ChildrenNameOperationName
+        /* "colsNameStartsWith" or "colsNameEndsWith" */
+        interface ColsNameOperationNameArg
 
-        /** [prefix\] or [suffix\] */
+        /* [prefix\] or [suffix\] */
         interface ArgumentArg
 
         interface ExampleArg
@@ -230,11 +326,11 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [CommonNameStartsEndsDocs]
-     * @setArg [CommonNameStartsEndsDocs.CapitalTitle] Starts
-     * @setArg [CommonNameStartsEndsDocs.Noun] starting
-     * @setArg [CommonNameStartsEndsDocs.OperationName] startsWith
-     * @setArg [CommonNameStartsEndsDocs.NameOperationName] nameStartsWith
-     * @setArg [CommonNameStartsEndsDocs.ChildrenNameOperationName] childrenNameStartsWith
+     * @setArg [CommonNameStartsEndsDocs.CapitalTitleArg] Starts
+     * @setArg [CommonNameStartsEndsDocs.NounArg] starting
+     * @setArg [CommonNameStartsEndsDocs.OperationNameArg] startsWith
+     * @setArg [CommonNameStartsEndsDocs.NameOperationNameArg] nameStartsWith
+     * @setArg [CommonNameStartsEndsDocs.ColsNameOperationNameArg] colsNameStartsWith
      * @setArg [CommonNameStartsEndsDocs.ArgumentArg] [prefix\]
      *
      * @see [nameEndsWith\]
@@ -250,9 +346,9 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     public fun ColumnsSelectionDsl<*>.startsWith(prefix: CharSequence): TransformableColumnSet<*> =
         nameStartsWith(prefix)
 
-    @Deprecated("Use childrenNameStartsWith instead", ReplaceWith("this.childrenNameStartsWith(prefix)"))
+    @Deprecated("Use colsNameStartsWith instead", ReplaceWith("this.colsNameStartsWith(prefix)"))
     public fun SingleColumn<DataRow<*>>.startsWith(prefix: CharSequence): TransformableColumnSet<*> =
-        childrenNameStartsWith(prefix)
+        colsNameStartsWith(prefix)
 
     /**
      * @include [CommonNameStartsWithDocs]
@@ -261,8 +357,11 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameStartsWith][ColumnSet.nameStartsWith]`("order-") }`
      */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.nameStartsWith(prefix: CharSequence): TransformableColumnSet<C> =
-        colsInternal { it.name.startsWith(prefix) } as TransformableColumnSet<C>
+    public fun <C> ColumnSet<C>.nameStartsWith(
+        prefix: CharSequence,
+        ignoreCase: Boolean = false,
+    ): TransformableColumnSet<C> =
+        colsInternal { it.name.startsWith(prefix, ignoreCase) } as TransformableColumnSet<C>
 
     /**
      * @include [CommonNameStartsWithDocs]
@@ -270,46 +369,59 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { `[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order-") }`
      */
-    public fun ColumnsSelectionDsl<*>.nameStartsWith(prefix: CharSequence): TransformableColumnSet<*> =
-        asSingleColumn().childrenNameStartsWith(prefix)
+    public fun ColumnsSelectionDsl<*>.nameStartsWith(
+        prefix: CharSequence,
+        ignoreCase: Boolean = false,
+    ): TransformableColumnSet<*> =
+        asSingleColumn().colsNameStartsWith(prefix, ignoreCase)
 
     /**
      * @include [CommonNameStartsWithDocs]
      * @setArg [CommonNameStartsEndsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { someGroupCol.`[childrenNameStartsWith][SingleColumn.childrenNameStartsWith]`("order-") }`
+     * `df.`[select][DataFrame.select]` { someGroupCol.`[colsNameStartsWith][SingleColumn.colsNameStartsWith]`("order-") }`
      */
-    public fun SingleColumn<DataRow<*>>.childrenNameStartsWith(prefix: CharSequence): TransformableColumnSet<*> =
-        this.ensureIsColumnGroup().colsInternal { it.name.startsWith(prefix) }
+    public fun SingleColumn<DataRow<*>>.colsNameStartsWith(
+        prefix: CharSequence,
+        ignoreCase: Boolean = false,
+    ): TransformableColumnSet<*> =
+        this.ensureIsColumnGroup().colsInternal { it.name.startsWith(prefix, ignoreCase) }
 
     /**
      * @include [CommonNameStartsWithDocs]
      * @setArg [CommonNameStartsEndsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "someGroupCol".`[childrenNameStartsWith][String.childrenNameStartsWith]`("order-") }`
+     * `df.`[select][DataFrame.select]` { "someGroupCol".`[colsNameStartsWith][String.colsNameStartsWith]`("order-") }`
      */
-    public fun String.childrenNameStartsWith(prefix: CharSequence): TransformableColumnSet<*> =
-        columnGroup(this).childrenNameStartsWith(prefix)
+    public fun String.colsNameStartsWith(
+        prefix: CharSequence,
+        ignoreCase: Boolean = false,
+    ): TransformableColumnSet<*> =
+        columnGroup(this).colsNameStartsWith(prefix, ignoreCase)
 
     /**
      * @include [CommonNameStartsWithDocs]
      * @setArg [CommonNameStartsEndsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameStartsWith][SingleColumn.childrenNameStartsWith]`("order-") }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[childrenNameStartsWith][KProperty.childrenNameStartsWith]`("order-") }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[colsNameStartsWith][KProperty.colsNameStartsWith]`("order-") }`
      */
-    public fun KProperty<DataRow<*>>.childrenNameStartsWith(prefix: CharSequence): TransformableColumnSet<*> =
-        columnGroup(this).childrenNameStartsWith(prefix)
+    public fun KProperty<*>.colsNameStartsWith(
+        prefix: CharSequence,
+        ignoreCase: Boolean = false,
+    ): TransformableColumnSet<*> =
+        columnGroup(this).colsNameStartsWith(prefix, ignoreCase)
 
     /**
      * @include [CommonNameStartsWithDocs]
      * @setArg [CommonNameStartsEndsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[childrenNameStartsWith][ColumnPath.childrenNameStartsWith]`("order-") }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[colsNameStartsWith][ColumnPath.colsNameStartsWith]`("order-") }`
      */
-    public fun ColumnPath.childrenNameStartsWith(prefix: CharSequence): TransformableColumnSet<*> =
-        columnGroup(this).childrenNameStartsWith(prefix)
+    public fun ColumnPath.colsNameStartsWith(
+        prefix: CharSequence,
+        ignoreCase: Boolean = false,
+    ): TransformableColumnSet<*> =
+        columnGroup(this).colsNameStartsWith(prefix, ignoreCase)
 
     // endregion
 
@@ -317,11 +429,11 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * @include [CommonNameStartsEndsDocs]
-     * @setArg [CommonNameStartsEndsDocs.CapitalTitle] Ends
-     * @setArg [CommonNameStartsEndsDocs.Noun] ending
-     * @setArg [CommonNameStartsEndsDocs.OperationName] endsWith
-     * @setArg [CommonNameStartsEndsDocs.NameOperationName] nameEndsWith
-     * @setArg [CommonNameStartsEndsDocs.ChildrenNameOperationName] childrenNameEndsWith
+     * @setArg [CommonNameStartsEndsDocs.CapitalTitleArg] Ends
+     * @setArg [CommonNameStartsEndsDocs.NounArg] ending
+     * @setArg [CommonNameStartsEndsDocs.OperationNameArg] endsWith
+     * @setArg [CommonNameStartsEndsDocs.NameOperationNameArg] nameEndsWith
+     * @setArg [CommonNameStartsEndsDocs.ColsNameOperationNameArg] colsNameEndsWith
      * @setArg [CommonNameStartsEndsDocs.ArgumentArg] [suffix\]
      *
      * @see [nameStartsWith\]
@@ -338,7 +450,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     public fun ColumnsSelectionDsl<*>.endsWith(suffix: CharSequence): TransformableColumnSet<*> =
         nameEndsWith(suffix)
 
-    @Deprecated("Use childrenNameEndsWith instead", ReplaceWith("this.childrenNameEndsWith(suffix)"))
+    @Deprecated("Use colsNameEndsWith instead", ReplaceWith("this.colsNameEndsWith(suffix)"))
     public fun SingleColumn<DataRow<*>>.endsWith(suffix: CharSequence): TransformableColumnSet<*> =
         this.ensureIsColumnGroup().colsInternal { it.name.endsWith(suffix) }
 
@@ -349,8 +461,11 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameEndsWith][ColumnSet.nameEndsWith]`("-order") }`
      */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.nameEndsWith(suffix: CharSequence): TransformableColumnSet<C> =
-        colsInternal { it.name.endsWith(suffix) } as TransformableColumnSet<C>
+    public fun <C> ColumnSet<C>.nameEndsWith(
+        suffix: CharSequence,
+        ignoreCase: Boolean = false,
+    ): TransformableColumnSet<C> =
+        colsInternal { it.name.endsWith(suffix, ignoreCase) } as TransformableColumnSet<C>
 
     /**
      * @include [CommonNameEndsWithDocs]
@@ -358,47 +473,61 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { `[nameEndsWith][ColumnsSelectionDsl.nameEndsWith]`("-order") }`
      */
-    public fun ColumnsSelectionDsl<*>.nameEndsWith(suffix: CharSequence): TransformableColumnSet<*> =
-        asSingleColumn().childrenNameEndsWith(suffix)
+    public fun ColumnsSelectionDsl<*>.nameEndsWith(
+        suffix: CharSequence,
+        ignoreCase: Boolean = false,
+    ): TransformableColumnSet<*> =
+        asSingleColumn().colsNameEndsWith(suffix, ignoreCase)
 
     /**
      * @include [CommonNameEndsWithDocs]
      * @setArg [CommonNameStartsEndsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { someGroupCol.`[childrenNameEndsWith][SingleColumn.childrenNameEndsWith]`("-order") }`
+     * `df.`[select][DataFrame.select]` { someGroupCol.`[colsNameEndsWith][SingleColumn.colsNameEndsWith]`("-order") }`
      */
-    public fun SingleColumn<DataRow<*>>.childrenNameEndsWith(suffix: CharSequence): TransformableColumnSet<*> =
-        this.ensureIsColumnGroup().colsInternal { it.name.endsWith(suffix) }
+    public fun SingleColumn<DataRow<*>>.colsNameEndsWith(
+        suffix: CharSequence,
+        ignoreCase: Boolean = false,
+    ): TransformableColumnSet<*> =
+        this.ensureIsColumnGroup().colsInternal { it.name.endsWith(suffix, ignoreCase) }
 
     /**
      * @include [CommonNameEndsWithDocs]
      * @setArg [CommonNameStartsEndsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "someGroupCol".`[childrenNameEndsWith][String.childrenNameEndsWith]`("-order") }`
+     * `df.`[select][DataFrame.select]` { "someGroupCol".`[colsNameEndsWith][String.colsNameEndsWith]`("-order") }`
      */
-    public fun String.childrenNameEndsWith(suffix: CharSequence): TransformableColumnSet<*> =
-        columnGroup(this).childrenNameEndsWith(suffix)
+    public fun String.colsNameEndsWith(
+        suffix: CharSequence,
+        ignoreCase: Boolean = false,
+    ): TransformableColumnSet<*> =
+        columnGroup(this).colsNameEndsWith(suffix, ignoreCase)
 
     /**
      * @include [CommonNameEndsWithDocs]
      * @setArg [CommonNameStartsEndsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::someGroupCol).`[childrenNameEndsWith][SingleColumn.childrenNameEndsWith]`("-order") }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[childrenNameEndsWith][KProperty.childrenNameEndsWith]`("-order") }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[colsNameEndsWith][KProperty.colsNameEndsWith]`("-order") }`
      */
-    public fun KProperty<DataRow<*>>.childrenNameEndsWith(suffix: CharSequence): TransformableColumnSet<*> =
-        columnGroup(this).childrenNameEndsWith(suffix)
+    public fun KProperty<*>.colsNameEndsWith(
+        suffix: CharSequence,
+        ignoreCase: Boolean = false,
+    ): TransformableColumnSet<*> =
+        columnGroup(this).colsNameEndsWith(suffix, ignoreCase)
 
     /**
      * @include [CommonNameEndsWithDocs]
      * @setArg [CommonNameStartsEndsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[childrenNameEndsWith][ColumnPath.childrenNameEndsWith]`("-order") }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[colsNameEndsWith][ColumnPath.colsNameEndsWith]`("-order") }`
      */
-    public fun ColumnPath.childrenNameEndsWith(suffix: CharSequence): TransformableColumnSet<*> =
-        columnGroup(this).childrenNameEndsWith(suffix)
+    public fun ColumnPath.colsNameEndsWith(
+        suffix: CharSequence,
+        ignoreCase: Boolean = false,
+    ): TransformableColumnSet<*> =
+        columnGroup(this).colsNameEndsWith(suffix, ignoreCase)
 
     // endregion
 }
+
 // endregion

@@ -12,6 +12,11 @@ import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelecti
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetRef
 import kotlin.reflect.KProperty
 
+/*
+ * This template is to be used in displaying the Usage / DSL grammar
+ * of each individual ColumnsSelectionDsl function group, as well as the entire
+ * thing itself.
+ */
 public interface UsageTemplateColumnsSelectionDsl {
 
     /**
@@ -126,6 +131,15 @@ public interface UsageTemplateColumnsSelectionDsl {
         /** `number: `[Int][Int] */
         public interface NumberDef
 
+        /** `text: `[String][String] */
+        public interface TextDef
+
+        /** `ignoreCase: `[Boolean][Boolean] */
+        public interface IgnoreCaseDef
+
+        /** `regex: `[Regex][Regex] */
+        public interface RegexDef
+
         // endregion
 
         // region References to the definitions
@@ -159,6 +173,15 @@ public interface UsageTemplateColumnsSelectionDsl {
 
         /** [number][NumberDef] */
         public interface NumberRef
+
+        /** [text][TextDef] */
+        public interface TextRef
+
+        /** [ignoreCase][IgnoreCaseDef] */
+        public interface IgnoreCaseRef
+
+        /** [regex][RegexDef] */
+        public interface RegexRef
 
         // endregion
     }
