@@ -18,7 +18,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.toIndices
+import org.jetbrains.kotlinx.dataframe.impl.getTrueIndices
 import org.jetbrains.kotlinx.dataframe.indices
 import kotlin.reflect.KProperty
 
@@ -39,7 +39,7 @@ public fun <T> DataFrame<T>.filter(predicate: RowFilter<T>): DataFrame<T> =
     }.let { get(it) }
 
 public fun <T> DataFrame<T>.filterBy(column: ColumnSelector<T, Boolean>): DataFrame<T> =
-    getRows(getColumn(column).toList().toIndices())
+    getRows(getColumn(column).toList().getTrueIndices())
 
 public fun <T> DataFrame<T>.filterBy(column: String): DataFrame<T> = filterBy { column.toColumnOf() }
 

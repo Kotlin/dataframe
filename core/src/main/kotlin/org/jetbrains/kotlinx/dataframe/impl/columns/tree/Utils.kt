@@ -41,7 +41,11 @@ internal fun <T> TreeNode<T>.topmostChildren(yieldCondition: (TreeNode<T>) -> Bo
         yieldCondition = yieldCondition,
     )
 
-@Deprecated("Use topmostChildren instead", ReplaceWith("topmostChildren(yieldCondition)"))
+@Deprecated(
+    "Use topmostChildren instead",
+    ReplaceWith("topmostChildren(yieldCondition)"),
+    level = DeprecationLevel.ERROR
+)
 internal fun <T> TreeNode<T>.topDfs(yieldCondition: (TreeNode<T>) -> Boolean): List<TreeNode<T>> =
     topmostChildren(yieldCondition)
 

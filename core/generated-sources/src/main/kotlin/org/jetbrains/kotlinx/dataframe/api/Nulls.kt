@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.*
-import org.jetbrains.kotlinx.dataframe.util.ITERABLE_COLUMNS_DEPRECATION_MESSAGE
 import kotlin.reflect.KProperty
 
 // region fillNulls
@@ -203,17 +202,6 @@ public fun <T, C> DataFrame<T>.fillNulls(vararg columns: KProperty<C>): Update<T
  * @param [columns] The [Column references][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnAccessors.WithExample] of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
 public fun <T, C> DataFrame<T>.fillNulls(vararg columns: ColumnReference<C>): Update<T, C?> =
-    fillNulls { columns.toColumnSet() }
-
-@Deprecated(
-    message = ITERABLE_COLUMNS_DEPRECATION_MESSAGE,
-    replaceWith = ReplaceWith(
-        "fillNulls { columns.toColumnSet() }",
-        "org.jetbrains.kotlinx.dataframe.columns.toColumnSet",
-    ),
-    level = DeprecationLevel.ERROR,
-)
-public fun <T, C> DataFrame<T>.fillNulls(columns: Iterable<ColumnReference<C>>): Update<T, C?> =
     fillNulls { columns.toColumnSet() }
 
 // endregion
@@ -424,17 +412,6 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: KProperty<C>): Update<T,
 public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: ColumnReference<C>): Update<T, C> =
     fillNaNs { columns.toColumnSet() }
 
-@Deprecated(
-    message = ITERABLE_COLUMNS_DEPRECATION_MESSAGE,
-    replaceWith = ReplaceWith(
-        "fillNaNs { columns.toColumnSet() }",
-        "org.jetbrains.kotlinx.dataframe.columns.toColumnSet",
-    ),
-    level = DeprecationLevel.ERROR,
-)
-public fun <T, C> DataFrame<T>.fillNaNs(columns: Iterable<ColumnReference<C>>): Update<T, C> =
-    fillNaNs { columns.toColumnSet() }
-
 // endregion
 
 // region fillNA
@@ -621,17 +598,6 @@ public fun <T, C> DataFrame<T>.fillNA(vararg columns: KProperty<C>): Update<T, C
  * @param [columns] The [Column references][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnAccessors.WithExample] of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
 public fun <T, C> DataFrame<T>.fillNA(vararg columns: ColumnReference<C>): Update<T, C?> =
-    fillNA { columns.toColumnSet() }
-
-@Deprecated(
-    message = ITERABLE_COLUMNS_DEPRECATION_MESSAGE,
-    replaceWith = ReplaceWith(
-        "fillNA { columns.toColumnSet() }",
-        "org.jetbrains.kotlinx.dataframe.columns.toColumnSet",
-    ),
-    level = DeprecationLevel.ERROR,
-)
-public fun <T, C> DataFrame<T>.fillNA(columns: Iterable<ColumnReference<C>>): Update<T, C?> =
     fillNA { columns.toColumnSet() }
 
 // endregion
@@ -833,20 +799,6 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: String, whereAllNull: Bool
 public fun <T> DataFrame<T>.dropNulls(vararg columns: AnyColumnReference, whereAllNull: Boolean = false): DataFrame<T> =
     dropNulls(whereAllNull) { columns.toColumnSet() }
 
-@Deprecated(
-    message = ITERABLE_COLUMNS_DEPRECATION_MESSAGE,
-    replaceWith = ReplaceWith(
-        "dropNulls(whereAllNull) { columns.toColumnSet() }",
-        "org.jetbrains.kotlinx.dataframe.columns.toColumnSet",
-    ),
-    level = DeprecationLevel.ERROR,
-)
-public fun <T> DataFrame<T>.dropNulls(
-    columns: Iterable<AnyColumnReference>,
-    whereAllNull: Boolean = false,
-): DataFrame<T> =
-    dropNulls(whereAllNull) { columns.toColumnSet() }
-
 /**
  * ## The Drop Nulls Operation
  *
@@ -1020,17 +972,6 @@ public fun <T> DataFrame<T>.dropNA(vararg columns: String, whereAllNA: Boolean =
  * ([Column Accessors API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ColumnAccessorsApi]). used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
  */
 public fun <T> DataFrame<T>.dropNA(vararg columns: AnyColumnReference, whereAllNA: Boolean = false): DataFrame<T> =
-    dropNA(whereAllNA) { columns.toColumnSet() }
-
-@Deprecated(
-    message = ITERABLE_COLUMNS_DEPRECATION_MESSAGE,
-    replaceWith = ReplaceWith(
-        "dropNA(whereAllNA) { columns.toColumnSet() }",
-        "org.jetbrains.kotlinx.dataframe.columns.toColumnSet",
-    ),
-    level = DeprecationLevel.ERROR,
-)
-public fun <T> DataFrame<T>.dropNA(columns: Iterable<AnyColumnReference>, whereAllNA: Boolean = false): DataFrame<T> =
     dropNA(whereAllNA) { columns.toColumnSet() }
 
 /**
@@ -1228,20 +1169,6 @@ public fun <T> DataFrame<T>.dropNaNs(vararg columns: String, whereAllNaN: Boolea
  * ([Column Accessors API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ColumnAccessorsApi]). used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
  */
 public fun <T> DataFrame<T>.dropNaNs(vararg columns: AnyColumnReference, whereAllNaN: Boolean = false): DataFrame<T> =
-    dropNaNs(whereAllNaN) { columns.toColumnSet() }
-
-@Deprecated(
-    message = ITERABLE_COLUMNS_DEPRECATION_MESSAGE,
-    replaceWith = ReplaceWith(
-        "dropNaNs(whereAllNaN) { columns.toColumnSet() }",
-        "org.jetbrains.kotlinx.dataframe.columns.toColumnSet",
-    ),
-    level = DeprecationLevel.ERROR,
-)
-public fun <T> DataFrame<T>.dropNaNs(
-    columns: Iterable<AnyColumnReference>,
-    whereAllNaN: Boolean = false,
-): DataFrame<T> =
     dropNaNs(whereAllNaN) { columns.toColumnSet() }
 
 /**

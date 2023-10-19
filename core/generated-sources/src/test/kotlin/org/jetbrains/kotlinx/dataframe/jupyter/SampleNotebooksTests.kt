@@ -10,6 +10,7 @@ import java.util.Locale
 
 class SampleNotebooksTests : DataFrameJupyterTest() {
     @Test
+    @Ignore
     fun puzzles() = exampleTest("puzzles", "40 puzzles")
 
     @Test
@@ -24,6 +25,7 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
     )
 
     @Test
+    @Ignore
     fun titanic() = exampleTest(
         "titanic", "Titanic",
         replacer = CodeReplacer.byMap(

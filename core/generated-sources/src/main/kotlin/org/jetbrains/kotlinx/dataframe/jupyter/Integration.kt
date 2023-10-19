@@ -10,20 +10,27 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.Convert
+import org.jetbrains.kotlinx.dataframe.api.FormatClause
 import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
 import org.jetbrains.kotlinx.dataframe.api.Gather
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
+import org.jetbrains.kotlinx.dataframe.api.GroupClause
+import org.jetbrains.kotlinx.dataframe.api.InsertClause
 import org.jetbrains.kotlinx.dataframe.api.Merge
+import org.jetbrains.kotlinx.dataframe.api.MoveClause
 import org.jetbrains.kotlinx.dataframe.api.Pivot
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 import org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy
 import org.jetbrains.kotlinx.dataframe.api.ReducedPivot
 import org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy
+import org.jetbrains.kotlinx.dataframe.api.RenameClause
+import org.jetbrains.kotlinx.dataframe.api.ReplaceClause
 import org.jetbrains.kotlinx.dataframe.api.Split
 import org.jetbrains.kotlinx.dataframe.api.SplitWithTransform
 import org.jetbrains.kotlinx.dataframe.api.Update
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
+import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.columnsCount
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.frames
@@ -169,6 +176,7 @@ internal class Integration(
         if (version != null) {
             dependencies(
                 "org.jetbrains.kotlinx:dataframe-excel:$version",
+                "org.jetbrains.kotlinx:dataframe-jdbc:$version",
                 "org.jetbrains.kotlinx:dataframe-arrow:$version",
                 "org.jetbrains.kotlinx:dataframe-openapi:$version",
             )
@@ -176,7 +184,7 @@ internal class Integration(
 
         try {
             setMinimalKernelVersion(MIN_KERNEL_VERSION)
-        } catch (_: NoSuchMethodError) { // will be thrown on version < 0.11.0.198
+        } catch (_: NoSuchMethodError) { // will be thrown when a version < 0.11.0.198
             throw IllegalStateException(
                 getKernelUpdateMessage(notebook.kernelVersion, MIN_KERNEL_VERSION, notebook.jupyterClientType)
             )
@@ -213,6 +221,13 @@ internal class Integration(
                 { "DataRow: index = ${it.value.rowsCount()}, columnsCount = ${it.value.columnsCount()}" },
                 applyRowsLimit = false
             )
+
+            render<GroupClause<*, *>>({ "Group" })
+            render<MoveClause<*, *>>({ "Move" })
+            render<RenameClause<*, *>>({ "Rename" })
+            render<ReplaceClause<*, *>>({ "Replace" })
+            render<InsertClause<*>>({ "Insert" })
+            render<FormatClause<*, *>>({ "Format" })
 
             render<DataFrameHtmlData> {
                 // Our integration declares script and css definition. But in Kotlin Notebook outputs are isolated in IFrames
@@ -349,5 +364,11 @@ internal fun convertToDataFrame(dataframeLike: Any): AnyFrame =
         is GroupBy<*, *> -> dataframeLike.toDataFrame()
         is AnyFrame -> dataframeLike
         is DisableRowsLimitWrapper -> dataframeLike.value
+        is MoveClause<*, *> -> dataframeLike.df
+        is RenameClause<*, *> -> dataframeLike.df
+        is ReplaceClause<*, *> -> dataframeLike.df
+        is GroupClause<*, *> -> dataframeLike.into("untitled")
+        is InsertClause<*> -> dataframeLike.at(0)
+        is FormatClause<*, *> -> dataframeLike.df
         else -> throw IllegalArgumentException("Unsupported type: ${dataframeLike::class}")
     }
