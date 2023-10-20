@@ -174,6 +174,68 @@ internal fun AnyFrame.toHtmlData(
     return DataFrameHtmlData("", body, script)
 }
 
+internal fun AnyFrame.toStaticHtml(
+    configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
+    cellRenderer: CellRenderer,
+): DataFrameHtmlData {
+    val df = this
+    val id = "static_df_${nextTableId()}"
+    val columnsToRender = columns()
+
+    fun StringBuilder.emitTag(tag: String, attributes: String = "", tagContents: StringBuilder.() -> Unit) {
+        append("<")
+        append(tag)
+        if (attributes.isNotEmpty()) {
+            append(" ")
+            append(attributes)
+        }
+        append(">")
+
+        tagContents()
+
+        append("</")
+        append(tag)
+        append(">")
+    }
+
+    fun StringBuilder.emitHeader() = emitTag("thead") {
+        emitTag("tr") {
+            columnsToRender.forEach { col ->
+                emitTag("th") {
+                    append(col.name())
+                }
+            }
+        }
+    }
+
+    fun StringBuilder.emitRow(row: AnyRow) = emitTag("tr") {
+        columnsToRender.forEach { col ->
+            emitTag("td") {
+                append(cellRenderer.content(row[col.path()], configuration).truncatedContent)
+            }
+        }
+    }
+
+    fun StringBuilder.emitBody() = emitTag("tbody") {
+        val rowsCountToRender = minOf(rowsCount(), configuration.rowsLimit ?: Int.MAX_VALUE)
+        for (rowIndex in 0..<rowsCountToRender) {
+            emitRow(df[rowIndex])
+        }
+    }
+
+    fun StringBuilder.emitTable() = emitTag("table", """class="dataframe" id="$id"""") {
+        emitHeader()
+        emitBody()
+    }
+
+    return DataFrameHtmlData(
+        body = buildString { emitTable() },
+        script = """
+            document.getElementById("$id").style.display = "none";
+        """.trimIndent()
+    )
+}
+
 internal fun DataFrameHtmlData.print() = println(this)
 
 @Deprecated(
@@ -217,6 +279,8 @@ public fun <T> DataFrame<T>.toHTML(
     }
 
     var tableHtml = toHtmlData(configuration, cellRenderer)
+
+    tableHtml += toStaticHtml(configuration, cellRenderer)
 
     if (bodyFooter != null) {
         tableHtml += DataFrameHtmlData("", bodyFooter, "")
