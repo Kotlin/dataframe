@@ -8,10 +8,10 @@
     - `Level.WARNING` messages are changed to `Level.ERROR`
     - `Level.ERROR` messages and their functions are removed.
     - Update regions in the file accordingly.
-4. Update tutorials according last code changes
+4. Update tutorials according to last code changes
 5. Update README.MD according last code changes
-   - update artifact version
-   - update Kotlin version
+   - update an artifact version
+   - update a Kotlin version
    - update the [section](README.md#kotlin-kotlin-jupyter-openapi-arrow-and-jdk-versions) about library versions
 6. Update a project version in the file `gradle.properties` (i.e. 0.9.0 -> 0.10.0)
    - For major releases: update a project version in the file [`v.list`](https://github.com/Kotlin/dataframe/blame/master/docs/StardustDocs/v.list)
@@ -22,9 +22,9 @@
 9. Make last commit with release tag (_v0.1.1_ for example) to the release branch 
 10. Run tests and build artifacts on TC for the commit with the release tag 
 11. Deploy artifacts on MavenCentral via `Publish` task running on TC based on the commit with the release tag 
-12. Check artifacts' availability on MavenCentral 
-13. Check Gradle Plugin portal availability (usually it takes 12 hours)
-14. Update a bootstrap dependency version in the `libs.versions.toml` file (only after plugin's publication)
+12. Check artifacts' availability on [MavenCentral](https://mvnrepository.com/artifact/org.jetbrains.kotlinx/dataframe) 
+13. Check [Gradle Plugin portal availability](https://plugins.gradle.org/plugin/org.jetbrains.kotlinx.dataframe/) (usually it takes 12 hours)
+14. Update a bootstrap dependency version in the `libs.versions.toml` file (only after the plugin's publication)
 15. Make final testing
     - Check on Datalore with a test project (TODO: add link)
     - Check for Android with a test project (TODO: add link)
@@ -33,5 +33,5 @@
 17. Prepare and publish the Release Notes 
 18. Create Release from the release tag on GitHub 
 19. Update a KDF version in the [Kotlin Jupyter Descriptor](https://github.com/Kotlin/kotlin-jupyter-libraries/blob/master/dataframe.json). Now the Renovate bot doing this 
-20. Update DataFrame version in gradle.properties file for next release cycle (i.e. 0.10.0 -> 0.11.0)
+20. Update DataFrame version in the `gradle.properties` file for the next release cycle (i.e. 0.10.0 -> 0.11.0)
     
