@@ -11,6 +11,8 @@ import org.jetbrains.kotlinx.dataframe.impl.api.asFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateWithValuePerColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
+import org.jetbrains.kotlinx.dataframe.util.ITERABLE_COLUMNS_DEPRECATION_MESSAGE
+import org.jetbrains.kotlinx.dataframe.util.ITERABLE_COLUMNS_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.UPDATE_AS_NULLABLE_MESSAGE
 import org.jetbrains.kotlinx.dataframe.util.UPDATE_AS_NULLABLE_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.UPDATE_WITH_VALUE
@@ -229,6 +231,17 @@ public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C
 public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Update<T, C> =
     update { columns.toColumnSet() }
 
+@Deprecated(
+    message = ITERABLE_COLUMNS_DEPRECATION_MESSAGE,
+    replaceWith = ReplaceWith(
+        ITERABLE_COLUMNS_REPLACE,
+        "org.jetbrains.kotlinx.dataframe.columns.toColumnSet",
+    ),
+    level = DeprecationLevel.ERROR,
+)
+public fun <T, C> DataFrame<T>.update(columns: Iterable<ColumnReference<C>>): Update<T, C> =
+    update { columns.toColumnSet() }
+
 // endregion
 
 /** ## Where
@@ -405,9 +418,9 @@ public fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameExpressi
     asFrameImpl(expression)
 
 @Deprecated(
-    UPDATE_AS_NULLABLE_MESSAGE,
-    ReplaceWith(UPDATE_AS_NULLABLE_REPLACE),
-    DeprecationLevel.ERROR,
+    message = UPDATE_AS_NULLABLE_MESSAGE,
+    replaceWith = ReplaceWith(UPDATE_AS_NULLABLE_REPLACE),
+    level = DeprecationLevel.WARNING,
 )
 public fun <T, C> Update<T, C>.asNullable(): Update<T, C?> = this as Update<T, C?>
 
@@ -772,5 +785,5 @@ public fun <T, C> Update<T, C>.withZero(): DataFrame<T> = updateWithValuePerColu
  *
  * @param [value] The value to set the selected rows to. In contrast to [with][Update.with], this must be the same exact type.
  */
-@Deprecated(UPDATE_WITH_VALUE, ReplaceWith(UPDATE_WITH_VALUE_REPLACE), DeprecationLevel.ERROR)
+@Deprecated(UPDATE_WITH_VALUE, ReplaceWith(UPDATE_WITH_VALUE_REPLACE), DeprecationLevel.WARNING)
 public fun <T, C> Update<T, C>.withValue(value: C): DataFrame<T> = with { value }

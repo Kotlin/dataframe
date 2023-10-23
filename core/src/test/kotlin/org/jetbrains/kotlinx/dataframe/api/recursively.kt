@@ -27,10 +27,10 @@ class Recursively : TestBase() {
         this.map { it.name to it.path } shouldNotBe other.map { it.name to it.path }
     }
 
-    private val recursivelyGoal = dfGroup.getColumnsWithPaths { cols { true }.recursively() }
+    private val recursivelyGoal = dfGroup.getColumnsWithPaths { dfs { true } }
         .sortedBy { it.name }
 
-    private val recursivelyNoGroups = dfGroup.getColumnsWithPaths { cols { !it.isColumnGroup() }.recursively() }
+    private val recursivelyNoGroups = dfGroup.getColumnsWithPaths { allDfs(false) }
         .sortedBy { it.name }
 
     private val recursivelyString = dfGroup.getColumnsWithPaths { dfsOf<String?>() }

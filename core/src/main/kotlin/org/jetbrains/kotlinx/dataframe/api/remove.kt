@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
+import org.jetbrains.kotlinx.dataframe.util.ITERABLE_COLUMNS_DEPRECATION_MESSAGE
 import kotlin.reflect.KProperty
 
 // region DataFrame
@@ -20,6 +21,17 @@ public fun <T> DataFrame<T>.remove(vararg columns: AnyColumnReference): DataFram
 
 public fun <T> DataFrame<T>.remove(vararg columns: KProperty<*>): DataFrame<T> = remove { columns.toColumnSet() }
 
+@Deprecated(
+    message = ITERABLE_COLUMNS_DEPRECATION_MESSAGE,
+    replaceWith = ReplaceWith(
+        "remove { columns.toColumnSet() }",
+        "org.jetbrains.kotlinx.dataframe.columns.toColumnSet",
+    ),
+    level = DeprecationLevel.ERROR,
+)
+public fun <T> DataFrame<T>.remove(columns: Iterable<AnyColumnReference>): DataFrame<T> =
+    remove { columns.toColumnSet() }
+
 // endregion
 
 // region minus
@@ -31,6 +43,17 @@ public infix operator fun <T> DataFrame<T>.minus(column: String): DataFrame<T> =
 public infix operator fun <T> DataFrame<T>.minus(column: AnyColumnReference): DataFrame<T> = remove(column)
 
 public infix operator fun <T> DataFrame<T>.minus(columns: KProperty<*>): DataFrame<T> = remove(columns)
+
+@Deprecated(
+    message = ITERABLE_COLUMNS_DEPRECATION_MESSAGE,
+    replaceWith = ReplaceWith(
+        "minus { columns.toColumnSet() }",
+        "org.jetbrains.kotlinx.dataframe.columns.toColumnSet",
+    ),
+    level = DeprecationLevel.ERROR,
+)
+public infix operator fun <T> DataFrame<T>.minus(columns: Iterable<AnyColumnReference>): DataFrame<T> =
+    minus { columns.toColumnSet() }
 
 // endregion
 
