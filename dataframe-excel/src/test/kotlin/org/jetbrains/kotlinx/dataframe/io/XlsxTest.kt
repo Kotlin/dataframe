@@ -7,6 +7,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
@@ -120,5 +121,11 @@ class XlsxTest {
         val df = DataFrame.readExcel(testResource("iris_duplicated_column.xlsx"), nameRepairStrategy = NameRepairStrategy.MAKE_UNIQUE)
         df.columnNames() shouldBe listOf("Sepal.Length", "Sepal.Width", "C",
             "Petal.Length", "Petal.Width", "Species", "Other.Width", "Species1", "I", "Other.Width1", "Species2")
+    }
+
+    @Test
+    fun `read xlsx file that has cells with formulas that return numbers and strings`() {
+        val df = DataFrame.readExcel(testResource("formula_cell.xlsx"))
+        df.columnNames() shouldBe listOf("Number", "Greather than 5", "Multiplied by 10", "Divide by 5")
     }
 }
