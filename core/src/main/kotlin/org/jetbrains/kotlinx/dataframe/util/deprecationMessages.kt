@@ -44,41 +44,6 @@ internal const val TOP_MESSAGE = "top is deprecated, use roots() instead. $messa
 internal const val COL_SELECT_DSL_GROUP = "Use `colGroup()` instead. $message_0_13"
 internal const val COL_SELECT_DSL_GROUP_REPLACE = "this.colGroup(name)"
 
-internal const val COLS_SELECT_DSL_GROUP = "Use `colGroups` instead. $message_0_13"
-internal const val COLS_SELECT_DSL_GROUP_REPLACE = "this.colGroups(filter)"
-
-internal const val COL_SELECT_DSL_ALL_COLS = "Use `allCols()` instead. $message_0_13"
-internal const val COL_SELECT_DSL_ALL_COLS_REPLACE = "this.allCols()"
-
-internal const val COL_SELECT_DSL_ALL_COLS_AFTER = "Use `allColsAfter()` instead. $message_0_13"
-internal const val COL_SELECT_DSL_ALL_COLS_AFTER_REPLACE = "this.allColsAfter(column)"
-
-internal const val COL_SELECT_DSL_ALL_COLS_BEFORE = "Use `allColsBefore()` instead. $message_0_13"
-internal const val COL_SELECT_DSL_ALL_COLS_BEFORE_REPLACE = "this.allColsBefore(column)"
-
-internal const val COL_SELECT_DSL_ALL_FROM = "Use `allFrom()` instead. $message_0_13"
-internal const val COL_SELECT_DSL_ALL_FROM_REPLACE = "this.allFrom(column)"
-
-internal const val COL_SELECT_DSL_ALL_COLS_FROM = "Use `allColsFrom()` instead. $message_0_13"
-internal const val COL_SELECT_DSL_ALL_COLS_FROM_REPLACE = "this.allColsFrom(column)"
-
-internal const val COL_SELECT_DSL_ALL_UP_TO = "Use `allUpTo()` instead. $message_0_13"
-internal const val COL_SELECT_DSL_ALL_UP_TO_REPLACE = "this.allUpTo(column)"
-
-internal const val COL_SELECT_DSL_ALL_COLS_UP_TO = "Use `allColsUpTo()` instead. $message_0_13"
-internal const val COL_SELECT_DSL_ALL_COLS_UP_TO_REPLACE = "this.allColsUpTo(column)"
-
-internal const val COL_SELECT_DSL_AT_ANY_DEPTH = "This postfix notation is now deprecated. Use `colsAtAnyDepth().YOUR_OPERATION` instead (NOTE: ReplaceWith is incorrect). $message_0_13"
-
-// TODO https://youtrack.jetbrains.com/issue/KTIJ-27052/ReplaceWith-Deprecated-this-after-call-bug
-internal const val COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE = "this"
-
-internal const val COL_SELECT_DSL_CHILDREN = "Use colsInGroups {} instead. $message_0_13"
-internal const val COL_SELECT_DSL_CHILDREN_REPLACE = "this.colsInGroups(predicate)"
-
-internal const val COL_SELECT_DSL_CHILDREN_SINGLE_COL = "Use cols {} instead. $message_0_13"
-internal const val COL_SELECT_DSL_CHILDREN_SINGLE_COL_REPLACE = "this.cols(predicate)"
-
 // endregion
 
 // region WARNING in 0.13, ERROR in 0.14
@@ -86,6 +51,47 @@ internal const val COL_SELECT_DSL_CHILDREN_SINGLE_COL_REPLACE = "this.cols(predi
 private const val message_0_14 = "Will be removed in 0.14."
 
 internal const val COLUMN_WITH_PATH_MESSAGE = "`child` references are replaced with `col`. $message_0_14"
+
+internal const val COLS_SELECT_DSL_GROUP = "Use `colGroups` instead. $message_0_14"
+internal const val COLS_SELECT_DSL_GROUP_REPLACE = "this.colGroups(filter)"
+
+internal const val COL_SELECT_DSL_ALL_COLS = "Use `allCols()` instead. $message_0_14"
+internal const val COL_SELECT_DSL_ALL_COLS_REPLACE = "this.allCols()"
+
+internal const val COL_SELECT_DSL_ALL_COLS_AFTER = "Use `allColsAfter()` instead. $message_0_14"
+internal const val COL_SELECT_DSL_ALL_COLS_AFTER_REPLACE = "this.allColsAfter(column)"
+
+internal const val COL_SELECT_DSL_ALL_COLS_BEFORE = "Use `allColsBefore()` instead. $message_0_14"
+internal const val COL_SELECT_DSL_ALL_COLS_BEFORE_REPLACE = "this.allColsBefore(column)"
+
+internal const val COL_SELECT_DSL_ALL_FROM = "Use `allFrom()` instead. $message_0_14"
+internal const val COL_SELECT_DSL_ALL_FROM_REPLACE = "this.allFrom(column)"
+
+internal const val COL_SELECT_DSL_ALL_COLS_FROM = "Use `allColsFrom()` instead. $message_0_14"
+internal const val COL_SELECT_DSL_ALL_COLS_FROM_REPLACE = "this.allColsFrom(column)"
+
+internal const val COL_SELECT_DSL_ALL_UP_TO = "Use `allUpTo()` instead. $message_0_14"
+internal const val COL_SELECT_DSL_ALL_UP_TO_REPLACE = "this.allUpTo(column)"
+
+internal const val COL_SELECT_DSL_ALL_COLS_UP_TO = "Use `allColsUpTo()` instead. $message_0_14"
+internal const val COL_SELECT_DSL_ALL_COLS_UP_TO_REPLACE = "this.allColsUpTo(column)"
+
+internal const val COL_SELECT_DSL_AT_ANY_DEPTH = "This postfix notation is now deprecated. Use `colsAtAnyDepth().YOUR_OPERATION` instead (NOTE: ReplaceWith is incorrect). $message_0_14"
+
+// TODO https://youtrack.jetbrains.com/issue/KTIJ-27052/ReplaceWith-Deprecated-this-after-call-bug
+internal const val COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE = "this"
+
+internal const val COL_SELECT_DSL_CHILDREN = "Use colsInGroups {} instead. $message_0_14"
+internal const val COL_SELECT_DSL_CHILDREN_REPLACE = "this.colsInGroups(predicate)"
+
+internal const val COL_SELECT_DSL_CHILDREN_SINGLE_COL = "Use cols {} instead. $message_0_14"
+internal const val COL_SELECT_DSL_CHILDREN_SINGLE_COL_REPLACE = "this.cols(predicate)"
+
+// endregion
+
+// region WARNING in 0.14, ERROR in 0.15
+
+private const val message_0_15 = "Will be removed in 0.15."
 
 // endregion
 
