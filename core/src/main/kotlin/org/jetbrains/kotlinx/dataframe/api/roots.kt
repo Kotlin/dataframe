@@ -8,12 +8,14 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.roots
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
+import org.jetbrains.kotlinx.dataframe.util.TOP_MESSAGE
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
+
 public interface RootsColumnsSelectionDsl {
 
-    @Deprecated("Use roots() instead", ReplaceWith("roots()"))
+    @Deprecated(TOP_MESSAGE, ReplaceWith("roots()"), DeprecationLevel.ERROR)
     public fun <C> ColumnSet<C>.top(): ColumnSet<C> = roots()
 
     /**

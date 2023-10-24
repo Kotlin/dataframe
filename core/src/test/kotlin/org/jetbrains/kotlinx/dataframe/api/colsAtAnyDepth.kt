@@ -5,9 +5,13 @@ import io.kotest.matchers.shouldNotBe
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value
+import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.atAnyDepthImpl
+import org.jetbrains.kotlinx.dataframe.impl.columns.transform
+import org.jetbrains.kotlinx.dataframe.impl.columns.tree.flattenRecursively
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.jetbrains.kotlinx.dataframe.samples.api.city
@@ -34,6 +38,13 @@ class AtAnyDepth : TestBase() {
     infix fun List<ColumnWithPath<*>>.shouldNotBe(other: List<ColumnWithPath<*>>) {
         this.map { it.name to it.path } shouldNotBe other.map { it.name to it.path }
     }
+
+    // old function copied over to avoid breaking changes
+    private fun ColumnSet<*>.dfsInternal(predicate: (ColumnWithPath<*>) -> Boolean): TransformableColumnSet<Any?> =
+        transform {
+            it.filter { it.isColumnGroup() }
+                .flatMap { it.cols().flattenRecursively().filter(predicate) }
+        }
 
     private val atAnyDepthGoal =
         dfGroup.getColumnsWithPaths {

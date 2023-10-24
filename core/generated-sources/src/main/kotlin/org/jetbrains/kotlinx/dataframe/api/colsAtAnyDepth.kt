@@ -19,17 +19,11 @@ import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelecti
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.atAnyDepthImpl
-import org.jetbrains.kotlinx.dataframe.impl.columns.transform
-import org.jetbrains.kotlinx.dataframe.impl.columns.tree.flattenRecursively
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_ALL_DFS
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_ALL_DFS_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.ALL_DFS_MESSAGE
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_AT_ANY_DEPTH
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_DFS
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_DFS_OF
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_DFS_OF_REPLACE
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_DFS_OF_TYPED_REPLACE
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_DFS_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.DFS_MESSAGE
+import org.jetbrains.kotlinx.dataframe.util.DFS_OF_MESSAGE
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -565,116 +559,148 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
     // region deprecated recursively
 
     @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.WARNING)
-    public fun <C> TransformableColumnSet<C>.recursively(): ColumnSet<C> = atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
+    public fun <C> TransformableColumnSet<C>.recursively(): ColumnSet<C> =
+        atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
 
     @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.WARNING)
-    public fun <C> TransformableColumnSet<C>.rec(): ColumnSet<C> = atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
+    public fun <C> TransformableColumnSet<C>.rec(): ColumnSet<C> =
+        atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
 
     @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.WARNING)
-    public fun TransformableSingleColumn<*>.recursively(): SingleColumn<*> = atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
+    public fun TransformableSingleColumn<*>.recursively(): SingleColumn<*> =
+        atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
 
     @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.WARNING)
-    public fun TransformableSingleColumn<*>.rec(): SingleColumn<*> = atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
+    public fun TransformableSingleColumn<*>.rec(): SingleColumn<*> =
+        atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
 
     // endregion
 
     // region deprecated dfs
 
-    @Suppress("DEPRECATION")
-    @Deprecated(COL_SELECT_DSL_DFS, ReplaceWith(COL_SELECT_DSL_DFS_REPLACE), DeprecationLevel.ERROR)
-    public fun <C> ColumnSet<C>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> = dfsInternal(predicate)
+    @Deprecated(
+        message = DFS_MESSAGE,
+        replaceWith = ReplaceWith("this.colsAtAnyDepth(predicate)"),
+        level = DeprecationLevel.ERROR,
+    )
+    public fun <C> ColumnSet<C>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
+        error(DFS_MESSAGE)
 
-    @Suppress("DEPRECATION")
-    @Deprecated(COL_SELECT_DSL_DFS, ReplaceWith(COL_SELECT_DSL_DFS_REPLACE), DeprecationLevel.ERROR)
+    @Deprecated(
+        message = DFS_MESSAGE,
+        replaceWith = ReplaceWith("this.colsAtAnyDepth(predicate)"),
+        level = DeprecationLevel.ERROR,
+    )
     public fun SingleColumn<DataRow<*>>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
-        this.ensureIsColumnGroup().asColumnSet().dfsInternal(predicate)
+        error(DFS_MESSAGE)
 
-    @Suppress("DEPRECATION")
-    @Deprecated(COL_SELECT_DSL_DFS, ReplaceWith(COL_SELECT_DSL_DFS_REPLACE), DeprecationLevel.ERROR)
+    @Deprecated(
+        message = DFS_MESSAGE,
+        replaceWith = ReplaceWith("this.colsAtAnyDepth(predicate)"),
+        level = DeprecationLevel.ERROR,
+    )
     public fun ColumnsSelectionDsl<*>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
-        asSingleColumn().ensureIsColumnGroup().asColumnSet().dfsInternal(predicate)
+        error(DFS_MESSAGE)
 
-    @Suppress("DEPRECATION")
-    @Deprecated(COL_SELECT_DSL_DFS, ReplaceWith(COL_SELECT_DSL_DFS_REPLACE), DeprecationLevel.ERROR)
+    @Deprecated(
+        message = DFS_MESSAGE,
+        replaceWith = ReplaceWith("this.colsAtAnyDepth(predicate)"),
+        level = DeprecationLevel.ERROR,
+    )
     public fun String.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
-        columnGroup(this).ensureIsColumnGroup().asColumnSet().dfsInternal(predicate)
+        error(DFS_MESSAGE)
 
-    @Suppress("DEPRECATION")
-    @Deprecated(COL_SELECT_DSL_DFS, ReplaceWith(COL_SELECT_DSL_DFS_REPLACE), DeprecationLevel.ERROR)
+    @Deprecated(
+        message = DFS_MESSAGE,
+        replaceWith = ReplaceWith("this.colsAtAnyDepth(predicate)"),
+        level = DeprecationLevel.ERROR,
+    )
     public fun <C> KProperty<C>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
-        columnGroup(this).ensureIsColumnGroup().asColumnSet().dfsInternal(predicate)
+        error(DFS_MESSAGE)
 
-    @Suppress("DEPRECATION")
-    @Deprecated(COL_SELECT_DSL_DFS, ReplaceWith(COL_SELECT_DSL_DFS_REPLACE), DeprecationLevel.ERROR)
+    @Deprecated(
+        message = DFS_MESSAGE,
+        replaceWith = ReplaceWith("this.colsAtAnyDepth(predicate)"),
+        level = DeprecationLevel.ERROR,
+    )
     public fun ColumnPath.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
-        columnGroup(this).ensureIsColumnGroup().asColumnSet().dfsInternal(predicate)
+        error(DFS_MESSAGE)
 
     // endregion
 
     // region deprecated allDfs
 
-    @Suppress("DEPRECATION")
-    @Deprecated(COL_SELECT_DSL_ALL_DFS, ReplaceWith(COL_SELECT_DSL_ALL_DFS_REPLACE), DeprecationLevel.ERROR)
+    @Deprecated(
+        message = ALL_DFS_MESSAGE,
+        replaceWith = ReplaceWith("this.colsAtAnyDepth { includeGroups || !it.isColumnGroup() }"),
+        level = DeprecationLevel.ERROR,
+    )
     public fun ColumnSet<*>.allDfs(includeGroups: Boolean = false): ColumnSet<*> =
-        if (includeGroups) dfsInternal { true } else dfsInternal { !it.isColumnGroup() }
+        error(ALL_DFS_MESSAGE)
 
-    @Suppress("DEPRECATION")
-    @Deprecated(COL_SELECT_DSL_ALL_DFS, ReplaceWith(COL_SELECT_DSL_ALL_DFS_REPLACE), DeprecationLevel.ERROR)
+    @Deprecated(
+        message = ALL_DFS_MESSAGE,
+        replaceWith = ReplaceWith("this.colsAtAnyDepth { includeGroups || !it.isColumnGroup() }"),
+        level = DeprecationLevel.ERROR,
+    )
     public fun SingleColumn<DataRow<*>>.allDfs(includeGroups: Boolean = false): ColumnSet<*> =
-        ensureIsColumnGroup().asColumnSet().run {
-            if (includeGroups) dfsInternal { true } else dfsInternal { !it.isColumnGroup() }
-        }
+        error(ALL_DFS_MESSAGE)
 
-    @Suppress("DEPRECATION")
-    @Deprecated(COL_SELECT_DSL_ALL_DFS, ReplaceWith(COL_SELECT_DSL_ALL_DFS_REPLACE), DeprecationLevel.ERROR)
+    @Deprecated(
+        message = ALL_DFS_MESSAGE,
+        replaceWith = ReplaceWith("this.colsAtAnyDepth { includeGroups || !it.isColumnGroup() }"),
+        level = DeprecationLevel.ERROR,
+    )
     public fun ColumnsSelectionDsl<*>.allDfs(includeGroups: Boolean = false): ColumnSet<*> =
-        asSingleColumn().ensureIsColumnGroup().asColumnSet().run {
-            if (includeGroups) dfsInternal { true } else dfsInternal { !it.isColumnGroup() }
-        }
+        error(ALL_DFS_MESSAGE)
 
-    @Suppress("DEPRECATION")
-    @Deprecated(COL_SELECT_DSL_ALL_DFS, ReplaceWith(COL_SELECT_DSL_ALL_DFS_REPLACE), DeprecationLevel.ERROR)
+    @Deprecated(
+        message = ALL_DFS_MESSAGE,
+        replaceWith = ReplaceWith("this.colsAtAnyDepth { includeGroups || !it.isColumnGroup() }"),
+        level = DeprecationLevel.ERROR,
+    )
     public fun String.allDfs(includeGroups: Boolean = false): ColumnSet<*> =
-        columnGroup(this).ensureIsColumnGroup().asColumnSet().run {
-            if (includeGroups) dfsInternal { true } else dfsInternal { !it.isColumnGroup() }
-        }
+        error(ALL_DFS_MESSAGE)
 
-    @Suppress("DEPRECATION")
-    @Deprecated(COL_SELECT_DSL_ALL_DFS, ReplaceWith(COL_SELECT_DSL_ALL_DFS_REPLACE), DeprecationLevel.ERROR)
+    @Deprecated(
+        message = ALL_DFS_MESSAGE,
+        replaceWith = ReplaceWith("this.colsAtAnyDepth { includeGroups || !it.isColumnGroup() }"),
+        level = DeprecationLevel.ERROR,
+    )
     public fun KProperty<DataRow<*>>.allDfs(includeGroups: Boolean = false): ColumnSet<*> =
-        columnGroup(this).ensureIsColumnGroup().asColumnSet().run {
-            if (includeGroups) dfsInternal { true } else dfsInternal { !it.isColumnGroup() }
-        }
+        error(ALL_DFS_MESSAGE)
 
-    @Suppress("DEPRECATION")
-    @Deprecated(COL_SELECT_DSL_ALL_DFS, ReplaceWith(COL_SELECT_DSL_ALL_DFS_REPLACE), DeprecationLevel.ERROR)
+    @Deprecated(
+        message = ALL_DFS_MESSAGE,
+        replaceWith = ReplaceWith("this.colsAtAnyDepth { includeGroups || !it.isColumnGroup() }"),
+        level = DeprecationLevel.ERROR,
+    )
     public fun ColumnPath.allDfs(includeGroups: Boolean = false): ColumnSet<*> =
-        columnGroup(this).ensureIsColumnGroup().asColumnSet().run {
-            if (includeGroups) dfsInternal { true } else dfsInternal { !it.isColumnGroup() }
-        }
+        error(ALL_DFS_MESSAGE)
 
     // endregion
 
     // region deprecated dfsOf
 
-    @Suppress("DEPRECATION")
-    @Deprecated(COL_SELECT_DSL_DFS_OF, ReplaceWith(COL_SELECT_DSL_DFS_OF_REPLACE), DeprecationLevel.ERROR)
-    public fun <C> String.dfsOf(type: KType, predicate: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<*> =
-        columnGroup(this)
-            .ensureIsColumnGroup()
-            .asColumnSet()
-            .dfsInternal { it.isSubtypeOf(type) && predicate(it.cast()) }
+    @Deprecated(
+        message = DFS_OF_MESSAGE,
+        replaceWith = ReplaceWith("this.colsAtAnyDepth().colsOf(type, predicate)"),
+        level = DeprecationLevel.ERROR,
+    )
+    public fun <C> String.dfsOf(
+        type: KType,
+        predicate: (ColumnWithPath<C>) -> Boolean = { true },
+    ): ColumnSet<*> = error(DFS_OF_MESSAGE)
 
-    @Suppress("DEPRECATION")
-    @Deprecated(COL_SELECT_DSL_DFS_OF, ReplaceWith(COL_SELECT_DSL_DFS_OF_REPLACE), DeprecationLevel.ERROR)
+    @Deprecated(
+        message = DFS_OF_MESSAGE,
+        replaceWith = ReplaceWith("this.colsAtAnyDepth().colsOf(type, predicate)"),
+        level = DeprecationLevel.ERROR,
+    )
     public fun <C> KProperty<DataRow<*>>.dfsOf(
         type: KType,
         predicate: (ColumnWithPath<C>) -> Boolean = { true },
-    ): ColumnSet<*> =
-        columnGroup(this)
-            .ensureIsColumnGroup()
-            .asColumnSet()
-            .dfsInternal { it.isSubtypeOf(type) && predicate(it.cast()) }
+    ): ColumnSet<*> = error(DFS_OF_MESSAGE)
 
     // endregion
 }
@@ -687,70 +713,71 @@ internal fun ColumnsResolver<*>.colsAtAnyDepthInternal(predicate: ColumnFilter<*
     colsInternal(predicate)
         .atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
 
-@Suppress("DeprecatedCallableAddReplaceWith")
-@Deprecated("Replaced with colsAtAnyDepth()")
+@Deprecated(
+    message = DFS_MESSAGE,
+    replaceWith = ReplaceWith("this.colsAtAnyDepth(predicated)"),
+    level = DeprecationLevel.ERROR,
+)
 @PublishedApi
 internal fun ColumnSet<*>.dfsInternal(
     predicate: (ColumnWithPath<*>) -> Boolean,
-): TransformableColumnSet<*> =
-    transform {
-        it.filter { it.isColumnGroup() }
-            .flatMap { it.cols().flattenRecursively().filter(predicate) }
-    }
+): TransformableColumnSet<*> = error(DFS_OF_MESSAGE)
 
-@Suppress("DEPRECATION")
-@Deprecated(COL_SELECT_DSL_DFS_OF, ReplaceWith(COL_SELECT_DSL_DFS_OF_REPLACE), DeprecationLevel.ERROR)
+@Deprecated(
+    message = DFS_OF_MESSAGE,
+    replaceWith = ReplaceWith("this.colsAtAnyDepth().colsOf(type, predicated)"),
+    level = DeprecationLevel.ERROR,
+)
 public fun <C> ColumnSet<*>.dfsOf(
     type: KType,
     predicate: (ColumnWithPath<C>) -> Boolean = { true },
-): ColumnSet<*> =
-    dfsInternal { it.isSubtypeOf(type) && predicate(it.cast()) }
+): ColumnSet<*> = error(DFS_OF_MESSAGE)
 
-@Suppress("DEPRECATION")
-@Deprecated(COL_SELECT_DSL_DFS_OF, ReplaceWith(COL_SELECT_DSL_DFS_OF_REPLACE), DeprecationLevel.ERROR)
+@Deprecated(
+    message = DFS_OF_MESSAGE,
+    replaceWith = ReplaceWith("this.colsAtAnyDepth().colsOf(type, predicated)"),
+    level = DeprecationLevel.ERROR,
+)
 public fun <C> SingleColumn<DataRow<*>>.dfsOf(
     type: KType,
     predicate: (ColumnWithPath<C>) -> Boolean = { true },
-): ColumnSet<*> =
-    ensureIsColumnGroup()
-        .asColumnSet()
-        .dfsInternal { it.isSubtypeOf(type) && predicate(it.cast()) }
+): ColumnSet<*> = error(DFS_OF_MESSAGE)
 
-@Suppress("DEPRECATION")
-@Deprecated(COL_SELECT_DSL_DFS_OF, ReplaceWith(COL_SELECT_DSL_DFS_OF_REPLACE), DeprecationLevel.ERROR)
+@Deprecated(
+    message = DFS_OF_MESSAGE,
+    replaceWith = ReplaceWith("this.colsAtAnyDepth().colsOf(type, predicated)"),
+    level = DeprecationLevel.ERROR,
+)
 public fun <C> ColumnsSelectionDsl<*>.dfsOf(
     type: KType,
     predicate: (ColumnWithPath<C>) -> Boolean = { true },
-): ColumnSet<*> =
-    asSingleColumn()
-        .ensureIsColumnGroup()
-        .asColumnSet()
-        .dfsInternal { it.isSubtypeOf(type) && predicate(it.cast()) }
+): ColumnSet<*> = error(DFS_OF_MESSAGE)
 
-@Suppress("UNCHECKED_CAST", "DEPRECATION")
-@Deprecated(COL_SELECT_DSL_DFS_OF, ReplaceWith(COL_SELECT_DSL_DFS_OF_TYPED_REPLACE), DeprecationLevel.ERROR)
+@Deprecated(
+    message = DFS_OF_MESSAGE,
+    replaceWith = ReplaceWith("this.colsAtAnyDepth().colsOf<C>(filter)"),
+    level = DeprecationLevel.ERROR,
+)
 public inline fun <reified C> ColumnSet<*>.dfsOf(
     noinline filter: (ColumnWithPath<C>) -> Boolean = { true },
-): ColumnSet<C> =
-    dfsInternal { it.isSubtypeOf(typeOf<C>()) && filter(it.cast()) } as ColumnSet<C>
+): ColumnSet<C> = error(DFS_OF_MESSAGE)
 
-@Suppress("UNCHECKED_CAST", "DEPRECATION")
-@Deprecated(COL_SELECT_DSL_DFS_OF, ReplaceWith(COL_SELECT_DSL_DFS_OF_TYPED_REPLACE), DeprecationLevel.ERROR)
+@Deprecated(
+    message = DFS_OF_MESSAGE,
+    replaceWith = ReplaceWith("this.colsAtAnyDepth().colsOf<C>(filter)"),
+    level = DeprecationLevel.ERROR,
+)
 public inline fun <reified C> SingleColumn<DataRow<*>>.dfsOf(
     noinline filter: (ColumnWithPath<C>) -> Boolean = { true },
-): ColumnSet<C> =
-    ensureIsColumnGroup()
-        .asColumnSet()
-        .dfsInternal { it.isSubtypeOf(typeOf<C>()) && filter(it.cast()) } as ColumnSet<C>
+): ColumnSet<C> = error(DFS_OF_MESSAGE)
 
-@Suppress("UNCHECKED_CAST", "DEPRECATION")
-@Deprecated(COL_SELECT_DSL_DFS_OF, ReplaceWith(COL_SELECT_DSL_DFS_OF_TYPED_REPLACE), DeprecationLevel.ERROR)
+@Deprecated(
+    message = DFS_OF_MESSAGE,
+    replaceWith = ReplaceWith("this.colsAtAnyDepth().colsOf<C>(filter)"),
+    level = DeprecationLevel.ERROR,
+)
 public inline fun <reified C> ColumnsSelectionDsl<*>.dfsOf(
     noinline filter: (ColumnWithPath<C>) -> Boolean = { true },
-): ColumnSet<C> =
-    asSingleColumn()
-        .ensureIsColumnGroup()
-        .asColumnSet()
-        .dfsInternal { it.isSubtypeOf(typeOf<C>()) && filter(it.cast()) } as ColumnSet<C>
+): ColumnSet<C> = error(DFS_OF_MESSAGE)
 
 // endregion

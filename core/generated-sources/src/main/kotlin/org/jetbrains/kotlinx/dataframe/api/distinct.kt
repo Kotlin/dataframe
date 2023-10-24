@@ -43,7 +43,7 @@ public fun <T, C> DataFrame<T>.distinctBy(columns: ColumnsSelector<T, C>): DataF
 // endregion
 
 // region ColumnsSelectionDsl
-// TODO: add distinctChildren() methods?
+// TODO: add distinctCols() methods?
 public interface DistinctColumnsSelectionDsl {
 
     /**

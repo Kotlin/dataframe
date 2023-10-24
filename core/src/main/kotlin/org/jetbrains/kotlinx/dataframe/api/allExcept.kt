@@ -272,7 +272,6 @@ public interface AllExceptColumnsSelectionDsl<out T> {
                     allCols.allColumnsExceptKeepingStructure(columnsToExcept)
                         .map { it.changePath(col.path + it.path) }
                 } catch (e: IllegalStateException) {
-
                     // if allowed, attempt to resole all columns to except absolutely too if relative failed
                     if (allowFullPaths) {
                         val allColsAbsolute = allCols.map { it.addParentPath(col.path) }
@@ -289,6 +288,5 @@ public interface AllExceptColumnsSelectionDsl<out T> {
             } ?: emptyList()
         }
 }
-
 
 // endregion

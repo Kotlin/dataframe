@@ -58,7 +58,6 @@ class ColumnNameFiltersTests : ColumnsSelectionDslTests() {
             df.select { all().nameEndsWith("AGE", ignoreCase = true) },
         ).shouldAllBeEqual()
 
-
         listOf(
             df.select { name.firstName },
 

@@ -616,7 +616,11 @@ public interface ColGroupColumnsSelectionDsl {
 
     // region deprecated
 
-    @Deprecated(COL_SELECT_DSL_GROUP, ReplaceWith(COL_SELECT_DSL_GROUP_REPLACE), DeprecationLevel.WARNING)
+    @Deprecated(
+        message = COL_SELECT_DSL_GROUP,
+        replaceWith = ReplaceWith(COL_SELECT_DSL_GROUP_REPLACE),
+        level = DeprecationLevel.ERROR,
+    )
     public fun ColumnsContainer<*>.group(name: String): ColumnGroupReference = name.toColumnOf()
 
     // endregion
