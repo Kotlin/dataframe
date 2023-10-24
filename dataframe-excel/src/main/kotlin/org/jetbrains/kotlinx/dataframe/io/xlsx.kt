@@ -290,7 +290,14 @@ private fun Cell?.cellValue(sheetName: String): Any? =
         }
 
         CellType.STRING -> stringCellValue
-        CellType.FORMULA -> numericCellValue
+        CellType.FORMULA -> when (this.cachedFormulaResultType) {
+            CellType.NUMERIC -> numericCellValue
+            CellType.STRING -> stringCellValue
+            CellType.BOOLEAN -> booleanCellValue
+            CellType.ERROR -> errorCellValue
+            else -> null
+        }
+
         CellType.BLANK -> stringCellValue
         CellType.BOOLEAN -> booleanCellValue
         CellType.ERROR -> errorCellValue
