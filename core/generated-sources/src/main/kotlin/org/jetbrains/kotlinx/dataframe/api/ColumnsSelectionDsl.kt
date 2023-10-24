@@ -108,6 +108,8 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     // drop(5), dropLastChildren(2), dropLastWhile {}, dropChildrenWhile {}
     DropColumnsSelectionDsl,
 
+    // select {}, TODO due to String.invoke conflict this cannot be moved out of ColumnsSelectionDsl
+    SelectColumnsSelectionDsl,
     // except(), allExcept {}
     AllExceptColumnsSelectionDsl<T>,
     // nameContains(""), childrenNameContains(""), nameStartsWith(""), childrenNameEndsWith("")
@@ -794,48 +796,8 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     public operator fun <R> ColumnPath.invoke(selector: ColumnsSelector<*, R>): ColumnSet<R> =
         select(selector)
 
-    @Deprecated(
-        message = "Nested select is reserved for ColumnsSelector/ColumnsSelectionDsl behavior. " +
-            "Use myGroup.cols(\"col1\", \"col2\") to select columns by name from a ColumnGroup.",
-        replaceWith = ReplaceWith("this.cols(*columns)"),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun SingleColumn<DataRow<*>>.select(vararg columns: String): ColumnSet<*> =
-        select { columns.toColumnSet() }
-
-    @Deprecated(
-        message = "Nested select is reserved for ColumnsSelector/ColumnsSelectionDsl behavior. " +
-            "Use myGroup.cols(col1, col2) to select columns by name from a ColumnGroup.",
-        replaceWith = ReplaceWith("this.cols(*columns)"),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun <R> SingleColumn<DataRow<*>>.select(vararg columns: ColumnReference<R>): ColumnSet<R> =
-        select { columns.toColumnSet() }
-
-    @Deprecated(
-        message = "Nested select is reserved for ColumnsSelector/ColumnsSelectionDsl behavior. " +
-            "Use myGroup.cols(Type::col1, Type::col2) to select columns by name from a ColumnGroup.",
-        replaceWith = ReplaceWith("this.cols(*columns)"),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun <R> SingleColumn<DataRow<*>>.select(vararg columns: KProperty<R>): ColumnSet<R> =
-        select { columns.toColumnSet() }
-
     // endregion
 }
-
-internal fun <C, R> SingleColumn<DataRow<C>>.selectInternal(selector: ColumnsSelector<C, R>): ColumnSet<R> =
-    createColumnSet { context ->
-        this.ensureIsColumnGroup().resolveSingle(context)?.let { col ->
-            require(col.isColumnGroup()) {
-                "Column ${col.path} is not a ColumnGroup and can thus not be selected from."
-            }
-
-            col.asColumnGroup()
-                .getColumnsWithPaths(selector as ColumnsSelector<*, R>)
-                .map { it.changePath(col.path + it.path) }
-        } ?: emptyList()
-    }
 
 /**
  * ## Column Expression

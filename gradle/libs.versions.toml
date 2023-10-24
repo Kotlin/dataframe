@@ -32,7 +32,7 @@ kotestAsserions = "4.6.3"
 jsoup = "1.14.3"
 arrow = "11.0.0"
 docProcessor = "0.2.3"
-simpleGit = "2.0.1"
+simpleGit = "2.0.3"
 
 [libraries]
 ksp-gradle = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }
