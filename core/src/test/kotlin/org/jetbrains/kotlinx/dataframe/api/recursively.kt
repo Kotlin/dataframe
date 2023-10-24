@@ -2,12 +2,19 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
+import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.columns.transform
+import org.jetbrains.kotlinx.dataframe.impl.columns.tree.flattenRecursively
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.jetbrains.kotlinx.dataframe.samples.api.city
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.junit.Test
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 class Recursively : TestBase() {
 
@@ -27,14 +34,33 @@ class Recursively : TestBase() {
         this.map { it.name to it.path } shouldNotBe other.map { it.name to it.path }
     }
 
-    private val recursivelyGoal = dfGroup.getColumnsWithPaths { cols { true }.recursively() }
+    // old function copied over to avoid breaking changes
+    private fun ColumnSet<*>.dfsInternal(predicate: (ColumnWithPath<*>) -> Boolean): TransformableColumnSet<Any?> =
+        transform {
+            it.filter { it.isColumnGroup() }
+                .flatMap { it.children().flattenRecursively().filter(predicate) }
+        }
+
+    private val recursivelyGoal = dfGroup.getColumnsWithPaths { dfsInternal { true } }
         .sortedBy { it.name }
 
-    private val recursivelyNoGroups = dfGroup.getColumnsWithPaths { cols { !it.isColumnGroup() }.recursively() }
-        .sortedBy { it.name }
+    private val recursivelyNoGroups = dfGroup.getColumnsWithPaths {
+        // old function copied over to avoid breaking changes
+        fun SingleColumn<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> =
+            if (includeGroups) cols { true }.recursively() else cols { !it.isColumnGroup() }.recursively()
 
-    private val recursivelyString = dfGroup.getColumnsWithPaths { dfsOf<String?>() }
-        .sortedBy { it.name }
+        allDfs(false)
+    }.sortedBy { it.name }
+
+    private val recursivelyString = dfGroup.getColumnsWithPaths {
+        // old function copied over to avoid breaking changes
+        fun <C> SingleColumn<*>.dfsOf(
+            type: KType,
+            predicate: (ColumnWithPath<C>) -> Boolean = { true },
+        ): ColumnSet<*> = dfsInternal { it.isSubtypeOf(type) && predicate(it.cast()) }
+
+        dfsOf<String?>(typeOf<String?>())
+    }.sortedBy { it.name }
 
     @Test
     fun `first, last, and single`() {
