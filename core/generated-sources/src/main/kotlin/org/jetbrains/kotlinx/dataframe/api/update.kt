@@ -405,9 +405,9 @@ public fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameExpressi
     asFrameImpl(expression)
 
 @Deprecated(
-    UPDATE_AS_NULLABLE_MESSAGE,
-    ReplaceWith(UPDATE_AS_NULLABLE_REPLACE),
-    DeprecationLevel.ERROR,
+    message = UPDATE_AS_NULLABLE_MESSAGE,
+    replaceWith = ReplaceWith(UPDATE_AS_NULLABLE_REPLACE),
+    level = DeprecationLevel.ERROR,
 )
 public fun <T, C> Update<T, C>.asNullable(): Update<T, C?> = this as Update<T, C?>
 
