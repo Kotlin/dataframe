@@ -97,9 +97,10 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     SelectColumnsSelectionDsl,
     // except(), allExcept {}
     AllExceptColumnsSelectionDsl<T>,
+
     // nameContains(""), childrenNameContains(""), nameStartsWith(""), childrenNameEndsWith("")
     ColumnNameFiltersColumnsSelectionDsl,
-    // withoutNulls(), childrenWithoutNulls()
+    // withoutNulls(), colsWithoutNulls()
     WithoutNullsColumnsSelectionDsl,
     // distinct()
     DistinctColumnsSelectionDsl,
@@ -201,6 +202,8 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  `|` {@include [ColumnNameFiltersColumnsSelectionDsl.Usage.PlainDslNameStartsEndsWith]}**`(`**{@include [UsageTemplate.TextRef]}`[, `{@include [UsageTemplate.IgnoreCaseRef]}`]`**`)`**
      *
+     *  `|` {@include [WithoutNullsColumnsSelectionDsl.Usage.PlainDslName]}**`()`**
+     *
      *  `|` TODO
      * }
      * {@comment -------------------------------------------------------------------------------------------- }
@@ -253,6 +256,8 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  {@include [Indent]}`|` {@include [ColumnNameFiltersColumnsSelectionDsl.Usage.ColumnSetNameStartsEndsWith]}**`(`**{@include [UsageTemplate.TextRef]}`[, `{@include [UsageTemplate.IgnoreCaseRef]}`]`**`)`**
      *
+     *  {@include [Indent]}`|` {@include [WithoutNullsColumnsSelectionDsl.Usage.ColumnSetName]}**`()`**
+     *
      *  {@include [Indent]}`|` TODO
      * }
      * {@comment -------------------------------------------------------------------------------------------- }
@@ -303,6 +308,8 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *  {@include [Indent]}`|` {@include [ColumnNameFiltersColumnsSelectionDsl.Usage.ColumnGroupNameContains]}**`(`**{@include [UsageTemplate.TextRef]}`[, `{@include [UsageTemplate.IgnoreCaseRef]}`] | `{@include [UsageTemplate.RegexRef]}**`)`**
      *
      *  {@include [Indent]}`|` {@include [ColumnNameFiltersColumnsSelectionDsl.Usage.ColumnGroupNameStartsWith]}**`(`**{@include [UsageTemplate.TextRef]}`[, `{@include [UsageTemplate.IgnoreCaseRef]}`]`**`)`**
+     *
+     *  {@include [Indent]}`|` {@include [WithoutNullsColumnsSelectionDsl.Usage.ColumnGroupName]}**`()`**
      *
      *  {@include [Indent]}`|` TODO
      * }

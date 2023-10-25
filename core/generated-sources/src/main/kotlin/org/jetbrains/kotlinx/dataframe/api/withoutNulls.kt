@@ -6,17 +6,98 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
+
+/**
+ * See [Usage]
+ */
 public interface WithoutNullsColumnsSelectionDsl {
 
     /**
-     * ## (Children) Without Nulls
+     * ## (Cols) Without Nulls Usage
+     *
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `[KProperty][KProperty]`<*>` | `[ColumnPath][ColumnPath]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### In the plain DSL:
+     *
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  [**withoutNulls**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]**`()`**
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**withoutNulls**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]**`()`**
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### On a column group reference:
+     *
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**colsWithoutNulls**][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.colsWithoutNulls]**`()`**
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
+    public interface Usage {
+
+        /** [**withoutNulls**][ColumnsSelectionDsl.withoutNulls] */
+        public interface PlainDslName
+
+        /** .[**withoutNulls**][ColumnsSelectionDsl.withoutNulls] */
+        public interface ColumnSetName
+
+        /** .[**colsWithoutNulls**][ColumnsSelectionDsl.colsWithoutNulls] */
+        public interface ColumnGroupName
+    }
+
+    /**
+     * ## (Cols) Without Nulls
      * Returns a new [ColumnSet] that contains only columns that do not have `null` values.
      *
-     * NOTE: For [column groups][ColumnGroup], `withoutNulls` is named `childrenWithoutNulls` to avoid confusion.
+     * NOTE: For [column groups][ColumnGroup], `withoutNulls` is named `colsWithoutNulls` to avoid confusion.
+     *
+     * See [Usage] for how to use these functions.
      *
      * #### For Example:
      *
@@ -24,7 +105,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { `[withoutNulls][ColumnsSelectionDsl.withoutNulls]`() }`
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::userData).`[childrenWithoutNulls][SingleColumn.childrenWithoutNulls]`() }`
+     * `df.`[select][DataFrame.select]` { Type::userData.`[colsWithoutNulls][SingleColumn.colsWithoutNulls]`() }`
      *
      * #### Examples for this overload:
      *
@@ -38,10 +119,12 @@ public interface WithoutNullsColumnsSelectionDsl {
     }
 
     /**
-     * ## (Children) Without Nulls
+     * ## (Cols) Without Nulls
      * Returns a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains only columns that do not have `null` values.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `withoutNulls` is named `childrenWithoutNulls` to avoid confusion.
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `withoutNulls` is named `colsWithoutNulls` to avoid confusion.
+     *
+     * See [Usage][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.Usage] for how to use these functions.
      *
      * #### For Example:
      *
@@ -49,7 +132,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[withoutNulls][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::userData).`[childrenWithoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenWithoutNulls]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::userData.`[colsWithoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsWithoutNulls]`() }`
      *
      * #### Examples for this overload:
      *
@@ -62,10 +145,12 @@ public interface WithoutNullsColumnsSelectionDsl {
         transform { cols -> cols.filter { !it.hasNulls() } } as ColumnSet<C & Any>
 
     /**
-     * ## (Children) Without Nulls
+     * ## (Cols) Without Nulls
      * Returns a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains only columns that do not have `null` values.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `withoutNulls` is named `childrenWithoutNulls` to avoid confusion.
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `withoutNulls` is named `colsWithoutNulls` to avoid confusion.
+     *
+     * See [Usage][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.Usage] for how to use these functions.
      *
      * #### For Example:
      *
@@ -73,7 +158,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[withoutNulls][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::userData).`[childrenWithoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenWithoutNulls]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::userData.`[colsWithoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsWithoutNulls]`() }`
      *
      * #### Examples for this overload:
      *
@@ -82,13 +167,15 @@ public interface WithoutNullsColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */
     public fun ColumnsSelectionDsl<*>.withoutNulls(): ColumnSet<Any> =
-        asSingleColumn().childrenWithoutNulls()
+        asSingleColumn().colsWithoutNulls()
 
     /**
-     * ## (Children) Without Nulls
+     * ## (Cols) Without Nulls
      * Returns a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains only columns that do not have `null` values.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `withoutNulls` is named `childrenWithoutNulls` to avoid confusion.
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `withoutNulls` is named `colsWithoutNulls` to avoid confusion.
+     *
+     * See [Usage][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.Usage] for how to use these functions.
      *
      * #### For Example:
      *
@@ -96,7 +183,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[withoutNulls][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::userData).`[childrenWithoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenWithoutNulls]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::userData.`[colsWithoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsWithoutNulls]`() }`
      *
      * #### Examples for this overload:
      *
@@ -104,14 +191,16 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */
-    public fun SingleColumn<DataRow<*>>.childrenWithoutNulls(): ColumnSet<Any> =
-        this.ensureIsColumnGroup().allColumnsInternal().withoutNulls()
+    public fun SingleColumn<DataRow<*>>.colsWithoutNulls(): ColumnSet<Any> =
+        ensureIsColumnGroup().allColumnsInternal().withoutNulls()
 
     /**
-     * ## (Children) Without Nulls
+     * ## (Cols) Without Nulls
      * Returns a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains only columns that do not have `null` values.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `withoutNulls` is named `childrenWithoutNulls` to avoid confusion.
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `withoutNulls` is named `colsWithoutNulls` to avoid confusion.
+     *
+     * See [Usage][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.Usage] for how to use these functions.
      *
      * #### For Example:
      *
@@ -119,7 +208,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[withoutNulls][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::userData).`[childrenWithoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenWithoutNulls]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::userData.`[colsWithoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsWithoutNulls]`() }`
      *
      * #### Examples for this overload:
      *
@@ -127,14 +216,16 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */
-    public fun String.childrenWithoutNulls(): ColumnSet<Any> =
-        columnGroup(this).childrenWithoutNulls()
+    public fun String.colsWithoutNulls(): ColumnSet<Any> =
+        columnGroup(this).colsWithoutNulls()
 
     /**
-     * ## (Children) Without Nulls
+     * ## (Cols) Without Nulls
      * Returns a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains only columns that do not have `null` values.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `withoutNulls` is named `childrenWithoutNulls` to avoid confusion.
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `withoutNulls` is named `colsWithoutNulls` to avoid confusion.
+     *
+     * See [Usage][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.Usage] for how to use these functions.
      *
      * #### For Example:
      *
@@ -142,7 +233,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[withoutNulls][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::userData).`[childrenWithoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenWithoutNulls]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::userData.`[colsWithoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsWithoutNulls]`() }`
      *
      * #### Examples for this overload:
      *
@@ -150,14 +241,16 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */
-    public fun KProperty<DataRow<*>>.childrenWithoutNulls(): ColumnSet<Any> =
-        columnGroup(this).childrenWithoutNulls()
+    public fun KProperty<*>.colsWithoutNulls(): ColumnSet<Any> =
+        columnGroup(this).colsWithoutNulls()
 
     /**
-     * ## (Children) Without Nulls
+     * ## (Cols) Without Nulls
      * Returns a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains only columns that do not have `null` values.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `withoutNulls` is named `childrenWithoutNulls` to avoid confusion.
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `withoutNulls` is named `colsWithoutNulls` to avoid confusion.
+     *
+     * See [Usage][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.Usage] for how to use these functions.
      *
      * #### For Example:
      *
@@ -165,7 +258,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[withoutNulls][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::userData).`[childrenWithoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.childrenWithoutNulls]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::userData.`[colsWithoutNulls][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsWithoutNulls]`() }`
      *
      * #### Examples for this overload:
      *
@@ -173,7 +266,8 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */
-    public fun ColumnPath.childrenWithoutNulls(): ColumnSet<Any> =
-        columnGroup(this).childrenWithoutNulls()
+    public fun ColumnPath.colsWithoutNulls(): ColumnSet<Any> =
+        columnGroup(this).colsWithoutNulls()
 }
+
 // endregion

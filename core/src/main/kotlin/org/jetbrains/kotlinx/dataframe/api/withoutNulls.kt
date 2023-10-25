@@ -6,17 +6,60 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
+
+/**
+ * See [Usage]
+ */
 public interface WithoutNullsColumnsSelectionDsl {
 
     /**
-     * ## (Children) Without Nulls
+     * ## (Cols) Without Nulls Usage
+     *
+     * @include [UsageTemplate]
+     * {@setArg [UsageTemplate.DefinitionsArg]
+     *  {@include [UsageTemplate.ColumnSetDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.ColumnGroupDef]}
+     * }
+     *
+     * {@setArg [UsageTemplate.PlainDslFunctionsArg]
+     *  {@include [PlainDslName]}**`()`**
+     * }
+     *
+     * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
+     *  {@include [Indent]}{@include [ColumnSetName]}**`()`**
+     * }
+     *
+     * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
+     *  {@include [Indent]}{@include [ColumnGroupName]}**`()`**
+     * }
+     */
+    public interface Usage {
+
+        /** [**withoutNulls**][ColumnsSelectionDsl.withoutNulls] */
+        public interface PlainDslName
+
+        /** .[**withoutNulls**][ColumnsSelectionDsl.withoutNulls] */
+        public interface ColumnSetName
+
+        /** .[**colsWithoutNulls**][ColumnsSelectionDsl.colsWithoutNulls] */
+        public interface ColumnGroupName
+    }
+
+    /**
+     * ## (Cols) Without Nulls
      * Returns a new [ColumnSet] that contains only columns that do not have `null` values.
      *
-     * NOTE: For [column groups][ColumnGroup], `withoutNulls` is named `childrenWithoutNulls` to avoid confusion.
+     * NOTE: For [column groups][ColumnGroup], `withoutNulls` is named `colsWithoutNulls` to avoid confusion.
+     *
+     * See [Usage] for how to use these functions.
      *
      * #### For Example:
      *
@@ -24,7 +67,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { `[withoutNulls][ColumnsSelectionDsl.withoutNulls]`() }`
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::userData).`[childrenWithoutNulls][SingleColumn.childrenWithoutNulls]`() }`
+     * `df.`[select][DataFrame.select]` { Type::userData.`[colsWithoutNulls][SingleColumn.colsWithoutNulls]`() }`
      *
      * #### Examples for this overload:
      *
@@ -51,47 +94,46 @@ public interface WithoutNullsColumnsSelectionDsl {
      * @include [CommonWithoutNullsDocs]
      * @setArg [CommonWithoutNullsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[withoutNulls][ColumnsSelectionDsl.childrenWithoutNulls]`() }`
+     * `df.`[select][DataFrame.select]` { `[withoutNulls][ColumnsSelectionDsl.colsWithoutNulls]`() }`
      */
     public fun ColumnsSelectionDsl<*>.withoutNulls(): ColumnSet<Any> =
-        asSingleColumn().childrenWithoutNulls()
+        asSingleColumn().colsWithoutNulls()
 
     /**
      * @include [CommonWithoutNullsDocs]
      * @setArg [CommonWithoutNullsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[childrenWithoutNulls][SingleColumn.childrenWithoutNulls]`() }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsWithoutNulls][SingleColumn.colsWithoutNulls]`() }`
      */
-    public fun SingleColumn<DataRow<*>>.childrenWithoutNulls(): ColumnSet<Any> =
-        this.ensureIsColumnGroup().allColumnsInternal().withoutNulls()
+    public fun SingleColumn<DataRow<*>>.colsWithoutNulls(): ColumnSet<Any> =
+        ensureIsColumnGroup().allColumnsInternal().withoutNulls()
 
     /**
      * @include [CommonWithoutNullsDocs]
      * @setArg [CommonWithoutNullsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[childrenWithoutNulls][String.childrenWithoutNulls]`() }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsWithoutNulls][String.colsWithoutNulls]`() }`
      */
-    public fun String.childrenWithoutNulls(): ColumnSet<Any> =
-        columnGroup(this).childrenWithoutNulls()
+    public fun String.colsWithoutNulls(): ColumnSet<Any> =
+        columnGroup(this).colsWithoutNulls()
 
     /**
      * @include [CommonWithoutNullsDocs]
      * @setArg [CommonWithoutNullsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColumnGroup).`[childrenWithoutNulls][SingleColumn.childrenWithoutNulls]`() }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[childrenWithoutNulls][KProperty.childrenWithoutNulls]`() }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[colsWithoutNulls][KProperty.colsWithoutNulls]`() }`
      */
-    public fun KProperty<DataRow<*>>.childrenWithoutNulls(): ColumnSet<Any> =
-        columnGroup(this).childrenWithoutNulls()
+    public fun KProperty<*>.colsWithoutNulls(): ColumnSet<Any> =
+        columnGroup(this).colsWithoutNulls()
 
     /**
      * @include [CommonWithoutNullsDocs]
      * @setArg [CommonWithoutNullsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[childrenWithoutNulls][ColumnPath.childrenWithoutNulls]`() }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[colsWithoutNulls][ColumnPath.colsWithoutNulls]`() }`
      */
-    public fun ColumnPath.childrenWithoutNulls(): ColumnSet<Any> =
-        columnGroup(this).childrenWithoutNulls()
+    public fun ColumnPath.colsWithoutNulls(): ColumnSet<Any> =
+        columnGroup(this).colsWithoutNulls()
 }
+
 // endregion
