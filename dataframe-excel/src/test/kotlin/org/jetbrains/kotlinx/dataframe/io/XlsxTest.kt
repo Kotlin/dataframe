@@ -125,6 +125,6 @@ class XlsxTest {
     @Test
     fun `read xlsx file that has cells with formulas that return numbers and strings`() {
         val df = DataFrame.readExcel(testResource("formula_cell.xlsx"))
-        df.columnNames() shouldBe listOf("Number", "Greather than 5", "Multiplied by 10", "Divide by 5")
+        df.columnNames() shouldBe listOf("Number", "Greater than 5", "Multiplied by 10", "Divided by 5")
     }
 }
