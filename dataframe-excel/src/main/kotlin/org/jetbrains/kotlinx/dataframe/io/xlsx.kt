@@ -278,8 +278,9 @@ private fun repairNameIfRequired(
     }
 }
 
-private fun Cell?.cellValue(sheetName: String): Any? =
-    when (this?.cellType) {
+private fun Cell?.cellValue(sheetName: String): Any? {
+    if (this == null) return null
+    fun getValueFromType(type: CellType?): Any? = when (type) {
         CellType._NONE -> error("Cell $address of sheet $sheetName has a CellType that should only be used internally. This is a bug, please report https://github.com/Kotlin/dataframe/issues")
         CellType.NUMERIC -> {
             val number = numericCellValue
@@ -290,19 +291,14 @@ private fun Cell?.cellValue(sheetName: String): Any? =
         }
 
         CellType.STRING -> stringCellValue
-        CellType.FORMULA -> when (this.cachedFormulaResultType) {
-            CellType.NUMERIC -> numericCellValue
-            CellType.STRING -> stringCellValue
-            CellType.BOOLEAN -> booleanCellValue
-            CellType.ERROR -> errorCellValue
-            else -> null
-        }
-
+        CellType.FORMULA -> getValueFromType(cachedFormulaResultType)
         CellType.BLANK -> stringCellValue
         CellType.BOOLEAN -> booleanCellValue
         CellType.ERROR -> errorCellValue
         null -> null
     }
+    return getValueFromType(cellType)
+}
 
 public fun <T> DataFrame<T>.writeExcel(
     path: String,
