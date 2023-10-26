@@ -6,6 +6,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.DistinctColumnSet
 import org.jetbrains.kotlinx.dataframe.indices
 import kotlin.reflect.KProperty
@@ -43,13 +45,39 @@ public fun <T, C> DataFrame<T>.distinctBy(columns: ColumnsSelector<T, C>): DataF
 // endregion
 
 // region ColumnsSelectionDsl
-// TODO: add distinctCols() methods?
+
+/**
+ * See [Usage]
+ */
 public interface DistinctColumnsSelectionDsl {
+
+    /**
+     * ## Distinct Usage
+     *
+     * @include [UsageTemplate]
+     * {@setArg [UsageTemplate.DefinitionsArg]
+     *  {@include [UsageTemplate.ColumnSetDef]}
+     * }
+     *
+     * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
+     *  {@include [Indent]}{@include [ColumnSetName]}**`()`**
+     * }
+     *
+     * {@setArg [UsageTemplate.PlainDslPart]}
+     * {@setArg [UsageTemplate.ColumnGroupPart]}
+     */
+    public interface Usage {
+
+        /** .[**distinct**][ColumnsSelectionDsl.distinct] */
+        public interface ColumnSetName
+    }
 
     /**
      * ## Distinct
      * Returns a new [ColumnSet] from [this] containing only distinct columns (by path).
      * This is useful when you've selected the same column multiple times.
+     *
+     * See [Usage] for how to use [distinct].
      *
      * #### For Example:
      * `df.`[select][DataFrame.select]` { (`[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>() `[and][ColumnsSelectionDsl.and]` age).`[distinct][ColumnSet.distinct]`() }`
@@ -60,4 +88,5 @@ public interface DistinctColumnsSelectionDsl {
      */
     public fun <C> ColumnSet<C>.distinct(): ColumnSet<C> = DistinctColumnSet(this)
 }
+
 // endregion

@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.documentation
 import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -16,6 +17,8 @@ import kotlin.reflect.KProperty
  * This template is to be used in displaying the Usage / DSL grammar
  * of each individual ColumnsSelectionDsl function group, as well as the entire
  * thing itself.
+ *
+ * See an example of how to use this template at [UsageTemplateColumnsSelectionDsl.UsageTemplateExample]
  */
 public interface UsageTemplateColumnsSelectionDsl {
 
@@ -189,5 +192,76 @@ public interface UsageTemplateColumnsSelectionDsl {
         public interface RegexRef
 
         // endregion
+    }
+
+    /**
+     * ## MyFunction Example Usage
+     *
+     *
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `[KProperty][KProperty]`<*>` | `[ColumnPath][ColumnPath]
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  `number: `[Int][Int]
+     *
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**example**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]**`(`**`[`[number][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.NumberDef]`]`**`)`**
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### On a column group reference:
+     *
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**colsExample**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]**`(`**`[`[number][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.NumberDef]`]`**`)`**
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
+    public interface UsageTemplateExample {
+
+        /** .[**example**][ColumnsSelectionDsl.first] */
+        public interface ColumnSetName
+
+        /** .[**colsExample**][ColumnsSelectionDsl.first] */
+        public interface ColumnGroupName
     }
 }

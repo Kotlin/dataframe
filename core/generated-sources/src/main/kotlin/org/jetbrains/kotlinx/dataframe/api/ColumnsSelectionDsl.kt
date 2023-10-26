@@ -306,6 +306,8 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**withoutNulls**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]**`()`**
      *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**distinct**][org.jetbrains.kotlinx.dataframe.api.DistinctColumnsSelectionDsl.distinct]**`()`**
+     *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`|` TODO
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;

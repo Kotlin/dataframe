@@ -258,6 +258,8 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  {@include [Indent]}`|` {@include [WithoutNullsColumnsSelectionDsl.Usage.ColumnSetName]}**`()`**
      *
+     *  {@include [Indent]}`|` {@include [DistinctColumnsSelectionDsl.Usage.ColumnSetName]}**`()`**
+     *
      *  {@include [Indent]}`|` TODO
      * }
      * {@comment -------------------------------------------------------------------------------------------- }
