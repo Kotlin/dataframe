@@ -204,6 +204,8 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  `|` {@include [WithoutNullsColumnsSelectionDsl.Usage.PlainDslName]}**`()`**
      *
+     *  `|` {@include [NoneColumnsSelectionDsl.Usage.PlainDslName]}**`()`**
+     *
      *  `|` TODO
      * }
      * {@comment -------------------------------------------------------------------------------------------- }

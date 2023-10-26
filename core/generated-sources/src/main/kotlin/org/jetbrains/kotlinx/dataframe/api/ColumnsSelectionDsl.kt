@@ -245,6 +245,8 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  `|` [**withoutNulls**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]**`()`**
      *
+     *  `|` [**none**][org.jetbrains.kotlinx.dataframe.api.NoneColumnsSelectionDsl.none]**`()`**
+     *
      *  `|` TODO
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
