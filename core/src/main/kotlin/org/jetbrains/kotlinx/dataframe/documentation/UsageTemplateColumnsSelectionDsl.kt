@@ -11,7 +11,10 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnGroupRef
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetRef
+import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplateExample.ColumnGroupName
+import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplateExample.ColumnSetName
 import kotlin.reflect.KProperty
+import kotlin.reflect.KType
 
 /*
  * This template is to be used in displaying the Usage / DSL grammar
@@ -106,6 +109,19 @@ public interface UsageTemplateColumnsSelectionDsl {
         public interface ColumnGroupDef
 
         /**
+         * `singleColumn: `[SingleColumn][SingleColumn]`<`[DataRow][DataRow]`<*>>
+         */
+        public interface SingleColumnDef
+
+        /**
+         * `columnGroupReference: `[String][String]` | `[KProperty][KProperty]`<*>`
+         *
+         * {@include [QuadrupleIndent]}{@include [QuadrupleIndent]}{@include [DoubleIndent]}
+         * | `[ColumnPath][ColumnPath]
+         */
+        public interface ColumnGroupNoSingleColumnDef
+
+        /**
          * `column: `[ColumnAccessor][ColumnAccessor]` | `[String][String]
          *
          * {@include [DoubleIndent]}{@include [HalfIndent]}{@include [QuarterIndent]}
@@ -143,6 +159,9 @@ public interface UsageTemplateColumnsSelectionDsl {
         /** `regex: `[Regex][Regex] */
         public interface RegexDef
 
+        /** `kType: `[KType][KType] */
+        public interface KTypeDef
+
         // endregion
 
         // region References to the definitions
@@ -152,6 +171,12 @@ public interface UsageTemplateColumnsSelectionDsl {
 
         /** [columnGroup][ColumnGroupDef] */
         public interface ColumnGroupRef
+
+        /** [singleColumn][SingleColumnDef] */
+        public interface SingleColumnRef
+
+        /** [columnGroupReference][ColumnGroupNoSingleColumnDef] */
+        public interface ColumnGroupNoSingleColumnRef
 
         /** [condition][ConditionDef] */
         public interface ConditionRef
@@ -185,6 +210,9 @@ public interface UsageTemplateColumnsSelectionDsl {
 
         /** [regex][RegexDef] */
         public interface RegexRef
+
+        /** [kType][KTypeDef] */
+        public interface KTypeRef
 
         // endregion
     }
