@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
@@ -10,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.addParentPath
+import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExceptAndUnpack
 import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExceptKeepingStructure
 import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
@@ -35,6 +37,23 @@ public interface AllExceptColumnsSelectionDsl<out T> {
     // TODO Same as select and cols but then inverted
 
     // region deprecated and experiments
+
+    public operator fun ColumnReference<*>.not(): ColumnSet<Any?> =
+        with(this@AllExceptColumnsSelectionDsl as ColumnsSelectionDsl<T>) {
+            allExcept(this@not)
+        }
+
+    public operator fun ColumnSet<*>.not(): ColumnSet<Any?> =
+        with(this@AllExceptColumnsSelectionDsl as ColumnsSelectionDsl<T>) {
+            allExcept(this@not)
+        }
+
+    public infix fun <C> ColumnSet<C>.oldExcept(other: ColumnsResolver<*>): ColumnSet<C> =
+        createColumnSet { context ->
+            val resolvedCols = this@oldExcept.resolve(context)
+            val resolvedColsToExcept = other.resolve(context)
+            resolvedCols.allColumnsExceptAndUnpack(resolvedColsToExcept)
+        } as ColumnSet<C>
 
     // TODO TBD
     @Deprecated("Use allExcept instead", ReplaceWith("this.allColsExcept(selector)"), DeprecationLevel.WARNING)

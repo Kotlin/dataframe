@@ -115,6 +115,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * [all][ColumnsSelectionDsl.all]`().`[recursively][recursively]`() -> `[colsAtAnyDepth][colsAtAnyDepth]`()`
      *
      * @see [DataFrame.flatten\]
+     * @see [ColumnsSelectionDsl.simplify\]
      */
     private interface CommonAtAnyDepthDocs {
 

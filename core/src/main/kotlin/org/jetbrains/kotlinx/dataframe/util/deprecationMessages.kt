@@ -39,8 +39,6 @@ internal const val ALL_DFS_MESSAGE: String = "allDfs is deprecated, use colsAtAn
 @PublishedApi
 internal const val DFS_OF_MESSAGE: String = "dfsOf is deprecated, use colsAtAnyDepth instead. $message_0_13 "
 
-internal const val TOP_MESSAGE = "top is deprecated, use roots() instead. $message_0_13"
-
 internal const val COL_SELECT_DSL_GROUP = "Use `colGroup()` instead. $message_0_13"
 internal const val COL_SELECT_DSL_GROUP_REPLACE = "this.colGroup(name)"
 
@@ -86,6 +84,8 @@ internal const val COL_SELECT_DSL_CHILDREN_REPLACE = "this.colsInGroups(predicat
 
 internal const val COL_SELECT_DSL_CHILDREN_SINGLE_COL = "Use cols {} instead. $message_0_14"
 internal const val COL_SELECT_DSL_CHILDREN_SINGLE_COL_REPLACE = "this.cols(predicate)"
+
+internal const val TOP_MESSAGE = "top is deprecated, use simplify() instead. $message_0_14"
 
 // endregion
 

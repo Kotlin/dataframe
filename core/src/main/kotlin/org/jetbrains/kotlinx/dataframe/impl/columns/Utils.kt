@@ -211,6 +211,27 @@ internal fun <A, B> ColumnsResolver<A>.transform(
 }
 
 /**
+ * Applies a transformation on [this] [SingleColumn] by converting its
+ * single [ColumnWithPath]<[A]> to [List]<[ColumnWithPath]<[B]>] using [converter] but
+ * also providing the [ColumnResolutionContext] to the converter.
+ *
+ *  Since [converter] allows you to return multiple columns, the result is turned into a [ColumnSet]<[B]>.
+ *
+ * The result can either be used as a normal [ColumnSet]<[B]>,
+ * which resolves [this] and then applies [converter] on the result,
+ */
+internal fun <A, B> SingleColumn<A>.transformSingleWithContext(
+    converter: ColumnResolutionContext.(ColumnWithPath<A>) -> List<ColumnWithPath<B>>,
+): ColumnSet<B> = object : ColumnSet<B> {
+
+    override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<B>> =
+        this@transformSingleWithContext
+            .resolveSingle(context)
+            ?.let { converter(context, it) }
+            ?: emptyList()
+}
+
+/**
  * Applies a transformation on [this] by converting its [List]<[ColumnWithPath]<[A]>] to [List]<[ColumnWithPath]<[B]>]
  * using [converter], but also providing the [ColumnResolutionContext] to the converter.
  *
@@ -347,15 +368,18 @@ internal fun <C> ColumnsContainer<*>.getColumn(path: ColumnPath, policy: Unresol
         }
 
 /**
- * Returns a sub-list of columns that are roots of the trees of columns.
+ * Simplifies structure by removing columns that are already present in
+ * column groups in [this].
  *
- * In practice, this means that if a column in [this] is a child of another column in [this],
- * it will not be included in the result.
+ * A.k.a. it gets a sub-list of columns that are roots of the trees of columns.
+ *
+ * Note: this doesn't merge similarly called groups into one, nor does it insert columns into groups if they weren't
+ * so already.
  */
-internal fun <T> List<ColumnWithPath<T>>.roots(): List<ColumnWithPath<T>> {
-    val emptyRoot = TreeNode.createRoot<ColumnWithPath<T>?>(data = null)
-    this.forEach { emptyRoot.put(it.path, it) }
-    return emptyRoot.topmostChildren { it.data != null }.map { it.data!! }
+internal fun <T> List<ColumnWithPath<T>>.simplify(): List<ColumnWithPath<T>> {
+    val root = TreeNode.createRoot<ColumnWithPath<T>?>(data = null)
+    this.forEach { root.put(it.path, it) }
+    return root.topmostChildren { it.data != null }.map { it.data!! }
 }
 
 /**
@@ -364,7 +388,7 @@ internal fun <T> List<ColumnWithPath<T>>.roots(): List<ColumnWithPath<T>> {
  * all its siblings will be lifted out of the group. This also happens if a column is "removed" that does
  * not exist in [this].
  */
-internal fun List<ColumnWithPath<*>>.allColumnsExcept(columns: Iterable<ColumnWithPath<*>>): List<ColumnWithPath<*>> {
+internal fun List<ColumnWithPath<*>>.allColumnsExceptAndUnpack(columns: Iterable<ColumnWithPath<*>>): List<ColumnWithPath<*>> {
     if (isEmpty()) return emptyList()
     val fullTree = collectTree()
     columns.forEach {
@@ -410,6 +434,7 @@ internal fun List<ColumnWithPath<*>>.allColumnsExceptKeepingStructure(columns: I
 
                 // now we update the parent's parents recursively with new column group instances
                 var parent = nodeToExcept.parent.parent
+                @Suppress("UNNECESSARY_NOT_NULL_ASSERTION")
                 var currentNode = nodeToExcept.parent!!
                 while (parent != null) {
                     val parentData = parent.data as ColumnGroup<*>? ?: break

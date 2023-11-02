@@ -17,7 +17,7 @@ internal fun <T, C> DataFrame<T>.flattenImpl(
     keepParentNameForColumns: Boolean = false
 ): DataFrame<T> {
     val rootColumns = getColumnsWithPaths {
-        columns.toColumnSet().filter { it.isColumnGroup() }.roots()
+        columns.toColumnSet().filter { it.isColumnGroup() }.simplify()
     }
     val rootPrefixes = rootColumns.map { it.path }.toSet()
     val nameGenerators = rootPrefixes.map { it.dropLast() }.distinct().associateWith { path ->

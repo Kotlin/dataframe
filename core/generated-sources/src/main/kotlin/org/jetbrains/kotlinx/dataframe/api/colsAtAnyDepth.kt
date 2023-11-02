@@ -167,6 +167,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * [all][ColumnsSelectionDsl.all]`().`[recursively][recursively]`() -> `[colsAtAnyDepth][colsAtAnyDepth]`()`
      *
      * @see [DataFrame.flatten\]
+     * @see [ColumnsSelectionDsl.simplify\]
      */
     private interface CommonAtAnyDepthDocs {
 
@@ -233,6 +234,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[recursively][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.recursively]`() -> `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.colsAtAnyDepth]`()`
      *
      * @see [DataFrame.flatten]
+     * @see [ColumnsSelectionDsl.simplify]
      */
     public fun ColumnSet<*>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         colsAtAnyDepthInternal(predicate)
@@ -298,6 +300,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[recursively][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.recursively]`() -> `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.colsAtAnyDepth]`()`
      *
      * @see [DataFrame.flatten]
+     * @see [ColumnsSelectionDsl.simplify]
      */
     public fun ColumnsSelectionDsl<*>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         asSingleColumn().colsAtAnyDepthInternal(predicate)
@@ -361,6 +364,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[recursively][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.recursively]`() -> `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.colsAtAnyDepth]`()`
      *
      * @see [DataFrame.flatten]
+     * @see [ColumnsSelectionDsl.simplify]
      */
     public fun SingleColumn<DataRow<*>>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         ensureIsColumnGroup().colsAtAnyDepthInternal(predicate)
@@ -424,6 +428,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[recursively][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.recursively]`() -> `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.colsAtAnyDepth]`()`
      *
      * @see [DataFrame.flatten]
+     * @see [ColumnsSelectionDsl.simplify]
      */
     public fun String.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         columnGroup(this).colsAtAnyDepth(predicate)
@@ -487,6 +492,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[recursively][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.recursively]`() -> `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.colsAtAnyDepth]`()`
      *
      * @see [DataFrame.flatten]
+     * @see [ColumnsSelectionDsl.simplify]
      */
     public fun KProperty<*>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         columnGroup(this).colsAtAnyDepth(predicate)
@@ -550,6 +556,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`().`[recursively][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.recursively]`() -> `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.colsAtAnyDepth]`()`
      *
      * @see [DataFrame.flatten]
+     * @see [ColumnsSelectionDsl.simplify]
      */
     public fun ColumnPath.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         columnGroup(this).colsAtAnyDepth(predicate)

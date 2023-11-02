@@ -18,10 +18,22 @@ class DistinctTests : ColumnsSelectionDslTests() {
         ).shouldAllBeEqual()
 
         val cols = dfGroup.getColumnsWithPaths {
-            cols(name.firstName, name.firstName, name.firstName.firstName).distinct()
+            cols(
+                name.firstName,
+                name.firstName,
+                name.firstName.firstName,
+            ).distinct()
         }
         cols.size shouldBe 2
         cols.first().path shouldBe pathOf("name", "firstName")
         cols.last().path shouldBe pathOf("name", "firstName", "firstName")
+
+        dfGroup.select {
+            cols(
+                name.firstName,
+                name.firstName,
+                name.firstName.firstName,
+            ).distinct()
+        }
     }
 }

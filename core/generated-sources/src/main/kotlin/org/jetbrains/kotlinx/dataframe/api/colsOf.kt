@@ -265,7 +265,7 @@ public interface ColsOfColumnsSelectionDsl {
      * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
      */
-    public fun <C> KProperty<DataRow<*>>.colsOf(
+    public fun <C> KProperty<*>.colsOf(
         type: KType,
         filter: ColumnFilter<C> = { true },
     ): ColumnSet<*> = columnGroup(this).colsOf(type, filter)
@@ -612,7 +612,7 @@ internal fun <C> ColumnsResolver<*>.colsOfInternal(
 
 /* TODO: [Issue: #325, context receiver support](https://github.com/Kotlin/dataframe/issues/325)
 context(ColumnsSelectionDsl)
-public inline fun <reified C> KProperty<DataRow<*>>.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<*> =
+public inline fun <reified C> KProperty<*>.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<*> =
     colsOf(typeOf<C>(), filter)
 
 context(ColumnsSelectionDsl)

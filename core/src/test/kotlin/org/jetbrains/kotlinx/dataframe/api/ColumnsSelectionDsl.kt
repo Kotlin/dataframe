@@ -37,15 +37,6 @@ open class ColumnsSelectionDslTests : TestBase() {
         }
 
     @Test
-    fun roots() {
-        df.select { cols(name.firstName, name.lastName, age).roots() } shouldBe
-            df.select { cols(name.firstName, name.lastName, age) }
-
-        df.select { cols(name.firstName, name.lastName, age, name).roots() } shouldBe
-            df.select { cols(name, age) }
-    }
-
-    @Test
     fun select() {
         listOf(
             df.select {
