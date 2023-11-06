@@ -20,6 +20,7 @@ repositories {
 dependencies {
     api(project(":core"))
 
+    implementation(libs.kotlinLogging)
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlinpoet)
     api(libs.swagger) {
