@@ -8,7 +8,7 @@ import java.net.URL
 public fun isOpenApiStr(text: String): Boolean = try {
     val parsed = OpenAPIParser().readContents(text, null, null)
     parsed.openAPI?.components?.schemas != null
-} catch (_: Exception) {
+} catch (_: Throwable) {
     false
 }
 
