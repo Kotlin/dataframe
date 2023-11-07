@@ -158,7 +158,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *  {@include [LineBreak]}
      *  {@include [UsageTemplate.KTypeDef]}
      * }
-     * {@comment -------------------------------------------------------------------------------------------- }
+     * {@comment Plain DSL: -------------------------------------------------------------------------------------------- }
      * {@setArg [UsageTemplate.PlainDslFunctionsArg]
      *  `(`
      *  {@include [FirstColumnsSelectionDsl.Usage.PlainDslName]}
@@ -217,7 +217,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  `|` TODO
      * }
-     * {@comment -------------------------------------------------------------------------------------------- }
+     * {@comment ColumnSet: -------------------------------------------------------------------------------------------- }
      * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
      *  {@include [Indent]}`(`
      *  {@include [FirstColumnsSelectionDsl.Usage.ColumnSetName]}
@@ -273,9 +273,11 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  {@include [Indent]}`|` {@include [ColsOfColumnsSelectionDsl.Usage.ColumnSetName]}**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>`**` [` **`(`**{@include [UsageTemplate.KTypeRef]}**`)`** `] [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
      *
+     *  {@include [Indent]}`|` {@include [SimplifyColumnsSelectionDsl.Usage.ColumnSetName]}**`()`**
+     *
      *  {@include [Indent]}`|` TODO
      * }
-     * {@comment -------------------------------------------------------------------------------------------- }
+     * {@comment ColumnGroup: -------------------------------------------------------------------------------------------- }
      * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
      *  {@include [Indent]}`(`
      *  {@include [FirstColumnsSelectionDsl.Usage.ColumnGroupName]}
