@@ -51,7 +51,7 @@ public interface SimplifyColumnsSelectionDsl {
      * See [Usage] for how to use [simplify].
      *
      * ## For example:
-     * 
+     *
      * [cols][ColumnsSelectionDsl.cols]`(a, a.b, d.c).`[simplify][SimplifyColumnsSelectionDsl.simplify]`() == `[cols][ColumnsSelectionDsl.cols]`(a, d.c)`
      * {@include [LineBreak]}
      * `df.`[select][DataFrame.select]` { `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]` { "e" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[simplify][ColumnSet.simplify]`() }`

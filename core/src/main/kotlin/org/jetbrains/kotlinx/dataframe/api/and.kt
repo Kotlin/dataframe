@@ -11,6 +11,8 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.DoubleIndent
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import kotlin.reflect.KProperty
 
@@ -18,10 +20,47 @@ import kotlin.reflect.KProperty
 public interface AndColumnsSelectionDsl<out T> {
 
     /**
+     * ## And Operator Usage
+     *
+     * @include [UsageTemplate]
+     * {@setArg [UsageTemplate.DefinitionsArg]
+     *  {@include [UsageTemplate.ColumnSetDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.ColumnDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.ColumnOrColumnSetDef]}
+     * }
+     *
+     * {@setArg [UsageTemplate.PlainDslFunctionsArg]
+     *  {@include [UsageTemplate.ColumnOrColumnSetRef]} {@include [InfixName]}` [ `**`{`**` ] `{@include [UsageTemplate.ColumnOrColumnSetRef]}` [ `**`\\}`**` ] `
+     *
+     *  `| `{@include [UsageTemplate.ColumnOrColumnSetRef]}{@include [Name]}**`(`**`/`**`{ `**{@include [UsageTemplate.ColumnOrColumnSetRef]}**` \\}`**`/`**`)`**
+     * }
+     *
+     * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
+     *  {@include [Indent]}{@include [Name]}**`(`**`/`**`{ `**{@include [UsageTemplate.ColumnOrColumnSetRef]}**` \\}`**`/`**`)`**
+     * }
+     *
+     * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
+     *  {@include [Indent]}{@include [Name]}**`(`**`/`**`{ `**{@include [UsageTemplate.ColumnOrColumnSetRef]}**` \\}`**`/`**`)`**
+     * }
+     */
+    public interface Usage {
+
+        /** [**and**][ColumnsSelectionDsl.and] */
+        public interface InfixName
+
+        /** .[**and**][ColumnsSelectionDsl.and] */
+        public interface Name
+    }
+
+    /**
      * ## And Operator
      * The [and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
      * You can even mix and match any {@include [AccessApiLink]}!
+     *
+     * Check out the [Usage] for how to use [and].
      *
      * ### Examples:
      *

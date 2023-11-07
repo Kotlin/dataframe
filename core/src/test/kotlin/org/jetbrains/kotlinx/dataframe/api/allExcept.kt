@@ -185,7 +185,6 @@ class AllExceptTests : ColumnsSelectionDslTests() {
     @Test
     fun `TEMP experiments`() {
         dfGroup.select {
-
             @Suppress("UNCHECKED_CAST")
             fun ColumnSet<*>.containingGroups(): ColumnSet<DataRow<*>> = transformWithContext {
                 it.mapNotNull {
@@ -242,7 +241,6 @@ class AllExceptTests : ColumnsSelectionDslTests() {
 
             fun SingleColumn<*>.rootColGroup(): SingleColumn<DataRow<*>> =
                 colGroups().simplify().single()
-
 
 //            colsAtAnyDepth { it.name == "secondName" }.single().parentNoSiblings().parentNoSiblings()
 //            cols(name) except {

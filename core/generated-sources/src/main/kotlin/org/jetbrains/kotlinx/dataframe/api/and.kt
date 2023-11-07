@@ -11,6 +11,8 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.DoubleIndent
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import kotlin.reflect.KProperty
 
@@ -18,10 +20,87 @@ import kotlin.reflect.KProperty
 public interface AndColumnsSelectionDsl<out T> {
 
     /**
+     * ## And Operator Usage
+     *
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  `column: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]` | `[String][String]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `[KProperty][KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  `columnOrSet: `[column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]` | `[columnSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### In the plain DSL:
+     *
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  [columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef] [**and**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` [ `**`{`**` ] `[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef]` [ `**`}`**` ] `
+     *
+     *  `| `[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef].[**and**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]**`(`**`/`**`{ `**[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef]**` }`**`/`**`)`**
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**and**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]**`(`**`/`**`{ `**[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef]**` }`**`/`**`)`**
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### On a column group reference:
+     *
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**and**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]**`(`**`/`**`{ `**[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef]**` }`**`/`**`)`**
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
+    public interface Usage {
+
+        /** [**and**][ColumnsSelectionDsl.and] */
+        public interface InfixName
+
+        /** .[**and**][ColumnsSelectionDsl.and] */
+        public interface Name
+    }
+
+    /**
      * ## And Operator
      * The [and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
+     *
+     * Check out the [Usage] for how to use [and].
      *
      * ### Examples:
      *
@@ -59,6 +138,8 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
+     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
+     *
      * ### Examples:
      *
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]` { "colA" `[and][kotlin.String.and]` colB }`
@@ -92,6 +173,8 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
+     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
+     *
      * ### Examples:
      *
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]` { "colA" `[and][kotlin.String.and]` colB }`
@@ -121,6 +204,8 @@ public interface AndColumnsSelectionDsl<out T> {
      * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
+     *
+     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
      *
      * ### Examples:
      *
@@ -152,6 +237,8 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
+     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
+     *
      * ### Examples:
      *
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]` { "colA" `[and][kotlin.String.and]` colB }`
@@ -181,6 +268,8 @@ public interface AndColumnsSelectionDsl<out T> {
      * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
+     *
+     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
      *
      * ### Examples:
      *
@@ -217,6 +306,8 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
+     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
+     *
      * ### Examples:
      *
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]` { "colA" `[and][kotlin.String.and]` colB }`
@@ -250,6 +341,8 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
+     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
+     *
      * ### Examples:
      *
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]` { "colA" `[and][kotlin.String.and]` colB }`
@@ -279,6 +372,8 @@ public interface AndColumnsSelectionDsl<out T> {
      * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
+     *
+     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
      *
      * ### Examples:
      *
@@ -310,6 +405,8 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
+     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
+     *
      * ### Examples:
      *
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]` { "colA" `[and][kotlin.String.and]` colB }`
@@ -339,6 +436,8 @@ public interface AndColumnsSelectionDsl<out T> {
      * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
+     *
+     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
      *
      * ### Examples:
      *
@@ -375,6 +474,8 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
+     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
+     *
      * ### Examples:
      *
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]` { "colA" `[and][kotlin.String.and]` colB }`
@@ -408,6 +509,8 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
+     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
+     *
      * ### Examples:
      *
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]` { "colA" `[and][kotlin.String.and]` colB }`
@@ -437,6 +540,8 @@ public interface AndColumnsSelectionDsl<out T> {
      * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
+     *
+     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
      *
      * ### Examples:
      *
@@ -468,6 +573,8 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
+     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
+     *
      * ### Examples:
      *
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]` { "colA" `[and][kotlin.String.and]` colB }`
@@ -498,6 +605,8 @@ public interface AndColumnsSelectionDsl<out T> {
      * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
+     *
+     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
      *
      * ### Examples:
      *
@@ -534,6 +643,8 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
+     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
+     *
      * ### Examples:
      *
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]` { "colA" `[and][kotlin.String.and]` colB }`
@@ -569,6 +680,8 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
+     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
+     *
      * ### Examples:
      *
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]` { "colA" `[and][kotlin.String.and]` colB }`
@@ -600,6 +713,8 @@ public interface AndColumnsSelectionDsl<out T> {
      * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
+     *
+     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
      *
      * ### Examples:
      *
@@ -633,6 +748,8 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
+     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
+     *
      * ### Examples:
      *
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]` { "colA" `[and][kotlin.String.and]` colB }`
@@ -664,6 +781,8 @@ public interface AndColumnsSelectionDsl<out T> {
      * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
+     *
+     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
      *
      * ### Examples:
      *

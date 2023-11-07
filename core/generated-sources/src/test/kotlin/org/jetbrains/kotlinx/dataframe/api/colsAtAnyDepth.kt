@@ -23,22 +23,6 @@ import kotlin.reflect.typeOf
 
 class AtAnyDepth : TestBase() {
 
-    fun List<ColumnWithPath<*>>.print() {
-        forEach {
-            if (it.isValueColumn()) println("${it.name}: ${it.type()}")
-            else it.print()
-        }
-        println()
-    }
-
-    infix fun List<ColumnWithPath<*>>.shouldBe(other: List<ColumnWithPath<*>>) {
-        this.map { it.name to it.path } shouldBe other.map { it.name to it.path }
-    }
-
-    infix fun List<ColumnWithPath<*>>.shouldNotBe(other: List<ColumnWithPath<*>>) {
-        this.map { it.name to it.path } shouldNotBe other.map { it.name to it.path }
-    }
-
     // old function copied over to avoid breaking changes
     private fun ColumnSet<*>.dfsInternal(predicate: (ColumnWithPath<*>) -> Boolean): TransformableColumnSet<Any?> =
         transform {

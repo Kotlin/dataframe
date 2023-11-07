@@ -202,40 +202,4 @@ open class ColumnsSelectionDslTests : TestBase() {
 //            },
         ).shouldAllBeEqual()
     }
-
-    @Test
-    fun and() {
-        df.select {
-            age and name.select {
-                firstName and lastName
-            }
-        }
-
-        df.select {
-            age and (
-                name
-                )
-        }
-
-        df.select {
-            age and colGroup(Person::name).select {
-                firstName and lastName
-            }
-        }
-
-        df.select {
-            it { it { it { age } } }
-        }
-
-        df.select {
-            age and
-                name
-        }
-
-        df.select {
-            "age"<Int>() and name.firstName
-
-//            select { this { age } }
-        }
-    }
 }

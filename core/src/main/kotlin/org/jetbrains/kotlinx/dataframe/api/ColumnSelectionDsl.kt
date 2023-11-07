@@ -179,7 +179,16 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * For instance:
      * ```kotlin
      * "myColumn"["myNestedColumn"]<NestedColumnType>()
+     *
+     * "myColumn"["myNestedColumn"]["myDoublyNestedColumn"]<NestedColumnType>()
      * ```
      */
     public operator fun String.get(column: String): ColumnPath = pathOf(this, column)
+
+    /**
+     * As extension to `"myColumn"["myNestedColumn"]`, this function enables
+     * `"myColumn"["myNestedColumn"]["myDoublyNestedColumn"]` as alternative to
+     * [pathOf]`("myColumn", "myNestedColumn", "myDoublyNestedColumn")`
+     */
+    public operator fun ColumnPath.get(column: String): ColumnPath = this + column
 }

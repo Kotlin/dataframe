@@ -167,6 +167,9 @@ public interface UsageTemplateColumnsSelectionDsl {
         /** `kType: `[KType][KType] */
         public interface KTypeDef
 
+        /** `columnOrSet: `[column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]` | `[columnSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetDef] */
+        public interface ColumnOrColumnSetDef
+
         // endregion
 
         // region References to the definitions
@@ -218,6 +221,9 @@ public interface UsageTemplateColumnsSelectionDsl {
 
         /** [kType][KTypeDef] */
         public interface KTypeRef
+
+        /** [columnOrSet][ColumnOrColumnSetDef] */
+        public interface ColumnOrColumnSetRef
 
         // endregion
     }

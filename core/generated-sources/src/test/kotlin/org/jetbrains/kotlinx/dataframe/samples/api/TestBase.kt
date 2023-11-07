@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
@@ -10,8 +11,11 @@ import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.isValueColumn
 import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.to
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.explainer.PluginCallbackProxy
 import org.jetbrains.kotlinx.dataframe.impl.columns.asValueColumn
 import org.junit.After
@@ -104,10 +108,40 @@ public open class TestBase {
 
     infix fun <T, U : T> T.willBe(expected: U?) = shouldBe(expected)
 
+    /**
+     * Asserts that all elements of the iterable are equal to each other
+     */
     fun <T> Iterable<T>.shouldAllBeEqual(): Iterable<T> {
         this should {
             it.reduce { a, b -> a shouldBe b; b }
         }
         return this
+    }
+
+    /**
+     * Helper function to print List<ColumnWithPath<*>> in a readable way
+     */
+    fun List<ColumnWithPath<*>>.print() {
+        forEach {
+            if (it.isValueColumn()) println("${it.name}: ${it.type()}")
+            else it.print()
+        }
+        println()
+    }
+
+    /**
+     * Overload for shouldBe for List<ColumnWithPath<*>> to compare only names and paths
+     * since the instances of ColumnWithPath are different
+     */
+    infix fun List<ColumnWithPath<*>>.shouldBe(other: List<ColumnWithPath<*>>) {
+        this.map { it.name to it.path } shouldBe other.map { it.name to it.path }
+    }
+
+    /**
+     * Overload for shouldNotBe for List<ColumnWithPath<*>> to compare only names and paths
+     * since the instances of ColumnWithPath are different
+     */
+    infix fun List<ColumnWithPath<*>>.shouldNotBe(other: List<ColumnWithPath<*>>) {
+        this.map { it.name to it.path } shouldNotBe other.map { it.name to it.path }
     }
 }
