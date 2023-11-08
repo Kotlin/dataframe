@@ -17,6 +17,10 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
+
+/**
+ * See [Usage]
+ */
 public interface AndColumnsSelectionDsl<out T> {
 
     /**
@@ -48,7 +52,7 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      *  [columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef] [**and**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` [ `**`{`**` ] `[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef]` [ `**`}`**` ] `
      *
-     *  `| `[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef].[**and**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]**`(`**`/`**`{ `**[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef]**` }`**`/`**`)`**
+     *  `| `[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef].[**and**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] **`(`**`|`**`{ `**[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -59,7 +63,7 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**and**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]**`(`**`/`**`{ `**[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef]**` }`**`/`**`)`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**and**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] **`(`**`|`**`{ `**[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -70,7 +74,7 @@ public interface AndColumnsSelectionDsl<out T> {
      *
      *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**and**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]**`(`**`/`**`{ `**[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef]**` }`**`/`**`)`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**and**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] **`(`**`|`**`{ `**[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
      *
      *
      *
@@ -819,4 +823,5 @@ public interface AndColumnsSelectionDsl<out T> {
     private operator fun <C> ColumnsSelector<T, C>.invoke(): ColumnsResolver<C> =
         with(this@AndColumnsSelectionDsl as ColumnsSelectionDsl<T>) { this@invoke() }
 }
+
 // endregion

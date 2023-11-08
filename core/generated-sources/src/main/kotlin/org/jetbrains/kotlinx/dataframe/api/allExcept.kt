@@ -294,11 +294,7 @@ public interface AllExceptColumnsSelectionDsl<out T> {
                     // if allowed, attempt to resole all columns to except absolutely too if relative failed
                     if (allowFullPaths) {
                         val allColsAbsolute = allCols.map { it.addParentPath(col.path) }
-
-                        val columnsToExcept =
-                            (this@AllExceptColumnsSelectionDsl as ColumnsSelectionDsl<T>) { other }
-                                .resolve(context)
-
+                        val columnsToExcept = other.resolve(context)
                         allColsAbsolute.allColumnsExceptKeepingStructure(columnsToExcept)
                     } else {
                         throw e

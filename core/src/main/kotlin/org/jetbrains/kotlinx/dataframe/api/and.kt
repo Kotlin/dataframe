@@ -17,6 +17,10 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
+
+/**
+ * See [Usage]
+ */
 public interface AndColumnsSelectionDsl<out T> {
 
     /**
@@ -34,15 +38,15 @@ public interface AndColumnsSelectionDsl<out T> {
      * {@setArg [UsageTemplate.PlainDslFunctionsArg]
      *  {@include [UsageTemplate.ColumnOrColumnSetRef]} {@include [InfixName]}` [ `**`{`**` ] `{@include [UsageTemplate.ColumnOrColumnSetRef]}` [ `**`\\}`**` ] `
      *
-     *  `| `{@include [UsageTemplate.ColumnOrColumnSetRef]}{@include [Name]}**`(`**`/`**`{ `**{@include [UsageTemplate.ColumnOrColumnSetRef]}**` \\}`**`/`**`)`**
+     *  `| `{@include [UsageTemplate.ColumnOrColumnSetRef]}{@include [Name]} **`(`**`|`**`{ `**{@include [UsageTemplate.ColumnOrColumnSetRef]}**` \\}`**`|`**`)`**
      * }
      *
      * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
-     *  {@include [Indent]}{@include [Name]}**`(`**`/`**`{ `**{@include [UsageTemplate.ColumnOrColumnSetRef]}**` \\}`**`/`**`)`**
+     *  {@include [Indent]}{@include [Name]} **`(`**`|`**`{ `**{@include [UsageTemplate.ColumnOrColumnSetRef]}**` \\}`**`|`**`)`**
      * }
      *
      * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
-     *  {@include [Indent]}{@include [Name]}**`(`**`/`**`{ `**{@include [UsageTemplate.ColumnOrColumnSetRef]}**` \\}`**`/`**`)`**
+     *  {@include [Indent]}{@include [Name]} **`(`**`|`**`{ `**{@include [UsageTemplate.ColumnOrColumnSetRef]}**` \\}`**`|`**`)`**
      * }
      */
     public interface Usage {
@@ -207,4 +211,5 @@ public interface AndColumnsSelectionDsl<out T> {
     private operator fun <C> ColumnsSelector<T, C>.invoke(): ColumnsResolver<C> =
         with(this@AndColumnsSelectionDsl as ColumnsSelectionDsl<T>) { this@invoke() }
 }
+
 // endregion
