@@ -5,10 +5,7 @@
     <variables>
         <web-root>https://kotlin.github.io/dataframe/</web-root>
         <download-page/>
-<!--        <feedback-enabled>true</feedback-enabled>-->
-        <feedback-widget>true</feedback-widget>
-        <feedback-support>null</feedback-support>
-        <feedback-url>https://support.jetbrains.com</feedback-url>
+        <feedback-widget>false</feedback-widget>
         <webmaster>webmaster@jetbrains.com</webmaster>
         <algolia-id>JWPLKSKZVF</algolia-id>
         <algolia-index>prod_DATAFRAME_HELP</algolia-index>
