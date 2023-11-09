@@ -32,7 +32,7 @@ dependencies {
     testImplementation("io.kotest:kotest-assertions-core:4.6.0")
     testImplementation("com.android.tools.build:gradle-api:7.3.1")
     testImplementation("com.android.tools.build:gradle:7.3.1")
-    testImplementation("io.ktor:ktor-server-netty:1.6.7")
+    testImplementation("io.ktor:ktor-server-netty:2.3.6")
     testImplementation(libs.h2db)
     testImplementation(gradleApi())
 }
