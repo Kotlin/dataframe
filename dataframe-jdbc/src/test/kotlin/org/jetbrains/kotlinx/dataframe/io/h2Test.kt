@@ -314,6 +314,52 @@ class JdbcTest {
     }
 
     @Test
+    fun `read from incorrect SQL query`() {
+        @Language("SQL")
+        val createSQL = """
+            CREATE TABLE Orders (
+            order_id INT PRIMARY KEY,
+            customer_id INT,
+            order_date DATE,
+            total_amount DECIMAL(10, 2));
+            """
+
+
+        @Language("SQL")
+        val dropSQL = """
+            DROP TABLE Customer;
+            """
+
+        @Language("SQL")
+        val alterSQL = """
+            ALTER TABLE Customer
+            ADD COLUMN email VARCHAR(100);
+            """
+
+        @Language("SQL")
+        val deleteSQL = """
+            DELETE FROM Customer
+            WHERE id = 1;
+            """
+
+        shouldThrow<IllegalArgumentException> {
+            DataFrame.readSqlQuery(connection, createSQL)
+        }
+
+        shouldThrow<IllegalArgumentException> {
+            DataFrame.readSqlQuery(connection, dropSQL)
+        }
+
+        shouldThrow<IllegalArgumentException> {
+            DataFrame.readSqlQuery(connection, alterSQL)
+        }
+
+        shouldThrow<IllegalArgumentException> {
+            DataFrame.readSqlQuery(connection, deleteSQL)
+        }
+    }
+
+    @Test
     fun `read from non-existing jdbc url`() {
         shouldThrow<SQLException> {
             DataFrame.readSqlTable(DriverManager.getConnection("ddd"), "WrongTableName")
