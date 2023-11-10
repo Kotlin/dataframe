@@ -219,6 +219,12 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  `|` {@include [UsageTemplate.ColumnOrColumnSetRef]}{@include [AndColumnsSelectionDsl.Usage.Name]} **`(`**`|`**`{ `**{@include [UsageTemplate.ColumnOrColumnSetRef]}**` \\}`**`|`**`)`**
      *
+     *  `|` {@include [UsageTemplate.ColumnRef]} {@include [RenameColumnsSelectionDsl.Usage.InfixNamedName]}`/`{@include [RenameColumnsSelectionDsl.Usage.InfixIntoName]} {@include [UsageTemplate.ColumnRef]}
+     *
+     *  `| `{@include [UsageTemplate.ColumnRef]}{@include [RenameColumnsSelectionDsl.Usage.NamedName]}**`(`**{@include [UsageTemplate.ColumnRef]}**`)`**
+     *
+     *  `| `{@include [UsageTemplate.ColumnRef]}{@include [RenameColumnsSelectionDsl.Usage.IntoName]}**`(`**{@include [UsageTemplate.ColumnRef]}**`)`**
+     *
      *  `|` TODO
      * }
      * {@comment ColumnSet: -------------------------------------------------------------------------------------------- }

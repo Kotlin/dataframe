@@ -2,18 +2,13 @@ package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
-import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
-import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
-import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
-import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnGroupRef
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetRef
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplateExample.ColumnGroupName
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplateExample.ColumnSetName
-import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
 /*
@@ -101,31 +96,31 @@ public interface UsageTemplateColumnsSelectionDsl {
         public interface ColumnSetDef
 
         /**
-         * `columnGroup: `[SingleColumn][SingleColumn]`<`[DataRow][DataRow]`<*>> | `[String][String]
+         * `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
          *
          * {@include [QuadrupleIndent]}{@include [Indent]}{@include [QuarterIndent]}
-         * `| `[KProperty][KProperty]`<*>` | `[ColumnPath][ColumnPath]
+         * `| `[KProperty][kotlin.reflect.KProperty]`<*>` | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
          */
         public interface ColumnGroupDef
 
         /**
-         * `singleColumn: `[SingleColumn][SingleColumn]`<`[DataRow][DataRow]`<*>>
+         * `singleColumn: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>
          */
         public interface SingleColumnDef
 
         /**
-         * `columnGroupReference: `[String][String]` | `[KProperty][KProperty]`<*>`
+         * `columnGroupReference: `[String][String]` | `[KProperty][kotlin.reflect.KProperty]`<*>`
          *
          * {@include [QuadrupleIndent]}{@include [QuadrupleIndent]}{@include [DoubleIndent]}
-         * | `[ColumnPath][ColumnPath]
+         * | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
          */
         public interface ColumnGroupNoSingleColumnDef
 
         /**
-         * `column: `[ColumnAccessor][ColumnAccessor]` | `[String][String]
+         * `column: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]` | `[String][String]
          *
          * {@include [DoubleIndent]}{@include [HalfIndent]}{@include [QuarterIndent]}
-         * `| `[KProperty][KProperty]`<*> | `[ColumnPath][ColumnPath]
+         * `| `[KProperty][kotlin.reflect.KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
          */
         public interface ColumnDef
 

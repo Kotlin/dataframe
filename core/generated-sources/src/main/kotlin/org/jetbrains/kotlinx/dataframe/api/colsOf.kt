@@ -41,17 +41,17 @@ public interface ColsOfColumnsSelectionDsl {
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `columnGroupReference: `[String][String]` | `[KProperty][KProperty]`<*>`
+     *  `columnGroupReference: `[String][String]` | `[KProperty][kotlin.reflect.KProperty]`<*>`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     * | `[ColumnPath][ColumnPath]
+     * | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `column: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]` | `[String][String]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `[KProperty][KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     * `| `[KProperty][kotlin.reflect.KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *

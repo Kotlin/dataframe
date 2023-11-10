@@ -138,7 +138,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *  `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `[KProperty][KProperty]`<*>` | `[ColumnPath][ColumnPath]
+     * `| `[KProperty][kotlin.reflect.KProperty]`<*>` | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -149,7 +149,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *  `column: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]` | `[String][String]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `[KProperty][KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     * `| `[KProperty][kotlin.reflect.KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -193,10 +193,10 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `columnGroupReference: `[String][String]` | `[KProperty][KProperty]`<*>`
+     *  `columnGroupReference: `[String][String]` | `[KProperty][kotlin.reflect.KProperty]`<*>`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     * | `[ColumnPath][ColumnPath]
+     * | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -268,6 +268,12 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *  `|` [columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef] [**and**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` [ `**`{`**` ] `[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef]` [ `**`}`**` ] `
      *
      *  `|` [columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef].[**and**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] **`(`**`|`**`{ `**[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
+     *
+     *  `|` [column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef] [**named**][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.named]`/`[**into**][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.into] [column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]
+     *
+     *  `| `[column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef].[**named**][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.named]**`(`**[column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]**`)`**
+     *
+     *  `| `[column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef].[**into**][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.into]**`(`**[column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]**`)`**
      *
      *  `|` TODO
      *

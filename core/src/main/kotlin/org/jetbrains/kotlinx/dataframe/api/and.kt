@@ -30,6 +30,8 @@ public interface AndColumnsSelectionDsl<out T> {
      * {@setArg [UsageTemplate.DefinitionsArg]
      *  {@include [UsageTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.ColumnGroupDef]}
+     *  {@include [LineBreak]}
      *  {@include [UsageTemplate.ColumnDef]}
      *  {@include [LineBreak]}
      *  {@include [UsageTemplate.ColumnOrColumnSetDef]}
