@@ -87,6 +87,9 @@ internal const val COL_SELECT_DSL_CHILDREN_SINGLE_COL_REPLACE = "this.cols(predi
 
 internal const val TOP_MESSAGE = "top is deprecated, use simplify() instead. $message_0_14"
 
+internal const val COL_SELECT_DSL_LIST_DATACOLUMN_GET = "This function is deprecated. Use `.toColumnSet()[]` instead. $message_0_14"
+internal const val COL_SELECT_DSL_LIST_DATACOLUMN_GET_REPLACE = "this.toColumnSet()[range]"
+
 // endregion
 
 // region WARNING in 0.14, ERROR in 0.15

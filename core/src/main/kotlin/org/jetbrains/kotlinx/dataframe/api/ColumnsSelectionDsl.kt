@@ -18,6 +18,8 @@ import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
+import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_LIST_DATACOLUMN_GET
+import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_LIST_DATACOLUMN_GET_REPLACE
 import kotlin.reflect.KProperty
 
 /**
@@ -366,11 +368,17 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
         this(this@ColumnsSelectionDsl, this@ColumnsSelectionDsl)
 
     /**
-     * ## Columns by Index Range from List of Columns
+     * ## Deprecated: Columns by Index Range from List of Columns
      * Helper function to create a [ColumnSet] from a list of columns by specifying a range of indices.
      *
-     * {@comment TODO find out usages of this function and add examples}
+     * ### Deprecated
+     * Deprecated because it's too niche. Let us know if you have a good use for it!
      */
+    @Deprecated(
+        message = COL_SELECT_DSL_LIST_DATACOLUMN_GET,
+        replaceWith = ReplaceWith(COL_SELECT_DSL_LIST_DATACOLUMN_GET_REPLACE),
+        level = DeprecationLevel.WARNING,
+    )
     public operator fun <C> List<DataColumn<C>>.get(range: IntRange): ColumnSet<C> =
         ColumnsList(subList(range.first, range.last + 1))
 

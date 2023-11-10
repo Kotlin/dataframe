@@ -5,12 +5,15 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.jetbrains.kotlinx.dataframe.samples.api.age
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
+import org.jetbrains.kotlinx.dataframe.samples.api.isHappy
 import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.jetbrains.kotlinx.dataframe.samples.api.secondName
+import org.jetbrains.kotlinx.dataframe.samples.api.weight
 import org.junit.Test
 
 open class ColumnsSelectionDslTests : TestBase() {
@@ -35,6 +38,13 @@ open class ColumnsSelectionDslTests : TestBase() {
 
             dataFrameOf(firstName, lastName, frameCol).asColumnGroup("name")
         }
+
+    @Test
+    fun `DataColumn get`() {
+        df.select {
+            listOf(age, weight, isHappy).toColumnSet()[0..1]
+        }.alsoDebug()
+    }
 
     @Test
     fun select() {
