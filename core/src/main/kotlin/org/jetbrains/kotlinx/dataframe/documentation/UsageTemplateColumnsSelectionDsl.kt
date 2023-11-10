@@ -160,6 +160,15 @@ public interface UsageTemplateColumnsSelectionDsl {
         /** `columnOrSet: `{@include [ColumnRef]}` | `{@include [ColumnSetRef]} */
         public interface ColumnOrColumnSetDef
 
+        /** `name: `[String][String] */
+        public interface NameDef
+
+        /** `infer: `[Infer][org.jetbrains.kotlinx.dataframe.api.Infer] */
+        public interface InferDef
+
+        /** `expression: `{@include [ColumnExpressionLink]} */
+        public interface ColumnExpressionDef
+
         // endregion
 
         // region References to the definitions
@@ -214,6 +223,15 @@ public interface UsageTemplateColumnsSelectionDsl {
 
         /** [columnOrSet][ColumnOrColumnSetDef] */
         public interface ColumnOrColumnSetRef
+
+        /** [name][NameDef] */
+        public interface NameRef
+
+        /** [infer][InferDef] */
+        public interface InferRef
+
+        /** [expression][ColumnExpressionDef] */
+        public interface ColumnExpressionRef
 
         // endregion
     }

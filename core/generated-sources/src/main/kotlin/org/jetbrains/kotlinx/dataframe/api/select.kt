@@ -37,6 +37,13 @@ public fun <T> DataFrame<T>.select(vararg columns: AnyColumnReference): DataFram
 public interface SelectColumnsSelectionDsl {
 
     /**
+     * TODO
+     */
+    public interface Usage {
+
+    }
+
+    /**
      * ## Select from [ColumnGroup]
      *
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] on

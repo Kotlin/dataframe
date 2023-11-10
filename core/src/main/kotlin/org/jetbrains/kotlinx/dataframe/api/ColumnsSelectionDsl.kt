@@ -11,7 +11,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
-import org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -118,7 +117,9 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     // colSet and colB
     AndColumnsSelectionDsl<T>,
     // colA named "colB", colA into "colB"
-    RenameColumnsSelectionDsl {
+    RenameColumnsSelectionDsl,
+    // expr {}
+    ExprColumnsSelectionDsl {
 
     /**
      * ## [ColumnsSelectionDsl] Usage
@@ -223,9 +224,11 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  `|` {@include [UsageTemplate.ColumnRef]} {@include [RenameColumnsSelectionDsl.Usage.InfixNamedName]}`/`{@include [RenameColumnsSelectionDsl.Usage.InfixIntoName]} {@include [UsageTemplate.ColumnRef]}
      *
-     *  `| `{@include [UsageTemplate.ColumnRef]}{@include [RenameColumnsSelectionDsl.Usage.NamedName]}**`(`**{@include [UsageTemplate.ColumnRef]}**`)`**
+     *  `|` {@include [UsageTemplate.ColumnRef]}{@include [RenameColumnsSelectionDsl.Usage.NamedName]}**`(`**{@include [UsageTemplate.ColumnRef]}**`)`**
      *
-     *  `| `{@include [UsageTemplate.ColumnRef]}{@include [RenameColumnsSelectionDsl.Usage.IntoName]}**`(`**{@include [UsageTemplate.ColumnRef]}**`)`**
+     *  `|` {@include [UsageTemplate.ColumnRef]}{@include [RenameColumnsSelectionDsl.Usage.IntoName]}**`(`**{@include [UsageTemplate.ColumnRef]}**`)`**
+     *
+     *  `|` {@include [ExprColumnsSelectionDsl.Usage.PlainDslName]}**`(`**`[`{@include [UsageTemplate.NameRef]}`,][`{@include [UsageTemplate.InferRef]}`]`**`)`** **`{ `**{@include [UsageTemplate.ColumnExpressionRef]}**` \\}`**
      *
      *  `|` TODO
      * }
@@ -442,21 +445,4 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     // endregion
 }
 
-/**
- * @include [ColumnExpression.CommonDocs]
- *
- * #### For example:
- *
- * `df.`[groupBy][DataFrame.groupBy]` { `[expr][ColumnsSelectionDsl.expr]` { firstName.`[length][String.length]` + lastName.`[length][String.length]` } `[named][named]` "nameLength" }`
- *
- * `df.`[sortBy][DataFrame.sortBy]` { `[expr][ColumnsSelectionDsl.expr]` { name.`[length][String.length]` }.`[desc][SortDsl.desc]`() }`
- *
- * @param [name] The name the temporary column. Will be empty by default.
- * @include [Infer.Param] By default: [Nulls][Infer.Nulls].
- * @param [expression] An [AddExpression] to define what each new row of the temporary column should contain.
- */
-public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(
-    name: String = "",
-    infer: Infer = Infer.Nulls,
-    noinline expression: AddExpression<T, R>,
-): DataColumn<R> = mapToColumn(name, infer, expression)
+

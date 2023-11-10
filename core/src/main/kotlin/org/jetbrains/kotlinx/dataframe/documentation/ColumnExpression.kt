@@ -1,6 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
-import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.api.AddDsl
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
+import org.jetbrains.kotlinx.dataframe.api.CreateDataFrameDsl
+import org.jetbrains.kotlinx.dataframe.api.expr
 
 /**
  * ## Column Expression

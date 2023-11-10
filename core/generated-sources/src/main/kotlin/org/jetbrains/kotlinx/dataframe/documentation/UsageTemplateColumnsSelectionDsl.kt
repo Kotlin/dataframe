@@ -165,6 +165,15 @@ public interface UsageTemplateColumnsSelectionDsl {
         /** `columnOrSet: `[column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]` | `[columnSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetDef] */
         public interface ColumnOrColumnSetDef
 
+        /** `name: `[String][String] */
+        public interface NameDef
+
+        /** `infer: `[Infer][org.jetbrains.kotlinx.dataframe.api.Infer] */
+        public interface InferDef
+
+        /** `expression: `[Column Expression][org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression] */
+        public interface ColumnExpressionDef
+
         // endregion
 
         // region References to the definitions
@@ -219,6 +228,15 @@ public interface UsageTemplateColumnsSelectionDsl {
 
         /** [columnOrSet][ColumnOrColumnSetDef] */
         public interface ColumnOrColumnSetRef
+
+        /** [name][NameDef] */
+        public interface NameRef
+
+        /** [infer][InferDef] */
+        public interface InferRef
+
+        /** [expression][ColumnExpressionDef] */
+        public interface ColumnExpressionRef
 
         // endregion
     }
