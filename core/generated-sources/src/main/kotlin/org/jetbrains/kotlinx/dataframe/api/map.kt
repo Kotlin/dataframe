@@ -76,7 +76,7 @@ public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
 ): DataColumn<R> = mapToColumn(name, typeOf<R>(), infer, body)
 
 public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
-    column: ColumnAccessor<R>,
+    column: ColumnReference<R>,
     infer: Infer = Infer.Nulls,
     noinline body: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(column, typeOf<R>(), infer, body)
@@ -95,7 +95,7 @@ public fun <T, R> ColumnsContainer<T>.mapToColumn(
 ): DataColumn<R> = newColumn(type, name, infer, body)
 
 public fun <T, R> ColumnsContainer<T>.mapToColumn(
-    column: ColumnAccessor<R>,
+    column: ColumnReference<R>,
     type: KType,
     infer: Infer = Infer.Nulls,
     body: AddExpression<T, R>,
