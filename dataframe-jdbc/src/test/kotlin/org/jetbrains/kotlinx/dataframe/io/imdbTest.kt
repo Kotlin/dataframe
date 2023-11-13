@@ -71,6 +71,5 @@ class ImdbTestTest {
             val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
             schema.print()
         }
-
     }
 }

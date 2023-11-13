@@ -64,7 +64,6 @@ interface Table2MariaDb {
     val setCol: String
 }
 
-@Ignore
 class MariadbTest {
     companion object {
         private lateinit var connection: Connection

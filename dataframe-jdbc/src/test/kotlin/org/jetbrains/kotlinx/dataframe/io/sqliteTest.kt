@@ -47,7 +47,6 @@ interface CustomerOrderSQLite {
     val orderDetails: ByteArray
 }
 
-@Ignore
 class SqliteTest {
     companion object {
         private lateinit var connection: Connection

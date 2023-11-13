@@ -1,18 +1,32 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import java.math.BigDecimal
+import java.sql.Blob
+import java.sql.Clob
 import java.sql.Connection
 import java.sql.DatabaseMetaData
 import java.sql.DriverManager
+import java.sql.NClob
+import java.sql.Ref
 import java.sql.ResultSet
 import java.sql.ResultSetMetaData
+import java.sql.RowId
+import java.sql.SQLXML
+import java.sql.Time
+import java.sql.Timestamp
+import java.sql.Types
+import java.util.Date
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromUrl
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 private val logger = KotlinLogging.logger {}
 
@@ -122,8 +136,7 @@ public fun DataFrame.Companion.readSqlTable(connection: Connection, tableName: S
         st.executeQuery(
             preparedQuery
         ).use { rs ->
-            val data = fetchAndConvertDataFromResultSet(tableColumns, rs, dbType, limit)
-            return data.toDataFrame()
+            return fetchAndConvertDataFromResultSet(tableColumns, rs, dbType, limit)
         }
     }
 }
@@ -190,11 +203,9 @@ public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: St
     connection.createStatement().use { st ->
         st.executeQuery(internalSqlQuery).use { rs ->
             val tableColumns = getTableColumnsMetadata(rs)
-            val data = fetchAndConvertDataFromResultSet(tableColumns, rs, dbType, DEFAULT_LIMIT)
+            return fetchAndConvertDataFromResultSet(tableColumns, rs, dbType, DEFAULT_LIMIT)
 
-            logger.debug { "SQL query executed successfully. Converting data to DataFrame." }
-
-            return data.toDataFrame()
+            // logger.debug { "SQL query executed successfully. Converting data to DataFrame." }
         }
     }
 }
@@ -220,8 +231,7 @@ public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, dbType: DbTyp
  */
 public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, dbType: DbType, limit: Int): AnyFrame {
     val tableColumns = getTableColumnsMetadata(resultSet)
-    val data = fetchAndConvertDataFromResultSet(tableColumns, resultSet, dbType, limit)
-    return data.toDataFrame()
+    return fetchAndConvertDataFromResultSet(tableColumns, resultSet, dbType, limit)
 }
 
 /**
@@ -472,9 +482,9 @@ public fun DataFrame.Companion.getSchemaForAllSqlTables(connection: Connection):
  * @param [dbType] the type of database.
  * @return a DataFrameSchema object representing the schema built from the table columns.
  */
-private fun buildSchemaByTableColumns(tableColumns: MutableMap<String, TableColumnMetadata>, dbType: DbType): DataFrameSchema {
+private fun buildSchemaByTableColumns(tableColumns: MutableList<TableColumnMetadata>, dbType: DbType): DataFrameSchema {
     val schemaColumns = tableColumns.map {
-        Pair(it.key, dbType.toColumnSchema(it.value))
+        Pair(it.name, dbType.toColumnSchema(it))
     }.toMap()
 
     return DataFrameSchemaImpl(
@@ -485,16 +495,16 @@ private fun buildSchemaByTableColumns(tableColumns: MutableMap<String, TableColu
 /**
  * Retrieves the metadata of the columns in the result set.
  *
- * @param [rs] the result set
- * @return a mutable map of column names to [TableColumnMetadata] objects,
- * where each TableColumnMetadata object contains information such as the column type,
- * JDBC type, size, and name.
+ * @param rs the result set
+ * @return a mutable list of [TableColumnMetadata] objects,
+ *         where each TableColumnMetadata object contains information such as the column type,
+ *         JDBC type, size, and name.
  */
-private fun getTableColumnsMetadata(rs: ResultSet): MutableMap<String, TableColumnMetadata> {
+private fun getTableColumnsMetadata(rs: ResultSet): MutableList<TableColumnMetadata> {
     val metaData: ResultSetMetaData = rs.metaData
     val numberOfColumns: Int = metaData.columnCount
 
-    val tableColumns = mutableMapOf<String, TableColumnMetadata>()
+    val tableColumns = mutableListOf<TableColumnMetadata>()
 
     for (i in 1 until numberOfColumns + 1) {
         val name = metaData.getColumnName(i)
@@ -502,14 +512,7 @@ private fun getTableColumnsMetadata(rs: ResultSet): MutableMap<String, TableColu
         val type = metaData.getColumnTypeName(i)
         val jdbcType = metaData.getColumnType(i)
 
-        // TODO:
-        //  add strategy for multiple columns handling (throw exception, ignore,
-        //  create columns with additional indexes in name)
-        // column names should be unique
-        check(!tableColumns.containsKey(name)) { "Multiple columns with name $name from table ${metaData.getTableName(i)}. Rename columns to make it unique." }
-
-        tableColumns += Pair(name, TableColumnMetadata(name, type, jdbcType, size))
-
+        tableColumns += TableColumnMetadata(name, type, jdbcType, size)
     }
     return tableColumns
 }
@@ -519,21 +522,21 @@ private fun getTableColumnsMetadata(rs: ResultSet): MutableMap<String, TableColu
  *
  * @param [connection] the database connection
  * @param [tableName] the name of the table
- * @return a mutable map of column names to [TableColumnMetadata] objects,
+ * @return a mutable list of [TableColumnMetadata] objects,
  * where each TableColumnMetadata object contains information such as the column type,
  * JDBC type, size, and name.
  */
-private fun getTableColumnsMetadata(connection: Connection, tableName: String): MutableMap<String, TableColumnMetadata> {
+private fun getTableColumnsMetadata(connection: Connection, tableName: String): MutableList<TableColumnMetadata> {
     val dbMetaData: DatabaseMetaData = connection.metaData
     val columns: ResultSet = dbMetaData.getColumns(null, null, tableName, null)
-    val tableColumns = mutableMapOf<String, TableColumnMetadata>()
+    val tableColumns = mutableListOf<TableColumnMetadata>()
 
     while (columns.next()) {
         val name = columns.getString("COLUMN_NAME")
         val type = columns.getString("TYPE_NAME")
         val jdbcType = columns.getInt("DATA_TYPE")
         val size = columns.getInt("COLUMN_SIZE")
-        tableColumns += Pair(name, TableColumnMetadata(name, type, jdbcType, size))
+        tableColumns += TableColumnMetadata(name, type, jdbcType, size)
     }
     return tableColumns
 }
@@ -541,53 +544,101 @@ private fun getTableColumnsMetadata(connection: Connection, tableName: String): 
 /**
  * Fetches and converts data from a ResultSet into a mutable map.
  *
- * @param [tableColumns] a map containing the column metadata for the table.
+ * @param [tableColumns] a list containing the column metadata for the table.
  * @param [rs] the ResultSet object containing the data to be fetched and converted.
  * @param [dbType] the type of the database.
  * @param [limit] the maximum number of rows to fetch and convert.
  * @return A mutable map containing the fetched and converted data.
  */
 private fun fetchAndConvertDataFromResultSet(
-    tableColumns: MutableMap<String, TableColumnMetadata>,
+    tableColumns: MutableList<TableColumnMetadata>,
     rs: ResultSet,
     dbType: DbType,
     limit: Int
-): MutableMap<String, MutableList<Any?>> {
-    // map<columnName; columndata>
-    val data = mutableMapOf<String, MutableList<Any?>>()
-
-    // init data
-    tableColumns.forEach { (columnName, _) ->
-        data[columnName] = mutableListOf()
-    }
+): AnyFrame {
+    // list<columnIdx; columndata>
+    val data = List(tableColumns.size) { mutableListOf<Any?>() }
 
     var counter = 0
 
     if (limit > 0) {
         while (counter < limit && rs.next()) {
-            handleRow(tableColumns, data, dbType, rs)
+
+            repeat(tableColumns.size) { i ->
+                data[i].add(rs.getObject(i + 1))
+            }
+
             counter++
             // if (counter % 1000 == 0) logger.debug { "Loaded $counter rows." } // TODO: https://github.com/Kotlin/dataframe/issues/455
         }
     } else {
         while (rs.next()) {
-            handleRow(tableColumns, data, dbType, rs)
+
+            repeat(tableColumns.size) { i ->
+                data[i].add(rs.getObject(i + 1))
+            }
+
             counter++
             // if (counter % 1000 == 0) logger.debug { "Loaded $counter rows." } // TODO: https://github.com/Kotlin/dataframe/issues/455
         }
     }
 
-    return data
+    return data.mapIndexed { index, values ->
+        DataColumn.createValueColumn(
+            name = tableColumns[index].name,
+            values = values,
+            type = generateKType(dbType, tableColumns[index])
+        )
+    }.toDataFrame()
 }
 
-private fun handleRow(
-    tableColumns: MutableMap<String, TableColumnMetadata>,
-    data: MutableMap<String, MutableList<Any?>>,
-    dbType: DbType,
-    rs: ResultSet
-) {
-    tableColumns.forEach { (columnName, jdbcColumn) ->
-        data[columnName] = (data[columnName]!! + dbType.convertDataFromResultSet(rs, jdbcColumn)).toMutableList()
+/**
+ * Generates a KType based on the given database type and table column metadata.
+ *
+ * @param dbType The database type.
+ * @param tableColumnMetadata The table column metadata.
+ *
+ * @return The generated KType.
+ */
+private fun generateKType(dbType: DbType, tableColumnMetadata: TableColumnMetadata): KType {
+    return when (tableColumnMetadata.jdbcType) {
+        Types.BIT -> typeOf<Boolean?>()
+        Types.TINYINT -> typeOf<Byte?>()
+        Types.SMALLINT -> typeOf<Short?>()
+        Types.INTEGER -> typeOf<Int?>()
+        Types.BIGINT -> typeOf<Long?>()
+        Types.FLOAT -> typeOf<Float?>()
+        Types.REAL -> typeOf<Float?>()
+        Types.DOUBLE -> typeOf<Double?>()
+        Types.NUMERIC -> typeOf<BigDecimal?>()
+        Types.DECIMAL -> typeOf<BigDecimal?>()
+        Types.CHAR -> typeOf<Char?>()
+        Types.VARCHAR -> typeOf<String?>()
+        Types.LONGVARCHAR -> typeOf<String?>()
+        Types.DATE -> typeOf<Date?>()
+        Types.TIME -> typeOf<Time?>()
+        Types.TIMESTAMP -> typeOf<Timestamp?>()
+        Types.BINARY -> typeOf<ByteArray?>()
+        Types.VARBINARY -> typeOf<ByteArray?>()
+        Types.LONGVARBINARY -> typeOf<ByteArray?>()
+        Types.NULL -> typeOf<String?>()
+        Types.OTHER -> typeOf<Any?>()
+        Types.JAVA_OBJECT -> typeOf<Any?>()
+        Types.DISTINCT -> typeOf<Any?>()
+        Types.STRUCT -> typeOf<Any?>()
+        Types.ARRAY -> typeOf<Array<Any?>?>()
+        Types.BLOB -> typeOf<Blob?>()
+        Types.CLOB -> typeOf<Clob?>()
+        Types.REF -> typeOf<Ref?>()
+        Types.DATALINK -> typeOf<Any?>()
+        Types.BOOLEAN -> typeOf<Boolean?>()
+        Types.ROWID -> typeOf<RowId?>()
+        Types.NCHAR -> typeOf<Char?>()
+        Types.NVARCHAR -> typeOf<String?>()
+        Types.LONGNVARCHAR -> typeOf<String?>()
+        Types.NCLOB -> typeOf<NClob?>()
+        Types.SQLXML -> typeOf<SQLXML?>()
+        else -> error("Unknown sql type: $tableColumnMetadata.jdbcType")
     }
 }
 

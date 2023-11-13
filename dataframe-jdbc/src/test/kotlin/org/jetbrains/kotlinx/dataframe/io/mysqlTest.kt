@@ -62,7 +62,6 @@ interface Table2MySql {
     val setCol: String
 }
 
-@Ignore
 class MySqlTest {
     companion object {
         private lateinit var connection: Connection
