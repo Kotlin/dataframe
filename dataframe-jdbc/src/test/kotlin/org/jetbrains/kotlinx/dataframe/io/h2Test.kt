@@ -327,6 +327,7 @@ class JdbcTest {
         }
     }
 
+    // to cover a reported case from https://github.com/Kotlin/dataframe/issues/494
     @Test
     fun `repeated read from ResultSet with limit`() {
         connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).use { st ->
@@ -360,6 +361,88 @@ class JdbcTest {
         shouldThrow<JdbcSQLSyntaxErrorException> {
             DataFrame.readSqlTable(connection, "WrongTableName").cast<Customer>()
         }
+    }
+
+    // to cover a reported case from https://github.com/Kotlin/dataframe/issues/498
+    @Test
+    fun `read from incorrect SQL query`() {
+        @Language("SQL")
+        val createSQL = """
+            CREATE TABLE Orders (
+            order_id INT PRIMARY KEY,
+            customer_id INT,
+            order_date DATE,
+            total_amount DECIMAL(10, 2))
+            """
+
+
+        @Language("SQL")
+        val dropSQL = """
+            DROP TABLE Customer
+            """
+
+        @Language("SQL")
+        val alterSQL = """
+            ALTER TABLE Customer
+            ADD COLUMN email VARCHAR(100)
+            """
+
+        @Language("SQL")
+        val deleteSQL = """
+            DELETE FROM Customer
+            WHERE id = 1
+            """
+
+        @Language("SQL")
+        val repeatedSQL = """
+            SELECT * FROM Customer
+            WHERE id = 1;
+            SELECT * FROM Customer
+            WHERE id = 1;
+            """
+
+        shouldThrow<IllegalArgumentException> {
+            DataFrame.readSqlQuery(connection, createSQL)
+        }
+
+        shouldThrow<IllegalArgumentException> {
+            DataFrame.readSqlQuery(connection, dropSQL)
+        }
+
+        shouldThrow<IllegalArgumentException> {
+            DataFrame.readSqlQuery(connection, alterSQL)
+        }
+
+        shouldThrow<IllegalArgumentException> {
+            DataFrame.readSqlQuery(connection, deleteSQL)
+        }
+
+        shouldThrow<IllegalArgumentException> {
+            DataFrame.readSqlQuery(connection, repeatedSQL)
+        }
+    }
+
+    @Test
+    fun `read from table with name from reserved SQL keywords`() {
+        // Create table Sale
+        @Language("SQL")
+        val createAlterTableQuery = """
+                CREATE TABLE "ALTER" (
+                id INT PRIMARY KEY,
+                description TEXT
+                )
+            """
+
+        connection.createStatement().execute(
+            createAlterTableQuery
+        )
+
+        @Language("SQL")
+        val selectFromWeirdTableSQL = """
+            SELECT * from "ALTER"
+            """
+
+        DataFrame.readSqlQuery(connection, selectFromWeirdTableSQL).rowsCount() shouldBe 0
     }
 
     @Test
