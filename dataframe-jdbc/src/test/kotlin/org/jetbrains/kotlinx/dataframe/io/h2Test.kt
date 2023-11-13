@@ -254,6 +254,27 @@ class JdbcTest {
         dataSchema.columns["name"]!!.type shouldBe typeOf<String>()
     }
 
+    // to cover a reported case from https://github.com/Kotlin/dataframe/issues/494
+    @Test
+    fun `repeated read from table with limit`() {
+        val tableName = "Customer"
+
+        for(i in 1 .. 10) {
+            val df1 = DataFrame.readSqlTable(connection, tableName, 2).cast<Customer>()
+
+            df1.rowsCount() shouldBe 2
+            df1.filter { it[Customer::age] > 30 }.rowsCount() shouldBe 1
+            df1[0][1] shouldBe "John"
+
+            val dbConfig = DatabaseConfiguration(url = URL)
+            val df2 = DataFrame.readSqlTable(dbConfig, tableName, 2).cast<Customer>()
+
+            df2.rowsCount() shouldBe 2
+            df2.filter { it[Customer::age] > 30 }.rowsCount() shouldBe 1
+            df2[0][1] shouldBe "John"
+        }
+    }
+
     @Test
     fun `read from ResultSet`() {
         connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).use { st ->
@@ -302,6 +323,34 @@ class JdbcTest {
                 val dataSchema1 = DataFrame.getSchemaForResultSet(rs, connection)
                 dataSchema1.columns.size shouldBe 3
                 dataSchema.columns["name"]!!.type shouldBe typeOf<String>()
+            }
+        }
+    }
+
+    @Test
+    fun `repeated read from ResultSet with limit`() {
+        connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).use { st ->
+            @Language("SQL")
+            val selectStatement = "SELECT * FROM Customer"
+
+            st.executeQuery(selectStatement).use { rs ->
+                for (i in 1 .. 10) {
+                    rs.beforeFirst()
+
+                    val df1 =  DataFrame.readResultSet(rs, H2, 2).cast<Customer>()
+
+                    df1.rowsCount() shouldBe 2
+                    df1.filter { it[Customer::age] > 30 }.rowsCount() shouldBe 1
+                    df1[0][1] shouldBe "John"
+
+                    rs.beforeFirst()
+
+                    val df2 = DataFrame.readResultSet(rs, connection, 2).cast<Customer>()
+
+                    df2.rowsCount() shouldBe 2
+                    df2.filter { it[Customer::age] > 30 }.rowsCount() shouldBe 1
+                    df2[0][1] shouldBe "John"
+                }
             }
         }
     }
