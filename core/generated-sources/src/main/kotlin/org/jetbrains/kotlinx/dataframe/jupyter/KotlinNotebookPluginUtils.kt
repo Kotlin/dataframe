@@ -34,7 +34,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import kotlin.random.Random
 
-
 /**
  * A class with utility methods for Kotlin Notebook Plugin integration.
  * Kotlin Notebook Plugin is acts as a client of Kotlin Jupyter kernel and use this functionality
@@ -62,6 +61,51 @@ public object KotlinNotebookPluginUtils {
      */
     public fun getRowsSubsetForRendering(df: AnyFrame, startIdx: Int, endIdx: Int): DisableRowsLimitWrapper =
         DisableRowsLimitWrapper(df.filter { it.index() in startIdx until endIdx })
+
+    /**
+     * Sorts a dataframe-like object by multiple columns.
+     *
+     * @param dataFrameLike The dataframe-like object to sort.
+     * @param columnPaths The list of columns to sort by. Each element in the list represents a column path
+     * @param desc The list of booleans indicating whether each column should be sorted in descending order.
+     *             The size of this list should be the same as the size of the `columns` list.
+     *
+     * @throws IllegalArgumentException if `dataFrameLike` is `null`.
+     *
+     * @return The sorted dataframe.
+     */
+    public fun sortByColumns(
+        dataFrameLike: Any?,
+        columnPaths: List<List<String>>,
+        desc: List<Boolean>
+    ): AnyFrame = when (dataFrameLike) {
+        null -> throw IllegalArgumentException("Dataframe is null")
+        else -> sortByColumns(convertToDataFrame(dataFrameLike), columnPaths, desc)
+    }
+
+    /**
+     * Sorts the given data frame by the specified columns.
+     *
+     * @param df The data frame to be sorted.
+     * @param columnPaths The paths of the columns to be sorted. Each path is represented as a list of strings.
+     * @param isDesc A list of booleans indicating whether each column should be sorted in descending order.
+     *        The size of this list must be equal to the size of the columnPaths list.
+     * @return The sorted data frame.
+     */
+    public fun sortByColumns(df: AnyFrame, columnPaths: List<List<String>>, isDesc: List<Boolean>): AnyFrame =
+        df.sortBy {
+            require(columnPaths.all { it.isNotEmpty() })
+            require(columnPaths.size == isDesc.size)
+
+            val sortKeys = columnPaths.map { path ->
+                ColumnPath(path)
+            }
+
+            (sortKeys zip isDesc).map { (key, desc) ->
+                if (desc) key.desc() else key
+            }.toColumnSet()
+        }
+
     /**
      * Converts [dataframeLike] to [AnyFrame].
      * If [dataframeLike] is already [AnyFrame] then it is returned as is.
