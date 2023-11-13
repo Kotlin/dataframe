@@ -179,7 +179,7 @@ public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: St
  * @see DriverManager.getConnection
  */
 public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: String, limit: Int): AnyFrame {
-    require (isValid(sqlQuery)) { "SQL query should start from SELECT, contain one query for reading data without any manipulation. "}
+    require (isValid(sqlQuery)) { "SQL query should start from SELECT and contain one query for reading data without any manipulation. "}
 
     val url = connection.metaData.url
     val dbType = extractDBTypeFromUrl(url)
@@ -201,18 +201,13 @@ public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: St
     }
 }
 
-/** SQL-query is valid only if it starts from SELECT and doesn't contain any other DDL or DML or DCL operator.*/
+/** SQL-query is accepted only if it starts from SELECT */
 private fun isValid(sqlQuery: String): Boolean {
     val normalizedSqlQuery = sqlQuery.trim().uppercase()
 
     return normalizedSqlQuery.startsWith("SELECT") &&
-        !normalizedSqlQuery.contains(";") &&
-        !forbiddenKeywords.any { normalizedSqlQuery.contains(it) }
+        !normalizedSqlQuery.contains(";")
 }
-
-private val forbiddenKeywords = setOf("INSERT", "UPDATE", "DELETE", "LOCK",
-    "CREATE", "DROP", "ALTER", "TRUNCATE", "COMMENT", "RENAME",
-    "GRANT", "REVOKE", "BEGIN", "COMMIT", "ROLLBACK", "SAVEPOINT")
 
 /**
  * Reads the data from a [ResultSet] and converts it into a DataFrame.
