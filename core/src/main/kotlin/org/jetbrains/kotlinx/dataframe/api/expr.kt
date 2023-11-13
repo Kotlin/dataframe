@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ExprColumnsSelectionDsl.Usage.PlainDslName
@@ -42,6 +43,8 @@ public interface ExprColumnsSelectionDsl {
 /**
  * @include [ColumnExpression.CommonDocs]
  *
+ * This function is essentially a shortcut for [ColumnsContainer.mapToColumn].
+ * {@include [LineBreak]}
  * See [Usage][ExprColumnsSelectionDsl.Usage] for how to use [expr].
  *
  * #### For example:
@@ -50,9 +53,10 @@ public interface ExprColumnsSelectionDsl {
  *
  * `df.`[sortBy][DataFrame.sortBy]` { `[expr][ColumnsSelectionDsl.expr]` { name.`[length][String.length]` }.`[desc][SortDsl.desc]`() }`
  *
- * @param [name] The name the temporary column. Will be empty by default.
- * @include [Infer.Param] By default: [Nulls][Infer.Nulls].
+ * @param [name] The name the temporary column. Is empty by default ("untitled" in the DataFrame).
+ * @include [Infer.ParamDoc] By default: [Nulls][Infer.Nulls].
  * @param [expression] An [AddExpression] to define what each new row of the temporary column should contain.
+ * @see [ColumnsContainer.mapToColumn]
  */
 public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(
     name: String = "",

@@ -283,7 +283,7 @@ public enum class Infer {
      * @param [infer\] [An enum][Infer] that indicates how [DataColumn.type] should be calculated.
      * Either [None], [Nulls], or [Type].
      */
-    internal interface Param
+    internal interface ParamDoc
 }
 
 /**

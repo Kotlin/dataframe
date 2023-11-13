@@ -133,6 +133,10 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *  {@include [LineBreak]}
      *  {@include [UsageTemplate.ColumnGroupDef]}
      *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.SingleColumnDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.ColumnGroupNoSingleColumnDef]}
+     *  {@include [LineBreak]}
      *  {@include [UsageTemplate.ConditionDef]}
      *  {@include [LineBreak]}
      *  {@include [UsageTemplate.ColumnDef]}
@@ -160,6 +164,14 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *  {@include [UsageTemplate.ColumnGroupNoSingleColumnDef]}
      *  {@include [LineBreak]}
      *  {@include [UsageTemplate.KTypeDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.ColumnOrColumnSetDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.NameDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.InferDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.ColumnExpressionDef]}
      * }
      * {@comment Plain DSL: -------------------------------------------------------------------------------------------- }
      * {@setArg [UsageTemplate.PlainDslFunctionsArg]

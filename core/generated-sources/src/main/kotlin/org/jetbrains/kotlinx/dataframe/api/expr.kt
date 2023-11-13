@@ -69,6 +69,10 @@ public interface ExprColumnsSelectionDsl {
  *
  * See [Column Expression][org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression] for more information.
  *
+ * This function is essentially a shortcut for [ColumnsContainer.mapToColumn].
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
  * See [Usage][ExprColumnsSelectionDsl.Usage] for how to use [expr].
  *
  * #### For example:
