@@ -1,6 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
-import com.beust.klaxon.*
+import com.beust.klaxon.JsonArray
+import com.beust.klaxon.JsonObject
+import com.beust.klaxon.Parser
+import io.kotest.assertions.throwables.shouldNotThrow
+import io.kotest.matchers.comparables.shouldBeGreaterThan
+import io.kotest.matchers.comparables.shouldBeLessThan
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
@@ -79,8 +84,7 @@ class RenderingTests : JupyterReplTestCase() {
 
     @Test
     fun `test kotlin notebook plugin utils rows subset`() {
-        @Language("kts")
-        val result = exec<MimeTypedResult>(
+        val json = executeScriptAndParseDataframeResult(
             """
             data class Row(val id: Int)
             val df = (1..100).map { Row(it) }.toDataFrame()
@@ -88,14 +92,27 @@ class RenderingTests : JupyterReplTestCase() {
             """.trimIndent()
         )
 
-        val json = parseDataframeJson(result)
-
-        json.int("nrow") shouldBe 30
-        json.int("ncol") shouldBe 1
+        assertDataFrameDimensions(json, 30, 1)
 
         val rows = json.array<JsonArray<*>>("kotlin_dataframe")!!
         rows.getObj(0).int("id") shouldBe 21
         rows.getObj(rows.lastIndex).int("id") shouldBe 50
+    }
+
+    /**
+     * Executes the given `script` and parses the resulting DataFrame as a `JsonObject`.
+     *
+     * @param script the script to be executed
+     * @return the parsed DataFrame result as a `JsonObject`
+     */
+    private fun executeScriptAndParseDataframeResult(@Language("kts") script: String): JsonObject {
+        val result = exec<MimeTypedResult>(script)
+        return parseDataframeJson(result)
+    }
+
+    private fun assertDataFrameDimensions(json: JsonObject, expectedRows: Int, expectedColumns: Int) {
+        json.int("nrow") shouldBe expectedRows
+        json.int("ncol") shouldBe expectedColumns
     }
 
     private fun parseDataframeJson(result: MimeTypedResult): JsonObject {
@@ -106,23 +123,121 @@ class RenderingTests : JupyterReplTestCase() {
     private fun JsonArray<*>.getObj(index: Int) = this.get(index) as JsonObject
 
     @Test
-    fun `test kotlin notebook plugin utils groupby`() {
-        @Language("kts")
-        val result = exec<MimeTypedResult>(
+    fun `test kotlin notebook plugin utils sort by one column asc`() {
+        val json = executeScriptAndParseDataframeResult(
             """
-            data class Row(val id: Int, val group: Int)
-            val df = (1..100).map { Row(it, if (it <= 50) 1 else 2) }.toDataFrame()
-            KotlinNotebookPluginUtils.getRowsSubsetForRendering(df.groupBy("group"), 0, 10)
+            data class CustomRow(val id: Int, val category: String)
+            val df = (1..100).map { CustomRow(it, if (it % 2 == 0) "even" else "odd") }.toDataFrame()
+            KotlinNotebookPluginUtils.sortByColumns(df, listOf(listOf("id")), listOf(false))
             """.trimIndent()
         )
 
-        val json = parseDataframeJson(result)
+        assertDataFrameDimensions(json, 100, 2)
+        assertSortedById(json, false)
+    }
 
-        json.int("nrow") shouldBe 2
-        json.int("ncol") shouldBe 2
+    @Suppress("UNCHECKED_CAST")
+    private fun assertSortedById(json: JsonObject, desc: Boolean) {
+        val rows = json["kotlin_dataframe"] as JsonArray<JsonObject>
+        var previousId = if (desc) 101 else 0
+        rows.forEach { row ->
+            val currentId = row.int("id")!!
+            if (desc) currentId shouldBeLessThan previousId else currentId shouldBeGreaterThan previousId
+            previousId = currentId
+        }
+    }
+
+    @Test
+    fun `test kotlin notebook plugin utils sort by one column desc`() {
+        val json = executeScriptAndParseDataframeResult(
+            """
+            data class CustomRow(val id: Int, val category: String)
+            val df = (1..100).map { CustomRow(it, if (it % 2 == 0) "even" else "odd") }.toDataFrame()
+            KotlinNotebookPluginUtils.sortByColumns(df, listOf(listOf("id")), listOf(true))
+            """.trimIndent()
+        )
+
+        assertDataFrameDimensions(json, 100, 2)
+        assertSortedById(json, true)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    @Test
+    fun `test kotlin notebook plugin utils sort by multiple columns`() {
+        val json = executeScriptAndParseDataframeResult(
+            """
+            data class CustomRow(val id: Int, val category: String)
+            val df = (1..100).map { CustomRow(it, if (it % 2 == 0) "even" else "odd") }.toDataFrame()
+            KotlinNotebookPluginUtils.getRowsSubsetForRendering(
+                KotlinNotebookPluginUtils.sortByColumns(df, listOf(listOf("category"), listOf("id")), listOf(true, false)),
+                0, 100
+            )
+            """.trimIndent()
+        )
+
+        assertDataFrameDimensions(json, 100, 2)
+
+        val rows = json["kotlin_dataframe"] as JsonArray<JsonObject>
+        assertSortedByCategory(rows)
+        assertSortedById(rows)
+    }
+
+    private fun assertSortedByCategory(rows: JsonArray<JsonObject>) {
+        rows.forEachIndexed { i, row ->
+            val currentCategory = row.string("category")
+            if (i < 50) currentCategory shouldBe "odd"
+            else currentCategory shouldBe "even"
+        }
+    }
+
+    private fun assertSortedById(rows: JsonArray<JsonObject>) {
+        var previousCategory = "odd"
+        var previousId = 0
+        for (row in rows) {
+            val currentCategory = row.string("category")!!
+            val currentId = row.int("id")!!
+
+            if (previousCategory == "odd" && currentCategory == "even") {
+                previousId shouldBeGreaterThan currentId
+            } else if (previousCategory == currentCategory) {
+                previousId shouldBeLessThan currentId
+            }
+
+            previousCategory = currentCategory
+            previousId = currentId
+        }
+    }
+
+    @Test
+    fun `test kotlin dataframe conversion groupby`() {
+        val json = executeScriptAndParseDataframeResult(
+            """
+            data class Row(val id: Int, val group: Int)
+            val df = (1..100).map { Row(it, if (it <= 50) 1 else 2) }.toDataFrame()
+            KotlinNotebookPluginUtils.convertToDataFrame(df.groupBy("group"))
+            """.trimIndent()
+        )
+
+        assertDataFrameDimensions(json, 2, 2)
 
         val rows = json.array<JsonArray<*>>("kotlin_dataframe")!!
         rows.getObj(0).array<JsonObject>("group1")!!.size shouldBe 50
         rows.getObj(1).array<JsonObject>("group1")!!.size shouldBe 50
+    }
+
+    // Regression KTNB-424
+    @Test
+    fun `test kotlin dataframe conversion ReducedGroupBy`() {
+        shouldNotThrow<Throwable> {
+            val json = executeScriptAndParseDataframeResult(
+                """
+                data class Row(val id: Int, val group: Int)
+                val df = (1..100).map { Row(it, if (it <= 50) 1 else 2) }.toDataFrame()
+                KotlinNotebookPluginUtils.convertToDataFrame(df.groupBy("group").first())
+                """.trimIndent()
+            )
+
+            assertDataFrameDimensions(json, 2, 2)
+        }
     }
 }
