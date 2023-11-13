@@ -579,7 +579,7 @@ private fun fetchAndConvertDataFromResultSet(
     var counter = 0
 
     if (limit > 0) {
-        while (rs.next() && counter < limit) {
+        while (counter < limit && rs.next()) {
             handleRow(tableColumns, data, dbType, rs)
             counter++
             // if (counter % 1000 == 0) logger.debug { "Loaded $counter rows." } // TODO: https://github.com/Kotlin/dataframe/issues/455
