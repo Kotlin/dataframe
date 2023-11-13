@@ -32,14 +32,14 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import kotlin.random.Random
+import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 
 /**
  * A class with utility methods for Kotlin Notebook Plugin integration.
- * Kotlin Notebook Plugin is acts as a client of Kotlin Jupyter kernel and use this functionality
+ * Kotlin Notebook Plugin acts as a client of Kotlin Jupyter kernel and uses this functionality
  * for dynamic pagination when rendering dataframes.
- * The plugin sends Kotlin following code to the kernel to evaluate
- * DISPLAY(KotlinNotebooksPluginUtils.getRowsSubsetForRendering(Out[x], 0, 20), "")
+ * The plugin sends the following code to the kernel to evaluate:
+ * DISPLAY(KotlinNotebooksPluginUtils.getRowsSubsetForRendering(Out[...], 0, 20), "")
  */
 public object KotlinNotebookPluginUtils {
     /**
@@ -120,11 +120,18 @@ public object KotlinNotebookPluginUtils {
             is ReducedPivotGroupBy<*> -> dataframeLike.values()
             is SplitWithTransform<*, *, *> -> dataframeLike.into()
             is Split<*, *> -> dataframeLike.toDataFrame()
-            is Merge<*, *, *> -> dataframeLike.into(generateRandomVariationOfString("merged"))
-            is Gather<*, *, *, *> -> dataframeLike.into(
-                generateRandomVariationOfString("key"),
-                generateRandomVariationOfString("value")
+            is Merge<*, *, *> -> dataframeLike.into(
+                generateRandomVariationOfColumnName(
+                    "merged",
+                    dataframeLike.df.columnNames()
+                )
             )
+
+            is Gather<*, *, *, *> -> dataframeLike.into(
+                generateRandomVariationOfColumnName("key", dataframeLike.df.columnNames()),
+                generateRandomVariationOfColumnName("value", dataframeLike.df.columnNames())
+            )
+
             is Update<*, *> -> dataframeLike.df
             is Convert<*, *> -> dataframeLike.df
             is FormattedFrame<*> -> dataframeLike.df
@@ -136,23 +143,28 @@ public object KotlinNotebookPluginUtils {
             is MoveClause<*, *> -> dataframeLike.df
             is RenameClause<*, *> -> dataframeLike.df
             is ReplaceClause<*, *> -> dataframeLike.df
-            is GroupClause<*, *> -> dataframeLike.into(generateRandomVariationOfString("untitled"))
+            is GroupClause<*, *> -> dataframeLike.into(
+                generateRandomVariationOfColumnName(
+                    "untitled",
+                    dataframeLike.df.columnNames()
+                )
+            )
+
             is InsertClause<*> -> dataframeLike.at(0)
             is FormatClause<*, *> -> dataframeLike.df
             else -> throw IllegalArgumentException("Unsupported type: ${dataframeLike::class}")
         }
 
     /**
-     * Generates a random variation of the given string by appending a unique hash to it.
+     * Generates a random variation of a column name that is unique among the provided used names.
      *
-     * @param str the original string to generate variation from
-     * @return a random variation of the original string
+     * @param preferredName The preferred name for the column.
+     * @param usedNames The list of already used column names.
+     * @return A unique random variation of the preferred name.
      */
-    public fun generateRandomVariationOfString(str: String): String {
-        val timeStamp = System.currentTimeMillis()
-        val random = Random.Default.nextInt()
-        val hash = "${timeStamp}_$random".hashCode()
-
-        return "${str}_${String.format("%08X", hash)}" // get only 8 symbols from hash
-    }
+    public fun generateRandomVariationOfColumnName(
+        preferredName: String,
+        usedNames: List<String> = emptyList()
+    ): String =
+        ColumnNameGenerator(usedNames).addUnique(preferredName)
 }
