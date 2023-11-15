@@ -39,7 +39,7 @@ public object Sqlite : DbType("sqlite") {
             tables.getString("TABLE_CAT"))
     }
 
-    override fun convertSqlTypeToKType(jdbcType: Int): KType? {
+    override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? {
         return null
     }
 }

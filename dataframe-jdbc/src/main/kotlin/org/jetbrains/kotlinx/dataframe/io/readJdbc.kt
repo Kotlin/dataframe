@@ -26,6 +26,8 @@ import org.jetbrains.kotlinx.dataframe.io.db.DbType
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromUrl
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KType
+import kotlin.reflect.full.isSupertypeOf
+import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.typeOf
 
 private val logger = KotlinLogging.logger {}
@@ -300,7 +302,10 @@ public fun DataFrame.Companion.readAllSqlTables(connection: Connection, catalogu
             // we filter her second time because of specific logic with SQLite and possible issues with future databases
             val tableName = if (table.catalogue != null) table.catalogue + "." + table.name else table.name
             // TODO: handle empty table name (impossible, but should do it)
-
+            // TODO: both cases is schema specified or not in URL
+            // in h2 database name is recognized as a schema name https://www.h2database.com/html/features.html#database_url
+            // https://stackoverflow.com/questions/20896935/spring-hibernate-h2-database-schema-not-found
+            // could be Dialect/Database specific
             logger.debug { "Reading table: $tableName" }
 
             val dataFrame = readSqlTable(connection, tableName, limit)
@@ -562,9 +567,7 @@ private fun fetchAndConvertDataFromResultSet(
     if (limit > 0) {
         while (counter < limit && rs.next()) {
 
-            repeat(tableColumns.size) { i ->
-                data[i].add(rs.getObject(i + 1))
-            }
+            populateTableData(tableColumns, data, rs, dbType)
 
             counter++
             // if (counter % 1000 == 0) logger.debug { "Loaded $counter rows." } // TODO: https://github.com/Kotlin/dataframe/issues/455
@@ -572,9 +575,7 @@ private fun fetchAndConvertDataFromResultSet(
     } else {
         while (rs.next()) {
 
-            repeat(tableColumns.size) { i ->
-                data[i].add(rs.getObject(i + 1))
-            }
+            populateTableData(tableColumns, data, rs, dbType)
 
             counter++
             // if (counter % 1000 == 0) logger.debug { "Loaded $counter rows." } // TODO: https://github.com/Kotlin/dataframe/issues/455
@@ -590,6 +591,19 @@ private fun fetchAndConvertDataFromResultSet(
     }.toDataFrame()
 }
 
+private fun populateTableData(tableColumns: MutableList<TableColumnMetadata>, data: List<MutableList<Any?>>, rs: ResultSet, dbType: DbType) {
+    repeat(tableColumns.size) { i ->
+        data[i].add(
+            try {
+                rs.getObject(i + 1)
+            } catch (_: Throwable) {
+                val kType = generateKType(dbType, tableColumns[i]) //TODO: generate and cache it earlier to avoid multiple calls
+                if (kType.isSupertypeOf(String::class.starProjectedType)) rs.getString(i + 1) else rs.getString(i + 1) // TODO: expand for all the types like in generateKType function
+            }
+        )
+    }
+}
+
 /**
  * Generates a KType based on the given database type and table column metadata.
  *
@@ -599,7 +613,7 @@ private fun fetchAndConvertDataFromResultSet(
  * @return The generated KType.
  */
 private fun generateKType(dbType: DbType, tableColumnMetadata: TableColumnMetadata): KType {
-    val kType = dbType.convertSqlTypeToKType(tableColumnMetadata.jdbcType)
+    val kType = dbType.convertSqlTypeToKType(tableColumnMetadata)
 
     if (kType!=null) return kType
 

@@ -68,7 +68,9 @@ public object PostgreSql : DbType("postgresql") {
             tables.getString("table_cat"))
     }
 
-    override fun convertSqlTypeToKType(jdbcType: Int): KType? {
+    override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? {
+        if(tableColumnMetadata.sqlTypeName == "money") // because of https://github.com/pgjdbc/pgjdbc/issues/425
+            return typeOf<String>()
         return null
     }
 }

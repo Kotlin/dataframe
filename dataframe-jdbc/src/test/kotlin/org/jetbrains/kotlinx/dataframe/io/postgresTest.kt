@@ -49,7 +49,7 @@ interface Table2 {
     val macaddrcol: String
     val moneycol: String
     val numericcol: String
-    val pathcol: String
+    val pathcol: org.postgresql.geometric.PGpath
     val pointcol: String
     val polygoncol: String
     val realcol: Float
@@ -277,7 +277,7 @@ class PostgresTest {
         val table2Df = dataframes[1].cast<Table2>()
 
         table2Df.rowsCount() shouldBe 3
-        table2Df.filter { it[Table2::pathcol] == "((1,2),(3,1))" }.rowsCount() shouldBe 1
+        table2Df.filter { it[Table2::pathcol] == org.postgresql.geometric.PGpath("((1,2),(3,1))") }.rowsCount() shouldBe 1
         table2Df[0][11] shouldBe 1001
 
         //TODO: add test for JSON column

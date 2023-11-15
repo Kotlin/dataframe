@@ -80,7 +80,7 @@ public object MySql : DbType("mysql") {
             tables.getString("table_cat"))
     }
 
-    override fun convertSqlTypeToKType(jdbcType: Int): KType? {
+    override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? {
         return null
     }
 }

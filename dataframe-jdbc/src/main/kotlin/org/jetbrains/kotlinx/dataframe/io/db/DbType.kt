@@ -45,5 +45,5 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      */
     public abstract fun buildTableMetadata(tables: ResultSet): TableMetadata
 
-    public abstract fun convertSqlTypeToKType(jdbcType: Int): KType?
+    public abstract fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType?
 }
