@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.impl.scale
 import org.jetbrains.kotlinx.dataframe.impl.truncate
 import org.jetbrains.kotlinx.dataframe.jupyter.CellRenderer
+import org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -208,11 +209,13 @@ internal fun AnyFrame.toStaticHtml(
         }
     }
 
+    fun StringBuilder.emitCell(cellValue: Any?) = emitTag("td") {
+        append(cellRenderer.content(cellValue, configuration).truncatedContent)
+    }
+
     fun StringBuilder.emitRow(row: AnyRow) = emitTag("tr") {
         columnsToRender.forEach { col ->
-            emitTag("td") {
-                append(cellRenderer.content(row[col.path()], configuration).truncatedContent)
-            }
+            emitCell(row[col.path()])
         }
     }
 
@@ -250,7 +253,7 @@ public fun <T> DataFrame<T>.html(): String = toStandaloneHTML().toString()
  */
 public fun <T> DataFrame<T>.toStandaloneHTML(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
-    cellRenderer: CellRenderer = org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer,
+    cellRenderer: CellRenderer = DefaultCellRenderer,
     getFooter: (DataFrame<T>) -> String? = { "DataFrame [${it.size}]" },
 ): DataFrameHtmlData = toHTML(configuration, cellRenderer, getFooter).withTableDefinitions()
 
@@ -259,7 +262,7 @@ public fun <T> DataFrame<T>.toStandaloneHTML(
  */
 public fun <T> DataFrame<T>.toHTML(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
-    cellRenderer: CellRenderer = org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer,
+    cellRenderer: CellRenderer = DefaultCellRenderer,
     getFooter: (DataFrame<T>) -> String? = { "DataFrame [${it.size}]" },
 ): DataFrameHtmlData {
     val limit = configuration.rowsLimit ?: Int.MAX_VALUE
@@ -280,7 +283,7 @@ public fun <T> DataFrame<T>.toHTML(
 
     var tableHtml = toHtmlData(configuration, cellRenderer)
 
-    tableHtml += toStaticHtml(configuration, cellRenderer)
+    tableHtml += toStaticHtml(configuration, DefaultCellRenderer)
 
     if (bodyFooter != null) {
         tableHtml += DataFrameHtmlData("", bodyFooter, "")
