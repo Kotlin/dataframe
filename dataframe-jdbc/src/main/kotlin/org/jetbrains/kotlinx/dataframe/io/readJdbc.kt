@@ -131,11 +131,11 @@ public fun DataFrame.Companion.readSqlTable(connection: Connection, tableName: S
 
     connection.createStatement().use { st ->
         logger.debug { "Connection with url:${url} is established successfully." }
-        val tableColumns = getTableColumnsMetadata(connection, tableName)
 
         st.executeQuery(
             preparedQuery
         ).use { rs ->
+            val tableColumns = getTableColumnsMetadata(rs)
             return fetchAndConvertDataFromResultSet(tableColumns, rs, dbType, limit)
         }
     }
@@ -351,6 +351,8 @@ public fun DataFrame.Companion.getSchemaForSqlTable(dbConfig: DatabaseConfigurat
  *
  * @see DriverManager.getConnection
  */
+
+// TODO: rewrite to extract metainformation from the ResultSet
 public fun DataFrame.Companion.getSchemaForSqlTable(
     connection: Connection,
     tableName: String
@@ -528,7 +530,7 @@ private fun getTableColumnsMetadata(rs: ResultSet): MutableList<TableColumnMetad
  */
 private fun getTableColumnsMetadata(connection: Connection, tableName: String): MutableList<TableColumnMetadata> {
     val dbMetaData: DatabaseMetaData = connection.metaData
-    val columns: ResultSet = dbMetaData.getColumns(null, null, tableName, null)
+    val columns: ResultSet = dbMetaData.getColumns("imdb", null, tableName, null)
     val tableColumns = mutableListOf<TableColumnMetadata>()
 
     while (columns.next()) {
@@ -637,6 +639,8 @@ private fun generateKType(dbType: DbType, tableColumnMetadata: TableColumnMetada
         Types.NVARCHAR -> typeOf<String?>()
         Types.LONGNVARCHAR -> typeOf<String?>()
         Types.NCLOB -> typeOf<NClob?>()
+        Types.SQLXML -> typeOf<SQLXML?>()
+        Types.REF_CURSOR -> typeOf<Ref?>()
         Types.SQLXML -> typeOf<SQLXML?>()
         else -> error("Unknown sql type: $tableColumnMetadata.jdbcType")
     }

@@ -9,7 +9,8 @@ import java.sql.DriverManager
 import java.util.Properties
 import org.junit.Ignore
 
-private const val URL = "jdbc:mariadb://localhost:3306/imdb"
+private const val URL = "jdbc:mariadb://localhost:3307/imdb"
+private const val URL2 = "jdbc:mariadb://localhost:3307"
 private const val USER_NAME = "root"
 private const val PASSWORD = "pass"
 
@@ -29,7 +30,6 @@ interface RankedMoviesWithGenres {
     val genres: String
 }
 
-@Ignore
 class ImdbTestTest {
     @Test
     fun `read table`() {
@@ -42,6 +42,21 @@ class ImdbTestTest {
 
         DriverManager.getConnection(URL, props).use { connection ->
             val df = DataFrame.readSqlTable(connection, "actors", 100).cast<ActorKDF>()
+            df.print()
+        }
+    }
+
+    @Test
+    fun `read table with schema`() {
+        val props = Properties()
+        props.setProperty("user", USER_NAME)
+        props.setProperty("password", PASSWORD)
+
+        // generate kdf schemas by database metadata (as interfaces or extensions)
+        // for gradle or as classes under the hood in KNB
+
+        DriverManager.getConnection(URL2, props).use { connection ->
+            val df = DataFrame.readSqlTable(connection, "imdb.actors", 100).cast<ActorKDF>()
             df.print()
         }
     }
