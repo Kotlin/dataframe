@@ -261,40 +261,18 @@ public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, connection: C
 }
 
 /**
- * Reads all non-system tables from a database and returns them as a list of data frames
- * using the provided database configuration.
- *
- * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
- * @return a list of [AnyFrame] objects representing the non-system tables from the database.
- */
-public fun DataFrame.Companion.readAllSqlTables(dbConfig: DatabaseConfiguration): List<AnyFrame> {
-    return readAllSqlTables(dbConfig, DEFAULT_LIMIT)
-}
-
-/**
  * Reads all tables from the given database using the provided database configuration and limit.
  *
  * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
  * @param [limit] the maximum number of rows to read from each table.
  * @return a list of [AnyFrame] objects representing the non-system tables from the database.
  */
-public fun DataFrame.Companion.readAllSqlTables(dbConfig: DatabaseConfiguration, limit: Int): List<AnyFrame> {
+public fun DataFrame.Companion.readAllSqlTables(dbConfig: DatabaseConfiguration, catalogue: String? = null, limit: Int = DEFAULT_LIMIT): List<AnyFrame> {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return readAllSqlTables(connection, limit)
+        return readAllSqlTables(connection, catalogue, limit)
     }
 }
 
-/**
- * Reads all non-system tables from a database and returns them as a list of data frames.
- *
- * @param [connection] the database connection to read tables from.
- * @return a list of [AnyFrame] objects representing the non-system tables from the database.
- *
- * @see DriverManager.getConnection
- */
-public fun DataFrame.Companion.readAllSqlTables(connection: Connection): List<AnyFrame> {
-    return readAllSqlTables(connection, DEFAULT_LIMIT)
-}
 
 /**
  * Reads all non-system tables from a database and returns them as a list of data frames.
@@ -305,13 +283,14 @@ public fun DataFrame.Companion.readAllSqlTables(connection: Connection): List<An
  *
  * @see DriverManager.getConnection
  */
-public fun DataFrame.Companion.readAllSqlTables(connection: Connection, limit: Int): List<AnyFrame> {
+public fun DataFrame.Companion.readAllSqlTables(connection: Connection, catalogue: String? = null, limit: Int = DEFAULT_LIMIT): List<AnyFrame> {
     val metaData = connection.metaData
     val url = connection.metaData.url
     val dbType = extractDBTypeFromUrl(url)
 
     // exclude a system and other tables without data, but it looks like it supported badly for many databases
-    val tables = metaData.getTables(null, null, null, arrayOf("TABLE"))
+    val tables = metaData.getTables(catalogue, null, null, arrayOf("TABLE"))
+    // TODO: handle execution and write test for non-existing stuff
 
     val dataFrames = mutableListOf<AnyFrame>()
 
@@ -319,10 +298,14 @@ public fun DataFrame.Companion.readAllSqlTables(connection: Connection, limit: I
         val table = dbType.buildTableMetadata(tables)
         if (!dbType.isSystemTable(table)) {
             // we filter her second time because of specific logic with SQLite and possible issues with future databases
-            logger.debug { "Reading table: ${table.name}" }
-            val dataFrame = readSqlTable(connection, table.name, limit)
+            val tableName = if (table.catalogue != null) table.catalogue + "." + table.name else table.name
+            // TODO: handle empty table name (impossible, but should do it)
+
+            logger.debug { "Reading table: $tableName" }
+
+            val dataFrame = readSqlTable(connection, tableName, limit)
             dataFrames += dataFrame
-            logger.debug { "Finished reading table: ${table.name}" }
+            logger.debug { "Finished reading table: $tableName" }
         }
     }
 

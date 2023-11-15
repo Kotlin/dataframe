@@ -444,7 +444,7 @@ class JdbcTest {
         saleDf.filter { it[Sale::amount]!! > 40 }.rowsCount() shouldBe 3
         saleDf[0][2] shouldBe 100.5f
 
-        val dataframes1 = DataFrame.readAllSqlTables(connection, 1)
+        val dataframes1 = DataFrame.readAllSqlTables(connection, limit =1)
 
         val customerDf1 = dataframes1[0].cast<Customer>()
 
@@ -483,7 +483,7 @@ class JdbcTest {
         saleDf2.filter { it[Sale::amount]!! > 40 }.rowsCount() shouldBe 3
         saleDf2[0][2] shouldBe 100.5f
 
-        val dataframes3 = DataFrame.readAllSqlTables(dbConfig, 1)
+        val dataframes3 = DataFrame.readAllSqlTables(dbConfig, limit = 1)
 
         val customerDf3 = dataframes3[0].cast<Customer>()
 
