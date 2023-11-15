@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
 import org.jetbrains.kotlinx.dataframe.io.TableMetadata
+import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 /**
@@ -15,41 +16,6 @@ import kotlin.reflect.typeOf
 public object MariaDb : DbType("mariadb") {
     override val driverClassName: String
         get() = "org.mariadb.jdbc.Driver"
-
-    override fun convertDataFromResultSet(rs: ResultSet, tableColumnMetadata: TableColumnMetadata): Any? {
-        val name = tableColumnMetadata.name
-        return when (tableColumnMetadata.sqlTypeName) {
-            "BIT" -> rs.getBytes(name)
-            "TINYINT" -> rs.getInt(name)
-            "SMALLINT" -> rs.getInt(name)
-            "MEDIUMINT"-> rs.getInt(name)
-            "MEDIUMINT UNSIGNED" -> rs.getLong(name)
-            "INTEGER", "INT" -> rs.getInt(name)
-            "INTEGER UNSIGNED", "INT UNSIGNED" -> rs.getLong(name)
-            "BIGINT" -> rs.getLong(name)
-            "FLOAT" -> rs.getFloat(name)
-            "DOUBLE" -> rs.getDouble(name)
-            "DECIMAL" -> rs.getBigDecimal(name)
-            "DATE" -> rs.getDate(name).toString()
-            "DATETIME" -> rs.getTimestamp(name).toString()
-            "TIMESTAMP" -> rs.getTimestamp(name).toString()
-            "TIME"-> rs.getTime(name).toString()
-            "YEAR" -> rs.getDate(name).toString()
-            "VARCHAR", "CHAR" -> rs.getString(name)
-            "BINARY" -> rs.getBytes(name)
-            "VARBINARY" -> rs.getBytes(name)
-            "TINYBLOB"-> rs.getBytes(name)
-            "BLOB"-> rs.getBytes(name)
-            "MEDIUMBLOB" -> rs.getBytes(name)
-            "LONGBLOB" -> rs.getBytes(name)
-            "TEXT" -> rs.getString(name)
-            "MEDIUMTEXT" -> rs.getString(name)
-            "LONGTEXT" -> rs.getString(name)
-            "ENUM" -> rs.getString(name)
-            "SET" -> rs.getString(name)
-            else -> throw IllegalArgumentException("Unsupported MariaDB type: ${tableColumnMetadata.sqlTypeName}")
-        }
-    }
 
     override fun toColumnSchema(tableColumnMetadata: TableColumnMetadata): ColumnSchema {
         return when (tableColumnMetadata.sqlTypeName) {
@@ -94,5 +60,9 @@ public object MariaDb : DbType("mariadb") {
             tables.getString("table_name"),
             tables.getString("table_schem"),
             tables.getString("table_cat"))
+    }
+
+    override fun convertSqlTypeToKType(jdbcType: Int): KType? {
+        return null
     }
 }

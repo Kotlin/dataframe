@@ -7,6 +7,7 @@ import java.util.Locale
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.io.TableMetadata
+import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 /**
@@ -18,43 +19,6 @@ import kotlin.reflect.typeOf
 public object PostgreSql : DbType("postgresql") {
     override val driverClassName: String
         get() = "org.postgresql.Driver"
-
-    override fun convertDataFromResultSet(rs: ResultSet, tableColumnMetadata: TableColumnMetadata): Any? {
-        val name = tableColumnMetadata.name
-        return when (tableColumnMetadata.sqlTypeName) {
-            "serial" -> rs.getInt(name)
-            "int8", "bigint", "bigserial" -> rs.getLong(name)
-            "bool" -> rs.getBoolean(name)
-            "box" -> rs.getString(name)
-            "bytea" -> rs.getBytes(name)
-            "character", "bpchar" -> rs.getString(name)
-            "circle" -> rs.getString(name)
-            "date" -> rs.getDate(name).toString()
-            "float8", "double precision" -> rs.getDouble(name)
-            "int4", "integer" -> rs.getInt(name)
-            "interval" -> rs.getString(name)
-            "json", "jsonb" -> rs.getString(name) // TODO: https://github.com/Kotlin/dataframe/issues/462
-            "line" -> rs.getString(name)
-            "lseg" -> rs.getString(name)
-            "macaddr" -> rs.getString(name)
-            "money" -> rs.getString(name)
-            "numeric" -> rs.getString(name)
-            "path" -> rs.getString(name)
-            "point" -> rs.getString(name)
-            "polygon" -> rs.getString(name)
-            "float4", "real" -> rs.getFloat(name)
-            "int2", "smallint" -> rs.getShort(name)
-            "smallserial" -> rs.getInt(name)
-            "text" -> rs.getString(name)
-            "time" -> rs.getString(name)
-            "timetz", "time with time zone" -> rs.getString(name)
-            "timestamp" -> rs.getString(name)
-            "timestamptz", "timestamp with time zone" -> rs.getString(name)
-            "uuid" -> rs.getString(name)
-            "xml" -> rs.getString(name)
-            else -> throw IllegalArgumentException("Unsupported PostgreSQL type: ${tableColumnMetadata.sqlTypeName}")
-        }
-    }
 
     override fun toColumnSchema(tableColumnMetadata: TableColumnMetadata): ColumnSchema {
         return when (tableColumnMetadata.sqlTypeName) {
@@ -102,5 +66,9 @@ public object PostgreSql : DbType("postgresql") {
             tables.getString("table_name"),
             tables.getString("table_schem"),
             tables.getString("table_cat"))
+    }
+
+    override fun convertSqlTypeToKType(jdbcType: Int): KType? {
+        return null
     }
 }

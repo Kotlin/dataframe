@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
 import org.jetbrains.kotlinx.dataframe.io.TableMetadata
+import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 /**
@@ -15,18 +16,6 @@ import kotlin.reflect.typeOf
 public object Sqlite : DbType("sqlite") {
     override val driverClassName: String
         get() = "org.sqlite.JDBC"
-
-    override fun convertDataFromResultSet(rs: ResultSet, tableColumnMetadata: TableColumnMetadata): Any? {
-        val name = tableColumnMetadata.name
-        return when (tableColumnMetadata.sqlTypeName) {
-            "INTEGER", "INTEGER AUTO_INCREMENT" -> rs.getInt(name)
-            "TEXT" -> rs.getString(name)
-            "REAL" -> rs.getDouble(name)
-            "NUMERIC" -> rs.getDouble(name)
-            "BLOB" -> rs.getBytes(name)
-            else -> throw IllegalArgumentException("Unsupported SQLite type: ${tableColumnMetadata.sqlTypeName}")
-        }
-    }
 
     override fun toColumnSchema(tableColumnMetadata: TableColumnMetadata): ColumnSchema {
         return when (tableColumnMetadata.sqlTypeName) {
@@ -48,5 +37,9 @@ public object Sqlite : DbType("sqlite") {
             tables.getString("TABLE_NAME"),
             tables.getString("TABLE_SCHEM"),
             tables.getString("TABLE_CAT"))
+    }
+
+    override fun convertSqlTypeToKType(jdbcType: Int): KType? {
+        return null
     }
 }

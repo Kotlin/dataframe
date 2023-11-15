@@ -528,9 +528,13 @@ private fun getTableColumnsMetadata(rs: ResultSet): MutableList<TableColumnMetad
  * where each TableColumnMetadata object contains information such as the column type,
  * JDBC type, size, and name.
  */
-private fun getTableColumnsMetadata(connection: Connection, tableName: String): MutableList<TableColumnMetadata> {
+private fun getTableColumnsMetadata(connection: Connection, tableNameWithCatalog: String): MutableList<TableColumnMetadata> {
     val dbMetaData: DatabaseMetaData = connection.metaData
-    val columns: ResultSet = dbMetaData.getColumns("imdb", null, tableName, null)
+
+    val (catalogName, tableName) = parseCatalogAndTableName(tableNameWithCatalog)
+
+    val columns: ResultSet = dbMetaData.getColumns(catalogName, null, tableName, null)
+
     val tableColumns = mutableListOf<TableColumnMetadata>()
 
     while (columns.next()) {
@@ -541,6 +545,15 @@ private fun getTableColumnsMetadata(connection: Connection, tableName: String): 
         tableColumns += TableColumnMetadata(name, type, jdbcType, size)
     }
     return tableColumns
+}
+
+private fun parseCatalogAndTableName(tableNameWithCatalog: String): Pair<String?, String> {
+    val parts = tableNameWithCatalog.split('.', limit = 2)
+    return when (parts.size) {
+        1 -> Pair(null, parts[0]) // If only table name is provided
+        2 -> Pair(parts[0], parts[1]) // If both catalog and table name are provided
+        else -> throw IllegalArgumentException("Invalid format: $tableNameWithCatalog")
+    }
 }
 
 /**
@@ -603,46 +616,53 @@ private fun fetchAndConvertDataFromResultSet(
  * @return The generated KType.
  */
 private fun generateKType(dbType: DbType, tableColumnMetadata: TableColumnMetadata): KType {
-    return when (tableColumnMetadata.jdbcType) {
-        Types.BIT -> typeOf<Boolean?>()
-        Types.TINYINT -> typeOf<Byte?>()
-        Types.SMALLINT -> typeOf<Short?>()
-        Types.INTEGER -> typeOf<Int?>()
-        Types.BIGINT -> typeOf<Long?>()
-        Types.FLOAT -> typeOf<Float?>()
-        Types.REAL -> typeOf<Float?>()
-        Types.DOUBLE -> typeOf<Double?>()
-        Types.NUMERIC -> typeOf<BigDecimal?>()
-        Types.DECIMAL -> typeOf<BigDecimal?>()
-        Types.CHAR -> typeOf<Char?>()
-        Types.VARCHAR -> typeOf<String?>()
-        Types.LONGVARCHAR -> typeOf<String?>()
-        Types.DATE -> typeOf<Date?>()
-        Types.TIME -> typeOf<Time?>()
-        Types.TIMESTAMP -> typeOf<Timestamp?>()
-        Types.BINARY -> typeOf<ByteArray?>()
-        Types.VARBINARY -> typeOf<ByteArray?>()
-        Types.LONGVARBINARY -> typeOf<ByteArray?>()
-        Types.NULL -> typeOf<String?>()
-        Types.OTHER -> typeOf<Any?>()
-        Types.JAVA_OBJECT -> typeOf<Any?>()
-        Types.DISTINCT -> typeOf<Any?>()
-        Types.STRUCT -> typeOf<Any?>()
-        Types.ARRAY -> typeOf<Array<Any?>?>()
-        Types.BLOB -> typeOf<Blob?>()
-        Types.CLOB -> typeOf<Clob?>()
-        Types.REF -> typeOf<Ref?>()
-        Types.DATALINK -> typeOf<Any?>()
-        Types.BOOLEAN -> typeOf<Boolean?>()
-        Types.ROWID -> typeOf<RowId?>()
-        Types.NCHAR -> typeOf<Char?>()
-        Types.NVARCHAR -> typeOf<String?>()
-        Types.LONGNVARCHAR -> typeOf<String?>()
-        Types.NCLOB -> typeOf<NClob?>()
-        Types.SQLXML -> typeOf<SQLXML?>()
-        Types.REF_CURSOR -> typeOf<Ref?>()
-        Types.SQLXML -> typeOf<SQLXML?>()
-        else -> error("Unknown sql type: $tableColumnMetadata.jdbcType")
+    val kType = dbType.convertSqlTypeToKType(tableColumnMetadata.jdbcType)
+
+    if (kType!=null) return kType
+
+    else {
+        return when (tableColumnMetadata.jdbcType) {
+            Types.BIT -> typeOf<Boolean?>()
+            Types.TINYINT -> typeOf<Byte?>()
+            Types.SMALLINT -> typeOf<Short?>()
+            Types.INTEGER -> typeOf<Int?>()
+            Types.BIGINT -> typeOf<Long?>()
+            Types.FLOAT -> typeOf<Float?>()
+            Types.REAL -> typeOf<Float?>()
+            Types.DOUBLE -> typeOf<Double?>()
+            Types.NUMERIC -> typeOf<BigDecimal?>()
+            Types.DECIMAL -> typeOf<BigDecimal?>()
+            Types.CHAR -> typeOf<Char?>()
+            Types.VARCHAR -> typeOf<String?>()
+            Types.LONGVARCHAR -> typeOf<String?>()
+            Types.DATE -> typeOf<Date?>()
+            Types.TIME -> typeOf<Time?>()
+            Types.TIMESTAMP -> typeOf<Timestamp?>()
+            Types.BINARY -> typeOf<ByteArray?>()
+            Types.VARBINARY -> typeOf<ByteArray?>()
+            Types.LONGVARBINARY -> typeOf<ByteArray?>()
+            Types.NULL -> typeOf<String?>()
+            Types.OTHER -> typeOf<Any?>()
+            Types.JAVA_OBJECT -> typeOf<Any?>()
+            Types.DISTINCT -> typeOf<Any?>()
+            Types.STRUCT -> typeOf<Any?>()
+            Types.ARRAY -> typeOf<Array<Any?>?>()
+            Types.BLOB -> typeOf<Blob?>()
+            Types.CLOB -> typeOf<Clob?>()
+            Types.REF -> typeOf<Ref?>()
+            Types.DATALINK -> typeOf<Any?>()
+            Types.BOOLEAN -> typeOf<Boolean?>()
+            Types.ROWID -> typeOf<RowId?>()
+            Types.NCHAR -> typeOf<Char?>()
+            Types.NVARCHAR -> typeOf<String?>()
+            Types.LONGNVARCHAR -> typeOf<String?>()
+            Types.NCLOB -> typeOf<NClob?>()
+            Types.SQLXML -> typeOf<SQLXML?>()
+            Types.REF_CURSOR -> typeOf<Ref?>()
+            Types.TIME_WITH_TIMEZONE -> typeOf<Time?>()
+            Types.TIMESTAMP_WITH_TIMEZONE -> typeOf<Timestamp?>()
+            else -> typeOf<String?>()
+        }
     }
 }
 

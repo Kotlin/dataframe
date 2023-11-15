@@ -22,53 +22,53 @@ private const val URL = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_
 
 @DataSchema
 interface Customer {
-    val id: Int
-    val name: String
-    val age: Int
+    val id: Int?
+    val name: String?
+    val age: Int?
 }
 
 @DataSchema
 interface Sale {
-    val id: Int
-    val customerId: Int
-    val amount: Double
+    val id: Int?
+    val customerId: Int?
+    val amount: Double?
 }
 
 @DataSchema
 interface CustomerSales {
-    val customerName: String
-    val totalSalesAmount: Double
+    val customerName: String?
+    val totalSalesAmount: Double?
 }
 
 @DataSchema
 interface TestTableData {
-    val characterCol: String
-    val characterVaryingCol: String
-    val characterLargeObjectCol: String
-    val mediumTextCol: String
-    val varcharIgnoreCaseCol: String
-    val binaryCol: ByteArray
-    val binaryVaryingCol: ByteArray
-    val binaryLargeObjectCol: ByteArray
-    val booleanCol: Boolean
-    val tinyIntCol: Byte
-    val smallIntCol: Short
-    val integerCol: Int
-    val bigIntCol: Long
-    val numericCol: Double
-    val realCol: Float
-    val doublePrecisionCol: Double
-    val decFloatCol: Double
-    val dateCol: String
-    val timeCol: String
-    val timeWithTimeZoneCol: String
-    val timestampCol: String
-    val timestampWithTimeZoneCol: String
-    val intervalCol: String
+    val characterCol: String?
+    val characterVaryingCol: String?
+    val characterLargeObjectCol: String?
+    val mediumTextCol: String?
+    val varcharIgnoreCaseCol: String?
+    val binaryCol: ByteArray?
+    val binaryVaryingCol: ByteArray?
+    val binaryLargeObjectCol: ByteArray?
+    val booleanCol: Boolean?
+    val tinyIntCol: Byte?
+    val smallIntCol: Short?
+    val integerCol: Int?
+    val bigIntCol: Long?
+    val numericCol: Double?
+    val realCol: Float?
+    val doublePrecisionCol: Double?
+    val decFloatCol: Double?
+    val dateCol: String?
+    val timeCol: String?
+    val timeWithTimeZoneCol: String?
+    val timestampCol: String?
+    val timestampWithTimeZoneCol: String?
+    val intervalCol: String?
     val javaObjectCol: Any?
-    val enumCol: String
-    val jsonCol: String
-    val uuidCol: String
+    val enumCol: String?
+    val jsonCol: String?
+    val uuidCol: String?
 }
 
 class JdbcTest {
@@ -214,7 +214,7 @@ class JdbcTest {
 
         val df = DataFrame.readSqlTable(connection, "TestTable").cast<TestTableData>()
         df.rowsCount() shouldBe 3
-        df.filter { it[TestTableData::integerCol] > 1000}.rowsCount() shouldBe 2
+        df.filter { it[TestTableData::integerCol]!! > 1000}.rowsCount() shouldBe 2
     }
 
     @Test
@@ -223,13 +223,13 @@ class JdbcTest {
         val df = DataFrame.readSqlTable(connection, tableName).cast<Customer>()
 
         df.rowsCount() shouldBe 4
-        df.filter { it[Customer::age] > 30 }.rowsCount() shouldBe 2
+        df.filter { it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
         df[0][1] shouldBe "John"
 
         val df1 = DataFrame.readSqlTable(connection, tableName, 1).cast<Customer>()
 
         df1.rowsCount() shouldBe 1
-        df1.filter { it[Customer::age] > 30 }.rowsCount() shouldBe 1
+        df1.filter { it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
         df1[0][1] shouldBe "John"
 
         val dataSchema = DataFrame.getSchemaForSqlTable(connection, tableName)
@@ -240,13 +240,13 @@ class JdbcTest {
         val df2 = DataFrame.readSqlTable(dbConfig, tableName).cast<Customer>()
 
         df2.rowsCount() shouldBe 4
-        df2.filter { it[Customer::age] > 30 }.rowsCount() shouldBe 2
+        df2.filter { it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
         df2[0][1] shouldBe "John"
 
         val df3 = DataFrame.readSqlTable(dbConfig, tableName, 1).cast<Customer>()
 
         df3.rowsCount() shouldBe 1
-        df3.filter { it[Customer::age] > 30 }.rowsCount() shouldBe 1
+        df3.filter { it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
         df3[0][1] shouldBe "John"
 
         val dataSchema1 = DataFrame.getSchemaForSqlTable(dbConfig, tableName)
@@ -263,14 +263,14 @@ class JdbcTest {
             val df1 = DataFrame.readSqlTable(connection, tableName, 2).cast<Customer>()
 
             df1.rowsCount() shouldBe 2
-            df1.filter { it[Customer::age] > 30 }.rowsCount() shouldBe 1
+            df1.filter { it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
             df1[0][1] shouldBe "John"
 
             val dbConfig = DatabaseConfiguration(url = URL)
             val df2 = DataFrame.readSqlTable(dbConfig, tableName, 2).cast<Customer>()
 
             df2.rowsCount() shouldBe 2
-            df2.filter { it[Customer::age] > 30 }.rowsCount() shouldBe 1
+            df2.filter { it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
             df2[0][1] shouldBe "John"
         }
     }
@@ -285,7 +285,7 @@ class JdbcTest {
                 val df = DataFrame.readResultSet(rs, H2).cast<Customer>()
 
                 df.rowsCount() shouldBe 4
-                df.filter { it[Customer::age] > 30 }.rowsCount() shouldBe 2
+                df.filter { it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
                 df[0][1] shouldBe "John"
 
                 rs.beforeFirst()
@@ -293,7 +293,7 @@ class JdbcTest {
                 val df1 =  DataFrame.readResultSet(rs, H2, 1).cast<Customer>()
 
                 df1.rowsCount() shouldBe 1
-                df1.filter { it[Customer::age] > 30 }.rowsCount() shouldBe 1
+                df1.filter { it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
                 df1[0][1] shouldBe "John"
 
                 rs.beforeFirst()
@@ -307,7 +307,7 @@ class JdbcTest {
                 val df2 = DataFrame.readResultSet(rs, connection).cast<Customer>()
 
                 df2.rowsCount() shouldBe 4
-                df2.filter { it[Customer::age] > 30 }.rowsCount() shouldBe 2
+                df2.filter { it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
                 df2[0][1] shouldBe "John"
 
                 rs.beforeFirst()
@@ -315,7 +315,7 @@ class JdbcTest {
                 val df3 = DataFrame.readResultSet(rs, connection, 1).cast<Customer>()
 
                 df3.rowsCount() shouldBe 1
-                df3.filter { it[Customer::age] > 30 }.rowsCount() shouldBe 1
+                df3.filter { it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
                 df3[0][1] shouldBe "John"
 
                 rs.beforeFirst()
@@ -340,7 +340,7 @@ class JdbcTest {
                     val df1 =  DataFrame.readResultSet(rs, H2, 2).cast<Customer>()
 
                     df1.rowsCount() shouldBe 2
-                    df1.filter { it[Customer::age] > 30 }.rowsCount() shouldBe 1
+                    df1.filter { it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
                     df1[0][1] shouldBe "John"
 
                     rs.beforeFirst()
@@ -348,7 +348,7 @@ class JdbcTest {
                     val df2 = DataFrame.readResultSet(rs, connection, 2).cast<Customer>()
 
                     df2.rowsCount() shouldBe 2
-                    df2.filter { it[Customer::age] > 30 }.rowsCount() shouldBe 1
+                    df2.filter { it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
                     df2[0][1] shouldBe "John"
                 }
             }
@@ -383,13 +383,13 @@ class JdbcTest {
         val df = DataFrame.readSqlQuery(connection, sqlQuery).cast<CustomerSales>()
 
         df.rowsCount() shouldBe 2
-        df.filter { it[CustomerSales::totalSalesAmount] > 100 }.rowsCount() shouldBe 1
+        df.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
         df[0][0] shouldBe "John"
 
         val df1 = DataFrame.readSqlQuery(connection, sqlQuery, 1).cast<CustomerSales>()
 
         df1.rowsCount() shouldBe 1
-        df1.filter { it[CustomerSales::totalSalesAmount] > 100 }.rowsCount() shouldBe 1
+        df1.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
         df1[0][0] shouldBe "John"
 
         val dataSchema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
@@ -400,13 +400,13 @@ class JdbcTest {
         val df2 = DataFrame.readSqlQuery(dbConfig, sqlQuery).cast<CustomerSales>()
 
         df2.rowsCount() shouldBe 2
-        df2.filter { it[CustomerSales::totalSalesAmount] > 100 }.rowsCount() shouldBe 1
+        df2.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
         df2[0][0] shouldBe "John"
 
         val df3 = DataFrame.readSqlQuery(dbConfig, sqlQuery, 1).cast<CustomerSales>()
 
         df3.rowsCount() shouldBe 1
-        df3.filter { it[CustomerSales::totalSalesAmount] > 100 }.rowsCount() shouldBe 1
+        df3.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
         df3[0][0] shouldBe "John"
 
         val dataSchema1 = DataFrame.getSchemaForSqlQuery(dbConfig, sqlQuery)
@@ -435,13 +435,13 @@ class JdbcTest {
         val customerDf = dataframes[0].cast<Customer>()
 
         customerDf.rowsCount() shouldBe 4
-        customerDf.filter { it[Customer::age] > 30 }.rowsCount() shouldBe 2
+        customerDf.filter { it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
         customerDf[0][1] shouldBe "John"
 
         val saleDf = dataframes[1].cast<Sale>()
 
         saleDf.rowsCount() shouldBe 4
-        saleDf.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 3
+        saleDf.filter { it[Sale::amount]!! > 40 }.rowsCount() shouldBe 3
         saleDf[0][2] shouldBe 100.5f
 
         val dataframes1 = DataFrame.readAllSqlTables(connection, 1)
@@ -449,13 +449,13 @@ class JdbcTest {
         val customerDf1 = dataframes1[0].cast<Customer>()
 
         customerDf1.rowsCount() shouldBe 1
-        customerDf1.filter { it[Customer::age] > 30 }.rowsCount() shouldBe 1
+        customerDf1.filter { it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
         customerDf1[0][1] shouldBe "John"
 
         val saleDf1 = dataframes1[1].cast<Sale>()
 
         saleDf1.rowsCount() shouldBe 1
-        saleDf1.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 1
+        saleDf1.filter { it[Sale::amount]!! > 40 }.rowsCount() shouldBe 1
         saleDf1[0][2] shouldBe 100.5f
 
         val dataSchemas = DataFrame.getSchemaForAllSqlTables(connection)
@@ -474,13 +474,13 @@ class JdbcTest {
         val customerDf2 = dataframes2[0].cast<Customer>()
 
         customerDf2.rowsCount() shouldBe 4
-        customerDf2.filter { it[Customer::age] > 30 }.rowsCount() shouldBe 2
+        customerDf2.filter { it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
         customerDf2[0][1] shouldBe "John"
 
         val saleDf2 = dataframes2[1].cast<Sale>()
 
         saleDf2.rowsCount() shouldBe 4
-        saleDf2.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 3
+        saleDf2.filter { it[Sale::amount]!! > 40 }.rowsCount() shouldBe 3
         saleDf2[0][2] shouldBe 100.5f
 
         val dataframes3 = DataFrame.readAllSqlTables(dbConfig, 1)
@@ -488,13 +488,13 @@ class JdbcTest {
         val customerDf3 = dataframes3[0].cast<Customer>()
 
         customerDf3.rowsCount() shouldBe 1
-        customerDf3.filter { it[Customer::age] > 30 }.rowsCount() shouldBe 1
+        customerDf3.filter { it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
         customerDf3[0][1] shouldBe "John"
 
         val saleDf3 = dataframes3[1].cast<Sale>()
 
         saleDf3.rowsCount() shouldBe 1
-        saleDf3.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 1
+        saleDf3.filter { it[Sale::amount]!! > 40 }.rowsCount() shouldBe 1
         saleDf3[0][2] shouldBe 100.5f
 
         val dataSchemas1 = DataFrame.getSchemaForAllSqlTables(dbConfig)

@@ -7,6 +7,7 @@ import java.util.Locale
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.io.TableMetadata
+import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 /**
@@ -18,44 +19,6 @@ import kotlin.reflect.typeOf
 public object MySql : DbType("mysql") {
     override val driverClassName: String
         get() = "com.mysql.jdbc.Driver"
-
-    override fun convertDataFromResultSet(rs: ResultSet, tableColumnMetadata: TableColumnMetadata): Any? {
-        val name = tableColumnMetadata.name
-        return when (tableColumnMetadata.sqlTypeName) {
-            "BIT" -> rs.getBytes(name)
-            "TINYINT" -> rs.getInt(name)
-            "SMALLINT" -> rs.getInt(name)
-            "MEDIUMINT"-> rs.getInt(name)
-            "MEDIUMINT UNSIGNED" -> rs.getLong(name)
-            "INTEGER", "INT" -> rs.getInt(name)
-            "INTEGER UNSIGNED", "INT UNSIGNED" -> rs.getLong(name)
-            "BIGINT" -> rs.getLong(name)
-            "FLOAT" -> rs.getFloat(name)
-            "DOUBLE" -> rs.getDouble(name)
-            "DECIMAL" -> rs.getBigDecimal(name)
-            "DATE" -> rs.getDate(name).toString()
-            "DATETIME" -> rs.getTimestamp(name).toString()
-            "TIMESTAMP" -> rs.getTimestamp(name).toString()
-            "TIME"-> rs.getTime(name).toString()
-            "YEAR" -> rs.getDate(name).toString()
-            "VARCHAR", "CHAR" -> rs.getString(name)
-            "BINARY" -> rs.getBytes(name)
-            "VARBINARY" -> rs.getBytes(name)
-            "TINYBLOB"-> rs.getBytes(name)
-            "BLOB"-> rs.getBytes(name)
-            "MEDIUMBLOB" -> rs.getBytes(name)
-            "LONGBLOB" -> rs.getBytes(name)
-            "TEXT" -> rs.getString(name)
-            "MEDIUMTEXT" -> rs.getString(name)
-            "LONGTEXT" -> rs.getString(name)
-            "ENUM" -> rs.getString(name)
-            "SET" -> rs.getString(name)
-            // special mysql types
-            "JSON" -> rs.getString(name) // TODO: https://github.com/Kotlin/dataframe/issues/462
-            "GEOMETRY" -> rs.getBytes(name)
-            else -> throw IllegalArgumentException("Unsupported MySQL type: ${tableColumnMetadata.sqlTypeName}")
-        }
-    }
 
     override fun toColumnSchema(tableColumnMetadata: TableColumnMetadata): ColumnSchema {
         return when (tableColumnMetadata.sqlTypeName) {
@@ -115,5 +78,9 @@ public object MySql : DbType("mysql") {
             tables.getString("table_name"),
             tables.getString("table_schem"),
             tables.getString("table_cat"))
+    }
+
+    override fun convertSqlTypeToKType(jdbcType: Int): KType? {
+        return null
     }
 }
