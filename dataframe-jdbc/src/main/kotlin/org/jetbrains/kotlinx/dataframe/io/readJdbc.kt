@@ -74,6 +74,8 @@ public data class TableMetadata(val name: String, val schemaName: String?, val c
  */
 public data class DatabaseConfiguration(val url: String, val user: String = "", val password: String = "")
 
+
+// TODO: remove
 /**
  * Reads data from an SQL table and converts it into a DataFrame.
  *
@@ -101,6 +103,7 @@ public fun DataFrame.Companion.readSqlTable(dbConfig: DatabaseConfiguration, tab
     }
 }
 
+// TODO: remove
 /**
  * Reads data from an SQL table and converts it into a DataFrame.
  *
@@ -143,6 +146,8 @@ public fun DataFrame.Companion.readSqlTable(connection: Connection, tableName: S
     }
 }
 
+
+// TODO: remove
 /**
  * Converts the result of an SQL query to the DataFrame.
  *
@@ -170,6 +175,7 @@ public fun DataFrame.Companion.readSqlQuery(dbConfig: DatabaseConfiguration, sql
     }
 }
 
+// TODO: remove
 /**
  * Converts the result of an SQL query to the DataFrame.
  *
@@ -212,6 +218,7 @@ public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: St
     }
 }
 
+// TODO: remove
 /**
  * Reads the data from a [ResultSet] and converts it into a DataFrame.
  *
