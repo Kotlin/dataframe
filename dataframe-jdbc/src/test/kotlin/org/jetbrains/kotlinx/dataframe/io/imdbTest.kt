@@ -9,8 +9,8 @@ import java.sql.DriverManager
 import java.util.Properties
 import org.junit.Ignore
 
-private const val URL = "jdbc:mariadb://localhost:3307/imdb"
-private const val URL2 = "jdbc:mariadb://localhost:3307"
+private const val URL = "jdbc:mariadb://localhost:3306/imdb"
+private const val URL2 = "jdbc:mariadb://localhost:3306"
 private const val USER_NAME = "root"
 private const val PASSWORD = "pass"
 

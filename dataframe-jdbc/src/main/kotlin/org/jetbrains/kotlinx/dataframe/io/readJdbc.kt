@@ -74,8 +74,6 @@ public data class TableMetadata(val name: String, val schemaName: String?, val c
  */
 public data class DatabaseConfiguration(val url: String, val user: String = "", val password: String = "")
 
-
-
 /**
  * Reads data from an SQL table and converts it into a DataFrame.
  *
@@ -228,7 +226,9 @@ public fun DataFrame.Companion.readAllSqlTables(connection: Connection, catalogu
         val table = dbType.buildTableMetadata(tables)
         if (!dbType.isSystemTable(table)) {
             // we filter her second time because of specific logic with SQLite and possible issues with future databases
-            val tableName = if (table.catalogue != null) table.catalogue + "." + table.name else table.name
+           // val tableName = if (table.catalogue != null) table.catalogue + "." + table.name else table.name
+            val tableName = if (catalogue != null) catalogue + "." + table.name else table.name
+
             // TODO: handle empty table name (impossible, but should do it)
             // TODO: both cases is schema specified or not in URL
             // in h2 database name is recognized as a schema name https://www.h2database.com/html/features.html#database_url
@@ -421,11 +421,11 @@ private fun buildSchemaByTableColumns(tableColumns: MutableList<TableColumnMetad
 private fun getTableColumnsMetadata(rs: ResultSet): MutableList<TableColumnMetadata> {
     val metaData: ResultSetMetaData = rs.metaData
     val numberOfColumns: Int = metaData.columnCount
-
     val tableColumns = mutableListOf<TableColumnMetadata>()
+    val columnNameCounter = mutableMapOf<String, Int>()
 
     for (i in 1 until numberOfColumns + 1) {
-        val name = metaData.getColumnName(i)
+        val name = manageColumnNameDuplication(columnNameCounter, metaData.getColumnName(i))
         val size = metaData.getColumnDisplaySize(i)
         val type = metaData.getColumnTypeName(i)
         val jdbcType = metaData.getColumnType(i)
@@ -435,11 +435,29 @@ private fun getTableColumnsMetadata(rs: ResultSet): MutableList<TableColumnMetad
     return tableColumns
 }
 
+private fun manageColumnNameDuplication(columnNameCounter: MutableMap<String, Int>, originalName: String): String {
+    var name = originalName
+    val count = columnNameCounter[originalName]
+
+    if (count != null) {
+        var incrementedCount = count + 1
+        while (columnNameCounter.containsKey("${originalName}_$incrementedCount")) {
+            incrementedCount++
+        }
+        columnNameCounter[originalName] = incrementedCount
+        name = "${originalName}_$incrementedCount"
+    } else {
+        columnNameCounter[originalName] = 0
+    }
+
+    return name
+}
+
 /**
  * Retrieves the metadata of columns for a given table.
  *
  * @param [connection] the database connection
- * @param [tableName] the name of the table
+ * @param [tableNameWithCatalog] the name of the table
  * @return a mutable list of [TableColumnMetadata] objects,
  * where each TableColumnMetadata object contains information such as the column type,
  * JDBC type, size, and name.
@@ -448,11 +466,12 @@ private fun getTableColumnsMetadata(connection: Connection, tableNameWithCatalog
     val dbMetaData: DatabaseMetaData = connection.metaData
 
     val (catalogName, tableName) = parseCatalogAndTableName(tableNameWithCatalog)
-
+    // TODO: probably need to extract catalogue as a separate paraemeter with null default value
     val columns: ResultSet = dbMetaData.getColumns(catalogName, null, tableName, null)
 
     val tableColumns = mutableListOf<TableColumnMetadata>()
 
+    //TODO: this code should be equal getTableColumnsMetadata method
     while (columns.next()) {
         val name = columns.getString("COLUMN_NAME")
         val type = columns.getString("TYPE_NAME")
