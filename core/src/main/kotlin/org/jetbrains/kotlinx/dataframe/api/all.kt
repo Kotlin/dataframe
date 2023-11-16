@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -94,6 +95,8 @@ public interface AllColumnsSelectionDsl {
      *  {@include [UsageTemplate.ColumnDef]}
      *  {@include [LineBreak]}
      *  {@include [UsageTemplate.ColumnSelectorDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.ConditionDef]}
      * }
      *
      * {@setArg [UsageTemplate.PlainDslFunctionsArg]
@@ -105,7 +108,7 @@ public interface AllColumnsSelectionDsl {
      * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
      *  {@include [Indent]}{@include [ColumnSetName]}**`()`**
      *
-     *  {@include [Indent]}`|` .**`all`**`(`{@include [Before]}`|`{@include [After]}`|`{@include [From]}`|`{@include [UpTo]}`)` `(` **`(`**{@include [UsageTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [UsageTemplate.ColumnSelectorRef]} **`\\}`** `)`
+     *  {@include [Indent]}`|` .**`all`**`(`{@include [Before]}`|`{@include [After]}`|`{@include [From]}`|`{@include [UpTo]}`)` `(` **`(`**{@include [UsageTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [UsageTemplate.ConditionRef]} **`\\}`** `)`
      * }
      *
      * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
@@ -269,6 +272,11 @@ public interface AllColumnsSelectionDsl {
      * then the function will take columns from its children.
      *
      * If [column\] does not exist, {@getArg [ColumnDoesNotExistArg]}.
+     * {@include [LineBreak]}
+     * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector] to be used
+     * in the Plain DSL, and on [column groups][ColumnGroup] and a [ColumnFilter] on [ColumnSets][ColumnSet].
+     * {@include [LineBreak]}
+     * See [Usage] for how to use these functions.
      *
      * #### For example:
      *
@@ -344,14 +352,10 @@ public interface AllColumnsSelectionDsl {
         interface Arg
     }
 
-    /** @include [ColumnSetAllAfterDocs] {@setArg [ColumnSetAllAfterDocs.Arg] \\ \{ myColumn \\\}} */
+    /** @include [ColumnSetAllAfterDocs] {@setArg [ColumnSetAllAfterDocs.Arg] \\ \{ myColumn `[in][String.contains]` it.`[name][ColumnWithPath.name]` \\\}} */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.allAfter(column: ColumnSelector<*, *>): ColumnSet<C> {
-        var resolvedColumn: DataColumn<C>? = null
-        return this
-            .onResolve { resolvedColumn = it.toColumnGroup("").getColumn(column) as DataColumn<C> }
-            .allAfterInternal { it.data == resolvedColumn!! } as ColumnSet<C>
-    }
+    public fun <C> ColumnSet<C>.allAfter(column: ColumnFilter<C>): ColumnSet<C> =
+        allAfterInternal(column as ColumnFilter<*>) as ColumnSet<C>
 
     /** @include [ColumnSetAllAfterDocs] {@setArg [ColumnSetAllAfterDocs.Arg] ("pathTo"["myColumn"])} */
     @Suppress("UNCHECKED_CAST")
@@ -575,14 +579,10 @@ public interface AllColumnsSelectionDsl {
         interface Arg
     }
 
-    /** @include [ColumnSetAllFromDocs] {@setArg [ColumnSetAllFromDocs.Arg] \\ \{ myColumn \\\}} */
+    /** @include [ColumnSetAllFromDocs] {@setArg [ColumnSetAllFromDocs.Arg] \\ \{ myColumn `[in][String.contains]` it.`[name][ColumnWithPath.name]` \\\}} */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.allFrom(column: ColumnSelector<*, *>): ColumnSet<C> {
-        var resolvedColumn: DataColumn<C>? = null
-        return this
-            .onResolve { resolvedColumn = it.toColumnGroup("").getColumn(column) as DataColumn<C> }
-            .allFromInternal { it.data == resolvedColumn!! } as ColumnSet<C>
-    }
+    public fun <C> ColumnSet<C>.allFrom(column: ColumnFilter<C>): ColumnSet<C> =
+        allFromInternal(column as ColumnFilter<*>) as ColumnSet<C>
 
     /** @include [ColumnSetAllFromDocs] {@setArg [ColumnSetAllFromDocs.Arg] ("pathTo"["myColumn"])} */
     @Suppress("UNCHECKED_CAST")
@@ -806,14 +806,10 @@ public interface AllColumnsSelectionDsl {
         interface Arg
     }
 
-    /** @include [ColumnSetAllBeforeDocs] {@setArg [ColumnSetAllBeforeDocs.Arg] \\ \{ myColumn \\\}} */
+    /** @include [ColumnSetAllBeforeDocs] {@setArg [ColumnSetAllBeforeDocs.Arg] \\ \{ myColumn `[in][String.contains]` it.`[name][ColumnWithPath.name]` \\\}} */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.allBefore(column: ColumnSelector<*, *>): ColumnSet<C> {
-        var resolvedColumn: DataColumn<C>? = null
-        return this
-            .onResolve { resolvedColumn = it.toColumnGroup("").getColumn(column) as DataColumn<C> }
-            .allBeforeInternal { it.data == resolvedColumn!! } as ColumnSet<C>
-    }
+    public fun <C> ColumnSet<C>.allBefore(column: ColumnFilter<C>): ColumnSet<C> =
+        allBeforeInternal(column as ColumnFilter<*>) as ColumnSet<C>
 
     /** @include [ColumnSetAllBeforeDocs] {@setArg [ColumnSetAllBeforeDocs.Arg] ("pathTo"["myColumn"])} */
     @Suppress("UNCHECKED_CAST")
@@ -1034,14 +1030,10 @@ public interface AllColumnsSelectionDsl {
         interface Arg
     }
 
-    /** @include [ColumnSetAllUpToDocs] {@setArg [ColumnSetAllUpToDocs.Arg] \\ \{ myColumn \\\}} */
+    /** @include [ColumnSetAllUpToDocs] {@setArg [ColumnSetAllUpToDocs.Arg] \\ \{ myColumn `[in][String.contains]` it.`[name][ColumnWithPath.name]` \\\}} */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.allUpTo(column: ColumnSelector<*, *>): ColumnSet<C> {
-        var resolvedColumn: DataColumn<C>? = null
-        return this
-            .onResolve { resolvedColumn = it.toColumnGroup("").getColumn(column) as DataColumn<C> }
-            .allUpToInternal { it.data == resolvedColumn!! } as ColumnSet<C>
-    }
+    public fun <C> ColumnSet<C>.allUpTo(column: ColumnFilter<C>): ColumnSet<C> =
+        allUpToInternal(column as ColumnFilter<*>) as ColumnSet<C>
 
     /** @include [ColumnSetAllUpToDocs] {@setArg [ColumnSetAllUpToDocs.Arg] ("pathTo"["myColumn"])} */
     @Suppress("UNCHECKED_CAST")
@@ -1330,7 +1322,7 @@ internal fun ColumnsResolver<*>.allColumnsInternal(removePaths: Boolean = false)
  * @param colByPredicate a function that takes a ColumnWithPath and returns true if the column matches the predicate, false otherwise
  * @return a new ColumnSet containing all columns after the first column that matches the given predicate
  */
-internal fun ColumnsResolver<*>.allAfterInternal(colByPredicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> {
+internal fun ColumnsResolver<*>.allAfterInternal(colByPredicate: ColumnFilter<*>): ColumnSet<*> {
     var take = false
     return colsInternal {
         if (take) {
@@ -1348,7 +1340,7 @@ internal fun ColumnsResolver<*>.allAfterInternal(colByPredicate: (ColumnWithPath
  * @param colByPredicate the predicate used to determine if a column should be included in the resulting set
  * @return a column set containing all columns that satisfy the predicate
  */
-internal fun ColumnsResolver<*>.allFromInternal(colByPredicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> {
+internal fun ColumnsResolver<*>.allFromInternal(colByPredicate: ColumnFilter<*>): ColumnSet<*> {
     var take = false
     return colsInternal {
         if (take) {
@@ -1366,7 +1358,7 @@ internal fun ColumnsResolver<*>.allFromInternal(colByPredicate: (ColumnWithPath<
  * @param colByPredicate the predicate function used to determine if a column should be included in the returned ColumnSet
  * @return a new ColumnSet containing all columns that come before the first column that satisfies the given predicate
  */
-internal fun ColumnsResolver<*>.allBeforeInternal(colByPredicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> {
+internal fun ColumnsResolver<*>.allBeforeInternal(colByPredicate: ColumnFilter<*>): ColumnSet<*> {
     var take = true
     return colsInternal {
         if (!take) {
@@ -1384,7 +1376,7 @@ internal fun ColumnsResolver<*>.allBeforeInternal(colByPredicate: (ColumnWithPat
  * @param colByPredicate a predicate function that takes a ColumnWithPath and returns true if the column satisfies the desired condition.
  * @return a ColumnSet containing all columns up to the first column that satisfies the given predicate.
  */
-internal fun ColumnsResolver<*>.allUpToInternal(colByPredicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> {
+internal fun ColumnsResolver<*>.allUpToInternal(colByPredicate: ColumnFilter<*>): ColumnSet<*> {
     var take = true
     return colsInternal {
         if (!take) {
