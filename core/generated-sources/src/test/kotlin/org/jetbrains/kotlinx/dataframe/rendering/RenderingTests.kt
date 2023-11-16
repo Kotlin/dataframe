@@ -125,4 +125,24 @@ class RenderingTests {
             df.toHTML().script shouldContain rendered
         }
     }
+
+    @Test
+    fun `static rendering should be present`() {
+        val df = dataFrameOf("a", "b")(listOf(1, 1), listOf(2, 4))
+        val actualHtml = df.toHTML()
+
+        actualHtml.body shouldContain """
+            <thead>
+            <tr>
+            <th>a</th><th>b</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td>[1, 1]</td><td>[2, 4]</td>
+            </tr>
+            </tbody>
+            </table>
+        """.trimIndent().replace("\n", "")
+    }
 }
