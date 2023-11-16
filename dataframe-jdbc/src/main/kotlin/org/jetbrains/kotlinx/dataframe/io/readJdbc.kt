@@ -75,19 +75,6 @@ public data class TableMetadata(val name: String, val schemaName: String?, val c
 public data class DatabaseConfiguration(val url: String, val user: String = "", val password: String = "")
 
 
-// TODO: remove
-/**
- * Reads data from an SQL table and converts it into a DataFrame.
- *
- * @param [dbConfig] the configuration for the database, including URL, user, and password.
- * @param [tableName] the name of the table to read data from.
- * @return the DataFrame containing the data from the SQL table.
- */
-public fun DataFrame.Companion.readSqlTable(dbConfig: DatabaseConfiguration, tableName: String): AnyFrame {
-    DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return readSqlTable(connection, tableName, DEFAULT_LIMIT)
-    }
-}
 
 /**
  * Reads data from an SQL table and converts it into a DataFrame.
@@ -97,26 +84,12 @@ public fun DataFrame.Companion.readSqlTable(dbConfig: DatabaseConfiguration, tab
  * @param [limit] the maximum number of rows to retrieve from the table.
  * @return the DataFrame containing the data from the SQL table.
  */
-public fun DataFrame.Companion.readSqlTable(dbConfig: DatabaseConfiguration, tableName: String, limit: Int): AnyFrame {
+public fun DataFrame.Companion.readSqlTable(dbConfig: DatabaseConfiguration, tableName: String, limit: Int = DEFAULT_LIMIT): AnyFrame {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return readSqlTable(connection, tableName, limit)
     }
 }
 
-// TODO: remove
-/**
- * Reads data from an SQL table and converts it into a DataFrame.
- *
- * @param [connection] the database connection to read tables from.
- * @param [tableName] the name of the table to read data from.
- * @return the DataFrame containing the data from the SQL table.
- *
- * @see DriverManager.getConnection
- */
-public fun DataFrame.Companion.readSqlTable(connection: Connection, tableName: String): AnyFrame {
-    return readSqlTable(connection, tableName, DEFAULT_LIMIT)
-}
-
 /**
  * Reads data from an SQL table and converts it into a DataFrame.
  *
@@ -127,7 +100,7 @@ public fun DataFrame.Companion.readSqlTable(connection: Connection, tableName: S
  *
  * @see DriverManager.getConnection
  */
-public fun DataFrame.Companion.readSqlTable(connection: Connection, tableName: String, limit: Int): AnyFrame {
+public fun DataFrame.Companion.readSqlTable(connection: Connection, tableName: String, limit: Int = DEFAULT_LIMIT): AnyFrame {
     var preparedQuery = "SELECT * FROM $tableName"
     if (limit > 0) preparedQuery += " LIMIT $limit"
 
@@ -146,21 +119,6 @@ public fun DataFrame.Companion.readSqlTable(connection: Connection, tableName: S
     }
 }
 
-
-// TODO: remove
-/**
- * Converts the result of an SQL query to the DataFrame.
- *
- * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
- * @param [sqlQuery] the SQL query to execute.
- * @return the DataFrame containing the result of the SQL query.
- */
-public fun DataFrame.Companion.readSqlQuery(dbConfig: DatabaseConfiguration, sqlQuery: String): AnyFrame {
-    DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return readSqlQuery(connection, sqlQuery, DEFAULT_LIMIT)
-    }
-}
-
 /**
  * Converts the result of an SQL query to the DataFrame.
  *
@@ -169,26 +127,12 @@ public fun DataFrame.Companion.readSqlQuery(dbConfig: DatabaseConfiguration, sql
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
  * @return the DataFrame containing the result of the SQL query.
  */
-public fun DataFrame.Companion.readSqlQuery(dbConfig: DatabaseConfiguration, sqlQuery: String, limit: Int): AnyFrame {
+public fun DataFrame.Companion.readSqlQuery(dbConfig: DatabaseConfiguration, sqlQuery: String, limit: Int = DEFAULT_LIMIT): AnyFrame {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return readSqlQuery(connection, sqlQuery, limit)
     }
 }
 
-// TODO: remove
-/**
- * Converts the result of an SQL query to the DataFrame.
- *
- * @param [connection] the database connection to execute the SQL query.
- * @param [sqlQuery] the SQL query to execute.
- * @return the DataFrame containing the result of the SQL query.
- *
- * @see DriverManager.getConnection
- */
-public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: String): AnyFrame {
-    return readSqlQuery(connection, sqlQuery, DEFAULT_LIMIT)
-}
-
 /**
  * Converts the result of an SQL query to the DataFrame.
  *
@@ -199,7 +143,7 @@ public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: St
  *
  * @see DriverManager.getConnection
  */
-public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: String, limit: Int): AnyFrame {
+public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: String, limit: Int = DEFAULT_LIMIT): AnyFrame {
     val url = connection.metaData.url
     val dbType = extractDBTypeFromUrl(url)
 
@@ -218,18 +162,6 @@ public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: St
     }
 }
 
-// TODO: remove
-/**
- * Reads the data from a [ResultSet] and converts it into a DataFrame.
- *
- * @param [resultSet] the ResultSet containing the data to read.
- * @param [dbType] the type of database that the ResultSet belongs to.
- * @return the DataFrame generated from the ResultSet data.
- */
-public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, dbType: DbType): AnyFrame {
-    return readResultSet(resultSet, dbType, DEFAULT_LIMIT)
-}
-
 /**
  * Reads the data from a ResultSet and converts it into a DataFrame.
  *
@@ -238,7 +170,7 @@ public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, dbType: DbTyp
  * @param [limit] the maximum number of rows to read from the ResultSet.
  * @return the DataFrame generated from the ResultSet data.
  */
-public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, dbType: DbType, limit: Int): AnyFrame {
+public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, dbType: DbType, limit: Int = DEFAULT_LIMIT): AnyFrame {
     val tableColumns = getTableColumnsMetadata(resultSet)
     return fetchAndConvertDataFromResultSet(tableColumns, resultSet, dbType, limit)
 }
@@ -248,21 +180,10 @@ public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, dbType: DbTyp
  *
  * @param [resultSet] the ResultSet containing the data to read.
  * @param [connection] the connection to the database (it's required to extract the database type).
- * @return the DataFrame generated from the ResultSet data.
- */
-public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, connection: Connection): AnyFrame {
-    return readResultSet(resultSet, connection, DEFAULT_LIMIT)
-}
-
-/**
- * Reads the data from a ResultSet and converts it into a DataFrame.
- *
- * @param [resultSet] the ResultSet containing the data to read.
- * @param [connection] the connection to the database (it's required to extract the database type).
  * @param [limit] the maximum number of rows to read from the ResultSet.
  * @return the DataFrame generated from the ResultSet data.
  */
-public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, connection: Connection, limit: Int): AnyFrame {
+public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, connection: Connection, limit: Int = DEFAULT_LIMIT): AnyFrame {
     val url = connection.metaData.url
     val dbType = extractDBTypeFromUrl(url)
 
@@ -566,24 +487,25 @@ private fun fetchAndConvertDataFromResultSet(
     dbType: DbType,
     limit: Int
 ): AnyFrame {
-    // list<columnIdx; columndata>
     val data = List(tableColumns.size) { mutableListOf<Any?>() }
+
+    val kotlinTypesForSqlColumns = mutableMapOf<Int, KType>()
+    List(tableColumns.size) { index ->
+        kotlinTypesForSqlColumns[index] = generateKType(dbType, tableColumns[index])
+    }
+
 
     var counter = 0
 
     if (limit > 0) {
         while (counter < limit && rs.next()) {
-
-            populateTableData(tableColumns, data, rs, dbType)
-
+            extractNewRowFromResultSetAndAddToData(tableColumns, data, rs, dbType, kotlinTypesForSqlColumns)
             counter++
             // if (counter % 1000 == 0) logger.debug { "Loaded $counter rows." } // TODO: https://github.com/Kotlin/dataframe/issues/455
         }
     } else {
         while (rs.next()) {
-
-            populateTableData(tableColumns, data, rs, dbType)
-
+            extractNewRowFromResultSetAndAddToData(tableColumns, data, rs, dbType, kotlinTypesForSqlColumns)
             counter++
             // if (counter % 1000 == 0) logger.debug { "Loaded $counter rows." } // TODO: https://github.com/Kotlin/dataframe/issues/455
         }
@@ -593,18 +515,24 @@ private fun fetchAndConvertDataFromResultSet(
         DataColumn.createValueColumn(
             name = tableColumns[index].name,
             values = values,
-            type = generateKType(dbType, tableColumns[index])
+            type = kotlinTypesForSqlColumns[index]!!
         )
     }.toDataFrame()
 }
 
-private fun populateTableData(tableColumns: MutableList<TableColumnMetadata>, data: List<MutableList<Any?>>, rs: ResultSet, dbType: DbType) {
+private fun extractNewRowFromResultSetAndAddToData(
+    tableColumns: MutableList<TableColumnMetadata>,
+    data: List<MutableList<Any?>>,
+    rs: ResultSet,
+    dbType: DbType,
+    kotlinTypesForSqlColumns: MutableMap<Int, KType>
+) {
     repeat(tableColumns.size) { i ->
         data[i].add(
             try {
                 rs.getObject(i + 1)
             } catch (_: Throwable) {
-                val kType = generateKType(dbType, tableColumns[i]) //TODO: generate and cache it earlier to avoid multiple calls
+                val kType = kotlinTypesForSqlColumns[i]!!
                 if (kType.isSupertypeOf(String::class.starProjectedType)) rs.getString(i + 1) else rs.getString(i + 1) // TODO: expand for all the types like in generateKType function
             }
         )
