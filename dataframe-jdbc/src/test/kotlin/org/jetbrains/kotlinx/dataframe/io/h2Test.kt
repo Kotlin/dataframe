@@ -153,7 +153,7 @@ class JdbcTest {
 
         val dataSchema = DataFrame.getSchemaForSqlTable(connection, tableName)
         dataSchema.columns.size shouldBe 2
-        dataSchema.columns["characterCol"]!!.type shouldBe typeOf<String>()
+        dataSchema.columns["characterCol"]!!.type shouldBe typeOf<Char?>()
     }
 
     @Test
@@ -258,7 +258,7 @@ class JdbcTest {
 
         val dataSchema = DataFrame.getSchemaForSqlTable(connection, tableName)
         dataSchema.columns.size shouldBe 3
-        dataSchema.columns["name"]!!.type shouldBe typeOf<String>()
+        dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
 
         val dbConfig = DatabaseConfiguration(url = URL)
         val df2 = DataFrame.readSqlTable(dbConfig, tableName).cast<Customer>()
@@ -275,7 +275,7 @@ class JdbcTest {
 
         val dataSchema1 = DataFrame.getSchemaForSqlTable(dbConfig, tableName)
         dataSchema1.columns.size shouldBe 3
-        dataSchema1.columns["name"]!!.type shouldBe typeOf<String>()
+        dataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
     }
 
     // to cover a reported case from https://github.com/Kotlin/dataframe/issues/494
@@ -324,7 +324,7 @@ class JdbcTest {
 
                 val dataSchema = DataFrame.getSchemaForResultSet(rs, H2)
                 dataSchema.columns.size shouldBe 3
-                dataSchema.columns["name"]!!.type shouldBe typeOf<String>()
+                dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
 
                 rs.beforeFirst()
 
@@ -346,7 +346,7 @@ class JdbcTest {
 
                 val dataSchema1 = DataFrame.getSchemaForResultSet(rs, connection)
                 dataSchema1.columns.size shouldBe 3
-                dataSchema1.columns["name"]!!.type shouldBe typeOf<String>()
+                dataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
             }
         }
     }
@@ -418,7 +418,7 @@ class JdbcTest {
 
         val dataSchema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
         dataSchema.columns.size shouldBe 2
-        dataSchema.columns["name"]!!.type shouldBe typeOf<String>()
+        dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
 
         val dbConfig = DatabaseConfiguration(url = URL)
         val df2 = DataFrame.readSqlQuery(dbConfig, sqlQuery).cast<CustomerSales>()
@@ -435,7 +435,7 @@ class JdbcTest {
 
         val dataSchema1 = DataFrame.getSchemaForSqlQuery(dbConfig, sqlQuery)
         dataSchema1.columns.size shouldBe 2
-        dataSchema1.columns["name"]!!.type shouldBe typeOf<String>()
+        dataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
     }
 
     @Test
@@ -504,11 +504,11 @@ class JdbcTest {
 
         val customerDataSchema = dataSchemas[0]
         customerDataSchema.columns.size shouldBe 3
-        customerDataSchema.columns["name"]!!.type shouldBe typeOf<String>()
+        customerDataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
 
         val saleDataSchema = dataSchemas[1]
         saleDataSchema.columns.size shouldBe 3
-        saleDataSchema.columns["amount"]!!.type shouldBe typeOf<Float>()
+        saleDataSchema.columns["amount"]!!.type shouldBe typeOf<BigDecimal?>()
 
         val dbConfig = DatabaseConfiguration(url = URL)
         val dataframes2 = DataFrame.readAllSqlTables(dbConfig)
@@ -543,11 +543,11 @@ class JdbcTest {
 
         val customerDataSchema1 = dataSchemas1[0]
         customerDataSchema1.columns.size shouldBe 3
-        customerDataSchema1.columns["name"]!!.type shouldBe typeOf<String>()
+        customerDataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
 
         val saleDataSchema1 = dataSchemas1[1]
         saleDataSchema1.columns.size shouldBe 3
-        saleDataSchema1.columns["amount"]!!.type shouldBe typeOf<Float>()
+        saleDataSchema1.columns["amount"]!!.type shouldBe typeOf<BigDecimal?>()
     }
 }
 

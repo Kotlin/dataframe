@@ -17,15 +17,8 @@ public object Sqlite : DbType("sqlite") {
     override val driverClassName: String
         get() = "org.sqlite.JDBC"
 
-    override fun toColumnSchema(tableColumnMetadata: TableColumnMetadata): ColumnSchema {
-        return when (tableColumnMetadata.sqlTypeName) {
-            "INTEGER", "INTEGER AUTO_INCREMENT" -> ColumnSchema.Value(typeOf<Int>())
-            "TEXT" -> ColumnSchema.Value(typeOf<String>())
-            "REAL" -> ColumnSchema.Value(typeOf<Double>())
-            "NUMERIC" -> ColumnSchema.Value(typeOf<Double>())
-            "BLOB" -> ColumnSchema.Value(typeOf<ByteArray>())
-            else -> throw IllegalArgumentException("Unsupported SQLite type: ${tableColumnMetadata.sqlTypeName} for column ${tableColumnMetadata.name}")
-        }
+    override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? {
+        return null
     }
 
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean {

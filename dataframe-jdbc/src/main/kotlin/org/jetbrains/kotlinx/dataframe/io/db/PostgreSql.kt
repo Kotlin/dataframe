@@ -20,40 +20,10 @@ public object PostgreSql : DbType("postgresql") {
     override val driverClassName: String
         get() = "org.postgresql.Driver"
 
-    override fun toColumnSchema(tableColumnMetadata: TableColumnMetadata): ColumnSchema {
-        return when (tableColumnMetadata.sqlTypeName) {
-            "serial" -> ColumnSchema.Value(typeOf<Int>())
-            "int8", "bigint", "bigserial" -> ColumnSchema.Value(typeOf<Long>())
-            "bool" -> ColumnSchema.Value(typeOf<Boolean>())
-            "box" -> ColumnSchema.Value(typeOf<String>())
-            "bytea" -> ColumnSchema.Value(typeOf<ByteArray>())
-            "character", "bpchar" -> ColumnSchema.Value(typeOf<String>())
-            "circle" -> ColumnSchema.Value(typeOf<String>())
-            "date" -> ColumnSchema.Value(typeOf<String>())
-            "float8", "double precision" -> ColumnSchema.Value(typeOf<Double>())
-            "int4", "integer" -> ColumnSchema.Value(typeOf<Int>())
-            "interval" -> ColumnSchema.Value(typeOf<String>())
-            "json", "jsonb" -> ColumnSchema.Value(typeOf<ColumnGroup<DataRow<String>>>()) // TODO: https://github.com/Kotlin/dataframe/issues/462
-            "line" -> ColumnSchema.Value(typeOf<String>())
-            "lseg" -> ColumnSchema.Value(typeOf<String>())
-            "macaddr" -> ColumnSchema.Value(typeOf<String>())
-            "money" -> ColumnSchema.Value(typeOf<String>())
-            "numeric" -> ColumnSchema.Value(typeOf<String>())
-            "path" -> ColumnSchema.Value(typeOf<String>())
-            "point" -> ColumnSchema.Value(typeOf<String>())
-            "polygon" -> ColumnSchema.Value(typeOf<String>())
-            "float4", "real" -> ColumnSchema.Value(typeOf<Float>())
-            "int2", "smallint" -> ColumnSchema.Value(typeOf<Float>())
-            "smallserial" -> ColumnSchema.Value(typeOf<Int>())
-            "text" -> ColumnSchema.Value(typeOf<String>())
-            "time" -> ColumnSchema.Value(typeOf<String>())
-            "timetz", "time with time zone" -> ColumnSchema.Value(typeOf<String>())
-            "timestamp" -> ColumnSchema.Value(typeOf<String>())
-            "timestamptz", "timestamp with time zone" -> ColumnSchema.Value(typeOf<String>())
-            "uuid" -> ColumnSchema.Value(typeOf<String>())
-            "xml" -> ColumnSchema.Value(typeOf<String>())
-            else -> throw IllegalArgumentException("Unsupported PostgreSQL type: ${tableColumnMetadata.sqlTypeName} for column ${tableColumnMetadata.name}")
-        }
+    override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? {
+        if (tableColumnMetadata.sqlTypeName.contains("json"))
+            return ColumnSchema.Value(typeOf<ColumnGroup<DataRow<String>>>()) // TODO: https://github.com/Kotlin/dataframe/issues/462
+        return null
     }
 
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean {

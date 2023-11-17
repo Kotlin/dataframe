@@ -26,7 +26,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
     /**
      * Returns a [ColumnSchema] produced from [tableColumnMetadata].
      */
-    public abstract fun toColumnSchema(tableColumnMetadata: TableColumnMetadata): ColumnSchema
+    public abstract fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema?
 
     /**
      * Checks if the given table name is a system table for the specified database type.
@@ -45,5 +45,11 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      */
     public abstract fun buildTableMetadata(tables: ResultSet): TableMetadata
 
+    /**
+     * Converts SQL data type to a Kotlin data type.
+     *
+     * @param [tableColumnMetadata] The metadata of the table column.
+     * @return The corresponding Kotlin data type, or null if no mapping is found.
+     */
     public abstract fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType?
 }

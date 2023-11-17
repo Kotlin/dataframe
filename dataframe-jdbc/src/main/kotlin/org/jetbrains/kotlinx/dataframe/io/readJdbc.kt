@@ -5,7 +5,6 @@ import java.math.BigDecimal
 import java.sql.Blob
 import java.sql.Clob
 import java.sql.Connection
-import java.sql.DatabaseMetaData
 import java.sql.DriverManager
 import java.sql.NClob
 import java.sql.Ref
@@ -24,6 +23,7 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromUrl
+import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSupertypeOf
@@ -400,14 +400,20 @@ public fun DataFrame.Companion.getSchemaForAllSqlTables(connection: Connection):
  * @return a DataFrameSchema object representing the schema built from the table columns.
  */
 private fun buildSchemaByTableColumns(tableColumns: MutableList<TableColumnMetadata>, dbType: DbType): DataFrameSchema {
-    val schemaColumns = tableColumns.map {
-        Pair(it.name, dbType.toColumnSchema(it))
-    }.toMap()
+    val schemaColumns = tableColumns.associate {
+        Pair(it.name, generateColumnSchemaValue(dbType, it))
+    }
 
     return DataFrameSchemaImpl(
         columns = schemaColumns
     )
 }
+
+private fun generateColumnSchemaValue(
+    dbType: DbType,
+    tableColumnMetadata: TableColumnMetadata
+): ColumnSchema = dbType.convertSqlTypeToColumnSchemaValue(tableColumnMetadata) ?: ColumnSchema.Value(makeCommonSqlToKTypeMapping(tableColumnMetadata))
+
 
 /**
  * Retrieves the metadata of the columns in the result set.
@@ -530,52 +536,50 @@ private fun extractNewRowFromResultSetAndAddToData(
  * @return The generated KType.
  */
 private fun generateKType(dbType: DbType, tableColumnMetadata: TableColumnMetadata): KType {
-    val kType = dbType.convertSqlTypeToKType(tableColumnMetadata)
+    return dbType.convertSqlTypeToKType(tableColumnMetadata) ?: makeCommonSqlToKTypeMapping(tableColumnMetadata)
+}
 
-    if (kType!=null) return kType
-
-    else {
-        return when (tableColumnMetadata.jdbcType) {
-            Types.BIT -> typeOf<Boolean?>()
-            Types.TINYINT -> typeOf<Byte?>()
-            Types.SMALLINT -> typeOf<Short?>()
-            Types.INTEGER -> typeOf<Int?>()
-            Types.BIGINT -> typeOf<Long?>()
-            Types.FLOAT -> typeOf<Float?>()
-            Types.REAL -> typeOf<Float?>()
-            Types.DOUBLE -> typeOf<Double?>()
-            Types.NUMERIC -> typeOf<BigDecimal?>()
-            Types.DECIMAL -> typeOf<BigDecimal?>()
-            Types.CHAR -> typeOf<Char?>()
-            Types.VARCHAR -> typeOf<String?>()
-            Types.LONGVARCHAR -> typeOf<String?>()
-            Types.DATE -> typeOf<Date?>()
-            Types.TIME -> typeOf<Time?>()
-            Types.TIMESTAMP -> typeOf<Timestamp?>()
-            Types.BINARY -> typeOf<ByteArray?>()
-            Types.VARBINARY -> typeOf<ByteArray?>()
-            Types.LONGVARBINARY -> typeOf<ByteArray?>()
-            Types.NULL -> typeOf<String?>()
-            Types.OTHER -> typeOf<Any?>()
-            Types.JAVA_OBJECT -> typeOf<Any?>()
-            Types.DISTINCT -> typeOf<Any?>()
-            Types.STRUCT -> typeOf<Any?>()
-            Types.ARRAY -> typeOf<Array<Any?>?>()
-            Types.BLOB -> typeOf<Blob?>()
-            Types.CLOB -> typeOf<Clob?>()
-            Types.REF -> typeOf<Ref?>()
-            Types.DATALINK -> typeOf<Any?>()
-            Types.BOOLEAN -> typeOf<Boolean?>()
-            Types.ROWID -> typeOf<RowId?>()
-            Types.NCHAR -> typeOf<Char?>()
-            Types.NVARCHAR -> typeOf<String?>()
-            Types.LONGNVARCHAR -> typeOf<String?>()
-            Types.NCLOB -> typeOf<NClob?>()
-            Types.SQLXML -> typeOf<SQLXML?>()
-            Types.REF_CURSOR -> typeOf<Ref?>()
-            Types.TIME_WITH_TIMEZONE -> typeOf<Time?>()
-            Types.TIMESTAMP_WITH_TIMEZONE -> typeOf<Timestamp?>()
-            else -> typeOf<String?>()
-        }
+private fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata): KType {
+    return when (tableColumnMetadata.jdbcType) {
+        Types.BIT -> typeOf<Boolean?>()
+        Types.TINYINT -> typeOf<Byte?>()
+        Types.SMALLINT -> typeOf<Short?>()
+        Types.INTEGER -> typeOf<Int?>()
+        Types.BIGINT -> typeOf<Long?>()
+        Types.FLOAT -> typeOf<Float?>()
+        Types.REAL -> typeOf<Float?>()
+        Types.DOUBLE -> typeOf<Double?>()
+        Types.NUMERIC -> typeOf<BigDecimal?>()
+        Types.DECIMAL -> typeOf<BigDecimal?>()
+        Types.CHAR -> typeOf<Char?>()
+        Types.VARCHAR -> typeOf<String?>()
+        Types.LONGVARCHAR -> typeOf<String?>()
+        Types.DATE -> typeOf<Date?>()
+        Types.TIME -> typeOf<Time?>()
+        Types.TIMESTAMP -> typeOf<Timestamp?>()
+        Types.BINARY -> typeOf<ByteArray?>()
+        Types.VARBINARY -> typeOf<ByteArray?>()
+        Types.LONGVARBINARY -> typeOf<ByteArray?>()
+        Types.NULL -> typeOf<String?>()
+        Types.OTHER -> typeOf<Any?>()
+        Types.JAVA_OBJECT -> typeOf<Any?>()
+        Types.DISTINCT -> typeOf<Any?>()
+        Types.STRUCT -> typeOf<Any?>()
+        Types.ARRAY -> typeOf<Array<Any?>?>()
+        Types.BLOB -> typeOf<Blob?>()
+        Types.CLOB -> typeOf<Clob?>()
+        Types.REF -> typeOf<Ref?>()
+        Types.DATALINK -> typeOf<Any?>()
+        Types.BOOLEAN -> typeOf<Boolean?>()
+        Types.ROWID -> typeOf<RowId?>()
+        Types.NCHAR -> typeOf<Char?>()
+        Types.NVARCHAR -> typeOf<String?>()
+        Types.LONGNVARCHAR -> typeOf<String?>()
+        Types.NCLOB -> typeOf<NClob?>()
+        Types.SQLXML -> typeOf<SQLXML?>()
+        Types.REF_CURSOR -> typeOf<Ref?>()
+        Types.TIME_WITH_TIMEZONE -> typeOf<Time?>()
+        Types.TIMESTAMP_WITH_TIMEZONE -> typeOf<Timestamp?>()
+        else -> typeOf<String?>()
     }
 }
