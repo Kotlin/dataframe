@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
-import com.beust.klaxon.internal.firstNotNullResult
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
@@ -88,4 +87,12 @@ internal fun <T> concatImpl(dataFrames: List<DataFrame<T>>): DataFrame<T> {
     } else {
         dataFrameOf(columns)
     }.cast()
+}
+
+private inline fun <T, R : Any> Iterable<T>.firstNotNullResult(transform: (T) -> R?): R? {
+    for (element in this) {
+        val result = transform(element)
+        if (result != null) return result
+    }
+    return null
 }
