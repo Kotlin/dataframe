@@ -190,17 +190,17 @@ class DataFrameJdbcSymbolProcessorTest {
                     val tableName = "Customer"
                     DriverManager.getConnection("$CONNECTION_URL").use { connection ->
                         val df = DataFrame.readSqlTable(connection, tableName).cast<Customer>()
-                        df.filter { age > 30 }
+                        df.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
 
                         val df1 = DataFrame.readSqlTable(connection, tableName, 1).cast<Customer>()
-                        df1.filter { age > 30 }
+                        df1.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
                         
                         val dbConfig = DatabaseConfiguration(url = "$CONNECTION_URL")
                         val df2 = DataFrame.readSqlTable(dbConfig, tableName).cast<Customer>()
-                        df2.filter { age > 30 }
+                        df2.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
                         
                         val df3 = DataFrame.readSqlTable(dbConfig, tableName, 1).cast<Customer>()
-                        df3.filter { age > 30 }
+                        df3.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
  
                     }
                 }
