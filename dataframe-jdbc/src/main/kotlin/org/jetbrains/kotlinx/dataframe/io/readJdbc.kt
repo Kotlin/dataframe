@@ -154,8 +154,6 @@ public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: St
         st.executeQuery(internalSqlQuery).use { rs ->
             val tableColumns = getTableColumnsMetadata(rs)
             return fetchAndConvertDataFromResultSet(tableColumns, rs, dbType, DEFAULT_LIMIT)
-
-            // logger.debug { "SQL query executed successfully. Converting data to DataFrame." }
         }
     }
 }
@@ -200,7 +198,6 @@ public fun DataFrame.Companion.readAllSqlTables(dbConfig: DatabaseConfiguration,
         return readAllSqlTables(connection, catalogue, limit)
     }
 }
-
 
 /**
  * Reads all non-system tables from a database and returns them as a list of data frames.
@@ -267,8 +264,6 @@ public fun DataFrame.Companion.getSchemaForSqlTable(dbConfig: DatabaseConfigurat
  *
  * @see DriverManager.getConnection
  */
-
-// TODO: rewrite to extract metainformation from the ResultSet
 public fun DataFrame.Companion.getSchemaForSqlTable(
     connection: Connection,
     tableName: String
@@ -276,12 +271,16 @@ public fun DataFrame.Companion.getSchemaForSqlTable(
     val url = connection.metaData.url
     val dbType = extractDBTypeFromUrl(url)
 
-    connection.createStatement().use {
-        logger.debug { "Connection with url:${connection.metaData.url} is established successfully." }
+    // TODO: passed table name to be a table name without any SQL words and ;
+    val preparedQuery = "SELECT * FROM $tableName LIMIT 1"
 
-        val tableColumns = getTableColumnsMetadata(connection, tableName)
-
-        return buildSchemaByTableColumns(tableColumns, dbType)
+    connection.createStatement().use { st ->
+        st.executeQuery(
+            preparedQuery
+        ).use { rs ->
+            val tableColumns = getTableColumnsMetadata(rs)
+            return buildSchemaByTableColumns(tableColumns, dbType)
+        }
     }
 }
 
@@ -454,44 +453,6 @@ private fun manageColumnNameDuplication(columnNameCounter: MutableMap<String, In
 }
 
 /**
- * Retrieves the metadata of columns for a given table.
- *
- * @param [connection] the database connection
- * @param [tableNameWithCatalog] the name of the table
- * @return a mutable list of [TableColumnMetadata] objects,
- * where each TableColumnMetadata object contains information such as the column type,
- * JDBC type, size, and name.
- */
-private fun getTableColumnsMetadata(connection: Connection, tableNameWithCatalog: String): MutableList<TableColumnMetadata> {
-    val dbMetaData: DatabaseMetaData = connection.metaData
-
-    val (catalogName, tableName) = parseCatalogAndTableName(tableNameWithCatalog)
-    // TODO: probably need to extract catalogue as a separate paraemeter with null default value
-    val columns: ResultSet = dbMetaData.getColumns(catalogName, null, tableName, null)
-
-    val tableColumns = mutableListOf<TableColumnMetadata>()
-
-    //TODO: this code should be equal getTableColumnsMetadata method
-    while (columns.next()) {
-        val name = columns.getString("COLUMN_NAME")
-        val type = columns.getString("TYPE_NAME")
-        val jdbcType = columns.getInt("DATA_TYPE")
-        val size = columns.getInt("COLUMN_SIZE")
-        tableColumns += TableColumnMetadata(name, type, jdbcType, size)
-    }
-    return tableColumns
-}
-
-private fun parseCatalogAndTableName(tableNameWithCatalog: String): Pair<String?, String> {
-    val parts = tableNameWithCatalog.split('.', limit = 2)
-    return when (parts.size) {
-        1 -> Pair(null, parts[0]) // If only table name is provided
-        2 -> Pair(parts[0], parts[1]) // If both catalog and table name are provided
-        else -> throw IllegalArgumentException("Invalid format: $tableNameWithCatalog")
-    }
-}
-
-/**
  * Fetches and converts data from a ResultSet into a mutable map.
  *
  * @param [tableColumns] a list containing the column metadata for the table.
@@ -513,37 +474,39 @@ private fun fetchAndConvertDataFromResultSet(
         kotlinTypesForSqlColumns[index] = generateKType(dbType, tableColumns[index])
     }
 
-
     var counter = 0
 
     if (limit > 0) {
         while (counter < limit && rs.next()) {
-            extractNewRowFromResultSetAndAddToData(tableColumns, data, rs, dbType, kotlinTypesForSqlColumns)
+            extractNewRowFromResultSetAndAddToData(tableColumns, data, rs, kotlinTypesForSqlColumns)
             counter++
             // if (counter % 1000 == 0) logger.debug { "Loaded $counter rows." } // TODO: https://github.com/Kotlin/dataframe/issues/455
         }
     } else {
         while (rs.next()) {
-            extractNewRowFromResultSetAndAddToData(tableColumns, data, rs, dbType, kotlinTypesForSqlColumns)
+            extractNewRowFromResultSetAndAddToData(tableColumns, data, rs, kotlinTypesForSqlColumns)
             counter++
             // if (counter % 1000 == 0) logger.debug { "Loaded $counter rows." } // TODO: https://github.com/Kotlin/dataframe/issues/455
         }
     }
 
-    return data.mapIndexed { index, values ->
+    val dataFrame = data.mapIndexed { index, values ->
         DataColumn.createValueColumn(
             name = tableColumns[index].name,
             values = values,
             type = kotlinTypesForSqlColumns[index]!!
         )
     }.toDataFrame()
+
+    logger.debug { "DataFrame with ${dataFrame.rowsCount()} rows and ${dataFrame.columnsCount()} columns created as a result of SQL query." }
+
+    return dataFrame
 }
 
 private fun extractNewRowFromResultSetAndAddToData(
     tableColumns: MutableList<TableColumnMetadata>,
     data: List<MutableList<Any?>>,
     rs: ResultSet,
-    dbType: DbType,
     kotlinTypesForSqlColumns: MutableMap<Int, KType>
 ) {
     repeat(tableColumns.size) { i ->
@@ -616,6 +579,3 @@ private fun generateKType(dbType: DbType, tableColumnMetadata: TableColumnMetada
         }
     }
 }
-
-
-

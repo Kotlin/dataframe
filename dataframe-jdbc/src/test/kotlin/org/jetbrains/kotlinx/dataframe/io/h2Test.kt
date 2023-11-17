@@ -135,6 +135,28 @@ class JdbcTest {
     }
 
     @Test
+    fun `read from empty table`() {
+        @Language("SQL")
+        val createTableQuery = """
+                CREATE TABLE EmptyTestTable (
+                    characterCol CHAR(10),
+                    characterVaryingCol VARCHAR(20)
+                )
+            """
+
+        connection.createStatement().execute(createTableQuery.trimIndent())
+
+        val tableName = "EmptyTestTable"
+
+        val df = DataFrame.readSqlTable(connection, tableName)
+        df.rowsCount() shouldBe 0
+
+        val dataSchema = DataFrame.getSchemaForSqlTable(connection, tableName)
+        dataSchema.columns.size shouldBe 2
+        dataSchema.columns["characterCol"]!!.type shouldBe typeOf<String>()
+    }
+
+    @Test
     fun `read from huge table`() {
         @Language("SQL")
         val createTableQuery = """
@@ -253,7 +275,7 @@ class JdbcTest {
 
         val dataSchema1 = DataFrame.getSchemaForSqlTable(dbConfig, tableName)
         dataSchema1.columns.size shouldBe 3
-        dataSchema.columns["name"]!!.type shouldBe typeOf<String>()
+        dataSchema1.columns["name"]!!.type shouldBe typeOf<String>()
     }
 
     // to cover a reported case from https://github.com/Kotlin/dataframe/issues/494
@@ -324,7 +346,7 @@ class JdbcTest {
 
                 val dataSchema1 = DataFrame.getSchemaForResultSet(rs, connection)
                 dataSchema1.columns.size shouldBe 3
-                dataSchema.columns["name"]!!.type shouldBe typeOf<String>()
+                dataSchema1.columns["name"]!!.type shouldBe typeOf<String>()
             }
         }
     }
@@ -413,7 +435,7 @@ class JdbcTest {
 
         val dataSchema1 = DataFrame.getSchemaForSqlQuery(dbConfig, sqlQuery)
         dataSchema1.columns.size shouldBe 2
-        dataSchema.columns["name"]!!.type shouldBe typeOf<String>()
+        dataSchema1.columns["name"]!!.type shouldBe typeOf<String>()
     }
 
     @Test
