@@ -283,7 +283,7 @@ public fun <T> DataFrame<T>.toHTML(
 
     var tableHtml = toHtmlData(configuration, cellRenderer)
 
-    tableHtml += toStaticHtml(configuration, DefaultCellRenderer)
+//    tableHtml += toStaticHtml(configuration, DefaultCellRenderer)
 
     if (bodyFooter != null) {
         tableHtml += DataFrameHtmlData("", bodyFooter, "")
