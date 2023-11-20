@@ -32,4 +32,5 @@
     such that 
     - `Level.WARNING` messages are changed to `Level.ERROR`
     - `Level.ERROR` messages and their functions are removed.
-    - Update regions in the file accordingly.    
+    - Update regions in the file accordingly.
+20. Update Notebook examples, both in the project as well as on Datalore.
