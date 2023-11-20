@@ -254,8 +254,9 @@ public fun <T> DataFrame<T>.html(): String = toStandaloneHTML().toString()
 public fun <T> DataFrame<T>.toStandaloneHTML(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
     cellRenderer: CellRenderer = DefaultCellRenderer,
+    includeStatic: Boolean = true,
     getFooter: (DataFrame<T>) -> String? = { "DataFrame [${it.size}]" },
-): DataFrameHtmlData = toHTML(configuration, cellRenderer, getFooter).withTableDefinitions()
+): DataFrameHtmlData = toHTML(configuration, cellRenderer, includeStatic, getFooter).withTableDefinitions()
 
 /**
  * @return DataFrameHtmlData without additional definitions. Can be rendered in Jupyter kernel environments
@@ -263,6 +264,7 @@ public fun <T> DataFrame<T>.toStandaloneHTML(
 public fun <T> DataFrame<T>.toHTML(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
     cellRenderer: CellRenderer = DefaultCellRenderer,
+    includeStatic: Boolean = true,
     getFooter: (DataFrame<T>) -> String? = { "DataFrame [${it.size}]" },
 ): DataFrameHtmlData {
     val limit = configuration.rowsLimit ?: Int.MAX_VALUE
@@ -283,7 +285,9 @@ public fun <T> DataFrame<T>.toHTML(
 
     var tableHtml = toHtmlData(configuration, cellRenderer)
 
-//    tableHtml += toStaticHtml(configuration, DefaultCellRenderer)
+    if (includeStatic) {
+        tableHtml += toStaticHtml(configuration, DefaultCellRenderer)
+    }
 
     if (bodyFooter != null) {
         tableHtml += DataFrameHtmlData("", bodyFooter, "")

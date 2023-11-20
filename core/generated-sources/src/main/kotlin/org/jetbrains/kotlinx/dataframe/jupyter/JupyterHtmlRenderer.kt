@@ -51,10 +51,12 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
     ).plus(
         df.toHTML(
             configuration = reifiedDisplayConfiguration,
-            cellRenderer = contextRenderer
+            cellRenderer = contextRenderer,
+            includeStatic = false, // is added later to make sure it's put outside of potential iFrames
         ) { footer }
     ).toJupyterHtmlData()
 
+    // Generates a static version of the table which can be displayed in GitHub previews etc.
     val staticHtml = df.toStaticHtml(reifiedDisplayConfiguration, DefaultCellRenderer).toJupyterHtmlData()
 
     if (notebook.kernelVersion >= KotlinKernelVersion.from(MIN_KERNEL_VERSION_FOR_NEW_TABLES_UI)!!) {
