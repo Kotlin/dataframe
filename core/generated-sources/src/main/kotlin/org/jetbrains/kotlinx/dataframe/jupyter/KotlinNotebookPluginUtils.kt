@@ -24,7 +24,6 @@ import org.jetbrains.kotlinx.dataframe.api.SplitWithTransform
 import org.jetbrains.kotlinx.dataframe.api.Update
 import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.frames
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.sortBy
@@ -60,7 +59,7 @@ public object KotlinNotebookPluginUtils {
      * It's used for example for dynamic pagination in Kotlin Notebook Plugin.
      */
     public fun getRowsSubsetForRendering(df: AnyFrame, startIdx: Int, endIdx: Int): DisableRowsLimitWrapper =
-        DisableRowsLimitWrapper(df.filter { it.index() in startIdx until endIdx })
+        DisableRowsLimitWrapper(df[startIdx ..< endIdx])
 
     /**
      * Sorts a dataframe-like object by multiple columns.
