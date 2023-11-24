@@ -3,9 +3,11 @@ package org.jetbrains.kotlinx.dataframe.io
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
@@ -16,6 +18,7 @@ import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.UUID
 import org.junit.Ignore
+import kotlin.reflect.typeOf
 
 private const val URL = "jdbc:postgresql://localhost:5432/test"
 private const val USER_NAME = "postgres"
@@ -39,6 +42,7 @@ interface Table1 {
     val intervalcol: String
     val jsoncol: String
     val jsonbcol: String
+    val varcharcol: String
 }
 
 @DataSchema
@@ -104,7 +108,8 @@ class PostgresTest {
                 integerCol integer,
                 intervalCol interval,
                 jsonCol json,
-                jsonbCol jsonb
+                jsonbCol jsonb,
+                varcharCol varchar(10)
             )
             """
             connection.createStatement().execute(
@@ -146,8 +151,8 @@ class PostgresTest {
                 bigintCol, bigserialCol,  booleanCol, 
                 boxCol, byteaCol, characterCol, characterNCol, charCol, 
                  circleCol, dateCol, doubleCol, 
-                integerCol, intervalCol, jsonCol, jsonbCol
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                integerCol, intervalCol, jsonCol, jsonbCol, varcharCol
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """
 
             @Language("SQL")
@@ -184,6 +189,7 @@ class PostgresTest {
 
                     st.setObject(14, jsonbObject)
                     st.setObject(15, jsonbObject)
+                    st.setObject(16, "a varchar")
                     st.executeUpdate()
                 }
             }
@@ -274,6 +280,7 @@ class PostgresTest {
         table1Df.rowsCount() shouldBe 3
         table1Df.filter { it[Table1::integercol] > 12345 }.rowsCount() shouldBe 2
         table1Df[0][1] shouldBe 1000L
+        table1Df[0][16] shouldBe "a varchar"
 
         val table2Df = dataframes[1].cast<Table2>()
 
@@ -282,5 +289,28 @@ class PostgresTest {
         table2Df[0][11] shouldBe 1001
 
         //TODO: add test for JSON column
+    }
+
+    @Test
+    fun `read schema from sql table`() {
+        val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
+
+        schema.columns["id"]?.type shouldBe typeOf<Int>()
+        schema.columns["bigintcol"]?.type shouldBe typeOf<Long>()
+        schema.columns["bigserialcol"]?.type shouldBe typeOf<Long>()
+        schema.columns["booleancol"]?.type shouldBe typeOf<Boolean>()
+        schema.columns["boxcol"]?.type shouldBe typeOf<String>()
+        schema.columns["byteacol"]?.type shouldBe typeOf<ByteArray>()
+        schema.columns["charactercol"]?.type shouldBe typeOf<String>()
+        schema.columns["characterncol"]?.type shouldBe typeOf<String>()
+        schema.columns["charcol"]?.type shouldBe typeOf<String>()
+        schema.columns["circlecol"]?.type shouldBe typeOf<String>()
+        schema.columns["datecol"]?.type shouldBe typeOf<String>()
+        schema.columns["doublecol"]?.type shouldBe typeOf<Double>()
+        schema.columns["integercol"]?.type shouldBe typeOf<Int>()
+        schema.columns["intervalcol"]?.type shouldBe typeOf<String>()
+        schema.columns["jsoncol"]?.type shouldBe typeOf<ColumnGroup<DataRow<String>>>()
+        schema.columns["jsonbcol"]?.type shouldBe typeOf<ColumnGroup<DataRow<String>>>()
+        schema.columns["varcharcol"]?.type shouldBe typeOf<String>()
     }
 }

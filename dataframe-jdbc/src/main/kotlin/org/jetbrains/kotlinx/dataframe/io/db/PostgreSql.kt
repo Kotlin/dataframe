@@ -51,6 +51,7 @@ public object PostgreSql : DbType("postgresql") {
             "timestamp" -> rs.getString(name)
             "timestamptz", "timestamp with time zone" -> rs.getString(name)
             "uuid" -> rs.getString(name)
+            "varchar" -> rs.getString(name)
             "xml" -> rs.getString(name)
             else -> throw IllegalArgumentException("Unsupported PostgreSQL type: ${tableColumnMetadata.sqlTypeName}")
         }
@@ -87,6 +88,7 @@ public object PostgreSql : DbType("postgresql") {
             "timestamp" -> ColumnSchema.Value(typeOf<String>())
             "timestamptz", "timestamp with time zone" -> ColumnSchema.Value(typeOf<String>())
             "uuid" -> ColumnSchema.Value(typeOf<String>())
+            "varchar" -> ColumnSchema.Value(typeOf<String>())
             "xml" -> ColumnSchema.Value(typeOf<String>())
             else -> throw IllegalArgumentException("Unsupported PostgreSQL type: ${tableColumnMetadata.sqlTypeName} for column ${tableColumnMetadata.name}")
         }
