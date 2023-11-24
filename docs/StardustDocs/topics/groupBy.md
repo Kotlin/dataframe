@@ -6,7 +6,7 @@
 Splits the rows of [`DataFrame`](DataFrame.md) into groups using one or several columns as grouping keys.
 
 ```text
-groupBy { columns }
+groupBy(moveToTop = true) { columns }
       [ transformations ]
       reducer | aggregator | pivot
 
@@ -34,7 +34,6 @@ See [column selectors](ColumnSelectors.md), [groupBy transformations](#transform
 df.groupBy { name }
 df.groupBy { city and name.lastName }
 df.groupBy { age / 10 named "ageDecade" }
-df.groupBy { expr { name.firstName.length + name.lastName.length } named "nameLength" }
 ```
 
 </tab>
@@ -56,8 +55,6 @@ df.groupBy { city and lastName }
 df.groupBy(city, lastName)
 
 df.groupBy { age / 10 named "ageDecade" }
-
-df.groupBy { expr { firstName().length + lastName().length } named "nameLength" }
 ```
 
 </tab>
@@ -67,11 +64,64 @@ df.groupBy { expr { firstName().length + lastName().length } named "nameLength" 
 df.groupBy("name")
 df.groupBy { "city" and "name"["lastName"] }
 df.groupBy { "age"<Int>() / 10 named "ageDecade" }
-df.groupBy { expr { "name"["firstName"]<String>().length + "name"["lastName"]<String>().length } named "nameLength" }
 ```
 
 </tab></tabs>
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupBy.html"/>
+<!---END-->
+
+Grouping columns can be created inplace:
+
+<!---FUN groupByExpr-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { expr { name.firstName.length + name.lastName.length } named "nameLength" }
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val name by columnGroup()
+val lastName by name.column<String>()
+val firstName by name.column<String>()
+
+df.groupBy { expr { firstName().length + lastName().length } named "nameLength" }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy { expr { "name"["firstName"]<String>().length + "name"["lastName"]<String>().length } named "nameLength" }
+```
+
+</tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByExpr.html"/>
+<!---END-->
+
+With optional `moveToTop` parameter you can choose whether to make a selected *nested column* a top-level column:  
+
+<!---FUN groupByMoveToTop-->
+
+```kotlin
+df.groupBy(moveToTop = true) { name.lastName }
+```
+
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByMoveToTop.html"/>
+<!---END-->
+
+or to keep it inside a `ColumnGroup`:
+
+<!---FUN groupByMoveToTopFalse-->
+
+```kotlin
+df.groupBy(moveToTop = false) { name.lastName }
+```
+
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByMoveToTopFalse.html"/>
 <!---END-->
 
 Returns `GroupBy` object.

@@ -374,9 +374,8 @@ public fun <T> DataFrame<T>.html(): String = toStandaloneHTML().toString()
 public fun <T> DataFrame<T>.toStandaloneHTML(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
     cellRenderer: CellRenderer = DefaultCellRenderer,
-    includeStatic: Boolean = true,
     getFooter: (DataFrame<T>) -> String? = { "DataFrame [${it.size}]" },
-): DataFrameHtmlData = toHTML(configuration, cellRenderer, includeStatic, getFooter).withTableDefinitions()
+): DataFrameHtmlData = toHTML(configuration, cellRenderer, getFooter).withTableDefinitions()
 
 /**
  * @return DataFrameHtmlData without additional definitions. Can be rendered in Jupyter kernel environments
@@ -384,7 +383,6 @@ public fun <T> DataFrame<T>.toStandaloneHTML(
 public fun <T> DataFrame<T>.toHTML(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
     cellRenderer: CellRenderer = DefaultCellRenderer,
-    includeStatic: Boolean = true,
     getFooter: (DataFrame<T>) -> String? = { "DataFrame [${it.size}]" },
 ): DataFrameHtmlData {
     val limit = configuration.rowsLimit ?: Int.MAX_VALUE
@@ -405,7 +403,7 @@ public fun <T> DataFrame<T>.toHTML(
 
     var tableHtml = toHtmlData(configuration, cellRenderer)
 
-    if (includeStatic) {
+    if (configuration.enableFallbackStaticTables) {
         tableHtml += toStaticHtml(configuration, DefaultCellRenderer)
     }
 
@@ -505,6 +503,8 @@ public data class DataFrameHtmlData(
 /**
  * @param rowsLimit null to disable rows limit
  * @param cellContentLimit -1 to disable content trimming
+ * @param enableFallbackStaticTables true to add additional pure HTML table that will be visible only if JS  is disabled;
+ * For example hosting *.ipynb files with outputs on GitHub
  */
 public data class DisplayConfiguration(
     var rowsLimit: Int? = 20,
@@ -515,6 +515,7 @@ public data class DisplayConfiguration(
     var isolatedOutputs: Boolean = flagFromEnv("LETS_PLOT_HTML_ISOLATED_FRAME"),
     internal val localTesting: Boolean = flagFromEnv("KOTLIN_DATAFRAME_LOCAL_TESTING"),
     var useDarkColorScheme: Boolean = false,
+    var enableFallbackStaticTables: Boolean = true,
 ) {
     public companion object {
         public val DEFAULT: DisplayConfiguration = DisplayConfiguration()
