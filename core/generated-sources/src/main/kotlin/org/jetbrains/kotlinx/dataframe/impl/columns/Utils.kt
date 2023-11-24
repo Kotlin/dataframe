@@ -57,7 +57,7 @@ internal fun <T> ColumnWithPath<T>.changePath(path: ColumnPath): ColumnWithPath<
 
 internal fun <T> BaseColumn<T>.addParentPath(path: ColumnPath) = addPath(path + name)
 
-/* TODO internal */ public fun <T> BaseColumn<T>.addPath(): ColumnWithPath<T> = addPath(pathOf(name))
+internal fun <T> BaseColumn<T>.addPath(): ColumnWithPath<T> = addPath(pathOf(name))
 
 internal fun ColumnPath.depth() = size - 1
 
