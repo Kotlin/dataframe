@@ -18,6 +18,10 @@ import org.apache.arrow.vector.TimeMicroVector
 import org.apache.arrow.vector.TimeMilliVector
 import org.apache.arrow.vector.TimeNanoVector
 import org.apache.arrow.vector.TimeSecVector
+import org.apache.arrow.vector.TimeStampMicroVector
+import org.apache.arrow.vector.TimeStampMilliVector
+import org.apache.arrow.vector.TimeStampNanoVector
+import org.apache.arrow.vector.TimeStampSecVector
 import org.apache.arrow.vector.TinyIntVector
 import org.apache.arrow.vector.UInt1Vector
 import org.apache.arrow.vector.UInt2Vector
@@ -130,6 +134,39 @@ private fun TimeMilliVector.values(range: IntRange): List<LocalTime?> = range.ma
 
 private fun TimeSecVector.values(range: IntRange): List<LocalTime?> =
     range.map { getObject(it)?.let { LocalTime.ofSecondOfDay(it.toLong()) } }
+
+private fun TimeStampNanoVector.values(range: IntRange): List<LocalDateTime?> = range.mapIndexed { i, it ->
+    if (isNull(i)) {
+        null
+    } else {
+        getObject(it)
+    }
+}
+
+private fun TimeStampMicroVector.values(range: IntRange): List<LocalDateTime?> = range.mapIndexed { i, it ->
+    if (isNull(i)) {
+        null
+    } else {
+        getObject(it)
+    }
+}
+
+private fun TimeStampMilliVector.values(range: IntRange): List<LocalDateTime?> = range.mapIndexed { i, it ->
+    if (isNull(i)) {
+        null
+    } else {
+        getObject(it)
+    }
+}
+
+private fun TimeStampSecVector.values(range: IntRange): List<LocalDateTime?> = range.mapIndexed { i, it ->
+    if (isNull(i)) {
+        null
+    } else {
+        getObject(it)
+    }
+}
+
 private fun StructVector.values(range: IntRange): List<Map<String, Any?>?> = range.map {
     getObject(it)
 }
@@ -202,6 +239,10 @@ private fun readField(root: VectorSchemaRoot, field: Field, nullability: Nullabi
             is TimeMicroVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
             is TimeMilliVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
             is TimeSecVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is TimeStampNanoVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is TimeStampMicroVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is TimeStampMilliVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is TimeStampSecVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
             is StructVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
             else -> {
                 throw NotImplementedError("reading from ${vector.javaClass.canonicalName} is not implemented")
