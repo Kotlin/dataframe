@@ -6,6 +6,7 @@ import io.kotest.matchers.string.shouldNotContain
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.move
@@ -14,19 +15,21 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.escapeHTML
 import org.jetbrains.kotlinx.dataframe.io.formatter
+import org.jetbrains.kotlinx.dataframe.io.maxDepth
 import org.jetbrains.kotlinx.dataframe.io.print
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 import org.jetbrains.kotlinx.dataframe.io.renderToStringTable
 import org.jetbrains.kotlinx.dataframe.io.toHTML
 import org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
+import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.jsoup.Jsoup
 import org.junit.Test
 import java.net.URL
 import java.text.DecimalFormatSymbols
 import kotlin.reflect.typeOf
 
-class RenderingTests {
+class RenderingTests : TestBase() {
 
     @Test
     fun `render row with unicode values as table`() {
@@ -131,18 +134,34 @@ class RenderingTests {
         val df = dataFrameOf("a", "b")(listOf(1, 1), listOf(2, 4))
         val actualHtml = df.toHTML()
 
-        actualHtml.body shouldContain """
+        val body = actualHtml.body.lines().joinToString("") { it.trimStart() }
+
+        body shouldContain """
             <thead>
             <tr>
-            <th>a</th><th>b</th>
+            <th class="bottomBorder">a</th>
+            <th class="bottomBorder">b</th>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td>[1, 1]</td><td>[2, 4]</td>
+            <td>[1, 1]</td>
+            <td>[2, 4]</td>
             </tr>
             </tbody>
             </table>
         """.trimIndent().replace("\n", "")
+    }
+
+    @Test
+    fun `max depth`() {
+        df.maxDepth() shouldBe 1
+        dfGroup.maxDepth() shouldBe 2
+        emptyDataFrame<Any>().maxDepth() shouldBe 0
+    }
+
+    @Test
+    fun `max width`() {
+        // TODO
     }
 }
