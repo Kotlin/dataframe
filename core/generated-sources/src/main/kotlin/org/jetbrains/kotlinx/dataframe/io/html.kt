@@ -5,10 +5,21 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.api.FormattingDSL
+import org.jetbrains.kotlinx.dataframe.api.RowColFormatter
+import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.asNumbers
+import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
+import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.isEmpty
+import org.jetbrains.kotlinx.dataframe.api.isNumber
+import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
+import org.jetbrains.kotlinx.dataframe.api.rows
+import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
+import org.jetbrains.kotlinx.dataframe.columns.depth
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.renderType
@@ -27,8 +38,7 @@ import java.io.File
 import java.io.InputStreamReader
 import java.net.URL
 import java.nio.file.Path
-import java.util.LinkedList
-import java.util.Random
+import java.util.*
 import kotlin.io.path.writeText
 
 internal val tooltipLimit = 1000
@@ -185,7 +195,7 @@ public fun AnyFrame.toStaticHtml(
     val id = "static_df_${nextTableId()}"
     val flattenedCols = getColumnsWithPaths { cols { !it.isColumnGroup() }.recursively() }
     val colGrid = getColumnsHeaderGrid()
-    val borders = colGrid.last().map { it.borders }
+    val borders = colGrid.last().map { it.borders - Border.BOTTOM }
     val nestedRowsLimit = configuration.nestedRowsLimit
 
     fun StringBuilder.emitTag(tag: String, attributes: String = "", tagContents: StringBuilder.() -> Unit) {
@@ -282,24 +292,27 @@ private enum class Border(val className: String) {
     BOTTOM("bottomBorder");
 }
 
-private fun Set<Border>.toClass(): String = "class=\"${joinToString(" ") { it.className }}\""
+private fun Set<Border>.toClass(): String =
+    if (isEmpty()) ""
+    else "class=\"${joinToString(" ") { it.className }}\""
 
 private data class ColumnWithPathWithBorder<T>(
     val columnWithPath: ColumnWithPath<T>? = null,
     val borders: Set<Border> = emptySet(),
 )
 
-/** Returns the depth of the most-nested column in this group, starting at 0 */
-private fun ColumnGroup<*>.maxDepth(): Int = getColumnsWithPaths { all().recursively() }.maxOf { it.depth() }
+/** Returns the depth of the most-nested column in this df/group, starting at 0 */
+internal fun AnyFrame.maxDepth(): Int =
+    getColumnsWithPaths { all().rec() }.maxOfOrNull { it.depth } ?: 0
 
 /** Returns the max number of columns needed to display this column flattened */
-private fun BaseColumn<*>.maxWidth(): Int =
+internal fun BaseColumn<*>.maxWidth(): Int =
     if (this is ColumnGroup<*>) columns().sumOf { it.maxWidth() }.coerceAtLeast(1)
     else 1
 
 /**
  * Given a [DataFrame], this function returns a depth-first "matrix" containing all columns
- * layed out in such a way that they can be used to render the header of a table. The
+ * laid out in such a way that they can be used to render the header of a table. The
  * [ColumnWithPathWithBorder.columnWithPath] is `null` when nothing should be rendered in that cell.
  * Borders are included too, also for `null` cells.
  *
@@ -311,8 +324,8 @@ private fun BaseColumn<*>.maxWidth(): Int =
  * ```
  */
 private fun AnyFrame.getColumnsHeaderGrid(): List<List<ColumnWithPathWithBorder<*>>> {
-    val colGroup = asColumnGroup("")
-    val maxDepth = colGroup.maxDepth()
+    val colGroup = asColumnGroup()
+    val maxDepth = maxDepth()
     val maxWidth = colGroup.maxWidth()
     val map =
         MutableList(maxDepth + 1) { MutableList(maxWidth) { ColumnWithPathWithBorder<Any?>() } }
