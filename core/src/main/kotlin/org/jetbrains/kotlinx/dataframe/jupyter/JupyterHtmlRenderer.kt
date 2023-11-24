@@ -50,9 +50,9 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
         includeCss = true,
     ).plus(
         df.toHTML(
-            configuration = reifiedDisplayConfiguration,
+            // is added later to make sure it's put outside of potential iFrames
+            configuration = reifiedDisplayConfiguration.copy(enableFallbackStaticTables = false),
             cellRenderer = contextRenderer,
-            includeStatic = false, // is added later to make sure it's put outside of potential iFrames
         ) { footer }
     ).toJupyterHtmlData()
 

@@ -17,6 +17,16 @@ import kotlin.reflect.KProperty
 
 // region DataFrame
 
+/**
+ *
+ * @param cols key columns; Column for grouping can be created inplace
+ *
+ * `df.groupBy { expr("columnName") { "someColumn"<Int>() + 15 } }`
+ *
+ * is equivalent to
+ *
+ * `df.add("columnName") { "someColumn"<Int>() + 15 }.groupBy("columnName")`
+ */
 public fun <T> DataFrame<T>.groupBy(moveToTop: Boolean = true, cols: ColumnsSelector<T, *>): GroupBy<T, T> =
     groupByImpl(moveToTop, cols)
 
