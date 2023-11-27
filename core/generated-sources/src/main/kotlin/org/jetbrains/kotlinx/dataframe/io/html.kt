@@ -250,7 +250,7 @@ public fun AnyFrame.toStaticHtml(
                         append(
                             cellValue.take(nestedRowsLimit ?: Int.MAX_VALUE)
                                 .toStaticHtml(configuration, cellRenderer, includeCss = false)
-                                .toString()
+                                .body
                         )
                         val size = cellValue.rowsCount()
                         if (size > (nestedRowsLimit ?: Int.MAX_VALUE)) {
