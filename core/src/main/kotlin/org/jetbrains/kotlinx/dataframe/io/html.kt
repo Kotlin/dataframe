@@ -243,8 +243,7 @@ public fun AnyFrame.toStaticHtml(
                 is AnyFrame ->
                     emitTag("details") {
                         emitTag("summary") {
-                            append("DataFrame ")
-                            append(cellRenderer.content(cellValue, configuration).truncatedContent)
+                            append("DataFrame [${cellValue.size}]")
                         }
                         // add the dataframe as a nested table limiting the number of rows if needed
                         // CSS will not be included here, as it is already included in the main table
@@ -623,7 +622,7 @@ internal class DataFrameFormatter(
 
     private fun RenderedContent.addCss(css: String? = null): RenderedContent {
         return if (css != null) {
-            copy(truncatedContent = "<span class=\"$css\">" + truncatedContent + "</span>", isFormatted = true)
+            copy(truncatedContent = "<span class=\"$css\">$truncatedContent</span>", isFormatted = true)
         } else this
     }
 
@@ -632,7 +631,7 @@ internal class DataFrameFormatter(
             val ellipsis = "...".ellipsis(str)
             if (limit < 4) ellipsis
             else {
-                val len = Math.max(limit - 3, 1)
+                val len = (limit - 3).coerceAtLeast(1)
                 RenderedContent.textWithLength(str.substring(0, len).escapeHTML(), len) + ellipsis
             }
         } else {
@@ -767,7 +766,7 @@ internal class DataFrameFormatter(
                 val keyLimit = limit - sizeOfValue
                 if (key.length > keyLimit) {
                     if (limit > 3) {
-                        (key + "...").truncate(limit).addCss(structuralClass)
+                        ("$key...").truncate(limit).addCss(structuralClass)
                     } else null
                 } else {
                     val renderedValue =
