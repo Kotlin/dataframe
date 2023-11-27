@@ -257,7 +257,7 @@ class PostgresTest {
                 t2.lineCol,
                 t2.numericCol
             FROM table1 t1
-            JOIN table2 t2 ON t1.id = t2.id;
+            JOIN table2 t2 ON t1.id = t2.id
         """.trimIndent()
 
         val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<TestTableData>()
@@ -279,7 +279,5 @@ class PostgresTest {
         table2Df.rowsCount() shouldBe 3
         table2Df.filter { it[Table2::pathcol] == org.postgresql.geometric.PGpath("((1,2),(3,1))") }.rowsCount() shouldBe 1
         table2Df[0][11] shouldBe 1001
-
-        //TODO: add test for JSON column
     }
 }

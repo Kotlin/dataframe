@@ -15,6 +15,8 @@ import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.junit.Ignore
 
 private const val URL = "jdbc:mariadb://localhost:3307"
@@ -55,6 +57,7 @@ interface Table1MariaDb {
     val longtextCol: String
     val enumCol: String
     val setCol: String
+    val jsonCol: String
 }
 
 @DataSchema
@@ -63,6 +66,11 @@ interface Table2MariaDb {
     val enumCol: String
     val setCol: String
 }
+
+private const val JSON_STRING =
+    "{\"details\": {\"foodType\": \"Pizza\", \"menu\": \"https://www.loumalnatis.com/our-menu\"}, \n" +
+        "     \t\"favorites\": [{\"description\": \"Pepperoni deep dish\", \"price\": 18.75}, \n" +
+        "{\"description\": \"The Lou\", \"price\": 24.75}]}"
 
 class MariadbTest {
     companion object {
@@ -123,7 +131,9 @@ class MariadbTest {
                 mediumtextCol MEDIUMTEXT,
                 longtextCol LONGTEXT,
                 enumCol ENUM('Value1', 'Value2', 'Value3'),
-                setCol SET('Option1', 'Option2', 'Option3')
+                setCol SET('Option1', 'Option2', 'Option3'),
+                jsonCol JSON
+                CHECK (JSON_VALID(jsonCol))
             )
         """
             connection.createStatement().execute(
@@ -176,8 +186,8 @@ class MariadbTest {
                 bitCol, tinyintCol, smallintCol, mediumintCol, mediumintUnsignedCol, integerCol, intCol, 
                 integerUnsignedCol, bigintCol, floatCol, doubleCol, decimalCol, dateCol, datetimeCol, timestampCol,
                 timeCol, yearCol, varcharCol, charCol, binaryCol, varbinaryCol, tinyblobCol, blobCol,
-                mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol, jsonCol
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """.trimIndent()
 
 
@@ -224,6 +234,7 @@ class MariadbTest {
                     st.setString(28, "longtextValue$i")
                     st.setString(29, "Value$i")
                     st.setString(30, "Option$i")
+                    st.setString(31, JSON_STRING)
 
                     st.executeUpdate()
                 }
@@ -301,7 +312,7 @@ class MariadbTest {
                t2.enumCol,
                t2.setCol
             FROM table1 t1
-            JOIN table2 t2 ON t1.id = t2.id;
+            JOIN table2 t2 ON t1.id = t2.id
         """.trimIndent()
 
         val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<Table2MariaDb>()
@@ -317,6 +328,7 @@ class MariadbTest {
         table1Df.rowsCount() shouldBe 3
         table1Df.filter { it[Table1MariaDb::integerCol] > 100 }.rowsCount() shouldBe 2
         table1Df[0][11] shouldBe 10.0
+        table1Df[0][31] shouldBe JSON_STRING // TODO: https://github.com/Kotlin/dataframe/issues/462
 
         val table2Df = dataframes[1].cast<Table1MariaDb>()
 

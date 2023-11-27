@@ -305,7 +305,7 @@ class MySqlTest {
                t2.enumCol,
                t2.setCol
             FROM table1 t1
-            JOIN table2 t2 ON t1.id = t2.id;
+            JOIN table2 t2 ON t1.id = t2.id
         """.trimIndent()
 
         val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<Table2MariaDb>()

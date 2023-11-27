@@ -21,10 +21,6 @@ public object MySql : DbType("mysql") {
         get() = "com.mysql.jdbc.Driver"
 
     override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? {
-        if (tableColumnMetadata.sqlTypeName.lowercase().contains("json"))
-            return ColumnSchema.Value(typeOf<ColumnGroup<DataRow<String>>>()) // TODO: https://github.com/Kotlin/dataframe/issues/462
-        if (tableColumnMetadata.sqlTypeName.lowercase().contains("geometry"))
-            return ColumnSchema.Value(typeOf<ByteArray>())
         return null
     }
 
@@ -51,7 +47,6 @@ public object MySql : DbType("mysql") {
             tables.getString("table_cat"))
     }
 
-    // TODO: finish mapping, add tests
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? {
         return null
     }

@@ -21,8 +21,6 @@ public object PostgreSql : DbType("postgresql") {
         get() = "org.postgresql.Driver"
 
     override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? {
-        if (tableColumnMetadata.sqlTypeName.contains("json"))
-            return ColumnSchema.Value(typeOf<ColumnGroup<DataRow<String>>>()) // TODO: https://github.com/Kotlin/dataframe/issues/462
         return null
     }
 

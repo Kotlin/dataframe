@@ -149,6 +149,9 @@ public fun DataFrame.Companion.readSqlQuery(dbConfig: DatabaseConfiguration, sql
 /**
  * Converts the result of an SQL query to the DataFrame.
  *
+ * NOTE: SQL query should start from SELECT and contain one query for reading data without any manipulation.
+ * It should not contain ```;``` symbol.
+ *
  * @param [connection] the database connection to execute the SQL query.
  * @param [sqlQuery] the SQL query to execute.
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
