@@ -243,7 +243,6 @@ public fun DataFrame.Companion.readAllSqlTables(connection: Connection, catalogu
 
     // exclude a system and other tables without data, but it looks like it supported badly for many databases
     val tables = metaData.getTables(catalogue, null, null, arrayOf("TABLE"))
-    // TODO: handle execution and write test for non-existing stuff
 
     val dataFrames = mutableListOf<AnyFrame>()
 
@@ -254,7 +253,6 @@ public fun DataFrame.Companion.readAllSqlTables(connection: Connection, catalogu
            // val tableName = if (table.catalogue != null) table.catalogue + "." + table.name else table.name
             val tableName = if (catalogue != null) catalogue + "." + table.name else table.name
 
-            // TODO: handle empty table name (impossible, but should do it)
             // TODO: both cases is schema specified or not in URL
             // in h2 database name is recognized as a schema name https://www.h2database.com/html/features.html#database_url
             // https://stackoverflow.com/questions/20896935/spring-hibernate-h2-database-schema-not-found
@@ -299,7 +297,6 @@ public fun DataFrame.Companion.getSchemaForSqlTable(
     val url = connection.metaData.url
     val dbType = extractDBTypeFromUrl(url)
 
-    // TODO: passed table name to be a table name without any SQL words and ;
     val preparedQuery = "SELECT * FROM $tableName LIMIT 1"
 
     connection.createStatement().use { st ->

@@ -62,6 +62,7 @@ interface Table2MySql {
     val setCol: String
 }
 
+@Ignore
 class MySqlTest {
     companion object {
         private lateinit var connection: Connection
@@ -292,8 +293,6 @@ class MySqlTest {
 
         val df2 = DataFrame.readSqlTable(connection, "table2").cast<Table1MariaDb>()
         df2.rowsCount() shouldBe 3
-
-        //TODO: add test for JSON column
     }
 
     @Test

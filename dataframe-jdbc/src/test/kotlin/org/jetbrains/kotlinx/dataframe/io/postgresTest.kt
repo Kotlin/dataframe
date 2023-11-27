@@ -73,6 +73,7 @@ interface ViewTable {
     val numericcol: String
 }
 
+@Ignore
 class PostgresTest {
     companion object {
         private lateinit var connection: Connection

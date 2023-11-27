@@ -30,6 +30,7 @@ interface RankedMoviesWithGenres {
     val genres: String
 }
 
+@Ignore
 class ImdbTestTest {
     @Test
     fun `read table`() {

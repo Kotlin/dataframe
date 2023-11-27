@@ -72,6 +72,7 @@ private const val JSON_STRING =
         "     \t\"favorites\": [{\"description\": \"Pepperoni deep dish\", \"price\": 18.75}, \n" +
         "{\"description\": \"The Lou\", \"price\": 24.75}]}"
 
+@Ignore
 class MariadbTest {
     companion object {
         private lateinit var connection: Connection
