@@ -43,6 +43,21 @@ private val logger = KotlinLogging.logger {}
 private const val DEFAULT_LIMIT = Int.MIN_VALUE
 
 /**
+ * Constant variable indicating the start of an SQL read query.
+ * The value of this variable is "SELECT".
+ */
+private const val START_OF_READ_SQL_QUERY = "SELECT"
+
+/**
+ * Constant representing the separator used to separate multiple SQL queries.
+ *
+ * This separator is used when multiple SQL queries need to be executed together.
+ * Each query should be separated by this separator to indicate the end of one query
+ * and the start of the next query.
+ */
+private const val MULTIPLE_SQL_QUERY_SEPARATOR = ";"
+
+/**
  * Represents a column in a database table to keep all required meta-information.
  *
  * @property [name] the name of the column.
@@ -142,6 +157,8 @@ public fun DataFrame.Companion.readSqlQuery(dbConfig: DatabaseConfiguration, sql
  * @see DriverManager.getConnection
  */
 public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: String, limit: Int = DEFAULT_LIMIT): AnyFrame {
+    require (isValid(sqlQuery)) { "SQL query should start from SELECT and contain one query for reading data without any manipulation. "}
+    
     val url = connection.metaData.url
     val dbType = extractDBTypeFromUrl(url)
 
@@ -156,6 +173,14 @@ public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: St
             return fetchAndConvertDataFromResultSet(tableColumns, rs, dbType, DEFAULT_LIMIT)
         }
     }
+}
+
+/** SQL-query is accepted only if it starts from SELECT */
+private fun isValid(sqlQuery: String): Boolean {
+    val normalizedSqlQuery = sqlQuery.trim().uppercase()
+
+    return normalizedSqlQuery.startsWith(START_OF_READ_SQL_QUERY) &&
+        !normalizedSqlQuery.contains(MULTIPLE_SQL_QUERY_SEPARATOR)
 }
 
 /**

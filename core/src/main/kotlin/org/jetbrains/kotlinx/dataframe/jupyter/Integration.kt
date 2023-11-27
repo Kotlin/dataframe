@@ -30,15 +30,9 @@ import org.jetbrains.kotlinx.dataframe.api.SplitWithTransform
 import org.jetbrains.kotlinx.dataframe.api.Update
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
-import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.columnsCount
-import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.frames
-import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.name
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -340,35 +334,3 @@ public fun KotlinKernelHost.useSchemas(schemaClasses: Iterable<KClass<*>>) {
 public fun KotlinKernelHost.useSchemas(vararg schemaClasses: KClass<*>): Unit = useSchemas(schemaClasses.asIterable())
 
 public inline fun <reified T> KotlinKernelHost.useSchema(): Unit = useSchemas(T::class)
-
-/**
- * Converts [dataframeLike] to [AnyFrame].
- * If [dataframeLike] is already [AnyFrame] then it is returned as is.
- * If it's not possible to convert [dataframeLike] to [AnyFrame] then [IllegalArgumentException] is thrown.
- */
-internal fun convertToDataFrame(dataframeLike: Any): AnyFrame =
-    when (dataframeLike) {
-        is Pivot<*> -> dataframeLike.frames().toDataFrame()
-        is ReducedPivot<*> -> dataframeLike.values().toDataFrame()
-        is PivotGroupBy<*> -> dataframeLike.frames()
-        is ReducedPivotGroupBy<*> -> dataframeLike.values()
-        is SplitWithTransform<*, *, *> -> dataframeLike.into()
-        is Split<*, *> -> dataframeLike.toDataFrame()
-        is Merge<*, *, *> -> dataframeLike.into("merged")
-        is Gather<*, *, *, *> -> dataframeLike.into("key", "value")
-        is Update<*, *> -> dataframeLike.df
-        is Convert<*, *> -> dataframeLike.df
-        is FormattedFrame<*> -> dataframeLike.df
-        is AnyCol -> dataFrameOf(dataframeLike)
-        is AnyRow -> dataframeLike.toDataFrame()
-        is GroupBy<*, *> -> dataframeLike.toDataFrame()
-        is AnyFrame -> dataframeLike
-        is DisableRowsLimitWrapper -> dataframeLike.value
-        is MoveClause<*, *> -> dataframeLike.df
-        is RenameClause<*, *> -> dataframeLike.df
-        is ReplaceClause<*, *> -> dataframeLike.df
-        is GroupClause<*, *> -> dataframeLike.into("untitled")
-        is InsertClause<*> -> dataframeLike.at(0)
-        is FormatClause<*, *> -> dataframeLike.df
-        else -> throw IllegalArgumentException("Unsupported type: ${dataframeLike::class}")
-    }
