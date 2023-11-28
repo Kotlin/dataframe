@@ -95,21 +95,6 @@ tasks.withType<LintTask> {
     enabled = true
 }
 
-kotlinter {
-    ignoreFailures = false
-    reporters = arrayOf("checkstyle", "plain")
-    experimentalRules = true
-    disabledRules = arrayOf(
-        "no-wildcard-imports",
-        "experimental:spacing-between-declarations-with-annotations",
-        "experimental:enum-entry-name-case",
-        "experimental:argument-list-wrapping",
-        "experimental:annotation",
-        "max-line-length",
-        "filename"
-    )
-}
-
 tasks.test {
     jvmArgs = listOf("--add-opens", "java.base/java.nio=ALL-UNNAMED")
 }

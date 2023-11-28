@@ -2,6 +2,7 @@ plugins {
     kotlin("jvm")
     kotlin("libs.publisher")
     id("org.jetbrains.kotlinx.kover")
+    id("org.jmailen.kotlinter")
 }
 
 group = "org.jetbrains.kotlinx"
