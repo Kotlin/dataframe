@@ -108,7 +108,7 @@ internal fun tableJs(columns: List<ColumnDataForJs>, id: Int, rootId: Int, nrow:
             val colName = col.renderHeader().escapeForHtmlInJs()
             append("{ name: \"$colName\", children: $children, rightAlign: ${col.rightAlign}, values: $values }, \n")
 
-            return colIndex
+            return@appendColWithChildren colIndex
         }
         columns.forEach { appendColWithChildren(it) }
         append("]")
@@ -193,37 +193,41 @@ public fun AnyFrame.toStaticHtml(
 ): DataFrameHtmlData {
     val df = this
     val id = "static_df_${nextTableId()}"
+
+    // Retrieve all columns, including nested ones
     val flattenedCols = getColumnsWithPaths { cols { !it.isColumnGroup() }.recursively() }
+
+    // Get a grid of columns for the header, as well as the side borders for each cell
     val colGrid = getColumnsHeaderGrid()
     val borders = colGrid.last().map { it.borders - Border.BOTTOM }
+
+    // Limit for number of rows in dataframes inside frame columns
     val nestedRowsLimit = configuration.nestedRowsLimit
 
+    // Adds the given tag to the html, with the given attributes and contents
     fun StringBuilder.emitTag(tag: String, attributes: String = "", tagContents: StringBuilder.() -> Unit) {
-        append("<")
-        append(tag)
+        append("<$tag")
         if (attributes.isNotEmpty()) {
             append(" ")
             append(attributes)
         }
         append(">")
-
         tagContents()
-
-        append("</")
-        append(tag)
-        append(">")
+        append("</$tag>")
     }
 
+    // Adds a header to the html. This header contains all the column names including nested ones
+    // properly laid out with borders.
     fun StringBuilder.emitHeader() = emitTag("thead") {
         for (row in colGrid) {
             emitTag("tr") {
                 for ((j, col) in row.withIndex()) {
-                    var borders = col.borders
+                    val colBorders = col.borders.toMutableSet()
+                    // check if the next cell has a left border, and if so, add a right border to this cell
                     if (row.getOrNull(j + 1)?.borders?.contains(Border.LEFT) == true) {
-                        // because left does not work unless at first column
-                        borders += Border.RIGHT
+                        colBorders += Border.RIGHT
                     }
-                    emitTag("th", borders.toClass()) {
+                    emitTag("th", "${colBorders.toClass()} style=\"text-align:left\"") {
                         append(col.columnWithPath?.name ?: "")
                     }
                 }
@@ -231,37 +235,43 @@ public fun AnyFrame.toStaticHtml(
         }
     }
 
-    fun StringBuilder.emitCell(cellValue: Any?, borders: Set<Border>): Unit = emitTag("td", borders.toClass()) {
-        when (cellValue) {
-            is AnyFrame ->
-                emitTag("details") {
-                    emitTag("summary") {
-                        append("DataFrame ")
-                        append(cellRenderer.content(cellValue, configuration).truncatedContent)
-                    }
-                    append(
-                        cellValue.take(nestedRowsLimit ?: Int.MAX_VALUE)
-                            .toStaticHtml(configuration, cellRenderer, includeCss = false)
-                            .toString()
-                    )
-                    val size = cellValue.rowsCount()
-                    if (size > nestedRowsLimit ?: Int.MAX_VALUE) {
-                        emitTag("p") {
-                            append("... showing only top $nestedRowsLimit of $size rows")
+    // Adds a single cell to the html. DataRows from column groups already need to be split up into separate cells.
+    fun StringBuilder.emitCell(cellValue: Any?, borders: Set<Border>): Unit =
+        emitTag("td", borders.toClass()) {
+            when (cellValue) {
+                // uses the <details> and <summary> to create a collapsible cell for dataframes
+                is AnyFrame ->
+                    emitTag("details") {
+                        emitTag("summary") {
+                            append("DataFrame [${cellValue.size}]")
+                        }
+                        // add the dataframe as a nested table limiting the number of rows if needed
+                        // CSS will not be included here, as it is already included in the main table
+                        append(
+                            cellValue.take(nestedRowsLimit ?: Int.MAX_VALUE)
+                                .toStaticHtml(configuration, cellRenderer, includeCss = false)
+                                .body
+                        )
+                        val size = cellValue.rowsCount()
+                        if (size > (nestedRowsLimit ?: Int.MAX_VALUE)) {
+                            emitTag("p") {
+                                append("... showing only top $nestedRowsLimit of $size rows")
+                            }
                         }
                     }
-                }
 
-            else ->
-                append(cellRenderer.content(cellValue, configuration).truncatedContent)
+                // Else use the default cell renderer
+                else ->
+                    append(cellRenderer.content(cellValue, configuration).truncatedContent)
+            }
         }
-    }
 
+    // Adds a single row to the html. This row uses the flattened columns to get them displayed non-collapsed.
     fun StringBuilder.emitRow(row: AnyRow) = emitTag("tr") {
         for ((i, col) in flattenedCols.withIndex()) {
-            var border = borders[i]
+            val border = borders[i].toMutableSet()
+            // check if the next cell has a left border, and if so, add a right border to this cell
             if (borders.getOrNull(i + 1)?.contains(Border.LEFT) == true) {
-                // because left does not work unless at first column
                 border += Border.RIGHT
             }
             val cell = row[col.path()]
@@ -269,6 +279,7 @@ public fun AnyFrame.toStaticHtml(
         }
     }
 
+    // Adds the body of the html. This body contains all the cols and rows of the dataframe.
     fun StringBuilder.emitBody() = emitTag("tbody") {
         val rowsCountToRender = minOf(rowsCount(), configuration.rowsLimit ?: Int.MAX_VALUE)
         for (rowIndex in 0..<rowsCountToRender) {
@@ -276,26 +287,43 @@ public fun AnyFrame.toStaticHtml(
         }
     }
 
+    // Base function which adds the table to the html.
     fun StringBuilder.emitTable() = emitTag("table", """class="dataframe" id="$id"""") {
         emitHeader()
         emitBody()
     }
 
-    return DataFrameHtmlData(body = buildString { emitTable() }) +
-        DataFrameHtmlData.tableDefinitions(includeJs = false, includeCss = includeCss)
+    return DataFrameHtmlData(
+        body = buildString { emitTable() },
+        // will hide the table if JS is enabled
+        script = """
+            document.getElementById("$id").style.display = "none";
+        """.trimIndent(),
+    ) + DataFrameHtmlData.tableDefinitions(includeJs = false, includeCss = includeCss)
 }
 
+/**
+ * Border enum used for static rendering of tables in html/css.
+ * @see toClass
+ */
 private enum class Border(val className: String) {
-    // NOTE: these don't render unless at leftmost; add rightborder to the previous cell.
+    // NOTE: these don't render unless at leftmost; add rightBorder to the previous cell.
     LEFT("leftBorder"),
     RIGHT("rightBorder"),
     BOTTOM("bottomBorder");
 }
 
+/**
+ * Converts a set of borders to a class string for html/css rendering.
+ */
 private fun Set<Border>.toClass(): String =
     if (isEmpty()) ""
     else "class=\"${joinToString(" ") { it.className }}\""
 
+/**
+ * Wrapper class which contains a nullable [ColumnWithPath] and a set of [Border]s.
+ * (Empty cells can have borders too)
+ */
 private data class ColumnWithPathWithBorder<T>(
     val columnWithPath: ColumnWithPath<T>? = null,
     val borders: Set<Border> = emptySet(),
@@ -327,7 +355,7 @@ private fun AnyFrame.getColumnsHeaderGrid(): List<List<ColumnWithPathWithBorder<
     val colGroup = asColumnGroup()
     val maxDepth = maxDepth()
     val maxWidth = colGroup.maxWidth()
-    val map =
+    val matrix =
         MutableList(maxDepth + 1) { MutableList(maxWidth) { ColumnWithPathWithBorder<Any?>() } }
 
     fun ColumnWithPath<*>.addChildren(depth: Int = 0, breadth: Int = 0) {
@@ -335,20 +363,25 @@ private fun AnyFrame.getColumnsHeaderGrid(): List<List<ColumnWithPathWithBorder<
         val children = children()
         val lastIndex = children.lastIndex
         for ((i, child) in children().withIndex()) {
-            map[depth][breadth] = map[depth][breadth].copy(columnWithPath = child)
+            matrix[depth][breadth] = matrix[depth][breadth].copy(columnWithPath = child)
 
-            // draw colGroup borders unless at start/end of table
+            // draw colGroup side borders unless at start/end of table
             val borders = mutableSetOf<Border>()
             if (i == 0 && breadth != 0) borders += Border.LEFT
             if (i == lastIndex && breadth != maxWidth - 1) borders += Border.RIGHT
+
+            // draw bottom border if at max depth
             if (depth == maxDepth) borders += Border.BOTTOM
 
             if (borders.isNotEmpty()) {
+                // draw borders in other cells
+                // from depth - 1 (to include not just the children but the current cell too)
                 for (j in (depth - 1).coerceAtLeast(0)..maxDepth) {
-                    map[j][breadth] = map[j][breadth].let { it.copy(borders = it.borders + borders) }
+                    matrix[j][breadth] = matrix[j][breadth].let { it.copy(borders = it.borders + borders) }
                 }
             }
 
+            // recurse if needed to render children of the current column group
             if (child is ColumnGroup<*>) {
                 child.addChildren(depth + 1, breadth)
             }
@@ -356,7 +389,7 @@ private fun AnyFrame.getColumnsHeaderGrid(): List<List<ColumnWithPathWithBorder<
         }
     }
     colGroup.addPath().addChildren()
-    return map
+    return matrix
 }
 
 internal fun DataFrameHtmlData.print() = println(this)
@@ -421,7 +454,7 @@ public fun <T> DataFrame<T>.toHTML(
 public data class DataFrameHtmlData(
     @Language("css") val style: String = "",
     @Language("html", prefix = "<body>", suffix = "</body>") val body: String = "",
-    @Language("js") val script: String = ""
+    @Language("js") val script: String = "",
 ) {
     override fun toString(): String = buildString {
         appendLine("<html>")
@@ -589,7 +622,7 @@ internal class DataFrameFormatter(
 
     private fun RenderedContent.addCss(css: String? = null): RenderedContent {
         return if (css != null) {
-            copy(truncatedContent = "<span class=\"$css\">" + truncatedContent + "</span>", isFormatted = true)
+            copy(truncatedContent = "<span class=\"$css\">$truncatedContent</span>", isFormatted = true)
         } else this
     }
 
@@ -598,7 +631,7 @@ internal class DataFrameFormatter(
             val ellipsis = "...".ellipsis(str)
             if (limit < 4) ellipsis
             else {
-                val len = Math.max(limit - 3, 1)
+                val len = (limit - 3).coerceAtLeast(1)
                 RenderedContent.textWithLength(str.substring(0, len).escapeHTML(), len) + ellipsis
             }
         } else {
@@ -733,7 +766,7 @@ internal class DataFrameFormatter(
                 val keyLimit = limit - sizeOfValue
                 if (key.length > keyLimit) {
                     if (limit > 3) {
-                        (key + "...").truncate(limit).addCss(structuralClass)
+                        ("$key...").truncate(limit).addCss(structuralClass)
                     } else null
                 } else {
                     val renderedValue =
