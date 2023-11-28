@@ -1,10 +1,12 @@
 package org.jetbrains.dataframe.gradle
 
 object TestData {
-    val csvSample = """
-            name, age
-            Alice, 15
-            Bob,
+
+    val csvSample =
+        """
+        name, age
+        Alice, 15
+        Bob,
         """.trimIndent()
 
     val csvName = "data.csv"

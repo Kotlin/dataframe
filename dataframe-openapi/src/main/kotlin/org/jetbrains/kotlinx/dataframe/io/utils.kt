@@ -27,7 +27,6 @@ internal interface IsObject {
     val isObject: Boolean
 }
 
-
 /** Helper function to create a [GeneratedField] without [GeneratedField.columnSchema]. */
 internal fun generatedFieldOf(
     fieldName: ValidFieldName,
