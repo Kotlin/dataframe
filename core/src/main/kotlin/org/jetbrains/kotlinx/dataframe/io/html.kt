@@ -220,7 +220,7 @@ public fun AnyFrame.toStaticHtml(
     // properly laid out with borders.
     fun StringBuilder.emitHeader() = emitTag("thead") {
         for (row in colGrid) {
-            emitTag("tr") {
+            emitTag("tr", "align=\"left\"") {
                 for ((j, col) in row.withIndex()) {
                     val colBorders = col.borders.toMutableSet()
                     // check if the next cell has a left border, and if so, add a right border to this cell
@@ -267,7 +267,7 @@ public fun AnyFrame.toStaticHtml(
         }
 
     // Adds a single row to the html. This row uses the flattened columns to get them displayed non-collapsed.
-    fun StringBuilder.emitRow(row: AnyRow) = emitTag("tr") {
+    fun StringBuilder.emitRow(row: AnyRow) = emitTag("tr", "align=\"right\"") {
         for ((i, col) in flattenedCols.withIndex()) {
             val border = borders[i].toMutableSet()
             // check if the next cell has a left border, and if so, add a right border to this cell
