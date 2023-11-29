@@ -15,10 +15,12 @@ import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
 import org.jetbrains.kotlinx.dataframe.api.rows
+import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.depth
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
@@ -238,7 +240,7 @@ public fun AnyFrame.toStaticHtml(
 
     // Adds a single cell to the html. DataRows from column groups already need to be split up into separate cells.
     fun StringBuilder.emitCell(cellValue: Any?, borders: Set<Border>): Unit =
-        emitTag("td", borders.toClass()) {
+        emitTag("td", "${borders.toClass()} style=\"vertical-align:top\"") {
             when (cellValue) {
                 // uses the <details> and <summary> to create a collapsible cell for dataframes
                 is AnyFrame ->

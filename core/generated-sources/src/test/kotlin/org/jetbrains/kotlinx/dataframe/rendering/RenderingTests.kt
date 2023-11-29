@@ -184,7 +184,7 @@ class RenderingTests : TestBase() {
         val df = DataFrame.read("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains.json")
 
 //        df.toHTML().openInBrowser()
-        df.toStaticHtml(openNestedDfs = true).copy(script = "").openInBrowser()
+        df.toStaticHtml(openNestedDfs = true, includeCss = false).copy(script = "").openInBrowser()
 //        df.get(frameColumn("repos")).get(0).toStaticHtml(openNestedDfs = false).copy(script = "").openInBrowser()
     }
 }
