@@ -190,6 +190,7 @@ public fun AnyFrame.toStaticHtml(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
     cellRenderer: CellRenderer = DefaultCellRenderer,
     includeCss: Boolean = true,
+    openNestedDfs: Boolean = false,
 ): DataFrameHtmlData {
     val df = this
     val id = "static_df_${nextTableId()}"
@@ -241,7 +242,7 @@ public fun AnyFrame.toStaticHtml(
             when (cellValue) {
                 // uses the <details> and <summary> to create a collapsible cell for dataframes
                 is AnyFrame ->
-                    emitTag("details") {
+                    emitTag("details", if (openNestedDfs) "open" else "") {
                         emitTag("summary") {
                             append("DataFrame [${cellValue.size}]")
                         }
@@ -249,7 +250,12 @@ public fun AnyFrame.toStaticHtml(
                         // CSS will not be included here, as it is already included in the main table
                         append(
                             cellValue.take(nestedRowsLimit ?: Int.MAX_VALUE)
-                                .toStaticHtml(configuration, cellRenderer, includeCss = false)
+                                .toStaticHtml(
+                                    configuration,
+                                    cellRenderer,
+                                    includeCss = false,
+                                    openNestedDfs = openNestedDfs
+                                )
                                 .body
                         )
                         val size = cellValue.rowsCount()
@@ -330,8 +336,11 @@ private data class ColumnWithPathWithBorder<T>(
 )
 
 /** Returns the depth of the most-nested column in this df/group, starting at 0 */
-internal fun AnyFrame.maxDepth(): Int =
-    getColumnsWithPaths { all().rec() }.maxOfOrNull { it.depth } ?: 0
+internal fun AnyFrame.maxDepth(startingAt: Int = 0): Int =
+    columns().maxOfOrNull {
+        if (it is ColumnGroup<*>) it.maxDepth(startingAt + 1)
+        else startingAt
+    } ?: startingAt
 
 /** Returns the max number of columns needed to display this column flattened */
 internal fun BaseColumn<*>.maxWidth(): Int =
@@ -356,7 +365,13 @@ private fun AnyFrame.getColumnsHeaderGrid(): List<List<ColumnWithPathWithBorder<
     val maxDepth = maxDepth()
     val maxWidth = colGroup.maxWidth()
     val matrix =
-        MutableList(maxDepth + 1) { MutableList(maxWidth) { ColumnWithPathWithBorder<Any?>() } }
+        MutableList(maxDepth + 1) { depth ->
+            MutableList(maxWidth) {
+                // already adding bottom borders for the last row
+                val borders = if (depth == maxDepth) setOf(Border.BOTTOM) else emptySet()
+                ColumnWithPathWithBorder<Any?>(borders = borders)
+            }
+        }
 
     fun ColumnWithPath<*>.addChildren(depth: Int = 0, breadth: Int = 0) {
         var breadth = breadth
@@ -369,9 +384,6 @@ private fun AnyFrame.getColumnsHeaderGrid(): List<List<ColumnWithPathWithBorder<
             val borders = mutableSetOf<Border>()
             if (i == 0 && breadth != 0) borders += Border.LEFT
             if (i == lastIndex && breadth != maxWidth - 1) borders += Border.RIGHT
-
-            // draw bottom border if at max depth
-            if (depth == maxDepth) borders += Border.BOTTOM
 
             if (borders.isNotEmpty()) {
                 // draw borders in other cells
