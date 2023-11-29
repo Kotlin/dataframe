@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage.ColumnGroupName
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage
+import org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.Usage.ColumnSetName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
@@ -116,7 +117,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     ColsOfColumnsSelectionDsl,
     // simplify()
     SimplifyColumnsSelectionDsl,
-    // filter {}, filterChildren {}
+    // filter {}
     FilterColumnsSelectionDsl,
     // colSet and colB
     AndColumnsSelectionDsl<T>,
@@ -376,6 +377,8 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**and**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] **`(`**`|`**`{ `**[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
      *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**filter**][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]**` {`** [condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef] **`}`**
+     *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`|` TODO
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -501,18 +504,9 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] on
      * any [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]. This is more powerful than [ColumnsSelectionDsl.cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], because all operations of
-     * the DSL are at your disposal. Nested select, like this, will take the selected columns
-     * out of their original structure.
+     * the DSL are at your disposal.
      *
-     * This means that executing:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { a.`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` { b `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` c  } }`
-     *
-     * results in exactly the same [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] as executing:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { a.b `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` a.c  }`.
-     *
-     * The [invoke `{}`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
+     * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
      * #### For example:
      *
@@ -550,18 +544,9 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] on
      * any [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]. This is more powerful than [ColumnsSelectionDsl.cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], because all operations of
-     * the DSL are at your disposal. Nested select, like this, will take the selected columns
-     * out of their original structure.
+     * the DSL are at your disposal.
      *
-     * This means that executing:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { a.`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` { b `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` c  } }`
-     *
-     * results in exactly the same [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] as executing:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { a.b `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` a.c  }`.
-     *
-     * The [invoke `{}`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
+     * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
      * #### For example:
      *
@@ -605,18 +590,9 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] on
      * any [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]. This is more powerful than [ColumnsSelectionDsl.cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], because all operations of
-     * the DSL are at your disposal. Nested select, like this, will take the selected columns
-     * out of their original structure.
+     * the DSL are at your disposal.
      *
-     * This means that executing:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { a.`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` { b `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` c  } }`
-     *
-     * results in exactly the same [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] as executing:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { a.b `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` a.c  }`.
-     *
-     * The [invoke `{}`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
+     * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
      * #### For example:
      *
@@ -654,18 +630,9 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] on
      * any [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]. This is more powerful than [ColumnsSelectionDsl.cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], because all operations of
-     * the DSL are at your disposal. Nested select, like this, will take the selected columns
-     * out of their original structure.
+     * the DSL are at your disposal.
      *
-     * This means that executing:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { a.`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` { b `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` c  } }`
-     *
-     * results in exactly the same [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] as executing:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { a.b `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` a.c  }`.
-     *
-     * The [invoke `{}`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
+     * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
      * #### For example:
      *
