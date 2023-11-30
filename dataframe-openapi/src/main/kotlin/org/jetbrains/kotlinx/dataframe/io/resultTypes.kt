@@ -108,4 +108,3 @@ internal sealed interface OpenApiTypeResult {
     /** Property is an enum with values [values]. */
     data class Enum(val values: List<String>, val nullable: Boolean) : OpenApiTypeResult
 }
-

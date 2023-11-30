@@ -3,7 +3,7 @@ plugins {
     kotlin("libs.publisher")
     kotlin("plugin.serialization")
     id("org.jetbrains.kotlinx.kover")
-
+    id("org.jmailen.kotlinter")
     kotlin("jupyter.api")
 }
 

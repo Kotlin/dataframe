@@ -52,6 +52,7 @@ public fun DataFrame.Companion.readArrowIPC(
     allocator: RootAllocator = Allocator.ROOT,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame = readArrowIPCImpl(channel, allocator, nullability)
+
 /**
  * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [channel]
  */

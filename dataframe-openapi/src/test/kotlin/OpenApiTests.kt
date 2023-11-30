@@ -1064,15 +1064,14 @@ class OpenApiTests : JupyterReplTestCase() {
 
     @Test
     fun `Jupyter importDataSchema`() {
+        val filePath = apiGuruYaml.absolutePath.let {
+            if (separatorChar == '\\') it.replace("\\", "\\\\")
+            else it
+        }
         @Language("kts")
         val _1 = execRaw(
             """
-                val ApiGuru = importDataSchema(File("${
-                apiGuruYaml.absolutePath.let {
-                    if (separatorChar == '\\') it.replace("\\", "\\\\")
-                    else it
-                }
-            }"))
+                val ApiGuru = importDataSchema(File("$filePath"))
             """.trimIndent()
         )
 

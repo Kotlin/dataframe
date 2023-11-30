@@ -39,6 +39,7 @@ internal const val KOTLIN_COMPILER_CLASSPATH_PROPERTY = "kotlin.compiler.classpa
 internal const val KOTLIN_COMPILER_JAR_PROPERTY = "kotlin.compiler.jar"
 internal const val KOTLIN_STDLIB_JAR_PROPERTY = "kotlin.java.stdlib.jar"
 internal const val KOTLIN_REFLECT_JAR_PROPERTY = "kotlin.java.reflect.jar"
+
 // obsolete name, but maybe still used in the wild
 // TODO: consider removing
 internal const val KOTLIN_RUNTIME_JAR_PROPERTY = "kotlin.java.runtime.jar"
@@ -222,8 +223,9 @@ private fun allRelatedClassLoaders(clsLoader: ClassLoader, visited: MutableSet<C
     if (!visited.add(clsLoader)) return emptySequence()
 
     val singleParent = clsLoader.parent
-    if (singleParent != null)
+    if (singleParent != null) {
         return sequenceOf(singleParent).flatMap { allRelatedClassLoaders(it, visited) } + clsLoader
+    }
 
     return try {
         val arrayOfClassLoaders = getParentClassLoaders(clsLoader)
