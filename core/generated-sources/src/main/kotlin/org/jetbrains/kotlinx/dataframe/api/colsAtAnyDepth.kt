@@ -12,7 +12,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
@@ -26,7 +25,6 @@ import org.jetbrains.kotlinx.dataframe.util.DFS_MESSAGE
 import org.jetbrains.kotlinx.dataframe.util.DFS_OF_MESSAGE
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
-import kotlin.reflect.typeOf
 
 // region ColumnsSelectionDsl
 

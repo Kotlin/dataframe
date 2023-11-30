@@ -39,5 +39,4 @@ class ExprTests : ColumnsSelectionDslTests() {
             none()
         }
     }
-
 }

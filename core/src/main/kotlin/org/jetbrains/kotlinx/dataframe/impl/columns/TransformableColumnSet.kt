@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
-import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.colsInternal
 import org.jetbrains.kotlinx.dataframe.api.singleInternal
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext

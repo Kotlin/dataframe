@@ -13,7 +13,6 @@ import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs
 import org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslUsage
-import org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslUsage.OperationArg
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.index

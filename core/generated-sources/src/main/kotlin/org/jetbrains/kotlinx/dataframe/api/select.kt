@@ -39,9 +39,7 @@ public interface SelectColumnsSelectionDsl {
     /**
      * TODO
      */
-    public interface Usage {
-
-    }
+    public interface Usage
 
     /**
      * ## Select from [ColumnGroup]
