@@ -103,23 +103,23 @@ class DataFrameReadTest {
                 // Create table Customer
                 connection.createStatement().execute(
                     """
-                CREATE TABLE Customer (
-                    id INT PRIMARY KEY,
-                    name VARCHAR(50),
-                    age INT
-                )
-            """.trimIndent()
+                    CREATE TABLE Customer (
+                        id INT PRIMARY KEY,
+                        name VARCHAR(50),
+                        age INT
+                    )
+                    """.trimIndent()
                 )
 
                 // Create table Sale
                 connection.createStatement().execute(
                     """
-                CREATE TABLE Sale (
-                    id INT PRIMARY KEY,
-                    customerId INT,
-                    amount DECIMAL(10, 2)
-                )
-            """.trimIndent()
+                    CREATE TABLE Sale (
+                        id INT PRIMARY KEY,
+                        customerId INT,
+                        amount DECIMAL(10, 2)
+                    )
+                    """.trimIndent()
                 )
 
                 // add data to the Customer table

@@ -29,6 +29,7 @@ import org.jetbrains.kotlinx.dataframe.api.rightJoin
 import org.jetbrains.kotlinx.dataframe.api.rightJoinWith
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.explainer.PluginCallbackProxy
+import org.jetbrains.kotlinx.dataframe.explainer.SamplesDisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
@@ -131,7 +132,7 @@ class JoinWith : TestBase() {
     private fun AnyFrame.toColoredHTML() = toHTML(
         getFooter = { null },
         cellRenderer = renderer,
-        configuration = DisplayConfiguration.DEFAULT.copy(
+        configuration = SamplesDisplayConfiguration.copy(
             cellFormatter = { row, col ->
                 val value = row[col]
                 if (value is ColoredValue<*>) {

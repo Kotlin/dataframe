@@ -3,6 +3,7 @@ plugins {
     kotlin("libs.publisher")
     id("org.jetbrains.kotlinx.kover")
     kotlin("jupyter.api")
+    // TODO enable later: id("org.jmailen.kotlinter")
 }
 
 group = "org.jetbrains.kotlinx"

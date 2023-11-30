@@ -5,7 +5,6 @@ import io.kotest.inspectors.forOne
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.gradle.testkit.runner.TaskOutcome
-import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.junit.Test
 import java.io.File

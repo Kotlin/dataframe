@@ -18,6 +18,7 @@ import java.io.File
 import java.net.URL
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.util.*
 
 class SchemaGeneratorPlugin : Plugin<Project> {
 
@@ -104,7 +105,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         val defaultPath = schema.defaultPath ?: extension.defaultPath ?: true
         val delimiters = schema.withNormalizationBy ?: extension.withNormalizationBy ?: setOf('\t', ' ', '_')
 
-        return target.tasks.create("generateDataFrame${interfaceName}", GenerateDataSchemaTask::class.java) {
+        return target.tasks.create("generateDataFrame$interfaceName", GenerateDataSchemaTask::class.java) {
             (logging as? DefaultLoggingManager)?.setLevelInternal(LogLevel.QUIET)
             group = GROUP
             data.set(schema.data)
@@ -124,7 +125,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         val rawName = schema.name?.substringAfterLast('.')
             ?: fileName(schema.data)
                 ?.toCamelCaseByDelimiters(delimiters)
-                ?.capitalize()
+                ?.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
                 ?.removeSurrounding("`")
             ?: return null
         NameChecker.checkValidIdentifier(rawName)

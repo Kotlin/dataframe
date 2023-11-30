@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.impl.scale
 import org.jetbrains.kotlinx.dataframe.impl.truncate
 import org.jetbrains.kotlinx.dataframe.jupyter.CellRenderer
+import org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -174,6 +175,70 @@ internal fun AnyFrame.toHtmlData(
     return DataFrameHtmlData("", body, script)
 }
 
+internal fun AnyFrame.toStaticHtml(
+    configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
+    cellRenderer: CellRenderer,
+): DataFrameHtmlData {
+    val df = this
+    val id = "static_df_${nextTableId()}"
+    val columnsToRender = columns()
+
+    fun StringBuilder.emitTag(tag: String, attributes: String = "", tagContents: StringBuilder.() -> Unit) {
+        append("<")
+        append(tag)
+        if (attributes.isNotEmpty()) {
+            append(" ")
+            append(attributes)
+        }
+        append(">")
+
+        tagContents()
+
+        append("</")
+        append(tag)
+        append(">")
+    }
+
+    fun StringBuilder.emitHeader() = emitTag("thead") {
+        emitTag("tr") {
+            columnsToRender.forEach { col ->
+                emitTag("th") {
+                    append(col.name())
+                }
+            }
+        }
+    }
+
+    fun StringBuilder.emitCell(cellValue: Any?) = emitTag("td") {
+        append(cellRenderer.content(cellValue, configuration).truncatedContent)
+    }
+
+    fun StringBuilder.emitRow(row: AnyRow) = emitTag("tr") {
+        columnsToRender.forEach { col ->
+            emitCell(row[col.path()])
+        }
+    }
+
+    fun StringBuilder.emitBody() = emitTag("tbody") {
+        val rowsCountToRender = minOf(rowsCount(), configuration.rowsLimit ?: Int.MAX_VALUE)
+        for (rowIndex in 0..<rowsCountToRender) {
+            emitRow(df[rowIndex])
+        }
+    }
+
+    fun StringBuilder.emitTable() = emitTag("table", """class="dataframe" id="$id"""") {
+        emitHeader()
+        emitBody()
+    }
+
+    return DataFrameHtmlData(
+        body = buildString { emitTable() },
+        script = """
+            document.getElementById("$id").style.display = "none";
+        """.trimIndent()
+    )
+}
+
 internal fun DataFrameHtmlData.print() = println(this)
 
 @Deprecated(
@@ -188,7 +253,7 @@ public fun <T> DataFrame<T>.html(): String = toStandaloneHTML().toString()
  */
 public fun <T> DataFrame<T>.toStandaloneHTML(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
-    cellRenderer: CellRenderer = org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer,
+    cellRenderer: CellRenderer = DefaultCellRenderer,
     getFooter: (DataFrame<T>) -> String? = { "DataFrame [${it.size}]" },
 ): DataFrameHtmlData = toHTML(configuration, cellRenderer, getFooter).withTableDefinitions()
 
@@ -197,7 +262,7 @@ public fun <T> DataFrame<T>.toStandaloneHTML(
  */
 public fun <T> DataFrame<T>.toHTML(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
-    cellRenderer: CellRenderer = org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer,
+    cellRenderer: CellRenderer = DefaultCellRenderer,
     getFooter: (DataFrame<T>) -> String? = { "DataFrame [${it.size}]" },
 ): DataFrameHtmlData {
     val limit = configuration.rowsLimit ?: Int.MAX_VALUE
@@ -217,6 +282,10 @@ public fun <T> DataFrame<T>.toHTML(
     }
 
     var tableHtml = toHtmlData(configuration, cellRenderer)
+
+    if (configuration.enableFallbackStaticTables) {
+        tableHtml += toStaticHtml(configuration, DefaultCellRenderer)
+    }
 
     if (bodyFooter != null) {
         tableHtml += DataFrameHtmlData("", bodyFooter, "")
@@ -297,6 +366,8 @@ public data class DataFrameHtmlData(
 /**
  * @param rowsLimit null to disable rows limit
  * @param cellContentLimit -1 to disable content trimming
+ * @param enableFallbackStaticTables true to add additional pure HTML table that will be visible only if JS  is disabled;
+ * For example hosting *.ipynb files with outputs on GitHub
  */
 public data class DisplayConfiguration(
     var rowsLimit: Int? = 20,
@@ -307,6 +378,7 @@ public data class DisplayConfiguration(
     var isolatedOutputs: Boolean = flagFromEnv("LETS_PLOT_HTML_ISOLATED_FRAME"),
     internal val localTesting: Boolean = flagFromEnv("KOTLIN_DATAFRAME_LOCAL_TESTING"),
     var useDarkColorScheme: Boolean = false,
+    var enableFallbackStaticTables: Boolean = true,
 ) {
     public companion object {
         public val DEFAULT: DisplayConfiguration = DisplayConfiguration()

@@ -8,9 +8,9 @@ import java.io.File
 
 class ApiChangesDetectionTest : AbstractDataFramePluginIntegrationTest() {
 
-   // GenerateDataSchemaTask::class,
-   // DefaultReadCsvMethod::class,
-   // DefaultReadJsonMethod::class
+    // GenerateDataSchemaTask::class,
+    // DefaultReadCsvMethod::class,
+    // DefaultReadJsonMethod::class
     @Test
     fun `cast api`() {
         compiles {
@@ -43,6 +43,7 @@ class ApiChangesDetectionTest : AbstractDataFramePluginIntegrationTest() {
             """.trimIndent()
         }
     }
+
     // GenerateDataSchemaTask::class,
     // DefaultReadCsvMethod::class,
     @Test

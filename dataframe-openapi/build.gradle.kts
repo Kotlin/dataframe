@@ -3,7 +3,7 @@ plugins {
     kotlin("libs.publisher")
     kotlin("plugin.serialization")
     id("org.jetbrains.kotlinx.kover")
-
+    id("org.jmailen.kotlinter")
     kotlin("jupyter.api")
 }
 
@@ -20,6 +20,7 @@ repositories {
 dependencies {
     api(project(":core"))
 
+    implementation(libs.kotlinLogging)
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlinpoet)
     api(libs.swagger) {

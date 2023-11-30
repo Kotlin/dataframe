@@ -27,7 +27,6 @@ import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
-import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.sessionId
 import org.jetbrains.kotlinx.dataframe.io.tableInSessionId
 import org.jetbrains.kotlinx.dataframe.io.toHTML
@@ -244,8 +243,8 @@ object PluginCallbackProxy : PluginCallback {
 }
 
 private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
-    fun DataFrame<*>.toHTML() = toHTML(DisplayConfiguration(), getFooter = { "" })
-    fun FormattedFrame<*>.toHTML1() = toHTML(DisplayConfiguration())
+    fun DataFrame<*>.toHTML() = toHTML(SamplesDisplayConfiguration, getFooter = { "" })
+    fun FormattedFrame<*>.toHTML1() = toHTML(SamplesDisplayConfiguration)
 
     return when (dataframeLike) {
         is Pivot<*> -> dataframeLike.frames().toDataFrame().toHTML()
