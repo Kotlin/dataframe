@@ -47,14 +47,6 @@ tasks.test {
     }
 }
 
-kotlinter {
-    ignoreFailures = false
-    reporters = arrayOf("checkstyle", "plain")
-    disabledRules = arrayOf(
-        "max-line-length",
-    )
-}
-
 sourceSets {
     main {
         java.setSrcDirs(listOf("src"))

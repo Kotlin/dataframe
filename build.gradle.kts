@@ -1,7 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.tooling.core.closure
 import org.jetbrains.kotlinx.publisher.apache2
 import org.jetbrains.kotlinx.publisher.developer
 import org.jetbrains.kotlinx.publisher.githubRepo
+import org.jmailen.gradle.kotlinter.KotlinterExtension
 
 @Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 plugins {
@@ -50,6 +52,31 @@ allprojects {
     tasks.withType<JavaCompile> {
         sourceCompatibility = JavaVersion.VERSION_1_8.toString()
         targetCompatibility = JavaVersion.VERSION_1_8.toString()
+    }
+
+    // Attempts to configure kotlinter for each sub-project that uses the plugin
+    afterEvaluate {
+        try {
+            kotlinter {
+                ignoreFailures = false
+                reporters = arrayOf("checkstyle", "plain")
+                experimentalRules = true
+                disabledRules = arrayOf(
+                    "no-wildcard-imports",
+                    "experimental:spacing-between-declarations-with-annotations",
+                    "experimental:enum-entry-name-case",
+                    "experimental:argument-list-wrapping",
+                    "experimental:annotation",
+                    "max-line-length",
+                    "filename",
+                    "comment-spacing",
+                    "curly-spacing",
+                    "experimental:annotation-spacing"
+                )
+            }
+        } catch (_: UnknownDomainObjectException) {
+            logger.warn("Could not set kotlinter config on :${this.name}")
+        }
     }
 }
 

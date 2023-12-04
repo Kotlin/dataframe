@@ -43,8 +43,5 @@ internal fun addBuildEventsListenerRegistryMock(project: Project) {
 }
 
 object BuildEventsListenerRegistryMock : BuildEventsListenerRegistry {
-
-    override fun onTaskCompletion(listener: Provider<out OperationCompletionListener>?) {
-    }
-
+    override fun onTaskCompletion(listener: Provider<out OperationCompletionListener>?) = Unit
 }

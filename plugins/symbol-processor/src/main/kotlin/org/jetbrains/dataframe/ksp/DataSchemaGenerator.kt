@@ -22,20 +22,23 @@ import org.jetbrains.kotlinx.dataframe.impl.codeGen.from
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.toStandaloneSnippet
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlCodeGenReader
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlDfReader
-import org.jetbrains.kotlinx.dataframe.io.*
+import org.jetbrains.kotlinx.dataframe.io.ArrowFeather
+import org.jetbrains.kotlinx.dataframe.io.CSV
+import org.jetbrains.kotlinx.dataframe.io.Excel
+import org.jetbrains.kotlinx.dataframe.io.JSON
+import org.jetbrains.kotlinx.dataframe.io.OpenApi
+import org.jetbrains.kotlinx.dataframe.io.TSV
+import org.jetbrains.kotlinx.dataframe.io.databaseCodeGenReader
+import org.jetbrains.kotlinx.dataframe.io.db.driverClassNameFromUrl
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
+import org.jetbrains.kotlinx.dataframe.io.isURL
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.io.File
-import java.lang.RuntimeException
 import java.net.MalformedURLException
 import java.net.URL
 import java.sql.Connection
 import java.sql.DriverManager
-import org.jetbrains.kotlinx.dataframe.io.db.H2
-import org.jetbrains.kotlinx.dataframe.io.db.MariaDb
-import org.jetbrains.kotlinx.dataframe.io.db.MySql
-import org.jetbrains.kotlinx.dataframe.io.db.PostgreSql
-import org.jetbrains.kotlinx.dataframe.io.db.Sqlite
-import org.jetbrains.kotlinx.dataframe.io.db.driverClassNameFromUrl
-import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 
 @OptIn(KspExperimental::class)
 class DataSchemaGenerator(
@@ -81,7 +84,7 @@ class DataSchemaGenerator(
             }
         } else {
             // revisit architecture for an addition of the new data source https://github.com/Kotlin/dataframe/issues/450
-            if(path.startsWith("jdbc")) {
+            if (path.startsWith("jdbc")) {
                 return ImportDataSchemaStatement(
                     origin = file,
                     name = name,
@@ -206,11 +209,13 @@ class DataSchemaGenerator(
         // revisit architecture for an addition of the new data source https://github.com/Kotlin/dataframe/issues/450
         // works for JDBC and OpenAPI only
         // first try without creating a dataframe
-        when (val codeGenResult = if (importStatement.isJdbc) {
-            CodeGenerator.databaseCodeGenReader(importStatement.dataSource.data, name)
-        } else {
-            CodeGenerator.urlCodeGenReader(importStatement.dataSource.data, name, formats, false)
-        }) {
+        when (
+            val codeGenResult = if (importStatement.isJdbc) {
+                CodeGenerator.databaseCodeGenReader(importStatement.dataSource.data, name)
+            } else {
+                CodeGenerator.urlCodeGenReader(importStatement.dataSource.data, name, formats, false)
+            }
+        ) {
             is CodeGenerationReadResult.Success -> {
                 val readDfMethod = codeGenResult.getReadDfMethod(
                     pathRepresentation = importStatement
@@ -268,19 +273,22 @@ class DataSchemaGenerator(
 
     private fun generateSchemaForImport(
         importStatement: ImportDataSchemaStatement,
-        connection: Connection
+        connection: Connection,
     ): DataFrameSchema {
         logger.info("Table name: ${importStatement.jdbcOptions.tableName}")
         logger.info("SQL query: ${importStatement.jdbcOptions.sqlQuery}")
 
-        return if (importStatement.jdbcOptions.tableName.isNotBlank())
+        return if (importStatement.jdbcOptions.tableName.isNotBlank()) {
             DataFrame.getSchemaForSqlTable(connection, importStatement.jdbcOptions.tableName)
-        else if(importStatement.jdbcOptions.sqlQuery.isNotBlank())
+        } else if (importStatement.jdbcOptions.sqlQuery.isNotBlank()) {
             DataFrame.getSchemaForSqlQuery(connection, importStatement.jdbcOptions.sqlQuery)
-        else throw RuntimeException("Table name: ${importStatement.jdbcOptions.tableName}, " +
-            "SQL query: ${importStatement.jdbcOptions.sqlQuery} both are empty! " +
-            "Populate 'tableName' or 'sqlQuery' in jdbcOptions with value to generate schema " +
-            "for SQL table or result of SQL query!")
+        } else {
+            throw RuntimeException(
+                "Table name: ${importStatement.jdbcOptions.tableName}, " +
+                    "SQL query: ${importStatement.jdbcOptions.sqlQuery} both are empty! " +
+                    "Populate 'tableName' or 'sqlQuery' in jdbcOptions with value to generate schema " +
+                    "for SQL table or result of SQL query!"
+            )
+        }
     }
 }
-

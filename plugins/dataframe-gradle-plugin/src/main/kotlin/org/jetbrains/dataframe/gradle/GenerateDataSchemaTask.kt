@@ -17,12 +17,6 @@ import org.jetbrains.kotlinx.dataframe.impl.codeGen.from
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.toStandaloneSnippet
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlCodeGenReader
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlDfReader
-import java.io.File
-import java.lang.RuntimeException
-import java.net.URL
-import java.nio.file.Paths
-import java.sql.Connection
-import java.sql.DriverManager
 import org.jetbrains.kotlinx.dataframe.io.ArrowFeather
 import org.jetbrains.kotlinx.dataframe.io.CSV
 import org.jetbrains.kotlinx.dataframe.io.Excel
@@ -33,6 +27,11 @@ import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
 import org.jetbrains.kotlinx.dataframe.io.isURL
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+import java.io.File
+import java.net.URL
+import java.nio.file.Paths
+import java.sql.Connection
+import java.sql.DriverManager
 
 abstract class GenerateDataSchemaTask : DefaultTask() {
 
@@ -177,19 +176,23 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
 
     private fun generateSchemaByJdbcOptions(
         jdbcOptions: JdbcOptionsDsl,
-        connection: Connection
+        connection: Connection,
     ): DataFrameSchema {
         logger.debug("Table name: ${jdbcOptions.tableName}")
         logger.debug("SQL query: ${jdbcOptions.sqlQuery}")
 
-        return if (jdbcOptions.tableName.isNotBlank())
+        return if (jdbcOptions.tableName.isNotBlank()) {
             DataFrame.getSchemaForSqlTable(connection, jdbcOptions.tableName)
-        else if(jdbcOptions.sqlQuery.isNotBlank())
+        } else if (jdbcOptions.sqlQuery.isNotBlank()) {
             DataFrame.getSchemaForSqlQuery(connection, jdbcOptions.sqlQuery)
-        else throw RuntimeException("Table name: ${jdbcOptions.tableName}, " +
-            "SQL query: ${jdbcOptions.sqlQuery} both are empty! " +
-            "Populate 'tableName' or 'sqlQuery' in jdbcOptions with value to generate schema " +
-            "for SQL table or result of SQL query!")
+        } else {
+            throw RuntimeException(
+                "Table name: ${jdbcOptions.tableName}, " +
+                    "SQL query: ${jdbcOptions.sqlQuery} both are empty! " +
+                    "Populate 'tableName' or 'sqlQuery' in jdbcOptions with value to generate schema " +
+                    "for SQL table or result of SQL query!"
+            )
+        }
     }
 
     private fun stringOf(data: Any): String =
