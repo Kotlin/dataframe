@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
 import org.jetbrains.kotlinx.dataframe.impl.owner
+import kotlin.math.min
 
 /**
  * Path to a [column][DataColumn] in [DataFrame].
@@ -79,4 +80,24 @@ public data class ColumnPath(val path: List<String>) : List<String> by path, Col
     public fun joinToString(separator: String = "/"): String = path.joinToString(separator)
 
     override fun <C> get(column: ColumnReference<C>): ColumnAccessor<C> = ColumnAccessorImpl(this + column.path())
+}
+
+/**
+ * Removes the start of [this] [ColumnPath] with respect to a certain [parent].
+ * For example:
+ *
+ * `parent == [a, b, c]`
+ * `child == [b, c, e]`
+ * `result => [e]`
+ */
+internal fun ColumnPath.removeStartWrt(parent: ColumnPath): ColumnPath {
+    var overlapSize = 0
+    val minSize = min(this.size, parent.size)
+    for (i in 1..minSize) {
+        if (this.subList(0, i) == parent.subList(parent.size - i, parent.size)) {
+            overlapSize = i
+        }
+    }
+
+    return ColumnPath(path.drop(overlapSize))
 }

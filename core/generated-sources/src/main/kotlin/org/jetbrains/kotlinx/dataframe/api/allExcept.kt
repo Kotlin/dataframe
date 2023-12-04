@@ -95,8 +95,9 @@ public interface AllExceptColumnsSelectionDsl<out T> {
 
     // region ColumnSet
 
-    public infix fun <C> ColumnSet<C>.except(selector: ColumnsSelector<*, *>): ColumnSet<C> =
-        except(selector.toColumns<Any?, _>())
+    public infix fun <C> ColumnSet<C>.except(selector: () -> ColumnsResolver<*>): ColumnSet<C> =
+//        except(selector.toColumns<Any?, _>())
+        except(selector())
 
     public infix fun <C> ColumnSet<C>.except(other: ColumnsResolver<*>): ColumnSet<C> =
         createColumnSet { context ->

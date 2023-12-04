@@ -15,13 +15,13 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
+import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import kotlin.reflect.KProperty
 
@@ -326,7 +326,11 @@ public interface ColsColumnsSelectionDsl {
     public fun <C> ColumnsSelectionDsl<*>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
-    ): ColumnSet<C> = this.asSingleColumn().cols(firstCol, *otherCols)
+    ): ColumnSet<C> = headPlusArray(firstCol, otherCols).let { refs ->
+        this.asSingleColumn().ensureIsColumnGroup().transformSingle { col ->
+            refs.mapNotNull { col.getCol(it)?.cast() }
+        }
+    }
 
     /** @include [ColumnsSelectionDslColsVarargColumnReferenceDocs] */
     public operator fun <C> ColumnsSelectionDsl<*>.get(
@@ -338,9 +342,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
      * @setArg [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(columnA, columnB) }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(columnA, myColumnGroup.columnB) }`
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`columnA, columnB`[`]`][SingleColumn.cols]` }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`columnA, myColumnGroup.columnB`[`]`][SingleColumn.cols]` }`
      */
     private interface SingleColumnColsVarargColumnReferenceDocs
 
@@ -348,11 +352,11 @@ public interface ColsColumnsSelectionDsl {
     public fun <C> SingleColumn<DataRow<*>>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
-    ): ColumnSet<C> = headPlusArray(firstCol, otherCols).let { refs ->
-        this.ensureIsColumnGroup().asColumnSet().transform {
-            it.flatMap { col -> refs.mapNotNull { col.getCol(it) } }
-        }
-    }
+    ): ColumnSet<C> = this.cols<C>(
+        // use just the name of the column references to prevent scoping issues like `a.cols(a.b, a.c)`
+        firstCol.name(),
+        *otherCols.map { it.name() }.toTypedArray(),
+    )
 
     /**
      * @include [SingleColumnColsVarargColumnReferenceDocs]
@@ -489,8 +493,9 @@ public interface ColsColumnsSelectionDsl {
         firstCol: String,
         vararg otherCols: String,
     ): ColumnSet<T> = headPlusArray(firstCol, otherCols).let { names ->
-        this.ensureIsColumnGroup().asColumnSet()
-            .transform { it.flatMap { col -> names.mapNotNull { col.getCol(it) } } }
+        this.ensureIsColumnGroup().transformSingle { col ->
+            names.mapNotNull { col.getCol(it) }
+        }
     }.cast()
 
     /**
@@ -651,9 +656,10 @@ public interface ColsColumnsSelectionDsl {
     public fun <T> SingleColumn<DataRow<*>>.cols(
         firstCol: ColumnPath,
         vararg otherCols: ColumnPath,
-    ): ColumnSet<T> = headPlusArray(firstCol, otherCols).let { names ->
-        this.ensureIsColumnGroup().asColumnSet()
-            .transform { it.flatMap { col -> names.mapNotNull { col.getCol(it) } } }
+    ): ColumnSet<T> = headPlusArray(firstCol, otherCols).let { paths ->
+        this.ensureIsColumnGroup().transformSingle { col ->
+            paths.mapNotNull { col.getCol(it) }
+        }
     }.cast()
 
     /**
@@ -801,8 +807,9 @@ public interface ColsColumnsSelectionDsl {
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
     ): ColumnSet<C> = headPlusArray(firstCol, otherCols).let { props ->
-        this.ensureIsColumnGroup().asColumnSet()
-            .transform { it.flatMap { col -> props.mapNotNull { col.getCol(it) } } }
+        this.ensureIsColumnGroup().transformSingle { col ->
+            props.mapNotNull { col.getCol(it) }
+        }
     }
 
     /** @include [SingleColumnColsVarargKPropertyDocs] */

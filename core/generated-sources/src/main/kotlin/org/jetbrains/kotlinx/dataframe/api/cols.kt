@@ -15,13 +15,13 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
+import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import kotlin.reflect.KProperty
 
@@ -1235,7 +1235,11 @@ public interface ColsColumnsSelectionDsl {
     public fun <C> ColumnsSelectionDsl<*>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
-    ): ColumnSet<C> = this.asSingleColumn().cols(firstCol, *otherCols)
+    ): ColumnSet<C> = headPlusArray(firstCol, otherCols).let { refs ->
+        this.asSingleColumn().ensureIsColumnGroup().transformSingle { col ->
+            refs.mapNotNull { col.getCol(it)?.cast() }
+        }
+    }
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
@@ -1298,9 +1302,9 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(columnA, columnB) }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(columnA, myColumnGroup.columnB) }`
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`columnA, columnB`[`]`][SingleColumn.cols]` }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`columnA, myColumnGroup.columnB`[`]`][SingleColumn.cols]` }`
      *
      *
      * @param [firstCol] A [ColumnReference] that points to a column.
@@ -1332,9 +1336,9 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, myColumnGroup.columnB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`columnA, myColumnGroup.columnB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
      *
      * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
@@ -1344,11 +1348,11 @@ public interface ColsColumnsSelectionDsl {
     public fun <C> SingleColumn<DataRow<*>>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
-    ): ColumnSet<C> = headPlusArray(firstCol, otherCols).let { refs ->
-        this.ensureIsColumnGroup().asColumnSet().transform {
-            it.flatMap { col -> refs.mapNotNull { col.getCol(it) } }
-        }
-    }
+    ): ColumnSet<C> = this.cols<C>(
+        // use just the name of the column references to prevent scoping issues like `a.cols(a.b, a.c)`
+        firstCol.name(),
+        *otherCols.map { it.name() }.toTypedArray(),
+    )
 
     /**
      * ## Cols
@@ -1374,9 +1378,9 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, myColumnGroup.columnB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`columnA, myColumnGroup.columnB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
      *
      * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
@@ -1991,8 +1995,9 @@ public interface ColsColumnsSelectionDsl {
         firstCol: String,
         vararg otherCols: String,
     ): ColumnSet<T> = headPlusArray(firstCol, otherCols).let { names ->
-        this.ensureIsColumnGroup().asColumnSet()
-            .transform { it.flatMap { col -> names.mapNotNull { col.getCol(it) } } }
+        this.ensureIsColumnGroup().transformSingle { col ->
+            names.mapNotNull { col.getCol(it) }
+        }
     }.cast()
 
     /**
@@ -2752,9 +2757,10 @@ public interface ColsColumnsSelectionDsl {
     public fun <T> SingleColumn<DataRow<*>>.cols(
         firstCol: ColumnPath,
         vararg otherCols: ColumnPath,
-    ): ColumnSet<T> = headPlusArray(firstCol, otherCols).let { names ->
-        this.ensureIsColumnGroup().asColumnSet()
-            .transform { it.flatMap { col -> names.mapNotNull { col.getCol(it) } } }
+    ): ColumnSet<T> = headPlusArray(firstCol, otherCols).let { paths ->
+        this.ensureIsColumnGroup().transformSingle { col ->
+            paths.mapNotNull { col.getCol(it) }
+        }
     }.cast()
 
     /**
@@ -3449,8 +3455,9 @@ public interface ColsColumnsSelectionDsl {
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
     ): ColumnSet<C> = headPlusArray(firstCol, otherCols).let { props ->
-        this.ensureIsColumnGroup().asColumnSet()
-            .transform { it.flatMap { col -> props.mapNotNull { col.getCol(it) } } }
+        this.ensureIsColumnGroup().transformSingle { col ->
+            props.mapNotNull { col.getCol(it) }
+        }
     }
 
     /** ## Cols

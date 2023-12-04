@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.samples.api.age
 import org.jetbrains.kotlinx.dataframe.samples.api.city
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
@@ -82,6 +83,13 @@ class ColsTests : ColumnsSelectionDslTests() {
             df.select { it[name, age] },
         ).shouldAllBeEqual()
 
+        // "breaking spec" and using a column accessor where it doesn't belong does not work.
+        df.select select1@{
+            name.select {
+                cols(this@select1.name.firstName, lastName)
+            }
+        } shouldBe df.select { name.lastName }
+
         val firstName by column<String>()
         val lastName by column<String>()
 
@@ -91,9 +99,13 @@ class ColsTests : ColumnsSelectionDslTests() {
             df.select { name.cols(firstName, lastName) },
             df.select { name[firstName, lastName] },
 
+            // take just the name
+            df.select { name.cols(name.firstName, name.lastName) },
+            df.select { name[name.firstName, name.lastName] },
+
             df.select {
                 name.select {
-                    cols(this@select.firstName, this@select.lastName)
+                    cols(firstName, lastName)
                 }
             },
 
@@ -106,17 +118,32 @@ class ColsTests : ColumnsSelectionDslTests() {
             df.select { "name".cols(firstName, lastName) },
             df.select { "name"[firstName, lastName] },
 
+            df.select { "name".cols(name.firstName, name.lastName) },
+            df.select { "name"[name.firstName, name.lastName] },
+
             df.select { Person::name.cols(firstName, lastName) },
             df.select { Person::name[firstName, lastName] },
+
+            df.select { Person::name.cols(name.firstName, name.lastName) },
+            df.select { Person::name[name.firstName, name.lastName] },
 
             df.select { NonDataSchemaPerson::name.cols(firstName, lastName) },
             df.select { NonDataSchemaPerson::name[firstName, lastName] },
 
+            df.select { NonDataSchemaPerson::name.cols(name.firstName, name.lastName) },
+            df.select { NonDataSchemaPerson::name[name.firstName, name.lastName] },
+
             df.select { pathOf("name").cols(firstName, lastName) },
             df.select { pathOf("name")[firstName, lastName] },
 
+            df.select { pathOf("name").cols(name.firstName, name.lastName) },
+            df.select { pathOf("name")[name.firstName, name.lastName] },
+
             df.select { it["name"].asColumnGroup().cols(firstName, lastName) },
             df.select { it["name"].asColumnGroup()[firstName, lastName] },
+
+            df.select { it["name"].asColumnGroup().cols(name.firstName, name.lastName) },
+            df.select { it["name"].asColumnGroup()[name.firstName, name.lastName] },
         ).shouldAllBeEqual()
     }
 

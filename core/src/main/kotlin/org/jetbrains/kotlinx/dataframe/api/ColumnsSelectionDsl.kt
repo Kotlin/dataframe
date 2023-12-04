@@ -41,6 +41,14 @@ internal interface ColumnsSelectionDslLink
 internal fun <T> ColumnsSelectionDsl<T>.asSingleColumn(): SingleColumn<DataRow<T>> = this as SingleColumn<DataRow<T>>
 
 /**
+ * [DslMarker] for [ColumnsSelectionDsl] to prevent accessors being used across scopes for nested
+ * [ColumnsSelectionDsl.select] calls.
+ */
+@DslMarker
+@Target(AnnotationTarget.CLASS, AnnotationTarget.TYPEALIAS, AnnotationTarget.TYPE, AnnotationTarget.FUNCTION)
+public annotation class ColumnsSelectionDslMarker
+
+/**
  * @include [CommonColumnSelectionDocs]
  *
  * Can be safely cast to [SingleColumn] across the library. It does not directly
@@ -48,6 +56,7 @@ internal fun <T> ColumnsSelectionDsl<T>.asSingleColumn(): SingleColumn<DataRow<T
  *
  * See [Usage] for the DSL Grammar of the ColumnsSelectionDsl.
  */
+@ColumnsSelectionDslMarker
 public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     ColumnSelectionDsl<T>,
 

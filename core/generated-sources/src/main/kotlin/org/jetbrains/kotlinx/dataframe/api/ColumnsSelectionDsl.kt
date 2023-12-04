@@ -41,6 +41,14 @@ internal interface ColumnsSelectionDslLink
 internal fun <T> ColumnsSelectionDsl<T>.asSingleColumn(): SingleColumn<DataRow<T>> = this as SingleColumn<DataRow<T>>
 
 /**
+ * [DslMarker] for [ColumnsSelectionDsl] to prevent accessors being used across scopes for nested
+ * [ColumnsSelectionDsl.select] calls.
+ */
+@DslMarker
+@Target(AnnotationTarget.CLASS, AnnotationTarget.TYPEALIAS, AnnotationTarget.TYPE, AnnotationTarget.FUNCTION)
+public annotation class ColumnsSelectionDslMarker
+
+/**
  * Referring to or expressing column(s) in the selection DSL can be done in several ways corresponding to all
  * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]:
  * TODO: [Issue #286](https://github.com/Kotlin/dataframe/issues/286)
@@ -52,6 +60,7 @@ internal fun <T> ColumnsSelectionDsl<T>.asSingleColumn(): SingleColumn<DataRow<T
  *
  * See [Usage] for the DSL Grammar of the ColumnsSelectionDsl.
  */
+@ColumnsSelectionDslMarker
 public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     ColumnSelectionDsl<T>,
 
