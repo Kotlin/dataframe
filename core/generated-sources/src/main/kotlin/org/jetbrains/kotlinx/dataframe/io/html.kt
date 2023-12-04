@@ -15,13 +15,10 @@ import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
 import org.jetbrains.kotlinx.dataframe.api.rows
-import org.jetbrains.kotlinx.dataframe.api.sumOf
-import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.columns.depth
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.renderType
@@ -42,6 +39,7 @@ import java.net.URL
 import java.nio.file.Path
 import java.util.*
 import kotlin.io.path.writeText
+import kotlin.math.ceil
 
 internal val tooltipLimit = 1000
 
@@ -163,10 +161,10 @@ internal fun AnyFrame.toHtmlData(
             }
         }
         return ColumnDataForJs(
-            col,
-            if (col is ColumnGroup<*>) col.columns().map { col.columnToJs(it, rowsLimit) } else emptyList(),
-            col.isSubtypeOf<Number?>(),
-            contents
+            column = col,
+            nested = if (col is ColumnGroup<*>) col.columns().map { col.columnToJs(it, rowsLimit) } else emptyList(),
+            rightAlign = col.isSubtypeOf<Number?>(),
+            values = contents,
         )
     }
 
@@ -181,12 +179,19 @@ internal fun AnyFrame.toHtmlData(
     }
     val body = getResourceText("/table.html", "ID" to rootId)
     val script = scripts.joinToString("\n") + "\n" + getResourceText("/renderTable.js", "___ID___" to rootId)
-    return DataFrameHtmlData("", body, script)
+    return DataFrameHtmlData(style = "", body = body, script = script)
 }
 
 /**
  * Renders [this] [DataFrame] as static HTML (meaning no JS is used).
  * CSS rendering is enabled by default but can be turned off using [includeCss]
+ *
+ * @param configuration optional configuration for rendering
+ * @param cellRenderer optional cell renderer for rendering
+ * @param includeCss whether to include CSS in the output. This is `true` by default but it can be set
+ *  to `false` to emulate what happens in environments where custom CSS is not allowed.
+ * @param openNestedDfs whether to open nested dataframes. This is `false` by default byt ut can be set
+ *  to `true` to emulate what happens in environments where `<details>` tags are not supported.
  */
 public fun AnyFrame.toStaticHtml(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
@@ -206,6 +211,7 @@ public fun AnyFrame.toStaticHtml(
 
     // Limit for number of rows in dataframes inside frame columns
     val nestedRowsLimit = configuration.nestedRowsLimit
+    val rowsLimit = configuration.rowsLimit
 
     // Adds the given tag to the html, with the given attributes and contents
     fun StringBuilder.emitTag(tag: String, attributes: String = "", tagContents: StringBuilder.() -> Unit) {
@@ -239,34 +245,42 @@ public fun AnyFrame.toStaticHtml(
     }
 
     // Adds a single cell to the html. DataRows from column groups already need to be split up into separate cells.
-    fun StringBuilder.emitCell(cellValue: Any?, borders: Set<Border>): Unit =
+    fun StringBuilder.emitCell(cellValue: Any?, row: AnyRow, col: ColumnWithPath<*>, borders: Set<Border>): Unit =
         emitTag("td", "${borders.toClass()} style=\"vertical-align:top\"") {
-            when (cellValue) {
+            when (col) {
                 // uses the <details> and <summary> to create a collapsible cell for dataframes
-                is AnyFrame ->
+                is FrameColumn<*> -> {
+                    cellValue as AnyFrame
                     emitTag("details", if (openNestedDfs) "open" else "") {
                         emitTag("summary") {
                             append("DataFrame [${cellValue.size}]")
                         }
+
+                        // nestedRowsLimit becomes the rowsLimit for nested DFs
+                        // while the new nested rows limit is halved, keeping at least 1
+                        val newRowsLimit = nestedRowsLimit
+                        val newNestedRowsLimit = nestedRowsLimit?.let { ceil(it / 2.0).toInt() }
+
                         // add the dataframe as a nested table limiting the number of rows if needed
                         // CSS will not be included here, as it is already included in the main table
-                        append(
-                            cellValue.take(nestedRowsLimit ?: Int.MAX_VALUE)
-                                .toStaticHtml(
-                                    configuration,
-                                    cellRenderer,
-                                    includeCss = false,
-                                    openNestedDfs = openNestedDfs
-                                )
-                                .body
-                        )
+                        cellValue.toStaticHtml(
+                            configuration = configuration.copy(
+                                rowsLimit = newRowsLimit,
+                                nestedRowsLimit = newNestedRowsLimit,
+                            ),
+                            cellRenderer = cellRenderer,
+                            includeCss = false,
+                            openNestedDfs = openNestedDfs,
+                        ).let { append(it.body) }
+
                         val size = cellValue.rowsCount()
-                        if (size > (nestedRowsLimit ?: Int.MAX_VALUE)) {
+                        if (size > newRowsLimit ?: Int.MAX_VALUE) {
                             emitTag("p") {
-                                append("... showing only top $nestedRowsLimit of $size rows")
+                                append("... showing only top $newRowsLimit of $size rows")
                             }
                         }
                     }
+                }
 
                 // Else use the default cell renderer
                 else ->
@@ -283,13 +297,13 @@ public fun AnyFrame.toStaticHtml(
                 border += Border.RIGHT
             }
             val cell = row[col.path()]
-            emitCell(cell, border)
+            emitCell(cell, row, col, border)
         }
     }
 
     // Adds the body of the html. This body contains all the cols and rows of the dataframe.
     fun StringBuilder.emitBody() = emitTag("tbody") {
-        val rowsCountToRender = minOf(rowsCount(), configuration.rowsLimit ?: Int.MAX_VALUE)
+        val rowsCountToRender = minOf(rowsCount(), rowsLimit ?: Int.MAX_VALUE)
         for (rowIndex in 0..<rowsCountToRender) {
             emitRow(df[rowIndex])
         }
@@ -348,15 +362,6 @@ internal fun AnyFrame.maxDepth(startingAt: Int = 0): Int =
 internal fun BaseColumn<*>.maxWidth(): Int =
     if (this is ColumnGroup<*>) columns().sumOf { it.maxWidth() }.coerceAtLeast(1)
     else 1
-
-internal fun BaseColumn<*>.maxNumberOfRows(): Int =
-    if (this is ColumnGroup<*>) {
-        columns().maxOfOrNull { it.maxNumberOfRows() } ?: 0
-    } else if (this is FrameColumn<*>) {
-        values().sumOf { it.asColumnGroup("").maxNumberOfRows() }
-    } else {
-        this.size()
-    }
 
 /**
  * Given a [DataFrame], this function returns a depth-first "matrix" containing all columns

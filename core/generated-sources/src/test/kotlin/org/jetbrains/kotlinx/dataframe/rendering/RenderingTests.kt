@@ -3,13 +3,11 @@ package org.jetbrains.kotlinx.dataframe.rendering
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
-import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
-import org.jetbrains.kotlinx.dataframe.api.frameColumn
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.move
@@ -21,11 +19,9 @@ import org.jetbrains.kotlinx.dataframe.io.formatter
 import org.jetbrains.kotlinx.dataframe.io.maxDepth
 import org.jetbrains.kotlinx.dataframe.io.maxWidth
 import org.jetbrains.kotlinx.dataframe.io.print
-import org.jetbrains.kotlinx.dataframe.io.read
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 import org.jetbrains.kotlinx.dataframe.io.renderToStringTable
 import org.jetbrains.kotlinx.dataframe.io.toHTML
-import org.jetbrains.kotlinx.dataframe.io.toStaticHtml
 import org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
@@ -149,14 +145,14 @@ class RenderingTests : TestBase() {
         body shouldContain """
             <thead>
             <tr>
-            <th class="bottomBorder">a</th>
-            <th class="bottomBorder">b</th>
+            <th class="bottomBorder" style="text-align:left">a</th>
+            <th class="bottomBorder" style="text-align:left">b</th>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td>[1, 1]</td>
-            <td>[2, 4]</td>
+            <td  style="vertical-align:top">[1, 1]</td>
+            <td  style="vertical-align:top">[2, 4]</td>
             </tr>
             </tbody>
             </table>
@@ -177,14 +173,5 @@ class RenderingTests : TestBase() {
         dfGroup.name.firstName.maxWidth() shouldBe 3
         dfGroup.name.lastName.maxWidth() shouldBe 1
         dfGroup.name.firstName.secondName.maxWidth() shouldBe 1
-    }
-
-    @Test
-    fun `test static rendering TODO temp`() {
-        val df = DataFrame.read("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains.json")
-
-//        df.toHTML().openInBrowser()
-        df.toStaticHtml(openNestedDfs = true, includeCss = false).copy(script = "").openInBrowser()
-//        df.get(frameColumn("repos")).get(0).toStaticHtml(openNestedDfs = false).copy(script = "").openInBrowser()
     }
 }
