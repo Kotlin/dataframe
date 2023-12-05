@@ -11,9 +11,13 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
+import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_SELECT_COLS
+import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_SELECT_COLS_REPLACE
 import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 
@@ -37,9 +41,58 @@ public fun <T> DataFrame<T>.select(vararg columns: AnyColumnReference): DataFram
 public interface SelectColumnsSelectionDsl {
 
     /**
-     * TODO
+     * ## Select from [ColumnGroup] Usage
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `[KProperty][kotlin.reflect.KProperty]`<*>` | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  `colSelector: `[ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
+     *
+     *
+     *
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### On a column group reference:
+     *
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**select**][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]**` {`** [colSelector][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSelectorDef] **`}`**
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`|`[**` {`**][ColumnsSelectionDsl.select] [colSelector][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSelectorDef] [**`}`**][ColumnsSelectionDsl.select]
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
      */
-    public interface Usage
+    public interface Usage {
+
+        /** .[**select**][ColumnsSelectionDsl.select] */
+        public interface ColumnGroupName
+    }
 
     /**
      * ## Select from [ColumnGroup]
@@ -49,6 +102,8 @@ public interface SelectColumnsSelectionDsl {
      * the DSL are at your disposal.
      *
      * The [invoke][ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
+     *
+     * See [Usage] for how to use [select].
      *
      * #### For example:
      *
@@ -90,6 +145,8 @@ public interface SelectColumnsSelectionDsl {
      *
      * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
+     * See [Usage][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Usage] for how to use [select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` { someCol `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() } }`
@@ -130,6 +187,8 @@ public interface SelectColumnsSelectionDsl {
      *
      * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
+     * See [Usage][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Usage] for how to use [select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` { someCol `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() } }`
@@ -142,13 +201,7 @@ public interface SelectColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[select][SingleColumn.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
-     *
-     * `df.`[select][DataFrame.select]` { `[x][ColumnsSelectionDsl.colGroup]`(Type::myColGroup)`[() `{`][SingleColumn.select]` colA `[and][ColumnsSelectionDsl.and]` colB `[`}`][SingleColumn.select]` }`
-     *
-     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[select][SingleColumn.select]` { colA `[and][ColumnsSelectionDsl.and]` colB } }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup.`[select][KProperty.select]` { colA `[and][ColumnsSelectionDsl.and]` colB } }`
+     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[select][KProperty.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup `[`{`][KProperty.select]` colA `[and][ColumnsSelectionDsl.and]` colB `[`}`][KProperty.select]` }`
      *
@@ -164,8 +217,6 @@ public interface SelectColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
      * @see [SingleColumn.except]
      */
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("KPropertySelect")
     @OptIn(ExperimentalTypeInference::class)
     @OverloadResolutionByLambdaReturnType
     // TODO: [KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)
@@ -181,6 +232,8 @@ public interface SelectColumnsSelectionDsl {
      *
      * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
+     * See [Usage][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Usage] for how to use [select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` { someCol `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() } }`
@@ -193,15 +246,14 @@ public interface SelectColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[select][SingleColumn.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
-     *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup)`[() `{`][SingleColumn.select]` colA `[and][ColumnsSelectionDsl.and]` colB `[`}`][SingleColumn.select]` }`
-     *
-     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[select][SingleColumn.select]` { colA `[and][ColumnsSelectionDsl.and]` colB } }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup.`[select][KProperty.select]` { colA `[and][ColumnsSelectionDsl.and]` colB } }`
+     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[select][KProperty.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup `[`{`][KProperty.select]` colA `[and][ColumnsSelectionDsl.and]` colB `[`}`][KProperty.select]` }`
+     *
+     * ## NOTE: 
+     * If you get a warning `CANDIDATE_CHOSEN_USING_OVERLOAD_RESOLUTION_BY_LAMBDA_ANNOTATION`, you
+     * can safely ignore this. It is caused by a workaround for a bug in the Kotlin compiler
+     * ([KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)).
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -217,7 +269,6 @@ public interface SelectColumnsSelectionDsl {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("KPropertyDataRowSelect")
-    // TODO: remove warning due to [KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)
     public fun <C, R> KProperty<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         columnGroup(this).select(selector)
 
@@ -229,6 +280,8 @@ public interface SelectColumnsSelectionDsl {
      * the DSL are at your disposal.
      *
      * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
+     *
+     * See [Usage][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Usage] for how to use [select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select].
      *
      * #### For example:
      *
@@ -270,6 +323,8 @@ public interface SelectColumnsSelectionDsl {
      *
      * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
+     * See [Usage][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Usage] for how to use [select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select].
+     *
      * #### For example:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` { someCol `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() } }`
@@ -307,28 +362,25 @@ public interface SelectColumnsSelectionDsl {
 
     // region deprecated
     @Deprecated(
-        message = "Nested select is reserved for ColumnsSelector/ColumnsSelectionDsl behavior. " +
-            "Use myGroup.cols(\"col1\", \"col2\") to select columns by name from a ColumnGroup.",
-        replaceWith = ReplaceWith("this.cols(*columns)"),
-        level = DeprecationLevel.ERROR,
+        message = COL_SELECT_DSL_SELECT_COLS,
+        replaceWith = ReplaceWith(COL_SELECT_DSL_SELECT_COLS_REPLACE),
+        level = DeprecationLevel.WARNING,
     )
     public fun SingleColumn<DataRow<*>>.select(vararg columns: String): ColumnSet<*> =
         selectInternal { columns.toColumnSet() }
 
     @Deprecated(
-        message = "Nested select is reserved for ColumnsSelector/ColumnsSelectionDsl behavior. " +
-            "Use myGroup.cols(col1, col2) to select columns by name from a ColumnGroup.",
-        replaceWith = ReplaceWith("this.cols(*columns)"),
-        level = DeprecationLevel.ERROR,
+        message = COL_SELECT_DSL_SELECT_COLS,
+        replaceWith = ReplaceWith(COL_SELECT_DSL_SELECT_COLS_REPLACE),
+        level = DeprecationLevel.WARNING,
     )
     public fun <R> SingleColumn<DataRow<*>>.select(vararg columns: ColumnReference<R>): ColumnSet<R> =
         selectInternal { columns.toColumnSet() }
 
     @Deprecated(
-        message = "Nested select is reserved for ColumnsSelector/ColumnsSelectionDsl behavior. " +
-            "Use myGroup.cols(Type::col1, Type::col2) to select columns by name from a ColumnGroup.",
-        replaceWith = ReplaceWith("this.cols(*columns)"),
-        level = DeprecationLevel.ERROR,
+        message = COL_SELECT_DSL_SELECT_COLS,
+        replaceWith = ReplaceWith(COL_SELECT_DSL_SELECT_COLS_REPLACE),
+        level = DeprecationLevel.WARNING,
     )
     public fun <R> SingleColumn<DataRow<*>>.select(vararg columns: KProperty<R>): ColumnSet<R> =
         selectInternal { columns.toColumnSet() }

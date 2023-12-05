@@ -90,6 +90,9 @@ internal const val TOP_MESSAGE = "top is deprecated, use simplify() instead. $me
 internal const val COL_SELECT_DSL_LIST_DATACOLUMN_GET = "This function is deprecated. Use `.toColumnSet()[]` instead. $message_0_14"
 internal const val COL_SELECT_DSL_LIST_DATACOLUMN_GET_REPLACE = "this.toColumnSet()[range]"
 
+internal const val COL_SELECT_DSL_SELECT_COLS = "Nested select is reserved for ColumnsSelector/ColumnsSelectionDsl behavior. Use myGroup.cols() to select columns by name from a ColumnGroup. $message_0_14"
+internal const val COL_SELECT_DSL_SELECT_COLS_REPLACE = "this.cols(*columns)"
+
 // endregion
 
 // region WARNING in 0.14, ERROR in 0.15
