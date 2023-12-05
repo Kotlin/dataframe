@@ -14,7 +14,7 @@ import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.columns.transformWithContext
+import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 
 // region DataFrame
@@ -79,14 +79,6 @@ public interface SelectColumnsSelectionDsl {
         interface ExampleArg
     }
 
-    // TODO? can cause clashes if cols have the same name
-    public fun <C> ColumnSet<C>.select(selector: ColumnsSelector<*, *>): ColumnSet<*> =
-        transformWithContext {
-            it.toColumnGroup("")
-                .select(selector)
-                .resolve(this)
-        }
-
     /**
      * @include [CommonSelectDocs]
      * @setArg [CommonSelectDocs.ExampleArg]
@@ -104,6 +96,28 @@ public interface SelectColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[select][SingleColumn.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
      *
+     * `df.`[select][DataFrame.select]` { `[x][ColumnsSelectionDsl.colGroup]`(Type::myColGroup)`[() `{`][SingleColumn.select]` colA `[and][ColumnsSelectionDsl.and]` colB `[`}`][SingleColumn.select]` }`
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[select][SingleColumn.select]` { colA `[and][ColumnsSelectionDsl.and]` colB } }`
+     *
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup.`[select][KProperty.select]` { colA `[and][ColumnsSelectionDsl.and]` colB } }`
+     *
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup `[`{`][KProperty.select]` colA `[and][ColumnsSelectionDsl.and]` colB `[`}`][KProperty.select]` }`
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("KPropertySelect")
+    @OptIn(ExperimentalTypeInference::class)
+    @OverloadResolutionByLambdaReturnType
+    // TODO: [KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)
+    public fun <C, R> KProperty<C>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> =
+        columnGroup(this).select(selector)
+
+    /**
+     * @include [CommonSelectDocs]
+     * @setArg [CommonSelectDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[select][SingleColumn.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup)`[() `{`][SingleColumn.select]` colA `[and][ColumnsSelectionDsl.and]` colB `[`}`][SingleColumn.select]` }`
      *
      * `df.`[select][DataFrame.select]` { Type::myColGroup.`[select][SingleColumn.select]` { colA `[and][ColumnsSelectionDsl.and]` colB } }`
@@ -112,6 +126,9 @@ public interface SelectColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup `[`{`][KProperty.select]` colA `[and][ColumnsSelectionDsl.and]` colB `[`}`][KProperty.select]` }`
      */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("KPropertyDataRowSelect")
+    // TODO: remove warning due to [KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)
     public fun <C, R> KProperty<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         columnGroup(this).select(selector)
 
