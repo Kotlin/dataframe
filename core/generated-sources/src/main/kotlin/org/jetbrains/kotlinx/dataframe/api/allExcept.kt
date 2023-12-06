@@ -9,6 +9,8 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.addParentPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExceptAndUnpack
@@ -25,6 +27,68 @@ public interface AllExceptColumnsSelectionDsl<out T> {
 
     // region except
 
+    /**
+     * ## All (Except) Usage
+     *
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `[KProperty][kotlin.reflect.KProperty]`<*>` | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  `condition: `[ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
+     *
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
+     *
+     *  
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### On a column group reference:
+     *
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
+     *
+     *  
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
+    public interface Usage
+
 //    /** TODO tbd */
 //    @Suppress("UNCHECKED_CAST")
 //    public fun <C> ColumnSet<C>.colsExcept(predicate: ColumnFilter<C>): TransformableColumnSet<C> =
@@ -38,15 +102,15 @@ public interface AllExceptColumnsSelectionDsl<out T> {
 
     // region deprecated and experiments
 
-//    public operator fun ColumnReference<*>.not(): ColumnSet<Any?> =
-//        with(this@AllExceptColumnsSelectionDsl as ColumnsSelectionDsl<T>) {
-//            allExcept(this@not)
-//        }
-//
-//    public operator fun ColumnSet<*>.not(): ColumnSet<Any?> =
-//        with(this@AllExceptColumnsSelectionDsl as ColumnsSelectionDsl<T>) {
-//            allExcept(this@not)
-//        }
+    public operator fun ColumnReference<*>.not(): ColumnSet<Any?> =
+        with(this@AllExceptColumnsSelectionDsl as ColumnsSelectionDsl<T>) {
+            allExcept(this@not)
+        }
+
+    public operator fun ColumnSet<*>.not(): ColumnSet<Any?> =
+        with(this@AllExceptColumnsSelectionDsl as ColumnsSelectionDsl<T>) {
+            allExcept(this@not)
+        }
 
     public infix fun <C> ColumnSet<C>.oldExcept(other: ColumnsResolver<*>): ColumnSet<C> =
         createColumnSet { context ->

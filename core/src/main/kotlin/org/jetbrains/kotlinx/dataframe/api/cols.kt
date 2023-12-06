@@ -140,10 +140,11 @@ public interface ColsColumnsSelectionDsl {
         /**
          * @include [CommonColsDocs]
          *
-         * @param [firstCol\] A {@getArg [AccessorType]} that points to a column.
-         * @param [otherCols\] Optional additional {@getArg [AccessorType]}s that point to columns.
+         * @param [firstCol\] A {@getArg [AccessorType]} that points to a relative column.
+         * @param [otherCols\] Optional additional {@getArg [AccessorType]}s that point to relative columns.
+         * @throws [IllegalArgumentException\] if any of the given [ColumnReference]s point to a column that doesn't
+         *   exist.
          * @return A [ColumnSet] containing the columns that [firstCol\] and [otherCols\] point to.
-         *   Columns that cannot be found are ignored.
          */
         interface Vararg {
 
@@ -333,11 +334,7 @@ public interface ColsColumnsSelectionDsl {
     public fun <C> ColumnsSelectionDsl<*>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
-    ): ColumnSet<C> = headPlusArray(firstCol, otherCols).let { refs ->
-        this.asSingleColumn().ensureIsColumnGroup().transformSingle { col ->
-            refs.mapNotNull { col.getCol(it)?.cast() }
-        }
-    }
+    ): ColumnSet<C> = asSingleColumn().cols(firstCol, *otherCols)
 
     /** @include [ColumnsSelectionDslColsVarargColumnReferenceDocs] */
     public operator fun <C> ColumnsSelectionDsl<*>.get(
@@ -349,9 +346,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
      * @setArg [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(columnA, myColumnGroup.columnB) }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(columnA, columnB) }`
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`columnA, myColumnGroup.columnB`[`]`][SingleColumn.cols]` }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`columnA, columnB`[`]`][SingleColumn.cols]` }`
      */
     private interface SingleColumnColsVarargColumnReferenceDocs
 
@@ -359,11 +356,7 @@ public interface ColsColumnsSelectionDsl {
     public fun <C> SingleColumn<DataRow<*>>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
-    ): ColumnSet<C> = this.cols<C>(
-        // use just the name of the column references to prevent scoping issues like `a.cols(a.b, a.c)`
-        firstCol.name(),
-        *otherCols.map { it.name() }.toTypedArray(),
-    )
+    ): ColumnSet<C> = colsInternal(listOf(firstCol, *otherCols)).cast()
 
     /**
      * @include [SingleColumnColsVarargColumnReferenceDocs]
@@ -499,11 +492,7 @@ public interface ColsColumnsSelectionDsl {
     public fun <T> SingleColumn<DataRow<*>>.cols(
         firstCol: String,
         vararg otherCols: String,
-    ): ColumnSet<T> = headPlusArray(firstCol, otherCols).let { names ->
-        this.ensureIsColumnGroup().transformSingle { col ->
-            names.mapNotNull { col.getCol(it) }
-        }
-    }.cast()
+    ): ColumnSet<T> = colsInternal(listOf(firstCol, *otherCols).map { pathOf(it) }).cast()
 
     /**
      * @include [SingleColumnColsVarargStringDocs]
@@ -631,7 +620,7 @@ public interface ColsColumnsSelectionDsl {
     public fun <T> ColumnsSelectionDsl<*>.cols(
         firstCol: ColumnPath,
         vararg otherCols: ColumnPath,
-    ): ColumnSet<T> = this.asSingleColumn().cols(firstCol, *otherCols).cast()
+    ): ColumnSet<T> = asSingleColumn().cols<T>(firstCol, *otherCols)
 
     /** @include [ColumnsSelectionDslVarargColumnPathDocs] */
     public operator fun ColumnsSelectionDsl<*>.get(
@@ -663,11 +652,7 @@ public interface ColsColumnsSelectionDsl {
     public fun <T> SingleColumn<DataRow<*>>.cols(
         firstCol: ColumnPath,
         vararg otherCols: ColumnPath,
-    ): ColumnSet<T> = headPlusArray(firstCol, otherCols).let { paths ->
-        this.ensureIsColumnGroup().transformSingle { col ->
-            paths.mapNotNull { col.getCol(it) }
-        }
-    }.cast()
+    ): ColumnSet<T> = colsInternal(listOf(firstCol, *otherCols)).cast()
 
     /**
      * @include [SingleColumnColsVarargColumnPathDocs]
@@ -813,11 +798,7 @@ public interface ColsColumnsSelectionDsl {
     public fun <C> SingleColumn<DataRow<*>>.cols(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
-    ): ColumnSet<C> = headPlusArray(firstCol, otherCols).let { props ->
-        this.ensureIsColumnGroup().transformSingle { col ->
-            props.mapNotNull { col.getCol(it) }
-        }
-    }
+    ): ColumnSet<C> = colsInternal(listOf(firstCol, *otherCols).map { pathOf(it.name) }).cast()
 
     /** @include [SingleColumnColsVarargKPropertyDocs] */
     public operator fun <C> SingleColumn<DataRow<*>>.get(
@@ -1228,6 +1209,16 @@ public interface ColsColumnsSelectionDsl {
 
     // endregion
 }
+
+internal fun SingleColumn<DataRow<*>>.colsInternal(refs: Iterable<ColumnReference<*>>): ColumnSet<*> =
+    ensureIsColumnGroup()
+        .transformSingle { col ->
+            refs.map {
+                col.getCol(it) ?: throw IllegalArgumentException(
+                    "Column at ${col.path.plus(it.path()).joinToString()} was not found."
+                )
+            }
+        }
 
 /**
  * If this [ColumnsResolver] is a [SingleColumn], it

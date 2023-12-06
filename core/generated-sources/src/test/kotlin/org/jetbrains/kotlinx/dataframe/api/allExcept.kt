@@ -94,6 +94,7 @@ class AllExceptTests : ColumnsSelectionDslTests() {
     fun `relative path`() {
         listOf(
             df.select { name.allColsExcept { lastName } }.alsoDebug(),
+//            df.select { name.allColsExcept { name.lastName } }.alsoDebug(),
 
 //            df.select { name.allColsExcept("name"["lastName"]) }.alsoDebug(),
             df.select { name.allColsExcept { "lastName"() } }.alsoDebug(),
@@ -177,17 +178,8 @@ class AllExceptTests : ColumnsSelectionDslTests() {
     fun `test with except`() {
 //        df.select { name.allCols() except name.firstName }.alsoDebug()
 
-//        df.select { !(age and name) }.alsoDebug()
+        df.select { !(age and name) }.alsoDebug()
         df.select { allExcept(age and name) }.alsoDebug()
-    }
-
-    @Test
-    fun `!`() {
-//        df.select { !(age and name) }.alsoDebug()
-//        df.select { allExcept(age and name) }.alsoDebug()
-//
-//        df.select { 50 / age }.alsoDebug()
-        df.select { !(isHappy.castToNullable()) named "isNotHappy" and isHappy }.alsoDebug()
     }
 
     // TODO (re)move

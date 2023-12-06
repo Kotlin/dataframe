@@ -635,7 +635,7 @@ public interface ColGroupColumnsSelectionDsl {
 internal fun <C> SingleColumn<DataRow<C>>.ensureIsColumnGroup(): SingleColumn<DataRow<C>> =
     onResolve { col: ColumnWithPath<*>? ->
         require(col?.isColumnGroup() != false) {
-            "Column at ${col?.path} is not a ColumnGroup, but a ${col?.kind()}."
+            "Column at ${col?.path?.joinToString()} is not a ColumnGroup, but a ${col?.kind()}."
         }
     }
 
@@ -643,7 +643,7 @@ internal fun <C> SingleColumn<DataRow<C>>.ensureIsColumnGroup(): SingleColumn<Da
 internal fun <C> ColumnAccessor<DataRow<C>>.ensureIsColumnGroup(): ColumnAccessor<DataRow<C>> =
     onResolve { col: ColumnWithPath<*>? ->
         require(col?.isColumnGroup() != false) {
-            "Column at ${col?.path} is not a ColumnGroup, but a ${col?.kind()}."
+            "Column at ${col?.path?.joinToString()} is not a ColumnGroup, but a ${col?.kind()}."
         }
     }
 

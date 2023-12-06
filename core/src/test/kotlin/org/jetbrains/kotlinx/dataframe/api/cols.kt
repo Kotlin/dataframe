@@ -18,9 +18,26 @@ class ColsTests : ColumnsSelectionDslTests() {
         shouldThrow<IllegalArgumentException> {
             df.select { "age".cols() }
         }
+        shouldThrow<IllegalArgumentException> {
+            df.select { cols("non-existent") }
+        }
+        shouldThrow<IllegalArgumentException> {
+            df.select { name.cols("non-existent") }
+        }
 
-        // instead of throwing an exception, this returns empty DF
-        df.select { cols("non-existent") } shouldBe emptyDataFrame()
+        // calls are always relative to the receiver
+        shouldThrow<IllegalArgumentException> {
+            df.select { name.cols(name.firstName) }
+        }
+
+        // "breaking spec" and using a column accessor where it doesn't belong does not work.
+        shouldThrow<IllegalArgumentException> {
+            df.select select1@{
+                name.select {
+                    cols(this@select1.name.firstName)
+                }
+            }
+        }
     }
 
     @Test
@@ -86,13 +103,6 @@ class ColsTests : ColumnsSelectionDslTests() {
             df.select { it[name, age] },
         ).shouldAllBeEqual()
 
-        // "breaking spec" and using a column accessor where it doesn't belong does not work.
-        df.select select1@{
-            name.select {
-                cols(this@select1.name.firstName, lastName)
-            }
-        } shouldBe df.select { name.lastName }
-
         val firstName by column<String>()
         val lastName by column<String>()
 
@@ -101,10 +111,6 @@ class ColsTests : ColumnsSelectionDslTests() {
 
             df.select { name.cols(firstName, lastName) },
             df.select { name[firstName, lastName] },
-
-            // take just the name
-            df.select { name.cols(name.firstName, name.lastName) },
-            df.select { name[name.firstName, name.lastName] },
 
             df.select {
                 name.select {
@@ -121,32 +127,17 @@ class ColsTests : ColumnsSelectionDslTests() {
             df.select { "name".cols(firstName, lastName) },
             df.select { "name"[firstName, lastName] },
 
-            df.select { "name".cols(name.firstName, name.lastName) },
-            df.select { "name"[name.firstName, name.lastName] },
-
             df.select { Person::name.cols(firstName, lastName) },
             df.select { Person::name[firstName, lastName] },
-
-            df.select { Person::name.cols(name.firstName, name.lastName) },
-            df.select { Person::name[name.firstName, name.lastName] },
 
             df.select { NonDataSchemaPerson::name.cols(firstName, lastName) },
             df.select { NonDataSchemaPerson::name[firstName, lastName] },
 
-            df.select { NonDataSchemaPerson::name.cols(name.firstName, name.lastName) },
-            df.select { NonDataSchemaPerson::name[name.firstName, name.lastName] },
-
             df.select { pathOf("name").cols(firstName, lastName) },
             df.select { pathOf("name")[firstName, lastName] },
 
-            df.select { pathOf("name").cols(name.firstName, name.lastName) },
-            df.select { pathOf("name")[name.firstName, name.lastName] },
-
             df.select { it["name"].asColumnGroup().cols(firstName, lastName) },
             df.select { it["name"].asColumnGroup()[firstName, lastName] },
-
-            df.select { it["name"].asColumnGroup().cols(name.firstName, name.lastName) },
-            df.select { it["name"].asColumnGroup()[name.firstName, name.lastName] },
         ).shouldAllBeEqual()
     }
 
@@ -328,6 +319,23 @@ class ColsTests : ColumnsSelectionDslTests() {
             df.select { pathOf("name").cols<String>(0..1) },
             df.select { it["name"].asColumnGroup().cols(0..1) },
             df.select { it["name"].asColumnGroup().cols<String>(0..1) },
+        ).shouldAllBeEqual()
+    }
+
+    @Test
+    fun `triple nested accessor edge case`() {
+        listOf(
+            dfGroup.select { name.firstName.firstName and name.lastName },
+
+            // column paths are relative to the receiver
+            dfGroup.select { name.cols("firstName"["firstName"], pathOf("lastName")) },
+
+            // column accessors can only be relative
+            dfGroup.select { name.cols(colGroup("firstName").col("firstName"), col("lastName")) },
+
+            // so not absolute
+//            dfGroup.select { name.cols(name.firstName.firstName, name.lastName) },
+
         ).shouldAllBeEqual()
     }
 }

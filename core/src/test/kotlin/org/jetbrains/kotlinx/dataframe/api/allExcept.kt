@@ -94,6 +94,7 @@ class AllExceptTests : ColumnsSelectionDslTests() {
     fun `relative path`() {
         listOf(
             df.select { name.allColsExcept { lastName } }.alsoDebug(),
+//            df.select { name.allColsExcept { name.lastName } }.alsoDebug(),
 
 //            df.select { name.allColsExcept("name"["lastName"]) }.alsoDebug(),
             df.select { name.allColsExcept { "lastName"() } }.alsoDebug(),

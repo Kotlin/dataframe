@@ -9,6 +9,8 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.addParentPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExceptAndUnpack
@@ -24,6 +26,22 @@ import kotlin.reflect.KProperty
 public interface AllExceptColumnsSelectionDsl<out T> {
 
     // region except
+
+    /**
+     * ## All (Except) Usage
+     *
+     * @include [UsageTemplate]
+     * {@setArg [UsageTemplate.DefinitionsArg]
+     *  {@include [UsageTemplate.ColumnSetDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.ColumnGroupDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.ConditionDef]}
+     * }
+     *
+     *
+     */
+    public interface Usage
 
 //    /** TODO tbd */
 //    @Suppress("UNCHECKED_CAST")

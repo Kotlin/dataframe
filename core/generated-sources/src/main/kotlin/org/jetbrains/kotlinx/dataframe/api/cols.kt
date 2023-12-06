@@ -241,10 +241,11 @@ public interface ColsColumnsSelectionDsl {
          * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]}
          *
          *
-         * @param [firstCol\] A {@getArg [AccessorType]} that points to a column.
-         * @param [otherCols\] Optional additional {@getArg [AccessorType]}s that point to columns.
+         * @param [firstCol\] A {@getArg [AccessorType]} that points to a relative column.
+         * @param [otherCols\] Optional additional {@getArg [AccessorType]}s that point to relative columns.
+         * @throws [IllegalArgumentException\] if any of the given [ColumnReference]s point to a column that doesn't
+         *   exist.
          * @return A [ColumnSet] containing the columns that [firstCol\] and [otherCols\] point to.
-         *   Columns that cannot be found are ignored.
          */
         interface Vararg {
 
@@ -1201,10 +1202,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`colGroup.columnA, columnB`[`]`][ColumnsSelectionDsl.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnReference] that points to a column.
-     * @param [otherCols] Optional additional [ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnReference] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnReference]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     private interface ColumnsSelectionDslColsVarargColumnReferenceDocs
 
@@ -1236,19 +1238,16 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`colGroup.columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
-     * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public fun <C> ColumnsSelectionDsl<*>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
-    ): ColumnSet<C> = headPlusArray(firstCol, otherCols).let { refs ->
-        this.asSingleColumn().ensureIsColumnGroup().transformSingle { col ->
-            refs.mapNotNull { col.getCol(it)?.cast() }
-        }
-    }
+    ): ColumnSet<C> = asSingleColumn().cols(firstCol, *otherCols)
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
@@ -1278,10 +1277,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`colGroup.columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
-     * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public operator fun <C> ColumnsSelectionDsl<*>.get(
         firstCol: ColumnReference<C>,
@@ -1312,15 +1312,16 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(columnA, myColumnGroup.columnB) }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(columnA, columnB) }`
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`columnA, myColumnGroup.columnB`[`]`][SingleColumn.cols]` }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`columnA, columnB`[`]`][SingleColumn.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnReference] that points to a column.
-     * @param [otherCols] Optional additional [ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnReference] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnReference]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     private interface SingleColumnColsVarargColumnReferenceDocs
 
@@ -1347,24 +1348,21 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, myColumnGroup.columnB) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`columnA, myColumnGroup.columnB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
-     * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public fun <C> SingleColumn<DataRow<*>>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
-    ): ColumnSet<C> = this.cols<C>(
-        // use just the name of the column references to prevent scoping issues like `a.cols(a.b, a.c)`
-        firstCol.name(),
-        *otherCols.map { it.name() }.toTypedArray(),
-    )
+    ): ColumnSet<C> = colsInternal(listOf(firstCol, *otherCols)).cast()
 
     /**
      * ## Cols
@@ -1390,15 +1388,16 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, myColumnGroup.columnB) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`columnA, myColumnGroup.columnB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
-     * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public operator fun <C> SingleColumn<DataRow<*>>.get(
         firstCol: ColumnReference<C>,
@@ -1434,10 +1433,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { "myColumnGroup"`[`[`][String.cols]`columnA, columnB`[`]`][String.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnReference] that points to a column.
-     * @param [otherCols] Optional additional [ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnReference] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnReference]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     private interface StringColsVarargColumnReferenceDocs
 
@@ -1469,10 +1469,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"`[`[`][kotlin.String.cols]`columnA, columnB`[`]`][kotlin.String.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
-     * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public fun <C> String.cols(
         firstCol: ColumnReference<C>,
@@ -1507,10 +1508,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"`[`[`][kotlin.String.cols]`columnA, columnB`[`]`][kotlin.String.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
-     * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public operator fun <C> String.get(
         firstCol: ColumnReference<C>,
@@ -1546,10 +1548,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"pathTo"["colA"], "pathTo"["colB"]`[`]`][KProperty.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnReference] that points to a column.
-     * @param [otherCols] Optional additional [ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnReference] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnReference]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     private interface KPropertyColsVarargColumnReferenceDocs
 
@@ -1581,10 +1584,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"pathTo"["colA"], "pathTo"["colB"]`[`]`][kotlin.reflect.KProperty.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
-     * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public fun <C> KProperty<*>.cols(
         firstCol: ColumnReference<C>,
@@ -1619,10 +1623,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"pathTo"["colA"], "pathTo"["colB"]`[`]`][kotlin.reflect.KProperty.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
-     * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public operator fun <C> KProperty<*>.get(
         firstCol: ColumnReference<C>,
@@ -1660,10 +1665,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`columnA, columnB`[`]`][ColumnPath.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnReference] that points to a column.
-     * @param [otherCols] Optional additional [ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnReference] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnReference]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     private interface ColumnPathColsVarargColumnReferenceDocs
 
@@ -1697,10 +1703,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
-     * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public fun <C> ColumnPath.cols(
         firstCol: ColumnReference<C>,
@@ -1737,10 +1744,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
-     * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public operator fun <C> ColumnPath.get(
         firstCol: ColumnReference<C>,
@@ -1782,10 +1790,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][ColumnsSelectionDsl.cols]` }`
      *
      *
-     * @param [firstCol] A [String] that points to a column.
-     * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [String] that points to a relative column.
+     * @param [otherCols] Optional additional [String]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     private interface ColumnsSelectionDslVarargStringDocs
 
@@ -1819,10 +1828,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      *
-     * @param [firstCol] A [String] that points to a column.
-     * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [String] that points to a relative column.
+     * @param [otherCols] Optional additional [String]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
@@ -1861,10 +1871,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      *
-     * @param [firstCol] A [String] that points to a column.
-     * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [String] that points to a relative column.
+     * @param [otherCols] Optional additional [String]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public fun <T> ColumnsSelectionDsl<*>.cols(
         firstCol: String,
@@ -1901,10 +1912,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      *
-     * @param [firstCol] A [String] that points to a column.
-     * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [String] that points to a relative column.
+     * @param [otherCols] Optional additional [String]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public operator fun ColumnsSelectionDsl<*>.get(
         firstCol: String,
@@ -1940,10 +1952,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`"columnA", "columnB"`[`]`][SingleColumn.cols]` }`
      *
      *
-     * @param [firstCol] A [String] that points to a column.
-     * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [String] that points to a relative column.
+     * @param [otherCols] Optional additional [String]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     private interface SingleColumnColsVarargStringDocs
 
@@ -1975,10 +1988,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
      *
-     * @param [firstCol] A [String] that points to a column.
-     * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [String] that points to a relative column.
+     * @param [otherCols] Optional additional [String]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
@@ -2015,19 +2029,16 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
      *
-     * @param [firstCol] A [String] that points to a column.
-     * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [String] that points to a relative column.
+     * @param [otherCols] Optional additional [String]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public fun <T> SingleColumn<DataRow<*>>.cols(
         firstCol: String,
         vararg otherCols: String,
-    ): ColumnSet<T> = headPlusArray(firstCol, otherCols).let { names ->
-        this.ensureIsColumnGroup().transformSingle { col ->
-            names.mapNotNull { col.getCol(it) }
-        }
-    }.cast()
+    ): ColumnSet<T> = colsInternal(listOf(firstCol, *otherCols).map { pathOf(it) }).cast()
 
     /**
      * ## Cols
@@ -2058,10 +2069,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
      *
-     * @param [firstCol] A [String] that points to a column.
-     * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [String] that points to a relative column.
+     * @param [otherCols] Optional additional [String]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public operator fun SingleColumn<DataRow<*>>.get(
         firstCol: String,
@@ -2097,10 +2109,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { "columnGroup"`[`[`][String.cols]`"columnA", "columnB"`[`]`][String.cols]` }`
      *
      *
-     * @param [firstCol] A [String] that points to a column.
-     * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [String] that points to a relative column.
+     * @param [otherCols] Optional additional [String]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     private interface StringColsVarargStringDocs
 
@@ -2132,10 +2145,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup"`[`[`][kotlin.String.cols]`"columnA", "columnB"`[`]`][kotlin.String.cols]` }`
      *
      *
-     * @param [firstCol] A [String] that points to a column.
-     * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [String] that points to a relative column.
+     * @param [otherCols] Optional additional [String]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
@@ -2172,10 +2186,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup"`[`[`][kotlin.String.cols]`"columnA", "columnB"`[`]`][kotlin.String.cols]` }`
      *
      *
-     * @param [firstCol] A [String] that points to a column.
-     * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [String] that points to a relative column.
+     * @param [otherCols] Optional additional [String]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public fun <T> String.cols(
         firstCol: String,
@@ -2210,10 +2225,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup"`[`[`][kotlin.String.cols]`"columnA", "columnB"`[`]`][kotlin.String.cols]` }`
      *
      *
-     * @param [firstCol] A [String] that points to a column.
-     * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [String] that points to a relative column.
+     * @param [otherCols] Optional additional [String]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public operator fun String.get(
         firstCol: String,
@@ -2249,10 +2265,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"columnA", "columnB"`[`]`][KProperty.cols]` }`
      *
      *
-     * @param [firstCol] A [String] that points to a column.
-     * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [String] that points to a relative column.
+     * @param [otherCols] Optional additional [String]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     private interface KPropertiesColsVarargStringDocs
 
@@ -2284,10 +2301,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"columnA", "columnB"`[`]`][kotlin.reflect.KProperty.cols]` }`
      *
      *
-     * @param [firstCol] A [String] that points to a column.
-     * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [String] that points to a relative column.
+     * @param [otherCols] Optional additional [String]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
@@ -2324,10 +2342,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"columnA", "columnB"`[`]`][kotlin.reflect.KProperty.cols]` }`
      *
      *
-     * @param [firstCol] A [String] that points to a column.
-     * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [String] that points to a relative column.
+     * @param [otherCols] Optional additional [String]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public fun <T> KProperty<*>.cols(
         firstCol: String,
@@ -2362,10 +2381,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"columnA", "columnB"`[`]`][kotlin.reflect.KProperty.cols]` }`
      *
      *
-     * @param [firstCol] A [String] that points to a column.
-     * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [String] that points to a relative column.
+     * @param [otherCols] Optional additional [String]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public operator fun KProperty<*>.get(
         firstCol: String,
@@ -2401,10 +2421,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`"columnA", "columnB"`[`]`][ColumnPath.cols]` }`
      *
      *
-     * @param [firstCol] A [String] that points to a column.
-     * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [String] that points to a relative column.
+     * @param [otherCols] Optional additional [String]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     private interface ColumnPathColsVarargStringDocs
 
@@ -2436,10 +2457,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
      *
      *
-     * @param [firstCol] A [String] that points to a column.
-     * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [String] that points to a relative column.
+     * @param [otherCols] Optional additional [String]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
@@ -2476,10 +2498,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
      *
      *
-     * @param [firstCol] A [String] that points to a column.
-     * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [String] that points to a relative column.
+     * @param [otherCols] Optional additional [String]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public fun <T> ColumnPath.cols(
         firstCol: String,
@@ -2514,10 +2537,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
      *
      *
-     * @param [firstCol] A [String] that points to a column.
-     * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [String] that points to a relative column.
+     * @param [otherCols] Optional additional [String]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public operator fun ColumnPath.get(
         firstCol: String,
@@ -2559,10 +2583,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][ColumnsSelectionDsl.cols]` }`
      *
      *
-     * @param [firstCol] A [String] that points to a column.
-     * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [String] that points to a relative column.
+     * @param [otherCols] Optional additional [String]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     private interface ColumnsSelectionDslVarargColumnPathDocs
 
@@ -2596,10 +2621,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      *
-     * @param [firstCol] A [String] that points to a column.
-     * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [String] that points to a relative column.
+     * @param [otherCols] Optional additional [String]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
@@ -2638,15 +2664,16 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      *
-     * @param [firstCol] A [String] that points to a column.
-     * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [String] that points to a relative column.
+     * @param [otherCols] Optional additional [String]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public fun <T> ColumnsSelectionDsl<*>.cols(
         firstCol: ColumnPath,
         vararg otherCols: ColumnPath,
-    ): ColumnSet<T> = this.asSingleColumn().cols(firstCol, *otherCols).cast()
+    ): ColumnSet<T> = asSingleColumn().cols<T>(firstCol, *otherCols)
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
@@ -2678,10 +2705,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      *
-     * @param [firstCol] A [String] that points to a column.
-     * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [String] that points to a relative column.
+     * @param [otherCols] Optional additional [String]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public operator fun ColumnsSelectionDsl<*>.get(
         firstCol: ColumnPath,
@@ -2719,10 +2747,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][SingleColumn.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnPath] that points to a column.
-     * @param [otherCols] Optional additional [ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnPath] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnPath]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     private interface SingleColumnColsVarargColumnPathDocs
 
@@ -2756,10 +2785,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
-     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
@@ -2798,19 +2828,16 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
-     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public fun <T> SingleColumn<DataRow<*>>.cols(
         firstCol: ColumnPath,
         vararg otherCols: ColumnPath,
-    ): ColumnSet<T> = headPlusArray(firstCol, otherCols).let { paths ->
-        this.ensureIsColumnGroup().transformSingle { col ->
-            paths.mapNotNull { col.getCol(it) }
-        }
-    }.cast()
+    ): ColumnSet<T> = colsInternal(listOf(firstCol, *otherCols)).cast()
 
     /**
      * ## Cols
@@ -2843,10 +2870,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
-     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public operator fun SingleColumn<DataRow<*>>.get(
         firstCol: ColumnPath,
@@ -2884,10 +2912,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { "columnGroup"`[`[`][String.cols]`""pathTo"["colA"], "pathTo"["colB"])`[`]`][ColumnPath.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnPath] that points to a column.
-     * @param [otherCols] Optional additional [ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnPath] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnPath]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     private interface StringColsVarargColumnPathDocs
 
@@ -2921,10 +2950,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup"`[`[`][kotlin.String.cols]`""pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
-     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
@@ -2963,10 +2993,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup"`[`[`][kotlin.String.cols]`""pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
-     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public fun <T> String.cols(
         firstCol: ColumnPath,
@@ -3003,10 +3034,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup"`[`[`][kotlin.String.cols]`""pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
-     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public operator fun String.get(
         firstCol: ColumnPath,
@@ -3044,10 +3076,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"columnA", "columnB"`[`]`][KProperty.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnPath] that points to a column.
-     * @param [otherCols] Optional additional [ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnPath] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnPath]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     private interface KPropertiesColsVarargColumnPathDocs
 
@@ -3081,10 +3114,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"columnA", "columnB"`[`]`][kotlin.reflect.KProperty.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
-     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
@@ -3123,10 +3157,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"columnA", "columnB"`[`]`][kotlin.reflect.KProperty.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
-     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public fun <T> KProperty<*>.cols(
         firstCol: ColumnPath,
@@ -3163,10 +3198,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"columnA", "columnB"`[`]`][kotlin.reflect.KProperty.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
-     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public operator fun KProperty<*>.get(
         firstCol: ColumnPath,
@@ -3204,10 +3240,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][ColumnPath.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnPath] that points to a column.
-     * @param [otherCols] Optional additional [ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnPath] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnPath]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     private interface ColumnPathColsVarargColumnPathDocs
 
@@ -3241,10 +3278,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
-     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
@@ -3283,10 +3321,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
-     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public fun <T> ColumnPath.cols(
         firstCol: ColumnPath,
@@ -3323,10 +3362,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
      *
      *
-     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
-     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a relative column.
+     * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public operator fun ColumnPath.get(
         firstCol: ColumnPath,
@@ -3366,10 +3406,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`Type::colA, Type::colB`[`]`][ColumnsSelectionDsl.cols]` }`
      *
      *
-     * @param [firstCol] A [KProperty] that points to a column.
-     * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [KProperty] that points to a relative column.
+     * @param [otherCols] Optional additional [KProperty]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     private interface ColumnsSelectionDslColsVarargKPropertyDocs
 
@@ -3401,10 +3442,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      *
-     * @param [firstCol] A [KProperty] that points to a column.
-     * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [KProperty] that points to a relative column.
+     * @param [otherCols] Optional additional [KProperty]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public fun <C> ColumnsSelectionDsl<*>.cols(
         firstCol: KProperty<C>,
@@ -3439,10 +3481,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      *
-     * @param [firstCol] A [KProperty] that points to a column.
-     * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [KProperty] that points to a relative column.
+     * @param [otherCols] Optional additional [KProperty]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public operator fun <C> ColumnsSelectionDsl<*>.get(
         firstCol: KProperty<C>,
@@ -3478,10 +3521,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`Type::colA, Type::colB`[`]`][SingleColumn.cols]` }`
      *
      *
-     * @param [firstCol] A [KProperty] that points to a column.
-     * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [KProperty] that points to a relative column.
+     * @param [otherCols] Optional additional [KProperty]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     private interface SingleColumnColsVarargKPropertyDocs
 
@@ -3513,19 +3557,16 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
      *
-     * @param [firstCol] A [KProperty] that points to a column.
-     * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [KProperty] that points to a relative column.
+     * @param [otherCols] Optional additional [KProperty]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public fun <C> SingleColumn<DataRow<*>>.cols(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
-    ): ColumnSet<C> = headPlusArray(firstCol, otherCols).let { props ->
-        this.ensureIsColumnGroup().transformSingle { col ->
-            props.mapNotNull { col.getCol(it) }
-        }
-    }
+    ): ColumnSet<C> = colsInternal(listOf(firstCol, *otherCols).map { pathOf(it.name) }).cast()
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver].
@@ -3555,10 +3596,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
      *
-     * @param [firstCol] A [KProperty] that points to a column.
-     * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [KProperty] that points to a relative column.
+     * @param [otherCols] Optional additional [KProperty]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public operator fun <C> SingleColumn<DataRow<*>>.get(
         firstCol: KProperty<C>,
@@ -3594,10 +3636,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { "myColumnGroup"`[`[`][String.cols]`Type::colA, Type::colB`[`]`][String.cols]` }`
      *
      *
-     * @param [firstCol] A [KProperty] that points to a column.
-     * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [KProperty] that points to a relative column.
+     * @param [otherCols] Optional additional [KProperty]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     private interface StringColsVarargKPropertyDocs
 
@@ -3629,10 +3672,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"`[`[`][kotlin.String.cols]`Type::colA, Type::colB`[`]`][kotlin.String.cols]` }`
      *
      *
-     * @param [firstCol] A [KProperty] that points to a column.
-     * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [KProperty] that points to a relative column.
+     * @param [otherCols] Optional additional [KProperty]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public fun <C> String.cols(
         firstCol: KProperty<C>,
@@ -3667,10 +3711,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"`[`[`][kotlin.String.cols]`Type::colA, Type::colB`[`]`][kotlin.String.cols]` }`
      *
      *
-     * @param [firstCol] A [KProperty] that points to a column.
-     * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [KProperty] that points to a relative column.
+     * @param [otherCols] Optional additional [KProperty]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public operator fun <C> String.get(
         firstCol: KProperty<C>,
@@ -3706,10 +3751,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup`[`[`][SingleColumn.cols]`Type::colA, Type::colB`[`]`][SingleColumn.cols]` }`
      *
      *
-     * @param [firstCol] A [KProperty] that points to a column.
-     * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [KProperty] that points to a relative column.
+     * @param [otherCols] Optional additional [KProperty]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     private interface KPropertyColsVarargKPropertyDocs
 
@@ -3741,10 +3787,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
      *
-     * @param [firstCol] A [KProperty] that points to a column.
-     * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [KProperty] that points to a relative column.
+     * @param [otherCols] Optional additional [KProperty]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public fun <C> KProperty<*>.cols(
         firstCol: KProperty<C>,
@@ -3779,10 +3826,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
      *
-     * @param [firstCol] A [KProperty] that points to a column.
-     * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [KProperty] that points to a relative column.
+     * @param [otherCols] Optional additional [KProperty]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public operator fun <C> KProperty<*>.get(
         firstCol: KProperty<C>,
@@ -3818,10 +3866,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`Type::colA, Type::colB`[`]`][ColumnPath.cols]` }`
      *
      *
-     * @param [firstCol] A [KProperty] that points to a column.
-     * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [KProperty] that points to a relative column.
+     * @param [otherCols] Optional additional [KProperty]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     private interface ColumnPathColsVarargKPropertyDocs
 
@@ -3853,10 +3902,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
      *
      *
-     * @param [firstCol] A [KProperty] that points to a column.
-     * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [KProperty] that points to a relative column.
+     * @param [otherCols] Optional additional [KProperty]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public fun <C> ColumnPath.cols(
         firstCol: KProperty<C>,
@@ -3891,10 +3941,11 @@ public interface ColsColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
      *
      *
-     * @param [firstCol] A [KProperty] that points to a column.
-     * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
-     *   Columns that cannot be found are ignored. 
+     * @param [firstCol] A [KProperty] that points to a relative column.
+     * @param [otherCols] Optional additional [KProperty]s that point to relative columns.
+     * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
+     *   exist.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
      */
     public operator fun <C> ColumnPath.get(
         firstCol: KProperty<C>,
@@ -5246,6 +5297,16 @@ public interface ColsColumnsSelectionDsl {
 
     // endregion
 }
+
+internal fun SingleColumn<DataRow<*>>.colsInternal(refs: Iterable<ColumnReference<*>>): ColumnSet<*> =
+    ensureIsColumnGroup()
+        .transformSingle { col ->
+            refs.map {
+                col.getCol(it) ?: throw IllegalArgumentException(
+                    "Column at ${col.path.plus(it.path()).joinToString()} was not found."
+                )
+            }
+        }
 
 /**
  * If this [ColumnsResolver] is a [SingleColumn], it
