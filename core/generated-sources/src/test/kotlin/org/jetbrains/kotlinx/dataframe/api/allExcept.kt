@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -136,23 +137,37 @@ class AllExceptTests : ColumnsSelectionDslTests() {
                 name.firstName allColsExcept pathOf("secondName")
             },
         ).shouldAllBeEqual()
+
+        listOf(
+            dfGroup.select { name.firstName { secondName and thirdName } },
+            dfGroup.select { name { firstName allColsExcept "firstName" } }.alsoDebug(),
+            dfGroup.select { name { firstName allColsExcept pathOf("firstName") } }.alsoDebug(),
+            dfGroup.select { (name allColsExcept "firstName"["firstName"]).first().asColumnGroup().allCols() },
+            dfGroup.remove { name.firstName.firstName }.select { name.firstName.allCols() },
+        ).shouldAllBeEqual()
     }
 
     @Test
     fun temp() {
-        df.alsoDebug()
+//        df.alsoDebug()
 //        df.select {
 //            name allColsExcept "lastName"
 //        }.alsoDebug()
 //
-//        df.select {
-//            name allColsExcept pathOf("lastName")
+
+//        dfGroup.select {
+//            name {
+//                firstName allColsExcept firstName.firstName
+//            }
 //        }.alsoDebug()
+        TODO()
+        dfGroup.select { name { firstName allColsExcept firstName.firstName } }.alsoDebug() // should work
+        dfGroup.select { name { firstName allColsExcept firstName } }.alsoDebug() // should fail
 
         shouldThrow<IllegalArgumentException> {
             dfGroup.select {
                 name.firstName allColsExcept "firstName"["secondName"]
-            }.alsoDebug()
+            }
         }
 
 
