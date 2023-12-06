@@ -27,7 +27,7 @@ public interface UsageTemplateColumnsSelectionDsl {
      *
      * {@setArg [UsageTemplate.PlainDslPart]
      *  {@include [LineBreak]}
-     *  ### In the plain DSL:
+     *  ### In the [ColumnsSelectionDsl][ColumnsSelectionDsl]:
      *
      *  {@include [LineBreak]}
      *  {@getArg [UsageTemplate.PlainDslFunctionsArg]}

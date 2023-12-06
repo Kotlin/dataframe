@@ -51,7 +51,9 @@ public interface ColsColumnsSelectionDsl {
      * {@setArg [UsageTemplate.PlainDslFunctionsArg]
      *  {@include [PlainDslName]}`[`**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}`, .. | `{@include [UsageTemplate.IndexRef]}`, .. | `{@include [UsageTemplate.IndexRangeRef]}**`)`**
      *
-     *  `|` `(` {@include [PlainDslName]}` [ `**` { `**{@include [UsageTemplate.ConditionRef]}**` \\} `**`] |  `**`this`**`/`**`it`** [**`[`**][cols]**`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`**[**`]`**][cols]` )`
+     *  `|` {@include [PlainDslName]}` [ `**` { `**{@include [UsageTemplate.ConditionRef]}**` \\} `**`]`
+     *
+     *  `|` **`this`**`/`**`it`** [**`[`**][cols]**`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`**[**`]`**][cols]
      *
      *  `|` **`this`**`/`**`it`** [**`[`**][cols]{@include [UsageTemplate.ColumnRef]}`, ..`[**`]`**][cols]
      * }
@@ -59,7 +61,9 @@ public interface ColsColumnsSelectionDsl {
      * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
      *  {@include [Indent]}{@include [ColumnSetName]}**`(`**{@include [UsageTemplate.IndexRef]}`, .. | `{@include [UsageTemplate.IndexRangeRef]}**`)`**
      *
-     *  {@include [Indent]}`|` `(` {@include [ColumnSetName]}` [ `**` { `**{@include [UsageTemplate.ConditionRef]}**` \\} `**`] | `[**`[`**][cols]**`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`**[**`]`**][cols]` )`
+     *  {@include [Indent]}`| `{@include [ColumnSetName]}` [ `**` { `**{@include [UsageTemplate.ConditionRef]}**` \\} `**`]`
+     *
+     *  {@include [Indent]}`| `[**`[`**][cols]**`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`**[**`]`**][cols]
      *
      *  {@include [Indent]}`| `[**`[`**][cols]{@include [UsageTemplate.IndexRef]}`, .. | `{@include [UsageTemplate.IndexRangeRef]}[**`]`**][cols]`
      * }
@@ -67,9 +71,11 @@ public interface ColsColumnsSelectionDsl {
      * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
      *  {@include [Indent]}{@include [ColumnGroupName]}`[`**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}`, .. | `{@include [UsageTemplate.IndexRef]}`, .. | `{@include [UsageTemplate.IndexRangeRef]}**`)`**
      *
-     *  {@include [Indent]}`|` `(` {@include [ColumnGroupName]}` [ `**` { `**{@include [UsageTemplate.ConditionRef]}**` \\} `**`] | `[**`[`**][cols]**`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`**[**`]`**][cols]` )`
+     *  {@include [Indent]}`| `{@include [ColumnGroupName]}` [ `**` { `**{@include [UsageTemplate.ConditionRef]}**` \\} `**`]`
      *
-     *  {@include [Indent]}`|` [**`[`**][cols]{@include [UsageTemplate.ColumnRef]}`, ..`[**`]`**][cols]
+     *  {@include [Indent]}`| `[**`[`**][cols]**`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`**[**`]`**][cols]
+     *
+     *  {@include [Indent]}`| `[**`[`**][cols]{@include [UsageTemplate.ColumnRef]}`, ..`[**`]`**][cols]
      * }
      */
     public interface Usage {
@@ -137,6 +143,7 @@ public interface ColsColumnsSelectionDsl {
          * @param [firstCol\] A {@getArg [AccessorType]} that points to a column.
          * @param [otherCols\] Optional additional {@getArg [AccessorType]}s that point to columns.
          * @return A [ColumnSet] containing the columns that [firstCol\] and [otherCols\] point to.
+         *   Columns that cannot be found are ignored.
          */
         interface Vararg {
 
@@ -316,9 +323,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@setArg [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
      * @setArg [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(columnA, columnB) }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(colGroup.columnA, columnB) }`
      *
-     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`columnA, columnB`[`]`][ColumnsSelectionDsl.cols]` }`
+     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`colGroup.columnA, columnB`[`]`][ColumnsSelectionDsl.cols]` }`
      */
     private interface ColumnsSelectionDslColsVarargColumnReferenceDocs
 

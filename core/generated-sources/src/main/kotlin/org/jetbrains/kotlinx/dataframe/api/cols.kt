@@ -71,14 +71,16 @@ public interface ColsColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### In the plain DSL:
+     *  ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`[`**`<`**[T][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**[column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]`, .. | `[index][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.IndexDef]`, .. | `[indexRange][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.IndexRangeDef]**`)`**
      *
-     *  `|` `(` [**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` [ `**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` } `**`] |  `**`this`**`/`**`it`** [**`[`**][cols]**`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`**[**`]`**][cols]` )`
+     *  `|` [**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` [ `**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` } `**`]`
+     *
+     *  `|` **`this`**`/`**`it`** [**`[`**][cols]**`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`**[**`]`**][cols]
      *
      *  `|` **`this`**`/`**`it`** [**`[`**][cols][column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]`, ..`[**`]`**][cols]
      *
@@ -93,7 +95,9 @@ public interface ColsColumnsSelectionDsl {
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;.[**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]**`(`**[index][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.IndexDef]`, .. | `[indexRange][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.IndexRangeDef]**`)`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` `(` .[**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` [ `**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` } `**`] | `[**`[`**][cols]**`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`**[**`]`**][cols]` )`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `.[**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` [ `**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` } `**`]`
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][cols]**`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`**[**`]`**][cols]
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][cols][index][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.IndexDef]`, .. | `[indexRange][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.IndexRangeDef][**`]`**][cols]`
      *
@@ -108,9 +112,11 @@ public interface ColsColumnsSelectionDsl {
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;.[**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`[`**`<`**[T][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**[column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]`, .. | `[index][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.IndexDef]`, .. | `[indexRange][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.IndexRangeDef]**`)`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` `(` .[**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` [ `**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` } `**`] | `[**`[`**][cols]**`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`**[**`]`**][cols]` )`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `.[**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` [ `**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` } `**`]`
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` [**`[`**][cols][column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]`, ..`[**`]`**][cols]
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][cols]**`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`**[**`]`**][cols]
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][cols][column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]`, ..`[**`]`**][cols]
      *
      *
      *
@@ -238,6 +244,7 @@ public interface ColsColumnsSelectionDsl {
          * @param [firstCol\] A {@getArg [AccessorType]} that points to a column.
          * @param [otherCols\] Optional additional {@getArg [AccessorType]}s that point to columns.
          * @return A [ColumnSet] containing the columns that [firstCol\] and [otherCols\] point to.
+         *   Columns that cannot be found are ignored.
          */
         interface Vararg {
 
@@ -1189,14 +1196,15 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(columnA, columnB) }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(colGroup.columnA, columnB) }`
      *
-     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`columnA, columnB`[`]`][ColumnsSelectionDsl.cols]` }`
+     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`colGroup.columnA, columnB`[`]`][ColumnsSelectionDsl.cols]` }`
      *
      *
      * @param [firstCol] A [ColumnReference] that points to a column.
      * @param [otherCols] Optional additional [ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     private interface ColumnsSelectionDslColsVarargColumnReferenceDocs
 
@@ -1223,14 +1231,15 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(columnA, columnB) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup.columnA, columnB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`colGroup.columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      *
      * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
      * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public fun <C> ColumnsSelectionDsl<*>.cols(
         firstCol: ColumnReference<C>,
@@ -1264,14 +1273,15 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(columnA, columnB) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup.columnA, columnB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`colGroup.columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      *
      * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
      * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public operator fun <C> ColumnsSelectionDsl<*>.get(
         firstCol: ColumnReference<C>,
@@ -1309,7 +1319,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnReference] that points to a column.
      * @param [otherCols] Optional additional [ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     private interface SingleColumnColsVarargColumnReferenceDocs
 
@@ -1343,7 +1354,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
      * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public fun <C> SingleColumn<DataRow<*>>.cols(
         firstCol: ColumnReference<C>,
@@ -1385,7 +1397,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
      * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public operator fun <C> SingleColumn<DataRow<*>>.get(
         firstCol: ColumnReference<C>,
@@ -1423,7 +1436,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnReference] that points to a column.
      * @param [otherCols] Optional additional [ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     private interface StringColsVarargColumnReferenceDocs
 
@@ -1457,7 +1471,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
      * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public fun <C> String.cols(
         firstCol: ColumnReference<C>,
@@ -1494,7 +1509,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
      * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public operator fun <C> String.get(
         firstCol: ColumnReference<C>,
@@ -1532,7 +1548,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnReference] that points to a column.
      * @param [otherCols] Optional additional [ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     private interface KPropertyColsVarargColumnReferenceDocs
 
@@ -1566,7 +1583,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
      * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public fun <C> KProperty<*>.cols(
         firstCol: ColumnReference<C>,
@@ -1603,7 +1621,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
      * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public operator fun <C> KProperty<*>.get(
         firstCol: ColumnReference<C>,
@@ -1643,7 +1662,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnReference] that points to a column.
      * @param [otherCols] Optional additional [ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     private interface ColumnPathColsVarargColumnReferenceDocs
 
@@ -1679,7 +1699,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
      * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public fun <C> ColumnPath.cols(
         firstCol: ColumnReference<C>,
@@ -1718,7 +1739,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a column.
      * @param [otherCols] Optional additional [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public operator fun <C> ColumnPath.get(
         firstCol: ColumnReference<C>,
@@ -1762,7 +1784,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [String] that points to a column.
      * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     private interface ColumnsSelectionDslVarargStringDocs
 
@@ -1798,7 +1821,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [String] that points to a column.
      * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
@@ -1839,7 +1863,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [String] that points to a column.
      * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public fun <T> ColumnsSelectionDsl<*>.cols(
         firstCol: String,
@@ -1878,7 +1903,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [String] that points to a column.
      * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public operator fun ColumnsSelectionDsl<*>.get(
         firstCol: String,
@@ -1916,7 +1942,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [String] that points to a column.
      * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     private interface SingleColumnColsVarargStringDocs
 
@@ -1950,7 +1977,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [String] that points to a column.
      * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
@@ -1989,7 +2017,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [String] that points to a column.
      * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public fun <T> SingleColumn<DataRow<*>>.cols(
         firstCol: String,
@@ -2031,7 +2060,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [String] that points to a column.
      * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public operator fun SingleColumn<DataRow<*>>.get(
         firstCol: String,
@@ -2069,7 +2099,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [String] that points to a column.
      * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     private interface StringColsVarargStringDocs
 
@@ -2103,7 +2134,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [String] that points to a column.
      * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
@@ -2142,7 +2174,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [String] that points to a column.
      * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public fun <T> String.cols(
         firstCol: String,
@@ -2179,7 +2212,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [String] that points to a column.
      * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public operator fun String.get(
         firstCol: String,
@@ -2217,7 +2251,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [String] that points to a column.
      * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     private interface KPropertiesColsVarargStringDocs
 
@@ -2251,7 +2286,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [String] that points to a column.
      * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
@@ -2290,7 +2326,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [String] that points to a column.
      * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public fun <T> KProperty<*>.cols(
         firstCol: String,
@@ -2327,7 +2364,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [String] that points to a column.
      * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public operator fun KProperty<*>.get(
         firstCol: String,
@@ -2365,7 +2403,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [String] that points to a column.
      * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     private interface ColumnPathColsVarargStringDocs
 
@@ -2399,7 +2438,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [String] that points to a column.
      * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
@@ -2438,7 +2478,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [String] that points to a column.
      * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public fun <T> ColumnPath.cols(
         firstCol: String,
@@ -2475,7 +2516,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [String] that points to a column.
      * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public operator fun ColumnPath.get(
         firstCol: String,
@@ -2519,7 +2561,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [String] that points to a column.
      * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     private interface ColumnsSelectionDslVarargColumnPathDocs
 
@@ -2555,7 +2598,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [String] that points to a column.
      * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
@@ -2596,7 +2640,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [String] that points to a column.
      * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public fun <T> ColumnsSelectionDsl<*>.cols(
         firstCol: ColumnPath,
@@ -2635,7 +2680,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [String] that points to a column.
      * @param [otherCols] Optional additional [String]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public operator fun ColumnsSelectionDsl<*>.get(
         firstCol: ColumnPath,
@@ -2675,7 +2721,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnPath] that points to a column.
      * @param [otherCols] Optional additional [ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     private interface SingleColumnColsVarargColumnPathDocs
 
@@ -2711,7 +2758,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
      * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
@@ -2752,7 +2800,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
      * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public fun <T> SingleColumn<DataRow<*>>.cols(
         firstCol: ColumnPath,
@@ -2796,7 +2845,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
      * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public operator fun SingleColumn<DataRow<*>>.get(
         firstCol: ColumnPath,
@@ -2836,7 +2886,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnPath] that points to a column.
      * @param [otherCols] Optional additional [ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     private interface StringColsVarargColumnPathDocs
 
@@ -2872,7 +2923,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
      * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
@@ -2913,7 +2965,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
      * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public fun <T> String.cols(
         firstCol: ColumnPath,
@@ -2952,7 +3005,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
      * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public operator fun String.get(
         firstCol: ColumnPath,
@@ -2992,7 +3046,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnPath] that points to a column.
      * @param [otherCols] Optional additional [ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     private interface KPropertiesColsVarargColumnPathDocs
 
@@ -3028,7 +3083,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
      * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
@@ -3069,7 +3125,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
      * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public fun <T> KProperty<*>.cols(
         firstCol: ColumnPath,
@@ -3108,7 +3165,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
      * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public operator fun KProperty<*>.get(
         firstCol: ColumnPath,
@@ -3148,7 +3206,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnPath] that points to a column.
      * @param [otherCols] Optional additional [ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     private interface ColumnPathColsVarargColumnPathDocs
 
@@ -3184,7 +3243,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
      * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
@@ -3225,7 +3285,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
      * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public fun <T> ColumnPath.cols(
         firstCol: ColumnPath,
@@ -3264,7 +3325,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a column.
      * @param [otherCols] Optional additional [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public operator fun ColumnPath.get(
         firstCol: ColumnPath,
@@ -3306,7 +3368,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [KProperty] that points to a column.
      * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     private interface ColumnsSelectionDslColsVarargKPropertyDocs
 
@@ -3340,7 +3403,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [KProperty] that points to a column.
      * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public fun <C> ColumnsSelectionDsl<*>.cols(
         firstCol: KProperty<C>,
@@ -3377,7 +3441,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [KProperty] that points to a column.
      * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public operator fun <C> ColumnsSelectionDsl<*>.get(
         firstCol: KProperty<C>,
@@ -3415,7 +3480,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [KProperty] that points to a column.
      * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     private interface SingleColumnColsVarargKPropertyDocs
 
@@ -3449,7 +3515,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [KProperty] that points to a column.
      * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public fun <C> SingleColumn<DataRow<*>>.cols(
         firstCol: KProperty<C>,
@@ -3490,7 +3557,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [KProperty] that points to a column.
      * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public operator fun <C> SingleColumn<DataRow<*>>.get(
         firstCol: KProperty<C>,
@@ -3528,7 +3596,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [KProperty] that points to a column.
      * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     private interface StringColsVarargKPropertyDocs
 
@@ -3562,7 +3631,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [KProperty] that points to a column.
      * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public fun <C> String.cols(
         firstCol: KProperty<C>,
@@ -3599,7 +3669,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [KProperty] that points to a column.
      * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public operator fun <C> String.get(
         firstCol: KProperty<C>,
@@ -3637,7 +3708,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [KProperty] that points to a column.
      * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     private interface KPropertyColsVarargKPropertyDocs
 
@@ -3671,7 +3743,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [KProperty] that points to a column.
      * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public fun <C> KProperty<*>.cols(
         firstCol: KProperty<C>,
@@ -3708,7 +3781,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [KProperty] that points to a column.
      * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public operator fun <C> KProperty<*>.get(
         firstCol: KProperty<C>,
@@ -3746,7 +3820,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [KProperty] that points to a column.
      * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     private interface ColumnPathColsVarargKPropertyDocs
 
@@ -3780,7 +3855,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [KProperty] that points to a column.
      * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public fun <C> ColumnPath.cols(
         firstCol: KProperty<C>,
@@ -3817,7 +3893,8 @@ public interface ColsColumnsSelectionDsl {
      *
      * @param [firstCol] A [KProperty] that points to a column.
      * @param [otherCols] Optional additional [KProperty]s that point to columns.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
+     *   Columns that cannot be found are ignored. 
      */
     public operator fun <C> ColumnPath.get(
         firstCol: KProperty<C>,

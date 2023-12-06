@@ -18,6 +18,9 @@ class ColsTests : ColumnsSelectionDslTests() {
         shouldThrow<IllegalArgumentException> {
             df.select { "age".cols() }
         }
+
+        // instead of throwing an exception, this returns empty DF
+        df.select { cols("non-existent") } shouldBe emptyDataFrame()
     }
 
     @Test

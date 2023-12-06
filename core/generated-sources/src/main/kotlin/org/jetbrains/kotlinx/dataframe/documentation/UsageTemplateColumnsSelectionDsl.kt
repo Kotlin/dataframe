@@ -29,7 +29,7 @@ public interface UsageTemplateColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### In the plain DSL:
+     *  ### In the [ColumnsSelectionDsl][ColumnsSelectionDsl]:
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;

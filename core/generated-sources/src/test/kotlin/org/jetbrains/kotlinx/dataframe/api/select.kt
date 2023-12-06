@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
 import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
@@ -17,8 +16,6 @@ class SelectTests : ColumnsSelectionDslTests() {
 //                 name.firstName
 //             }
 //         }
-
-        df.select { name.cols(name.firstName) }.alsoDebug()
 
         listOf(
             df.select { name.firstName and name.lastName },
