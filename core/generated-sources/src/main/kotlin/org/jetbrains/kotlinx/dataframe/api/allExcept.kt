@@ -38,15 +38,15 @@ public interface AllExceptColumnsSelectionDsl<out T> {
 
     // region deprecated and experiments
 
-    public operator fun ColumnReference<*>.not(): ColumnSet<Any?> =
-        with(this@AllExceptColumnsSelectionDsl as ColumnsSelectionDsl<T>) {
-            allExcept(this@not)
-        }
-
-    public operator fun ColumnSet<*>.not(): ColumnSet<Any?> =
-        with(this@AllExceptColumnsSelectionDsl as ColumnsSelectionDsl<T>) {
-            allExcept(this@not)
-        }
+//    public operator fun ColumnReference<*>.not(): ColumnSet<Any?> =
+//        with(this@AllExceptColumnsSelectionDsl as ColumnsSelectionDsl<T>) {
+//            allExcept(this@not)
+//        }
+//
+//    public operator fun ColumnSet<*>.not(): ColumnSet<Any?> =
+//        with(this@AllExceptColumnsSelectionDsl as ColumnsSelectionDsl<T>) {
+//            allExcept(this@not)
+//        }
 
     public infix fun <C> ColumnSet<C>.oldExcept(other: ColumnsResolver<*>): ColumnSet<C> =
         createColumnSet { context ->

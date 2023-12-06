@@ -6,6 +6,16 @@ import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import java.math.BigDecimal
 
+public operator fun DataColumn<Boolean>.not(): DataColumn<Boolean> = map { !it }
+
+@JvmName("notBooleanNullable")
+public operator fun DataColumn<Boolean?>.not(): DataColumn<Boolean?> = map { it?.not() }
+
+public operator fun ColumnReference<Boolean>.not(): ColumnReference<Boolean> = map { !it }
+
+@JvmName("notBooleanNullable")
+public operator fun ColumnReference<Boolean?>.not(): ColumnReference<Boolean?> = map { it?.not() }
+
 public operator fun DataColumn<Int>.plus(value: Int): DataColumn<Int> = map { it + value }
 
 public operator fun DataColumn<Int>.minus(value: Int): DataColumn<Int> = map { it - value }

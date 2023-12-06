@@ -36,8 +36,6 @@ public fun <T> DataFrame<T>.select(vararg columns: AnyColumnReference): DataFram
 
 // region ColumnsSelectionDsl
 // NOTE: invoke overloads are inside ColumnsSelectionDsl.kt due to conflicts
-// TODO probably provide all overloads, similar to DataFrame.select in this file
-// TODO explore parallels with except {}
 public interface SelectColumnsSelectionDsl {
 
     /**
@@ -361,6 +359,7 @@ public interface SelectColumnsSelectionDsl {
         columnGroup(this).select(selector)
 
     // region deprecated
+
     @Deprecated(
         message = COL_SELECT_DSL_SELECT_COLS,
         replaceWith = ReplaceWith(COL_SELECT_DSL_SELECT_COLS_REPLACE),
@@ -384,6 +383,7 @@ public interface SelectColumnsSelectionDsl {
     )
     public fun <R> SingleColumn<DataRow<*>>.select(vararg columns: KProperty<R>): ColumnSet<R> =
         selectInternal { columns.toColumnSet() }
+
     // endregion
 }
 
