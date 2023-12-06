@@ -170,23 +170,14 @@ public interface AllExceptColumnsSelectionDsl<out T> {
 
     // region SingleColumn
 
-    public infix fun <C> SingleColumn<DataRow<C>>.allColsExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
+    public fun <C> SingleColumn<DataRow<C>>.allColsExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         allColsExceptInternal(selector.toColumns())
 
-    public infix fun SingleColumn<DataRow<*>>.allColsExcept(other: ColumnsResolver<*>): ColumnSet<*> =
-        allColsExceptInternal(other)
-
     public fun SingleColumn<DataRow<*>>.allColsExcept(vararg other: ColumnsResolver<*>): ColumnSet<*> =
-        allColsExcept(other.toColumnSet())
-
-    public infix fun SingleColumn<DataRow<*>>.allColsExcept(other: String): ColumnSet<*> =
-        allColsExcept(column<Any?>(other))
+        allColsExceptInternal(other.toColumnSet())
 
     public fun SingleColumn<DataRow<*>>.allColsExcept(vararg others: String): ColumnSet<*> =
         allColsExcept(others.toColumnSet())
-
-    public infix fun SingleColumn<DataRow<*>>.allColsExcept(other: KProperty<*>): ColumnSet<*> =
-        allColsExcept(column(other))
 
     public fun SingleColumn<DataRow<*>>.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         allColsExcept(others.toColumnSet())
@@ -200,20 +191,11 @@ public interface AllExceptColumnsSelectionDsl<out T> {
     public fun String.allColsExcept(selector: ColumnsSelector<*, *>): ColumnSet<*> =
         columnGroup(this).allColsExcept(selector)
 
-    public infix fun String.allColsExcept(other: ColumnsResolver<*>): ColumnSet<*> =
-        columnGroup(this).allColsExcept(other)
-
     public fun String.allColsExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
-        allColsExcept(others.toColumnSet())
-
-    public fun String.allColsExcept(other: String): ColumnSet<*> =
-        columnGroup(this).allColsExcept(other)
+        columnGroup(this).allColsExcept(others.toColumnSet())
 
     public fun String.allColsExcept(vararg others: String): ColumnSet<*> =
         allColsExcept(others.toColumnSet())
-
-    public fun String.allColsExcept(other: KProperty<*>): ColumnSet<*> =
-        columnGroup(this).allColsExcept(other)
 
     public fun String.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         allColsExcept(others.toColumnSet())
@@ -225,20 +207,11 @@ public interface AllExceptColumnsSelectionDsl<out T> {
     public fun <C> KProperty<DataRow<C>>.allColsExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         columnGroup(this).allColsExcept(selector)
 
-    public infix fun KProperty<*>.allColsExcept(other: ColumnsResolver<*>): ColumnSet<*> =
-        columnGroup(this).allColsExcept(other)
-
     public fun KProperty<*>.allColsExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
-        allColsExcept(others.toColumnSet())
-
-    public infix fun KProperty<*>.allColsExcept(other: String): ColumnSet<*> =
-        columnGroup(this).allColsExcept(other)
+        columnGroup(this).allColsExcept(others.toColumnSet())
 
     public fun KProperty<*>.allColsExcept(vararg others: String): ColumnSet<*> =
         allColsExcept(others.toColumnSet())
-
-    public infix fun KProperty<*>.allColsExcept(other: KProperty<*>): ColumnSet<*> =
-        columnGroup(this).allColsExcept(other)
 
     public fun KProperty<*>.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         allColsExcept(others.toColumnSet())
@@ -250,20 +223,11 @@ public interface AllExceptColumnsSelectionDsl<out T> {
     public fun ColumnPath.allColsExcept(selector: ColumnsSelector<*, *>): ColumnSet<*> =
         columnGroup(this).allColsExcept(selector)
 
-    public infix fun ColumnPath.allColsExcept(other: ColumnsResolver<*>): ColumnSet<*> =
-        columnGroup(this).allColsExcept(other)
-
     public fun ColumnPath.allColsExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
-        allColsExcept(others.toColumnSet())
-
-    public infix fun ColumnPath.allColsExcept(other: String): ColumnSet<*> =
-        columnGroup(this).allColsExcept(other)
+        columnGroup(this).allColsExcept(others.toColumnSet())
 
     public fun ColumnPath.allColsExcept(vararg others: String): ColumnSet<*> =
         allColsExcept(others.toColumnSet())
-
-    public infix fun ColumnPath.allColsExcept(other: KProperty<*>): ColumnSet<*> =
-        columnGroup(this).allColsExcept(other)
 
     public fun ColumnPath.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         allColsExcept(others.toColumnSet())
