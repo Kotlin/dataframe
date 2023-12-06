@@ -46,7 +46,7 @@ internal open class DataFrameReceiver<T>(
                         host = this@DataFrameReceiver,
                     ).asDataColumn().cast()
 
-                UnresolvedColumnsPolicy.Fail -> error("Column $path not found among ${df.columnNames()}.")
+                UnresolvedColumnsPolicy.Fail -> error("Column ${path.joinToString()} not found among ${df.columnNames()}.")
             }
 
             is MissingDataColumn -> this

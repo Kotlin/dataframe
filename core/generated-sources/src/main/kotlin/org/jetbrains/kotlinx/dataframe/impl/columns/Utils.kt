@@ -361,7 +361,7 @@ internal fun <C> ColumnsContainer<*>.getColumn(path: ColumnPath, policy: Unresol
     getColumnOrNull(path)?.cast()
         ?: when (policy) {
             UnresolvedColumnsPolicy.Fail ->
-                error("Column not found: $path")
+                error("Column not found: ${path.joinToString()}")
 
             UnresolvedColumnsPolicy.Skip -> null
             UnresolvedColumnsPolicy.Create -> DataColumn.empty().cast<C>()

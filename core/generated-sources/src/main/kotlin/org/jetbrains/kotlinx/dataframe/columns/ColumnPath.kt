@@ -50,7 +50,8 @@ public data class ColumnPath(val path: List<String>) : List<String> by path, Col
      */
     public fun take(first: Int): ColumnPath = ColumnPath(path.take(first))
 
-    public fun replaceLast(name: String): ColumnPath = ColumnPath(if (path.size < 2) listOf(name) else path.dropLast(1) + name)
+    public fun replaceLast(name: String): ColumnPath =
+        ColumnPath(if (path.size < 2) listOf(name) else path.dropLast(1) + name)
 
     /**
      * Returns a shortened [ColumnPath] containing just the last [last] elements.
@@ -79,4 +80,35 @@ public data class ColumnPath(val path: List<String>) : List<String> by path, Col
     public fun joinToString(separator: String = "/"): String = path.joinToString(separator)
 
     override fun <C> get(column: ColumnReference<C>): ColumnAccessor<C> = ColumnAccessorImpl(this + column.path())
+}
+
+/**
+ * Drops the overlapping start of the child path with respect to the parent path, and returns the resulting ColumnPath.
+ *
+ * For example:
+ * ```kt
+ * val parentPath = pathOf("a", "b", "c")
+ * val childPath = pathOf("a", "b", "c", "d", "e")
+ *
+ * childPath.dropStartWrt(parentPath) // returns pathOf("d", "e")
+ * ```
+ *
+ * @param otherPath The parent path to compare against.
+ * @return The resulting ColumnPath after dropping the overlapping start.
+ */
+internal fun ColumnPath.dropStartWrt(otherPath: ColumnPath): ColumnPath {
+    val first = dropOverlappingStartOfChild(parent = otherPath, child = this)
+    return ColumnPath(first)
+}
+
+internal fun <T> dropOverlappingStartOfChild(parent: List<T>, child: List<T>): List<T> {
+    var indexToRemoveTill = 0
+    for (i in child.indices) {
+        val subFirst = child.subList(0, i + 1)
+        val sufficientSubSecond = parent.subList(maxOf(0, parent.size - (i + 1)), parent.size)
+        if (subFirst == sufficientSubSecond) {
+            indexToRemoveTill = i + 1
+        }
+    }
+    return child.subList(indexToRemoveTill, child.size)
 }

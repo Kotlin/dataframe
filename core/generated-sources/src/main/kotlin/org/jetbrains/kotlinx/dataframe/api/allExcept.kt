@@ -8,15 +8,16 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.toColumns
-import org.jetbrains.kotlinx.dataframe.impl.columns.addParentPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExceptAndUnpack
 import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExceptKeepingStructure
 import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.columns.isMissingColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsWithPaths
 import kotlin.reflect.KProperty
@@ -215,10 +216,10 @@ public interface AllExceptColumnsSelectionDsl<out T> {
     // region SingleColumn
 
     public infix fun <C> SingleColumn<DataRow<C>>.allColsExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
-        allColsExceptInternal(selector.toColumns(), false)
+        allColsExceptInternal(selector.toColumns())
 
     public infix fun SingleColumn<DataRow<*>>.allColsExcept(other: ColumnsResolver<*>): ColumnSet<*> =
-        allColsExceptInternal(other, true)
+        allColsExceptInternal(other)
 
     public fun SingleColumn<DataRow<*>>.allColsExcept(vararg other: ColumnsResolver<*>): ColumnSet<*> =
         allColsExcept(other.toColumnSet())
@@ -235,11 +236,12 @@ public interface AllExceptColumnsSelectionDsl<out T> {
     public fun SingleColumn<DataRow<*>>.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         allColsExcept(others.toColumnSet())
 
-    public infix fun SingleColumn<DataRow<*>>.allColsExcept(other: ColumnPath): ColumnSet<*> =
-        allColsExcept(column<Any?>(other))
+    // reference and path
+    public infix fun SingleColumn<DataRow<*>>.allColsExcept(other: ColumnReference<*>): ColumnSet<*> =
+        allColsExceptInternal(other)
 
-    public fun SingleColumn<DataRow<*>>.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
-        allColsExcept(others.toColumnSet())
+    public fun SingleColumn<DataRow<*>>.allColsExcept(vararg other: ColumnReference<*>): ColumnSet<*> =
+        allColsExceptInternal(*other)
 
     // endregion
 
@@ -266,11 +268,11 @@ public interface AllExceptColumnsSelectionDsl<out T> {
     public fun String.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         allColsExcept(others.toColumnSet())
 
-    public fun String.allColsExcept(other: ColumnPath): ColumnSet<*> =
+    public fun String.allColsExcept(other: ColumnReference<*>): ColumnSet<*> =
         columnGroup(this).allColsExcept(other)
 
-    public fun String.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
-        allColsExcept(others.toColumnSet())
+    public fun String.allColsExcept(vararg others: ColumnReference<*>): ColumnSet<*> =
+        columnGroup(this).allColsExcept(*others)
 
     // endregion
 
@@ -297,11 +299,11 @@ public interface AllExceptColumnsSelectionDsl<out T> {
     public fun KProperty<*>.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         allColsExcept(others.toColumnSet())
 
-    public infix fun KProperty<*>.allColsExcept(other: ColumnPath): ColumnSet<*> =
+    public infix fun KProperty<*>.allColsExcept(other: ColumnReference<*>): ColumnSet<*> =
         columnGroup(this).allColsExcept(other)
 
-    public fun KProperty<*>.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
-        allColsExcept(others.toColumnSet())
+    public fun KProperty<*>.allColsExcept(vararg others: ColumnReference<*>): ColumnSet<*> =
+        columnGroup(this).allColsExcept(*others)
 
     // endregion
 
@@ -328,44 +330,91 @@ public interface AllExceptColumnsSelectionDsl<out T> {
     public fun ColumnPath.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         allColsExcept(others.toColumnSet())
 
-    public infix fun ColumnPath.allColsExcept(other: ColumnPath): ColumnSet<*> =
+    public infix fun ColumnPath.allColsExcept(other: ColumnReference<*>): ColumnSet<*> =
         columnGroup(this).allColsExcept(other)
 
-    public fun ColumnPath.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
-        allColsExcept(others.toColumnSet())
+    public fun ColumnPath.allColsExcept(vararg others: ColumnReference<*>): ColumnSet<*> =
+        columnGroup(this).allColsExcept(*others)
 
     // endregion
 
     // endregion
 
-    private fun SingleColumn<DataRow<*>>.allColsExceptInternal(other: ColumnsResolver<*>, allowFullPaths: Boolean) =
+    /**
+     * streamlines column references such that both relative and absolute paths can be used
+     */
+    // TODO remove this overload again
+    private fun SingleColumn<DataRow<*>>.allColsExceptInternal(vararg others: ColumnReference<*>): ColumnSet<*> =
+        allColsExceptInternal(others.toColumnSet())
+    //        transformSingleWithContext { col ->
+//            val correctedOthers = others.map {
+//               it.path().dropStartWrt(col.path)
+//            }
+//            allColsExceptInternal(correctedOthers.toColumnSet()).resolve(this)
+//        }
+
+    private fun SingleColumn<DataRow<*>>.allColsExceptInternal(other: ColumnsResolver<*>) =
         createColumnSet { context ->
-            this.ensureIsColumnGroup().resolveSingle(context)?.let { col ->
-                require(col.isColumnGroup()) {
-                    "Column ${col.path} is not a ColumnGroup and can thus not be excepted from."
-                }
+            val col = this.ensureIsColumnGroup().resolveSingle(context)
+                ?: return@createColumnSet emptyList()
+            val colGroup = col.asColumnGroup()
+            val colPath = col.path
 
-                val allCols = col.asColumnGroup()
-                    .getColumnsWithPaths { all() }
+            val parentScope = (this@AllExceptColumnsSelectionDsl as ColumnsSelectionDsl<T>)
+                .asSingleColumn()
+            val parentCol = parentScope.ensureIsColumnGroup().resolveSingle(context)
+                ?: return@createColumnSet emptyList()
+            val parentColGroup = parentCol.asColumnGroup()
+            val parentPath = parentCol.path
 
-                // try to resolve all columns to except relative to the current column
-                try {
-                    val columnsToExcept = col.asColumnGroup()
-                        .getColumnsWithPaths(context.unresolvedColumnsPolicy) { other }
+            val allCols = colGroup.getColumnsWithPaths { all() }
 
-                    allCols.allColumnsExceptKeepingStructure(columnsToExcept)
-                        .map { it.changePath(col.path + it.path) }
-                } catch (e: IllegalStateException) {
-                    // if allowed, attempt to resole all columns to except absolutely too if relative failed
-                    if (allowFullPaths) {
-                        val allColsAbsolute = allCols.map { it.addParentPath(col.path) }
-                        val columnsToExcept = other.resolve(context)
-                        allColsAbsolute.allColumnsExceptKeepingStructure(columnsToExcept)
-                    } else {
-                        throw e
+            val colsToExceptRelativeToParent = parentColGroup
+                .getColumnsWithPaths(UnresolvedColumnsPolicy.Skip) { other }
+
+
+            val colsToExceptRelativeToCol = colGroup
+                .getColumnsWithPaths(UnresolvedColumnsPolicy.Skip) { other }
+
+            // throw exceptions for columns that weren't in this or parent scope
+            (colsToExceptRelativeToParent + colsToExceptRelativeToCol).groupBy { it.path }
+                .forEach { (path, cols) ->
+                    if (cols.all { it.data.isMissingColumn() }) {
+                        throw IllegalArgumentException(
+                            "Column ${(colPath + path).joinToString()} and ${(parentPath + path).joinToString()} not found."
+                        )
                     }
                 }
-            } ?: emptyList()
+
+            val colsToExcept = colsToExceptRelativeToCol +
+                colsToExceptRelativeToParent.map { // adjust the path to be relative to the current column
+                    it.changePath(it.path.dropFirst(colPath.size - parentPath.size))
+                }
+
+            allCols.allColumnsExceptKeepingStructure(
+                colsToExcept
+                    .distinctBy { it.path }
+                    .filterNot { it.data.isMissingColumn() }
+            ).map { it.changePath(col.path + it.path) }
+
+            // try to resolve all columns to except relative to the current column
+//                try {
+//                    val columnsToExcept = colGroup
+//                        .getColumnsWithPaths(context.unresolvedColumnsPolicy) { other }
+//
+//                    allCols.allColumnsExceptKeepingStructure(columnsToExcept)
+//                        .map { it.changePath(col.path + it.path) }
+//                } catch (e: IllegalStateException) {
+//                    // if allowed, attempt to resole all columns to except absolutely too if relative failed
+//                    if (allowFullPaths) {
+//                        val allColsAbsolute = allCols.map { it.addParentPath(col.path) }
+//                        val columnsToExcept = other.resolve(context)
+//                        allColsAbsolute.allColumnsExceptKeepingStructure(columnsToExcept)
+//                    } else {
+//                        throw e
+//                    }
+//                }
+
         }
 }
 

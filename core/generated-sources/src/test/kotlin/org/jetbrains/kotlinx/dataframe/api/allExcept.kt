@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.assertions.throwables.shouldThrow
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -20,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.samples.api.isHappy
 import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.jetbrains.kotlinx.dataframe.samples.api.secondName
+import org.jetbrains.kotlinx.dataframe.samples.api.thirdName
 import org.jetbrains.kotlinx.dataframe.samples.api.weight
 import org.junit.Test
 
@@ -103,16 +105,57 @@ class AllExceptTests : ColumnsSelectionDslTests() {
     }
 
     @Test
+    fun `should work`() {
+        listOf(
+            dfGroup.remove { name.firstName.secondName }.select { name.allCols() }.alsoDebug(),
+
+            dfGroup.select {
+                name allColsExcept "name"["firstName"]["secondName"]
+            },
+            dfGroup.select {
+                name allColsExcept (name.firstName.secondName and name.firstName.secondName)
+            },
+            dfGroup.select {
+                name allColsExcept colGroup("firstName").col("secondName")
+            },
+        ).shouldAllBeEqual()
+
+        listOf(
+            dfGroup.remove { name.firstName.secondName }.select { name.firstName.allCols() }.alsoDebug(),
+
+            dfGroup.select {
+                name.firstName allColsExcept "secondName"
+            },
+            dfGroup.select {
+                name.firstName allColsExcept name.firstName.secondName
+            },
+            dfGroup.select {
+                name.firstName allColsExcept pathOf("name", "firstName", "secondName")
+            },
+            dfGroup.select {
+                name.firstName allColsExcept pathOf("secondName")
+            },
+        ).shouldAllBeEqual()
+    }
+
+    @Test
     fun temp() {
         df.alsoDebug()
+//        df.select {
+//            name allColsExcept "lastName"
+//        }.alsoDebug()
+//
+//        df.select {
+//            name allColsExcept pathOf("lastName")
+//        }.alsoDebug()
 
-        df.select {
-            name.allColsExcept("lastName")
-        }.alsoDebug()
+        shouldThrow<IllegalArgumentException> {
+            dfGroup.select {
+                name.firstName allColsExcept "firstName"["secondName"]
+            }.alsoDebug()
+        }
 
-        df.select {
-            name.allColsExcept("name"["lastName"])
-        }.alsoDebug()
+
     }
 
     @Test
@@ -149,6 +192,24 @@ class AllExceptTests : ColumnsSelectionDslTests() {
             df.select { name allColsExcept "lastName" },
             df.select { name allColsExcept Name::lastName },
             df.select { name allColsExcept pathOf("lastName") },
+        ).shouldAllBeEqual()
+    }
+
+    @Test
+    fun `2 levels deep`() {
+        val secondNameAccessor = column<String?>("secondName")
+        val thirdNameAccessor = column<String?>("thirdName")
+
+        listOf(
+            dfGroup.select { name.firstName.firstName },
+
+            dfGroup.select { name.firstName.allColsExcept { secondName and thirdName } },
+            dfGroup.select { name.firstName.allColsExcept { secondNameAccessor and thirdNameAccessor } },
+            dfGroup.select { name.firstName.allColsExcept { cols { it.name in listOf("secondName", "thirdName") } } },
+            dfGroup.select { name.firstName.allColsExcept(name.firstName.secondName and name.firstName.thirdName) },
+            dfGroup.select { name.firstName allColsExcept (name.firstName.secondName and name.firstName.thirdName) },
+            dfGroup.select { name.firstName allColsExcept (name.firstName.secondName and thirdNameAccessor) },
+            dfGroup.select { name.firstName allColsExcept (secondNameAccessor and thirdNameAccessor) },
         ).shouldAllBeEqual()
     }
 
