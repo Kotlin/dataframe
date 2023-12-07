@@ -22,14 +22,14 @@ internal fun <T, C> RenameClause<T, C>.renameImpl(newNames: Array<out String>): 
 internal fun <T, C> RenameClause<T, C>.renameImpl(transform: (ColumnWithPath<C>) -> String): DataFrame<T> {
     // get all selected columns and their paths
     val selectedColumnsWithPath = df.getColumnsWithPaths(columns)
-        .associateBy { it.data }
+        .associateBy { it.path }
     // gather a tree of all columns where the nodes will be renamed
     val tree = df.getColumnsWithPaths { all().rec() }.collectTree()
 
     // perform rename in nodes
-    tree.allChildrenNotNull().forEach { node ->
+    tree.allChildrenNotNull().map { it to it.pathFromRoot() }.forEach { (node, originalPath) ->
         // Check if the current node/column is a selected column and, if so, get its ColumnWithPath
-        val column = selectedColumnsWithPath[node.data] ?: return@forEach
+        val column = selectedColumnsWithPath[originalPath] ?: return@forEach
         // Use the found selected ColumnWithPath to query for the new name
         val newColumnName = transform(column)
         node.name = newColumnName
