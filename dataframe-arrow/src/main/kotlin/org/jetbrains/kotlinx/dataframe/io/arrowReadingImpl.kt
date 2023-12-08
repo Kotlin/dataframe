@@ -32,6 +32,7 @@ import org.apache.arrow.vector.VarCharVector
 import org.apache.arrow.vector.VectorSchemaRoot
 import org.apache.arrow.vector.complex.StructVector
 import org.apache.arrow.vector.ipc.ArrowFileReader
+import org.apache.arrow.vector.ipc.ArrowReader
 import org.apache.arrow.vector.ipc.ArrowStreamReader
 import org.apache.arrow.vector.types.pojo.Field
 import org.apache.arrow.vector.util.DateUtility
@@ -262,17 +263,7 @@ internal fun DataFrame.Companion.readArrowIPCImpl(
     allocator: RootAllocator = Allocator.ROOT,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame {
-    ArrowStreamReader(channel, allocator).use { reader ->
-        val flattened = buildList {
-            val root = reader.vectorSchemaRoot
-            val schema = root.schema
-            while (reader.loadNextBatch()) {
-                val df = schema.fields.map { f -> readField(root, f, nullability) }.toDataFrame()
-                add(df)
-            }
-        }
-        return flattened.concatKeepingSchema()
-    }
+    return readArrowImpl(ArrowStreamReader(channel, allocator), nullability)
 }
 
 /**
@@ -283,14 +274,36 @@ internal fun DataFrame.Companion.readArrowFeatherImpl(
     allocator: RootAllocator = Allocator.ROOT,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame {
-    ArrowFileReader(channel, allocator).use { reader ->
+    return readArrowImpl(ArrowFileReader(channel, allocator), nullability)
+}
+
+/**
+ * Read [Arrow any format](https://arrow.apache.org/docs/java/ipc.html#reading-writing-ipc-formats) data from existing [reader]
+ */
+internal fun DataFrame.Companion.readArrowImpl(
+    reader: ArrowReader,
+    nullability: NullabilityOptions = NullabilityOptions.Infer
+): AnyFrame {
+    reader.use {
         val flattened = buildList {
-            reader.recordBlocks.forEach { block ->
-                reader.loadRecordBatch(block)
-                val root = reader.vectorSchemaRoot
-                val schema = root.schema
-                val df = schema.fields.map { f -> readField(root, f, nullability) }.toDataFrame()
-                add(df)
+            when (reader) {
+                is ArrowFileReader -> {
+                    reader.recordBlocks.forEach { block ->
+                        reader.loadRecordBatch(block)
+                        val root = reader.vectorSchemaRoot
+                        val schema = root.schema
+                        val df = schema.fields.map { f -> readField(root, f, nullability) }.toDataFrame()
+                        add(df)
+                    }
+                }
+                is ArrowStreamReader -> {
+                    val root = reader.vectorSchemaRoot
+                    val schema = root.schema
+                    while (reader.loadNextBatch()) {
+                        val df = schema.fields.map { f -> readField(root, f, nullability) }.toDataFrame()
+                        add(df)
+                    }
+                }
             }
         }
         return flattened.concatKeepingSchema()
