@@ -33,7 +33,7 @@ interface Customer {
 interface Sale {
     val id: Int?
     val customerId: Int?
-    val amount: Double?
+    val amount: Double
 }
 
 @DataSchema
@@ -102,7 +102,7 @@ class JdbcTest {
                 CREATE TABLE Sale (
                     id INT PRIMARY KEY,
                     customerId INT,
-                    amount DECIMAL(10, 2)
+                    amount DECIMAL(10, 2) NOT NULL
                 )
             """
 
@@ -534,7 +534,6 @@ class JdbcTest {
         schema.columns.size shouldBe 2
         schema.columns.toList()[0].first shouldBe "name"
         schema.columns.toList()[1].first shouldBe "name_1"
-
     }
 
     @Test
@@ -566,7 +565,7 @@ class JdbcTest {
         val saleDf = dataframes[1].cast<Sale>()
 
         saleDf.rowsCount() shouldBe 4
-        saleDf.filter { it[Sale::amount] != null && it[Sale::amount]!! > 40 }.rowsCount() shouldBe 3
+        saleDf.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 3
         (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
 
         val dataframes1 = DataFrame.readAllSqlTables(connection, limit =1)
@@ -580,7 +579,7 @@ class JdbcTest {
         val saleDf1 = dataframes1[1].cast<Sale>()
 
         saleDf1.rowsCount() shouldBe 1
-        saleDf1.filter { it[Sale::amount] != null && it[Sale::amount]!! > 40 }.rowsCount() shouldBe 1
+        saleDf1.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 1
         (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
 
         val dataSchemas = DataFrame.getSchemaForAllSqlTables(connection)
@@ -591,7 +590,7 @@ class JdbcTest {
 
         val saleDataSchema = dataSchemas[1]
         saleDataSchema.columns.size shouldBe 3
-        saleDataSchema.columns["amount"]!!.type shouldBe typeOf<BigDecimal?>()
+        saleDataSchema.columns["amount"]!!.type shouldBe typeOf<BigDecimal>()
 
         val dbConfig = DatabaseConfiguration(url = URL)
         val dataframes2 = DataFrame.readAllSqlTables(dbConfig)
@@ -605,7 +604,7 @@ class JdbcTest {
         val saleDf2 = dataframes2[1].cast<Sale>()
 
         saleDf2.rowsCount() shouldBe 4
-        saleDf2.filter { it[Sale::amount] != null && it[Sale::amount]!! > 40 }.rowsCount() shouldBe 3
+        saleDf2.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 3
         (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
 
         val dataframes3 = DataFrame.readAllSqlTables(dbConfig, limit = 1)
@@ -619,7 +618,7 @@ class JdbcTest {
         val saleDf3 = dataframes3[1].cast<Sale>()
 
         saleDf3.rowsCount() shouldBe 1
-        saleDf3.filter { it[Sale::amount] != null && it[Sale::amount]!! > 40 }.rowsCount() shouldBe 1
+        saleDf3.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 1
         (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
 
         val dataSchemas1 = DataFrame.getSchemaForAllSqlTables(dbConfig)
@@ -630,7 +629,7 @@ class JdbcTest {
 
         val saleDataSchema1 = dataSchemas1[1]
         saleDataSchema1.columns.size shouldBe 3
-        saleDataSchema1.columns["amount"]!!.type shouldBe typeOf<BigDecimal?>()
+        saleDataSchema1.columns["amount"]!!.type shouldBe typeOf<BigDecimal>()
     }
 }
 

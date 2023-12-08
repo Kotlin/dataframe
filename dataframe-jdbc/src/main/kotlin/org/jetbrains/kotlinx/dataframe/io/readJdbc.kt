@@ -2,19 +2,6 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import java.math.BigDecimal
-import java.sql.Blob
-import java.sql.Clob
-import java.sql.Connection
-import java.sql.DriverManager
-import java.sql.NClob
-import java.sql.Ref
-import java.sql.ResultSet
-import java.sql.ResultSetMetaData
-import java.sql.RowId
-import java.sql.SQLXML
-import java.sql.Time
-import java.sql.Timestamp
-import java.sql.Types
 import java.util.Date
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -25,10 +12,11 @@ import org.jetbrains.kotlinx.dataframe.io.db.DbType
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromUrl
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+import java.sql.*
 import kotlin.reflect.KType
+import kotlin.reflect.full.createType
 import kotlin.reflect.full.isSupertypeOf
 import kotlin.reflect.full.starProjectedType
-import kotlin.reflect.typeOf
 
 private val logger = KotlinLogging.logger {}
 
@@ -64,8 +52,9 @@ private const val MULTIPLE_SQL_QUERY_SEPARATOR = ";"
  * @property [sqlTypeName] the SQL data type of the column.
  * @property [jdbcType] the JDBC data type of the column produced from [java.sql.Types].
  * @property [size] the size of the column.
+ * @property [isNullable] true if column could contain nulls.
  */
-public data class TableColumnMetadata(val name: String, val sqlTypeName: String, val jdbcType: Int, val size: Int)
+public data class TableColumnMetadata(val name: String, val sqlTypeName: String, val jdbcType: Int, val size: Int, val isNullable: Boolean = false)
 
 /**
  * Represents a table metadata to store information about a database table,
@@ -150,7 +139,7 @@ public fun DataFrame.Companion.readSqlQuery(dbConfig: DatabaseConfiguration, sql
  * Converts the result of an SQL query to the DataFrame.
  *
  * NOTE: SQL query should start from SELECT and contain one query for reading data without any manipulation.
- * It should not contain ```;``` symbol.
+ * It should not contain `;` symbol.
  *
  * @param [connection] the database connection to execute the SQL query.
  * @param [sqlQuery] the SQL query to execute.
@@ -453,14 +442,23 @@ private fun getTableColumnsMetadata(rs: ResultSet): MutableList<TableColumnMetad
     val numberOfColumns: Int = metaData.columnCount
     val tableColumns = mutableListOf<TableColumnMetadata>()
     val columnNameCounter = mutableMapOf<String, Int>()
+    val databaseMetaData: DatabaseMetaData = rs.statement.connection.metaData
+    val catalog: String? = rs.statement.connection.catalog
+    val schema: String? = rs.statement.connection.schema
 
     for (i in 1 until numberOfColumns + 1) {
+        val columnResultSet: ResultSet = databaseMetaData.getColumns(catalog, schema, metaData.getTableName(i), metaData.getColumnName(i) )
+        val isNullable: Boolean = when(columnResultSet.getString("IS_NULLABLE")) {
+            "YES" -> true
+            else  -> false  // handle "NO" and unexpected values
+        }
+
         val name = manageColumnNameDuplication(columnNameCounter, metaData.getColumnName(i))
         val size = metaData.getColumnDisplaySize(i)
         val type = metaData.getColumnTypeName(i)
         val jdbcType = metaData.getColumnType(i)
 
-        tableColumns += TableColumnMetadata(name, type, jdbcType, size)
+        tableColumns += TableColumnMetadata(name, type, jdbcType, size, isNullable)
     }
     return tableColumns
 }
@@ -565,46 +563,48 @@ private fun generateKType(dbType: DbType, tableColumnMetadata: TableColumnMetada
 }
 
 private fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata): KType {
-    return when (tableColumnMetadata.jdbcType) {
-        Types.BIT -> typeOf<Boolean?>()
-        Types.TINYINT -> typeOf<Byte?>()
-        Types.SMALLINT -> typeOf<Short?>()
-        Types.INTEGER -> typeOf<Int?>()
-        Types.BIGINT -> typeOf<Long?>()
-        Types.FLOAT -> typeOf<Float?>()
-        Types.REAL -> typeOf<Float?>()
-        Types.DOUBLE -> typeOf<Double?>()
-        Types.NUMERIC -> typeOf<BigDecimal?>()
-        Types.DECIMAL -> typeOf<BigDecimal?>()
-        Types.CHAR -> typeOf<Char?>()
-        Types.VARCHAR -> typeOf<String?>()
-        Types.LONGVARCHAR -> typeOf<String?>()
-        Types.DATE -> typeOf<Date?>()
-        Types.TIME -> typeOf<Time?>()
-        Types.TIMESTAMP -> typeOf<Timestamp?>()
-        Types.BINARY -> typeOf<ByteArray?>()
-        Types.VARBINARY -> typeOf<ByteArray?>()
-        Types.LONGVARBINARY -> typeOf<ByteArray?>()
-        Types.NULL -> typeOf<String?>()
-        Types.OTHER -> typeOf<Any?>()
-        Types.JAVA_OBJECT -> typeOf<Any?>()
-        Types.DISTINCT -> typeOf<Any?>()
-        Types.STRUCT -> typeOf<Any?>()
-        Types.ARRAY -> typeOf<Array<Any?>?>()
-        Types.BLOB -> typeOf<Blob?>()
-        Types.CLOB -> typeOf<Clob?>()
-        Types.REF -> typeOf<Ref?>()
-        Types.DATALINK -> typeOf<Any?>()
-        Types.BOOLEAN -> typeOf<Boolean?>()
-        Types.ROWID -> typeOf<RowId?>()
-        Types.NCHAR -> typeOf<Char?>()
-        Types.NVARCHAR -> typeOf<String?>()
-        Types.LONGNVARCHAR -> typeOf<String?>()
-        Types.NCLOB -> typeOf<NClob?>()
-        Types.SQLXML -> typeOf<SQLXML?>()
-        Types.REF_CURSOR -> typeOf<Ref?>()
-        Types.TIME_WITH_TIMEZONE -> typeOf<Time?>()
-        Types.TIMESTAMP_WITH_TIMEZONE -> typeOf<Timestamp?>()
-        else -> typeOf<String?>()
-    }
+    val jdbcTypeToKTypeMapping = mapOf(
+        Types.BIT to Boolean::class,
+        Types.TINYINT to Byte::class,
+        Types.SMALLINT to Short::class,
+        Types.INTEGER to Int::class,
+        Types.BIGINT to Long::class,
+        Types.FLOAT to Float::class,
+        Types.REAL to Float::class,
+        Types.DOUBLE to Double::class,
+        Types.NUMERIC to BigDecimal::class,
+        Types.DECIMAL to BigDecimal::class,
+        Types.CHAR to Char::class,
+        Types.VARCHAR to String::class,
+        Types.LONGVARCHAR to String::class,
+        Types.DATE to Date::class,
+        Types.TIME to Time::class,
+        Types.TIMESTAMP to Timestamp::class,
+        Types.BINARY to ByteArray::class,
+        Types.VARBINARY to ByteArray::class,
+        Types.LONGVARBINARY to ByteArray::class,
+        Types.NULL to String::class,
+        Types.OTHER to Any::class,
+        Types.JAVA_OBJECT to Any::class,
+        Types.DISTINCT to Any::class,
+        Types.STRUCT to Any::class,
+        Types.ARRAY to Array<Any>::class,
+        Types.BLOB to Blob::class,
+        Types.CLOB to Clob::class,
+        Types.REF to Ref::class,
+        Types.DATALINK to Any::class,
+        Types.BOOLEAN to Boolean::class,
+        Types.ROWID to RowId::class,
+        Types.NCHAR to Char::class,
+        Types.NVARCHAR to String::class,
+        Types.LONGNVARCHAR to String::class,
+        Types.NCLOB to NClob::class,
+        Types.SQLXML to SQLXML::class,
+        Types.REF_CURSOR to Ref::class,
+        Types.TIME_WITH_TIMEZONE to Time::class,
+        Types.TIMESTAMP_WITH_TIMEZONE to Timestamp::class
+    )
+    val kClass = jdbcTypeToKTypeMapping[tableColumnMetadata.jdbcType] ?: String::class
+    return kClass.createType(nullable = tableColumnMetadata.isNullable)
 }
+
