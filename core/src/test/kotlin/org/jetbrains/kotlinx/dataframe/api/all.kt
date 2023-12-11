@@ -151,6 +151,7 @@ class AllTests : ColumnsSelectionDslTests() {
         ).shouldAllBeEqual()
     }
 
+    @Suppress("CANDIDATE_CHOSEN_USING_OVERLOAD_RESOLUTION_BY_LAMBDA_ANNOTATION")
     @Test
     fun `all subset at lower level after and from`() {
         listOf(
@@ -182,6 +183,7 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { "name".allColsAfter(pathOf("firstName")) },
             df.select { "name".allColsAfter(pathOf("name", "firstName")) },
 
+            df.select { Person::name.allColsAfter { firstName } },
             df.select { Person::name.allColsAfter { firstNameAccessor } },
             df.select { Person::name.allColsAfter(name.firstName) },
             df.select { Person::name.allColsAfter(firstNameAccessor) },
@@ -189,6 +191,15 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { Person::name.allColsAfter(Name::firstName) },
             df.select { Person::name.allColsAfter(pathOf("firstName")) },
             df.select { Person::name.allColsAfter(pathOf("name", "firstName")) },
+
+            df.select { NonDataSchemaPerson::name.allColsAfter { firstName } },
+            df.select { NonDataSchemaPerson::name.allColsAfter { firstNameAccessor } },
+            df.select { NonDataSchemaPerson::name.allColsAfter(name.firstName) },
+            df.select { NonDataSchemaPerson::name.allColsAfter(firstNameAccessor) },
+            df.select { NonDataSchemaPerson::name.allColsAfter("firstName") },
+            df.select { NonDataSchemaPerson::name.allColsAfter(Name::firstName) },
+            df.select { NonDataSchemaPerson::name.allColsAfter(pathOf("firstName")) },
+            df.select { NonDataSchemaPerson::name.allColsAfter(pathOf("name", "firstName")) },
 
             df.select { pathOf("name").allColsAfter { firstNameAccessor } },
             df.select { pathOf("name").allColsAfter(name.firstName) },
@@ -215,6 +226,7 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { "name".allColsFrom(pathOf("lastName")) },
             df.select { "name".allColsFrom(pathOf("name", "lastName")) },
 
+            df.select { Person::name.allColsFrom { lastName } },
             df.select { Person::name.allColsFrom { lastNameAccessor } },
             df.select { Person::name.allColsFrom(name.lastName) },
             df.select { Person::name.allColsFrom(lastNameAccessor) },
@@ -222,6 +234,15 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { Person::name.allColsFrom(Name::lastName) },
             df.select { Person::name.allColsFrom(pathOf("lastName")) },
             df.select { Person::name.allColsFrom(pathOf("name", "lastName")) },
+
+            df.select { NonDataSchemaPerson::name.allColsFrom { lastName } },
+            df.select { NonDataSchemaPerson::name.allColsFrom { lastNameAccessor } },
+            df.select { NonDataSchemaPerson::name.allColsFrom(name.lastName) },
+            df.select { NonDataSchemaPerson::name.allColsFrom(lastNameAccessor) },
+            df.select { NonDataSchemaPerson::name.allColsFrom("lastName") },
+            df.select { NonDataSchemaPerson::name.allColsFrom(Name::lastName) },
+            df.select { NonDataSchemaPerson::name.allColsFrom(pathOf("lastName")) },
+            df.select { NonDataSchemaPerson::name.allColsFrom(pathOf("name", "lastName")) },
 
             df.select { pathOf("name").allColsFrom { lastNameAccessor } },
             df.select { pathOf("name").allColsFrom(name.lastName) },
@@ -233,6 +254,7 @@ class AllTests : ColumnsSelectionDslTests() {
         ).shouldAllBeEqual()
     }
 
+    @Suppress("CANDIDATE_CHOSEN_USING_OVERLOAD_RESOLUTION_BY_LAMBDA_ANNOTATION")
     @Test
     fun `all subset at lower level before and upTo`() {
         val firstNameAccessor = column<String>("firstName")
@@ -258,6 +280,7 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { "name".allColsBefore(pathOf("lastName")) },
             df.select { "name".allColsBefore(pathOf("name", "lastName")) },
 
+            df.select { Person::name.allColsBefore { lastName } },
             df.select { Person::name.allColsBefore { lastNameAccessor } },
             df.select { Person::name.allColsBefore(name.lastName) },
             df.select { Person::name.allColsBefore(lastNameAccessor) },
@@ -265,6 +288,15 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { Person::name.allColsBefore(Name::lastName) },
             df.select { Person::name.allColsBefore(pathOf("lastName")) },
             df.select { Person::name.allColsBefore(pathOf("name", "lastName")) },
+
+            df.select { NonDataSchemaPerson::name.allColsBefore { lastName } },
+            df.select { NonDataSchemaPerson::name.allColsBefore { lastNameAccessor } },
+            df.select { NonDataSchemaPerson::name.allColsBefore(name.lastName) },
+            df.select { NonDataSchemaPerson::name.allColsBefore(lastNameAccessor) },
+            df.select { NonDataSchemaPerson::name.allColsBefore("lastName") },
+            df.select { NonDataSchemaPerson::name.allColsBefore(Name::lastName) },
+            df.select { NonDataSchemaPerson::name.allColsBefore(pathOf("lastName")) },
+            df.select { NonDataSchemaPerson::name.allColsBefore(pathOf("name", "lastName")) },
 
             df.select { pathOf("name").allColsBefore { lastNameAccessor } },
             df.select { pathOf("name").allColsBefore(name.lastName) },
@@ -291,6 +323,7 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { "name".allColsUpTo(pathOf("firstName")) },
             df.select { "name".allColsUpTo(pathOf("name", "firstName")) },
 
+            df.select { Person::name.allColsUpTo { firstName } },
             df.select { Person::name.allColsUpTo { firstNameAccessor } },
             df.select { Person::name.allColsUpTo(name.firstName) },
             df.select { Person::name.allColsUpTo(firstNameAccessor) },
@@ -298,6 +331,15 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { Person::name.allColsUpTo(Name::firstName) },
             df.select { Person::name.allColsUpTo(pathOf("firstName")) },
             df.select { Person::name.allColsUpTo(pathOf("name", "firstName")) },
+
+            df.select { NonDataSchemaPerson::name.allColsUpTo { firstName } },
+            df.select { NonDataSchemaPerson::name.allColsUpTo { firstNameAccessor } },
+            df.select { NonDataSchemaPerson::name.allColsUpTo(name.firstName) },
+            df.select { NonDataSchemaPerson::name.allColsUpTo(firstNameAccessor) },
+            df.select { NonDataSchemaPerson::name.allColsUpTo("firstName") },
+            df.select { NonDataSchemaPerson::name.allColsUpTo(Name::firstName) },
+            df.select { NonDataSchemaPerson::name.allColsUpTo(pathOf("firstName")) },
+            df.select { NonDataSchemaPerson::name.allColsUpTo(pathOf("name", "firstName")) },
 
             df.select { pathOf("name").allColsUpTo { firstNameAccessor } },
             df.select { pathOf("name").allColsUpTo(name.firstName) },
