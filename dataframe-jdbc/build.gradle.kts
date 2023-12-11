@@ -24,6 +24,8 @@ dependencies {
     testImplementation(libs.h2db)
     testImplementation(libs.junit)
     testImplementation(libs.sl4j)
+    testImplementation ("org.testcontainers:testcontainers:1.19.3")
+    testImplementation ("org.testcontainers:postgresql:1.19.3")
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
