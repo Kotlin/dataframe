@@ -17,13 +17,13 @@ class AllExceptTests : ColumnsSelectionDslTests() {
 
     @Test
     fun `exceptions`() {
-        shouldThrow<IllegalArgumentException> {
+        shouldThrow<IllegalStateException> {
             dfGroup.select {
                 name.firstName.allColsExcept("firstName"["secondName"])
             }
         }
 
-        shouldThrow<IllegalArgumentException> {
+        shouldThrow<IllegalStateException> {
             dfGroup.select {
                 name.firstName.allColsExcept(pathOf("name", "firstName", "secondName"))
             }
