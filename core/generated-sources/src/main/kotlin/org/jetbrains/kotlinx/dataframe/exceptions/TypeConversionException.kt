@@ -12,5 +12,5 @@ public open class TypeConversionException(
 ) : RuntimeException() {
 
     override val message: String
-        get() = "Failed to convert '$value' from $from to $to" + (column?.let { " in column ${it.joinToString()}" } ?: "")
+        get() = "Failed to convert '$value' from $from to $to" + (column?.let { " in column '${it.joinToString()}'" } ?: "")
 }

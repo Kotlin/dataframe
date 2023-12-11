@@ -18,9 +18,14 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExceptKeepingStruc
 import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.isMissingColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.io.renderToString
+import org.jetbrains.kotlinx.dataframe.util.ALL_COLS_EXCEPT
+import org.jetbrains.kotlinx.dataframe.util.ALL_COLS_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.ALL_COLS_REPLACE_VARARG
+import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
@@ -104,15 +109,15 @@ public interface AllExceptColumnsSelectionDsl<out T> {
 
     // region deprecated and experiments
 
-    public operator fun ColumnReference<*>.not(): ColumnSet<Any?> =
-        with(this@AllExceptColumnsSelectionDsl as ColumnsSelectionDsl<T>) {
-            allExcept(this@not)
-        }
-
-    public operator fun ColumnSet<*>.not(): ColumnSet<Any?> =
-        with(this@AllExceptColumnsSelectionDsl as ColumnsSelectionDsl<T>) {
-            allExcept(this@not)
-        }
+//    public operator fun ColumnReference<*>.not(): ColumnSet<Any?> =
+//        with(this@AllExceptColumnsSelectionDsl as ColumnsSelectionDsl<T>) {
+//            allExcept(this@not)
+//        }
+//
+//    public operator fun ColumnSet<*>.not(): ColumnSet<Any?> =
+//        with(this@AllExceptColumnsSelectionDsl as ColumnsSelectionDsl<T>) {
+//            allExcept(this@not)
+//        }
 
     public infix fun <C> ColumnSet<C>.oldExcept(other: ColumnsResolver<*>): ColumnSet<C> =
         createColumnSet { context ->
@@ -120,15 +125,6 @@ public interface AllExceptColumnsSelectionDsl<out T> {
             val resolvedColsToExcept = other.resolve(context)
             resolvedCols.allColumnsExceptAndUnpack(resolvedColsToExcept)
         } as ColumnSet<C>
-
-    // TODO TBD
-    @Deprecated("Use allExcept instead", ReplaceWith("this.allColsExcept(selector)"), DeprecationLevel.WARNING)
-    public infix fun <C> SingleColumn<DataRow<C>>.except(selector: ColumnsSelector<C, *>): ColumnSet<*> =
-        allColsExcept(selector)
-
-    @Deprecated("Use allExcept instead", ReplaceWith("this.allExcept(selector)"), DeprecationLevel.WARNING)
-    public infix fun <C> ColumnsSelectionDsl<C>.except(selector: ColumnsSelector<C, *>): ColumnSet<*> =
-        allExcept(selector)
 
     public infix fun <C> SingleColumn<DataRow<C>>.exceptNew(selector: ColumnsSelector<C, *>): SingleColumn<DataRow<*>> =
         this.ensureIsColumnGroup().transformSingle { singleCol ->
@@ -141,28 +137,51 @@ public interface AllExceptColumnsSelectionDsl<out T> {
             newCols as List<ColumnWithPath<DataRow<*>>>
         }.singleInternal()
 
-    @Deprecated("Use allExcept instead", ReplaceWith("this.allExcept(other)"))
-    public fun SingleColumn<DataRow<*>>.except(vararg other: ColumnsResolver<*>): ColumnSet<*> =
-        allColsExcept(*other)
-
-    @Deprecated("Use allExcept instead", ReplaceWith("this.allExcept(other)"))
-    public fun ColumnsSelectionDsl<*>.except(vararg other: ColumnsResolver<*>): ColumnSet<*> =
-        allExcept(*other)
-
-    /** TODO tbd */
-    public operator fun SingleColumn<DataRow<*>>.minus(other: ColumnsResolver<*>): ColumnSet<*> =
-        allColsExcept(other)
-
-    /** TODO tbd */
-    public operator fun <C> SingleColumn<DataRow<C>>.minus(selector: ColumnsSelector<C, *>): ColumnSet<*> =
+    @Deprecated("Use allColsExcept instead", ReplaceWith("this.allColsExcept(selector)"))
+    public fun <C> SingleColumn<DataRow<C>>.except(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         allColsExcept(selector)
+
+    @Deprecated("Use allColsExcept instead", ReplaceWith("this.allColsExcept { others.toColumnSet() } "))
+    public fun SingleColumn<DataRow<*>>.except(vararg others: ColumnsResolver<*>): ColumnSet<*> =
+        allColsExcept { others.toColumnSet() }
+
+    @Deprecated("Use allColsExcept instead", ReplaceWith("this.allColsExcept(others)"))
+    public fun SingleColumn<DataRow<*>>.except(vararg others: String): ColumnSet<*> =
+        allColsExcept(*others)
+
+    @Deprecated("Use allColsExcept instead", ReplaceWith("this.allColsExcept(others)"))
+    public fun SingleColumn<DataRow<*>>.except(vararg others: KProperty<*>): ColumnSet<*> =
+        allColsExcept(*others)
+
+    @Deprecated("Use allColsExcept instead", ReplaceWith("this.allColsExcept(others)"))
+    public fun SingleColumn<DataRow<*>>.except(vararg others: ColumnPath): ColumnSet<*> =
+        allColsExcept(*others)
+
+    @Deprecated("Use allExcept instead", ReplaceWith("this.allExcept(others)"))
+    public fun <C> ColumnsSelectionDsl<C>.except(selector: ColumnsSelector<C, *>): ColumnSet<*> =
+        allExcept(selector)
+
+    @Deprecated("Use allExcept instead", ReplaceWith("this.allExcept(others"))
+    public fun ColumnsSelectionDsl<*>.except(vararg others: ColumnsResolver<*>): ColumnSet<*> =
+        allExcept(*others)
+
+    @Deprecated("Use allExcept instead", ReplaceWith("this.allExcept(others)"))
+    public fun ColumnsSelectionDsl<*>.except(vararg others: String): ColumnSet<*> =
+        allExcept(*others)
+
+    @Deprecated("Use allExcept instead", ReplaceWith("this.allExcept(others)"))
+    public fun ColumnsSelectionDsl<*>.except(vararg others: KProperty<*>): ColumnSet<*> =
+        allExcept(*others)
+
+    @Deprecated("Use allExcept instead", ReplaceWith("this.allExcept(others)"))
+    public fun ColumnsSelectionDsl<*>.except(vararg others: ColumnPath): ColumnSet<*> =
+        allExcept(*others)
 
     // endregion
 
     // region ColumnSet
 
     public infix fun <C> ColumnSet<C>.except(selector: () -> ColumnsResolver<*>): ColumnSet<C> =
-//        except(selector.toColumns<Any?, _>())
         except(selector())
 
     public infix fun <C> ColumnSet<C>.except(other: ColumnsResolver<*>): ColumnSet<C> =
@@ -200,17 +219,18 @@ public interface AllExceptColumnsSelectionDsl<out T> {
     public fun <C> ColumnsSelectionDsl<C>.allExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         this.asSingleColumn().allColsExcept(selector)
 
-    public fun ColumnsSelectionDsl<*>.allExcept(vararg other: ColumnsResolver<*>): ColumnSet<*> =
-        asSingleColumn().allColsExcept(other.toColumnSet())
+    // no scoping issues, this can exist for legacy purposes
+    public fun ColumnsSelectionDsl<*>.allExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
+        asSingleColumn().allColsExceptInternal(others.toColumnSet())
 
     public fun ColumnsSelectionDsl<*>.allExcept(vararg others: String): ColumnSet<*> =
-        asSingleColumn().allColsExcept(others.toColumnSet())
+        asSingleColumn().allColsExceptInternal(others.toColumnSet())
 
     public fun ColumnsSelectionDsl<*>.allExcept(vararg others: KProperty<*>): ColumnSet<*> =
-        asSingleColumn().allColsExcept(others.toColumnSet())
+        asSingleColumn().allColsExceptInternal(others.toColumnSet())
 
     public fun ColumnsSelectionDsl<*>.allExcept(vararg others: ColumnPath): ColumnSet<*> =
-        asSingleColumn().allColsExcept(others.toColumnSet())
+        asSingleColumn().allColsExceptInternal(others.toColumnSet())
 
     // endregion
 
@@ -219,14 +239,22 @@ public interface AllExceptColumnsSelectionDsl<out T> {
     public fun <C> SingleColumn<DataRow<C>>.allColsExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         allColsExceptInternal(selector.toColumns())
 
-    public fun SingleColumn<DataRow<*>>.allColsExcept(vararg other: ColumnsResolver<*>): ColumnSet<*> =
-        allColsExceptInternal(other.toColumnSet())
+    @Deprecated(ALL_COLS_EXCEPT, ReplaceWith(ALL_COLS_REPLACE), DeprecationLevel.ERROR)
+    public fun SingleColumn<DataRow<*>>.allColsExcept(other: ColumnsResolver<*>): ColumnSet<*> =
+        allColsExcept { other }
+
+    @Deprecated(ALL_COLS_EXCEPT, ReplaceWith(ALL_COLS_REPLACE_VARARG), DeprecationLevel.ERROR)
+    public fun SingleColumn<DataRow<*>>.allColsExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
+        allColsExcept { others.toColumnSet() }
 
     public fun SingleColumn<DataRow<*>>.allColsExcept(vararg others: String): ColumnSet<*> =
-        allColsExcept(others.toColumnSet())
+        allColsExceptInternal(others.toColumnSet())
 
     public fun SingleColumn<DataRow<*>>.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
-        allColsExcept(others.toColumnSet())
+        allColsExceptInternal(others.toColumnSet())
+
+    public fun SingleColumn<DataRow<*>>.allColsExcept(vararg other: ColumnPath): ColumnSet<*> =
+        allColsExceptInternal(other.toColumnSet())
 
     // reference and path
 
@@ -237,30 +265,54 @@ public interface AllExceptColumnsSelectionDsl<out T> {
     public fun String.allColsExcept(selector: ColumnsSelector<*, *>): ColumnSet<*> =
         columnGroup(this).allColsExcept(selector)
 
+    @Deprecated(ALL_COLS_EXCEPT, ReplaceWith(ALL_COLS_REPLACE), DeprecationLevel.ERROR)
+    public fun String.allColsExcept(other: ColumnsResolver<*>): ColumnSet<*> =
+        allColsExcept { other }
+
+    @Deprecated(ALL_COLS_EXCEPT, ReplaceWith(ALL_COLS_REPLACE_VARARG), DeprecationLevel.ERROR)
     public fun String.allColsExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
-        columnGroup(this).allColsExcept(others.toColumnSet())
+        allColsExcept { others.toColumnSet() }
 
     public fun String.allColsExcept(vararg others: String): ColumnSet<*> =
-        allColsExcept(others.toColumnSet())
+        columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
     public fun String.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
-        allColsExcept(others.toColumnSet())
+        columnGroup(this).allColsExceptInternal(others.toColumnSet())
+
+    public fun String.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
+        columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
     // endregion
 
     // region KProperty
 
+    @OptIn(ExperimentalTypeInference::class)
+    @OverloadResolutionByLambdaReturnType
+    // TODO: [KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)
+    public fun <C> KProperty<C>.allColsExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
+        columnGroup(this).allColsExcept(selector)
+
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("KPropertyDataRowAllColsExcept")
     public fun <C> KProperty<DataRow<C>>.allColsExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         columnGroup(this).allColsExcept(selector)
 
+    @Deprecated(ALL_COLS_EXCEPT, ReplaceWith(ALL_COLS_REPLACE), DeprecationLevel.ERROR)
+    public fun KProperty<*>.allColsExcept(other: ColumnsResolver<*>): ColumnSet<*> =
+        allColsExcept { other }
+
+    @Deprecated(ALL_COLS_EXCEPT, ReplaceWith(ALL_COLS_REPLACE_VARARG), DeprecationLevel.ERROR)
     public fun KProperty<*>.allColsExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
-        columnGroup(this).allColsExcept(others.toColumnSet())
+        allColsExcept { others.toColumnSet() }
 
     public fun KProperty<*>.allColsExcept(vararg others: String): ColumnSet<*> =
-        allColsExcept(others.toColumnSet())
+        columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
     public fun KProperty<*>.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
-        allColsExcept(others.toColumnSet())
+        columnGroup(this).allColsExceptInternal(others.toColumnSet())
+
+    public fun KProperty<*>.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
+        columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
     // endregion
 
@@ -269,88 +321,29 @@ public interface AllExceptColumnsSelectionDsl<out T> {
     public fun ColumnPath.allColsExcept(selector: ColumnsSelector<*, *>): ColumnSet<*> =
         columnGroup(this).allColsExcept(selector)
 
+    @Deprecated(ALL_COLS_EXCEPT, ReplaceWith(ALL_COLS_REPLACE), DeprecationLevel.ERROR)
+    public fun ColumnPath.allColsExcept(other: ColumnsResolver<*>): ColumnSet<*> =
+        allColsExcept { other }
+
+    @Deprecated(ALL_COLS_EXCEPT, ReplaceWith(ALL_COLS_REPLACE_VARARG), DeprecationLevel.ERROR)
     public fun ColumnPath.allColsExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
-        columnGroup(this).allColsExcept(others.toColumnSet())
+        allColsExcept { others.toColumnSet() }
 
     public fun ColumnPath.allColsExcept(vararg others: String): ColumnSet<*> =
-        allColsExcept(others.toColumnSet())
+        columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
     public fun ColumnPath.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
-        allColsExcept(others.toColumnSet())
+        columnGroup(this).allColsExceptInternal(others.toColumnSet())
+
+    public fun ColumnPath.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
+        columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
     // endregion
 
     // endregion
 
     private fun SingleColumn<DataRow<*>>.allColsExceptInternal(other: ColumnsResolver<*>) =
-        createColumnSet { context ->
-            val col = this.ensureIsColumnGroup().resolveSingle(context)
-                ?: return@createColumnSet emptyList()
-            val colGroup = col.asColumnGroup()
-            val colPath = col.path
-
-            val parentScope = (this@AllExceptColumnsSelectionDsl as ColumnsSelectionDsl<T>)
-                .asSingleColumn()
-            val parentCol = parentScope.ensureIsColumnGroup().resolveSingle(context)
-                ?: return@createColumnSet emptyList()
-            val parentColGroup = parentCol.asColumnGroup()
-
-            val allCols = colGroup.getColumnsWithPaths { all() }
-
-            val colsToExceptRelativeToParent = parentColGroup
-                .getColumnsWithPaths(UnresolvedColumnsPolicy.Skip) { other }
-
-            val colsToExceptRelativeToCol = colGroup
-                .getColumnsWithPaths(UnresolvedColumnsPolicy.Skip) { other }
-
-            // throw exceptions for columns that weren't in this or parent scope
-            (colsToExceptRelativeToParent + colsToExceptRelativeToCol)
-                .groupBy { it.path }
-                .forEach { (path, cols) ->
-                    if (cols.all { it.data.isMissingColumn() }) {
-                        val columnTitles = parentColGroup.renderToString(0, 0, columnTypes = true).trim(' ', '\n', '.')
-                        throw IllegalArgumentException(
-                            "Column ${(colPath + path).joinToString()} and ${path.joinToString()} not found among columns: $columnTitles."
-                        )
-                    }
-                }
-
-            val colsToExcept = colsToExceptRelativeToCol +
-                colsToExceptRelativeToParent.mapNotNull { // adjust the path to be relative to the current column
-                    for (i in colPath.indices) {
-                        if (colPath[i] != it.path.getOrNull(i)) {
-                           return@mapNotNull null
-                        }
-                    }
-                    val newPath = it.path.dropFirst(colPath.size)
-                    if (newPath.isEmpty()) null else it.changePath(newPath)
-                }
-
-            allCols.allColumnsExceptKeepingStructure(
-                colsToExcept
-                    .distinctBy { it.path }
-                    .filterNot { it.data.isMissingColumn() }
-            ).map { it.changePath(col.path + it.path) }
-
-            // try to resolve all columns to except relative to the current column
-//                try {
-//                    val columnsToExcept = colGroup
-//                        .getColumnsWithPaths(context.unresolvedColumnsPolicy) { other }
-//
-//                    allCols.allColumnsExceptKeepingStructure(columnsToExcept)
-//                        .map { it.changePath(col.path + it.path) }
-//                } catch (e: IllegalStateException) {
-//                    // if allowed, attempt to resole all columns to except absolutely too if relative failed
-//                    if (allowFullPaths) {
-//                        val allColsAbsolute = allCols.map { it.addParentPath(col.path) }
-//                        val columnsToExcept = other.resolve(context)
-//                        allColsAbsolute.allColumnsExceptKeepingStructure(columnsToExcept)
-//                    } else {
-//                        throw e
-//                    }
-//                }
-
-        }
+        selectInternal { all() except other }
 }
 
 // endregion

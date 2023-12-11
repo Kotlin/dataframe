@@ -8,6 +8,7 @@ import org.junit.Test
 
 class SelectTests : ColumnsSelectionDslTests() {
 
+    @Suppress("CANDIDATE_CHOSEN_USING_OVERLOAD_RESOLUTION_BY_LAMBDA_ANNOTATION")
     @Test
     fun select() {
         // should not compile:

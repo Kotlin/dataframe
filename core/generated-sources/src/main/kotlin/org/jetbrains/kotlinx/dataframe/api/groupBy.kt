@@ -53,7 +53,7 @@ public fun <T> Pivot<T>.groupBy(vararg columns: KProperty<*>): PivotGroupBy<T> =
 public fun <T> Pivot<T>.groupByOther(): PivotGroupBy<T> {
     val impl = this as PivotImpl<T>
     val pivotColumns = df.getPivotColumnPaths(columns).toColumnSet()
-    return impl.toGroupedPivot(moveToTop = false) { except(pivotColumns) }
+    return impl.toGroupedPivot(moveToTop = false) { allExcept(pivotColumns) }
 }
 
 // endregion
