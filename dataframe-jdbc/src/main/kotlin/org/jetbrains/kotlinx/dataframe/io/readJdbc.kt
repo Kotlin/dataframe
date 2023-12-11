@@ -448,9 +448,10 @@ private fun getTableColumnsMetadata(rs: ResultSet): MutableList<TableColumnMetad
 
     for (i in 1 until numberOfColumns + 1) {
         val columnResultSet: ResultSet = databaseMetaData.getColumns(catalog, schema, metaData.getTableName(i), metaData.getColumnName(i) )
-        val isNullable: Boolean = when(columnResultSet.getString("IS_NULLABLE")) {
-            "YES" -> true
-            else  -> false  // handle "NO" and unexpected values
+        val isNullable = if (columnResultSet.next()) {
+            columnResultSet.getString("IS_NULLABLE") == "YES"
+        } else {
+            true // we assume that it's nullable by default
         }
 
         val name = manageColumnNameDuplication(columnNameCounter, metaData.getColumnName(i))
