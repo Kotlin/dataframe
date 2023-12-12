@@ -36,8 +36,6 @@ public fun <T> DataFrame<T>.select(vararg columns: AnyColumnReference): DataFram
 
 // region ColumnsSelectionDsl
 // NOTE: invoke overloads are inside ColumnsSelectionDsl.kt due to conflicts
-// TODO probably provide all overloads, similar to DataFrame.select in this file
-// TODO explore parallels with except {}
 public interface SelectColumnsSelectionDsl {
 
     /**
@@ -49,13 +47,13 @@ public interface SelectColumnsSelectionDsl {
      *  {@include [LineBreak]}
      *  {@include [UsageTemplate.ColumnGroupDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.ColumnSelectorDef]}
+     *  {@include [UsageTemplate.ColumnsSelectorDef]}
      * }
      *
      * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnGroupName]}**` {`** {@include [UsageTemplate.ColumnSelectorRef]} **`\}`**
+     *  {@include [Indent]}{@include [ColumnGroupName]}**` {`** {@include [UsageTemplate.ColumnsSelectorRef]} **`\}`**
      *
-     *  {@include [Indent]}`|`[**` {`**][ColumnsSelectionDsl.select] {@include [UsageTemplate.ColumnSelectorRef]} [**`\}`**][ColumnsSelectionDsl.select]
+     *  {@include [Indent]}`|`[**` {`**][ColumnsSelectionDsl.select] {@include [UsageTemplate.ColumnsSelectorRef]} [**`\}`**][ColumnsSelectionDsl.select]
      * }
      * {@setArg [UsageTemplate.PlainDslPart]}
      * {@setArg [UsageTemplate.ColumnSetPart]}

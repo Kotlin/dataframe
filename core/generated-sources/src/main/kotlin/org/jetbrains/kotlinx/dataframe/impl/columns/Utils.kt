@@ -407,10 +407,12 @@ internal fun List<ColumnWithPath<*>>.allColumnsExceptAndUnpack(columns: Iterable
  * Returns a new list of column paths, except the ones inside [columns].
  * NOTE: ColumnGroups are adapted to keep their structure. If a column inside a column group is excepted, it will
  * be removed from the group.
- *
- * TODO remove column group when it's empty?
+ * Empty groups will be removed if [removeEmptyGroups]` == true`
  */
-internal fun List<ColumnWithPath<*>>.allColumnsExceptKeepingStructure(columns: Iterable<ColumnWithPath<*>>): List<ColumnWithPath<*>> {
+internal fun List<ColumnWithPath<*>>.allColumnsExceptKeepingStructure(
+    columns: Iterable<ColumnWithPath<*>>,
+    removeEmptyGroups: Boolean = true,
+): List<ColumnWithPath<*>> {
     if (isEmpty()) return emptyList()
     val fullTree = collectTree()
     for (columnToExcept in columns) {
@@ -427,13 +429,23 @@ internal fun List<ColumnWithPath<*>>.allColumnsExceptKeepingStructure(columns: I
                 // treat it as a DF to remove the column to except from it and
                 // convert it back to a column group
                 val current = nodeToExcept.parent.data as ColumnGroup<*>? ?: continue
-                nodeToExcept.parent.data = current
+                val adjustedCurrent = current
                     .remove(nodeToExcept.name)
                     .asColumnGroup(current.name)
                     .addPath(current.path())
 
+                // remove the group if it's empty and removeEmptyGroups is true
+                // else, simply update the parent's data with the adjusted column group
+                nodeToExcept.parent.data =
+                    if (adjustedCurrent.cols().isEmpty() && removeEmptyGroups) {
+                        null
+                    } else {
+                        adjustedCurrent
+                    }
+
                 // now we update the parent's parents recursively with new column group instances
                 var parent = nodeToExcept.parent.parent
+
                 @Suppress("UNNECESSARY_NOT_NULL_ASSERTION")
                 var currentNode = nodeToExcept.parent!!
                 while (parent != null) {

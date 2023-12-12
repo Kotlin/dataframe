@@ -1,13 +1,22 @@
 package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDslTests
+import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.ensureIsColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.api.singleInternal
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
+import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExceptAndUnpack
 import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExceptKeepingStructure
+import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
+import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullImpl
+import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingleWithContext
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformWithContext
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
@@ -20,6 +29,25 @@ class Experiments : ColumnsSelectionDslTests() {
     @Test
     fun `TEMP experiments`() {
         dfGroup.select {
+
+            infix fun <C> ColumnSet<C>.oldExcept(other: ColumnsResolver<*>): ColumnSet<C> =
+                createColumnSet { context ->
+                    val resolvedCols = this@oldExcept.resolve(context)
+                    val resolvedColsToExcept = other.resolve(context)
+                    resolvedCols.allColumnsExceptAndUnpack(resolvedColsToExcept)
+                } as ColumnSet<C>
+
+            infix fun <C> SingleColumn<DataRow<C>>.exceptNew(selector: ColumnsSelector<C, *>): SingleColumn<DataRow<*>> =
+                this.ensureIsColumnGroup().transformSingle { singleCol ->
+
+                    val columnsToExcept = singleCol.asColumnGroup().getColumnsWithPaths(selector)
+                        .map { it.changePath(singleCol.path + it.path) }
+
+                    val newCols = listOf(singleCol).allColumnsExceptKeepingStructure(columnsToExcept)
+
+                    newCols as List<ColumnWithPath<DataRow<*>>>
+                }.singleInternal()
+
             @Suppress("UNCHECKED_CAST")
             fun ColumnSet<*>.containingGroups(): ColumnSet<DataRow<*>> = transformWithContext {
                 it.mapNotNull {

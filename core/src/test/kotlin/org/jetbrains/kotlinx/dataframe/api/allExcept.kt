@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.samples.api.age
 import org.jetbrains.kotlinx.dataframe.samples.api.city
@@ -28,6 +29,17 @@ class AllExceptTests : ColumnsSelectionDslTests() {
                 name.firstName.allColsExcept(pathOf("name", "firstName", "secondName"))
             }
         }
+    }
+
+    @Test
+    fun `empty group`() {
+        df.select { name.allColsExcept { all() } } shouldBe df.select { none() }
+
+        df.select { allExcept { all() } } shouldBe df.select { none() }
+
+        df.select { allExcept { name.allCols() } }.alsoDebug()
+
+        df.remove { name.allCols() }.alsoDebug()
     }
 
     @Test

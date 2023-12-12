@@ -195,6 +195,10 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
+     *  `colsSelector: `[ColumnsSelector][org.jetbrains.kotlinx.dataframe.ColumnsSelector]
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
      *  `number: `[Int][Int]
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -454,9 +458,9 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**and**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] **`(`**`|`**`{ `**[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`|`.[**select**][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]**` {`** [colSelector][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSelectorDef] **`}`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`|`.[**select**][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]**` {`** [colsSelector][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnsSelectorDef] **`}`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`|`[**` {`**][ColumnsSelectionDsl.select] [colSelector][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSelectorDef] [**`}`**][ColumnsSelectionDsl.select]
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`|`[**` {`**][ColumnsSelectionDsl.select] [colsSelector][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnsSelectorDef] [**`}`**][ColumnsSelectionDsl.select]
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;

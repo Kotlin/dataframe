@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
+import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -142,6 +143,9 @@ public interface UsageTemplateColumnsSelectionDsl {
         /** `colSelector: `[ColumnSelector][ColumnSelector] */
         public interface ColumnSelectorDef
 
+        /** `colsSelector: `[ColumnsSelector][ColumnsSelector] */
+        public interface ColumnsSelectorDef
+
         /** `number: `[Int][Int] */
         public interface NumberDef
 
@@ -205,6 +209,9 @@ public interface UsageTemplateColumnsSelectionDsl {
 
         /** [colSelector][ColumnSelectorDef] */
         public interface ColumnSelectorRef
+
+        /** [colsSelector][ColumnsSelectorDef] */
+        public interface ColumnsSelectorRef
 
         /** [number][NumberDef] */
         public interface NumberRef

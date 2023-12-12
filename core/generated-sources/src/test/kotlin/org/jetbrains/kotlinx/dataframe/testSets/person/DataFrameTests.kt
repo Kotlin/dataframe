@@ -2569,7 +2569,7 @@ class DataFrameTests : BaseTest() {
             }
         }
 
-        exception.message shouldBe "Column [a] not found among []."
+        exception.message shouldBe "Column 'a' not found among []."
 
         val groupBy1 = groupBy
             .updateGroups { if (it.isEmpty()) DataFrame.empty(groupBy.groups.schema.value) else it }

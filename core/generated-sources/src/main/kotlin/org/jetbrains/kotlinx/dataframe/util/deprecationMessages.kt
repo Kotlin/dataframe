@@ -93,6 +93,16 @@ internal const val COL_SELECT_DSL_LIST_DATACOLUMN_GET_REPLACE = "this.toColumnSe
 internal const val COL_SELECT_DSL_SELECT_COLS = "Nested select is reserved for ColumnsSelector/ColumnsSelectionDsl behavior. Use myGroup.cols() to select columns by name from a ColumnGroup. $message_0_14"
 internal const val COL_SELECT_DSL_SELECT_COLS_REPLACE = "this.cols(*columns)"
 
+internal const val COL_SELECT_DSL_SINGLE_COL_EXCEPT = "This function is replaced with allColsExcept. $message_0_14"
+internal const val COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_SELECTOR = "this.allColsExcept(selector)"
+internal const val COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_RESOLVER = "this.allColsExcept { others.toColumnSet() }"
+internal const val COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_OTHERS = "this.allColsExcept(*others)"
+
+internal const val COL_SELECT_DSL_EXCEPT = "This function is replaced with allExcept. $message_0_14"
+internal const val COL_SELECT_DSL_EXCEPT_REPLACE_SELECTOR = "this.allExcept(selector)"
+internal const val COL_SELECT_DSL_EXCEPT_REPLACE_RESOLVER = "this.allExcept(*others)"
+
+
 // endregion
 
 // region WARNING in 0.14, ERROR in 0.15

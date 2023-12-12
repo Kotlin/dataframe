@@ -159,6 +159,8 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *  {@include [LineBreak]}
      *  {@include [UsageTemplate.ColumnSelectorDef]}
      *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.ColumnsSelectorDef]}
+     *  {@include [LineBreak]}
      *  {@include [UsageTemplate.NumberDef]}
      *  {@include [LineBreak]}
      *  {@include [UsageTemplate.TextDef]}
@@ -375,9 +377,9 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  {@include [Indent]}`|` {@include [AndColumnsSelectionDsl.Usage.Name]} **`(`**`|`**`{ `**{@include [UsageTemplate.ColumnOrColumnSetRef]}**` \\}`**`|`**`)`**
      *
-     *  {@include [Indent]}`|`{@include [SelectColumnsSelectionDsl.Usage.ColumnGroupName]}**` {`** {@include [UsageTemplate.ColumnSelectorRef]} **`\\}`**
+     *  {@include [Indent]}`|`{@include [SelectColumnsSelectionDsl.Usage.ColumnGroupName]}**` {`** {@include [UsageTemplate.ColumnsSelectorRef]} **`\\}`**
      *
-     *  {@include [Indent]}`|`[**` {`**][ColumnsSelectionDsl.select] {@include [UsageTemplate.ColumnSelectorRef]} [**`\\}`**][ColumnsSelectionDsl.select]
+     *  {@include [Indent]}`|`[**` {`**][ColumnsSelectionDsl.select] {@include [UsageTemplate.ColumnsSelectorRef]} [**`\\}`**][ColumnsSelectionDsl.select]
      *
      *  {@include [LineBreak]}
      *
