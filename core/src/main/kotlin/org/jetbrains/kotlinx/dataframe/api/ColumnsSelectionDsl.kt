@@ -4,7 +4,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage.ColumnGroupName
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -108,7 +107,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     // select {}, TODO due to String.invoke conflict this cannot be moved out of ColumnsSelectionDsl
     SelectColumnsSelectionDsl,
     // except(), allExcept {}, allColsExcept {}
-    AllExceptColumnsSelectionDsl<T>,
+    AllExceptColumnsSelectionDsl,
 
     // nameContains(""), childrenNameContains(""), nameStartsWith(""), childrenNameEndsWith("")
     ColumnNameFiltersColumnsSelectionDsl,
@@ -418,7 +417,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      * Invokes the given [ColumnsSelector] using this [ColumnsSelectionDsl].
      */
     public operator fun <C> ColumnsSelector<T, C>.invoke(): ColumnsResolver<C> =
-        this(this@ColumnsSelectionDsl, this@ColumnsSelectionDsl)
+        this@invoke(this@ColumnsSelectionDsl, this@ColumnsSelectionDsl)
 
     /**
      * ## Deprecated: Columns by Index Range from List of Columns

@@ -112,14 +112,14 @@ public interface AndColumnsSelectionDsl<out T> {
     /** @include [ColumnsResolverAndDocs] {@setArg [ColumnsResolverAndDocs.Argument] [colsOf][SingleColumn.colsOf]`<`[Int][Int]`>()} */
     public infix fun <C> ColumnsResolver<C>.and(other: ColumnsResolver<C>): ColumnSet<C> = ColumnsList(this, other)
 
+    /** @include [ColumnsResolverAndDocs] {@setArg [ColumnsResolverAndDocs.Argument] `{ colA `[/][DataColumn.div]` 2.0 `[named][ColumnReference.named]` "half colA" } `} */
+    public infix fun <C> ColumnsResolver<C>.and(other: () -> ColumnsResolver<C>): ColumnSet<C> = this and other()
+
     /** @include [ColumnsResolverAndDocs] {@setArg [ColumnsResolverAndDocs.Argument] "colB"} */
     public infix fun <C> ColumnsResolver<C>.and(other: String): ColumnSet<*> = this and other.toColumnAccessor()
 
     /** @include [ColumnsResolverAndDocs] {@setArg [ColumnsResolverAndDocs.Argument] Type::colB} */
     public infix fun <C> ColumnsResolver<C>.and(other: KProperty<C>): ColumnSet<C> = this and other.toColumnAccessor()
-
-    /** @include [ColumnsResolverAndDocs] {@setArg [ColumnsResolverAndDocs.Argument] `{ colA `[/][DataColumn.div]` 2.0 `[named][ColumnReference.named]` "half colA" } `} */
-    public infix fun <C> ColumnsResolver<C>.and(other: ColumnsSelector<T, C>): ColumnSet<C> = this and other()
 
     // endregion
 
@@ -139,14 +139,14 @@ public interface AndColumnsSelectionDsl<out T> {
     /** @include [StringAndDocs] {@setArg [StringAndDocs.Argument] [colsOf][SingleColumn.colsOf]`<`[Int][Int]`>()} */
     public infix fun <C> String.and(other: ColumnsResolver<C>): ColumnSet<*> = toColumnAccessor() and other
 
+    /** @include [StringAndDocs] {@setArg [StringAndDocs.Argument] `{ colA `[/][DataColumn.div]` 2.0 `[named][ColumnReference.named]` "half colA" } `} */
+    public infix fun <C> String.and(other: () -> ColumnsResolver<C>): ColumnSet<*> = toColumnAccessor() and other()
+
     /** @include [StringAndDocs] {@setArg [StringAndDocs.Argument] "colB"} */
     public infix fun String.and(other: String): ColumnSet<*> = toColumnAccessor() and other.toColumnAccessor()
 
     /** @include [StringAndDocs] {@setArg [StringAndDocs.Argument] Type::colB} */
     public infix fun <C> String.and(other: KProperty<C>): ColumnSet<*> = toColumnAccessor() and other
-
-    /** @include [StringAndDocs] {@setArg [StringAndDocs.Argument] `{ colA `[/][DataColumn.div]` 2.0 `[named][ColumnReference.named]` "half colA" } `} */
-    public infix fun <C> String.and(other: ColumnsSelector<T, C>): ColumnSet<*> = toColumnAccessor() and other()
 
     // endregion
 
@@ -166,15 +166,16 @@ public interface AndColumnsSelectionDsl<out T> {
     /** @include [KPropertyAndDocs] {@setArg [KPropertyAndDocs.Argument] [colsOf][SingleColumn.colsOf]`<`[Int][Int]`>()} */
     public infix fun <C> KProperty<C>.and(other: ColumnsResolver<C>): ColumnSet<C> = toColumnAccessor() and other
 
+    /** @include [KPropertyAndDocs] {@setArg [KPropertyAndDocs.Argument] `{ colA `[/][DataColumn.div]` 2.0 `[named][ColumnReference.named]` "half colA" } `} */
+    public infix fun <C> KProperty<C>.and(other: () -> ColumnsResolver<C>): ColumnSet<C> =
+        toColumnAccessor() and other()
+
     /** @include [KPropertyAndDocs] {@setArg [KPropertyAndDocs.Argument] "colB"} */
     public infix fun <C> KProperty<C>.and(other: String): ColumnSet<*> = toColumnAccessor() and other
 
     /** @include [KPropertyAndDocs] {@setArg [KPropertyAndDocs.Argument] Type::colB} */
     public infix fun <C> KProperty<C>.and(other: KProperty<C>): ColumnSet<C> =
         toColumnAccessor() and other.toColumnAccessor()
-
-    /** @include [KPropertyAndDocs] {@setArg [KPropertyAndDocs.Argument] `{ colA `[/][DataColumn.div]` 2.0 `[named][ColumnReference.named]` "half colA" } `} */
-    public infix fun <C> KProperty<C>.and(other: ColumnsSelector<T, C>): ColumnSet<C> = toColumnAccessor() and other()
 
     // endregion
 
@@ -196,22 +197,23 @@ public interface AndColumnsSelectionDsl<out T> {
     /** @include [ColumnsSelectorAndDocs] {@setArg [ColumnsSelectorAndDocs.Argument] [colsOf][SingleColumn.colsOf]`<`[Int][Int]`>()} */
     public infix fun <C> ColumnsSelector<T, C>.and(other: ColumnsResolver<C>): ColumnSet<C> = this() and other
 
+    /** @include [ColumnsSelectorAndDocs] {@setArg [ColumnsSelectorAndDocs.Argument] `{ colA `[/][DataColumn.div]` 2.0 `[named][ColumnReference.named]` "half colA" } `} */
+    public infix fun <C> ColumnsSelector<T, C>.and(other: () -> ColumnsResolver<C>): ColumnSet<C> = this() and other
+
     /** @include [ColumnsSelectorAndDocs] {@setArg [ColumnsSelectorAndDocs.Argument] "colB"} */
     public infix fun <C> ColumnsSelector<T, C>.and(other: String): ColumnSet<*> = this() and other
 
     /** @include [ColumnsSelectorAndDocs] {@setArg [ColumnsSelectorAndDocs.Argument] Type::colB} */
     public infix fun <C> ColumnsSelector<T, C>.and(other: KProperty<C>): ColumnSet<C> = this() and other
 
-    /** @include [ColumnsSelectorAndDocs] {@setArg [ColumnsSelectorAndDocs.Argument] `{ colA `[/][DataColumn.div]` 2.0 `[named][ColumnReference.named]` "half colA" } `} */
-    public infix fun <C> ColumnsSelector<T, C>.and(other: ColumnsSelector<T, C>): ColumnSet<C> = this() and other
-
     // endregion
 
     /**
-     * Invokes the given [ColumnsSelector] using this [ColumnsSelectionDsl].
+     * Invokes the given [ColumnsSelector] using this [ColumnsSelectionDsl] but only if the [T] of the
+     * [ColumnsSelector] matches with the [ColumnsSelectionDsl]`<T>`.
      */
     private operator fun <C> ColumnsSelector<T, C>.invoke(): ColumnsResolver<C> =
-        with(this@AndColumnsSelectionDsl as ColumnsSelectionDsl<T>) { this@invoke() }
+        this@invoke(this@AndColumnsSelectionDsl as ColumnsSelectionDsl<T>, this@AndColumnsSelectionDsl)
 }
 
 // endregion

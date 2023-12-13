@@ -71,6 +71,14 @@ class AllExceptTests : ColumnsSelectionDslTests() {
 
             df.select { allExcept { none() } },
         ).shouldAllBeEqual()
+
+        listOf(
+            df.select { name and name.firstName }.alsoDebug()
+        ).shouldAllBeEqual()
+
+        df.select { (name and name.firstName and name.firstName) except name.firstName }.alsoDebug()
+
+        df.select { (name and name and name.firstName) except name.firstName }.alsoDebug()
     }
 
     @Test
