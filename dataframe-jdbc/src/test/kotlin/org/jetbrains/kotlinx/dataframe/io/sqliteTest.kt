@@ -12,42 +12,42 @@ import org.junit.Test
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
-import org.junit.Ignore
+import kotlin.reflect.typeOf
 
 private const val DATABASE_URL = "jdbc:sqlite:"
 
 @DataSchema
 interface CustomerSQLite {
-    val id: Int
-    val name: String
-    val age: Int
+    val id: java.math.BigDecimal?
+    val name: String?
+    val age: Int?
     val salary: Double
-    val profilePicture: ByteArray
+    val profilePicture: ByteArray?
 }
 
 @DataSchema
 interface OrderSQLite {
-    val id: Int
-    val customerName: String
-    val orderDate: String
+    val id: java.math.BigDecimal?
+    val customerName: String?
+    val orderDate: String?
     val totalAmount: Double
-    val orderDetails: ByteArray
+    val orderDetails: ByteArray?
 }
 
 @DataSchema
 interface CustomerOrderSQLite {
-    val customerId: Int
-    val customerName: String
-    val customerAge: Int
+    val customerId: java.math.BigDecimal?
+    val customerName: String?
+    val customerAge: Int?
     val customerSalary: Double
-    val customerProfilePicture: ByteArray
-    val orderId: Int
-    val orderDate: String
+    val customerProfilePicture: ByteArray?
+    val orderId: java.math.BigDecimal?
+    val orderDate: String?
     val totalAmount: Double
-    val orderDetails: ByteArray
+    val orderDetails: ByteArray?
 }
 
-@Ignore
+//@Ignore
 class SqliteTest {
     companion object {
         private lateinit var connection: Connection
@@ -63,7 +63,7 @@ class SqliteTest {
                 id INTEGER AUTO_INCREMENT PRIMARY KEY,
                 name TEXT,
                 age INTEGER,
-                salary REAL,
+                salary REAL NOT NULL,
                 profilePicture BLOB
             )
             """
@@ -78,7 +78,7 @@ class SqliteTest {
                 id INTEGER AUTO_INCREMENT PRIMARY KEY,
                 customerName TEXT,
                 orderDate TEXT,
-                totalAmount NUMERIC,
+                totalAmount NUMERIC NOT NULL,
                 orderDetails BLOB
             )
             """
@@ -101,7 +101,7 @@ class SqliteTest {
 
             connection.prepareStatement("INSERT INTO Customers (name, age, salary, profilePicture) VALUES (?, ?, ?, ?)")
                 .use {
-                    it.setString(1, "Max Joint")
+                    it.setString(1, null)
                     it.setInt(2, 40)
                     it.setDouble(3, 1500.50)
                     it.setBytes(4, profilePicture)
@@ -110,7 +110,7 @@ class SqliteTest {
 
             connection.prepareStatement("INSERT INTO Orders (customerName, orderDate, totalAmount, orderDetails) VALUES (?, ?, ?, ?)")
                 .use {
-                    it.setString(1, "John Doe")
+                    it.setString(1, null)
                     it.setString(2, "2023-07-21")
                     it.setDouble(3, 150.75)
                     it.setBytes(4, orderDetails)
@@ -119,7 +119,7 @@ class SqliteTest {
 
             connection.prepareStatement("INSERT INTO Orders (customerName, orderDate, totalAmount, orderDetails) VALUES (?, ?, ?, ?)")
                 .use {
-                    it.setString(1, "Max Joint")
+                    it.setString(1, "John Doe")
                     it.setString(2, "2023-08-21")
                     it.setDouble(3, 250.75)
                     it.setBytes(4, orderDetails)
@@ -140,11 +140,25 @@ class SqliteTest {
 
     @Test
     fun `read from tables`() {
-        val df = DataFrame.readSqlTable(connection, "Customers").cast<CustomerSQLite>()
-        df.rowsCount() shouldBe 2
+        val customerTableName = "Customers"
+        val df = DataFrame.readSqlTable(connection, customerTableName).cast<CustomerSQLite>()
+        val result = df.filter { it[CustomerSQLite::name] == "John Doe"}
+        result[0][2] shouldBe 30
 
-        val df2 = DataFrame.readSqlTable(connection, "Orders").cast<CustomerSQLite>()
-        df2.rowsCount() shouldBe 2
+        val schema = DataFrame.getSchemaForSqlTable(connection, customerTableName)
+        schema.columns["id"]!!.type shouldBe typeOf<java.math.BigDecimal?>() // TODO:
+        schema.columns["name"]!!.type shouldBe typeOf<String?>()
+        schema.columns["salary"]!!.type shouldBe typeOf<Float>()
+
+        val orderTableName = "Orders"
+        val df2 = DataFrame.readSqlTable(connection, orderTableName).cast<OrderSQLite>()
+        val result2 = df2.filter { it[OrderSQLite::totalAmount] > 10 }
+        result2[0][2] shouldBe "2023-07-21"
+
+        val schema2 = DataFrame.getSchemaForSqlTable(connection, orderTableName)
+        schema2.columns["id"]!!.type shouldBe typeOf<java.math.BigDecimal?>()
+        schema2.columns["customerName"]!!.type shouldBe typeOf<String?>()
+        schema2.columns["totalAmount"]!!.type shouldBe typeOf<java.math.BigDecimal>()
     }
 
     @Test
@@ -166,10 +180,14 @@ class SqliteTest {
             """
 
         val df = DataFrame.readSqlQuery(connection, sqlQuery).cast<CustomerOrderSQLite>()
-        df.rowsCount() shouldBe 2
+        val result = df.filter { it[CustomerOrderSQLite::customerSalary] > 1 }
+        result[0][3] shouldBe 2500.5
 
-        val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
-        schema.columns.entries.size shouldBe 9
+        val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery = sqlQuery)
+        schema.columns["customerId"]!!.type shouldBe typeOf<java.math.BigDecimal?>()
+        schema.columns["customerName"]!!.type shouldBe typeOf<String?>()
+        schema.columns["customerAge"]!!.type shouldBe typeOf<Int?>()
+        schema.columns["totalAmount"]!!.type shouldBe typeOf<java.math.BigDecimal>()
     }
 
     @Test
@@ -179,13 +197,13 @@ class SqliteTest {
         val customerDf = dataframes[0].cast<CustomerSQLite>()
 
         customerDf.rowsCount() shouldBe 2
-        customerDf.filter { it[CustomerSQLite::age] > 30 }.rowsCount() shouldBe 1
+        customerDf.filter { it[CustomerSQLite::age] != null && it[CustomerSQLite::age]!! > 30 }.rowsCount() shouldBe 1
         customerDf[0][1] shouldBe "John Doe"
 
         val orderDf = dataframes[1].cast<OrderSQLite>()
 
         orderDf.rowsCount() shouldBe 2
         orderDf.filter { it[OrderSQLite::totalAmount] > 200 }.rowsCount() shouldBe 1
-        orderDf[0][1] shouldBe "John Doe"
+        orderDf[0][1] shouldBe null
     }
 }

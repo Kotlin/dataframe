@@ -242,21 +242,23 @@ class PostgresTest {
 
     @Test
     fun `read from tables`() {
-        val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1>()
+        val tableName1 = "table1"
+        val df1 = DataFrame.readSqlTable(connection, tableName1).cast<Table1>()
         val result = df1.filter { it[Table1::id] == 1 }
         result[0][12] shouldBe 12345
 
-        val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
+        val schema = DataFrame.getSchemaForSqlTable(connection, tableName1)
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["integercol"]!!.type shouldBe typeOf<Int?>()
         schema.columns["circlecol"]!!.type shouldBe typeOf<Any>()
 
-        val df2 = DataFrame.readSqlTable(connection, "table2").cast<Table2>()
+        val tableName2 = "table2"
+        val df2 = DataFrame.readSqlTable(connection, tableName2).cast<Table2>()
         val result2 = df2.filter { it[Table2::id] == 1 }
         result2[0][11] shouldBe 1001
         result2[0][13] shouldBe null
 
-        val schema2 = DataFrame.getSchemaForSqlTable(connection, "table2")
+        val schema2 = DataFrame.getSchemaForSqlTable(connection, tableName2)
         schema2.columns["id"]!!.type shouldBe typeOf<Int>()
         schema2.columns["pathcol"]!!.type shouldBe typeOf<Any>() // TODO: https://github.com/Kotlin/dataframe/issues/537
         schema2.columns["textcol"]!!.type shouldBe typeOf<String?>()
