@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import org.h2.jdbc.JdbcSQLSyntaxErrorException
 import org.intellij.lang.annotations.Language
@@ -84,7 +83,7 @@ class JdbcTest {
                 DriverManager.getConnection(URL)
 
 
-            // Crate table Customer
+            // Create table Customer
             @Language("SQL")
             val createCustomerTableQuery = """
                 CREATE TABLE Customer (
