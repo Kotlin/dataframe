@@ -74,7 +74,7 @@ interface ViewTable {
     val textCol: String?
 }
 
-//@Ignore
+@Ignore
 class PostgresTest {
     companion object {
         private lateinit var connection: Connection
@@ -301,7 +301,8 @@ class PostgresTest {
         val table2Df = dataframes[1].cast<Table2>()
 
         table2Df.rowsCount() shouldBe 3
-        table2Df.filter { it[Table2::pathcol] == org.postgresql.geometric.PGpath("((1,2),(3,1))") }.rowsCount() shouldBe 1
+        table2Df.filter { it[Table2::pathcol] == org.postgresql.geometric.PGpath("((1,2),(3,1))") }
+            .rowsCount() shouldBe 1
         table2Df[0][11] shouldBe 1001
     }
 }

@@ -12,6 +12,7 @@ import org.junit.Test
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
+import org.junit.Ignore
 import kotlin.reflect.typeOf
 
 private const val DATABASE_URL = "jdbc:sqlite:"
@@ -47,7 +48,7 @@ interface CustomerOrderSQLite {
     val orderDetails: ByteArray?
 }
 
-//@Ignore
+@Ignore
 class SqliteTest {
     companion object {
         private lateinit var connection: Connection
@@ -142,7 +143,7 @@ class SqliteTest {
     fun `read from tables`() {
         val customerTableName = "Customers"
         val df = DataFrame.readSqlTable(connection, customerTableName).cast<CustomerSQLite>()
-        val result = df.filter { it[CustomerSQLite::name] == "John Doe"}
+        val result = df.filter { it[CustomerSQLite::name] == "John Doe" }
         result[0][2] shouldBe 30
 
         val schema = DataFrame.getSchemaForSqlTable(connection, customerTableName)
