@@ -505,8 +505,8 @@ private fun getTableColumnsMetadata(rs: ResultSet): MutableList<TableColumnMetad
     val tableColumns = mutableListOf<TableColumnMetadata>()
     val columnNameCounter = mutableMapOf<String, Int>()
     val databaseMetaData: DatabaseMetaData = rs.statement.connection.metaData
-    val catalog: String? = rs.statement.connection.catalog
-    val schema: String? = rs.statement.connection.schema
+    val catalog: String? = rs.statement.connection.catalog.takeUnless { it.isNullOrBlank() }
+    val schema: String? = rs.statement.connection.schema.takeUnless { it.isNullOrBlank() }
 
     for (i in 1 until numberOfColumns + 1) {
         val columnResultSet: ResultSet =
