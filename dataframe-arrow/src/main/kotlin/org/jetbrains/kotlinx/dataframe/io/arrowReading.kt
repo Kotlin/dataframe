@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import org.apache.arrow.memory.RootAllocator
+import org.apache.arrow.vector.ipc.ArrowReader
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -170,3 +171,18 @@ public fun DataFrame.Companion.readArrowFeather(
 } else {
     readArrowFeather(File(path), nullability)
 }
+
+/**
+ * Read [Arrow any format](https://arrow.apache.org/docs/java/ipc.html#reading-writing-ipc-formats) data from existing [reader]
+ */
+public fun DataFrame.Companion.readArrow(
+    reader: ArrowReader,
+    nullability: NullabilityOptions = NullabilityOptions.Infer
+): AnyFrame = readArrowImpl(reader, nullability)
+
+/**
+ * Read [Arrow any format](https://arrow.apache.org/docs/java/ipc.html#reading-writing-ipc-formats) data from existing [ArrowReader]
+ */
+public fun ArrowReader.toDataFrame(
+    nullability: NullabilityOptions = NullabilityOptions.Infer
+): AnyFrame = DataFrame.Companion.readArrowImpl(this, nullability)
