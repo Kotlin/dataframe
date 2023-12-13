@@ -4,6 +4,8 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage.ColumnGroupName
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
@@ -105,7 +107,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
 
     // select {}, TODO due to String.invoke conflict this cannot be moved out of ColumnsSelectionDsl
     SelectColumnsSelectionDsl,
-    // except(), allExcept {}
+    // except(), allExcept {}, allColsExcept {}
     AllExceptColumnsSelectionDsl<T>,
 
     // nameContains(""), childrenNameContains(""), nameStartsWith(""), childrenNameEndsWith("")
@@ -148,6 +150,10 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *  {@include [UsageTemplate.ConditionDef]}
      *  {@include [LineBreak]}
      *  {@include [UsageTemplate.ColumnDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.ColumnNoAccessorDef]}
+     *  {@include [LineBreak]}
+     *  {@include [UsageTemplate.ColumnsResolverDef]}
      *  {@include [LineBreak]}
      *  {@include [UsageTemplate.IndexDef]}
      *  {@include [LineBreak]}
@@ -254,7 +260,9 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  `|` {@include [ExprColumnsSelectionDsl.Usage.PlainDslName]}**`(`**`[`{@include [UsageTemplate.NameRef]}`,][`{@include [UsageTemplate.InferRef]}`]`**`)`** **`{ `**{@include [UsageTemplate.ColumnExpressionRef]}**` \\}`**
      *
-     *  `|` TODO
+     *  `|` {@include [AllExceptColumnsSelectionDsl.Usage.PlainDslName]} **`{ `**{@include [UsageTemplate.ColumnsSelectorRef]}**` \\}`**
+     *
+     *  `|` {@include [AllExceptColumnsSelectionDsl.Usage.PlainDslName]}**`(`**{@include [UsageTemplate.ColumnRef]}**`, ..)`**
      * }
      * {@comment ColumnSet: -------------------------------------------------------------------------------------------- }
      * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
@@ -320,7 +328,11 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  {@include [Indent]}`|` {@include [FilterColumnsSelectionDsl.Usage.ColumnSetName]}**` {`** {@include [UsageTemplate.ConditionRef]} **`\\}`**
      *
-     *  {@include [Indent]}`|` TODO
+     *  {@include [Indent]}`|` {@include [AllExceptColumnsSelectionDsl.Usage.ColumnSetName]} `[`**` { `**`]` {@include [UsageTemplate.ColumnsResolverRef]} `[`**` \\} `**`]`
+     *
+     *  {@include [Indent]}`|` {@include [AllExceptColumnsSelectionDsl.Usage.ColumnSetName]} {@include [UsageTemplate.ColumnRef]}
+     *
+     *  {@include [Indent]}`|` {@include [AllExceptColumnsSelectionDsl.Usage.ColumnSetName]}**`(`**{@include [UsageTemplate.ColumnRef]}**`, ..)`**
      * }
      * {@comment ColumnGroup: -------------------------------------------------------------------------------------------- }
      * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
@@ -377,9 +389,13 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  {@include [Indent]}`|` {@include [AndColumnsSelectionDsl.Usage.Name]} **`(`**`|`**`{ `**{@include [UsageTemplate.ColumnOrColumnSetRef]}**` \\}`**`|`**`)`**
      *
-     *  {@include [Indent]}`|`{@include [SelectColumnsSelectionDsl.Usage.ColumnGroupName]}**` {`** {@include [UsageTemplate.ColumnsSelectorRef]} **`\\}`**
+     *  {@include [Indent]}`|` {@include [SelectColumnsSelectionDsl.Usage.ColumnGroupName]}**` {`** {@include [UsageTemplate.ColumnsSelectorRef]} **`\\}`**
      *
      *  {@include [Indent]}`|`[**` {`**][ColumnsSelectionDsl.select] {@include [UsageTemplate.ColumnsSelectorRef]} [**`\\}`**][ColumnsSelectionDsl.select]
+     *
+     *  {@include [Indent]}`|` {@include [AllExceptColumnsSelectionDsl.Usage.ColumnGroupName]} **` { `**{@include [UsageTemplate.ColumnsSelectorRef]}**` \\} `**
+     *
+     *  {@include [Indent]}`|` {@include [AllExceptColumnsSelectionDsl.Usage.ColumnGroupName]}**`(`**{@include [UsageTemplate.ColumnNoAccessorRef]}**`, ..)`**
      *
      *  {@include [LineBreak]}
      *
@@ -392,6 +408,8 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *  {@include [UsageTemplate.ColumnGroupNoSingleColumnRef]}
      *
      *  {@include [Indent]}{@include [ColsOfColumnsSelectionDsl.Usage.ColumnGroupName]}**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>(`**{@include [UsageTemplate.KTypeRef]}**`)`** ` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     *
+     *
      * }
      */
     public interface Usage

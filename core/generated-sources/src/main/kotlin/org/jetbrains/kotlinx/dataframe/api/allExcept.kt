@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.toColumns
@@ -31,7 +32,7 @@ import kotlin.reflect.KProperty
 public interface AllExceptColumnsSelectionDsl<out T> {
 
     /**
-     * ## All (Except) Usage
+     * ## (All) (Cols) Except Usage
      *
      *
      *
@@ -44,11 +45,7 @@ public interface AllExceptColumnsSelectionDsl<out T> {
      *  `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `[KProperty][kotlin.reflect.KProperty]`<*>` | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
-     *  
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  `condition: `[ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter]
+     * `| `[KProperty][kotlin.reflect.KProperty]`<* | `[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>` | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -60,6 +57,14 @@ public interface AllExceptColumnsSelectionDsl<out T> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
      * `| `[KProperty][kotlin.reflect.KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  `columnNoAccessor: `[String][String]` | `[KProperty][kotlin.reflect.KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *  
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  `columnsResolver: `[ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -81,7 +86,11 @@ public interface AllExceptColumnsSelectionDsl<out T> {
      *
      *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
      *
-     *  
+     *  &nbsp;&nbsp;&nbsp;&nbsp;[**except**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except] `[`**` { `**`]` [columnsResolver][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnsResolverDef] `[`**` } `**`]`
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` [**except**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except] [column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` [**except**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]**`(`**[column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]**`, ..)`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -92,7 +101,9 @@ public interface AllExceptColumnsSelectionDsl<out T> {
      *
      *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
      *
-     *  
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**allColsExcept**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] **` { `**[colsSelector][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnsSelectorDef]**` } `**
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**allColsExcept**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept]**`(`**[columnNoAccessor][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnNoAccessorDef]**`, ..)`**
      *
      *
      *
@@ -102,8 +113,6 @@ public interface AllExceptColumnsSelectionDsl<out T> {
      *
      *
      *
-     *
-     * TODO
      *
      *
      */
@@ -115,11 +124,134 @@ public interface AllExceptColumnsSelectionDsl<out T> {
         /** [**except**][ColumnsSelectionDsl.except] */
         public interface ColumnSetName
 
-        /** [**allColsExcept**][ColumnsSelectionDsl.allColsExcept] */
+        /** .[**allColsExcept**][ColumnsSelectionDsl.allColsExcept] */
         public interface ColumnGroupName
     }
 
-    // region deprecated and experiments
+    // region ColumnSet
+
+    public infix fun <C> ColumnSet<C>.except(selector: () -> ColumnsResolver<*>): ColumnSet<C> =
+        except(selector())
+
+    public infix fun <C> ColumnSet<C>.except(other: ColumnsResolver<*>): ColumnSet<C> =
+        exceptInternal(other)
+
+    public fun <C> ColumnSet<C>.except(vararg other: ColumnsResolver<*>): ColumnSet<C> =
+        except(other.toColumnSet())
+
+    public infix fun <C> ColumnSet<C>.except(other: String): ColumnSet<C> =
+        except(column<Any?>(other))
+
+    public fun <C> ColumnSet<C>.except(vararg others: String): ColumnSet<C> =
+        except(others.toColumnSet())
+
+    public infix fun <C> ColumnSet<C>.except(other: KProperty<C>): ColumnSet<C> =
+        except(column(other))
+
+    public fun <C> ColumnSet<C>.except(vararg others: KProperty<C>): ColumnSet<C> =
+        except(others.toColumnSet())
+
+    public infix fun <C> ColumnSet<C>.except(other: ColumnPath): ColumnSet<C> =
+        except(column<Any?>(other))
+
+    public fun <C> ColumnSet<C>.except(vararg others: ColumnPath): ColumnSet<C> =
+        except(others.toColumnSet())
+
+    // endregion
+
+    // region ColumnsSelectionDsl
+
+    public fun <C> ColumnsSelectionDsl<C>.allExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
+        this.asSingleColumn().allColsExcept(selector)
+
+    // no scoping issues, this can exist for legacy purposes
+    public fun ColumnsSelectionDsl<*>.allExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
+        asSingleColumn().allColsExceptInternal(others.toColumnSet())
+
+    public fun ColumnsSelectionDsl<*>.allExcept(vararg others: String): ColumnSet<*> =
+        asSingleColumn().allColsExceptInternal(others.toColumnSet())
+
+    public fun ColumnsSelectionDsl<*>.allExcept(vararg others: KProperty<*>): ColumnSet<*> =
+        asSingleColumn().allColsExceptInternal(others.toColumnSet())
+
+    public fun ColumnsSelectionDsl<*>.allExcept(vararg others: ColumnPath): ColumnSet<*> =
+        asSingleColumn().allColsExceptInternal(others.toColumnSet())
+
+    // endregion
+
+    // region SingleColumn
+
+    public fun <C> SingleColumn<DataRow<C>>.allColsExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
+        allColsExceptInternal(selector.toColumns())
+
+    public fun SingleColumn<DataRow<*>>.allColsExcept(vararg others: String): ColumnSet<*> =
+        allColsExceptInternal(others.toColumnSet())
+
+    public fun SingleColumn<DataRow<*>>.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
+        allColsExceptInternal(others.toColumnSet())
+
+    public fun SingleColumn<DataRow<*>>.allColsExcept(vararg other: ColumnPath): ColumnSet<*> =
+        allColsExceptInternal(other.toColumnSet())
+
+    // endregion
+
+    // region String
+
+    public fun String.allColsExcept(selector: ColumnsSelector<*, *>): ColumnSet<*> =
+        columnGroup(this).allColsExcept(selector)
+
+    public fun String.allColsExcept(vararg others: String): ColumnSet<*> =
+        columnGroup(this).allColsExceptInternal(others.toColumnSet())
+
+    public fun String.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
+        columnGroup(this).allColsExceptInternal(others.toColumnSet())
+
+    public fun String.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
+        columnGroup(this).allColsExceptInternal(others.toColumnSet())
+
+    // endregion
+
+    // region KProperty
+
+    @OptIn(ExperimentalTypeInference::class)
+    @OverloadResolutionByLambdaReturnType
+    // TODO: [KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)
+    public fun <C> KProperty<C>.allColsExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
+        columnGroup(this).allColsExcept(selector)
+
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("KPropertyDataRowAllColsExcept")
+    public fun <C> KProperty<DataRow<C>>.allColsExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
+        columnGroup(this).allColsExcept(selector)
+
+    public fun KProperty<*>.allColsExcept(vararg others: String): ColumnSet<*> =
+        columnGroup(this).allColsExceptInternal(others.toColumnSet())
+
+    public fun KProperty<*>.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
+        columnGroup(this).allColsExceptInternal(others.toColumnSet())
+
+    public fun KProperty<*>.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
+        columnGroup(this).allColsExceptInternal(others.toColumnSet())
+
+    // endregion
+
+    // region ColumnPath
+
+    public fun ColumnPath.allColsExcept(selector: ColumnsSelector<*, *>): ColumnSet<*> =
+        columnGroup(this).allColsExcept(selector)
+
+    public fun ColumnPath.allColsExcept(vararg others: String): ColumnSet<*> =
+        columnGroup(this).allColsExceptInternal(others.toColumnSet())
+
+    public fun ColumnPath.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
+        columnGroup(this).allColsExceptInternal(others.toColumnSet())
+
+    public fun ColumnPath.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
+        columnGroup(this).allColsExceptInternal(others.toColumnSet())
+
+    // endregion
+
+    // region deprecated
 
     @Deprecated(
         message = COL_SELECT_DSL_SINGLE_COL_EXCEPT,
@@ -201,162 +333,68 @@ public interface AllExceptColumnsSelectionDsl<out T> {
     public fun ColumnsSelectionDsl<*>.except(vararg others: ColumnPath): ColumnSet<*> =
         allExcept(*others)
 
-    // endregion
-
-    // region ColumnSet
-
-    public infix fun <C> ColumnSet<C>.except(selector: () -> ColumnsResolver<*>): ColumnSet<C> =
-        except(selector())
-
-    public infix fun <C> ColumnSet<C>.except(other: ColumnsResolver<*>): ColumnSet<C> =
-        exceptInternal(other)
-
-    public fun <C> ColumnSet<C>.except(vararg other: ColumnsResolver<*>): ColumnSet<C> =
-        except(other.toColumnSet())
-
-    public infix fun <C> ColumnSet<C>.except(other: String): ColumnSet<C> =
-        except(column<Any?>(other))
-
-    public fun <C> ColumnSet<C>.except(vararg others: String): ColumnSet<C> =
-        except(others.toColumnSet())
-
-    public infix fun <C> ColumnSet<C>.except(other: KProperty<C>): ColumnSet<C> =
-        except(column(other))
-
-    public fun <C> ColumnSet<C>.except(vararg others: KProperty<C>): ColumnSet<C> =
-        except(others.toColumnSet())
-
-    public infix fun <C> ColumnSet<C>.except(other: ColumnPath): ColumnSet<C> =
-        except(column<Any?>(other))
-
-    public fun <C> ColumnSet<C>.except(vararg others: ColumnPath): ColumnSet<C> =
-        except(others.toColumnSet())
-
-    // endregion
-
-    // region ColumnsSelectionDsl
-
-    public fun <C> ColumnsSelectionDsl<C>.allExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
-        this.asSingleColumn().allColsExcept(selector)
-
-    // no scoping issues, this can exist for legacy purposes
-    public fun ColumnsSelectionDsl<*>.allExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
-        asSingleColumn().allColsExceptInternal(others.toColumnSet())
-
-    public fun ColumnsSelectionDsl<*>.allExcept(vararg others: String): ColumnSet<*> =
-        asSingleColumn().allColsExceptInternal(others.toColumnSet())
-
-    public fun ColumnsSelectionDsl<*>.allExcept(vararg others: KProperty<*>): ColumnSet<*> =
-        asSingleColumn().allColsExceptInternal(others.toColumnSet())
-
-    public fun ColumnsSelectionDsl<*>.allExcept(vararg others: ColumnPath): ColumnSet<*> =
-        asSingleColumn().allColsExceptInternal(others.toColumnSet())
-
-    // endregion
-
-    // region SingleColumn
-
-    public fun <C> SingleColumn<DataRow<C>>.allColsExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
-        allColsExceptInternal(selector.toColumns())
-
-    @Deprecated(ALL_COLS_EXCEPT, ReplaceWith(ALL_COLS_REPLACE), DeprecationLevel.ERROR)
+    @Deprecated(
+        message = ALL_COLS_EXCEPT,
+        replaceWith = ReplaceWith(ALL_COLS_REPLACE),
+        level = DeprecationLevel.ERROR,
+    )
     public fun SingleColumn<DataRow<*>>.allColsExcept(other: ColumnsResolver<*>): ColumnSet<*> =
         allColsExcept { other }
 
-    @Deprecated(ALL_COLS_EXCEPT, ReplaceWith(ALL_COLS_REPLACE_VARARG), DeprecationLevel.ERROR)
+    @Deprecated(
+        message = ALL_COLS_EXCEPT,
+        replaceWith = ReplaceWith(ALL_COLS_REPLACE_VARARG),
+        level = DeprecationLevel.ERROR,
+    )
     public fun SingleColumn<DataRow<*>>.allColsExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
         allColsExcept { others.toColumnSet() }
 
-    public fun SingleColumn<DataRow<*>>.allColsExcept(vararg others: String): ColumnSet<*> =
-        allColsExceptInternal(others.toColumnSet())
-
-    public fun SingleColumn<DataRow<*>>.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
-        allColsExceptInternal(others.toColumnSet())
-
-    public fun SingleColumn<DataRow<*>>.allColsExcept(vararg other: ColumnPath): ColumnSet<*> =
-        allColsExceptInternal(other.toColumnSet())
-
-    // reference and path
-
-    // endregion
-
-    // region String
-
-    public fun String.allColsExcept(selector: ColumnsSelector<*, *>): ColumnSet<*> =
-        columnGroup(this).allColsExcept(selector)
-
-    @Deprecated(ALL_COLS_EXCEPT, ReplaceWith(ALL_COLS_REPLACE), DeprecationLevel.ERROR)
+    @Deprecated(
+        message = ALL_COLS_EXCEPT,
+        replaceWith = ReplaceWith(ALL_COLS_REPLACE),
+        level = DeprecationLevel.ERROR
+    )
     public fun String.allColsExcept(other: ColumnsResolver<*>): ColumnSet<*> =
         allColsExcept { other }
 
-    @Deprecated(ALL_COLS_EXCEPT, ReplaceWith(ALL_COLS_REPLACE_VARARG), DeprecationLevel.ERROR)
+    @Deprecated(
+        message = ALL_COLS_EXCEPT,
+        replaceWith = ReplaceWith(ALL_COLS_REPLACE_VARARG),
+        level = DeprecationLevel.ERROR,
+    )
     public fun String.allColsExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
         allColsExcept { others.toColumnSet() }
 
-    public fun String.allColsExcept(vararg others: String): ColumnSet<*> =
-        columnGroup(this).allColsExceptInternal(others.toColumnSet())
-
-    public fun String.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
-        columnGroup(this).allColsExceptInternal(others.toColumnSet())
-
-    public fun String.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
-        columnGroup(this).allColsExceptInternal(others.toColumnSet())
-
-    // endregion
-
-    // region KProperty
-
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
-    // TODO: [KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)
-    public fun <C> KProperty<C>.allColsExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
-        columnGroup(this).allColsExcept(selector)
-
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("KPropertyDataRowAllColsExcept")
-    public fun <C> KProperty<DataRow<C>>.allColsExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
-        columnGroup(this).allColsExcept(selector)
-
-    @Deprecated(ALL_COLS_EXCEPT, ReplaceWith(ALL_COLS_REPLACE), DeprecationLevel.ERROR)
+    @Deprecated(
+        message = ALL_COLS_EXCEPT,
+        replaceWith = ReplaceWith(ALL_COLS_REPLACE),
+        level = DeprecationLevel.ERROR,
+    )
     public fun KProperty<*>.allColsExcept(other: ColumnsResolver<*>): ColumnSet<*> =
         allColsExcept { other }
 
-    @Deprecated(ALL_COLS_EXCEPT, ReplaceWith(ALL_COLS_REPLACE_VARARG), DeprecationLevel.ERROR)
+    @Deprecated(
+        message = ALL_COLS_EXCEPT,
+        replaceWith = ReplaceWith(ALL_COLS_REPLACE_VARARG),
+        level = DeprecationLevel.ERROR,
+    )
     public fun KProperty<*>.allColsExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
         allColsExcept { others.toColumnSet() }
-
-    public fun KProperty<*>.allColsExcept(vararg others: String): ColumnSet<*> =
-        columnGroup(this).allColsExceptInternal(others.toColumnSet())
-
-    public fun KProperty<*>.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
-        columnGroup(this).allColsExceptInternal(others.toColumnSet())
-
-    public fun KProperty<*>.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
-        columnGroup(this).allColsExceptInternal(others.toColumnSet())
-
-    // endregion
-
-    // region ColumnPath
-
-    public fun ColumnPath.allColsExcept(selector: ColumnsSelector<*, *>): ColumnSet<*> =
-        columnGroup(this).allColsExcept(selector)
-
-    @Deprecated(ALL_COLS_EXCEPT, ReplaceWith(ALL_COLS_REPLACE), DeprecationLevel.ERROR)
+    @Deprecated(
+        message = ALL_COLS_EXCEPT,
+        replaceWith = ReplaceWith(ALL_COLS_REPLACE),
+        level = DeprecationLevel.ERROR,
+    )
     public fun ColumnPath.allColsExcept(other: ColumnsResolver<*>): ColumnSet<*> =
         allColsExcept { other }
 
-    @Deprecated(ALL_COLS_EXCEPT, ReplaceWith(ALL_COLS_REPLACE_VARARG), DeprecationLevel.ERROR)
+    @Deprecated(
+        message = ALL_COLS_EXCEPT,
+        replaceWith = ReplaceWith(ALL_COLS_REPLACE_VARARG),
+        level = DeprecationLevel.ERROR,
+    )
     public fun ColumnPath.allColsExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
         allColsExcept { others.toColumnSet() }
-
-    public fun ColumnPath.allColsExcept(vararg others: String): ColumnSet<*> =
-        columnGroup(this).allColsExceptInternal(others.toColumnSet())
-
-    public fun ColumnPath.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
-        columnGroup(this).allColsExceptInternal(others.toColumnSet())
-
-    public fun ColumnPath.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
-        columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
     // endregion
 

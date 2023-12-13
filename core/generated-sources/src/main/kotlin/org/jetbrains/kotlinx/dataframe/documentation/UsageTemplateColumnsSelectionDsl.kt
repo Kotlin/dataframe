@@ -3,9 +3,11 @@ package org.jetbrains.kotlinx.dataframe.documentation
 import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnGroupRef
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetRef
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplateExample.ColumnGroupName
@@ -105,7 +107,7 @@ public interface UsageTemplateColumnsSelectionDsl {
          * `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
          *
          * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-         * `| `[KProperty][kotlin.reflect.KProperty]`<*>` | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+         * `| `[KProperty][kotlin.reflect.KProperty]`<* | `[DataRow][DataRow]`<*>>` | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
          */
         public interface ColumnGroupDef
 
@@ -130,6 +132,9 @@ public interface UsageTemplateColumnsSelectionDsl {
          */
         public interface ColumnDef
 
+        /** `columnNoAccessor: `[String][String]` | `[KProperty][kotlin.reflect.KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] */
+        public interface ColumnNoAccessorDef
+
         /** `T: Column type` */
         public interface ColumnTypeDef
 
@@ -150,6 +155,9 @@ public interface UsageTemplateColumnsSelectionDsl {
 
         /** `colsSelector: `[ColumnsSelector][ColumnsSelector] */
         public interface ColumnsSelectorDef
+
+        /** `columnsResolver: `[ColumnsResolver][ColumnsResolver] */
+        public interface ColumnsResolverDef
 
         /** `number: `[Int][Int] */
         public interface NumberDef
@@ -200,6 +208,9 @@ public interface UsageTemplateColumnsSelectionDsl {
         /** [column][ColumnDef] */
         public interface ColumnRef
 
+        /** [columnNoAccessor][ColumnNoAccessorDef] */
+        public interface ColumnNoAccessorRef
+
         /** [index][IndexDef] */
         public interface IndexRef
 
@@ -217,6 +228,9 @@ public interface UsageTemplateColumnsSelectionDsl {
 
         /** [colsSelector][ColumnsSelectorDef] */
         public interface ColumnsSelectorRef
+
+        /** [columnsResolver][ColumnsResolverDef] */
+        public interface ColumnsResolverRef
 
         /** [number][NumberDef] */
         public interface NumberRef
@@ -263,7 +277,7 @@ public interface UsageTemplateColumnsSelectionDsl {
      *  `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `[KProperty][kotlin.reflect.KProperty]`<*>` | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     * `| `[KProperty][kotlin.reflect.KProperty]`<* | `[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>` | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
