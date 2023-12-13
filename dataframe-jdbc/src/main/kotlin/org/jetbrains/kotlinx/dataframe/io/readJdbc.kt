@@ -2,6 +2,20 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import java.math.BigDecimal
+import java.sql.Connection
+import java.sql.DatabaseMetaData
+import java.sql.DriverManager
+import java.sql.ResultSet
+import java.sql.ResultSetMetaData
+import java.sql.Time
+import java.sql.Timestamp
+import java.sql.Types
+import java.sql.RowId
+import java.sql.Ref
+import java.sql.Clob
+import java.sql.Blob
+import java.sql.NClob
+import java.sql.SQLXML
 import java.util.Date
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -12,7 +26,6 @@ import org.jetbrains.kotlinx.dataframe.io.db.DbType
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromUrl
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
-import java.sql.*
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.isSupertypeOf
@@ -54,7 +67,13 @@ private const val MULTIPLE_SQL_QUERY_SEPARATOR = ";"
  * @property [size] the size of the column.
  * @property [isNullable] true if column could contain nulls.
  */
-public data class TableColumnMetadata(val name: String, val sqlTypeName: String, val jdbcType: Int, val size: Int, val isNullable: Boolean = false)
+public data class TableColumnMetadata(
+    val name: String,
+    val sqlTypeName: String,
+    val jdbcType: Int,
+    val size: Int,
+    val isNullable: Boolean = false
+)
 
 /**
  * Represents a table metadata to store information about a database table,
@@ -86,7 +105,11 @@ public data class DatabaseConfiguration(val url: String, val user: String = "", 
  * @param [limit] the maximum number of rows to retrieve from the table.
  * @return the DataFrame containing the data from the SQL table.
  */
-public fun DataFrame.Companion.readSqlTable(dbConfig: DatabaseConfiguration, tableName: String, limit: Int = DEFAULT_LIMIT): AnyFrame {
+public fun DataFrame.Companion.readSqlTable(
+    dbConfig: DatabaseConfiguration,
+    tableName: String,
+    limit: Int = DEFAULT_LIMIT
+): AnyFrame {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return readSqlTable(connection, tableName, limit)
     }
@@ -102,7 +125,11 @@ public fun DataFrame.Companion.readSqlTable(dbConfig: DatabaseConfiguration, tab
  *
  * @see DriverManager.getConnection
  */
-public fun DataFrame.Companion.readSqlTable(connection: Connection, tableName: String, limit: Int = DEFAULT_LIMIT): AnyFrame {
+public fun DataFrame.Companion.readSqlTable(
+    connection: Connection,
+    tableName: String,
+    limit: Int = DEFAULT_LIMIT
+): AnyFrame {
     var preparedQuery = "SELECT * FROM $tableName"
     if (limit > 0) preparedQuery += " LIMIT $limit"
 
@@ -124,12 +151,19 @@ public fun DataFrame.Companion.readSqlTable(connection: Connection, tableName: S
 /**
  * Converts the result of an SQL query to the DataFrame.
  *
+ * NOTE: SQL query should start from SELECT and contain one query for reading data without any manipulation.
+ * It should not contain `;` symbol.
+ *
  * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
  * @param [sqlQuery] the SQL query to execute.
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
  * @return the DataFrame containing the result of the SQL query.
  */
-public fun DataFrame.Companion.readSqlQuery(dbConfig: DatabaseConfiguration, sqlQuery: String, limit: Int = DEFAULT_LIMIT): AnyFrame {
+public fun DataFrame.Companion.readSqlQuery(
+    dbConfig: DatabaseConfiguration,
+    sqlQuery: String,
+    limit: Int = DEFAULT_LIMIT
+): AnyFrame {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return readSqlQuery(connection, sqlQuery, limit)
     }
@@ -148,9 +182,13 @@ public fun DataFrame.Companion.readSqlQuery(dbConfig: DatabaseConfiguration, sql
  *
  * @see DriverManager.getConnection
  */
-public fun DataFrame.Companion.readSqlQuery(connection: Connection, sqlQuery: String, limit: Int = DEFAULT_LIMIT): AnyFrame {
-    require (isValid(sqlQuery)) { "SQL query should start from SELECT and contain one query for reading data without any manipulation. "}
-    
+public fun DataFrame.Companion.readSqlQuery(
+    connection: Connection,
+    sqlQuery: String,
+    limit: Int = DEFAULT_LIMIT
+): AnyFrame {
+    require(isValid(sqlQuery)) { "SQL query should start from SELECT and contain one query for reading data without any manipulation. " }
+
     val url = connection.metaData.url
     val dbType = extractDBTypeFromUrl(url)
 
@@ -176,27 +214,35 @@ private fun isValid(sqlQuery: String): Boolean {
 }
 
 /**
- * Reads the data from a ResultSet and converts it into a DataFrame.
+ * Reads the data from a [ResultSet] and converts it into a DataFrame.
  *
- * @param [resultSet] the ResultSet containing the data to read.
- * @param [dbType] the type of database that the ResultSet belongs to.
- * @param [limit] the maximum number of rows to read from the ResultSet.
- * @return the DataFrame generated from the ResultSet data.
+ * @param [resultSet] the [ResultSet] containing the data to read.
+ * @param [dbType] the type of database that the [ResultSet] belongs to.
+ * @param [limit] the maximum number of rows to read from the [ResultSet].
+ * @return the DataFrame generated from the [ResultSet] data.
  */
-public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, dbType: DbType, limit: Int = DEFAULT_LIMIT): AnyFrame {
+public fun DataFrame.Companion.readResultSet(
+    resultSet: ResultSet,
+    dbType: DbType,
+    limit: Int = DEFAULT_LIMIT
+): AnyFrame {
     val tableColumns = getTableColumnsMetadata(resultSet)
     return fetchAndConvertDataFromResultSet(tableColumns, resultSet, dbType, limit)
 }
 
 /**
- * Reads the data from a ResultSet and converts it into a DataFrame.
+ * Reads the data from a [ResultSet] and converts it into a DataFrame.
  *
- * @param [resultSet] the ResultSet containing the data to read.
+ * @param [resultSet] the [ResultSet] containing the data to read.
  * @param [connection] the connection to the database (it's required to extract the database type).
- * @param [limit] the maximum number of rows to read from the ResultSet.
- * @return the DataFrame generated from the ResultSet data.
+ * @param [limit] the maximum number of rows to read from the [ResultSet].
+ * @return the DataFrame generated from the [ResultSet] data.
  */
-public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, connection: Connection, limit: Int = DEFAULT_LIMIT): AnyFrame {
+public fun DataFrame.Companion.readResultSet(
+    resultSet: ResultSet,
+    connection: Connection,
+    limit: Int = DEFAULT_LIMIT
+): AnyFrame {
     val url = connection.metaData.url
     val dbType = extractDBTypeFromUrl(url)
 
@@ -210,7 +256,11 @@ public fun DataFrame.Companion.readResultSet(resultSet: ResultSet, connection: C
  * @param [limit] the maximum number of rows to read from each table.
  * @return a list of [AnyFrame] objects representing the non-system tables from the database.
  */
-public fun DataFrame.Companion.readAllSqlTables(dbConfig: DatabaseConfiguration, catalogue: String? = null, limit: Int = DEFAULT_LIMIT): List<AnyFrame> {
+public fun DataFrame.Companion.readAllSqlTables(
+    dbConfig: DatabaseConfiguration,
+    catalogue: String? = null,
+    limit: Int = DEFAULT_LIMIT
+): List<AnyFrame> {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return readAllSqlTables(connection, catalogue, limit)
     }
@@ -225,7 +275,11 @@ public fun DataFrame.Companion.readAllSqlTables(dbConfig: DatabaseConfiguration,
  *
  * @see DriverManager.getConnection
  */
-public fun DataFrame.Companion.readAllSqlTables(connection: Connection, catalogue: String? = null, limit: Int = DEFAULT_LIMIT): List<AnyFrame> {
+public fun DataFrame.Companion.readAllSqlTables(
+    connection: Connection,
+    catalogue: String? = null,
+    limit: Int = DEFAULT_LIMIT
+): List<AnyFrame> {
     val metaData = connection.metaData
     val url = connection.metaData.url
     val dbType = extractDBTypeFromUrl(url)
@@ -239,7 +293,7 @@ public fun DataFrame.Companion.readAllSqlTables(connection: Connection, catalogu
         val table = dbType.buildTableMetadata(tables)
         if (!dbType.isSystemTable(table)) {
             // we filter her second time because of specific logic with SQLite and possible issues with future databases
-           // val tableName = if (table.catalogue != null) table.catalogue + "." + table.name else table.name
+            // val tableName = if (table.catalogue != null) table.catalogue + "." + table.name else table.name
             val tableName = if (catalogue != null) catalogue + "." + table.name else table.name
 
             // TODO: both cases is schema specified or not in URL
@@ -262,9 +316,12 @@ public fun DataFrame.Companion.readAllSqlTables(connection: Connection, catalogu
  *
  * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
  * @param [tableName] the name of the SQL table for which to retrieve the schema.
- * @return the DataFrameSchema object representing the schema of the SQL table
+ * @return the [DataFrameSchema] object representing the schema of the SQL table
  */
-public fun DataFrame.Companion.getSchemaForSqlTable(dbConfig: DatabaseConfiguration, tableName: String): DataFrameSchema {
+public fun DataFrame.Companion.getSchemaForSqlTable(
+    dbConfig: DatabaseConfiguration,
+    tableName: String
+): DataFrameSchema {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return getSchemaForSqlTable(connection, tableName)
     }
@@ -305,7 +362,10 @@ public fun DataFrame.Companion.getSchemaForSqlTable(
  * @param [sqlQuery] the SQL query to execute and retrieve the schema from.
  * @return the schema of the SQL query as a [DataFrameSchema] object.
  */
-public fun DataFrame.Companion.getSchemaForSqlQuery(dbConfig: DatabaseConfiguration, sqlQuery: String): DataFrameSchema {
+public fun DataFrame.Companion.getSchemaForSqlQuery(
+    dbConfig: DatabaseConfiguration,
+    sqlQuery: String
+): DataFrameSchema {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return getSchemaForSqlQuery(connection, sqlQuery)
     }
@@ -333,13 +393,13 @@ public fun DataFrame.Companion.getSchemaForSqlQuery(connection: Connection, sqlQ
 }
 
 /**
- * Retrieves the schema from ResultSet.
+ * Retrieves the schema from [ResultSet].
  *
  * NOTE: This function will not close connection and result set and not retrieve data from the result set.
  *
- * @param [resultSet] the ResultSet obtained from executing a database query.
- * @param [dbType] the type of database that the ResultSet belongs to.
- * @return the schema of the ResultSet as a [DataFrameSchema] object.
+ * @param [resultSet] the [ResultSet] obtained from executing a database query.
+ * @param [dbType] the type of database that the [ResultSet] belongs to.
+ * @return the schema of the [ResultSet] as a [DataFrameSchema] object.
  */
 public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet, dbType: DbType): DataFrameSchema {
     val tableColumns = getTableColumnsMetadata(resultSet)
@@ -347,14 +407,14 @@ public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet, dbTyp
 }
 
 /**
- * Retrieves the schema from ResultSet.
+ * Retrieves the schema from [ResultSet].
  *
  * NOTE: [connection] is required to extract the database type.
  * This function will not close connection and result set and not retrieve data from the result set.
  *
- * @param [resultSet] the ResultSet obtained from executing a database query.
+ * @param [resultSet] the [ResultSet] obtained from executing a database query.
  * @param [connection] the connection to the database (it's required to extract the database type).
- * @return the schema of the ResultSet as a [DataFrameSchema] object.
+ * @return the schema of the [ResultSet] as a [DataFrameSchema] object.
  */
 public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet, connection: Connection): DataFrameSchema {
     val url = connection.metaData.url
@@ -368,7 +428,7 @@ public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet, conne
  * Retrieves the schema of all non-system tables in the database using the provided database configuration.
  *
  * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
- * @return a list of DataFrameSchema objects representing the schema of each non-system table.
+ * @return a list of [DataFrameSchema] objects representing the schema of each non-system table.
  */
 public fun DataFrame.Companion.getSchemaForAllSqlTables(dbConfig: DatabaseConfiguration): List<DataFrameSchema> {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
@@ -380,7 +440,7 @@ public fun DataFrame.Companion.getSchemaForAllSqlTables(dbConfig: DatabaseConfig
  * Retrieves the schema of all non-system tables in the database using the provided database connection.
  *
  * @param [connection] the database connection.
- * @return a list of DataFrameSchema objects representing the schema of each non-system table.
+ * @return a list of [DataFrameSchema] objects representing the schema of each non-system table.
  */
 public fun DataFrame.Companion.getSchemaForAllSqlTables(connection: Connection): List<DataFrameSchema> {
     val metaData = connection.metaData
@@ -411,7 +471,7 @@ public fun DataFrame.Companion.getSchemaForAllSqlTables(connection: Connection):
  * @param [tableColumns] a mutable map containing the table columns, where the key represents the column name
  * and the value represents the metadata of the column
  * @param [dbType] the type of database.
- * @return a DataFrameSchema object representing the schema built from the table columns.
+ * @return a [DataFrameSchema] object representing the schema built from the table columns.
  */
 private fun buildSchemaByTableColumns(tableColumns: MutableList<TableColumnMetadata>, dbType: DbType): DataFrameSchema {
     val schemaColumns = tableColumns.associate {
@@ -426,7 +486,9 @@ private fun buildSchemaByTableColumns(tableColumns: MutableList<TableColumnMetad
 private fun generateColumnSchemaValue(
     dbType: DbType,
     tableColumnMetadata: TableColumnMetadata
-): ColumnSchema = dbType.convertSqlTypeToColumnSchemaValue(tableColumnMetadata) ?: ColumnSchema.Value(makeCommonSqlToKTypeMapping(tableColumnMetadata))
+): ColumnSchema = dbType.convertSqlTypeToColumnSchemaValue(tableColumnMetadata) ?: ColumnSchema.Value(
+    makeCommonSqlToKTypeMapping(tableColumnMetadata)
+)
 
 
 /**
@@ -447,7 +509,8 @@ private fun getTableColumnsMetadata(rs: ResultSet): MutableList<TableColumnMetad
     val schema: String? = rs.statement.connection.schema
 
     for (i in 1 until numberOfColumns + 1) {
-        val columnResultSet: ResultSet = databaseMetaData.getColumns(catalog, schema, metaData.getTableName(i), metaData.getColumnName(i) )
+        val columnResultSet: ResultSet =
+            databaseMetaData.getColumns(catalog, schema, metaData.getTableName(i), metaData.getColumnName(i))
         val isNullable = if (columnResultSet.next()) {
             columnResultSet.getString("IS_NULLABLE") == "YES"
         } else {
@@ -464,6 +527,13 @@ private fun getTableColumnsMetadata(rs: ResultSet): MutableList<TableColumnMetad
     return tableColumns
 }
 
+/**
+ * Manages the duplication of column names by appending a unique identifier to the original name if necessary.
+ *
+ * @param columnNameCounter a mutable map that keeps track of the count for each column name.
+ * @param originalName the original name of the column to be managed.
+ * @return the modified column name that is free from duplication.
+ */
 private fun manageColumnNameDuplication(columnNameCounter: MutableMap<String, Int>, originalName: String): String {
     var name = originalName
     val count = columnNameCounter[originalName]
@@ -563,6 +633,12 @@ private fun generateKType(dbType: DbType, tableColumnMetadata: TableColumnMetada
     return dbType.convertSqlTypeToKType(tableColumnMetadata) ?: makeCommonSqlToKTypeMapping(tableColumnMetadata)
 }
 
+/**
+ * Creates a mapping between common SQL types and their corresponding KTypes.
+ *
+ * @param tableColumnMetadata The metadata of the table column.
+ * @return The KType associated with the SQL type, or a default type if no mapping is found.
+ */
 private fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata): KType {
     val jdbcTypeToKTypeMapping = mapOf(
         Types.BIT to Boolean::class,

@@ -238,7 +238,7 @@ class JdbcTest {
 
         val df = DataFrame.readSqlTable(connection, "TestTable").cast<TestTableData>()
         df.rowsCount() shouldBe 3
-        df.filter { it[TestTableData::integerCol]!! > 1000}.rowsCount() shouldBe 2
+        df.filter { it[TestTableData::integerCol]!! > 1000 }.rowsCount() shouldBe 2
     }
 
     @Test
@@ -283,7 +283,7 @@ class JdbcTest {
     fun `repeated read from table with limit`() {
         val tableName = "Customer"
 
-        for(i in 1 .. 10) {
+        for (i in 1..10) {
             val df1 = DataFrame.readSqlTable(connection, tableName, 2).cast<Customer>()
 
             df1.rowsCount() shouldBe 2
@@ -314,7 +314,7 @@ class JdbcTest {
 
                 rs.beforeFirst()
 
-                val df1 =  DataFrame.readResultSet(rs, H2, 1).cast<Customer>()
+                val df1 = DataFrame.readResultSet(rs, H2, 1).cast<Customer>()
 
                 df1.rowsCount() shouldBe 1
                 df1.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
@@ -359,10 +359,10 @@ class JdbcTest {
             val selectStatement = "SELECT * FROM Customer"
 
             st.executeQuery(selectStatement).use { rs ->
-                for (i in 1 .. 10) {
+                for (i in 1..10) {
                     rs.beforeFirst()
 
-                    val df1 =  DataFrame.readResultSet(rs, H2, 2).cast<Customer>()
+                    val df1 = DataFrame.readResultSet(rs, H2, 2).cast<Customer>()
 
                     df1.rowsCount() shouldBe 2
                     df1.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
@@ -522,7 +522,7 @@ class JdbcTest {
     }
 
     @Test
-    fun `read from sql query with two repeated columns` () {
+    fun `read from sql query with two repeated columns`() {
         @Language("SQL")
         val sqlQuery = """
             SELECT c1.name, c2.name
@@ -537,7 +537,7 @@ class JdbcTest {
     }
 
     @Test
-    fun `read from sql query with three repeated columns` () {
+    fun `read from sql query with three repeated columns`() {
         @Language("SQL")
         val sqlQuery = """
             SELECT c1.name as name, c2.name as name_1, c1.name as name_1
@@ -568,7 +568,7 @@ class JdbcTest {
         saleDf.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 3
         (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
 
-        val dataframes1 = DataFrame.readAllSqlTables(connection, limit =1)
+        val dataframes1 = DataFrame.readAllSqlTables(connection, limit = 1)
 
         val customerDf1 = dataframes1[0].cast<Customer>()
 
