@@ -18,7 +18,7 @@ private const val DATABASE_URL = "jdbc:sqlite:"
 
 @DataSchema
 interface CustomerSQLite {
-    val id: java.math.BigDecimal?
+    val id: Int?
     val name: String?
     val age: Int?
     val salary: Double
@@ -27,7 +27,7 @@ interface CustomerSQLite {
 
 @DataSchema
 interface OrderSQLite {
-    val id: java.math.BigDecimal?
+    val id: Int?
     val customerName: String?
     val orderDate: String?
     val totalAmount: Double
@@ -36,12 +36,12 @@ interface OrderSQLite {
 
 @DataSchema
 interface CustomerOrderSQLite {
-    val customerId: java.math.BigDecimal?
+    val customerId: Int?
     val customerName: String?
     val customerAge: Int?
     val customerSalary: Double
     val customerProfilePicture: ByteArray?
-    val orderId: java.math.BigDecimal?
+    val orderId: Int?
     val orderDate: String?
     val totalAmount: Double
     val orderDetails: ByteArray?
@@ -60,7 +60,7 @@ class SqliteTest {
             @Language("SQL")
             val createCustomersTableQuery = """
             CREATE TABLE Customers (
-                id INTEGER AUTO_INCREMENT PRIMARY KEY,
+                id INTEGER PRIMARY KEY,
                 name TEXT,
                 age INTEGER,
                 salary REAL NOT NULL,
@@ -75,7 +75,7 @@ class SqliteTest {
             @Language("SQL")
             val createOrderTableQuery = """
             CREATE TABLE Orders (
-                id INTEGER AUTO_INCREMENT PRIMARY KEY,
+                id INTEGER PRIMARY KEY,
                 customerName TEXT,
                 orderDate TEXT,
                 totalAmount NUMERIC NOT NULL,
@@ -146,7 +146,7 @@ class SqliteTest {
         result[0][2] shouldBe 30
 
         val schema = DataFrame.getSchemaForSqlTable(connection, customerTableName)
-        schema.columns["id"]!!.type shouldBe typeOf<java.math.BigDecimal?>() // TODO:
+        schema.columns["id"]!!.type shouldBe typeOf<Int?>()
         schema.columns["name"]!!.type shouldBe typeOf<String?>()
         schema.columns["salary"]!!.type shouldBe typeOf<Float>()
 
@@ -156,7 +156,7 @@ class SqliteTest {
         result2[0][2] shouldBe "2023-07-21"
 
         val schema2 = DataFrame.getSchemaForSqlTable(connection, orderTableName)
-        schema2.columns["id"]!!.type shouldBe typeOf<java.math.BigDecimal?>()
+        schema2.columns["id"]!!.type shouldBe typeOf<Int?>()
         schema2.columns["customerName"]!!.type shouldBe typeOf<String?>()
         schema2.columns["totalAmount"]!!.type shouldBe typeOf<java.math.BigDecimal>()
     }
@@ -184,7 +184,7 @@ class SqliteTest {
         result[0][3] shouldBe 2500.5
 
         val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery = sqlQuery)
-        schema.columns["customerId"]!!.type shouldBe typeOf<java.math.BigDecimal?>()
+        schema.columns["customerId"]!!.type shouldBe typeOf<kotlin.Int?>()
         schema.columns["customerName"]!!.type shouldBe typeOf<String?>()
         schema.columns["customerAge"]!!.type shouldBe typeOf<Int?>()
         schema.columns["totalAmount"]!!.type shouldBe typeOf<java.math.BigDecimal>()
