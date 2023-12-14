@@ -167,43 +167,43 @@ class DataFrameJdbcSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                        @file:ImportDataSchema(
-                             "Customer",
-                             "$CONNECTION_URL",
-                             jdbcOptions = JdbcOptions("", "", tableName = "Customer")
-                        )
+                @file:ImportDataSchema(
+                     "Customer",
+                     "$CONNECTION_URL",
+                     jdbcOptions = JdbcOptions("", "", tableName = "Customer")
+                )
+                
+                package test
+                
+                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+                import org.jetbrains.kotlinx.dataframe.annotations.JdbcOptions
+                import org.jetbrains.kotlinx.dataframe.api.filter
+                import org.jetbrains.kotlinx.dataframe.DataFrame
+                import org.jetbrains.kotlinx.dataframe.api.cast
+                import java.sql.Connection
+                import java.sql.DriverManager
+                import java.sql.SQLException
+                import org.jetbrains.kotlinx.dataframe.io.readSqlTable
+                import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
+                
+                fun main() {    
+                    val tableName = "Customer"
+                    DriverManager.getConnection("$CONNECTION_URL").use { connection ->
+                        val df = DataFrame.readSqlTable(connection, tableName).cast<Customer>()
+                        df.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
+
+                        val df1 = DataFrame.readSqlTable(connection, tableName, 1).cast<Customer>()
+                        df1.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
                         
-                        package test
+                        val dbConfig = DatabaseConfiguration(url = "$CONNECTION_URL")
+                        val df2 = DataFrame.readSqlTable(dbConfig, tableName).cast<Customer>()
+                        df2.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
                         
-                        import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
-                        import org.jetbrains.kotlinx.dataframe.annotations.JdbcOptions
-                        import org.jetbrains.kotlinx.dataframe.api.filter
-                        import org.jetbrains.kotlinx.dataframe.DataFrame
-                        import org.jetbrains.kotlinx.dataframe.api.cast
-                        import java.sql.Connection
-                        import java.sql.DriverManager
-                        import java.sql.SQLException
-                        import org.jetbrains.kotlinx.dataframe.io.readSqlTable
-                        import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
-                        
-                        fun main() {    
-                            val tableName = "Customer"
-                            DriverManager.getConnection("$CONNECTION_URL").use { connection ->
-                                val df = DataFrame.readSqlTable(connection, tableName).cast<Customer>()
-                                df.filter { age > 30 }
-        
-                                val df1 = DataFrame.readSqlTable(connection, tableName, 1).cast<Customer>()
-                                df1.filter { age > 30 }
-                                
-                                val dbConfig = DatabaseConfiguration(url = "$CONNECTION_URL")
-                                val df2 = DataFrame.readSqlTable(dbConfig, tableName).cast<Customer>()
-                                df2.filter { age > 30 }
-                                
-                                val df3 = DataFrame.readSqlTable(dbConfig, tableName, 1).cast<Customer>()
-                                df3.filter { age > 30 }
-         
-                            }
-                        }
+                        val df3 = DataFrame.readSqlTable(dbConfig, tableName, 1).cast<Customer>()
+                        df3.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
+ 
+                    }
+                }
                         """.trimIndent()
                     )
                 )

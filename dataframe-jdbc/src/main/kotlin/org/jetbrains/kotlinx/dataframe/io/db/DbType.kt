@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
 import org.jetbrains.kotlinx.dataframe.io.TableMetadata
+import kotlin.reflect.KType
 
 /**
  * The `DbType` class represents a database type used for reading dataframe from the database.
@@ -23,18 +24,9 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
     public abstract val driverClassName: String
 
     /**
-     * Converts the data from the given [ResultSet] into the specified [TableColumnMetadata] type.
-     *
-     * @param rs The [ResultSet] containing the data to be converted.
-     * @param tableColumnMetadata The [TableColumnMetadata] representing the target type of the conversion.
-     * @return The converted data as an instance of [Any].
-     */
-    public abstract fun convertDataFromResultSet(rs: ResultSet, tableColumnMetadata: TableColumnMetadata): Any?
-
-    /**
      * Returns a [ColumnSchema] produced from [tableColumnMetadata].
      */
-    public abstract fun toColumnSchema(tableColumnMetadata: TableColumnMetadata): ColumnSchema
+    public abstract fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema?
 
     /**
      * Checks if the given table name is a system table for the specified database type.
@@ -52,4 +44,12 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      * @return the TableMetadata object representing the table metadata.
      */
     public abstract fun buildTableMetadata(tables: ResultSet): TableMetadata
+
+    /**
+     * Converts SQL data type to a Kotlin data type.
+     *
+     * @param [tableColumnMetadata] The metadata of the table column.
+     * @return The corresponding Kotlin data type, or null if no mapping is found.
+     */
+    public abstract fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType?
 }
