@@ -16,6 +16,7 @@ import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.UUID
 import org.junit.Ignore
+import kotlin.reflect.typeOf
 
 private const val URL = "jdbc:postgresql://localhost:5432/test"
 private const val USER_NAME = "postgres"
@@ -35,7 +36,7 @@ interface Table1 {
     val circlecol: String
     val datecol: java.sql.Date
     val doublecol: Double
-    val integercol: Int
+    val integercol: Int?
     val intervalcol: String
     val jsoncol: String
     val jsonbcol: String
@@ -44,19 +45,19 @@ interface Table1 {
 @DataSchema
 interface Table2 {
     val id: Int
-    val linecol: String
+    val linecol: org.postgresql.geometric.PGline
     val lsegcol: String
     val macaddrcol: String
     val moneycol: String
     val numericcol: String
-    val pathcol: String
+    val pathcol: org.postgresql.geometric.PGpath
     val pointcol: String
     val polygoncol: String
     val realcol: Float
     val smallintcol: Short
     val smallserialcol: Int
     val serialcol: Int
-    val textcol: String
+    val textcol: String?
     val timecol: String
     val timewithzonecol: String
     val timestampcol: String
@@ -70,7 +71,7 @@ interface ViewTable {
     val id: Int
     val bigintcol: Long
     val linecol: String
-    val numericcol: String
+    val textCol: String?
 }
 
 @Ignore
@@ -90,21 +91,21 @@ class PostgresTest {
             val createTableStatement = """
                 CREATE TABLE IF NOT EXISTS table1 (
                 id serial PRIMARY KEY,
-                bigintCol bigint,
-                bigserialCol bigserial,
-                booleanCol boolean,
-                boxCol box,
-                byteaCol bytea,
-                characterCol character,
-                characterNCol character(10),
-                charCol char,
-                circleCol circle,
-                dateCol date,
-                doubleCol double precision,
+                bigintCol bigint not null,
+                bigserialCol bigserial not null,
+                booleanCol boolean not null,
+                boxCol box not null,
+                byteaCol bytea not null,
+                characterCol character not null,
+                characterNCol character(10) not null,
+                charCol char not null,
+                circleCol circle not null,
+                dateCol date not null,
+                doubleCol double precision not null,
                 integerCol integer,
-                intervalCol interval,
-                jsonCol json,
-                jsonbCol jsonb
+                intervalCol interval not null,
+                jsonCol json not null,
+                jsonbCol jsonb not null
             )
             """
             connection.createStatement().execute(
@@ -115,25 +116,25 @@ class PostgresTest {
             val createTableQuery = """
                 CREATE TABLE IF NOT EXISTS table2 (
                 id serial PRIMARY KEY,
-                lineCol line,
-                lsegCol lseg,
-                macaddrCol macaddr,
-                moneyCol money,
-                numericCol numeric,
-                pathCol path,
-                pointCol point,
-                polygonCol polygon,
-                realCol real,
-                smallintCol smallint,
-                smallserialCol smallserial,
-                serialCol serial,
+                lineCol line not null,
+                lsegCol lseg not null,
+                macaddrCol macaddr not null,
+                moneyCol money not null,
+                numericCol numeric not null,
+                pathCol path not null,
+                pointCol point not null,
+                polygonCol polygon not null,
+                realCol real not null,
+                smallintCol smallint not null,
+                smallserialCol smallserial not null,
+                serialCol serial not null,
                 textCol text,
-                timeCol time,
-                timeWithZoneCol time with time zone,
-                timestampCol timestamp,
-                timestampWithZoneCol timestamp with time zone,
-                uuidCol uuid,
-                xmlCol xml
+                timeCol time not null,
+                timeWithZoneCol time with time zone not null,
+                timestampCol timestamp not null,
+                timestampWithZoneCol timestamp with time zone not null,
+                uuidCol uuid not null,
+                xmlCol xml not null
             )
             """
             connection.createStatement().execute(
@@ -208,7 +209,7 @@ class PostgresTest {
                     st.setShort(10, (i * 100).toShort())
                     st.setInt(11, 1000 + i)
                     st.setInt(12, 1000000 + i)
-                    st.setString(13, "Text data $i")
+                    st.setString(13, null)
                     st.setTime(14, java.sql.Time.valueOf("12:34:56"))
 
                     st.setTimestamp(15, java.sql.Timestamp(System.currentTimeMillis()))
@@ -241,11 +242,27 @@ class PostgresTest {
 
     @Test
     fun `read from tables`() {
-        val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1>()
-        df1.rowsCount() shouldBe 3
+        val tableName1 = "table1"
+        val df1 = DataFrame.readSqlTable(connection, tableName1).cast<Table1>()
+        val result = df1.filter { it[Table1::id] == 1 }
+        result[0][12] shouldBe 12345
 
-        val df2 = DataFrame.readSqlTable(connection, "table2").cast<Table2>()
-        df2.rowsCount() shouldBe 3
+        val schema = DataFrame.getSchemaForSqlTable(connection, tableName1)
+        schema.columns["id"]!!.type shouldBe typeOf<Int>()
+        schema.columns["integercol"]!!.type shouldBe typeOf<Int?>()
+        schema.columns["circlecol"]!!.type shouldBe typeOf<Any>()
+
+        val tableName2 = "table2"
+        val df2 = DataFrame.readSqlTable(connection, tableName2).cast<Table2>()
+        val result2 = df2.filter { it[Table2::id] == 1 }
+        result2[0][11] shouldBe 1001
+        result2[0][13] shouldBe null
+
+        val schema2 = DataFrame.getSchemaForSqlTable(connection, tableName2)
+        schema2.columns["id"]!!.type shouldBe typeOf<Int>()
+        schema2.columns["pathcol"]!!.type shouldBe typeOf<Any>() // TODO: https://github.com/Kotlin/dataframe/issues/537
+        schema2.columns["textcol"]!!.type shouldBe typeOf<String?>()
+        schema2.columns["linecol"]!!.type shouldBe typeOf<Any>() // TODO: https://github.com/Kotlin/dataframe/issues/537
     }
 
     @Test
@@ -253,16 +270,22 @@ class PostgresTest {
         @Language("SQL")
         val sqlQuery = """
             SELECT
-                t1.id AS t1_id,
+                t1.id,
                 t1.bigintCol,
                 t2.lineCol,
-                t2.numericCol
+                t2.textCol
             FROM table1 t1
-            JOIN table2 t2 ON t1.id = t2.id;
+            JOIN table2 t2 ON t1.id = t2.id
         """.trimIndent()
 
-        val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<TestTableData>()
-        df.rowsCount() shouldBe 3
+        val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<ViewTable>()
+        val result = df.filter { it[ViewTable::id] == 1 }
+        result[0][3] shouldBe null
+
+        val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery = sqlQuery)
+        schema.columns["id"]!!.type shouldBe typeOf<Int>()
+        schema.columns["bigintcol"]!!.type shouldBe typeOf<Long>()
+        schema.columns["textcol"]!!.type shouldBe typeOf<String?>()
     }
 
     @Test
@@ -272,15 +295,14 @@ class PostgresTest {
         val table1Df = dataframes[0].cast<Table1>()
 
         table1Df.rowsCount() shouldBe 3
-        table1Df.filter { it[Table1::integercol] > 12345 }.rowsCount() shouldBe 2
+        table1Df.filter { it[Table1::integercol] != null && it[Table1::integercol]!! > 12345 }.rowsCount() shouldBe 2
         table1Df[0][1] shouldBe 1000L
 
         val table2Df = dataframes[1].cast<Table2>()
 
         table2Df.rowsCount() shouldBe 3
-        table2Df.filter { it[Table2::pathcol] == "((1,2),(3,1))" }.rowsCount() shouldBe 1
+        table2Df.filter { it[Table2::pathcol] == org.postgresql.geometric.PGpath("((1,2),(3,1))") }
+            .rowsCount() shouldBe 1
         table2Df[0][11] shouldBe 1001
-
-        //TODO: add test for JSON column
     }
 }
