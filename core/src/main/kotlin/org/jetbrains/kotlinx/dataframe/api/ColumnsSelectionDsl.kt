@@ -124,7 +124,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     // filter {}
     FilterColumnsSelectionDsl,
     // colSet and colB
-    AndColumnsSelectionDsl<T>,
+    AndColumnsSelectionDsl,
     // colA named "colB", colA into "colB"
     RenameColumnsSelectionDsl,
     // expr {}

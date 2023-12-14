@@ -95,13 +95,14 @@ internal const val COL_SELECT_DSL_SELECT_COLS_REPLACE = "this.cols(*columns)"
 
 internal const val COL_SELECT_DSL_SINGLE_COL_EXCEPT = "This function is replaced with allColsExcept. $message_0_14"
 internal const val COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_SELECTOR = "this.allColsExcept(selector)"
-internal const val COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_RESOLVER = "this.allColsExcept { others.toColumnSet() }"
+internal const val COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_RESOLVERS = "this.allColsExcept { others.toColumnSet() }"
+internal const val COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_RESOLVER = "this.allColsExcept { other }"
 internal const val COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_OTHERS = "this.allColsExcept(*others)"
+internal const val COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_OTHER = "this.allColsExcept(other)"
 
 internal const val COL_SELECT_DSL_EXCEPT = "This function is replaced with allExcept. $message_0_14"
 internal const val COL_SELECT_DSL_EXCEPT_REPLACE_SELECTOR = "this.allExcept(selector)"
 internal const val COL_SELECT_DSL_EXCEPT_REPLACE_RESOLVER = "this.allExcept(*others)"
-
 
 // endregion
 

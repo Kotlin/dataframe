@@ -359,6 +359,7 @@ public interface SelectColumnsSelectionDsl {
         columnGroup(this).select(selector)
 
     // region deprecated
+
     @Deprecated(
         message = COL_SELECT_DSL_SELECT_COLS,
         replaceWith = ReplaceWith(COL_SELECT_DSL_SELECT_COLS_REPLACE),
@@ -382,6 +383,7 @@ public interface SelectColumnsSelectionDsl {
     )
     public fun <R> SingleColumn<DataRow<*>>.select(vararg columns: KProperty<R>): ColumnSet<R> =
         selectInternal { columns.toColumnSet() }
+
     // endregion
 }
 

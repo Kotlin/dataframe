@@ -12,7 +12,7 @@ class AndTests : ColumnsSelectionDslTests() {
 
     @Test
     fun `and 2`() {
-        val ageSelector: ColumnsSelector<*, Int> = { "age"<Int>() }
+        val ageSelector: ColumnsSelector<Person, Int> = { age }
         listOf(
             df.select { cols(age, name) },
 
@@ -84,22 +84,23 @@ class AndTests : ColumnsSelectionDslTests() {
             df.select { pathOf("age") and { cols(name) } },
             df.select { pathOf("age").and { name } },
 
-            df.select { ageSelector and name },
-            df.select { ageSelector and "name" },
-            df.select { ageSelector and Person::name },
-            df.select { ageSelector and pathOf("name") },
-            df.select { ageSelector and cols(name) },
-            df.select { ageSelector.and(name) },
-            df.select { ageSelector.and("name") },
-            df.select { ageSelector.and(Person::name) },
-            df.select { ageSelector.and(pathOf("name")) },
-            df.select { ageSelector.and(cols(name)) },
-            df.select { ageSelector and { name } },
-            df.select { ageSelector and { "name"<String>() } },
-            df.select { ageSelector and { (Person::name)() } },
-            df.select { ageSelector and { pathOf("name") } },
-            df.select { ageSelector and { cols(name) } },
-            df.select { ageSelector.and { name } },
+            df.select { ageSelector() and name },
+            df.select { ageSelector() and name },
+            df.select { ageSelector() and "name" },
+            df.select { ageSelector() and Person::name },
+            df.select { ageSelector() and pathOf("name") },
+            df.select { ageSelector() and cols(name) },
+            df.select { ageSelector().and(name) },
+            df.select { ageSelector().and("name") },
+            df.select { ageSelector().and(Person::name) },
+            df.select { ageSelector().and(pathOf("name")) },
+            df.select { ageSelector().and(cols(name)) },
+            df.select { ageSelector() and { name } },
+            df.select { ageSelector() and { "name"<String>() } },
+            df.select { ageSelector() and { (Person::name)() } },
+            df.select { ageSelector() and { pathOf("name") } },
+            df.select { ageSelector() and { cols(name) } },
+            df.select { ageSelector().and { name } },
         ).shouldAllBeEqual()
     }
 

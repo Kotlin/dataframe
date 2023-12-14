@@ -21,7 +21,7 @@ import kotlin.reflect.KProperty
 /**
  * See [Usage]
  */
-public interface AndColumnsSelectionDsl<out T> {
+public interface AndColumnsSelectionDsl {
 
     /**
      * ## And Operator Usage
@@ -178,42 +178,6 @@ public interface AndColumnsSelectionDsl<out T> {
         toColumnAccessor() and other.toColumnAccessor()
 
     // endregion
-
-    // region ColumnsSelector
-
-    /**
-     * @include [CommonAndDocs]
-     * @setArg [CommonAndDocs.ExampleArg]
-     *
-     * `val intCols: `[ColumnsSelector][ColumnsSelector]`<*, `[Int][Int]`> = { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>() }`
-     *
-     * `df.`[select][DataFrame.select]` { intCols `[and][and] {@getArg [ColumnsSelectorAndDocs.Argument]}` }`
-     */
-    private interface ColumnsSelectorAndDocs {
-
-        interface Argument
-    }
-
-    /** @include [ColumnsSelectorAndDocs] {@setArg [ColumnsSelectorAndDocs.Argument] [colsOf][SingleColumn.colsOf]`<`[Int][Int]`>()} */
-    public infix fun <C> ColumnsSelector<T, C>.and(other: ColumnsResolver<C>): ColumnSet<C> = this() and other
-
-    /** @include [ColumnsSelectorAndDocs] {@setArg [ColumnsSelectorAndDocs.Argument] `{ colA `[/][DataColumn.div]` 2.0 `[named][ColumnReference.named]` "half colA" } `} */
-    public infix fun <C> ColumnsSelector<T, C>.and(other: () -> ColumnsResolver<C>): ColumnSet<C> = this() and other
-
-    /** @include [ColumnsSelectorAndDocs] {@setArg [ColumnsSelectorAndDocs.Argument] "colB"} */
-    public infix fun <C> ColumnsSelector<T, C>.and(other: String): ColumnSet<*> = this() and other
-
-    /** @include [ColumnsSelectorAndDocs] {@setArg [ColumnsSelectorAndDocs.Argument] Type::colB} */
-    public infix fun <C> ColumnsSelector<T, C>.and(other: KProperty<C>): ColumnSet<C> = this() and other
-
-    // endregion
-
-    /**
-     * Invokes the given [ColumnsSelector] using this [ColumnsSelectionDsl] but only if the [T] of the
-     * [ColumnsSelector] matches with the [ColumnsSelectionDsl]`<T>`.
-     */
-    private operator fun <C> ColumnsSelector<T, C>.invoke(): ColumnsResolver<C> =
-        this@invoke(this@AndColumnsSelectionDsl as ColumnsSelectionDsl<T>, this@AndColumnsSelectionDsl)
 }
 
 // endregion

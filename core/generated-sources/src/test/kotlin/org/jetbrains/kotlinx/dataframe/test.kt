@@ -29,7 +29,6 @@ class Experiments : ColumnsSelectionDslTests() {
     @Test
     fun `TEMP experiments`() {
         dfGroup.select {
-
             infix fun <C> ColumnSet<C>.oldExcept(other: ColumnsResolver<*>): ColumnSet<C> =
                 createColumnSet { context ->
                     val resolvedCols = this@oldExcept.resolve(context)
