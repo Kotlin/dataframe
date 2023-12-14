@@ -411,39 +411,39 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                 // DataFrameJdbcSymbolProcessorTest.`schema extracted via readFromDB method is resolved`
                 main.writeText(
                     """
-                    @file:ImportDataSchema(name = "Customer", path = "$connectionUrl")
-                    
-                    package test
-                    
-                    import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
-                    import org.jetbrains.kotlinx.dataframe.api.filter
-                    import org.jetbrains.kotlinx.dataframe.DataFrame
-                    import org.jetbrains.kotlinx.dataframe.api.cast
-                    import java.sql.Connection
-                    import java.sql.DriverManager
-                    import java.sql.SQLException
-                    import org.jetbrains.kotlinx.dataframe.io.readSqlTable
-                    import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
-                    
-                    fun main() {    
-                        Class.forName("org.h2.Driver")
-                        val tableName = "Customer"
-                        DriverManager.getConnection("$connectionUrl").use { connection ->
-                            val df = DataFrame.readSqlTable(connection, tableName).cast<Customer>()
-                            df.filter { age > 30 }
-    
-                            val df1 = DataFrame.readSqlTable(connection, tableName, 1).cast<Customer>()
-                            df1.filter { age > 30 }
-                            
-                            val dbConfig = DatabaseConfiguration(url = "$connectionUrl")
-                            val df2 = DataFrame.readSqlTable(dbConfig, tableName).cast<Customer>()
-                            df2.filter { age > 30 }
-                            
-                            val df3 = DataFrame.readSqlTable(dbConfig, tableName, 1).cast<Customer>()
-                            df3.filter { age > 30 }
-     
-                        }
+                @file:ImportDataSchema(name = "Customer", path = "$connectionUrl")
+                
+                package test
+                
+                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+                import org.jetbrains.kotlinx.dataframe.api.filter
+                import org.jetbrains.kotlinx.dataframe.DataFrame
+                import org.jetbrains.kotlinx.dataframe.api.cast
+                import java.sql.Connection
+                import java.sql.DriverManager
+                import java.sql.SQLException
+                import org.jetbrains.kotlinx.dataframe.io.readSqlTable
+                import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
+                
+                fun main() {    
+                    Class.forName("org.h2.Driver")
+                    val tableName = "Customer"
+                    DriverManager.getConnection("$connectionUrl").use { connection ->
+                        val df = DataFrame.readSqlTable(connection, tableName).cast<Customer>()
+                        df.filter { age != null && age > 30 }
+
+                        val df1 = DataFrame.readSqlTable(connection, tableName, 1).cast<Customer>()
+                        df1.filter { age != null && age > 30 }
+                        
+                        val dbConfig = DatabaseConfiguration(url = "$connectionUrl")
+                        val df2 = DataFrame.readSqlTable(dbConfig, tableName).cast<Customer>()
+                        df2.filter { age != null && age > 30 }
+                        
+                        val df3 = DataFrame.readSqlTable(dbConfig, tableName, 1).cast<Customer>()
+                        df3.filter { age != null && age > 30 }
+ 
                     }
+                }
                     """.trimIndent()
                 )
 

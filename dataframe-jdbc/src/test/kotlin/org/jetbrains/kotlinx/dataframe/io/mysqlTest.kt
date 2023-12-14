@@ -14,6 +14,7 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 import org.junit.Ignore
+import kotlin.reflect.typeOf
 
 private const val URL = "jdbc:mysql://localhost:3306"
 private const val USER_NAME = "root"
@@ -52,14 +53,50 @@ interface Table1MySql {
     val mediumtextCol: String
     val longtextCol: String
     val enumCol: String
-    val setCol: String
+    val setCol: Char
 }
 
 @DataSchema
 interface Table2MySql {
     val id: Int
+    val bitCol: Boolean?
+    val tinyintCol: Int?
+    val smallintCol: Int?
+    val mediumintCol: Int?
+    val mediumintUnsignedCol: Long?
+    val integerCol: Int?
+    val intCol: Int?
+    val integerUnsignedCol: Long?
+    val bigintCol: Long?
+    val floatCol: Float?
+    val doubleCol: Double?
+    val decimalCol: Double?
+    val dateCol: String?
+    val datetimeCol: String?
+    val timestampCol: String?
+    val timeCol: String?
+    val yearCol: String?
+    val varcharCol: String?
+    val charCol: String?
+    val binaryCol: ByteArray?
+    val varbinaryCol: ByteArray?
+    val tinyblobCol: ByteArray?
+    val blobCol: ByteArray?
+    val mediumblobCol: ByteArray?
+    val longblobCol: ByteArray?
+    val textCol: String?
+    val mediumtextCol: String?
+    val longtextCol: String?
+    val enumCol: String?
+    val setCol: Char?
+    val jsonCol: String?
+}
+
+@DataSchema
+interface Table3MySql {
+    val id: Int
     val enumCol: String
-    val setCol: String
+    val setCol: Char?
 }
 
 @Ignore
@@ -93,38 +130,39 @@ class MySqlTest {
             val createTableQuery = """
             CREATE TABLE IF NOT EXISTS table1 (
                 id INT AUTO_INCREMENT PRIMARY KEY,
-                bitCol BIT,
-                tinyintCol TINYINT,
-                smallintCol SMALLINT,
-                mediumintCol MEDIUMINT,
-                mediumintUnsignedCol MEDIUMINT UNSIGNED,
-                integerCol INTEGER,
-                intCol INT,
-                integerUnsignedCol INTEGER UNSIGNED,
-                bigintCol BIGINT,
-                floatCol FLOAT,
-                doubleCol DOUBLE,
-                decimalCol DECIMAL,
-                dateCol DATE,
-                datetimeCol DATETIME,
-                timestampCol TIMESTAMP,
-                timeCol TIME,
-                yearCol YEAR,
-                varcharCol VARCHAR(255),
-                charCol CHAR(10),
-                binaryCol BINARY(64),
-                varbinaryCol VARBINARY(128),
-                tinyblobCol TINYBLOB,
-                blobCol BLOB,
-                mediumblobCol MEDIUMBLOB,
-                longblobCol LONGBLOB,
-                textCol TEXT,
-                mediumtextCol MEDIUMTEXT,
-                longtextCol LONGTEXT,
-                enumCol ENUM('Value1', 'Value2', 'Value3'),
-                setCol SET('Option1', 'Option2', 'Option3'),
+                bitCol BIT NOT NULL,
+                tinyintCol TINYINT NOT NULL,
+                smallintCol SMALLINT NOT NULL,
+                mediumintCol MEDIUMINT NOT NULL,
+                mediumintUnsignedCol MEDIUMINT UNSIGNED NOT NULL,
+                integerCol INTEGER NOT NULL,
+                intCol INT NOT NULL,
+                integerUnsignedCol INTEGER UNSIGNED NOT NULL,
+                bigintCol BIGINT NOT NULL,
+                floatCol FLOAT NOT NULL,
+                doubleCol DOUBLE NOT NULL,
+                decimalCol DECIMAL NOT NULL,
+                dateCol DATE NOT NULL,
+                datetimeCol DATETIME NOT NULL,
+                timestampCol TIMESTAMP NOT NULL,
+                timeCol TIME NOT NULL,
+                yearCol YEAR NOT NULL,
+                varcharCol VARCHAR(255) NOT NULL,
+                charCol CHAR(10) NOT NULL,
+                binaryCol BINARY(64) NOT NULL,
+                varbinaryCol VARBINARY(128) NOT NULL,
+                tinyblobCol TINYBLOB NOT NULL,
+                blobCol BLOB NOT NULL,
+                mediumblobCol MEDIUMBLOB NOT NULL ,
+                longblobCol LONGBLOB NOT NULL,
+                textCol TEXT NOT NULL,
+                mediumtextCol MEDIUMTEXT NOT NULL,
+                longtextCol LONGTEXT NOT NULL,
+                enumCol ENUM('Value1', 'Value2', 'Value3') NOT NULL,
+                setCol SET('Option1', 'Option2', 'Option3') NOT NULL,
                 location GEOMETRY,
                 data JSON
+                CHECK (JSON_VALID(data))
             )
             """
 
@@ -168,6 +206,7 @@ class MySqlTest {
                 setCol SET('Option1', 'Option2', 'Option3'),
                 location GEOMETRY,
                 data JSON
+                CHECK (JSON_VALID(data))
             )
             """
 
@@ -261,8 +300,8 @@ class MySqlTest {
                     st.setBytes(23, "blobValue".toByteArray())
                     st.setBytes(24, "mediumblobValue".toByteArray())
                     st.setBytes(25, "longblobValue".toByteArray())
-                    st.setString(26, "textValue$i")
-                    st.setString(27, "mediumtextValue$i")
+                    st.setString(26, null)
+                    st.setString(27, null)
                     st.setString(28, "longtextValue$i")
                     st.setString(29, "Value$i")
                     st.setString(30, "Option$i")
@@ -288,13 +327,21 @@ class MySqlTest {
 
     @Test
     fun `basic test for reading sql tables`() {
-        val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MariaDb>()
-        df1.rowsCount() shouldBe 3
+        val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MySql>()
+        val result = df1.filter { it[Table1MySql::id] == 1 }
+        result[0][26] shouldBe "textValue1"
 
-        val df2 = DataFrame.readSqlTable(connection, "table2").cast<Table1MariaDb>()
-        df2.rowsCount() shouldBe 3
+        val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
+        schema.columns["id"]!!.type shouldBe typeOf<Int>()
+        schema.columns["textCol"]!!.type shouldBe typeOf<String>()
 
-        //TODO: add test for JSON column
+        val df2 = DataFrame.readSqlTable(connection, "table2").cast<Table2MySql>()
+        val result2 = df2.filter { it[Table2MySql::id] == 1 }
+        result2[0][26] shouldBe null
+
+        val schema2 = DataFrame.getSchemaForSqlTable(connection, "table2")
+        schema2.columns["id"]!!.type shouldBe typeOf<Int>()
+        schema2.columns["textCol"]!!.type shouldBe typeOf<String?>()
     }
 
     @Test
@@ -303,14 +350,20 @@ class MySqlTest {
         val sqlQuery = """
             SELECT
                t1.id,
-               t2.enumCol,
+               t1.enumCol,
                t2.setCol
             FROM table1 t1
-            JOIN table2 t2 ON t1.id = t2.id;
+            JOIN table2 t2 ON t1.id = t2.id
         """.trimIndent()
 
-        val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<Table2MariaDb>()
-        df.rowsCount() shouldBe 3
+        val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<Table3MySql>()
+        val result = df.filter { it[Table3MySql::id] == 1 }
+        result[0][2] shouldBe "Option1"
+
+        val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery = sqlQuery)
+        schema.columns["id"]!!.type shouldBe typeOf<Int>()
+        schema.columns["enumCol"]!!.type shouldBe typeOf<Char>()
+        schema.columns["setCol"]!!.type shouldBe typeOf<Char?>()
     }
 
     @Test
@@ -320,13 +373,16 @@ class MySqlTest {
         val table1Df = dataframes[0].cast<Table1MySql>()
 
         table1Df.rowsCount() shouldBe 3
-        table1Df.filter { it[Table1MariaDb::integerCol] > 100 }.rowsCount() shouldBe 2
+        table1Df.filter { it[Table1MySql::integerCol] > 100 }.rowsCount() shouldBe 2
         table1Df[0][11] shouldBe 10.0
+        table1Df[0][26] shouldBe "textValue1"
 
-        val table2Df = dataframes[1].cast<Table1MySql>()
+        val table2Df = dataframes[1].cast<Table2MySql>()
 
         table2Df.rowsCount() shouldBe 3
-        table2Df.filter { it[Table1MariaDb::integerCol] > 400 }.rowsCount() shouldBe 1
+        table2Df.filter { it[Table2MySql::integerCol] != null && it[Table2MySql::integerCol]!! > 400 }
+            .rowsCount() shouldBe 1
         table2Df[0][11] shouldBe 20.0
+        table2Df[0][26] shouldBe null
     }
 }
