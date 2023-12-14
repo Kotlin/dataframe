@@ -6,7 +6,6 @@ import java.sql.ResultSet
 import java.util.Locale
 import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import kotlin.reflect.KType
-import kotlin.reflect.typeOf
 
 /**
  * Represents the H2 database type.
