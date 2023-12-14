@@ -204,7 +204,7 @@ class DataFrameJdbcSymbolProcessorTest {
  
                     }
                 }
-            """.trimIndent()
+                        """.trimIndent()
                     )
                 )
             )
