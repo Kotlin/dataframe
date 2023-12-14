@@ -192,6 +192,7 @@ This table shows the mapping between main library component versions and minimum
 | 0.11.0                   | 8                    | 1.8.20         | 0.11.0-358             | 3.0.0           | 11.0.0               |
 | 0.11.1                   | 8                    | 1.8.20         | 0.11.0-358             | 3.0.0           | 11.0.0               |
 | 0.12.0                   | 8                    | 1.9.0          | 0.11.0-358             | 3.0.0           | 11.0.0               |
+| 0.12.1                   | 8                    | 1.9.0          | 0.11.0-358             | 3.0.0           | 11.0.0               |
 
 ## Usage example
 
