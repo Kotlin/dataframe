@@ -284,4 +284,11 @@ class CreateDataFrameTests {
         // In the test above you can see decompiled code that "fixes" this strange wrapping
         result.toString() shouldBe "Speed1(kmh=null)"
     }
+
+    private class PrivateClass(val a: Int)
+
+    @Test
+    fun `convert private class with public members`() {
+        listOf(PrivateClass(1)).toDataFrame() shouldBe dataFrameOf("a")(1)
+    }
 }

@@ -163,7 +163,7 @@ internal fun convertToDataFrame(
             }
         }
         property.javaField?.isAccessible = true
-//        property.isAccessible = true
+        property.isAccessible = true
 
         var nullable = false
         var hasExceptions = false
