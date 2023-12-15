@@ -4,8 +4,10 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
 import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.move
@@ -14,19 +16,26 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.escapeHTML
 import org.jetbrains.kotlinx.dataframe.io.formatter
+import org.jetbrains.kotlinx.dataframe.io.maxDepth
+import org.jetbrains.kotlinx.dataframe.io.maxWidth
 import org.jetbrains.kotlinx.dataframe.io.print
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 import org.jetbrains.kotlinx.dataframe.io.renderToStringTable
 import org.jetbrains.kotlinx.dataframe.io.toHTML
 import org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
+import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
+import org.jetbrains.kotlinx.dataframe.samples.api.firstName
+import org.jetbrains.kotlinx.dataframe.samples.api.lastName
+import org.jetbrains.kotlinx.dataframe.samples.api.name
+import org.jetbrains.kotlinx.dataframe.samples.api.secondName
 import org.jsoup.Jsoup
 import org.junit.Test
 import java.net.URL
 import java.text.DecimalFormatSymbols
 import kotlin.reflect.typeOf
 
-class RenderingTests {
+class RenderingTests : TestBase() {
 
     @Test
     fun `render row with unicode values as table`() {
@@ -131,18 +140,38 @@ class RenderingTests {
         val df = dataFrameOf("a", "b")(listOf(1, 1), listOf(2, 4))
         val actualHtml = df.toHTML()
 
-        actualHtml.body shouldContain """
+        val body = actualHtml.body.lines().joinToString("") { it.trimStart() }
+
+        body shouldContain """
             <thead>
             <tr>
-            <th>a</th><th>b</th>
+            <th class="bottomBorder" style="text-align:left">a</th>
+            <th class="bottomBorder" style="text-align:left">b</th>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td>[1, 1]</td><td>[2, 4]</td>
+            <td  style="vertical-align:top">[1, 1]</td>
+            <td  style="vertical-align:top">[2, 4]</td>
             </tr>
             </tbody>
             </table>
         """.trimIndent().replace("\n", "")
+    }
+
+    @Test
+    fun `max depth`() {
+        df.maxDepth() shouldBe 1
+        dfGroup.maxDepth() shouldBe 2
+        emptyDataFrame<Any>().maxDepth() shouldBe 0
+    }
+
+    @Test
+    fun `max width`() {
+        dfGroup.asColumnGroup("").maxWidth() shouldBe 8
+        dfGroup.name.maxWidth() shouldBe 4
+        dfGroup.name.firstName.maxWidth() shouldBe 3
+        dfGroup.name.lastName.maxWidth() shouldBe 1
+        dfGroup.name.firstName.secondName.maxWidth() shouldBe 1
     }
 }
