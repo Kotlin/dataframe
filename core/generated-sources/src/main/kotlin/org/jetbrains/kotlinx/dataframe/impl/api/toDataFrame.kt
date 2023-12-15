@@ -21,13 +21,16 @@ import org.jetbrains.kotlinx.dataframe.impl.getListType
 import org.jetbrains.kotlinx.dataframe.impl.projectUpTo
 import org.jetbrains.kotlinx.dataframe.impl.schema.getPropertiesOrder
 import java.lang.reflect.InvocationTargetException
+import java.lang.reflect.Method
 import java.time.temporal.Temporal
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.withNullability
+import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaField
 import kotlin.reflect.typeOf
 
@@ -141,7 +144,26 @@ internal fun convertToDataFrame(
         val property = it
         if (excludes.contains(property)) return@mapNotNull null
 
+        class ValueClassConverter(val unbox: Method, val box: Method)
+
+        val valueClassConverter = (it.returnType.classifier as? KClass<*>)?.let { kClass ->
+            if (!kClass.isValue) null else {
+                val constructor =
+                    requireNotNull(kClass.primaryConstructor) { "value class $kClass is expected to have primary constructor, but couldn't obtain it" }
+                val parameter = constructor.parameters.singleOrNull()
+                    ?: error("conversion of value class $kClass with multiple parameters in constructor is not yet supported")
+                // there's no need to unwrap if underlying field is nullable
+                if (parameter.type.isMarkedNullable) return@let null
+                // box and unbox impl methods are part of binary API of value classes
+                // https://youtrack.jetbrains.com/issue/KT-50518/Boxing-Unboxing-methods-for-JvmInline-value-classes-should-be-public-accessible
+                val unbox = kClass.java.getMethod("unbox-impl")
+                val box = kClass.java.methods.single { it.name == "box-impl" }
+                val valueClassConverter = ValueClassConverter(unbox, box)
+                valueClassConverter
+            }
+        }
         property.javaField?.isAccessible = true
+//        property.isAccessible = true
 
         var nullable = false
         var hasExceptions = false
@@ -151,7 +173,19 @@ internal fun convertToDataFrame(
                 null
             } else {
                 val value = try {
-                    it.call(obj)
+                    val value = it.call(obj)
+                    /**
+                     * here we do what compiler does
+                     * @see org.jetbrains.kotlinx.dataframe.api.CreateDataFrameTests.testKPropertyGetLibrary
+                     */
+                    if (valueClassConverter != null) {
+                        val var1 = value?.let {
+                            valueClassConverter.unbox.invoke(it)
+                        }
+                        var1?.let { valueClassConverter.box.invoke(null, var1) }
+                    } else {
+                        value
+                    }
                 } catch (e: InvocationTargetException) {
                     hasExceptions = true
                     e.targetException

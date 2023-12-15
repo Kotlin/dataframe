@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Ignore
 import org.junit.Test
+import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
 
 class CreateDataFrameTests {
@@ -223,5 +224,64 @@ class CreateDataFrameTests {
             println(func)
             println()
         }
+    }
+
+    // nullable field here - no generated unwrapping code
+    @JvmInline
+    internal value class Speed(val kmh: Number?)
+
+    internal class PathSegment(
+        val id: String,
+        val speedLimit: Speed? = null,
+    )
+
+    @Test
+    fun valueClassNullableField() {
+        val segments = listOf(PathSegment("foo", Speed(2.3)), PathSegment("bar"))
+
+        val df = segments.toDataFrame()
+        df["speedLimit"].values() shouldBe listOf(Speed(2.3), null)
+    }
+
+    @Test
+    fun valueClassNullableField1() {
+        val segments = listOf(PathSegment("foo", Speed(2.3)), PathSegment("bar", Speed(null)))
+
+        val df = segments.toDataFrame()
+        df["speedLimit"].values() shouldBe listOf(Speed(2.3), Speed(null))
+    }
+
+    @JvmInline
+    internal value class Speed1(val kmh: Number)
+
+    internal class PathSegment1(
+        val id: String,
+        val speedLimit: Speed1? = null,
+    )
+
+    @Test
+    fun valueClass() {
+        val segments = listOf(PathSegment1("foo", Speed1(2.3)), PathSegment1("bar"))
+
+        val df = segments.toDataFrame()
+        df["speedLimit"].values() shouldBe listOf(Speed1(2.3), null)
+    }
+
+    @Test
+    fun testKPropertyGet() {
+        val segment = PathSegment("bar")
+        val result = PathSegment::speedLimit.call(segment)
+        result shouldBe null
+    }
+
+    fun call(kProperty0: KProperty<*>, obj: Any) = kProperty0.call(obj)
+
+    @Test
+    fun testKPropertyCallLibrary() {
+        val segment = PathSegment1("bar")
+        val result = call(PathSegment1::speedLimit, segment)
+        // Sudden result! I cannot create this value, so toString.
+        // In the test above you can see decompiled code that "fixes" this strange wrapping
+        result.toString() shouldBe "Speed1(kmh=null)"
     }
 }
