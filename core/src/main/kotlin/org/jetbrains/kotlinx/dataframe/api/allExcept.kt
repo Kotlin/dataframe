@@ -69,7 +69,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *  {@include [Indent]}`|` {@include [ColumnSetName]} {@include [UsageTemplate.ColumnRef]}
      *
-     *  {@include [Indent]}`|` {@include [ColumnSetName]}**`(`**{@include [UsageTemplate.ColumnRef]}**`, ..)`**
+     *  {@include [Indent]}`|` .{@include [ColumnSetName]}**`(`**{@include [UsageTemplate.ColumnRef]}**`, ..)`**
      * }
      * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
      *  {@include [Indent]}{@include [ColumnGroupName]} **` { `**{@include [UsageTemplate.ColumnsSelectorRef]}**` \\} `**
@@ -198,7 +198,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @setArg [CommonExceptDocs.ParamArg] @param [other\] A [ColumnsResolver] containing the columns that need to be
      *   excluded from the [ColumnSet].
      * @setArg [ColumnSetInfixDocs.ArgumentArg1] `("age" `[and][ColumnsSelectionDsl.and]` height)`
-     * @setArg [ColumnSetInfixDocs.ArgumentArg2] `{ name.firstName }`
+     * @setArg [ColumnSetInfixDocs.ArgumentArg2] `(name.firstName)`
      */
     public infix fun <C> ColumnSet<C>.except(other: ColumnsResolver<*>): ColumnSet<C> =
         exceptInternal(other)
