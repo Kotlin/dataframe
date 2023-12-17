@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
-Two ways to create `DataFrame` with a subset of columns:
+Two ways to create [`DataFrame`](DataFrame.md) with a subset of columns:
 
 **indexing:**
 
@@ -32,6 +32,7 @@ df["age", "weight"]
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.getColumnsByName.html"/>
 <!---END-->
 
 See [DataFrame indexing](indexing.md)
@@ -66,6 +67,7 @@ df.select("age", "weight")
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.select.html"/>
 <!---END-->
 
 See [column selectors](ColumnSelectors.md)

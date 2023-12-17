@@ -4,14 +4,21 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.file.FileCollection
+import org.gradle.api.logging.LogLevel
+import org.gradle.internal.logging.services.DefaultLoggingManager
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.withType
-import org.jetbrains.kotlin.gradle.dsl.*
+import org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode
+import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.File
 import java.net.URL
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.util.*
 
 class SchemaGeneratorPlugin : Plugin<Project> {
 
@@ -44,7 +51,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         target: Project,
         extension: SchemaGeneratorExtension,
         appliedPlugin: AppliedPlugin?,
-        schema: Schema
+        schema: Schema,
     ): Task {
         val interfaceName = getInterfaceName(schema)
         fun propertyError(property: String): Nothing {
@@ -98,7 +105,8 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         val defaultPath = schema.defaultPath ?: extension.defaultPath ?: true
         val delimiters = schema.withNormalizationBy ?: extension.withNormalizationBy ?: setOf('\t', ' ', '_')
 
-        return target.tasks.create("generateDataFrame${interfaceName}", GenerateDataSchemaTask::class.java) {
+        return target.tasks.create("generateDataFrame$interfaceName", GenerateDataSchemaTask::class.java) {
+            (logging as? DefaultLoggingManager)?.setLevelInternal(LogLevel.QUIET)
             group = GROUP
             data.set(schema.data)
             this.interfaceName.set(interfaceName)
@@ -106,6 +114,8 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             this.src.set(src)
             this.schemaVisibility.set(visibility)
             this.csvOptions.set(schema.csvOptions)
+            this.jsonOptions.set(schema.jsonOptions)
+            this.jdbcOptions.set(schema.jdbcOptions) // TODO: probably remove
             this.defaultPath.set(defaultPath)
             this.delimiters.set(delimiters)
         }
@@ -115,7 +125,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         val rawName = schema.name?.substringAfterLast('.')
             ?: fileName(schema.data)
                 ?.toCamelCaseByDelimiters(delimiters)
-                ?.capitalize()
+                ?.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
                 ?.removeSurrounding("`")
             ?: return null
         NameChecker.checkValidIdentifier(rawName)
@@ -126,7 +136,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
 
     private class AppliedPlugin(
         val kotlinExtension: KotlinProjectExtension,
-        val sourceSetConfiguration: SourceSetConfiguration<*>
+        val sourceSetConfiguration: SourceSetConfiguration<*>,
     )
 
     private class SourceSetConfiguration<T : KotlinProjectExtension>(

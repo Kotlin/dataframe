@@ -1,6 +1,6 @@
 [//]: # (title: toMap)
 
-Converts `DataFrame` into `Map<String, List<*>>` from column names to column values.
+Converts [`DataFrame`](DataFrame.md) into `Map<String, List<*>>` from column names to column values.
 
 ```
 toMap()

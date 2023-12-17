@@ -8,6 +8,7 @@ plugins {
 
 repositories {
     mavenCentral()
+    mavenLocal() // in case of local dataframe development
 }
 
 kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotlin/")
@@ -15,10 +16,10 @@ kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotl
 application.mainClass.set("org.jetbrains.kotlinx.dataframe.examples.movies.MoviesWithDataClassKt")
 
 dependencies {
-    implementation(project(":core"))
+    // implementation("org.jetbrains.kotlinx:dataframe:X.Y.Z")
+    implementation(project(":"))
 }
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
 }
-

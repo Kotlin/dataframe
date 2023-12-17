@@ -12,7 +12,7 @@ df.count()
 
 <!---END-->
 
-Pass [row condition](DataRow.md#row-conditions) to count number of rows that satisfy to that condition:
+Pass a [row condition](DataRow.md#row-conditions) to count only the number of rows that satisfy that condition:
 
 <!---FUN countCondition-->
 
@@ -22,7 +22,8 @@ df.count { age > 15 }
 
 <!---END-->
 
-When `count` is used in [`groupBy`](groupBy.md#aggregation) or [`pivot`](pivot.md#aggregation) aggregations, it counts rows for every data group:
+When `count` is used in [`groupBy`](groupBy.md#aggregation) or [`pivot`](pivot.md#aggregation) aggregations,
+it counts rows for every data group:
 
 <!---FUN countAggregation-->
 
@@ -32,4 +33,5 @@ df.pivot { city }.count { age > 18 }
 df.pivot { name.firstName }.groupBy { name.lastName }.count()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.countAggregation.html"/>
 <!---END-->

@@ -1,0 +1,164 @@
+# DEMO for DataFrame, this might differ from the actual API
+openapi: 3.0.0
+info:
+  title: Magical Location Clock API
+  version: 1.0.0
+  contact:
+    email: mlc@jolanrensen.nl
+    url: mlc.jolanrensen.nl
+    name: Jolan Rensen
+paths:
+  "/peopleWithLocation":
+    get:
+      summary: ''
+      description: ''
+      parameters:
+        - in: query
+          name: apiKey
+          required: true
+          schema:
+            type: string
+            example: YOUR PASSWORD
+          description: The API key or password you set.
+        - in: query
+          name: type
+          required: false
+          description: How to receive the data
+          schema:
+            type: string
+            default: json
+            enum:
+              - json
+      #              - xml disabled for now
+      #              - readable
+      operationId: ''
+      responses:
+        '200':
+          description: Default response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PeopleWithLocation"
+  "/locationsWithPeople":
+    get:
+      summary: ''
+      description: ''
+      parameters:
+        - in: query
+          name: apiKey
+          required: true
+          schema:
+            type: string
+            example: YOUR PASSWORD
+          description: The API key or password you set.
+        - in: query
+          name: type
+          required: false
+          description: How to receive the data
+          schema:
+            type: string
+            default: json
+            enum:
+              - json
+      #              - xml disabled for now
+      #              - readable
+      operationId: ''
+      responses:
+        '200':
+          description: Default response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/LocationsWithPeople"
+externalDocs:
+  url: https://mlc.jolanrensen.nl/help/group-data-api
+security: [ ]
+servers:
+  - url: https://us-central1-jrclockwidget.cloudfunctions.net/getGroupData/{groupID}/
+    description: MLC Group Data API
+    variables:
+      groupID:
+        description: The group ID
+        default: "1234"
+components:
+  links: { }
+  callbacks: { }
+  schemas:
+
+    Gps:
+      type: object
+      description: The Gps coordinates of a person or location
+      required:
+        - latitude
+        - longitude
+      properties:
+        latitude:
+          type: number
+          format: double
+          description: The latitude of the location
+          example: 52.123456
+        longitude:
+          type: number
+          format: double
+          description: The longitude of the location
+          example: 4.123456
+
+    PersonWithLocation:
+      type: object
+      required:
+        - name
+        - location
+        - locationId
+      properties:
+        name:
+          type: string
+          description: The name of the person.
+          example: Person A
+        location:
+          type: string
+          description: The name of the location the person is currently at.
+          example: Home
+        locationId:
+          type: integer
+          format: int64
+          description: The ID of the location the person is currently at. 0 if the person is at no location.
+          example: 1237
+        gps:
+          $ref: "#/components/schemas/Gps"
+
+    LocationWithPeople:
+      type: object
+      required:
+        - name
+        - people
+        - peopleIds
+      properties:
+        name:
+          type: string
+          description: The name of the location.
+          example: Home
+        people:
+          type: array
+          description: The names of the people currently at this location.
+          items:
+            type: string
+            example: Person A
+        peopleIds:
+          type: array
+          description: The IDs of the people currently at this location.
+          items:
+            type: integer
+            format: int64
+            example: 1237
+        gps:
+          $ref: "#/components/schemas/Gps"
+
+    PeopleWithLocation:
+      type: object
+      additionalProperties:
+        $ref: "#/components/schemas/PersonWithLocation"
+
+    LocationsWithPeople:
+      type: object
+      additionalProperties:
+        $ref: "#/components/schemas/LocationWithPeople"

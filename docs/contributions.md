@@ -1,6 +1,6 @@
 # Contributing to the documentation
 
-DataFrame documentation is built from `.md` files in `docs/StardustDocs/topics`. 
+Kotlin DataFrame library's documentation is built from `.md` files in `docs/StardustDocs/topics`. 
 If you want to contribute to the documentation, find a suitable topic or create a new one.  
 Newly created topic must be added to a `docs/StardustDocs/topics/d.tree` to become visible in a navigation tree.
 

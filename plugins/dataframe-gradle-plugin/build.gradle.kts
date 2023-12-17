@@ -1,33 +1,40 @@
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+
 plugins {
     `kotlin-dsl`
     `java-gradle-plugin`
     `maven-publish`
     id("com.gradle.plugin-publish") version "0.15.0"
+    id("org.jmailen.kotlinter")
 }
 
 repositories {
     mavenCentral()
-    maven(url="https://jitpack.io")
+    maven(url = "https://jitpack.io")
     google()
 }
 
 group = "org.jetbrains.kotlinx.dataframe"
 
 dependencies {
+    api(libs.kotlin.reflect)
     implementation(project(":core"))
     implementation(project(":dataframe-arrow"))
+    implementation(project(":dataframe-openapi"))
     implementation(project(":dataframe-excel"))
+    implementation(project(":dataframe-jdbc"))
     implementation(kotlin("gradle-plugin-api"))
     implementation(kotlin("gradle-plugin"))
     implementation("com.beust:klaxon:5.5")
     implementation(libs.ksp.gradle)
     implementation(libs.ksp.api)
 
-    testImplementation("junit:junit:4.12")
+    testImplementation("junit:junit:4.13.1")
     testImplementation("io.kotest:kotest-assertions-core:4.6.0")
-    testImplementation("com.android.tools.build:gradle-api:4.1.1")
-    testImplementation("com.android.tools.build:gradle:4.1.1")
+    testImplementation("com.android.tools.build:gradle-api:7.3.1")
+    testImplementation("com.android.tools.build:gradle:7.3.1")
     testImplementation("io.ktor:ktor-server-netty:1.6.7")
+    testImplementation(libs.h2db)
     testImplementation(gradleApi())
 }
 
@@ -44,7 +51,10 @@ tasks.withType<ProcessResources> {
         filter {
             it.replace(
                 "%DATAFRAME_JAR%",
-                project(":core").configurations.getByName("instrumentedJars").artifacts.single().file.absolutePath.replace(File.separatorChar, '/')
+                project(":core").configurations.getByName("instrumentedJars").artifacts.single().file.absolutePath.replace(
+                    File.separatorChar,
+                    '/'
+                )
             )
         }
     }
@@ -78,7 +88,8 @@ pluginBundle {
         "deprecatedSchemaGeneratorPlugin" {
             // id is captured from java-gradle-plugin configuration
             displayName = "Kotlin Dataframe gradle plugin"
-            description = "The plugin was moved to 'org.jetbrains.kotlinx.dataframe'. Gradle plugin providing task for inferring data schemas from your CSV or JSON data"
+            description =
+                "The plugin was moved to 'org.jetbrains.kotlinx.dataframe'. Gradle plugin providing task for inferring data schemas from your CSV or JSON data"
             tags = listOf("dataframe", "kotlin")
         }
     }
@@ -98,13 +109,13 @@ tasks.withType<JavaCompile>().all {
 }
 
 sourceSets {
+    val main by getting
+    val test by getting
+    val testRuntimeClasspath by configurations
     create("integrationTest") {
-        withConvention(org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet::class) {
-            kotlin.srcDir("src/integrationTest/kotlin")
-            resources.srcDir("src/integrationTest/resources")
-            compileClasspath += sourceSets["main"].output + sourceSets["test"].output + configurations["testRuntimeClasspath"]
-            runtimeClasspath += output + compileClasspath + sourceSets["test"].runtimeClasspath
-        }
+        kotlin.srcDir("src/integrationTest/kotlin")
+        compileClasspath += main.output + test.output + testRuntimeClasspath
+        runtimeClasspath += output + compileClasspath + test.runtimeClasspath
     }
 }
 
@@ -117,9 +128,14 @@ val integrationTestTask = task<Test>("integrationTest") {
     dependsOn(":plugins:symbol-processor:publishToMavenLocal")
     dependsOn(":dataframe-arrow:publishToMavenLocal")
     dependsOn(":dataframe-excel:publishToMavenLocal")
- //   dependsOn(":publishApiPublicationToMavenLocal")
+    dependsOn(":dataframe-jdbc:publishToMavenLocal")
+    dependsOn(":dataframe-openapi:publishToMavenLocal")
+    dependsOn(":publishApiPublicationToMavenLocal")
     dependsOn(":dataframe-arrow:publishDataframeArrowPublicationToMavenLocal")
     dependsOn(":dataframe-excel:publishDataframeExcelPublicationToMavenLocal")
+    dependsOn(":dataframe-jdbc:publishDataframeJDBCPublicationToMavenLocal")
+    dependsOn(":dataframe-openapi:publishDataframeOpenApiPublicationToMavenLocal")
+    dependsOn(":plugins:symbol-processor:publishMavenPublicationToMavenLocal")
     dependsOn(":core:publishCorePublicationToMavenLocal")
     description = "Runs integration tests."
     group = "verification"

@@ -19,6 +19,7 @@ internal class SchemaGeneratorPluginTest {
     @Test
     fun `plugin configured via configure`() {
         val (_, result) = runGradleBuild(":generateDataFrameTest") {
+            // language=kts
             """
             import java.net.URL
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
@@ -47,6 +48,7 @@ internal class SchemaGeneratorPluginTest {
     @Test
     fun `plugin configured via extension DSL`() {
         val (_, result) = runGradleBuild(":generateDataFrameTest") {
+            // language=kts
             """
             import java.net.URL
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
@@ -77,6 +79,7 @@ internal class SchemaGeneratorPluginTest {
         val buildDir = Files.createTempDirectory("test").toFile()
         val buildFile = File(buildDir, "build.gradle")
         buildFile.writeText(
+            // language=groovy
             """
                 import java.net.URL
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
@@ -108,6 +111,7 @@ internal class SchemaGeneratorPluginTest {
         val buildDir = Files.createTempDirectory("test").toFile()
         val buildFile = File(buildDir, "build.gradle")
         buildFile.writeText(
+            // language=groovy
             """
                 import java.net.URL
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
@@ -138,6 +142,7 @@ internal class SchemaGeneratorPluginTest {
     @Test
     fun `plugin configure multiple schemas from URLs via extension`() {
         val (_, result) = runGradleBuild(":generateDataFrames") {
+            // language=kts
             """
             import java.net.URL
             
@@ -178,6 +183,7 @@ internal class SchemaGeneratorPluginTest {
                 File(it, TestData.csvName).writeText(TestData.csvSample)
                 File(it, TestData.jsonName).writeText(TestData.jsonSample)
             }
+            // language=kts
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
@@ -208,12 +214,12 @@ internal class SchemaGeneratorPluginTest {
         result.task(":generateDataFrameSchema")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
-
     @Test
     fun `data is string and relative path`() {
         val (_, result) = runGradleBuild(":generateDataFrameTest") { buildDir ->
             val dataDir = File(buildDir, "data").also { it.mkdirs() }
             File(dataDir, TestData.jsonName).writeText(TestData.jsonSample)
+            // language=kts
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
@@ -244,6 +250,7 @@ internal class SchemaGeneratorPluginTest {
             val dataDir = File(buildDir, "data").also { it.mkdirs() }
             val file = File(dataDir, TestData.jsonName).also { it.writeText(TestData.jsonSample) }
             val absolutePath = file.absolutePath.replace(File.separatorChar, '/')
+            // language=kts
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
@@ -271,6 +278,8 @@ internal class SchemaGeneratorPluginTest {
     @Test
     fun `data is string and url`() {
         val (_, result) = runGradleBuild(":generateDataFrameTest") { buildDir ->
+            println("Build dir: $buildDir")
+            // language=kts
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
@@ -296,14 +305,46 @@ internal class SchemaGeneratorPluginTest {
     }
 
     @Test
+    fun `data is OpenApi string and url`() {
+        val (_, result) = runGradleBuild(":generateDataFrameTest") { buildDir ->
+            println("Build dir: $buildDir")
+            // language=kts
+            """
+            import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
+               
+            plugins {
+                kotlin("jvm") version "$KOTLIN_VERSION"
+                id("org.jetbrains.kotlinx.dataframe")
+            }
+            
+            repositories {
+                mavenCentral() 
+            }
+
+            dataframes {
+                schema {
+                    data = "https://raw.githubusercontent.com/Kotlin/dataframe/2ad1c2f5d27267fa9b2abde1bf611fa50c5abce9/data/petstore.json"
+                    name = "Test"
+                    packageName = "org.test"
+                }
+            }
+            """.trimIndent()
+        }
+        result.task(":generateDataFrameTest")?.outcome shouldBe TaskOutcome.SUCCESS
+    }
+
+    @Test
     fun `custom csv delimiter`() {
         val (buildDir, result) = runGradleBuild(":generateDataFrameTest") { buildDir ->
             val csv = "semicolons.csv"
             val data = File(buildDir, csv)
-            data.writeText("""
+            data.writeText(
+                """
                 a;b;c
                 1;2;3
-            """.trimIndent())
+                """.trimIndent()
+            )
+            // language=kts
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                

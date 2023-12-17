@@ -1,6 +1,6 @@
 [//]: # (title: append)
 
-Adds one or several rows to `DataFrame`
+Adds one or several rows to [`DataFrame`](DataFrame.md)
 ```kotlin
 df.append (
     "Mike", 15,

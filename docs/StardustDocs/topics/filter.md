@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
-Returns `DataFrame` with rows that satisfy [row condition](DataRow.md#row-conditions)
+Returns [`DataFrame`](DataFrame.md) with rows that satisfy [row condition](DataRow.md#row-conditions)
 
 <!---FUN filter-->
 <tabs>
@@ -33,11 +33,12 @@ df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.filter.html"/>
 <!---END-->
 
 ## filterBy
 
-Returns `DataFrame` with rows that have value `true` in given column of type `Boolean`.
+Returns [`DataFrame`](DataFrame.md) with rows that have value `true` in given column of type `Boolean`.
 
 <!---FUN filterBy-->
 <tabs>
@@ -63,4 +64,5 @@ df.filterBy("isHappy")
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.filterBy.html"/>
 <!---END-->

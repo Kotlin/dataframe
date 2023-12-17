@@ -14,7 +14,7 @@
     --link-hover: #1a466c;
 }
 
-:root[theme="dark"], :root [data-jp-theme-light="false"]{
+:root[theme="dark"], :root [data-jp-theme-light="false"], .dataframe_dark{
     --background: #303030;
     --background-odd: #3c3c3c;
     --background-hover: #464646;
@@ -28,6 +28,10 @@
     --link-color: #008dc0;
     --link-color-pale: #97e1fb;
     --link-hover: #00688e;
+}
+
+p.dataframe_description {
+    color: var(--text-color-dark);
 }
 
 table.dataframe {

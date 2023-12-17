@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Returns `DataFrame` with rows sorted by one or several columns.
+Returns [`DataFrame`](DataFrame.md) with rows sorted by one or several columns.
 
 By default, columns are sorted in ascending order with `null` values going first. Available modifiers:
 * `.desc` — changes column sort order from ascending to descending
@@ -42,11 +42,12 @@ df.sortBy { "weight".nullsLast() }
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortBy.html"/>
 <!---END-->
 
 ## sortByDesc
 
-Returns `DataFrame` sorted by one or several columns in descending order.
+Returns [`DataFrame`](DataFrame.md) sorted by one or several columns in descending order.
 
 <!---FUN sortByDesc-->
 <tabs>
@@ -74,11 +75,12 @@ df.sortByDesc("age", "weight")
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortByDesc.html"/>
 <!---END-->
 
 ## sortWith
 
-Returns `DataFrame` sorted with comparator.
+Returns [`DataFrame`](DataFrame.md) sorted with comparator.
 
 <!---FUN sortWith-->
 
@@ -92,4 +94,5 @@ df.sortWith { row1, row2 ->
 }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortWith.html"/>
 <!---END-->

@@ -1,0 +1,285 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+  license:
+    name: MIT
+servers:
+  - url: http://petstore.swagger.io/v1
+paths:
+  /pets:
+    get:
+      summary: List all pets
+      operationId: listPets
+      tags:
+        - pets
+      parameters:
+        - name: limit
+          in: query
+          description: How many items to return at one time (max 100)
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: A paged array of pets
+          headers:
+            x-next:
+              description: A link to the next page of responses
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pets"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      summary: Create a pet
+      operationId: createPets
+      tags:
+        - pets
+      responses:
+        '201':
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /pets/{petId}:
+    get:
+      summary: Info for a specific pet
+      operationId: showPetById
+      tags:
+        - pets
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          description: The id of the pet to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pet"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+
+    Dog:
+      nullable: false
+      required:
+        - breed # required non-nullable enum -> breed: Breed
+        - tag
+      allOf:
+        - $ref: '#/components/schemas/Pet'
+        - type: object
+          # all other properties specific to a `Dog`
+          properties:
+            bark:
+              type: boolean
+            breed:
+              type: string
+              enum: [ Dingo, Husky, Retriever, Shepherd ]
+
+    Cat:
+      required:
+        - breed # required but nullable enum -> breed: Breed?
+        - eye_color # required but nullable enum
+        - hunts # required but nullable boolean
+      allOf:
+        - $ref: '#/components/schemas/Pet'
+        - type: object
+          # all other properties specific to a `Cat`
+          properties:
+            hunts:
+              nullable: true
+              type: boolean
+            age:
+              oneOf:
+                - type: integer
+                - type: number
+            breed:
+              type: string
+              enum: [ Ragdoll, Shorthair, Persian, Maine Coon, maine_coon, "", 1, null ]
+
+    EyeColor: # nullable enum in reference
+      type: string
+      enum:
+        - Blue
+        - Yellow
+        - Brown
+        - Green
+        - null
+
+    Pet:
+      type: object
+      required:
+        - id
+        - name
+        - eye_color # required but nullable enum -> EyeColor?
+        - pet_type
+      discriminator:
+        propertyName: pet_type
+      properties:
+        pet_type:
+          type: string
+        value:
+          anyOf:
+            - type: integer
+              format: int64
+            - type: string
+        name:
+          type: string
+        tag:
+          type: string
+        other:
+          not:
+            type: integer
+        eye_color:
+          $ref: '#/components/schemas/EyeColor'
+
+    PetRef:
+      oneOf:
+        - $ref: "#/components/schemas/Cat"
+        - $ref: "#/components/schemas/Dog"
+
+    AlsoCat:
+      $ref: "#/components/schemas/Cat"
+
+    Integer:
+      type: integer
+
+    IntList:
+      type: object
+      required:
+        - list
+      properties:
+        list:
+          type: array
+          items:
+            type: integer
+
+    ErrorHolder:
+      type: object
+      required:
+        - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: "#/components/schemas/Error"
+
+    Error:
+      type: object
+      required:
+        - code
+        - message
+        - petRef
+        - objectWithAdditional
+        - objectWithAdditional2
+        - objectWithAdditional3
+      properties:
+        ints:
+          $ref: "#/components/schemas/IntList"
+        petRef:
+          $ref: "#/components/schemas/PetRef"
+        pets:
+          type: array
+          items:
+            oneOf:
+              - $ref: "#/components/schemas/Cat"
+              - $ref: "#/components/schemas/Dog"
+              - type: object
+                properties:
+                  id:
+                    type: integer
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        objectWithAdditional:
+          $ref: "#/components/schemas/ObjectWithAdditionalProperties"
+        objectWithAdditionalList:
+          type: array
+          items:
+            $ref: "#/components/schemas/ObjectWithAdditionalProperties"
+        objectWithAdditional2:
+          type: object
+          nullable: true
+          additionalProperties:
+            oneOf:
+              - type: string
+              - type: integer
+        objectWithAdditional3:
+          type: object
+          additionalProperties:
+            nullable: true
+            oneOf:
+              - type: array
+                items:
+                  type: integer
+              - $ref: "#/components/schemas/Cat"
+              - $ref: "#/components/schemas/Dog"
+              - type: object
+                properties:
+                  id:
+                    type: integer
+        array:
+          type: array
+          items:
+            $ref: "#/components/schemas/SomeArrayArray"
+
+    ObjectWithAdditionalProperties:
+      type: object
+      nullable: false
+      additionalProperties:
+        nullable: false
+        type: string
+
+    SomeArrayArray:
+      type: array
+      items:
+        $ref: "#/components/schemas/SomeArray"
+
+    SomeArray:
+      nullable: false
+      type: array
+      items:
+        type: object
+        required:
+          - op
+          - path
+        properties:
+          op:
+            type: string
+            enum:
+              - add
+              - remove
+              - replace
+          path:
+            type: string
+          value:
+            type: object
+          objectWithAdditional:
+            type: object
+            nullable: true
+            additionalProperties:
+              type: integer

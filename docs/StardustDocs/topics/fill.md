@@ -16,11 +16,12 @@ df.fillNulls { colsOf<Int?>() }.with { -1 }
 df.update { colsOf<Int?>() }.where { it == null }.with { -1 }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.fillNulls.html"/>
 <!---END-->
 
 ## fillNaNs
 
-Replaces `Double.NaN` and `Float.NaN` values with given value or expression.
+Replaces [`NaN` values](nanAndNa.md#nan) (`Double.NaN` and `Float.NaN`) with given value or expression.
 
 <!---FUN fillNaNs-->
 
@@ -28,16 +29,18 @@ Replaces `Double.NaN` and `Float.NaN` values with given value or expression.
 df.fillNaNs { colsOf<Double>() }.withZero()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.fillNaNs.html"/>
 <!---END-->
 
 ## fillNA
 
-Replaces `null`, `Double.NaN` and `Float.NaN` values with given value or expression.
+Replaces [`NA` values](nanAndNa.md#na) (`null`, `Double.NaN`, and `Float.NaN`) with given value or expression.
 
 <!---FUN fillNA-->
 
 ```kotlin
-df.fillNA { weight }.withValue(-1)
+df.fillNA { weight }.with { -1 }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.fillNA.html"/>
 <!---END-->

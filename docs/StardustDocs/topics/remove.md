@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Returns `DataFrame` without selected columns.
+Returns [`DataFrame`](DataFrame.md) without selected columns.
 
 ```text
 remove { columns }
@@ -36,4 +36,5 @@ df.remove("name", "weight")
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.remove.html"/>
 <!---END-->

@@ -1,6 +1,6 @@
 name: kotlin-jupyter
 dependencies:
-  - kotlin-jupyter-kernel>=0.11.0.16
+  - kotlin-jupyter-kernel>=0.11.0.170
   - numpy=1.21.2
   - python=3.9
 channels:

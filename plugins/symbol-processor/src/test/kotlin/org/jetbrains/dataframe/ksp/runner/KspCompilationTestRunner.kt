@@ -40,14 +40,14 @@ internal object KspCompilationTestRunner {
         kspCompilation.kspArgs.putAll(params.options)
         kspCompilation.symbolProcessorProviders = listOf(DataFrameSymbolProcessorProvider())
         kspCompilation.compile().also {
-            println(it.messages);
+            println(it.messages)
             if (it.exitCode == KotlinCompilation.ExitCode.COMPILATION_ERROR) {
                 return KotlinCompileTestingCompilationResult(
-                    it,
-                    false,
-                    emptyList(),
-                    emptyList(),
-                    combinedOutputStream.toString(Charsets.UTF_8)
+                    delegate = it,
+                    successfulCompilation = false,
+                    kspGeneratedFiles = emptyList(),
+                    outputSourceDirs = emptyList(),
+                    rawOutput = combinedOutputStream.toString(Charsets.UTF_8)
                 )
             }
         }

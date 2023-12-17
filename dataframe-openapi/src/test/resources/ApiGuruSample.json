@@ -1,0 +1,717 @@
+{
+  "1forge.com": {
+    "added": "2017-05-30T08:34:14.000Z",
+    "preferred": "0.0.1",
+    "versions": {
+      "0.0.1": {
+        "added": "2017-05-30T08:34:14.000Z",
+        "info": {
+          "contact": {
+            "email": "contact@1forge.com",
+            "name": "1Forge",
+            "url": "http://1forge.com"
+          },
+          "description": "Stock and Forex Data and Realtime Quotes",
+          "title": "1Forge Finance APIs",
+          "version": "0.0.1",
+          "x-apisguru-categories": [
+            "financial"
+          ],
+          "x-logo": {
+            "backgroundColor": "#24292e",
+            "url": "https://api.apis.guru/v2/cache/logo/https_1forge.com_assets_images_f-blue.svg"
+          },
+          "x-origin": [
+            {
+              "format": "swagger",
+              "url": "http://1forge.com/openapi.json",
+              "version": "2.0"
+            }
+          ],
+          "x-providerName": "1forge.com"
+        },
+        "updated": "2017-06-27T16:49:57.000Z",
+        "swaggerUrl": "https://api.apis.guru/v2/specs/1forge.com/0.0.1/swagger.json",
+        "swaggerYamlUrl": "https://api.apis.guru/v2/specs/1forge.com/0.0.1/swagger.yaml",
+        "openapiVer": "2.0"
+      }
+    }
+  },
+  "1password.com:events": {
+    "added": "2021-07-19T10:17:09.188Z",
+    "preferred": "1.0.0",
+    "versions": {
+      "1.0.0": {
+        "added": "2021-07-19T10:17:09.188Z",
+        "info": {
+          "description": "1Password Events API Specification.",
+          "title": "Events API",
+          "version": "1.0.0",
+          "x-apisguru-categories": [
+            "security"
+          ],
+          "x-logo": {
+            "url": "https://api.apis.guru/v2/cache/logo/https_upload.wikimedia.org_wikipedia_commons_thumb_e_e3_1password-logo.svg_1280px-1password-logo.svg.png"
+          },
+          "x-origin": [
+            {
+              "format": "openapi",
+              "url": "https://i.1password.com/media/1password-events-reporting/1password-events-api.yaml",
+              "version": "3.0"
+            }
+          ],
+          "x-providerName": "1password.com",
+          "x-serviceName": "events"
+        },
+        "updated": "2021-07-22T10:32:52.774Z",
+        "swaggerUrl": "https://api.apis.guru/v2/specs/1password.com/events/1.0.0/openapi.json",
+        "swaggerYamlUrl": "https://api.apis.guru/v2/specs/1password.com/events/1.0.0/openapi.yaml",
+        "openapiVer": "3.0.0"
+      }
+    }
+  },
+  "1password.local:connect": {
+    "added": "2021-04-16T15:56:45.939Z",
+    "preferred": "1.3.0",
+    "versions": {
+      "1.3.0": {
+        "added": "2021-04-16T15:56:45.939Z",
+        "info": {
+          "contact": {
+            "email": "support@1password.com",
+            "name": "1Password Integrations",
+            "url": "https://support.1password.com/"
+          },
+          "description": "REST API interface for 1Password Connect.",
+          "title": "1Password Connect",
+          "version": "1.3.0",
+          "x-apisguru-categories": [
+            "security"
+          ],
+          "x-logo": {
+            "url": "https://api.apis.guru/v2/cache/logo/https_upload.wikimedia.org_wikipedia_commons_thumb_e_e3_1password-logo.svg_1280px-1password-logo.svg.png"
+          },
+          "x-origin": [
+            {
+              "format": "openapi",
+              "url": "https://i.1password.com/media/1password-connect/1password-connect-api.yaml",
+              "version": "3.0"
+            }
+          ],
+          "x-providerName": "1password.local",
+          "x-serviceName": "connect"
+        },
+        "updated": "2021-07-26T08:51:53.432Z",
+        "swaggerUrl": "https://api.apis.guru/v2/specs/1password.local/connect/1.3.0/openapi.json",
+        "swaggerYamlUrl": "https://api.apis.guru/v2/specs/1password.local/connect/1.3.0/openapi.yaml",
+        "openapiVer": "3.0.2"
+      }
+    }
+  },
+  "6-dot-authentiqio.appspot.com": {
+    "added": "2017-03-15T14:45:58.000Z",
+    "preferred": "6",
+    "versions": {
+      "6": {
+        "added": "2017-03-15T14:45:58.000Z",
+        "info": {
+          "contact": {
+            "email": "hello@authentiq.com",
+            "name": "Authentiq team",
+            "url": "http://authentiq.io/support"
+          },
+          "description": "Strong authentication, without the passwords.",
+          "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+          },
+          "termsOfService": "http://authentiq.com/terms/",
+          "title": "Authentiq API",
+          "version": "6",
+          "x-apisguru-categories": [
+            "security"
+          ],
+          "x-logo": {
+            "backgroundColor": "#F26641",
+            "url": "https://api.apis.guru/v2/cache/logo/https_www.authentiq.com_theme_images_authentiq-logo-a-inverse.svg"
+          },
+          "x-origin": [
+            {
+              "format": "openapi",
+              "url": "https://raw.githubusercontent.com/AuthentiqID/authentiq-docs/master/docs/swagger/issuer.yaml",
+              "version": "3.0"
+            }
+          ],
+          "x-providerName": "6-dot-authentiqio.appspot.com"
+        },
+        "updated": "2021-06-21T12:16:53.715Z",
+        "swaggerUrl": "https://api.apis.guru/v2/specs/6-dot-authentiqio.appspot.com/6/openapi.json",
+        "swaggerYamlUrl": "https://api.apis.guru/v2/specs/6-dot-authentiqio.appspot.com/6/openapi.yaml",
+        "openapiVer": "3.0.0"
+      }
+    }
+  },
+  "ably.io:platform": {
+    "added": "2019-07-13T11:28:07.000Z",
+    "preferred": "1.1.0",
+    "versions": {
+      "1.1.0": {
+        "added": "2019-07-13T11:28:07.000Z",
+        "info": {
+          "contact": {
+            "email": "support@ably.io",
+            "name": "Ably Support",
+            "url": "https://www.ably.io/contact",
+            "x-twitter": "ablyrealtime"
+          },
+          "description": "The [REST API specification](https://www.ably.io/documentation/rest-api) for Ably.",
+          "title": "Platform API",
+          "version": "1.1.0",
+          "x-apisguru-categories": [
+            "cloud"
+          ],
+          "x-logo": {
+            "url": "https://api.apis.guru/v2/cache/logo/https_twitter.com_ablyrealtime_profile_image"
+          },
+          "x-origin": [
+            {
+              "format": "openapi",
+              "url": "https://raw.githubusercontent.com/ably/open-specs/main/definitions/platform-v1.yaml",
+              "version": "3.0"
+            }
+          ],
+          "x-providerName": "ably.io",
+          "x-serviceName": "platform"
+        },
+        "updated": "2021-07-26T09:42:14.653Z",
+        "swaggerUrl": "https://api.apis.guru/v2/specs/ably.io/platform/1.1.0/openapi.json",
+        "swaggerYamlUrl": "https://api.apis.guru/v2/specs/ably.io/platform/1.1.0/openapi.yaml",
+        "openapiVer": "3.0.1"
+      }
+    }
+  },
+  "ably.net:control": {
+    "added": "2021-07-26T09:45:31.536Z",
+    "preferred": "1.0.14",
+    "versions": {
+      "1.0.14": {
+        "added": "2021-07-26T09:45:31.536Z",
+        "info": {
+          "contact": {
+            "x-twitter": "ablyrealtime"
+          },
+          "description": "Use the Control API to manage your applications, namespaces, keys, queues, rules, and more.\n\nDetailed information on using this API can be found in the Ably <a href=\"https://ably.com/documentation/control-api\">developer documentation</a>.\n\nControl API is currently in Beta.\n",
+          "title": "Control API v1",
+          "version": "1.0.14",
+          "x-apisguru-categories": [
+            "cloud"
+          ],
+          "x-logo": {
+            "url": "https://api.apis.guru/v2/cache/logo/https_twitter.com_ablyrealtime_profile_image"
+          },
+          "x-origin": [
+            {
+              "format": "openapi",
+              "url": "https://raw.githubusercontent.com/ably/open-specs/main/definitions/control-v1.yaml",
+              "version": "3.0"
+            }
+          ],
+          "x-providerName": "ably.net",
+          "x-serviceName": "control"
+        },
+        "updated": "2021-07-26T09:47:48.565Z",
+        "swaggerUrl": "https://api.apis.guru/v2/specs/ably.net/control/1.0.14/openapi.json",
+        "swaggerYamlUrl": "https://api.apis.guru/v2/specs/ably.net/control/1.0.14/openapi.yaml",
+        "openapiVer": "3.0.1"
+      }
+    }
+  },
+  "abstractapi.com:geolocation": {
+    "added": "2021-04-14T17:12:40.648Z",
+    "preferred": "1.0.0",
+    "versions": {
+      "1.0.0": {
+        "added": "2021-04-14T17:12:40.648Z",
+        "info": {
+          "description": "Abstract IP geolocation API allows developers to retrieve the region, country and city behind any IP worldwide. The API covers the geolocation of IPv4 and IPv6 addresses in 180+ countries worldwide. Extra information can be retrieved like the currency, flag or language associated to an IP.",
+          "title": "IP geolocation API",
+          "version": "1.0.0",
+          "x-apisguru-categories": [
+            "location"
+          ],
+          "x-logo": {
+            "url": "https://api.apis.guru/v2/cache/logo/https_global-uploads.webflow.com_5ebbd0a566a3996636e55959_5ec2ba29feeeb05d69160e7b_webclip.png"
+          },
+          "x-origin": [
+            {
+              "format": "openapi",
+              "url": "https://documentation.abstractapi.com/ip-geolocation-openapi.json",
+              "version": "3.0"
+            }
+          ],
+          "x-providerName": "abstractapi.com",
+          "x-serviceName": "geolocation"
+        },
+        "externalDocs": {
+          "description": "API Documentation",
+          "url": "https://www.abstractapi.com/ip-geolocation-api#docs"
+        },
+        "updated": "2021-06-21T12:16:53.715Z",
+        "swaggerUrl": "https://api.apis.guru/v2/specs/abstractapi.com/geolocation/1.0.0/openapi.json",
+        "swaggerYamlUrl": "https://api.apis.guru/v2/specs/abstractapi.com/geolocation/1.0.0/openapi.yaml",
+        "openapiVer": "3.0.1"
+      }
+    }
+  },
+  "adafruit.com": {
+    "added": "2018-02-10T10:41:43.000Z",
+    "preferred": "2.0.0",
+    "versions": {
+      "2.0.0": {
+        "added": "2018-02-10T10:41:43.000Z",
+        "info": {
+          "description": "### The Internet of Things for Everyone\n\nThe Adafruit IO HTTP API provides access to your Adafruit IO data from any programming language or hardware environment that can speak HTTP. The easiest way to get started is with [an Adafruit IO learn guide](https://learn.adafruit.com/series/adafruit-io-basics) and [a simple Internet of Things capable device like the Feather Huzzah](https://www.adafruit.com/product/2821).\n\nThis API documentation is hosted on GitHub Pages and is available at [https://github.com/adafruit/io-api](https://github.com/adafruit/io-api). For questions or comments visit the [Adafruit IO Forums](https://forums.adafruit.com/viewforum.php?f=56) or the [adafruit-io channel on the Adafruit Discord server](https://discord.gg/adafruit).\n\n#### Authentication\n\nAuthentication for every API request happens through the `X-AIO-Key` header or query parameter and your IO API key. A simple cURL request to get all available feeds for a user with the username \"io_username\" and the key \"io_key_12345\" could look like this:\n\n    $ curl -H \"X-AIO-Key: io_key_12345\" https://io.adafruit.com/api/v2/io_username/feeds\n\nOr like this:\n\n    $ curl \"https://io.adafruit.com/api/v2/io_username/feeds?X-AIO-Key=io_key_12345\n\nUsing the node.js [request](https://github.com/request/request) library, IO HTTP requests are as easy as:\n\n```js\nvar request = require('request');\n\nvar options = {\n  url: 'https://io.adafruit.com/api/v2/io_username/feeds',\n  headers: {\n    'X-AIO-Key': 'io_key_12345',\n    'Content-Type': 'application/json'\n  }\n};\n\nfunction callback(error, response, body) {\n  if (!error && response.statusCode == 200) {\n    var feeds = JSON.parse(body);\n    console.log(feeds.length + \" FEEDS AVAILABLE\");\n\n    feeds.forEach(function (feed) {\n      console.log(feed.name, feed.key);\n    })\n  }\n}\n\nrequest(options, callback);\n```\n\nUsing the ESP8266 Arduino HTTPClient library, an HTTPS GET request would look like this (replacing `---` with your own values in the appropriate locations):\n\n```arduino\n/// based on\n/// https://github.com/esp8266/Arduino/blob/master/libraries/ESP8266HTTPClient/examples/Authorization/Authorization.ino\n\n#include <Arduino.h>\n#include <ESP8266WiFi.h>\n#include <ESP8266WiFiMulti.h>\n#include <ESP8266HTTPClient.h>\n\nESP8266WiFiMulti WiFiMulti;\n\nconst char* ssid = \"---\";\nconst char* password = \"---\";\n\nconst char* host = \"io.adafruit.com\";\n\nconst char* io_key = \"---\";\nconst char* path_with_username = \"/api/v2/---/dashboards\";\n\n// Use web browser to view and copy\n// SHA1 fingerprint of the certificate\nconst char* fingerprint = \"77 00 54 2D DA E7 D8 03 27 31 23 99 EB 27 DB CB A5 4C 57 18\";\n\nvoid setup() {\n  Serial.begin(115200);\n\n  for(uint8_t t = 4; t > 0; t--) {\n    Serial.printf(\"[SETUP] WAIT %d...\\n\", t);\n    Serial.flush();\n    delay(1000);\n  }\n\n  WiFi.mode(WIFI_STA);\n  WiFiMulti.addAP(ssid, password);\n\n  // wait for WiFi connection\n  while(WiFiMulti.run() != WL_CONNECTED) {\n    Serial.print('.');\n    delay(1000);\n  }\n\n  Serial.println(\"[WIFI] connected!\");\n\n  HTTPClient http;\n\n  // start request with URL and TLS cert fingerprint for verification\n  http.begin(\"https://\" + String(host) + String(path_with_username), fingerprint);\n\n  // IO API authentication\n  http.addHeader(\"X-AIO-Key\", io_key);\n\n  // start connection and send HTTP header\n  int httpCode = http.GET();\n\n  // httpCode will be negative on error\n  if(httpCode > 0) {\n    // HTTP header has been send and Server response header has been handled\n    Serial.printf(\"[HTTP] GET response: %d\\n\", httpCode);\n\n    // HTTP 200 OK\n    if(httpCode == HTTP_CODE_OK) {\n      String payload = http.getString();\n      Serial.println(payload);\n    }\n\n    http.end();\n  }\n}\n\nvoid loop() {}\n```\n\n#### Client Libraries\n\nWe have client libraries to help you get started with your project: [Python](https://github.com/adafruit/io-client-python), [Ruby](https://github.com/adafruit/io-client-ruby), [Arduino C++](https://github.com/adafruit/Adafruit_IO_Arduino), [Javascript](https://github.com/adafruit/adafruit-io-node), and [Go](https://github.com/adafruit/io-client-go) are available. They're all open source, so if they don't already do what you want, you can fork and add any feature you'd like.\n\n",
+          "title": "Adafruit IO REST API",
+          "version": "2.0.0",
+          "x-apisguru-categories": [
+            "iot"
+          ],
+          "x-logo": {
+            "url": "https://api.apis.guru/v2/cache/logo/https_twitter.com_adafruit_profile_image.jpeg"
+          },
+          "x-origin": [
+            {
+              "format": "swagger",
+              "url": "https://raw.githubusercontent.com/adafruit/io-api/gh-pages/v2.json",
+              "version": "2.0"
+            }
+          ],
+          "x-providerName": "adafruit.com"
+        },
+        "updated": "2021-06-21T12:16:53.715Z",
+        "swaggerUrl": "https://api.apis.guru/v2/specs/adafruit.com/2.0.0/swagger.json",
+        "swaggerYamlUrl": "https://api.apis.guru/v2/specs/adafruit.com/2.0.0/swagger.yaml",
+        "openapiVer": "2.0"
+      }
+    }
+  },
+  "adobe.com:aem": {
+    "added": "2019-01-03T07:01:34.000Z",
+    "preferred": "3.5.0-pre.0",
+    "versions": {
+      "3.5.0-pre.0": {
+        "added": "2019-01-03T07:01:34.000Z",
+        "info": {
+          "contact": {
+            "email": "opensource@shinesolutions.com",
+            "name": "Shine Solutions",
+            "url": "http://shinesolutions.com",
+            "x-twitter": "Adobe"
+          },
+          "description": "Swagger AEM is an OpenAPI specification for Adobe Experience Manager (AEM) API",
+          "title": "Adobe Experience Manager (AEM) API",
+          "version": "3.5.0-pre.0",
+          "x-apisguru-categories": [
+            "marketing"
+          ],
+          "x-logo": {
+            "url": "https://api.apis.guru/v2/cache/logo/https_twitter.com_Adobe_profile_image.jpeg"
+          },
+          "x-origin": [
+            {
+              "format": "openapi",
+              "url": "https://raw.githubusercontent.com/shinesolutions/swagger-aem/master/conf/api.yml",
+              "version": "3.0"
+            }
+          ],
+          "x-providerName": "adobe.com",
+          "x-serviceName": "aem",
+          "x-unofficialSpec": true
+        },
+        "updated": "2021-06-21T12:16:53.715Z",
+        "swaggerUrl": "https://api.apis.guru/v2/specs/adobe.com/aem/3.5.0-pre.0/openapi.json",
+        "swaggerYamlUrl": "https://api.apis.guru/v2/specs/adobe.com/aem/3.5.0-pre.0/openapi.yaml",
+        "openapiVer": "3.0.0"
+      }
+    }
+  },
+  "adyen.com:AccountService": {
+    "added": "2020-11-03T12:51:40.318Z",
+    "preferred": "6",
+    "versions": {
+      "6": {
+        "added": "2020-11-03T12:51:40.318Z",
+        "info": {
+          "contact": {
+            "email": "developer-experience@adyen.com",
+            "name": "Adyen Developer Experience team",
+            "url": "https://www.adyen.help/hc/en-us/community/topics",
+            "x-twitter": "Adyen"
+          },
+          "description": "The Account API provides endpoints for managing account-related entities on your platform. These related entities include account holders, accounts, bank accounts, shareholders, and KYC-related documents. The management operations include actions such as creation, retrieval, updating, and deletion of them.\n\nFor more information, refer to our [documentation](https://docs.adyen.com/platforms).\n## Authentication\nTo connect to the Account API, you must use basic authentication credentials of your web service user. If you don't have one, contact the [Adyen Support Team](https://support.adyen.com/hc/en-us/requests/new). Then use its credentials to authenticate your request, for example:\n\n```\ncurl\n-U \"ws@MarketPlace.YourMarketPlace\":\"YourWsPassword\" \\\n-H \"Content-Type: application/json\" \\\n...\n```\nNote that when going live, you need to generate new web service user credentials to access the [live endpoints](https://docs.adyen.com/development-resources/live-endpoints).\n\n## Versioning\nThe Account API supports versioning of its endpoints through a version suffix in the endpoint URL. This suffix has the following format: \"vXX\", where XX is the version number.\n\nFor example:\n```\nhttps://cal-test.adyen.com/cal/services/Account/v6/createAccountHolder\n```",
+          "termsOfService": "https://www.adyen.com/legal/terms-and-conditions",
+          "title": "Adyen for Platforms: Account API",
+          "version": "6",
+          "x-apisguru-categories": [
+            "payment"
+          ],
+          "x-logo": {
+            "url": "https://api.apis.guru/v2/cache/logo/https_twitter.com_Adyen_profile_image.jpeg"
+          },
+          "x-origin": [
+            {
+              "format": "openapi",
+              "url": "https://raw.githubusercontent.com/Adyen/adyen-openapi/master/json/AccountService-v6.json",
+              "version": "3.1"
+            }
+          ],
+          "x-preferred": true,
+          "x-providerName": "adyen.com",
+          "x-publicVersion": true,
+          "x-serviceName": "AccountService"
+        },
+        "updated": "2021-11-12T23:18:19.544Z",
+        "swaggerUrl": "https://api.apis.guru/v2/specs/adyen.com/AccountService/6/openapi.json",
+        "swaggerYamlUrl": "https://api.apis.guru/v2/specs/adyen.com/AccountService/6/openapi.yaml",
+        "openapiVer": "3.1.0"
+      }
+    }
+  },
+  "adyen.com:BalancePlatformService": {
+    "added": "2021-06-14T12:42:12.263Z",
+    "preferred": "1",
+    "versions": {
+      "1": {
+        "added": "2021-06-14T12:42:12.263Z",
+        "info": {
+          "contact": {
+            "email": "developer-experience@adyen.com",
+            "name": "Adyen Developer Experience team",
+            "url": "https://www.adyen.help/hc/en-us/community/topics",
+            "x-twitter": "Adyen"
+          },
+          "description": "The Balance Platform API enables you to create a platform, onboard users as account holders, create balance accounts, and issue cards.\n\nFor information about use cases, refer to [Adyen Issuing](https://docs.adyen.com/issuing).\n\n ## Authentication\nYour Adyen contact will provide your API credential and an API key. To connect to the API, add an `X-API-Key` header with the API key as the value, for example:\n\n ```\ncurl\n-H \"Content-Type: application/json\" \\\n-H \"X-API-Key: YOUR_API_KEY\" \\\n...\n```\n\nAlternatively, you can use the username and password to connect to the API using basic authentication. For example:\n\n```\ncurl\n-H \"Content-Type: application/json\" \\\n-U \"ws@BalancePlatform.YOUR_BALANCE_PLATFORM\":\"YOUR_WS_PASSWORD\" \\\n...\n```\n## Versioning\nBalance Platform API supports versioning of its endpoints through a version suffix in the endpoint URL. This suffix has the following format: \"vXX\", where XX is the version number.\n\nFor example:\n```\nhttps://balanceplatform-api-test.adyen.com/bcl/v1\n```\n## Going live\nWhen going live, your Adyen contact will provide your API credential for the live environment. You can then use the API key or the username and password to send requests to `https://balanceplatform-api-live.adyen.com/bcl/v1`.\n\nFor more information, refer to our [Going live documentation](https://docs.adyen.com/issuing/integration-checklist#going-live).",
+          "termsOfService": "https://www.adyen.com/legal/terms-and-conditions",
+          "title": "Issuing: Balance Platform API",
+          "version": "1",
+          "x-apisguru-categories": [
+            "payment"
+          ],
+          "x-logo": {
+            "url": "https://api.apis.guru/v2/cache/logo/https_adyen.com_.resources_adyen-website_themes_images_apple-icon-180x180.png"
+          },
+          "x-origin": [
+            {
+              "format": "openapi",
+              "url": "https://raw.githubusercontent.com/Adyen/adyen-openapi/master/json/BalancePlatformService-v1.json",
+              "version": "3.1"
+            }
+          ],
+          "x-providerName": "adyen.com",
+          "x-publicVersion": true,
+          "x-serviceName": "BalancePlatformService"
+        },
+        "updated": "2021-11-22T23:16:57.458Z",
+        "swaggerUrl": "https://api.apis.guru/v2/specs/adyen.com/BalancePlatformService/1/openapi.json",
+        "swaggerYamlUrl": "https://api.apis.guru/v2/specs/adyen.com/BalancePlatformService/1/openapi.yaml",
+        "openapiVer": "3.1.0"
+      }
+    }
+  },
+  "adyen.com:BinLookupService": {
+    "added": "2020-11-03T12:51:40.318Z",
+    "preferred": "50",
+    "versions": {
+      "50": {
+        "added": "2020-11-03T12:51:40.318Z",
+        "info": {
+          "contact": {
+            "email": "developer-experience@adyen.com",
+            "name": "Adyen Developer Experience team",
+            "url": "https://www.adyen.help/hc/en-us/community/topics",
+            "x-twitter": "Adyen"
+          },
+          "description": "The BIN Lookup API provides endpoints for retrieving information, such as cost estimates, and 3D Secure supported version based on a given BIN.",
+          "termsOfService": "https://www.adyen.com/legal/terms-and-conditions",
+          "title": "Adyen BinLookup API",
+          "version": "50",
+          "x-apisguru-categories": [
+            "payment"
+          ],
+          "x-logo": {
+            "url": "https://api.apis.guru/v2/cache/logo/https_twitter.com_Adyen_profile_image.jpeg"
+          },
+          "x-origin": [
+            {
+              "format": "openapi",
+              "url": "https://raw.githubusercontent.com/Adyen/adyen-openapi/master/json/BinLookupService-v50.json",
+              "version": "3.1"
+            }
+          ],
+          "x-preferred": true,
+          "x-providerName": "adyen.com",
+          "x-publicVersion": true,
+          "x-serviceName": "BinLookupService"
+        },
+        "updated": "2021-11-01T23:17:40.475Z",
+        "swaggerUrl": "https://api.apis.guru/v2/specs/adyen.com/BinLookupService/50/openapi.json",
+        "swaggerYamlUrl": "https://api.apis.guru/v2/specs/adyen.com/BinLookupService/50/openapi.yaml",
+        "openapiVer": "3.1.0"
+      }
+    }
+  },
+  "adyen.com:CheckoutService": {
+    "added": "2021-11-01T23:17:40.475Z",
+    "preferred": "68",
+    "versions": {
+      "68": {
+        "added": "2021-11-01T23:17:40.475Z",
+        "info": {
+          "contact": {
+            "email": "developer-experience@adyen.com",
+            "name": "Adyen Developer Experience team",
+            "url": "https://www.adyen.help/hc/en-us/community/topics",
+            "x-twitter": "Adyen"
+          },
+          "description": "Adyen Checkout API provides a simple and flexible way to initiate and authorise online payments. You can use the same integration for payments made with cards (including 3D Secure), mobile wallets, and local payment methods (for example, iDEAL and Sofort).\n\nThis API reference provides information on available endpoints and how to interact with them. To learn more about the API, visit [Checkout documentation](https://docs.adyen.com/online-payments).\n\n## Authentication\nEach request to the Checkout API must be signed with an API key. For this, obtain an API Key from your Customer Area, as described in [How to get the API key](https://docs.adyen.com/development-resources/api-credentials#generate-api-key). Then set this key to the `X-API-Key` header value, for example:\n\n```\ncurl\n-H \"Content-Type: application/json\" \\\n-H \"X-API-Key: Your_Checkout_API_key\" \\\n...\n```\nNote that when going live, you need to generate a new API Key to access the [live endpoints](https://docs.adyen.com/development-resources/live-endpoints).\n\n## Versioning\nCheckout API supports versioning of its endpoints through a version suffix in the endpoint URL. This suffix has the following format: \"vXX\", where XX is the version number.\n\nFor example:\n```\nhttps://checkout-test.adyen.com/v68/payments\n```",
+          "termsOfService": "https://www.adyen.com/legal/terms-and-conditions",
+          "title": "Adyen Checkout API",
+          "version": "68",
+          "x-apisguru-categories": [
+            "payment"
+          ],
+          "x-logo": {
+            "url": "https://api.apis.guru/v2/cache/logo/https_adyen.com_.resources_adyen-website_themes_images_apple-icon-180x180.png"
+          },
+          "x-origin": [
+            {
+              "format": "openapi",
+              "url": "https://raw.githubusercontent.com/Adyen/adyen-openapi/master/json/CheckoutService-v68.json",
+              "version": "3.1"
+            }
+          ],
+          "x-preferred": true,
+          "x-providerName": "adyen.com",
+          "x-publicVersion": true,
+          "x-serviceName": "CheckoutService"
+        },
+        "updated": "2021-11-12T23:18:19.544Z",
+        "swaggerUrl": "https://api.apis.guru/v2/specs/adyen.com/CheckoutService/68/openapi.json",
+        "swaggerYamlUrl": "https://api.apis.guru/v2/specs/adyen.com/CheckoutService/68/openapi.yaml",
+        "openapiVer": "3.1.0"
+      }
+    }
+  },
+  "adyen.com:CheckoutUtilityService": {
+    "added": "2021-06-18T13:57:32.889Z",
+    "preferred": "1",
+    "versions": {
+      "1": {
+        "added": "2021-06-18T13:57:32.889Z",
+        "info": {
+          "contact": {
+            "email": "support@adyen.com",
+            "name": "Adyen Support",
+            "url": "https://support.adyen.com/",
+            "x-twitter": "Adyen"
+          },
+          "description": "A web service containing utility functions available for merchants integrating with Checkout APIs.\n## Authentication\nEach request to the Checkout Utility API must be signed with an API key. For this, obtain an API Key from your Customer Area, as described in [How to get the Checkout API key](https://docs.adyen.com/developers/user-management/how-to-get-the-checkout-api-key). Then set this key to the `X-API-Key` header value, for example:\n\n```\ncurl\n-H \"Content-Type: application/json\" \\\n-H \"X-API-Key: Your_Checkout_API_key\" \\\n...\n```\nNote that when going live, you need to generate a new API Key to access the [live endpoints](https://docs.adyen.com/developers/api-reference/live-endpoints).\n\n## Versioning\nCheckout API supports versioning of its endpoints through a version suffix in the endpoint URL. This suffix has the following format: \"vXX\", where XX is the version number.\n\nFor example:\n```\nhttps://checkout-test.adyen.com/v1/originKeys\n```",
+          "termsOfService": "https://docs.adyen.com/legal/terms-conditions",
+          "title": "Adyen Checkout Utility Service",
+          "version": "1",
+          "x-apisguru-categories": [
+            "payment"
+          ],
+          "x-logo": {
+            "url": "https://api.apis.guru/v2/cache/logo/https_twitter.com_Adyen_profile_image.jpeg"
+          },
+          "x-origin": [
+            {
+              "converter": {
+                "url": "https://github.com/lucybot/api-spec-converter",
+                "version": "2.7.11"
+              },
+              "format": "openapi",
+              "url": "https://raw.githubusercontent.com/adyen/adyen-openapi/master/specs/3.0/CheckoutUtilityService-v1.json",
+              "version": "3.0"
+            }
+          ],
+          "x-providerName": "adyen.com",
+          "x-serviceName": "CheckoutUtilityService"
+        },
+        "updated": "2021-06-18T13:57:32.889Z",
+        "swaggerUrl": "https://api.apis.guru/v2/specs/adyen.com/CheckoutUtilityService/1/openapi.json",
+        "swaggerYamlUrl": "https://api.apis.guru/v2/specs/adyen.com/CheckoutUtilityService/1/openapi.yaml",
+        "openapiVer": "3.0.0"
+      }
+    }
+  },
+  "adyen.com:FundService": {
+    "added": "2020-11-03T12:51:40.318Z",
+    "preferred": "6",
+    "versions": {
+      "6": {
+        "added": "2020-11-03T12:51:40.318Z",
+        "info": {
+          "contact": {
+            "email": "developer-experience@adyen.com",
+            "name": "Adyen Developer Experience team",
+            "url": "https://www.adyen.help/hc/en-us/community/topics",
+            "x-twitter": "Adyen"
+          },
+          "description": "The Fund API provides endpoints for managing the funds in the accounts on your platform. These management operations include actions such as the transfer of funds from one account to another, the payout of funds to an account holder, and the retrieval of balances in an account.\n\nFor more information, refer to our [documentation](https://docs.adyen.com/platforms).\n## Authentication\nTo connect to the Fund API, you must use basic authentication credentials of your web service user. If you don't have one, please contact the [Adyen Support Team](https://support.adyen.com/hc/en-us/requests/new). Then use its credentials to authenticate your request, for example:\n\n```\ncurl\n-U \"ws@MarketPlace.YourMarketPlace\":\"YourWsPassword\" \\\n-H \"Content-Type: application/json\" \\\n...\n```\nNote that when going live, you need to generate new web service user credentials to access the [live endpoints](https://docs.adyen.com/development-resources/live-endpoints).\n\n## Versioning\nThe Fund API supports versioning of its endpoints through a version suffix in the endpoint URL. This suffix has the following format: \"vXX\", where XX is the version number.\n\nFor example:\n```\nhttps://cal-test.adyen.com/cal/services/Fund/v6/accountHolderBalance\n```",
+          "termsOfService": "https://www.adyen.com/legal/terms-and-conditions",
+          "title": "Adyen for Platforms: Fund API",
+          "version": "6",
+          "x-apisguru-categories": [
+            "payment"
+          ],
+          "x-logo": {
+            "url": "https://api.apis.guru/v2/cache/logo/https_twitter.com_Adyen_profile_image.jpeg"
+          },
+          "x-origin": [
+            {
+              "format": "openapi",
+              "url": "https://raw.githubusercontent.com/Adyen/adyen-openapi/master/json/FundService-v6.json",
+              "version": "3.1"
+            }
+          ],
+          "x-preferred": true,
+          "x-providerName": "adyen.com",
+          "x-publicVersion": true,
+          "x-serviceName": "FundService"
+        },
+        "updated": "2021-11-01T23:17:40.475Z",
+        "swaggerUrl": "https://api.apis.guru/v2/specs/adyen.com/FundService/6/openapi.json",
+        "swaggerYamlUrl": "https://api.apis.guru/v2/specs/adyen.com/FundService/6/openapi.yaml",
+        "openapiVer": "3.1.0"
+      }
+    }
+  },
+  "adyen.com:HopService": {
+    "added": "2020-11-03T12:51:40.318Z",
+    "preferred": "6",
+    "versions": {
+      "6": {
+        "added": "2020-11-03T12:51:40.318Z",
+        "info": {
+          "contact": {
+            "email": "developer-experience@adyen.com",
+            "name": "Adyen Developer Experience team",
+            "url": "https://www.adyen.help/hc/en-us/community/topics",
+            "x-twitter": "Adyen"
+          },
+          "description": "The Hosted onboarding API provides endpoints that you can use to generate links to Adyen-hosted pages, such as an [onboarding page](https://docs.adyen.com/platforms/hosted-onboarding-page) or a [PCI compliance questionnaire](https://docs.adyen.com/platforms/platforms-for-partners). Then you can provide the link to your account holder so they can complete their onboarding.\n\n## Authentication\nTo connect to the Hosted onboarding API, you must use basic authentication credentials of your web service user. If you don't have one, contact our [Support Team](https://support.adyen.com/hc/en-us/requests/new). Then use your credentials to authenticate your request, for example:\n\n```\ncurl\n-U \"ws@MarketPlace.YourMarketPlace\":\"YourWsPassword\" \\\n-H \"Content-Type: application/json\" \\\n...\n```\nWhen going live, you need to generate new web service user credentials to access the [live endpoints](https://docs.adyen.com/development-resources/live-endpoints).\n\n## Versioning\nThe Hosted onboarding API supports versioning of its endpoints through a version suffix in the endpoint URL. This suffix has the following format: \"vXX\", where XX is the version number.\n\nFor example:\n```\nhttps://cal-test.adyen.com/cal/services/Hop/v6/getOnboardingUrl\n```",
+          "termsOfService": "https://www.adyen.com/legal/terms-and-conditions",
+          "title": "Adyen for Platforms: Hosted Onboarding",
+          "version": "6",
+          "x-apisguru-categories": [
+            "payment"
+          ],
+          "x-logo": {
+            "url": "https://api.apis.guru/v2/cache/logo/https_twitter.com_Adyen_profile_image.jpeg"
+          },
+          "x-origin": [
+            {
+              "format": "openapi",
+              "url": "https://raw.githubusercontent.com/Adyen/adyen-openapi/master/json/HopService-v6.json",
+              "version": "3.1"
+            }
+          ],
+          "x-preferred": true,
+          "x-providerName": "adyen.com",
+          "x-publicVersion": true,
+          "x-serviceName": "HopService"
+        },
+        "updated": "2021-11-01T23:17:40.475Z",
+        "swaggerUrl": "https://api.apis.guru/v2/specs/adyen.com/HopService/6/openapi.json",
+        "swaggerYamlUrl": "https://api.apis.guru/v2/specs/adyen.com/HopService/6/openapi.yaml",
+        "openapiVer": "3.1.0"
+      }
+    }
+  },
+  "adyen.com:MarketPayNotificationService": {
+    "added": "2021-06-21T10:54:37.877Z",
+    "preferred": "6",
+    "versions": {
+      "6": {
+        "added": "2021-06-21T10:54:37.877Z",
+        "info": {
+          "contact": {
+            "email": "developer-experience@adyen.com",
+            "name": "Adyen Developer Experience team",
+            "url": "https://www.adyen.help/hc/en-us/community/topics",
+            "x-twitter": "Adyen"
+          },
+          "description": "The Notification API sends notifications to the endpoints specified in a given subscription. Subscriptions are managed through the Notification Configuration API. The API specifications listed here detail the format of each notification.\n\nFor more information, refer to our [documentation](https://docs.adyen.com/platforms/notifications).",
+          "termsOfService": "https://www.adyen.com/legal/terms-and-conditions",
+          "title": "Adyen for Platforms: Notifications",
+          "version": "6",
+          "x-apisguru-categories": [
+            "payment"
+          ],
+          "x-logo": {
+            "url": "https://api.apis.guru/v2/cache/logo/https_twitter.com_Adyen_profile_image"
+          },
+          "x-origin": [
+            {
+              "format": "openapi",
+              "url": "https://raw.githubusercontent.com/Adyen/adyen-openapi/master/json/MarketPayNotificationService-v6.json",
+              "version": "3.1"
+            }
+          ],
+          "x-preferred": true,
+          "x-providerName": "adyen.com",
+          "x-publicVersion": true,
+          "x-serviceName": "MarketPayNotificationService"
+        },
+        "updated": "2021-11-12T23:18:19.544Z",
+        "swaggerUrl": "https://api.apis.guru/v2/specs/adyen.com/MarketPayNotificationService/6/openapi.json",
+        "swaggerYamlUrl": "https://api.apis.guru/v2/specs/adyen.com/MarketPayNotificationService/6/openapi.yaml",
+        "openapiVer": "3.1.0"
+      }
+    }
+  },
+  "adyen.com:NotificationConfigurationService": {
+    "added": "2020-11-03T12:51:40.318Z",
+    "preferred": "6",
+    "versions": {
+      "6": {
+        "added": "2020-11-03T12:51:40.318Z",
+        "info": {
+          "contact": {
+            "email": "developer-experience@adyen.com",
+            "name": "Adyen Developer Experience team",
+            "url": "https://www.adyen.help/hc/en-us/community/topics",
+            "x-twitter": "Adyen"
+          },
+          "description": "The Notification Configuration API provides endpoints for setting up and testing notifications that inform you of events on your platform, for example when a KYC check or a payout has been completed.\n\nFor more information, refer to our [documentation](https://docs.adyen.com/platforms/notifications).\n## Authentication\nTo connect to the Notification Configuration API, you must use basic authentication credentials of your web service user. If you don't have one, contact our [Adyen Support Team](https://support.adyen.com/hc/en-us/requests/new). Then use its credentials to authenticate your request, for example:\n\n```\ncurl\n-U \"ws@MarketPlace.YourMarketPlace\":\"YourWsPassword\" \\\n-H \"Content-Type: application/json\" \\\n...\n```\nNote that when going live, you need to generate new web service user credentials to access the [live endpoints](https://docs.adyen.com/development-resources/live-endpoints).\n\n## Versioning\nThe Notification Configuration API supports versioning of its endpoints through a version suffix in the endpoint URL. This suffix has the following format: \"vXX\", where XX is the version number.\n\nFor example:\n```\nhttps://cal-test.adyen.com/cal/services/Notification/v6/createNotificationConfiguration\n```",
+          "termsOfService": "https://www.adyen.com/legal/terms-and-conditions",
+          "title": "Adyen for Platforms: Notification Configuration API",
+          "version": "6",
+          "x-apisguru-categories": [
+            "payment"
+          ],
+          "x-logo": {
+            "url": "https://api.apis.guru/v2/cache/logo/https_twitter.com_Adyen_profile_image.jpeg"
+          },
+          "x-origin": [
+            {
+              "format": "openapi",
+              "url": "https://raw.githubusercontent.com/Adyen/adyen-openapi/master/json/NotificationConfigurationService-v6.json",
+              "version": "3.1"
+            }
+          ],
+          "x-preferred": true,
+          "x-providerName": "adyen.com",
+          "x-publicVersion": true,
+          "x-serviceName": "NotificationConfigurationService"
+        },
+        "updated": "2021-11-12T23:18:19.544Z",
+        "swaggerUrl": "https://api.apis.guru/v2/specs/adyen.com/NotificationConfigurationService/6/openapi.json",
+        "swaggerYamlUrl": "https://api.apis.guru/v2/specs/adyen.com/NotificationConfigurationService/6/openapi.yaml",
+        "openapiVer": "3.1.0"
+      }
+    }
+  }
+}

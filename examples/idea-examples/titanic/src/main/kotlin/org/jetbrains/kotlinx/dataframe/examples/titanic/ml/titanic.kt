@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.examples.titanic.ml
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.*
-import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dl.api.core.Sequential
 import org.jetbrains.kotlinx.dl.api.core.activation.Activations
 import org.jetbrains.kotlinx.dl.api.core.initializer.HeNormal
@@ -14,7 +13,7 @@ import org.jetbrains.kotlinx.dl.api.core.loss.Losses
 import org.jetbrains.kotlinx.dl.api.core.metric.Metrics
 import org.jetbrains.kotlinx.dl.api.core.optimizer.Adam
 import org.jetbrains.kotlinx.dl.dataset.OnHeapDataset
-import java.util.*
+import java.util.Locale
 
 private const val SEED = 12L
 private const val TEST_BATCH_SIZE = 100
@@ -33,18 +32,17 @@ fun main() {
     // Set Locale for correct number parsing
     Locale.setDefault(Locale.FRANCE)
 
-    // Set path for correct resolution (https://github.com/Kotlin/dataframe/issues/139)
-    val df = Passenger.readCSV("examples/idea-examples/titanic/src/main/resources/titanic.csv")
+    val df = Passenger.readCSV()
 
     // Calculating imputing values
     val (train, test) = df
         // imputing
         .fillNulls { sibsp and parch and age and fare }.perCol { it.mean() }
-        .fillNulls { sex }.withValue("female")
+        .fillNulls { sex }.with { "female" }
         // one hot encoding
         .pivotMatches { pclass and sex }
         // feature extraction
-        .select { survived and pclass and sibsp and parch and age and fare and sex}
+        .select { survived and pclass and sibsp and parch and age and fare and sex }
         .shuffle()
         .toTrainTest(0.7) { survived }
 
@@ -64,30 +62,35 @@ fun main() {
     }
 }
 
-fun <T> DataFrame<T>.toTrainTest(trainRatio: Double, yColumn: ColumnSelector<T, Number>): Pair<OnHeapDataset, OnHeapDataset> =
-    toOnHeapDataset(yColumn).split(trainRatio)
+fun <T> DataFrame<T>.toTrainTest(
+    trainRatio: Double,
+    yColumn: ColumnSelector<T, Number>,
+): Pair<OnHeapDataset, OnHeapDataset> =
+    toOnHeapDataset(yColumn)
+        .split(trainRatio)
 
-private fun <T> DataFrame<T>.toOnHeapDataset(yColumn: ColumnSelector<T, Number>): OnHeapDataset {
-    return OnHeapDataset.create(
+private fun <T> DataFrame<T>.toOnHeapDataset(yColumn: ColumnSelector<T, Number>): OnHeapDataset =
+    OnHeapDataset.create(
         dataframe = this,
-        yColumn = yColumn
+        yColumn = yColumn,
     )
-}
 
-private fun <T> OnHeapDataset.Companion.create(dataframe: DataFrame<T>, yColumn: ColumnSelector<T, Number>): OnHeapDataset {
-
+private fun <T> OnHeapDataset.Companion.create(
+    dataframe: DataFrame<T>,
+    yColumn: ColumnSelector<T, Number>,
+): OnHeapDataset {
     val x by column<FloatArray>("X")
 
     fun extractX(): Array<FloatArray> =
         dataframe.remove(yColumn)
-            .convert { allDfs() }.toFloat()
-            .merge { dfsOf<Float>() }.by { it.toFloatArray() }.into(x)
+            .convert { cols { !it.isColumnGroup() }.rec() }.toFloat()
+            .merge { colsOf<Float>().recursively() }.by { it.toFloatArray() }.into(x)
             .getColumn(x).toTypedArray()
 
     fun extractY(): FloatArray = dataframe[yColumn].toFloatArray()
 
     return create(
         ::extractX,
-        ::extractY
+        ::extractY,
     )
 }

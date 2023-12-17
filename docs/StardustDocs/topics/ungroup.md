@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Replaces `ColumnGroup` with its nested columns. 
+Replaces [`ColumnGroup`](DataColumn.md#columngroup) with its nested columns. 
 
 ```text
 ungroup { columns }
@@ -20,4 +20,5 @@ See [column selectors](ColumnSelectors.md)
 df.ungroup { name }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.ungroup.html"/>
 <!---END-->

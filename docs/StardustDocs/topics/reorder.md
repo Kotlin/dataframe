@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Returns `DataFrame` with a new order of selected columns.
+Returns [`DataFrame`](DataFrame.md) with a new order of selected columns.
 
 ```text
 reorder { columns }
@@ -39,6 +39,7 @@ df.reorder { age..isHappy }.byName()
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.reorder.html"/>
 <!---END-->
 
 When a subset of columns is selected they will be reordered among their original positions. Positions of other columns will not change. 
@@ -57,7 +58,7 @@ df.reorder("d", "b").cast<Int>().by { sum() } // [c, b, a, d]
 
 <!---END-->
 
-When exactly one `ColumnGroup` is selected, reordering is applied to its nested columns.
+When exactly one [`ColumnGroup`](DataColumn.md#columngroup) is selected, reordering is applied to its nested columns.
 
 <!---FUN reorderInGroup-->
 
@@ -65,6 +66,7 @@ When exactly one `ColumnGroup` is selected, reordering is applied to its nested 
 df.reorder { name }.byName(desc = true) // [name.lastName, name.firstName]
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.reorderInGroup.html"/>
 <!---END-->
 
 ## reorderColumnsBy
@@ -76,7 +78,7 @@ reorderColumnsBy(dfs = true, desc = false) { columnExpression }
 ```
 
 **Parameters:**
-* `dfs` — reorder columns inside `ColumnGroups` and `FrameColumns` recursively
+* `dfs` — reorder columns inside [`ColumnGroups`](DataColumn.md#columngroup) and [`FrameColumn`](DataColumn.md#framecolumn) recursively
 * `desc` — apply descending order
 
 ## reorderColumnsByName
@@ -86,5 +88,5 @@ reorderColumnsByName(dfs = true, desc = false)
 ```
 
 **Parameters:**
-* `dfs` — reorder columns inside `ColumnGroups` and `FrameColumns` recursively
+* `dfs` — reorder columns inside [`ColumnGroups`](DataColumn.md#columngroup) and [`FrameColumn`](DataColumn.md#framecolumn) recursively
 * `desc` — apply descending order

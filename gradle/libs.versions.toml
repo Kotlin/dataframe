@@ -1,12 +1,14 @@
 [versions]
-ksp = "1.7.10-1.0.6"
-kotlinJupyter = "0.11.0-95"
+ksp = "1.9.0-1.0.12"
+kotlinJupyter = "0.11.0-358"
 ktlint = "3.4.5"
-kotlin = "1.7.10"
-dokka = "1.5.31"
+kotlin = "1.9.0"
+dokka = "1.8.10"
 libsPublisher = "0.0.60-dev-30"
-dataframe = "0.8.1-dev-1068"
-korro = "0.1.1-dev-29"
+# "Bootstrap" version of the dataframe, used in the build itself to generate @DataSchema APIs,
+# dogfood Gradle / KSP plugins in tests and idea-examples modules
+dataframe = "0.12.0"
+korro = "0.1.5"
 kover = "0.6.0-Beta"
 
 commonsCsv = "1.8"
@@ -14,12 +16,23 @@ commonsCompress = "1.21"
 klaxon = "5.5"
 fuel = "2.3.1"
 poi = "5.2.2"
-kotlinDatetime = "0.3.1"
+mariadb = "3.1.4"
+h2db = "2.2.220"
+mysql = "8.0.33"
+postgresql = "42.6.0"
+sqlite = "3.42.0.1"
+kotlinDatetime = "0.4.0"
+kotlinpoet = "1.12.0"
+openapi = "2.1.13"
+kotlinLogging = "5.0.1"
+sl4j = "2.0.7"
 
 junit = "4.13.2"
 kotestAsserions = "4.6.3"
 jsoup = "1.14.3"
-arrow = "8.0.0"
+arrow = "11.0.0"
+docProcessor = "0.2.3"
+simpleGit = "2.0.3"
 
 [libraries]
 ksp-gradle = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }
@@ -36,6 +49,12 @@ commonsCompress = { module = "org.apache.commons:commons-compress", version.ref 
 klaxon = { module = "com.beust:klaxon", version.ref = "klaxon" }
 fuel = { module = "com.github.kittinunf.fuel:fuel", version.ref = "fuel" }
 poi = { module = "org.apache.poi:poi", version.ref = "poi" }
+mariadb = { group = "org.mariadb.jdbc", name = "mariadb-java-client", version.ref = "mariadb" }
+h2db = { group = "com.h2database", name = "h2", version.ref = "h2db" }
+mysql = { group = "mysql", name = "mysql-connector-java", version.ref = "mysql" }
+postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgresql" }
+sqlite = { group = "org.xerial", name = "sqlite-jdbc", version.ref = "sqlite" }
+
 poi-ooxml = { module = "org.apache.poi:poi-ooxml", version.ref = "poi" }
 kotlin-datetimeJvm = { module = "org.jetbrains.kotlinx:kotlinx-datetime-jvm", version.ref = "kotlinDatetime" }
 
@@ -46,6 +65,12 @@ jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 arrow-format = { group = "org.apache.arrow", name = "arrow-format", version.ref = "arrow" }
 arrow-vector = { group = "org.apache.arrow", name = "arrow-vector", version.ref = "arrow" }
 arrow-memory = { group = "org.apache.arrow", name = "arrow-memory-unsafe", version.ref = "arrow" }
+
+kotlinpoet = { group = "com.squareup", name = "kotlinpoet", version.ref = "kotlinpoet" }
+swagger = { group = "io.swagger.parser.v3", name = "swagger-parser", version.ref = "openapi" }
+
+kotlinLogging = { group = "io.github.oshai", name = "kotlin-logging", version.ref = "kotlinLogging" }
+sl4j = { group = "org.slf4j", name = "slf4j-simple", version.ref = "sl4j" }
 
 [plugins]
 jupyter-api = { id = "org.jetbrains.kotlin.jupyter.api", version.ref = "kotlinJupyter" }
@@ -58,3 +83,5 @@ korro = { id = "io.github.devcrocod.korro", version.ref = "korro" }
 kotlinter = { id = "org.jmailen.kotlinter", version.ref = "ktlint" }
 dataframe = { id = "org.jetbrains.kotlinx.dataframe", version.ref = "dataframe" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+docProcessor = { id = "nl.jolanrensen.docProcessor", version.ref = "docProcessor" }
+simpleGit = { id = "xyz.ronella.simple-git", version.ref = "simpleGit"}

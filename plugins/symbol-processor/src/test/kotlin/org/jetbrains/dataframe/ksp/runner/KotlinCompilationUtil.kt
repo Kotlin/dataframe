@@ -12,7 +12,7 @@ internal object KotlinCompilationUtil {
         sources: List<SourceFile>,
         outputStream: OutputStream,
         tempDir: File,
-        classpaths: List<File> = emptyList()
+        classpaths: List<File> = emptyList(),
     ): KotlinCompilation {
         val compilation = KotlinCompilation()
         compilation.workingDir = tempDir

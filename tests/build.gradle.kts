@@ -1,4 +1,4 @@
-import org.jetbrains.dataframe.gradle.DataSchemaVisibility
+import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 @Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 plugins {
@@ -12,11 +12,13 @@ plugins {
 
 repositories {
     mavenCentral()
+    mavenLocal() // for local development
 }
 
 dependencies {
     implementation(project(":core"))
     implementation(project(":dataframe-excel"))
+    implementation(project(":dataframe-jdbc"))
     implementation(project(":dataframe-arrow"))
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
@@ -24,6 +26,7 @@ dependencies {
     }
     testImplementation(libs.kotlin.datetimeJvm)
     testImplementation(libs.poi)
+    testImplementation(libs.arrow.vector)
 }
 
 kotlin.sourceSets {
@@ -37,7 +40,8 @@ kotlin.sourceSets {
 
 korro {
     docs = fileTree(rootProject.rootDir) {
-        include("docs/StardustDocs/topics/*.md")
+        include("docs/StardustDocs/topics/read.md")
+        include("docs/StardustDocs/topics/write.md")
     }
 
     samples = fileTree(project.projectDir) {
@@ -64,17 +68,24 @@ korro {
     }
 }
 
+tasks.formatKotlinMain {
+    dependsOn("kspKotlin")
+}
+
+tasks.formatKotlinTest {
+    dependsOn("kspTestKotlin")
+}
+
 tasks.lintKotlinMain {
-    exclude("**/*keywords*/**")
-    exclude {
-        it.name.endsWith(".Generated.kt")
-    }
-    exclude {
-        it.name.endsWith("\$Extensions.kt")
-    }
+    dependsOn("kspKotlin")
 }
 
 tasks.lintKotlinTest {
+    dependsOn("kspTestKotlin")
+}
+
+tasks.withType<LintTask> {
+    exclude("**/*keywords*/**")
     exclude {
         it.name.endsWith(".Generated.kt")
     }
@@ -84,26 +95,6 @@ tasks.lintKotlinTest {
     enabled = true
 }
 
-kotlinter {
-    ignoreFailures = false
-    reporters = arrayOf("checkstyle", "plain")
-    experimentalRules = true
-    disabledRules = arrayOf(
-        "no-wildcard-imports",
-        "experimental:spacing-between-declarations-with-annotations",
-        "experimental:enum-entry-name-case",
-        "experimental:argument-list-wrapping",
-        "experimental:annotation",
-        "max-line-length",
-        "filename"
-    )
-}
-
-dataframes {
-    schema {
-        sourceSet = "test"
-        visibility = DataSchemaVisibility.IMPLICIT_PUBLIC
-        data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
-        name = "org.jetbrains.kotlinx.dataframe.samples.api.Repository"
-    }
+tasks.test {
+    jvmArgs = listOf("--add-opens", "java.base/java.nio=ALL-UNNAMED")
 }

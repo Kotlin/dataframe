@@ -37,7 +37,6 @@ internal class FileTraversalTest {
         temp.findDeepestCommonSubdirectory() shouldBe leaf
     }
 
-
     @Test
     fun forkAtDepth0() {
         File(temp, "a/b/c").also { it.mkdirs() }
@@ -53,10 +52,8 @@ internal class FileTraversalTest {
         temp.findDeepestCommonSubdirectory() shouldBe a
     }
 
-
     @Test
     fun noSubdirectories() {
         temp.findDeepestCommonSubdirectory() shouldBe temp
     }
-
 }

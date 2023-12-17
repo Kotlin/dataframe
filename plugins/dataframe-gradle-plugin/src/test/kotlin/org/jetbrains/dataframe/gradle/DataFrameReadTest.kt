@@ -2,20 +2,24 @@ package org.jetbrains.dataframe.gradle
 
 import com.beust.klaxon.KlaxonException
 import io.kotest.assertions.asClue
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.assertions.throwables.shouldThrowAny
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.io.read
+import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.junit.Test
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.net.URL
 import java.nio.file.Files
+import java.nio.file.Paths
+import java.sql.DriverManager
+import kotlin.io.path.absolutePathString
 
 class DataFrameReadTest {
-
     @Test
     fun `file that does not exists`() {
         val temp = Files.createTempDirectory("").toFile()
@@ -75,10 +79,12 @@ class DataFrameReadTest {
             }
         }
     }
-    
+
     @Test
     fun `data accessible and readable`() {
-        val df = DataFrame.read(File("../../data/jetbrains_repositories.csv"))
+        shouldNotThrowAny {
+            DataFrame.read(Paths.get("../../data/jetbrains repositories.csv").absolutePathString())
+        }
     }
 
     @Test
@@ -88,5 +94,50 @@ class DataFrameReadTest {
 
         val df = DataFrame.read(temp)
         df.columnNames() shouldBe listOf("name", "age")
+    }
+
+    @Test
+    fun `jdbcSample is valid jdbc`() {
+        DriverManager.getConnection("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false")
+            .use { connection ->
+                // Create table Customer
+                connection.createStatement().execute(
+                    """
+                    CREATE TABLE Customer (
+                        id INT PRIMARY KEY,
+                        name VARCHAR(50),
+                        age INT
+                    )
+                    """.trimIndent()
+                )
+
+                // Create table Sale
+                connection.createStatement().execute(
+                    """
+                    CREATE TABLE Sale (
+                        id INT PRIMARY KEY,
+                        customerId INT,
+                        amount DECIMAL(10, 2)
+                    )
+                    """.trimIndent()
+                )
+
+                // add data to the Customer table
+                connection.createStatement().execute("INSERT INTO Customer (id, name, age) VALUES (1, 'John', 40)")
+                connection.createStatement().execute("INSERT INTO Customer (id, name, age) VALUES (2, 'Alice', 25)")
+                connection.createStatement().execute("INSERT INTO Customer (id, name, age) VALUES (3, 'Bob', 47)")
+
+                // add data to the Sale table
+                connection.createStatement().execute("INSERT INTO Sale (id, customerId, amount) VALUES (1, 1, 100.50)")
+                connection.createStatement().execute("INSERT INTO Sale (id, customerId, amount) VALUES (2, 2, 50.00)")
+                connection.createStatement().execute("INSERT INTO Sale (id, customerId, amount) VALUES (3, 1, 75.25)")
+                connection.createStatement().execute("INSERT INTO Sale (id, customerId, amount) VALUES (4, 3, 35.15)")
+
+                val dfCustomer = DataFrame.readSqlTable(connection, "Customer")
+                dfCustomer.columnNames() shouldBe listOf("id", "name", "age")
+
+                val dfSale = DataFrame.readSqlTable(connection, "Sale")
+                dfSale.columnNames() shouldBe listOf("id", "customerId", "amount")
+            }
     }
 }

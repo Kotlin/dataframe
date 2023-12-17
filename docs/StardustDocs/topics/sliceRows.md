@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
-Returns a `DataFrame` with rows at given indices:
+Returns a [`DataFrame`](DataFrame.md) with rows at given indices:
 
 <!---FUN getSeveralRowsByIndices-->
 
@@ -10,9 +10,10 @@ Returns a `DataFrame` with rows at given indices:
 df[0, 3, 4]
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.getSeveralRowsByIndices.html"/>
 <!---END-->
 
-Returns a `DataFrame` with rows inside given index ranges (including boundary indices):
+Returns a [`DataFrame`](DataFrame.md) with rows inside given index ranges (including boundary indices):
 
 <!---FUN getSeveralRowsByRanges-->
 
@@ -21,11 +22,12 @@ df[1..2]
 df[0..2, 4..5]
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.getSeveralRowsByRanges.html"/>
 <!---END-->
 
 ## take
 
-Returns a `DataFrame` containing first `n` rows
+Returns a [`DataFrame`](DataFrame.md) containing first `n` rows
 
 <!---FUN take-->
 
@@ -33,11 +35,12 @@ Returns a `DataFrame` containing first `n` rows
 df.take(5)
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.take.html"/>
 <!---END-->
 
 ## takeLast
 
-Returns a `DataFrame` containing last `n` rows
+Returns a [`DataFrame`](DataFrame.md) containing last `n` rows
 
 <!---FUN takeLast-->
 
@@ -45,11 +48,12 @@ Returns a `DataFrame` containing last `n` rows
 df.takeLast(5)
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.takeLast.html"/>
 <!---END-->
 
 ## takeWhile
 
-Returns a `DataFrame` containing first rows that satisfy the given [condition](DataRow.md#row-conditions)
+Returns a [`DataFrame`](DataFrame.md) containing first rows that satisfy the given [condition](DataRow.md#row-conditions)
 
 <!---FUN takeWhile-->
 
@@ -57,11 +61,12 @@ Returns a `DataFrame` containing first rows that satisfy the given [condition](D
 df.takeWhile { isHappy }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.takeWhile.html"/>
 <!---END-->
 
 ## drop
 
-Returns a `DataFrame` containing all rows except first `n` rows
+Returns a [`DataFrame`](DataFrame.md) containing all rows except first `n` rows
 
 <!---FUN drop-->
 
@@ -69,11 +74,12 @@ Returns a `DataFrame` containing all rows except first `n` rows
 df.drop(5)
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.drop.html"/>
 <!---END-->
 
 ## dropLast
 
-Returns a `DataFrame` containing all rows except last `n` rows
+Returns a [`DataFrame`](DataFrame.md) containing all rows except last `n` rows
 
 <!---FUN dropLast-->
 
@@ -82,11 +88,12 @@ df.dropLast() // default 1
 df.dropLast(5)
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.dropLast.html"/>
 <!---END-->
 
 ## dropWhile
 
-Returns a `DataFrame` containing all rows except first rows that satisfy the given [condition](DataRow.md#row-conditions)
+Returns a [`DataFrame`](DataFrame.md) containing all rows except first rows that satisfy the given [condition](DataRow.md#row-conditions)
 
 <!---FUN dropWhile-->
 
@@ -94,4 +101,5 @@ Returns a `DataFrame` containing all rows except first rows that satisfy the giv
 df.dropWhile { !isHappy }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.dropWhile.html"/>
 <!---END-->

@@ -17,7 +17,7 @@ columnNamesGenerator = DataColumn.(columnIndex: Int) -> String
 The following types of columns can be split without any _splitter_ configuration:
 * `String`: split by `,` and trim
 * `List`: split into elements
-* `DataFrame`: split into rows
+* [`DataFrame`](DataFrame.md): split into rows
 
 ## Split inplace
 
@@ -30,7 +30,7 @@ Use `.inplace()` terminal operation in `split` configuration to spread split val
 <tab title="Properties">
 
 ```kotlin
-df.split { name.firstName }.by { it.chars().toList() }.inplace()
+df.split { name.firstName }.by { it.asIterable() }.inplace()
 ```
 
 </tab>
@@ -40,40 +40,39 @@ df.split { name.firstName }.by { it.chars().toList() }.inplace()
 val name by columnGroup()
 val firstName by name.column<String>()
 
-df.split { firstName }.by { it.chars().toList() }.inplace()
+df.split { firstName }.by { it.asIterable() }.inplace()
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-df.split { "name"["firstName"]<String>() }.by { it.chars().toList() }.inplace()
+df.split { "name"["firstName"]<String>() }.by { it.asIterable() }.inplace()
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitInplace.html"/>
 <!---END-->
 
 ## Split horizontally
 
 Stores split values in new columns.
-* `into(col1, col2, ... )` — store splitted values in new top-level columns
-* `inward(col1, col2, ...)` — store splitted values in new columns nested inside original column
-* `intoColumns` — split `FrameColumn` into `ColumnGroup` storing in every cell a `List` of original values per every column
+* `into(col1, col2, ... )` — store split values in new top-level columns
+* `inward(col1, col2, ...)` — store split values in new columns nested inside original column
+* `intoColumns` — split [`FrameColumn`](DataColumn.md#framecolumn) into [`ColumnGroup`](DataColumn.md#columngroup) storing in every cell a `List` of original values per every column
 
 **Reverse operation:** [`merge`](merge.md)
 
 `columnNamesGenerator` is used to generate names for additional columns when the list of explicitly specified `columnNames` was not long enough. `columnIndex` starts with `1` for the first additional column name.
 
-Default `columnNamesGenerator` generates column names `splitted1`, `splitted2`...
+Default `columnNamesGenerator` generates column names `split1`, `split2`...
 
 <!---FUN split-->
 <tabs>
 <tab title="Properties">
 
 ```kotlin
-df.split { name }.by { it.values() }.into("nameParts")
-
-df.split { name.lastName }.by(" ").default("").inward { "word$it" }
+df.split { name.lastName }.by { it.asIterable() }.into("char1", "char2")
 ```
 
 </tab>
@@ -83,36 +82,82 @@ df.split { name.lastName }.by(" ").default("").inward { "word$it" }
 val name by columnGroup()
 val lastName by name.column<String>()
 
-df.split { name }.by { it.values() }.into("nameParts")
-
-df.split { lastName }.by(" ").default("").inward { "word$it" }
+df.split { lastName }.by { it.asIterable() }.into("char1", "char2")
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-df.split { name }.by { it.values() }.into("nameParts")
-
-df.split { "name"["lastName"] }.by(" ").default("").inward { "word$it" }
+df.split { "name"["lastName"]<String>() }.by { it.asIterable() }.into("char1", "char2")
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.split.html"/>
 <!---END-->
 
-`String` columns can also be splitted into group matches of [`Regex`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/-regex/) pattern:
+<!---FUN split1-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.split { name.lastName }
+    .by { it.asIterable() }.default(' ')
+    .inward { "char$it" }
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val name by columnGroup()
+val lastName by name.column<String>()
+
+df.split { lastName }
+    .by { it.asIterable() }.default(' ')
+    .inward { "char$it" }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.split { "name"["lastName"]<String>() }
+    .by { it.asIterable() }.default(' ')
+    .inward { "char$it" }
+```
+
+</tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.split1.html"/>
+<!---END-->
+
+`String` columns can also be split into group matches of [`Regex`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/-regex/) pattern:
 
 <!---FUN splitRegex-->
 
 ```kotlin
+val merged = df.merge { name.lastName and name.firstName }
+    .by { it[0] + " (" + it[1] + ")" }
+    .into("name")
+```
+
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitRegex.html"/>
+<!---END-->
+
+<!---FUN splitRegex1-->
+
+```kotlin
+val name by column<String>()
+
 merged.split { name }
     .match("""(.*) \((.*)\)""")
     .inward("firstName", "lastName")
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitRegex1.html"/>
 <!---END-->
 
-`FrameColumn` can be splitted into columns:
+[`FrameColumn`](DataColumn.md#framecolumn) can be split into columns:
 
 <!---FUN splitFrameColumn-->
 
@@ -148,7 +193,7 @@ Use `.intoRows()` terminal operation in `split` configuration to spread split va
 <tab title="Properties">
 
 ```kotlin
-df.split { name.firstName }.by { it.chars().toList() }.intoRows()
+df.split { name.firstName }.by { it.asIterable() }.intoRows()
 
 df.split { name }.by { it.values() }.intoRows()
 ```
@@ -160,7 +205,7 @@ df.split { name }.by { it.values() }.intoRows()
 val name by columnGroup()
 val firstName by name.column<String>()
 
-df.split { firstName }.by { it.chars().toList() }.intoRows()
+df.split { firstName }.by { it.asIterable() }.intoRows()
 
 df.split { name }.by { it.values() }.intoRows()
 ```
@@ -169,12 +214,13 @@ df.split { name }.by { it.values() }.intoRows()
 <tab title="Strings">
 
 ```kotlin
-df.split { "name"["firstName"]<String>() }.by { it.chars().toList() }.intoRows()
+df.split { "name"["firstName"]<String>() }.by { it.asIterable() }.intoRows()
 
-df.split { group("name") }.by { it.values() }.intoRows()
+df.split { colGroup("name") }.by { it.values() }.intoRows()
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitIntoRows.html"/>
 <!---END-->
 
 Equals to `split { column }...inplace().explode { column }`. See [`explode`](explode.md) for details.

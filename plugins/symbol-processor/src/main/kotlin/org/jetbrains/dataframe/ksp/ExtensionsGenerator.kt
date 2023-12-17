@@ -12,7 +12,6 @@ import com.google.devtools.ksp.symbol.KSClassifierReference
 import com.google.devtools.ksp.symbol.KSDeclaration
 import com.google.devtools.ksp.symbol.KSFile
 import com.google.devtools.ksp.symbol.KSName
-import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.google.devtools.ksp.symbol.KSTypeReference
 import com.google.devtools.ksp.symbol.KSValueArgument
 import com.google.devtools.ksp.symbol.Modifier
@@ -25,54 +24,55 @@ import java.io.OutputStreamWriter
 class ExtensionsGenerator(
     private val resolver: Resolver,
     private val codeGenerator: CodeGenerator,
-    private val logger: KSPLogger
+    private val logger: KSPLogger,
 ) {
     private companion object {
         val EXPECTED_VISIBILITIES = setOf(Visibility.PUBLIC, Visibility.INTERNAL)
     }
 
-    fun resolveValidDataSchemaDeclarations(): Sequence<DataSchemaDeclaration> {
+    fun resolveDataSchemaDeclarations(): Pair<Sequence<DataSchemaDeclaration>, List<KSClassDeclaration>> {
         val dataSchemaAnnotation = resolver.getKSNameFromString(DataFrameNames.DATA_SCHEMA)
         val symbols = resolver.getSymbolsWithAnnotation(dataSchemaAnnotation.asString())
 
-        return symbols
+        val (validDeclarations, invalidDeclarations) = symbols
             .filterIsInstance<KSClassDeclaration>()
-            .mapNotNull {
-                if (it.validate()) {
-                    it.toDataSchemaDeclarationOrNull()
-                } else {
-                    null
-                }
-            }
+            .partition { it.validate() }
+
+        val preprocessedDeclarations = validDeclarations
+            .asSequence()
+            .mapNotNull { it.toDataSchemaDeclarationOrNull() }
+
+        return Pair(preprocessedDeclarations, invalidDeclarations)
     }
 
     class DataSchemaDeclaration(
         val origin: KSClassDeclaration,
-        val properties: List<KSAnnotatedWithType>
+        val properties: List<KSAnnotatedWithType>,
     )
 
     class KSAnnotatedWithType(
         private val declaration: KSAnnotated,
         val simpleName: KSName,
-        val type: KSTypeReference
+        val type: KSTypeReference,
     ) : KSAnnotated by declaration
 
     private fun KSClassDeclaration.toDataSchemaDeclarationOrNull(): DataSchemaDeclaration? {
         return when {
             isClassOrInterface() && effectivelyPublicOrInternal() -> {
                 DataSchemaDeclaration(
-                    this,
-                    declarations
-                        .filterIsInstance<KSPropertyDeclaration>()
+                    origin = this,
+                    properties = getAllProperties()
                         .map { KSAnnotatedWithType(it, it.simpleName, it.type) }
-                        .toList()
+                        .toList(),
                 )
             }
+
             else -> null
         }
     }
 
-    private fun KSClassDeclaration.isClassOrInterface() = classKind == ClassKind.INTERFACE || classKind == ClassKind.CLASS
+    private fun KSClassDeclaration.isClassOrInterface() =
+        classKind == ClassKind.INTERFACE || classKind == ClassKind.CLASS
 
     private fun KSClassDeclaration.effectivelyPublicOrInternal(): Boolean {
         return effectivelyPublicOrInternalOrNull(dataSchema = this) != null
@@ -121,7 +121,7 @@ class ExtensionsGenerator(
                     declaration = dataSchema,
                     interfaceName = dataSchema.getQualifiedNameOrThrow(),
                     visibility = getMarkerVisibility(dataSchema),
-                    properties.map { property ->
+                    properties = properties.map { property ->
                         Property(getColumnName(property), property.simpleName.asString(), property.type)
                     }
                 )
@@ -155,23 +155,35 @@ class ExtensionsGenerator(
 
     private fun getMarkerVisibility(dataSchema: KSClassDeclaration) =
         when (val visibility = dataSchema.getVisibility()) {
-            Visibility.PUBLIC -> if (dataSchema.modifiers.contains(Modifier.PUBLIC)) {
-                MarkerVisibility.EXPLICIT_PUBLIC
-            } else {
-                MarkerVisibility.IMPLICIT_PUBLIC
-            }
-            Visibility.INTERNAL -> MarkerVisibility.INTERNAL
-            Visibility.PRIVATE, Visibility.PROTECTED, Visibility.LOCAL, Visibility.JAVA_PACKAGE -> {
-                error("DataSchema declaration should have ${EXPECTED_VISIBILITIES}, but was $visibility")
-            }
+            Visibility.PUBLIC ->
+                if (dataSchema.modifiers.contains(Modifier.PUBLIC)) {
+                    MarkerVisibility.EXPLICIT_PUBLIC
+                } else {
+                    MarkerVisibility.IMPLICIT_PUBLIC
+                }
+
+            Visibility.INTERNAL ->
+                MarkerVisibility.INTERNAL
+
+            Visibility.PRIVATE, Visibility.PROTECTED, Visibility.LOCAL, Visibility.JAVA_PACKAGE ->
+                error("DataSchema declaration should have $EXPECTED_VISIBILITIES, but was $visibility")
         }
 
     private fun getColumnName(property: KSAnnotatedWithType): String {
-        val columnNameAnnotation =  property.annotations.firstOrNull { annotation ->
+        val columnNameAnnotation = property.annotations.firstOrNull { annotation ->
             val annotationType = annotation.annotationType
-            (annotationType.element as? KSClassifierReference)?.referencedName()
-                .let { it == null || it == DataFrameNames.SHORT_COLUMN_NAME }
-                && annotationType.resolve().declaration.qualifiedName?.asString() == DataFrameNames.COLUMN_NAME
+
+            val typeIsColumnNameOrNull = (annotationType.element as? KSClassifierReference)
+                ?.referencedName()
+                ?.let { it == DataFrameNames.SHORT_COLUMN_NAME } != false
+
+            val declarationIsColumnName = annotationType
+                .resolve()
+                .declaration
+                .qualifiedName
+                ?.asString() == DataFrameNames.COLUMN_NAME
+
+            typeIsColumnNameOrNull && declarationIsColumnName
         }
         return if (columnNameAnnotation != null) {
             when (val arg = columnNameAnnotation.arguments.singleOrNull()) {
@@ -182,7 +194,7 @@ class ExtensionsGenerator(
             property.simpleName.asString()
         }
     }
-    
+
     private fun typeMismatchError(property: KSAnnotatedWithType, arg: KSValueArgument): Nothing {
         error("Expected one argument of type String in annotation ColumnName on property ${property.simpleName}, but got ${arg.value}")
     }

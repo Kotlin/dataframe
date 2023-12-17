@@ -1,16 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<buildprofiles>
+<buildprofiles xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/build-profiles.xsd"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <variables>
         <web-root>https://kotlin.github.io/dataframe/</web-root>
         <download-page/>
-        <config-feedback-enabled>true</config-feedback-enabled>
-        <config-feedback-widget>true</config-feedback-widget>
-        <config-feedback-support>null</config-feedback-support>
-        <config-feedback-url>https://support.jetbrains.com</config-feedback-url>
-        <config-webmaster>webmaster@jetbrains.com</config-webmaster>
-        <config-search-scopes-provider>https://www.jetbrains.com/search/json/</config-search-scopes-provider>
+        <feedback-widget>false</feedback-widget>
+        <webmaster>webmaster@jetbrains.com</webmaster>
+        <algolia-id>JWPLKSKZVF</algolia-id>
+        <algolia-index>prod_DATAFRAME_HELP</algolia-index>
+        <algolia-api-key>bce9ba6ce7419efe813d671244d3bf6a</algolia-api-key>
+        <search-scopes-provider>https://www.jetbrains.com/search/json/</search-scopes-provider>
         <generate-sitemap-url-prefix>https://kotlin.github.io/dataframe/</generate-sitemap-url-prefix>
+        <analytics-head-script-file>resize-iframes.js</analytics-head-script-file>
+        <enable-browser-edits>true</enable-browser-edits>
+        <browser-edits-url>https://github.com/Kotlin/dataframe/edit/master/docs/StardustDocs/</browser-edits-url>
     </variables>
-    <build-profile product="d"/>
+    <build-profile instance="d">
+        <variables>
+            <noindex-content>false</noindex-content>
+        </variables>
+    </build-profile>
+    <footer>
+        <social type="twitter" href="https://twitter.com/KotlinForData"/>
+        <social type="youtube" href="https://www.youtube.com/@Kotlin"/>
+        <link href="https://github.com/Kotlin/dataframe">GitHub</link>
+        <link href="https://kotlinlang.slack.com/archives/C4W52CFEZ">Slack Community</link>
+    </footer>
 </buildprofiles>

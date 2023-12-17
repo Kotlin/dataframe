@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 
-General information about `DataFrame`:
+General information about [`DataFrame`](DataFrame.md):
 * [`count`](count.md) / [`rowsCount()`](rowsCount.md) — number of rows
 * [`countDistinct()`](countDistinct.md) — number of distinct rows
 * [`columnsCount()`](columnsCount.md) — number of columns

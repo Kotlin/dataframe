@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 
-Splits the rows of `DataFrame` and groups them horizontally into new columns based on values from one or several columns of original `DataFrame`.
+Splits the rows of [`DataFrame`](DataFrame.md) and groups them horizontally into new columns based on values from one or several columns of original [`DataFrame`](DataFrame.md).
 
 ```text
 pivot (inward = true) { pivotColumns }
@@ -48,6 +48,7 @@ df.pivot("city")
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivot.html"/>
 <!---END-->
 
 To pivot several columns at once you can combine them using `and` or `then` infix function:
@@ -84,11 +85,13 @@ df.pivot { "city" then "name"["firstName"] }
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivot2.html"/>
 <!---END-->
 
 ## pivot + groupBy
 
-To create matrix table that is expanded both horizontally and vertically, apply `groupBy` transformation passing the columns for vertical grouping. Reversed order of `pivot` and `groupBy` will produce the same result.
+To create matrix table that is expanded both horizontally and vertically, apply [`groupBy`](groupBy.md) transformation passing the columns for vertical grouping. 
+Reversed order of `pivot` and [`groupBy`](groupBy.md) will produce the same result.
 
 <!---FUN pivotGroupBy-->
 <tabs>
@@ -122,6 +125,7 @@ df.groupBy("name").pivot("city")
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotGroupBy.html"/>
 <!---END-->
 
 To group by all columns except pivoted use `groupByOther`:
@@ -132,6 +136,7 @@ To group by all columns except pivoted use `groupByOther`:
 df.pivot { city }.groupByOther()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotGroupByOther.html"/>
 <!---END-->
 
 ## Aggregation
@@ -144,6 +149,37 @@ To aggregate data groups with one or several statistics use `aggregate`:
 
 ```kotlin
 df.pivot { city }.aggregate { minBy { age }.name }
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val city by column<String?>()
+val name by columnGroup()
+val firstName by name.column<String>()
+val age by column<Int>()
+val weight by column<Int?>()
+
+df.pivot { city }.aggregate { minBy(age).name }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.pivot("city").aggregate { minBy("age")["name"] }
+```
+
+</tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotAggregate.html"/>
+<!---END-->
+
+<!---FUN pivotAggregate1-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
 df.pivot { city }.groupBy { name.firstName }.aggregate {
     meanFor { age and weight } into "means"
     stdFor { age and weight } into "stds"
@@ -161,8 +197,6 @@ val firstName by name.column<String>()
 val age by column<Int>()
 val weight by column<Int?>()
 
-df.pivot { city }.aggregate { minBy(age).name }
-
 df.pivot { city }.groupBy { firstName }.aggregate {
     meanFor { age and weight } into "means"
     stdFor { age and weight } into "stds"
@@ -174,8 +208,6 @@ df.pivot { city }.groupBy { firstName }.aggregate {
 <tab title="Strings">
 
 ```kotlin
-df.pivot("city").aggregate { minBy("age")["name"] }
-
 df.pivot("city").groupBy { "name"["firstName"] }.aggregate {
     meanFor("age", "weight") into "means"
     stdFor("age", "weight") into "stds"
@@ -184,6 +216,7 @@ df.pivot("city").groupBy { "name"["firstName"] }.aggregate {
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotAggregate1.html"/>
 <!---END-->
 
 Shortcuts for common aggregation functions are also available:
@@ -219,10 +252,14 @@ df.groupBy("name").pivot("city").median("age")
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotCommonAggregations.html"/>
 <!---END-->
 
-By default, when aggregation function produces several values for single data group, column hierarchy in resulting `DataFrame` will be indexed first by pivot keys and then by the names of aggregated values.
-To reverse this order so that resulting columns will be indexed first by names of aggregated values and then by pivot keys, use `separate=true` flag that is available in multi-result aggregation operations, such as `aggregate` or `<stat>For`:
+By default, when aggregation function produces several values for single data group, 
+column hierarchy in resulting [`DataFrame`](DataFrame.md) 
+will be indexed first by pivot keys and then by the names of aggregated values.
+To reverse this order so that resulting columns will be indexed first by names of aggregated values and then by pivot keys, 
+use `separate=true` flag that is available in multi-result aggregation operations, such as `aggregate` or `<stat>For`:
 
 <!---FUN pivotSeparate-->
 <tabs>
@@ -275,10 +312,6 @@ To use one default value for all aggregation functions, use `default()` before a
 
 ```kotlin
 df.pivot { city }.groupBy { name }.aggregate { min { age } default 0 }
-df.pivot { city }.groupBy { name }.aggregate {
-    median { age } into "median age" default 0
-    minOrNull { weight } into "min weight" default 100
-}
 df.pivot { city }.groupBy { name }.default(0).min()
 ```
 
@@ -292,10 +325,6 @@ val weight by column<Int?>()
 val name by columnGroup()
 
 df.pivot { city }.groupBy { name }.aggregate { min { age } default 0 }
-df.pivot { city }.groupBy { name }.aggregate {
-    median { age } into "median age" default 0
-    minOrNull { weight } into "min weight" default 100
-}
 df.pivot { city }.groupBy { name }.default(0).min()
 ```
 
@@ -304,19 +333,57 @@ df.pivot { city }.groupBy { name }.default(0).min()
 
 ```kotlin
 df.pivot("city").groupBy("name").aggregate { min("age") default 0 }
-df.pivot("city").groupBy("name").aggregate {
-    median("age") into "median age" default 0
-    minOrNull("weight") into "min weight" default 100
-}
 df.pivot("city").groupBy("name").default(0).min()
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotDefault.html"/>
+<!---END-->
+
+<!---FUN pivotDefault1-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.pivot { city }.groupBy { name }.aggregate {
+    median { age } into "median age" default 0
+    minOrNull { weight } into "min weight" default 100
+}
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val city by column<String?>()
+val age by column<Int>()
+val weight by column<Int?>()
+val name by columnGroup()
+
+df.pivot { city }.groupBy { name }.aggregate {
+    median { age } into "median age" default 0
+    minOrNull { weight } into "min weight" default 100
+}
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.pivot("city").groupBy("name").aggregate {
+    median("age") into "median age" default 0
+    minOrNull("weight") into "min weight" default 100
+}
+```
+
+</tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotDefault1.html"/>
 <!---END-->
 
 ### Pivot inside aggregate
 
-[pivot](pivot.md) transformation can be used inside [`aggregate`](groupBy.md#aggregation) function of [`GroupBy`](groupBy.md). This allows to combine column pivoting with other [`groupBy`](groupBy.md) aggregations:
+pivot transformation can be used inside [`aggregate`](groupBy.md#aggregation) function of [`groupBy`](groupBy.md). 
+This allows to combine column pivoting with other [`groupBy`](groupBy.md) aggregations:
 
 <!---FUN pivotInAggregate-->
 <tabs>
@@ -364,11 +431,13 @@ df.groupBy { "name"["firstName"] }.aggregate {
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotInAggregate.html"/>
 <!---END-->
 
 ### pivotCounts
 
-Pivots with [`count`](count.md) statistics one or several columns preserving all other columns of `DataFrame` or `GroupBy`.
+Pivots with [`count`](count.md) statistics one or several columns preserving all other columns of [`DataFrame`](DataFrame.md) 
+or [`GroupBy DataFrame`](groupBy.md#transformation).
 
 <!---FUN pivotCounts-->
 
@@ -386,11 +455,12 @@ df.groupBy { name }.aggregate {
 }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotCounts.html"/>
 <!---END-->
 
 ### pivotMatches
 
-Pivots with `Boolean` statistics one or several columns preserving all other columns of `DataFrame`.
+Pivots with `Boolean` statistics one or several columns preserving all other columns of [`DataFrame`](DataFrame.md).
 
 <!---FUN pivotMatches-->
 
@@ -408,4 +478,5 @@ df.groupBy { name }.aggregate {
 }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotMatches.html"/>
 <!---END-->

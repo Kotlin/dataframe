@@ -2,21 +2,22 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 
-Computes cumulative sum of values in selected columns.
+Computes the cumulative sum of values in the selected columns.
 
 ```text
 cumSum(skipNA = true) [ { columns } ]
 ```
 
-Returns a `DataFrame` or `DataColumn` containing the cumulative sum.
+Returns a [`DataFrame`](DataFrame.md) or [`DataColumn`](DataColumn.md) containing the cumulative sum.
 
 **Parameters:**
-* `skipNA` — when `true`, ignores `NA` (`null` or `NaN`) values. When `false`, all values after first `NA` will be `NaN` (for `Double` and `Float` columns) or `null` (for integer columns).
+* `skipNA` — when `true`, ignores [`NA` values](nanAndNa.md#na) (`null` or `NaN`). 
+  When `false`, all values after first `NA` will be `NaN` (for `Double` and `Float` columns) or `null` (for integer columns).
 
 **Available for:**
 * [`DataFrame`](DataFrame.md)
 * [`DataColumn`](DataColumn.md)
-* [`GroupBy`](groupBy.md) — cumulative sum per every data group
+* [`GroupBy DataFrame`](groupBy.md#transformation) — cumulative sum per every data group
 
 <!---FUN cumSum-->
 

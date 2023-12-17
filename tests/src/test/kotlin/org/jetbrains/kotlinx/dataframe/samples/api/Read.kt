@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.columnTypes
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.with
+import org.jetbrains.kotlinx.dataframe.io.ColType
 import org.jetbrains.kotlinx.dataframe.io.readArrowFeather
 import org.jetbrains.kotlinx.dataframe.io.readCSV
 import org.jetbrains.kotlinx.dataframe.io.readJson
@@ -17,9 +18,10 @@ import org.jetbrains.kotlinx.dataframe.testArrowFeather
 import org.jetbrains.kotlinx.dataframe.testCsv
 import org.jetbrains.kotlinx.dataframe.testJson
 import org.junit.Test
+import java.util.*
 import kotlin.reflect.typeOf
 
-class Read : TestBase() {
+class Read {
     @Test
     fun readCsvCustom() {
         val file = testCsv("syntheticSample")
@@ -83,5 +85,27 @@ class Read : TestBase() {
         // SampleEnd
         df.rowsCount() shouldBe 1
         df.columnsCount() shouldBe 4
+    }
+
+    @Test
+    fun readNumbersWithSpecificLocale() {
+        val file = testCsv("numbers")
+        // SampleStart
+        val df = DataFrame.readCSV(
+            file,
+            parserOptions = ParserOptions(locale = Locale.UK),
+        )
+        // SampleEnd
+    }
+
+    @Test
+    fun readNumbersWithColType() {
+        val file = testCsv("numbers")
+        // SampleStart
+        val df = DataFrame.readCSV(
+            file,
+            colTypes = mapOf("colName" to ColType.String)
+        )
+        // SampleEnd
     }
 }

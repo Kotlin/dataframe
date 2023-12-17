@@ -1,7 +1,7 @@
 [//]: # (title: rows)
 
-Return rows of `DataFrame` as `Iterable<DataRow>`.
+Return rows of [`DataFrame`](DataFrame.md) as `Iterable<DataRow>`.
 
 ## rowsReversed
 
-Return rows of `DataFrame` in reversed order.
+Return rows of [`DataFrame`](DataFrame.md) in reversed order.

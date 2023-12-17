@@ -24,7 +24,8 @@ dataframes {
 }
 ```
 In this case output path will depend on your directory structure. For project with package `org.example` path will be `build/generated/dataframe/main/kotlin/org/example/dataframe/Securities.Generated.kt
-`. Note that name of the Kotlin file is derived from the name of the data file with the suffix `.Generated` and the package is derived from the directory structure with child directory `dataframe`. The name of the **data schema** itself is `Securities`. You could specify it explicitly:
+`. Note that name of the Kotlin file is derived from the name of the data file with the suffix `.Generated` and the package 
+is derived from the directory structure with child directory `dataframe`. The name of the **data schema** itself is `Securities`. You could specify it explicitly:
 ```kotlin
 schema {
     // output: build/generated/dataframe/main/kotlin/org/example/dataframe/MyName.Generated.kt
