@@ -15,6 +15,8 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.UUID
+import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.select
 import org.junit.Ignore
 import kotlin.reflect.typeOf
 
@@ -26,6 +28,7 @@ private const val PASSWORD = "pass"
 interface Table1 {
     val id: Int
     val bigintcol: Long
+    val smallintcol: Int
     val bigserialcol: Long
     val booleancol: Boolean
     val boxcol: String
@@ -74,7 +77,7 @@ interface ViewTable {
     val textCol: String?
 }
 
-@Ignore
+//@Ignore
 class PostgresTest {
     companion object {
         private lateinit var connection: Connection
@@ -92,6 +95,7 @@ class PostgresTest {
                 CREATE TABLE IF NOT EXISTS table1 (
                 id serial PRIMARY KEY,
                 bigintCol bigint not null,
+                smallintCol smallint not null,
                 bigserialCol bigserial not null,
                 booleanCol boolean not null,
                 boxCol box not null,
@@ -144,11 +148,11 @@ class PostgresTest {
             @Language("SQL")
             val insertData1 = """
             INSERT INTO table1 (
-                bigintCol, bigserialCol,  booleanCol, 
+                bigintCol, smallintCol, bigserialCol,  booleanCol, 
                 boxCol, byteaCol, characterCol, characterNCol, charCol, 
                  circleCol, dateCol, doubleCol, 
                 integerCol, intervalCol, jsonCol, jsonbCol
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """
 
             @Language("SQL")
@@ -166,25 +170,26 @@ class PostgresTest {
                 // Insert data into table1
                 for (i in 1..3) {
                     st.setLong(1, i * 1000L)
-                    st.setLong(2, 1000000000L + i)
-                    st.setBoolean(3, i % 2 == 1)
-                    st.setObject(4, org.postgresql.geometric.PGbox("(1,1),(2,2)"))
-                    st.setBytes(5, byteArrayOf(1, 2, 3))
-                    st.setString(6, "A")
-                    st.setString(7, "Hello")
-                    st.setString(8, "A")
-                    st.setObject(9, org.postgresql.geometric.PGcircle("<(1,2),3>"))
-                    st.setDate(10, java.sql.Date.valueOf("2023-08-01"))
-                    st.setDouble(11, 12.34)
-                    st.setInt(12, 12345 * i)
-                    st.setObject(13, org.postgresql.util.PGInterval("1 year"))
+                    st.setShort(2, 11.toShort())
+                    st.setLong(3, 1000000000L + i)
+                    st.setBoolean(4, i % 2 == 1)
+                    st.setObject(5, org.postgresql.geometric.PGbox("(1,1),(2,2)"))
+                    st.setBytes(6, byteArrayOf(1, 2, 3))
+                    st.setString(7, "A")
+                    st.setString(8, "Hello")
+                    st.setString(9, "A")
+                    st.setObject(10, org.postgresql.geometric.PGcircle("<(1,2),3>"))
+                    st.setDate(11, java.sql.Date.valueOf("2023-08-01"))
+                    st.setDouble(12, 12.34)
+                    st.setInt(13, 12345 * i)
+                    st.setObject(14, org.postgresql.util.PGInterval("1 year"))
 
                     val jsonbObject = PGobject()
                     jsonbObject.type = "jsonb"
                     jsonbObject.value = "{\"key\": \"value\"}"
 
-                    st.setObject(14, jsonbObject)
                     st.setObject(15, jsonbObject)
+                    st.setObject(16, jsonbObject)
                     st.executeUpdate()
                 }
             }
@@ -245,11 +250,14 @@ class PostgresTest {
         val tableName1 = "table1"
         val df1 = DataFrame.readSqlTable(connection, tableName1).cast<Table1>()
         val result = df1.filter { it[Table1::id] == 1 }
-        result[0][12] shouldBe 12345
+
+        result[0][2] shouldBe 11
+        result[0][13] shouldBe 12345
 
         val schema = DataFrame.getSchemaForSqlTable(connection, tableName1)
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["integercol"]!!.type shouldBe typeOf<Int?>()
+        schema.columns["smallintcol"]!!.type shouldBe typeOf<Int>()
         schema.columns["circlecol"]!!.type shouldBe typeOf<Any>()
 
         val tableName2 = "table2"
@@ -297,6 +305,7 @@ class PostgresTest {
         table1Df.rowsCount() shouldBe 3
         table1Df.filter { it[Table1::integercol] != null && it[Table1::integercol]!! > 12345 }.rowsCount() shouldBe 2
         table1Df[0][1] shouldBe 1000L
+        table1Df[0][2] shouldBe 11
 
         val table2Df = dataframes[1].cast<Table2>()
 
@@ -304,5 +313,16 @@ class PostgresTest {
         table2Df.filter { it[Table2::pathcol] == org.postgresql.geometric.PGpath("((1,2),(3,1))") }
             .rowsCount() shouldBe 1
         table2Df[0][11] shouldBe 1001
+    }
+
+    @Test
+    fun `read smallint type from tables`() {
+        val tableName1 = "table1"
+        val df1 = DataFrame.readSqlTable(connection, tableName1).cast<Table1>()
+        val result = df1.select ( "smallintcol" ).add("smallintcol2") {it[Table1::smallintcol]}
+        result[0][1] shouldBe 11
+
+        val schema = DataFrame.getSchemaForSqlTable(connection, tableName1)
+        schema.columns["smallintcol"]!!.type shouldBe typeOf<Int>()
     }
 }

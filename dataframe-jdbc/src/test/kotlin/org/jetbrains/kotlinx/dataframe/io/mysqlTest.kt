@@ -13,6 +13,8 @@ import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
+import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.select
 import org.junit.Ignore
 import kotlin.reflect.typeOf
 
@@ -99,7 +101,7 @@ interface Table3MySql {
     val setCol: Char?
 }
 
-@Ignore
+//@Ignore
 class MySqlTest {
     companion object {
         private lateinit var connection: Connection
@@ -384,5 +386,36 @@ class MySqlTest {
             .rowsCount() shouldBe 1
         table2Df[0][11] shouldBe 20.0
         table2Df[0][26] shouldBe null
+    }
+
+    @Test
+    fun `reading numeric types`() {
+        val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MySql>()
+
+        val result = df1.select("tinyintCol").add("tinyintCol2") { it[Table1MySql::tinyintCol] }
+
+        result[1][1] shouldBe 1.toByte()
+
+        val result1 = df1.select("smallintCol")
+            .add("smallintCol2") { it[Table1MySql::smallintCol] }
+
+        result1[1][1] shouldBe 10.toShort()
+
+        val result2 = df1.select("mediumintCol")
+            .add("mediumintCol2") { it[Table1MySql::mediumintCol] }
+
+        result2[1][1] shouldBe 100
+
+        val result3 = df1.select("mediumintUnsignedCol")
+            .add("mediumintUnsignedCol2") { it[Table1MySql::mediumintUnsignedCol] }
+
+        result3[1][1] shouldBe 100
+
+        val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
+
+        schema.columns["tinyintCol"]!!.type shouldBe typeOf<Byte>()
+        schema.columns["smallintCol"]!!.type shouldBe typeOf<Short>()
+        schema.columns["mediumintCol"]!!.type shouldBe typeOf<Int>()
+        schema.columns["mediumintUnsignedCol"]!!.type shouldBe typeOf<Int>()
     }
 }
