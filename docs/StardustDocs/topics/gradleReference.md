@@ -14,18 +14,18 @@ Note than name of the file and the interface are normalized: split by '_' and ' 
 You can set parsing options for CSV:
 ```kotlin
 dataframes {
-    // output: build/generated/dataframe/main/kotlin/org/example/dataframe/Securities.Generated.kt
+    // output: build/generated/dataframe/main/kotlin/org/example/dataframe/JetbrainsRepositories.Generated.kt
     schema {
-        data = "https://raw.githubusercontent.com/Kotlin/dataframe/1765966904c5920154a4a480aa1fcff23324f477/data/securities.csv"
+        data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
         csvOptions {
-            delimiter = ';'
+            delimiter = ','
         }
     }
 }
 ```
-In this case output path will depend on your directory structure. For project with package `org.example` path will be `build/generated/dataframe/main/kotlin/org/example/dataframe/Securities.Generated.kt
+In this case output path will depend on your directory structure. For project with package `org.example` path will be `build/generated/dataframe/main/kotlin/org/example/dataframe/JetbrainsRepositories.Generated.kt
 `. Note that name of the Kotlin file is derived from the name of the data file with the suffix `.Generated` and the package 
-is derived from the directory structure with child directory `dataframe`. The name of the **data schema** itself is `Securities`. You could specify it explicitly:
+is derived from the directory structure with child directory `dataframe`. The name of the **data schema** itself is `JetbrainsRepositories`. You could specify it explicitly:
 ```kotlin
 schema {
     // output: build/generated/dataframe/main/kotlin/org/example/dataframe/MyName.Generated.kt
