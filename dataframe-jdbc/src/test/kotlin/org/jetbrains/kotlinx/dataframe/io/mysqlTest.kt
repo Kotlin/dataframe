@@ -30,7 +30,7 @@ interface Table1MySql {
     val tinyintCol: Int
     val smallintCol: Int
     val mediumintCol: Int
-    val mediumintUnsignedCol: Long
+    val mediumintUnsignedCol: Int
     val integerCol: Int
     val intCol: Int
     val integerUnsignedCol: Long
@@ -65,7 +65,7 @@ interface Table2MySql {
     val tinyintCol: Int?
     val smallintCol: Int?
     val mediumintCol: Int?
-    val mediumintUnsignedCol: Long?
+    val mediumintUnsignedCol: Int?
     val integerCol: Int?
     val intCol: Int?
     val integerUnsignedCol: Long?
@@ -394,28 +394,40 @@ class MySqlTest {
 
         val result = df1.select("tinyintCol").add("tinyintCol2") { it[Table1MySql::tinyintCol] }
 
-        result[1][1] shouldBe 1.toByte()
+        result[0][1] shouldBe 1.toByte()
 
         val result1 = df1.select("smallintCol")
             .add("smallintCol2") { it[Table1MySql::smallintCol] }
 
-        result1[1][1] shouldBe 10.toShort()
+        result1[0][1] shouldBe 10.toShort()
 
         val result2 = df1.select("mediumintCol")
             .add("mediumintCol2") { it[Table1MySql::mediumintCol] }
 
-        result2[1][1] shouldBe 100
+        result2[0][1] shouldBe 100
 
         val result3 = df1.select("mediumintUnsignedCol")
             .add("mediumintUnsignedCol2") { it[Table1MySql::mediumintUnsignedCol] }
 
-        result3[1][1] shouldBe 100
+        result3[0][1] shouldBe 100
+
+        val result4 = df1.select("integerUnsignedCol")
+            .add("integerUnsignedCol2") { it[Table1MySql::integerUnsignedCol] }
+
+        result4[0][1] shouldBe 100L
 
         val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
 
-        schema.columns["tinyintCol"]!!.type shouldBe typeOf<Byte>()
-        schema.columns["smallintCol"]!!.type shouldBe typeOf<Short>()
+        schema.columns["tinyintCol"]!!.type shouldBe typeOf<Int>()
+        schema.columns["smallintCol"]!!.type shouldBe typeOf<Int>()
         schema.columns["mediumintCol"]!!.type shouldBe typeOf<Int>()
         schema.columns["mediumintUnsignedCol"]!!.type shouldBe typeOf<Int>()
+        schema.columns["integerUnsignedCol"]!!.type shouldBe typeOf<Long>()
+        // TODO: all unsigned types
+        // TODO: new mapping system based on class names
+        // validation after mapping in getObject
+        // getObject(i+1, type) catch getObject catch getString
+        // add direct mapping to getString and other methods
+
     }
 }

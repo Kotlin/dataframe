@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.io.db
 import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
+import java.sql.Types
 import java.util.Locale
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -21,6 +22,10 @@ public object MySql : DbType("mysql") {
         get() = "com.mysql.jdbc.Driver"
 
     override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? {
+        if(tableColumnMetadata.jdbcType == Types.TINYINT) // because of https://github.com/pgjdbc/pgjdbc/blob/246b759cdc264c2732717dbd6ff9f8f472024196/pgjdbc/src/main/java/org/postgresql/jdbc/PgResultSet.java#L182
+            return ColumnSchema.Value(typeOf<Int>())
+        if(tableColumnMetadata.jdbcType == Types.SMALLINT) // because of https://github.com/pgjdbc/pgjdbc/blob/246b759cdc264c2732717dbd6ff9f8f472024196/pgjdbc/src/main/java/org/postgresql/jdbc/PgResultSet.java#L182
+            return ColumnSchema.Value(typeOf<Int>())
         return null
     }
 
@@ -48,6 +53,10 @@ public object MySql : DbType("mysql") {
     }
 
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? {
+        if(tableColumnMetadata.jdbcType == Types.TINYINT)
+            return typeOf<Int>()
+        if(tableColumnMetadata.jdbcType == Types.SMALLINT)
+            return typeOf<Int>()
         return null
     }
 }
