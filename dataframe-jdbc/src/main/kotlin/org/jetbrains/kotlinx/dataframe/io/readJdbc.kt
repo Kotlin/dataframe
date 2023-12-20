@@ -645,8 +645,8 @@ private fun generateKType(dbType: DbType, tableColumnMetadata: TableColumnMetada
 private fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata): KType {
     val jdbcTypeToKTypeMapping = mapOf(
         Types.BIT to Boolean::class,
-        Types.TINYINT to Byte::class,
-        Types.SMALLINT to Short::class,
+        Types.TINYINT to Int::class,
+        Types.SMALLINT to Int::class,
         Types.INTEGER to Int::class,
         Types.BIGINT to Long::class,
         Types.FLOAT to Float::class,

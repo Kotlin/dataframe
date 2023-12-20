@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import kotlin.reflect.KType
+import kotlin.reflect.full.createType
 import kotlin.reflect.typeOf
 
 /**
@@ -23,12 +24,11 @@ public object PostgreSql : DbType("postgresql") {
 
     override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? {
         // TODO: could be a wrapper of convertSqlTypeToKType
-        if(tableColumnMetadata.sqlTypeName == "money") // because of https://github.com/pgjdbc/pgjdbc/issues/425
-            return ColumnSchema.Value(typeOf<String>())
-        if(tableColumnMetadata.jdbcType == Types.TINYINT) // because of https://github.com/pgjdbc/pgjdbc/blob/246b759cdc264c2732717dbd6ff9f8f472024196/pgjdbc/src/main/java/org/postgresql/jdbc/PgResultSet.java#L182
-            return ColumnSchema.Value(typeOf<Int>())
-        if(tableColumnMetadata.jdbcType == Types.SMALLINT) // because of https://github.com/pgjdbc/pgjdbc/blob/246b759cdc264c2732717dbd6ff9f8f472024196/pgjdbc/src/main/java/org/postgresql/jdbc/PgResultSet.java#L182
-            return ColumnSchema.Value(typeOf<Int>())
+        if (tableColumnMetadata.sqlTypeName == "money") // because of https://github.com/pgjdbc/pgjdbc/issues/425
+        {
+            val kType = String::class.createType(nullable = tableColumnMetadata.isNullable)
+            return ColumnSchema.Value(kType)
+        }
         return null
     }
 
@@ -46,11 +46,7 @@ public object PostgreSql : DbType("postgresql") {
 
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? {
         if(tableColumnMetadata.sqlTypeName == "money") // because of https://github.com/pgjdbc/pgjdbc/issues/425
-            return typeOf<String>()
-        if(tableColumnMetadata.jdbcType == Types.TINYINT) // because of https://github.com/pgjdbc/pgjdbc/blob/246b759cdc264c2732717dbd6ff9f8f472024196/pgjdbc/src/main/java/org/postgresql/jdbc/PgResultSet.java#L182
-            return typeOf<Int>()
-        if(tableColumnMetadata.jdbcType == Types.SMALLINT) // because of https://github.com/pgjdbc/pgjdbc/blob/246b759cdc264c2732717dbd6ff9f8f472024196/pgjdbc/src/main/java/org/postgresql/jdbc/PgResultSet.java#L182
-            return typeOf<Int>()
+            return String::class.createType(nullable = tableColumnMetadata.isNullable)
         return null
     }
 }

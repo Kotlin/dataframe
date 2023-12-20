@@ -17,6 +17,8 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.SQLException
+import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.select
 import kotlin.reflect.typeOf
 
 private const val URL = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false"
@@ -52,14 +54,14 @@ interface TestTableData {
     val binaryVaryingCol: ByteArray?
     val binaryLargeObjectCol: ByteArray?
     val booleanCol: Boolean?
-    val tinyIntCol: Byte?
-    val smallIntCol: Short?
+    val tinyIntCol: Int?
+    val smallIntCol: Int?
     val integerCol: Int?
     val bigIntCol: Long?
-    val numericCol: Double?
+    val numericCol: BigDecimal?
     val realCol: Float?
     val doublePrecisionCol: Double?
-    val decFloatCol: Double?
+    val decFloatCol: BigDecimal?
     val dateCol: String?
     val timeCol: String?
     val timeWithTimeZoneCol: String?
@@ -235,9 +237,56 @@ class JdbcTest {
             """.trimIndent()
         ).executeUpdate()
 
-        val df = DataFrame.readSqlTable(connection, "TestTable").cast<TestTableData>()
+        val tableName = "TestTable"
+        val df = DataFrame.readSqlTable(connection, tableName).cast<TestTableData>()
         df.rowsCount() shouldBe 3
         df.filter { it[TestTableData::integerCol]!! > 1000 }.rowsCount() shouldBe 2
+
+        // testing numeric columns
+        val result = df.select("tinyIntCol")
+            .add("tinyIntCol2") { it[TestTableData::tinyIntCol] }
+
+        result[0][1] shouldBe 1
+
+        val result1 = df.select("smallIntCol")
+            .add("smallIntCol2") { it[TestTableData::smallIntCol] }
+
+        result1[0][1] shouldBe 100
+
+        val result2 = df.select("bigIntCol")
+            .add("bigIntCol2") { it[TestTableData::bigIntCol] }
+
+        result2[0][1] shouldBe 100000
+
+        val result3 = df.select("numericCol")
+            .add("numericCol2") { it[TestTableData::numericCol] }
+
+        BigDecimal("123.45").compareTo(result3[0][1] as BigDecimal) shouldBe 0
+
+        val result4 = df.select("realCol")
+            .add("realCol2") { it[TestTableData::realCol] }
+
+        result4[0][1] shouldBe 1.23f
+
+        val result5 = df.select("doublePrecisionCol")
+            .add("doublePrecisionCol2") { it[TestTableData::doublePrecisionCol] }
+
+        result5[0][1] shouldBe 3.14
+
+        val result6 = df.select("decFloatCol")
+            .add("decFloatCol2") { it[TestTableData::decFloatCol] }
+
+        BigDecimal("2.71").compareTo(result6[0][1] as BigDecimal) shouldBe 0
+
+        val schema = DataFrame.getSchemaForSqlTable(connection, tableName)
+
+        schema.columns["tinyIntCol"]!!.type shouldBe typeOf<Int?>()
+        schema.columns["smallIntCol"]!!.type shouldBe typeOf<Int?>()
+        schema.columns["bigIntCol"]!!.type shouldBe typeOf<Long?>()
+        schema.columns["numericCol"]!!.type shouldBe typeOf<BigDecimal?>()
+        schema.columns["realCol"]!!.type shouldBe typeOf<Float?>()
+        schema.columns["doublePrecisionCol"]!!.type shouldBe typeOf<Double?>()
+        schema.columns["decFloatCol"]!!.type shouldBe typeOf<BigDecimal?>()
     }
 
     @Test
