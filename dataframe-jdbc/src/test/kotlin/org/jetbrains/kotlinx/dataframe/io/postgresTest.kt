@@ -52,12 +52,12 @@ interface Table2 {
     val lsegcol: String
     val macaddrcol: String
     val moneycol: String
-    val numericcol: String
+    val numericcol: BigDecimal
     val pathcol: org.postgresql.geometric.PGpath
     val pointcol: String
     val polygoncol: String
     val realcol: Float
-    val smallintcol: Short
+    val smallintcol: Int
     val smallserialcol: Int
     val serialcol: Int
     val textcol: String?
@@ -316,13 +316,46 @@ class PostgresTest {
     }
 
     @Test
-    fun `read smallint type from tables`() {
+    fun `read columns of different types to check type mapping`() {
         val tableName1 = "table1"
         val df1 = DataFrame.readSqlTable(connection, tableName1).cast<Table1>()
         val result = df1.select ( "smallintcol" ).add("smallintcol2") {it[Table1::smallintcol]}
         result[0][1] shouldBe 11
 
+        val result1 = df1.select ( "bigserialcol" ).add("bigserialcol2") {it[Table1::bigserialcol]}
+        result1[0][1] shouldBe 1000000001L
+
+        val result2 = df1.select ( "doublecol" ).add("doublecol2") {it[Table1::doublecol]}
+        result2[0][1] shouldBe 12.34
+
+        val tableName2 = "table2"
+        val df2 = DataFrame.readSqlTable(connection, tableName2).cast<Table2>()
+
+        val result3 = df2.select ( "moneycol" ).add("moneycol2") {it[Table2::moneycol]}
+        result3[0][1] shouldBe "123,45 ?" // TODO: weird mapping
+
+        val result4 = df2.select ( "numericcol" ).add("numericcol2") {it[Table2::numericcol]}
+        result4[0][1] shouldBe BigDecimal("12.34")
+
+        val result5 = df2.select ( "realcol" ).add("realcol2") {it[Table2::realcol]}
+        result5[0][1] shouldBe 12.34f
+
+        val result7 = df2.select ( "smallserialcol" ).add("smallserialcol2") {it[Table2::smallserialcol]}
+        result7[0][1] shouldBe 1001
+
+        val result8 = df2.select ( "serialcol" ).add("serialcol2") {it[Table2::serialcol]}
+        result8[0][1] shouldBe 1000001
+
         val schema = DataFrame.getSchemaForSqlTable(connection, tableName1)
         schema.columns["smallintcol"]!!.type shouldBe typeOf<Int>()
+        schema.columns["bigserialcol"]!!.type shouldBe typeOf<Long>()
+        schema.columns["doublecol"]!!.type shouldBe typeOf<Double>()
+
+        val schema1 = DataFrame.getSchemaForSqlTable(connection, tableName2)
+        schema1.columns["moneycol"]!!.type shouldBe typeOf<String>()
+        schema1.columns["numericcol"]!!.type shouldBe typeOf<BigDecimal>()
+        schema1.columns["realcol"]!!.type shouldBe typeOf<Float>()
+        schema1.columns["smallserialcol"]!!.type shouldBe typeOf<Int>()
+        schema1.columns["serialcol"]!!.type shouldBe typeOf<Int>()
     }
 }

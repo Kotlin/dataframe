@@ -37,7 +37,7 @@ interface Table1MySql {
     val bigintCol: Long
     val floatCol: Float
     val doubleCol: Double
-    val decimalCol: Double
+    val decimalCol: BigDecimal
     val dateCol: String
     val datetimeCol: String
     val timestampCol: String
@@ -416,6 +416,26 @@ class MySqlTest {
 
         result4[0][1] shouldBe 100L
 
+        val result5 = df1.select("bigintCol")
+            .add("bigintCol2") { it[Table1MySql::bigintCol] }
+
+        result5[0][1] shouldBe 100
+
+        val result6 = df1.select("floatCol")
+            .add("floatCol2") { it[Table1MySql::floatCol] }
+
+        result6[0][1] shouldBe 10.0f
+
+        val result7 = df1.select("doubleCol")
+            .add("doubleCol2") { it[Table1MySql::doubleCol] }
+
+        result7[0][1] shouldBe 10.0
+
+        val result8 = df1.select("decimalCol")
+            .add("decimalCol2") { it[Table1MySql::decimalCol] }
+
+        result8[0][1] shouldBe BigDecimal("10")
+
         val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
 
         schema.columns["tinyintCol"]!!.type shouldBe typeOf<Int>()
@@ -423,6 +443,10 @@ class MySqlTest {
         schema.columns["mediumintCol"]!!.type shouldBe typeOf<Int>()
         schema.columns["mediumintUnsignedCol"]!!.type shouldBe typeOf<Int>()
         schema.columns["integerUnsignedCol"]!!.type shouldBe typeOf<Long>()
+        schema.columns["bigintCol"]!!.type shouldBe typeOf<Long>()
+        schema.columns["floatCol"]!!.type shouldBe typeOf<Float>()
+        schema.columns["doubleCol"]!!.type shouldBe typeOf<Double>()
+        schema.columns["decimalCol"]!!.type shouldBe typeOf<BigDecimal>()
         // TODO: all unsigned types
         // TODO: new mapping system based on class names
         // validation after mapping in getObject
