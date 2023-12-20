@@ -77,7 +77,7 @@ interface ViewTable {
     val textCol: String?
 }
 
-//@Ignore
+@Ignore
 class PostgresTest {
     companion object {
         private lateinit var connection: Connection

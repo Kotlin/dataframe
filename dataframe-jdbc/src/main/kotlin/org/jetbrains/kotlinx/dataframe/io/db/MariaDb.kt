@@ -3,11 +3,9 @@ package org.jetbrains.kotlinx.dataframe.io.db
 import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
-import java.sql.Types
 import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
-import kotlin.reflect.typeOf
 
 /**
  * Represents the MariaDb database type.

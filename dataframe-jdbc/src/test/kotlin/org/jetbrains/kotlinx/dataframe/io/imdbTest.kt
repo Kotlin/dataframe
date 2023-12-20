@@ -4,7 +4,6 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.print
 import org.junit.Test
 import java.sql.DriverManager
 import java.util.Properties

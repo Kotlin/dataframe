@@ -3,14 +3,10 @@ package org.jetbrains.kotlinx.dataframe.io.db
 import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
-import java.sql.Types
 import java.util.Locale
-import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
-import kotlin.reflect.typeOf
 
 /**
  * Represents the PostgreSql database type.
