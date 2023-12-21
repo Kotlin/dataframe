@@ -3,6 +3,7 @@
 <buildprofiles xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/build-profiles.xsd"
                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <variables>
+        <header-logo>kotlin-logo.svg</header-logo>
         <web-root>https://kotlin.github.io/dataframe/</web-root>
         <download-page/>
         <feedback-widget>false</feedback-widget>
