@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     kotlin("jvm")/* version "1.7.10"*/
     id("java")
@@ -15,7 +17,7 @@ repositories {
 
 dependencies {
     //compileOnly(kotlin("compiler-embeddable"))
-    compileOnly("org.jetbrains.kotlin:kotlin-compiler:1.9.255-SNAPSHOT")
+    compileOnly("org.jetbrains.kotlin:kotlin-compiler:2.0.255-SNAPSHOT")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
 }
@@ -39,3 +41,8 @@ kotlinPublications {
     }
 }
 
+tasks.withType<KotlinCompile> {
+    compilerOptions.languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+    kotlinOptions.jvmTarget = "1.8"
+    compilerExecutionStrategy.set(org.jetbrains.kotlin.gradle.tasks.KotlinCompilerExecutionStrategy.IN_PROCESS)
+}
