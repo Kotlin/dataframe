@@ -13,6 +13,8 @@ import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
+import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.select
 import org.junit.Ignore
 import kotlin.reflect.typeOf
 
@@ -28,14 +30,14 @@ interface Table1MySql {
     val tinyintCol: Int
     val smallintCol: Int
     val mediumintCol: Int
-    val mediumintUnsignedCol: Long
+    val mediumintUnsignedCol: Int
     val integerCol: Int
     val intCol: Int
     val integerUnsignedCol: Long
     val bigintCol: Long
     val floatCol: Float
     val doubleCol: Double
-    val decimalCol: Double
+    val decimalCol: BigDecimal
     val dateCol: String
     val datetimeCol: String
     val timestampCol: String
@@ -63,7 +65,7 @@ interface Table2MySql {
     val tinyintCol: Int?
     val smallintCol: Int?
     val mediumintCol: Int?
-    val mediumintUnsignedCol: Long?
+    val mediumintUnsignedCol: Int?
     val integerCol: Int?
     val intCol: Int?
     val integerUnsignedCol: Long?
@@ -384,5 +386,72 @@ class MySqlTest {
             .rowsCount() shouldBe 1
         table2Df[0][11] shouldBe 20.0
         table2Df[0][26] shouldBe null
+    }
+
+    @Test
+    fun `reading numeric types`() {
+        val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MySql>()
+
+        val result = df1.select("tinyintCol").add("tinyintCol2") { it[Table1MySql::tinyintCol] }
+
+        result[0][1] shouldBe 1.toByte()
+
+        val result1 = df1.select("smallintCol")
+            .add("smallintCol2") { it[Table1MySql::smallintCol] }
+
+        result1[0][1] shouldBe 10.toShort()
+
+        val result2 = df1.select("mediumintCol")
+            .add("mediumintCol2") { it[Table1MySql::mediumintCol] }
+
+        result2[0][1] shouldBe 100
+
+        val result3 = df1.select("mediumintUnsignedCol")
+            .add("mediumintUnsignedCol2") { it[Table1MySql::mediumintUnsignedCol] }
+
+        result3[0][1] shouldBe 100
+
+        val result4 = df1.select("integerUnsignedCol")
+            .add("integerUnsignedCol2") { it[Table1MySql::integerUnsignedCol] }
+
+        result4[0][1] shouldBe 100L
+
+        val result5 = df1.select("bigintCol")
+            .add("bigintCol2") { it[Table1MySql::bigintCol] }
+
+        result5[0][1] shouldBe 100
+
+        val result6 = df1.select("floatCol")
+            .add("floatCol2") { it[Table1MySql::floatCol] }
+
+        result6[0][1] shouldBe 10.0f
+
+        val result7 = df1.select("doubleCol")
+            .add("doubleCol2") { it[Table1MySql::doubleCol] }
+
+        result7[0][1] shouldBe 10.0
+
+        val result8 = df1.select("decimalCol")
+            .add("decimalCol2") { it[Table1MySql::decimalCol] }
+
+        result8[0][1] shouldBe BigDecimal("10")
+
+        val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
+
+        schema.columns["tinyintCol"]!!.type shouldBe typeOf<Int>()
+        schema.columns["smallintCol"]!!.type shouldBe typeOf<Int>()
+        schema.columns["mediumintCol"]!!.type shouldBe typeOf<Int>()
+        schema.columns["mediumintUnsignedCol"]!!.type shouldBe typeOf<Int>()
+        schema.columns["integerUnsignedCol"]!!.type shouldBe typeOf<Long>()
+        schema.columns["bigintCol"]!!.type shouldBe typeOf<Long>()
+        schema.columns["floatCol"]!!.type shouldBe typeOf<Float>()
+        schema.columns["doubleCol"]!!.type shouldBe typeOf<Double>()
+        schema.columns["decimalCol"]!!.type shouldBe typeOf<BigDecimal>()
+        // TODO: all unsigned types
+        // TODO: new mapping system based on class names
+        // validation after mapping in getObject
+        // getObject(i+1, type) catch getObject catch getString
+        // add direct mapping to getString and other methods
+
     }
 }

@@ -65,6 +65,7 @@ private const val MULTIPLE_SQL_QUERY_SEPARATOR = ";"
  * @property [sqlTypeName] the SQL data type of the column.
  * @property [jdbcType] the JDBC data type of the column produced from [java.sql.Types].
  * @property [size] the size of the column.
+ * @property [javaClassName] the class name in Java.
  * @property [isNullable] true if column could contain nulls.
  */
 public data class TableColumnMetadata(
@@ -72,7 +73,8 @@ public data class TableColumnMetadata(
     val sqlTypeName: String,
     val jdbcType: Int,
     val size: Int,
-    val isNullable: Boolean = false
+    val javaClassName: String,
+    val isNullable: Boolean = false,
 )
 
 /**
@@ -521,8 +523,9 @@ private fun getTableColumnsMetadata(rs: ResultSet): MutableList<TableColumnMetad
         val size = metaData.getColumnDisplaySize(i)
         val type = metaData.getColumnTypeName(i)
         val jdbcType = metaData.getColumnType(i)
+        val javaClassName = metaData.getColumnClassName(i)
 
-        tableColumns += TableColumnMetadata(name, type, jdbcType, size, isNullable)
+        tableColumns += TableColumnMetadata(name, type, jdbcType, size, javaClassName, isNullable)
     }
     return tableColumns
 }
@@ -642,8 +645,8 @@ private fun generateKType(dbType: DbType, tableColumnMetadata: TableColumnMetada
 private fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata): KType {
     val jdbcTypeToKTypeMapping = mapOf(
         Types.BIT to Boolean::class,
-        Types.TINYINT to Byte::class,
-        Types.SMALLINT to Short::class,
+        Types.TINYINT to Int::class,
+        Types.SMALLINT to Int::class,
         Types.INTEGER to Int::class,
         Types.BIGINT to Long::class,
         Types.FLOAT to Float::class,
@@ -681,6 +684,7 @@ private fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata
         Types.TIME_WITH_TIMEZONE to Time::class,
         Types.TIMESTAMP_WITH_TIMEZONE to Timestamp::class
     )
+    // TODO: check mapping of JDBC types and classes correctly
     val kClass = jdbcTypeToKTypeMapping[tableColumnMetadata.jdbcType] ?: String::class
     return kClass.createType(nullable = tableColumnMetadata.isNullable)
 }
