@@ -4,11 +4,9 @@ import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
 import java.util.Locale
-import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import kotlin.reflect.KType
-import kotlin.reflect.typeOf
+import kotlin.reflect.full.createType
 
 /**
  * Represents the PostgreSql database type.
@@ -21,6 +19,12 @@ public object PostgreSql : DbType("postgresql") {
         get() = "org.postgresql.Driver"
 
     override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? {
+        // TODO: could be a wrapper of convertSqlTypeToKType
+        if (tableColumnMetadata.sqlTypeName == "money") // because of https://github.com/pgjdbc/pgjdbc/issues/425
+        {
+            val kType = String::class.createType(nullable = tableColumnMetadata.isNullable)
+            return ColumnSchema.Value(kType)
+        }
         return null
     }
 
@@ -38,7 +42,7 @@ public object PostgreSql : DbType("postgresql") {
 
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? {
         if(tableColumnMetadata.sqlTypeName == "money") // because of https://github.com/pgjdbc/pgjdbc/issues/425
-            return typeOf<String>()
+            return String::class.createType(nullable = tableColumnMetadata.isNullable)
         return null
     }
 }

@@ -4,11 +4,9 @@ import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
 import java.util.Locale
-import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import kotlin.reflect.KType
-import kotlin.reflect.typeOf
+import kotlin.reflect.full.createType
 
 /**
  * Represents the MySql database type.
@@ -21,6 +19,10 @@ public object MySql : DbType("mysql") {
         get() = "com.mysql.jdbc.Driver"
 
     override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? {
+        if(tableColumnMetadata.sqlTypeName == "INT UNSIGNED") {
+            val kType = Long::class.createType(nullable = tableColumnMetadata.isNullable)
+            return ColumnSchema.Value(kType)
+        }
         return null
     }
 
@@ -48,6 +50,8 @@ public object MySql : DbType("mysql") {
     }
 
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? {
+        if(tableColumnMetadata.sqlTypeName == "INT UNSIGNED")
+            return Long::class.createType(nullable = tableColumnMetadata.isNullable)
         return null
     }
 }

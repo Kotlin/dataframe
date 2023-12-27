@@ -5,7 +5,6 @@ import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
 import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import kotlin.reflect.KType
-import kotlin.reflect.typeOf
 
 /**
  * Represents the Sqlite database type.
