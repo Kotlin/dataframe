@@ -4,9 +4,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage.PlainDslName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -126,11 +123,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnGroups][ColumnGroup]
      * The variant of this function on [ColumnGroups][ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][SingleColumn.allColsExcept]` { col } ` is
-     * a shortcut for `myColGroup.`[select][ColumnsSelectionDsl.select]` { `[all][ColumnsSelectionDsl.all]`() `[except][ColumnSet]` col }`.
+     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][SingleColumn.allColsExcept]` { cols } ` is
+     * a shortcut for `myColGroup.`[select][ColumnsSelectionDsl.select]` { `[all][ColumnsSelectionDsl.all]`() `[except][ColumnSet]` cols }`.
      *
-     * Also note the name change, similar to [allCols][ColumnsSelectionDsl.allCols], this makes it clearer that your operating
-     * on the columns in the group.
+     * Also note the name change, similar to [allCols][ColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
+     * columns inside the group, 'lifting' them out.
      *
      * ### Examples for this overload
      * {@getArg [ExampleArg]}
@@ -205,13 +202,13 @@ public interface AllExceptColumnsSelectionDsl {
 
     /**
      * @include [ColumnSetVarargDocs]
-     * @setArg [CommonExceptDocs.ParamArg] @param [other\] Any number of [ColumnsResolvers][ColumnsResolver] containing
+     * @setArg [CommonExceptDocs.ParamArg] @param [others\] Any number of [ColumnsResolvers][ColumnsResolver] containing
      *  the columns that need to be excluded from the [ColumnSet].
      * @setArg [ColumnSetVarargDocs.ArgumentArg1] `(age, userData.height)`
      * @setArg [ColumnSetVarargDocs.ArgumentArg2] `(name.firstName, name.middleName)`
      */
-    public fun <C> ColumnSet<C>.except(vararg other: ColumnsResolver<*>): ColumnSet<C> =
-        except(other.toColumnSet())
+    public fun <C> ColumnSet<C>.except(vararg others: ColumnsResolver<*>): ColumnSet<C> =
+        except(others.toColumnSet())
 
     /**
      * @include [ColumnSetInfixDocs]
@@ -225,7 +222,7 @@ public interface AllExceptColumnsSelectionDsl {
 
     /**
      * @include [ColumnSetVarargDocs]
-     * @setArg [CommonExceptDocs.ParamArg] @param [other\] Any number of [Strings][String] referring to
+     * @setArg [CommonExceptDocs.ParamArg] @param [others\] Any number of [Strings][String] referring to
      *  the columns (relative to the current scope) that need to be excluded from the [ColumnSet].
      * @setArg [ColumnSetVarargDocs.ArgumentArg1] `("age", "height")`
      * @setArg [ColumnSetVarargDocs.ArgumentArg2] `("name")`
@@ -245,7 +242,7 @@ public interface AllExceptColumnsSelectionDsl {
 
     /**
      * @include [ColumnSetVarargDocs]
-     * @setArg [CommonExceptDocs.ParamArg] @param [other\] Any number of [KProperties][KProperty] referring to
+     * @setArg [CommonExceptDocs.ParamArg] @param [others\] Any number of [KProperties][KProperty] referring to
      *  the columns (relative to the current scope) that need to be excluded from the [ColumnSet].
      * @setArg [ColumnSetVarargDocs.ArgumentArg1] `(Person::age, Person::height)`
      * @setArg [ColumnSetVarargDocs.ArgumentArg2] `(Person::name)`
@@ -265,7 +262,7 @@ public interface AllExceptColumnsSelectionDsl {
 
     /**
      * @include [ColumnSetVarargDocs]
-     * @setArg [CommonExceptDocs.ParamArg] @param [other\] Any number of [ColumnPaths][ColumnPath] referring to
+     * @setArg [CommonExceptDocs.ParamArg] @param [others\] Any number of [ColumnPaths][ColumnPath] referring to
      *  the columns (relative to the current scope) that need to be excluded from the [ColumnSet].
      * @setArg [ColumnSetVarargDocs.ArgumentArg1] `(pathOf("age"), "userdata"["height"])`
      * @setArg [ColumnSetVarargDocs.ArgumentArg2] `("name"["firstName"], "name"["middleName"])`
@@ -277,19 +274,71 @@ public interface AllExceptColumnsSelectionDsl {
 
     // region ColumnsSelectionDsl
 
+    /**
+     * @include [CommonExceptDocs]
+     * @setArg [CommonExceptDocs.ExampleArg]
+     *  `df.`[select][ColumnsSelectionDsl.select] `{` [allExcept][ColumnsSelectionDsl.allExcept]{@getArg [ArgumentArg1]} `\\}`
+     *
+     *  `df.`[select][ColumnsSelectionDsl.select] `{` [allExcept][ColumnsSelectionDsl.allExcept]{@getArg [ArgumentArg2]} `\\}`
+     */
+    private interface ColumnsSelectionDslDocs {
+
+        /* argument */
+        interface ArgumentArg1
+
+        /* argument */
+        interface ArgumentArg2
+    }
+
+    /**
+     * @include [ColumnsSelectionDslDocs]
+     * @setArg [CommonExceptDocs.ParamArg] @param [selector\] A lambda in which you specify the columns that need to be
+     *  excluded from the current selection. The scope of the selector is the same as the outer scope.
+     * @setArg [ColumnsSelectionDslDocs.ArgumentArg1] ` { "age" `[and][ColumnsSelectionDsl.and]` height }`
+     * @setArg [ColumnsSelectionDslDocs.ArgumentArg2] ` { name.firstName }`
+     */
     public fun <C> ColumnsSelectionDsl<C>.allExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         this.asSingleColumn().allColsExcept(selector)
 
-    // no scoping issues, this can exist for legacy purposes
+
+    /**
+     * {@comment No scoping issues, this function can exist for legacy purposes}
+     * @include [ColumnsSelectionDslDocs]
+     * @setArg [CommonExceptDocs.ParamArg] @param [others\] A [ColumnsResolver] containing the columns that need to be
+     *  excluded from the current selection.
+     * @setArg [ColumnsSelectionDslDocs.ArgumentArg1] `(age, height)`
+     * @setArg [ColumnsSelectionDslDocs.ArgumentArg2] `(name.firstName, name.middleName)`
+     */
     public fun ColumnsSelectionDsl<*>.allExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
         asSingleColumn().allColsExceptInternal(others.toColumnSet())
 
+    /**
+     * @include [ColumnsSelectionDslDocs]
+     * @setArg [CommonExceptDocs.ParamArg] @param [others\] Any number of [Strings][String] referring to
+     *  the columns (relative to the current scope) that need to be excluded from the current selection.
+     * @setArg [ColumnsSelectionDslDocs.ArgumentArg1] `("age", "height")`
+     * @setArg [ColumnsSelectionDslDocs.ArgumentArg2] `("name")`
+     */
     public fun ColumnsSelectionDsl<*>.allExcept(vararg others: String): ColumnSet<*> =
         asSingleColumn().allColsExceptInternal(others.toColumnSet())
 
+    /**
+     * @include [ColumnsSelectionDslDocs]
+     * @setArg [CommonExceptDocs.ParamArg] @param [others\] Any number of [KProperties][KProperty] referring to
+     *  the columns (relative to the current scope) that need to be excluded from the current selection.
+     * @setArg [ColumnsSelectionDslDocs.ArgumentArg1] `(Person::age, Person::height)`
+     * @setArg [ColumnsSelectionDslDocs.ArgumentArg2] `(Person::name)`
+     */
     public fun ColumnsSelectionDsl<*>.allExcept(vararg others: KProperty<*>): ColumnSet<*> =
         asSingleColumn().allColsExceptInternal(others.toColumnSet())
 
+    /**
+     * @include [ColumnsSelectionDslDocs]
+     * @setArg [CommonExceptDocs.ParamArg] @param [others\] Any number of [ColumnPaths][ColumnPath] referring to
+     *  the columns (relative to the current scope) that need to be excluded from the current selection.
+     * @setArg [ColumnsSelectionDslDocs.ArgumentArg1] `(pathOf("age"), "userdata"["height"])`
+     * @setArg [ColumnsSelectionDslDocs.ArgumentArg2] `("name"["firstName"], "name"["middleName"])`
+     */
     public fun ColumnsSelectionDsl<*>.allExcept(vararg others: ColumnPath): ColumnSet<*> =
         asSingleColumn().allColsExceptInternal(others.toColumnSet())
 
@@ -297,6 +346,100 @@ public interface AllExceptColumnsSelectionDsl {
 
     // region SingleColumn
 
+    /**
+     * @include [CommonExceptDocs]
+     * @setArg [CommonExceptDocs.ExampleArg]
+     *  `df.`[select][ColumnsSelectionDsl.select] `{` {@getArg [ReceiverArg1]}[allColsExcept][{@getArg [ReceiverType]}.allColsExcept]{@getArg [ArgumentArg1]} `\\}`
+     *
+     *  `df.`[select][ColumnsSelectionDsl.select] `{ city` [and][ColumnsSelectionDsl.and] {@getArg [ReceiverArg2]}[allColsExcept][{@getArg [ReceiverType]}.allColsExcept]{@getArg [ArgumentArg2]} `\\}`
+     */
+    private interface ColumnGroupDocs {
+
+        /* receiver */
+        interface ReceiverArg1
+
+        /* receiver */
+        interface ReceiverArg2
+
+        /* type */
+        interface ReceiverType
+
+        /* argument */
+        interface ArgumentArg1
+
+        /* argument */
+        interface ArgumentArg2
+
+        /**
+         * @setArg [ColumnGroupDocs.ReceiverArg1] `userData.`
+         * @setArg [ColumnGroupDocs.ReceiverArg2] `name.`
+         * @setArg [ColumnGroupDocs.ReceiverType] SingleColumn
+         */
+        interface SingleColumnReceiverArgs
+
+        /**
+         * @setArg [ColumnGroupDocs.ReceiverArg1] `"userData".`
+         * @setArg [ColumnGroupDocs.ReceiverArg2] `"name".`
+         * @setArg [ColumnGroupDocs.ReceiverType] String
+         */
+        interface StringReceiverArgs
+
+        /**
+         * @setArg [ColumnGroupDocs.ReceiverArg1] `DataSchemaPerson::userData.`
+         * @setArg [ColumnGroupDocs.ReceiverArg2] `Person::name.`
+         * @setArg [ColumnGroupDocs.ReceiverType] KProperty
+         */
+        interface KPropertyReceiverArgs
+
+        /**
+         * @setArg [ColumnGroupDocs.ReceiverArg1] `pathOf("userData").`
+         * @setArg [ColumnGroupDocs.ReceiverArg2] `"pathTo"["myColGroup"].`
+         * @setArg [ColumnGroupDocs.ReceiverType] ColumnPath
+         */
+        interface ColumnPathReceiverArgs
+
+        /**
+         * @setArg [CommonExceptDocs.ParamArg] @param [selector\] A lambda in which you specify the columns that need to be
+         *  excluded from the current selection in [this\] column group. The other columns will be included in the selection
+         *  by default. The scope of the selector is relative to the column group.
+         * @setArg [ColumnGroupDocs.ArgumentArg1] ` { "age" `[and][ColumnsSelectionDsl.and]` height }`
+         * @setArg [ColumnGroupDocs.ArgumentArg2] ` { firstName }`
+         */
+        interface SelectorArgs
+
+        /**
+         * @setArg [CommonExceptDocs.ParamArg] @param [others\] Any number of [Strings][String] referring to
+         *  the columns (relative to the column group) that need to be excluded from the current selection in [this\]
+         *  column group. The other columns will be included in the selection by default.
+         * @setArg [ColumnGroupDocs.ArgumentArg1] `("age", "height")`
+         * @setArg [ColumnGroupDocs.ArgumentArg2] `("firstName", "middleName")`
+         */
+        interface StringArgs
+
+        /**
+         * @setArg [CommonExceptDocs.ParamArg] @param [others\] Any number of [KProperties][KProperty] referring to
+         *  the columns (relative to the column group) that need to be excluded from the current selection in [this\]
+         *  column group. The other columns will be included in the selection by default.
+         * @setArg [ColumnGroupDocs.ArgumentArg1] `(Person::age, Person::height)`
+         * @setArg [ColumnGroupDocs.ArgumentArg2] `(Person::firstName, Person::middleName)`
+         */
+        interface KPropertyArgs
+
+        /**
+         * @setArg [CommonExceptDocs.ParamArg] @param [others\] Any number of [ColumnPaths][ColumnPath] referring to
+         *  the columns (relative to the column group) that need to be excluded from the current selection in [this\]
+         *  column group. The other columns will be included in the selection by default.
+         * @setArg [ColumnGroupDocs.ArgumentArg1] `(pathOf("age"), "extraData"["item1"])`
+         * @setArg [ColumnGroupDocs.ArgumentArg2] `(pathOf("firstName"), "middleNames"["first"])`
+         */
+        interface ColumnPathArgs
+    }
+
+    /**
+     * @include [ColumnGroupDocs]
+     * @include [ColumnGroupDocs.SingleColumnReceiverArgs]
+     * @include [ColumnGroupDocs.SelectorArgs]
+     */
     public fun <C> SingleColumn<DataRow<C>>.allColsExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         allColsExceptInternal(selector.toColumns())
 
@@ -316,12 +459,27 @@ public interface AllExceptColumnsSelectionDsl {
     public fun SingleColumn<DataRow<*>>.allColsExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
         allColsExcept { others.toColumnSet() }
 
+    /**
+     * @include [ColumnGroupDocs]
+     * @include [ColumnGroupDocs.SingleColumnReceiverArgs]
+     * @include [ColumnGroupDocs.StringArgs]
+     */
     public fun SingleColumn<DataRow<*>>.allColsExcept(vararg others: String): ColumnSet<*> =
         allColsExceptInternal(others.toColumnSet())
 
+    /**
+     * @include [ColumnGroupDocs]
+     * @include [ColumnGroupDocs.SingleColumnReceiverArgs]
+     * @include [ColumnGroupDocs.KPropertyArgs]
+     */
     public fun SingleColumn<DataRow<*>>.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         allColsExceptInternal(others.toColumnSet())
 
+    /**
+     * @include [ColumnGroupDocs]
+     * @include [ColumnGroupDocs.SingleColumnReceiverArgs]
+     * @include [ColumnGroupDocs.ColumnPathArgs]
+     */
     public fun SingleColumn<DataRow<*>>.allColsExcept(vararg other: ColumnPath): ColumnSet<*> =
         allColsExceptInternal(other.toColumnSet())
 
@@ -329,6 +487,11 @@ public interface AllExceptColumnsSelectionDsl {
 
     // region String
 
+    /**
+     * @include [ColumnGroupDocs]
+     * @include [ColumnGroupDocs.StringReceiverArgs]
+     * @include [ColumnGroupDocs.SelectorArgs]
+     */
     public fun String.allColsExcept(selector: ColumnsSelector<*, *>): ColumnSet<*> =
         columnGroup(this).allColsExcept(selector)
 
@@ -348,12 +511,27 @@ public interface AllExceptColumnsSelectionDsl {
     public fun String.allColsExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
         allColsExcept { others.toColumnSet() }
 
+    /**
+     * @include [ColumnGroupDocs]
+     * @include [ColumnGroupDocs.StringReceiverArgs]
+     * @include [ColumnGroupDocs.StringArgs]
+     */
     public fun String.allColsExcept(vararg others: String): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
+    /**
+     * @include [ColumnGroupDocs]
+     * @include [ColumnGroupDocs.StringReceiverArgs]
+     * @include [ColumnGroupDocs.KPropertyArgs]
+     */
     public fun String.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
+    /**
+     * @include [ColumnGroupDocs]
+     * @include [ColumnGroupDocs.StringReceiverArgs]
+     * @include [ColumnGroupDocs.ColumnPathArgs]
+     */
     public fun String.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
@@ -361,12 +539,30 @@ public interface AllExceptColumnsSelectionDsl {
 
     // region KProperty
 
+    /**
+     * @include [ColumnGroupDocs]
+     * ## NOTE: {@comment TODO fix warning}
+     * If you get a warning `CANDIDATE_CHOSEN_USING_OVERLOAD_RESOLUTION_BY_LAMBDA_ANNOTATION`, you
+     * can safely ignore this. It is caused by a workaround for a bug in the Kotlin compiler
+     * ([KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)).
+     * @include [ColumnGroupDocs.KPropertyReceiverArgs]
+     * @include [ColumnGroupDocs.SelectorArgs]
+     */
     @OptIn(ExperimentalTypeInference::class)
     @OverloadResolutionByLambdaReturnType
     // TODO: [KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)
     public fun <C> KProperty<C>.allColsExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         columnGroup(this).allColsExcept(selector)
 
+    /**
+     * @include [ColumnGroupDocs]
+     * ## NOTE: {@comment TODO fix warning}
+     * If you get a warning `CANDIDATE_CHOSEN_USING_OVERLOAD_RESOLUTION_BY_LAMBDA_ANNOTATION`, you
+     * can safely ignore this. It is caused by a workaround for a bug in the Kotlin compiler
+     * ([KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)).
+     * @include [ColumnGroupDocs.KPropertyReceiverArgs]
+     * @include [ColumnGroupDocs.SelectorArgs]
+     */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("KPropertyDataRowAllColsExcept")
     public fun <C> KProperty<DataRow<C>>.allColsExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
@@ -388,12 +584,27 @@ public interface AllExceptColumnsSelectionDsl {
     public fun KProperty<*>.allColsExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
         allColsExcept { others.toColumnSet() }
 
+    /**
+     * @include [ColumnGroupDocs]
+     * @include [ColumnGroupDocs.KPropertyReceiverArgs]
+     * @include [ColumnGroupDocs.StringArgs]
+     */
     public fun KProperty<*>.allColsExcept(vararg others: String): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
+    /**
+     * @include [ColumnGroupDocs]
+     * @include [ColumnGroupDocs.KPropertyReceiverArgs]
+     * @include [ColumnGroupDocs.KPropertyArgs]
+     */
     public fun KProperty<*>.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
+    /**
+     * @include [ColumnGroupDocs]
+     * @include [ColumnGroupDocs.KPropertyReceiverArgs]
+     * @include [ColumnGroupDocs.ColumnPathArgs]
+     */
     public fun KProperty<*>.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
@@ -401,6 +612,11 @@ public interface AllExceptColumnsSelectionDsl {
 
     // region ColumnPath
 
+    /**
+     * @include [ColumnGroupDocs]
+     * @include [ColumnGroupDocs.ColumnPathReceiverArgs]
+     * @include [ColumnGroupDocs.SelectorArgs]
+     */
     public fun ColumnPath.allColsExcept(selector: ColumnsSelector<*, *>): ColumnSet<*> =
         columnGroup(this).allColsExcept(selector)
 
@@ -420,12 +636,27 @@ public interface AllExceptColumnsSelectionDsl {
     public fun ColumnPath.allColsExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
         allColsExcept { others.toColumnSet() }
 
+    /**
+     * @include [ColumnGroupDocs]
+     * @include [ColumnGroupDocs.ColumnPathReceiverArgs]
+     * @include [ColumnGroupDocs.StringArgs]
+     */
     public fun ColumnPath.allColsExcept(vararg others: String): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
+    /**
+     * @include [ColumnGroupDocs]
+     * @include [ColumnGroupDocs.ColumnPathReceiverArgs]
+     * @include [ColumnGroupDocs.KPropertyArgs]
+     */
     public fun ColumnPath.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
+    /**
+     * @include [ColumnGroupDocs]
+     * @include [ColumnGroupDocs.ColumnPathReceiverArgs]
+     * @include [ColumnGroupDocs.ColumnPathArgs]
+     */
     public fun ColumnPath.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
