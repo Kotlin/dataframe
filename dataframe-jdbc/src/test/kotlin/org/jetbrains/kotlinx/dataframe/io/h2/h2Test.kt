@@ -329,6 +329,43 @@ class JdbcTest {
         dataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
     }
 
+    @Test
+    fun `read from table with extension functions`() {
+        val tableName = "Customer"
+        val df = connection.toDF(tableName).cast<Customer>()
+
+        df.rowsCount() shouldBe 4
+        df.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
+        df[0][1] shouldBe "John"
+
+        val df1 = connection.toDF(tableName, 1).cast<Customer>()
+
+        df1.rowsCount() shouldBe 1
+        df1.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
+        df1[0][1] shouldBe "John"
+
+        val dataSchema = connection.getDataFrameSchema(tableName)
+        dataSchema.columns.size shouldBe 3
+        dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
+
+        val dbConfig = DatabaseConfiguration(url = URL)
+        val df2 = dbConfig.toDF(tableName).cast<Customer>()
+
+        df2.rowsCount() shouldBe 4
+        df2.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
+        df2[0][1] shouldBe "John"
+
+        val df3 = dbConfig.toDF(tableName, 1).cast<Customer>()
+
+        df3.rowsCount() shouldBe 1
+        df3.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
+        df3[0][1] shouldBe "John"
+
+        val dataSchema1 = dbConfig.getDataFrameSchema(tableName)
+        dataSchema1.columns.size shouldBe 3
+        dataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
+    }
+
     // to cover a reported case from https://github.com/Kotlin/dataframe/issues/494
     @Test
     fun `repeated read from table with limit`() {
@@ -619,6 +656,51 @@ class JdbcTest {
         df3[0][0] shouldBe "John"
 
         val dataSchema1 = DataFrame.getSchemaForSqlQuery(dbConfig, sqlQuery)
+        dataSchema1.columns.size shouldBe 2
+        dataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
+    }
+
+    @Test
+    fun `read from sql query with extension functions`() {
+        @Language("SQL")
+        val sqlQuery = """
+            SELECT c.name as customerName, SUM(s.amount) as totalSalesAmount
+            FROM Sale s
+            INNER JOIN Customer c ON s.customerId = c.id
+            WHERE c.age > 35
+            GROUP BY s.customerId, c.name
+        """.trimIndent()
+
+        val df = connection.toDF(sqlQuery).cast<CustomerSales>()
+
+        df.rowsCount() shouldBe 2
+        df.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
+        df[0][0] shouldBe "John"
+
+        val df1 = connection.toDF(sqlQuery, 1).cast<CustomerSales>()
+
+        df1.rowsCount() shouldBe 1
+        df1.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
+        df1[0][0] shouldBe "John"
+
+        val dataSchema = connection.getDataFrameSchema(sqlQuery)
+        dataSchema.columns.size shouldBe 2
+        dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
+
+        val dbConfig = DatabaseConfiguration(url = URL)
+        val df2 = dbConfig.toDF(sqlQuery).cast<CustomerSales>()
+
+        df2.rowsCount() shouldBe 2
+        df2.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
+        df2[0][0] shouldBe "John"
+
+        val df3 = dbConfig.toDF( sqlQuery, 1).cast<CustomerSales>()
+
+        df3.rowsCount() shouldBe 1
+        df3.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
+        df3[0][0] shouldBe "John"
+
+        val dataSchema1 = dbConfig.getDataFrameSchema(sqlQuery)
         dataSchema1.columns.size shouldBe 2
         dataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
     }

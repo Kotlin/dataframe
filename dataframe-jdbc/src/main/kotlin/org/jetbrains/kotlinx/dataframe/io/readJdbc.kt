@@ -216,6 +216,67 @@ public fun DataFrame.Companion.readSqlQuery(
     }
 }
 
+/**
+ * Converts the result of an SQL query to the DataFrame.
+ * Also, it could be a just name of the SQL table.
+ *
+ * NOTE: It should be a name of one of the existing SQL tables,
+ * or the SQL query should start from SELECT and contain one query for reading data without any manipulation.
+ * It should not contain `;` symbol.
+ *
+ * @param [sqlQueryOrTableName] the SQL query to execute or name of the SQL table.
+ * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
+ * @param [inferNullability] indicates how the column nullability should be inferred.
+ * @return the DataFrame containing the result of the SQL query.
+ */
+public fun DatabaseConfiguration.toDF(
+    sqlQueryOrTableName: String,
+    limit: Int = DEFAULT_LIMIT,
+    inferNullability: Boolean = true,
+): AnyFrame {
+    return when {
+        isSqlQuery(sqlQueryOrTableName) -> DataFrame.readSqlQuery(this, sqlQueryOrTableName, limit, inferNullability)
+        isSqlTableName(sqlQueryOrTableName) -> DataFrame.readSqlTable(this, sqlQueryOrTableName, limit, inferNullability)
+        else -> throw IllegalArgumentException("$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!")
+    }
+}
+
+private fun isSqlQuery(sqlQueryOrTableName: String): Boolean {
+    val queryPattern = Regex("(?i)\\b(SELECT)\\b")
+    return queryPattern.containsMatchIn(sqlQueryOrTableName.trim())
+}
+
+private fun isSqlTableName(sqlQueryOrTableName: String): Boolean {
+    // Match table names with optional schema and catalog (e.g., catalog.schema.table)
+    val tableNamePattern = Regex("^[a-zA-Z_][a-zA-Z0-9_]*(\\.[a-zA-Z_][a-zA-Z0-9_]*){0,2}$")
+    return tableNamePattern.matches(sqlQueryOrTableName.trim())
+}
+
+/**
+ * Converts the result of an SQL query to the DataFrame.
+ * Also, it could be a just name of the SQL table.
+ *
+ * NOTE: It should be a name of one of the existing SQL tables,
+ * or the SQL query should start from SELECT and contain one query for reading data without any manipulation.
+ * It should not contain `;` symbol.
+ *
+ * @param [sqlQueryOrTableName] the SQL query to execute or name of the SQL table.
+ * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
+ * @param [inferNullability] indicates how the column nullability should be inferred.
+ * @return the DataFrame containing the result of the SQL query.
+ */
+public fun Connection.toDF(
+    sqlQueryOrTableName: String,
+    limit: Int = DEFAULT_LIMIT,
+    inferNullability: Boolean = true,
+): AnyFrame {
+    return when {
+        isSqlQuery(sqlQueryOrTableName) -> DataFrame.readSqlQuery(this, sqlQueryOrTableName, limit, inferNullability)
+        isSqlTableName(sqlQueryOrTableName) -> DataFrame.readSqlTable(this, sqlQueryOrTableName, limit, inferNullability)
+        else -> throw IllegalArgumentException("$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!")
+    }
+}
+
 /** SQL query is accepted only if it starts from SELECT */
 private fun isValid(sqlQuery: String): Boolean {
     val normalizedSqlQuery = sqlQuery.trim().uppercase()
@@ -487,6 +548,38 @@ public fun DataFrame.Companion.getSchemaForSqlQuery(connection: Connection, sqlQ
             val tableColumns = getTableColumnsMetadata(rs)
             return buildSchemaByTableColumns(tableColumns, dbType)
         }
+    }
+}
+
+/**
+ * Retrieves the schema of an SQL query result or the SQL table using the provided database configuration.
+ *
+ * @param [sqlQueryOrTableName] the SQL query to execute and retrieve the schema from.
+ * @return the schema of the SQL query as a [DataFrameSchema] object.
+ */
+public fun DatabaseConfiguration.getDataFrameSchema(
+    sqlQueryOrTableName: String
+): DataFrameSchema {
+    return when {
+        isSqlQuery(sqlQueryOrTableName) -> DataFrame.getSchemaForSqlQuery(this, sqlQueryOrTableName)
+        isSqlTableName(sqlQueryOrTableName) -> DataFrame.getSchemaForSqlTable(this, sqlQueryOrTableName)
+        else -> throw IllegalArgumentException("$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!")
+    }
+}
+
+/**
+ * Retrieves the schema of an SQL query result or the SQL table using the provided database configuration.
+ *
+ * @param [sqlQueryOrTableName] the SQL query to execute and retrieve the schema from.
+ * @return the schema of the SQL query as a [DataFrameSchema] object.
+ */
+public fun Connection.getDataFrameSchema(
+    sqlQueryOrTableName: String
+): DataFrameSchema {
+    return when {
+        isSqlQuery(sqlQueryOrTableName) -> DataFrame.getSchemaForSqlQuery(this, sqlQueryOrTableName)
+        isSqlTableName(sqlQueryOrTableName) -> DataFrame.getSchemaForSqlTable(this, sqlQueryOrTableName)
+        else -> throw IllegalArgumentException("$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!")
     }
 }
 
