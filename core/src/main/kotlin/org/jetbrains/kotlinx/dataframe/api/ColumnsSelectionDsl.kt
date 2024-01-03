@@ -396,6 +396,10 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  {@include [Indent]}`|` {@include [AllExceptColumnsSelectionDsl.Usage.ColumnGroupName]}**`(`**{@include [UsageTemplate.ColumnNoAccessorRef]}**`, ..)`**
      *
+     *  {@include [Indent]}`|` {@include [AllExceptColumnsSelectionDsl.Usage.ColumnGroupExperimentalName]} **` { `**{@include [UsageTemplate.ColumnsSelectorRef]}**` \\} EXPERIMENTAL!`**
+     *
+     * {@include [Indent]}`|` {@include [AllExceptColumnsSelectionDsl.Usage.ColumnGroupExperimentalName]}**`(`**{@include [UsageTemplate.ColumnNoAccessorRef]}**`, ..) EXPERIMENTAL!`**
+     *
      *  {@include [LineBreak]}
      *
      *  {@include [UsageTemplate.SingleColumnRef]}

@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
@@ -112,6 +113,10 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**allColsExcept**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept]**`(`**[columnNoAccessor][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnNoAccessorDef]**`, ..)`**
      *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` [**exceptNew**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.exceptNew] **` { `**[colsSelector][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnsSelectorDef]**` } EXPERIMENTAL!`**
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` [**exceptNew**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.exceptNew]**`(`**[columnNoAccessor][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnNoAccessorDef]**`, ..) EXPERIMENTAL!`**
+     *
      *
      *
      *
@@ -133,6 +138,9 @@ public interface AllExceptColumnsSelectionDsl {
 
         /** .[**allColsExcept**][ColumnsSelectionDsl.allColsExcept] */
         public interface ColumnGroupName
+
+        /** [**exceptNew**][ColumnsSelectionDsl.exceptNew] */
+        public interface ColumnGroupExperimentalName
     }
 
     /**
@@ -2458,6 +2466,52 @@ public interface AllExceptColumnsSelectionDsl {
 
     // region experiments
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(colGroup) `[except][ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][DataFrame.select]` { colGroup `[exceptNew][SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except] functions
+     * are deleted.
+     */
+    private interface ExperimentalExceptDocs
+
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     public infix fun <C> SingleColumn<DataRow<C>>.exceptNew(selector: ColumnsSelector<C, *>): SingleColumn<DataRow<C>> =
         exceptExperimentalInternal(selector.toColumns())
@@ -2480,30 +2534,184 @@ public interface AllExceptColumnsSelectionDsl {
     public fun <C> SingleColumn<DataRow<C>>.exceptNew(vararg others: ColumnsResolver<*>): SingleColumn<DataRow<C>> =
         exceptNew { others.toColumnSet() }
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     public infix fun <C> SingleColumn<DataRow<C>>.exceptNew(other: String): SingleColumn<DataRow<C>> =
         exceptExperimentalInternal(column<Any?>(other))
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     public fun <C> SingleColumn<DataRow<C>>.exceptNew(vararg others: String): SingleColumn<DataRow<C>> =
         exceptExperimentalInternal(others.toColumnSet())
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     public infix fun <C> SingleColumn<DataRow<C>>.exceptNew(other: KProperty<C>): SingleColumn<DataRow<C>> =
         exceptExperimentalInternal(column(other))
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     public fun <C> SingleColumn<DataRow<C>>.exceptNew(vararg others: KProperty<*>): SingleColumn<DataRow<C>> =
         exceptExperimentalInternal(others.toColumnSet())
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     public infix fun <C> SingleColumn<DataRow<C>>.exceptNew(other: ColumnPath): SingleColumn<DataRow<C>> =
         exceptExperimentalInternal(column<Any?>(other))
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     public fun <C> SingleColumn<DataRow<C>>.exceptNew(vararg others: ColumnPath): SingleColumn<DataRow<C>> =
         exceptExperimentalInternal(others.toColumnSet())
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     public infix fun String.exceptNew(selector: ColumnsSelector<*, *>): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptNew(selector)
@@ -2526,30 +2734,184 @@ public interface AllExceptColumnsSelectionDsl {
     public fun String.exceptNew(vararg others: ColumnsResolver<*>): SingleColumn<DataRow<*>> =
         exceptNew { others.toColumnSet() }
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     public infix fun String.exceptNew(other: String): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptExperimentalInternal(column<Any?>(other))
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     public fun String.exceptNew(vararg others: String): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     public infix fun String.exceptNew(other: KProperty<*>): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptExperimentalInternal(column(other))
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     public fun String.exceptNew(vararg others: KProperty<*>): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     public infix fun String.exceptNew(other: ColumnPath): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptExperimentalInternal(column<Any?>(other))
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     public fun String.exceptNew(vararg others: ColumnPath): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     @OptIn(ExperimentalTypeInference::class)
     @OverloadResolutionByLambdaReturnType
@@ -2557,6 +2919,28 @@ public interface AllExceptColumnsSelectionDsl {
     public infix fun <C> KProperty<C>.exceptNew(selector: ColumnsSelector<C, *>): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptExperimentalInternal(selector.toColumns())
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("KPropertyDataRowExceptNew")
@@ -2581,66 +2965,352 @@ public interface AllExceptColumnsSelectionDsl {
     public fun KProperty<*>.exceptNew(vararg others: ColumnsResolver<*>): SingleColumn<DataRow<*>> =
         exceptNew { others.toColumnSet() }
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     public infix fun <C> KProperty<C>.exceptNew(other: String): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptExperimentalInternal(column<Any?>(other))
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     public fun <C> KProperty<C>.exceptNew(vararg others: String): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("KPropertyDataRowExceptNew")
     public infix fun <C> KProperty<DataRow<C>>.exceptNew(other: String): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptExperimentalInternal(column<Any?>(other))
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("KPropertyDataRowExceptNew")
     public fun <C> KProperty<DataRow<C>>.exceptNew(vararg others: String): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     public infix fun <C> KProperty<C>.exceptNew(other: KProperty<*>): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptExperimentalInternal(column(other))
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     public fun <C> KProperty<C>.exceptNew(vararg others: KProperty<*>): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("KPropertyDataRowExceptNew")
     public infix fun <C> KProperty<DataRow<C>>.exceptNew(other: KProperty<*>): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptExperimentalInternal(column(other))
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("KPropertyDataRowExceptNew")
     public fun <C> KProperty<DataRow<C>>.exceptNew(vararg others: KProperty<*>): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     public infix fun <C> KProperty<C>.exceptNew(other: ColumnPath): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptExperimentalInternal(column<Any?>(other))
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     public fun <C> KProperty<C>.exceptNew(vararg others: ColumnPath): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("KPropertyDataRowExceptNew")
     public infix fun <C> KProperty<DataRow<C>>.exceptNew(other: ColumnPath): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptExperimentalInternal(column<Any?>(other))
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("KPropertyDataRowExceptNew")
     public fun <C> KProperty<DataRow<C>>.exceptNew(vararg others: ColumnPath): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     public infix fun ColumnPath.exceptNew(selector: ColumnsSelector<*, *>): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptExperimentalInternal(selector.toColumns<Any?, Any?>())
@@ -2663,14 +3333,80 @@ public interface AllExceptColumnsSelectionDsl {
     public fun ColumnPath.exceptNew(vararg others: ColumnsResolver<*>): SingleColumn<DataRow<*>> =
         exceptNew { others.toColumnSet() }
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     public infix fun ColumnPath.exceptNew(other: String): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptExperimentalInternal(column<Any?>(other))
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     public fun ColumnPath.exceptNew(vararg others: String): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     public infix fun ColumnPath.exceptNew(other: KProperty<*>): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptExperimentalInternal(column(other))
@@ -2679,10 +3415,54 @@ public interface AllExceptColumnsSelectionDsl {
     public fun ColumnPath.exceptNew(vararg others: KProperty<*>): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     public infix fun ColumnPath.exceptNew(other: ColumnPath): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptExperimentalInternal(column<Any?>(other))
 
+    /**
+     * ## EXPERIMENTAL: Except on Column Group
+     *
+     * Selects the current column group itself, except for the specified columns. This is different from
+     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
+     *
+     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
+     *
+     * These produce the same result:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     *
+     * These functions are experimental and may be removed or changed in the future.
+     *
+     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     *
+     * ## NOTE:
+     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
+     * are deleted.
+     */
     @ExperimentalExceptCsDsl
     public fun ColumnPath.exceptNew(vararg others: ColumnPath): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
@@ -2838,6 +3618,7 @@ internal fun SingleColumn<DataRow<*>>.allColsExceptInternal(other: ColumnsResolv
  * @param other The [ColumnsResolver] to use for excluding columns.
  * @return A new [SingleColumn] with the filtered columns excluded.
  */
+@Suppress("UNCHECKED_CAST")
 internal fun <C> SingleColumn<DataRow<C>>.exceptExperimentalInternal(other: ColumnsResolver<*>): SingleColumn<DataRow<C>> =
     this.ensureIsColumnGroup().transformSingle { singleCol ->
         val columnsToExcept = singleCol.asColumnGroup()
