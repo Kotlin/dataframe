@@ -95,22 +95,6 @@ public interface UsageTemplateColumnsSelectionDsl {
 
         // region Definitions for at the top of the template
 
-        /** `columnSet: `[ColumnSet][ColumnSet]`<*>` */
-        public interface ColumnSetDef
-
-        /**
-         * `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
-         *
-         * {@include [QuadrupleIndent]}{@include [Indent]}{@include [QuarterIndent]}
-         * `| `[KProperty][kotlin.reflect.KProperty]`<* | `[DataRow][DataRow]`<*>>` | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
-         */
-        public interface ColumnGroupDef
-
-        /**
-         * `singleColumn: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>
-         */
-        public interface SingleColumnDef
-
         /**
          * `columnGroupReference: `[String][String]` | `[KProperty][kotlin.reflect.KProperty]`<*>`
          *
@@ -118,6 +102,12 @@ public interface UsageTemplateColumnsSelectionDsl {
          * | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
          */
         public interface ColumnGroupNoSingleColumnDef
+
+        /** `colSelector: `[ColumnSelector][ColumnSelector] */
+        public interface ColumnSelectorDef
+
+        /** `colsSelector: `[ColumnsSelector][ColumnsSelector] */
+        public interface ColumnsSelectorDef
 
         /**
          * `column: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]` | `[String][String]
@@ -127,11 +117,34 @@ public interface UsageTemplateColumnsSelectionDsl {
          */
         public interface ColumnDef
 
+        /**
+         * `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
+         *
+         * {@include [QuadrupleIndent]}{@include [Indent]}{@include [QuarterIndent]}
+         * `| `[KProperty][kotlin.reflect.KProperty]`<* | `[DataRow][DataRow]`<*>>` | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+         */
+        public interface ColumnGroupDef
+
         /** `columnNoAccessor: `[String][String]` | `[KProperty][kotlin.reflect.KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] */
         public interface ColumnNoAccessorDef
 
-        /** `T: Column type` */
-        public interface ColumnTypeDef
+        /** `columnOrSet: `{@include [ColumnRef]}` | `{@include [ColumnSetRef]} */
+        public interface ColumnOrColumnSetDef
+
+        /** `columnSet: `[ColumnSet][ColumnSet]`<*>` */
+        public interface ColumnSetDef
+
+        /** `columnsResolver: `[ColumnsResolver][ColumnsResolver] */
+        public interface ColumnsResolverDef
+
+        /** `condition: `[ColumnFilter][ColumnFilter] */
+        public interface ConditionDef
+
+        /** `expression: `{@include [ColumnExpressionLink]} */
+        public interface ColumnExpressionDef
+
+        /** `ignoreCase: `[Boolean][Boolean] */
+        public interface IgnoreCaseDef
 
         /** `index: `[Int][Int] */
         public interface IndexDef
@@ -139,84 +152,41 @@ public interface UsageTemplateColumnsSelectionDsl {
         /** `indexRange: `[IntRange][IntRange] */
         public interface IndexRangeDef
 
-        /** `condition: `[ColumnFilter][ColumnFilter] */
-        public interface ConditionDef
+        /** `infer: `[Infer][org.jetbrains.kotlinx.dataframe.api.Infer] */
+        public interface InferDef
 
         /** `kind: `[ColumnKind][ColumnKind] */
         public interface ColumnKindDef
 
-        /** `colSelector: `[ColumnSelector][ColumnSelector] */
-        public interface ColumnSelectorDef
-
-        /** `colsSelector: `[ColumnsSelector][ColumnsSelector] */
-        public interface ColumnsSelectorDef
-
-        /** `columnsResolver: `[ColumnsResolver][ColumnsResolver] */
-        public interface ColumnsResolverDef
-
-        /** `number: `[Int][Int] */
-        public interface NumberDef
-
-        /** `text: `[String][String] */
-        public interface TextDef
-
-        /** `ignoreCase: `[Boolean][Boolean] */
-        public interface IgnoreCaseDef
-
-        /** `regex: `[Regex][Regex] */
-        public interface RegexDef
-
         /** `kType: `[KType][KType] */
         public interface KTypeDef
-
-        /** `columnOrSet: `{@include [ColumnRef]}` | `{@include [ColumnSetRef]} */
-        public interface ColumnOrColumnSetDef
 
         /** `name: `[String][String] */
         public interface NameDef
 
-        /** `infer: `[Infer][org.jetbrains.kotlinx.dataframe.api.Infer] */
-        public interface InferDef
+        /** `number: `[Int][Int] */
+        public interface NumberDef
 
-        /** `expression: `{@include [ColumnExpressionLink]} */
-        public interface ColumnExpressionDef
+        /** `regex: `[Regex][Regex] */
+        public interface RegexDef
+
+        /**
+         * `singleColumn: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>
+         */
+        public interface SingleColumnDef
+
+        /** `T: Column type` */
+        public interface ColumnTypeDef
+
+        /** `text: `[String][String] */
+        public interface TextDef
 
         // endregion
 
         // region References to the definitions
 
-        /** [columnSet][ColumnSetDef] */
-        public interface ColumnSetRef
-
-        /** [columnGroup][ColumnGroupDef] */
-        public interface ColumnGroupRef
-
-        /** [singleColumn][SingleColumnDef] */
-        public interface SingleColumnRef
-
         /** [columnGroupReference][ColumnGroupNoSingleColumnDef] */
         public interface ColumnGroupNoSingleColumnRef
-
-        /** [condition][ConditionDef] */
-        public interface ConditionRef
-
-        /** [column][ColumnDef] */
-        public interface ColumnRef
-
-        /** [columnNoAccessor][ColumnNoAccessorDef] */
-        public interface ColumnNoAccessorRef
-
-        /** [index][IndexDef] */
-        public interface IndexRef
-
-        /** [indexRange][IndexRangeDef] */
-        public interface IndexRangeRef
-
-        /** [T][ColumnTypeDef] */
-        public interface ColumnTypeRef
-
-        /** [kind][ColumnKindDef] */
-        public interface ColumnKindRef
 
         /** [colSelector][ColumnSelectorDef] */
         public interface ColumnSelectorRef
@@ -224,35 +194,65 @@ public interface UsageTemplateColumnsSelectionDsl {
         /** [colsSelector][ColumnsSelectorDef] */
         public interface ColumnsSelectorRef
 
-        /** [columnsResolver][ColumnsResolverDef] */
-        public interface ColumnsResolverRef
+        /** [column][ColumnDef] */
+        public interface ColumnRef
 
-        /** [number][NumberDef] */
-        public interface NumberRef
+        /** [columnGroup][ColumnGroupDef] */
+        public interface ColumnGroupRef
 
-        /** [text][TextDef] */
-        public interface TextRef
-
-        /** [ignoreCase][IgnoreCaseDef] */
-        public interface IgnoreCaseRef
-
-        /** [regex][RegexDef] */
-        public interface RegexRef
-
-        /** [kType][KTypeDef] */
-        public interface KTypeRef
+        /** [columnNoAccessor][ColumnNoAccessorDef] */
+        public interface ColumnNoAccessorRef
 
         /** [columnOrSet][ColumnOrColumnSetDef] */
         public interface ColumnOrColumnSetRef
 
-        /** [name][NameDef] */
-        public interface NameRef
+        /** [columnSet][ColumnSetDef] */
+        public interface ColumnSetRef
+
+        /** [columnsResolver][ColumnsResolverDef] */
+        public interface ColumnsResolverRef
+
+        /** [condition][ConditionDef] */
+        public interface ConditionRef
+
+        /** [expression][ColumnExpressionDef] */
+        public interface ColumnExpressionRef
+
+        /** [ignoreCase][IgnoreCaseDef] */
+        public interface IgnoreCaseRef
+
+        /** [index][IndexDef] */
+        public interface IndexRef
+
+        /** [indexRange][IndexRangeDef] */
+        public interface IndexRangeRef
 
         /** [infer][InferDef] */
         public interface InferRef
 
-        /** [expression][ColumnExpressionDef] */
-        public interface ColumnExpressionRef
+        /** [kind][ColumnKindDef] */
+        public interface ColumnKindRef
+
+        /** [kType][KTypeDef] */
+        public interface KTypeRef
+
+        /** [name][NameDef] */
+        public interface NameRef
+
+        /** [number][NumberDef] */
+        public interface NumberRef
+
+        /** [regex][RegexDef] */
+        public interface RegexRef
+
+        /** [singleColumn][SingleColumnDef] */
+        public interface SingleColumnRef
+
+        /** [T][ColumnTypeDef] */
+        public interface ColumnTypeRef
+
+        /** [text][TextDef] */
+        public interface TextRef
 
         // endregion
     }
