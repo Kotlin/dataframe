@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
@@ -73,7 +74,8 @@ public interface ColGroupColumnsSelectionDsl {
      * ## Col Group
      *
      * Creates a [ColumnAccessor] (or [SingleColumn]) for a column group with the given argument which can be either
-     * an index ([Int]) or a reference to a column ([String], [ColumnPath], [KProperty], or [ColumnAccessor]).
+     * an index ([Int]) or a reference to a column
+     * ([String], [ColumnPath], [KProperty], or [ColumnAccessor]; any {@include [AccessApiLink]}).
      *
      * This is a DSL-shorthand for [columnGroup] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column

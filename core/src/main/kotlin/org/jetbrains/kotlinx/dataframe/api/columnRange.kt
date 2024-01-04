@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
@@ -39,7 +40,8 @@ public interface ColumnRangeColumnsSelectionDsl {
     /**
      * ## Range of Columns
      * Creates a [ColumnSet] containing all columns from [this\] up to (and including) [endInclusive\].
-     * Columns inside of column groups are also supported.
+     *
+     * Columns inside of column groups are also supported, as well as any combination of {@include [AccessApiLink]}.
      *
      * ### Check out: [Usage]
      *

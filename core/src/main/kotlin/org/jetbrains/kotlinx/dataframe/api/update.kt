@@ -39,7 +39,7 @@ import kotlin.reflect.KProperty
  * Returns the [DataFrame] with changed values in some cells
  * (column types can not be changed).
  *
- * Check out the [`update` Operation Usage][Usage].
+ * ### Check out: [Usage]
  *
  * For more information: {@include [DocumentationUrls.Update]}
  */

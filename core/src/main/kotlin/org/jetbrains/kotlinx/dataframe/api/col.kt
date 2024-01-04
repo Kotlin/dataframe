@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
@@ -73,7 +74,8 @@ public interface ColColumnsSelectionDsl {
      * ## Col
      *
      * Creates a [ColumnAccessor] (or [SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column ([String], [ColumnPath], [KProperty], or [ColumnAccessor]).
+     * an index ([Int]) or a reference to a column
+     * ([String], [ColumnPath], [KProperty], or [ColumnAccessor]; any {@include [AccessApiLink]}).
      *
      * This is a DSL-shorthand for [column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).

@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDslLink
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -86,7 +87,7 @@ public typealias RowColumnExpression<T, C, R> = (row: DataRow<T>, col: DataColum
 public typealias ColumnExpression<C, R> = Selector<DataColumn<C>, R>
 
 /**
- * [ColumnSelector] is used to express or select a single column, represented by [SingleColumn]`<C>`, using the
+ * A [ColumnSelector] is used to express or select a single column, represented by [SingleColumn]`<C>`, using the
  * context of [ColumnsSelectionDsl]`<T>` as `this` and `it`.
  *
  * Shorthand for:
@@ -97,8 +98,10 @@ public typealias ColumnExpression<C, R> = Selector<DataColumn<C>, R>
 public typealias ColumnSelector<T, C> = Selector<ColumnsSelectionDsl<T>, SingleColumn<C>>
 
 /**
- * [ColumnsSelector] is used to express or select one or multiple columns, represented by [ColumnsResolver]`<C>`,
+ * A [ColumnsSelector] is used to express or select one or multiple columns, represented by [ColumnsResolver]`<C>`,
  * using the context of [ColumnsSelectionDsl]`<T>` as `this` and `it`.
+ *
+ * See [ColumnsSelectionDsl] for more information.
  *
  * Shorthand for:
  * ```kotlin

@@ -15,7 +15,6 @@ import kotlin.reflect.KProperty
 /** [Column Selection DSL][ColumnSelectionDsl] */
 internal interface ColumnSelectionDslLink
 
-/** @include [CommonColumnSelectionDocs] */
 public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
 
     /**

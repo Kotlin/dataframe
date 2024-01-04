@@ -32,6 +32,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.isSingleColumnWithGroup
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
+import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
@@ -268,10 +269,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet] that contains a subset from the current [ColumnsResolver],
      * containing all columns {@getArg [BehaviorArg]}.
      *
-     * [column\] can be specified both relative to the current [ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver] is a [SingleColumn] and consists of only one [column group][ColumnGroup],
-     * then the function will take columns from its children.
+     * [column\] can be specified both relative to the current [ColumnsResolver] and absolutely and
+     * can be referenced using any {@include [AccessApiLink]}.
      *
      * If [column\] does not exist, {@getArg [ColumnDoesNotExistArg]}.
      * {@include [LineBreak]}

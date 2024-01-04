@@ -4,15 +4,13 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
@@ -20,20 +18,6 @@ import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_LIST_DATACOLUMN_GET
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_LIST_DATACOLUMN_GET_REPLACE
 import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
-
-/**
- * Referring to or expressing column(s) in the selection DSL can be done in several ways corresponding to all
- * [Access APIs][AccessApi]:
- * TODO: [Issue #286](https://github.com/Kotlin/dataframe/issues/286)
- *
- * @include [DocumentationUrls.ColumnSelectors]
- */
-private interface CommonColumnSelectionDocs
-
-/**
- * {@comment TODO}
- */
-private interface CommonColumnSelectionExamples
 
 /** [Columns Selection DSL][ColumnsSelectionDsl] */
 internal interface ColumnsSelectionDslLink
@@ -52,14 +36,11 @@ public annotation class ColumnsSelectionDslMarker
 
 /**
  * ## Columns Selection DSL
- * @include [CommonColumnSelectionDocs]
+ * {@include [SelectingColumns.Dsl.WithExample]}
+ * {@setArg [SelectingColumns.OperationArg] select}
  *
- * ### Check out: [Usage]
- *
- * Can be safely cast to [SingleColumn] across the library. It does not directly
+ * @comment This interface be safely cast to [SingleColumn] across the library. It does not directly
  * implement it for DSL purposes.
- *
- * See [Usage] for the DSL Grammar of the ColumnsSelectionDsl.
  */
 @ColumnsSelectionDslMarker
 public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */

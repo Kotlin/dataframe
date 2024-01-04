@@ -15,11 +15,6 @@ import kotlin.reflect.KProperty
 /** [Column Selection DSL][ColumnSelectionDsl] */
 internal interface ColumnSelectionDslLink
 
-/** Referring to or expressing column(s) in the selection DSL can be done in several ways corresponding to all
- * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]:
- * TODO: [Issue #286](https://github.com/Kotlin/dataframe/issues/286)
- *
- * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html) */
 public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
 
     /**

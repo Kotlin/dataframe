@@ -32,6 +32,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.isSingleColumnWithGroup
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
+import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
@@ -578,10 +579,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet] that contains a subset from the current [ColumnsResolver],
      * containing all columns {@getArg [BehaviorArg]}.
      *
-     * [column\] can be specified both relative to the current [ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver] is a [SingleColumn] and consists of only one [column group][ColumnGroup],
-     * then the function will take columns from its children.
+     * [column\] can be specified both relative to the current [ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column\] does not exist, {@getArg [ColumnDoesNotExistArg]}.
      *
@@ -665,10 +664,8 @@ public interface AllColumnsSelectionDsl {
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely..
      *
-     * [column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][ColumnSet].
      *
@@ -726,10 +723,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -790,10 +785,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -852,10 +845,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -914,10 +905,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -975,10 +964,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1036,10 +1023,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1098,10 +1083,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1162,10 +1145,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1223,10 +1204,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1284,10 +1263,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1345,10 +1322,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1406,10 +1381,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1468,10 +1441,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1532,10 +1503,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1598,10 +1567,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1667,10 +1634,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1728,10 +1693,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1789,10 +1752,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1851,10 +1812,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1915,10 +1874,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1976,10 +1933,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2037,10 +1992,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2098,10 +2051,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2159,10 +2110,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2221,10 +2170,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2291,10 +2238,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2361,10 +2306,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2429,10 +2372,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2495,10 +2436,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2561,10 +2500,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2627,10 +2564,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2694,10 +2629,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2758,10 +2691,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2819,10 +2750,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2880,10 +2809,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2941,10 +2868,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3002,10 +2927,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3070,10 +2993,8 @@ public interface AllColumnsSelectionDsl {
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely..
      *
-     * [column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][ColumnSet].
      *
@@ -3131,10 +3052,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3195,10 +3114,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3257,10 +3174,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3319,10 +3234,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3380,10 +3293,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3441,10 +3352,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3503,10 +3412,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3567,10 +3474,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3628,10 +3533,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3689,10 +3592,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3750,10 +3651,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3811,10 +3710,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3873,10 +3770,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3937,10 +3832,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -4003,10 +3896,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -4072,10 +3963,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -4133,10 +4022,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -4194,10 +4081,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -4256,10 +4141,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -4320,10 +4203,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -4381,10 +4262,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -4442,10 +4321,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -4503,10 +4380,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -4564,10 +4439,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -4626,10 +4499,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -4696,10 +4567,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -4766,10 +4635,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -4834,10 +4701,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -4900,10 +4765,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -4966,10 +4829,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -5032,10 +4893,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -5099,10 +4958,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -5163,10 +5020,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -5224,10 +5079,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -5285,10 +5138,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -5346,10 +5197,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -5407,10 +5256,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -5475,10 +5322,8 @@ public interface AllColumnsSelectionDsl {
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely..
      *
-     * [column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column] does not exist, the function will return a [ColumnSet][ColumnSet] containing all columns.
      *
@@ -5536,10 +5381,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -5600,10 +5443,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -5662,10 +5503,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -5724,10 +5563,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -5785,10 +5622,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -5846,10 +5681,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -5908,10 +5741,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -5972,10 +5803,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6033,10 +5862,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6094,10 +5921,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6155,10 +5980,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6216,10 +6039,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6278,10 +6099,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6342,10 +6161,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6408,10 +6225,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6474,10 +6289,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6535,10 +6348,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6596,10 +6407,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6658,10 +6467,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6722,10 +6529,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6783,10 +6588,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6844,10 +6647,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6905,10 +6706,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6966,10 +6765,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7028,10 +6825,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7098,10 +6893,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7168,10 +6961,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7236,10 +7027,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7302,10 +7091,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7368,10 +7155,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7434,10 +7219,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7501,10 +7284,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7565,10 +7346,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7626,10 +7405,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7687,10 +7464,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7748,10 +7523,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7809,10 +7582,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7877,10 +7648,8 @@ public interface AllColumnsSelectionDsl {
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely..
      *
-     * [column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column] does not exist, the function will return a [ColumnSet][ColumnSet] containing all columns.
      *
@@ -7938,10 +7707,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -8002,10 +7769,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -8064,10 +7829,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -8126,10 +7889,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -8187,10 +7948,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -8248,10 +8007,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -8310,10 +8067,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -8374,10 +8129,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -8435,10 +8188,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -8496,10 +8247,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -8557,10 +8306,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -8618,10 +8365,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -8680,10 +8425,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -8744,10 +8487,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -8810,10 +8551,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -8879,10 +8618,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -8940,10 +8677,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -9001,10 +8736,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -9063,10 +8796,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -9127,10 +8858,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -9188,10 +8917,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -9249,10 +8976,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -9310,10 +9035,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -9371,10 +9094,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -9433,10 +9154,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -9503,10 +9222,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -9573,10 +9290,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -9641,10 +9356,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -9707,10 +9420,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -9773,10 +9484,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -9839,10 +9548,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -9906,10 +9613,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -9970,10 +9675,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -10031,10 +9734,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -10092,10 +9793,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -10153,10 +9852,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -10214,10 +9911,8 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset from the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] and consists of only one [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * then the function will take columns from its children.
+     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
