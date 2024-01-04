@@ -148,6 +148,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude the given columns from the current selection.
      *
+     * ### Check out: [Usage]
+     *
      * ### On [ColumnSets][ColumnSet]
      * This function can be explained the easiest with [ColumnSets][ColumnSet]. Let's say we want all
      * integer columns apart from `age` and `height`.
@@ -211,6 +213,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude the given columns from the current selection.
+     *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -278,6 +282,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude the given columns from the current selection.
      *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
      * integer columns apart from `age` and `height`.
@@ -344,6 +350,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude the given columns from the current selection.
      *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
      * integer columns apart from `age` and `height`.
@@ -403,6 +411,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude the given columns from the current selection.
+     *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -464,6 +474,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude the given columns from the current selection.
      *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
      * integer columns apart from `age` and `height`.
@@ -523,6 +535,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude the given columns from the current selection.
+     *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -584,6 +598,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude the given columns from the current selection.
      *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
      * integer columns apart from `age` and `height`.
@@ -643,6 +659,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude the given columns from the current selection.
+     *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -704,6 +722,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude the given columns from the current selection.
      *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
      * integer columns apart from `age` and `height`.
@@ -764,6 +784,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude the given columns from the current selection.
      *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
      * integer columns apart from `age` and `height`.
@@ -823,6 +845,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude the given columns from the current selection.
+     *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -888,6 +912,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude the given columns from the current selection.
      *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
      * integer columns apart from `age` and `height`.
@@ -952,6 +978,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude the given columns from the current selection.
      *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
      * integer columns apart from `age` and `height`.
@@ -1006,12 +1034,13 @@ public interface AllExceptColumnsSelectionDsl {
     public fun <C> ColumnsSelectionDsl<C>.allExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         this.asSingleColumn().allColsExcept(selector)
 
-
     /**
      *
      * ## (All) (Cols) Except
      *
      * Exclude the given columns from the current selection.
+     *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -1072,6 +1101,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude the given columns from the current selection.
      *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
      * integer columns apart from `age` and `height`.
@@ -1131,6 +1162,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude the given columns from the current selection.
      *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
      * integer columns apart from `age` and `height`.
@@ -1189,6 +1222,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude the given columns from the current selection.
+     *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -1252,6 +1287,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude the given columns from the current selection.
+     *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -1358,6 +1395,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude the given columns from the current selection.
      *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
      * integer columns apart from `age` and `height`.
@@ -1434,6 +1473,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude the given columns from the current selection.
      *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
      * integer columns apart from `age` and `height`.
@@ -1494,6 +1535,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude the given columns from the current selection.
      *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
      * integer columns apart from `age` and `height`.
@@ -1553,6 +1596,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude the given columns from the current selection.
+     *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -1617,6 +1662,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude the given columns from the current selection.
+     *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -1694,6 +1741,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude the given columns from the current selection.
      *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
      * integer columns apart from `age` and `height`.
@@ -1754,6 +1803,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude the given columns from the current selection.
      *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
      * integer columns apart from `age` and `height`.
@@ -1813,6 +1864,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude the given columns from the current selection.
+     *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -1877,6 +1930,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude the given columns from the current selection.
+     *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -1944,6 +1999,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude the given columns from the current selection.
+     *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -2027,6 +2084,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude the given columns from the current selection.
      *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
      * integer columns apart from `age` and `height`.
@@ -2087,6 +2146,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude the given columns from the current selection.
      *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
      * integer columns apart from `age` and `height`.
@@ -2146,6 +2207,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude the given columns from the current selection.
+     *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -2210,6 +2273,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude the given columns from the current selection.
+     *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -2287,6 +2352,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude the given columns from the current selection.
      *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
      * integer columns apart from `age` and `height`.
@@ -2347,6 +2414,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude the given columns from the current selection.
      *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
      * integer columns apart from `age` and `height`.
@@ -2406,6 +2475,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude the given columns from the current selection.
+     *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all

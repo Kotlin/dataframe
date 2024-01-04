@@ -105,7 +105,7 @@ public interface SingleColumnsSelectionDsl {
      *
      * NOTE: For [column groups][ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
      *
-     * Check out [Usage] for how to use [single]/[singleCol].
+     * ### Check out: [Usage]
      *
      * #### Examples:
      *

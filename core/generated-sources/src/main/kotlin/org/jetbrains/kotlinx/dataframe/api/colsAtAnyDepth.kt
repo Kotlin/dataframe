@@ -113,17 +113,8 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * This function is especially powerful if followed by another filter function such as
      * [colsOf][ColumnsSelectionDsl.colsOf], [single][ColumnsSelectionDsl.single], and [valueCols][ColumnsSelectionDsl.valueCols].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * For usage, check out [Usage].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * For example:
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
+     * ### Check out: [Usage]
+     * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
      *
      * `df.`[select][DataFrame.select]` { `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().`[first][ColumnsSelectionDsl.firstCol]` { "Alice" `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
@@ -180,17 +171,8 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * This function is especially powerful if followed by another filter function such as
      * [colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf], [single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single], and [valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * For usage, check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Usage].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * For example:
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Usage]
+     * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]` { "Alice" `[in][Iterable.contains]` it.`[values][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() } }`
@@ -244,17 +226,8 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * This function is especially powerful if followed by another filter function such as
      * [colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf], [single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single], and [valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * For usage, check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Usage].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * For example:
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Usage]
+     * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]` { "Alice" `[in][Iterable.contains]` it.`[values][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() } }`
@@ -310,17 +283,8 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * This function is especially powerful if followed by another filter function such as
      * [colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf], [single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single], and [valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * For usage, check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Usage].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * For example:
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Usage]
+     * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]` { "Alice" `[in][Iterable.contains]` it.`[values][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() } }`
@@ -374,17 +338,8 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * This function is especially powerful if followed by another filter function such as
      * [colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf], [single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single], and [valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * For usage, check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Usage].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * For example:
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Usage]
+     * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]` { "Alice" `[in][Iterable.contains]` it.`[values][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() } }`
@@ -438,17 +393,8 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * This function is especially powerful if followed by another filter function such as
      * [colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf], [single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single], and [valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * For usage, check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Usage].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * For example:
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Usage]
+     * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]` { "Alice" `[in][Iterable.contains]` it.`[values][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() } }`
@@ -502,17 +448,8 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * This function is especially powerful if followed by another filter function such as
      * [colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf], [single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single], and [valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * For usage, check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Usage].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * For example:
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Usage]
+     * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]` { "Alice" `[in][Iterable.contains]` it.`[values][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() } }`

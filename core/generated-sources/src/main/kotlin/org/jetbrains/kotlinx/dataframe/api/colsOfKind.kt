@@ -113,7 +113,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * You can optionally use a [filter\] to only include certain columns.
      * [colsOfKind] can be called using any of the supported [APIs][AccessApi] (+ [ColumnPath]).
      *
-     * Check out [Usage] for how to use [colsOfKind].
+     * ### Check out: [Usage]
      *
      * #### For example:
      *
@@ -153,7 +153,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * You can optionally use a [filter] to only include certain columns.
      * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Usage] for how to use [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -201,7 +201,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * You can optionally use a [filter] to only include certain columns.
      * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Usage] for how to use [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -245,7 +245,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * You can optionally use a [filter] to only include certain columns.
      * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Usage] for how to use [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -289,7 +289,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * You can optionally use a [filter] to only include certain columns.
      * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Usage] for how to use [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -330,7 +330,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * You can optionally use a [filter] to only include certain columns.
      * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Usage] for how to use [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -371,7 +371,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * You can optionally use a [filter] to only include certain columns.
      * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Usage] for how to use [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *

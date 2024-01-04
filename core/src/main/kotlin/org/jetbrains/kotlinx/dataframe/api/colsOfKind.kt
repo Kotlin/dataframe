@@ -71,7 +71,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * You can optionally use a [filter\] to only include certain columns.
      * [colsOfKind] can be called using any of the supported [APIs][AccessApi] (+ [ColumnPath]).
      *
-     * Check out [Usage] for how to use [colsOfKind].
+     * ### Check out: [Usage]
      *
      * #### For example:
      *

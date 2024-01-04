@@ -90,7 +90,7 @@ public interface ColsOfColumnsSelectionDsl {
      *
      * Get columns by a given type and an optional filter.
      *
-     * See [Usage] for how to use [colsOf].
+     * ### Check out: [Usage]
      *
      * #### For example:
      *

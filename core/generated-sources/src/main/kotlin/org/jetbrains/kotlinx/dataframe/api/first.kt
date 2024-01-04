@@ -167,13 +167,14 @@ public interface FirstColumnsSelectionDsl {
 
     /**
      * ## First (Col)
+     *
      * Returns the first column in this [ColumnSet] or [ColumnGroup]
      * that adheres to the given [condition\].
      * If no column adheres to the given [condition\], [NoSuchElementException] is thrown.
      *
      * NOTE: For [column groups][ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
-     * Check out [Usage] for how to use [first]/[firstCol].
+     * ### Check out: [Usage]
      *
      * #### Examples:
      *
@@ -199,13 +200,14 @@ public interface FirstColumnsSelectionDsl {
 
     /**
      * ## First (Col)
+     *
      * Returns the first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      * that adheres to the given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage] for how to use [first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.first]/[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage]
      *
      * #### Examples:
      *
@@ -233,13 +235,14 @@ public interface FirstColumnsSelectionDsl {
 
     /**
      * ## First (Col)
+     *
      * Returns the first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      * that adheres to the given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage] for how to use [first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.first]/[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage]
      *
      * #### Examples:
      *
@@ -262,13 +265,14 @@ public interface FirstColumnsSelectionDsl {
 
     /**
      * ## First (Col)
+     *
      * Returns the first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      * that adheres to the given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage] for how to use [first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.first]/[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage]
      *
      * #### Examples:
      *
@@ -291,13 +295,14 @@ public interface FirstColumnsSelectionDsl {
 
     /**
      * ## First (Col)
+     *
      * Returns the first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      * that adheres to the given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage] for how to use [first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.first]/[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage]
      *
      * #### Examples:
      *
@@ -320,13 +325,14 @@ public interface FirstColumnsSelectionDsl {
 
     /**
      * ## First (Col)
+     *
      * Returns the first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      * that adheres to the given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage] for how to use [first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.first]/[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage]
      *
      * #### Examples:
      *
@@ -351,13 +357,14 @@ public interface FirstColumnsSelectionDsl {
 
     /**
      * ## First (Col)
+     *
      * Returns the first column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      * that adheres to the given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage] for how to use [first][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.first]/[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Usage]
      *
      * #### Examples:
      *

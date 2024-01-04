@@ -145,7 +145,7 @@ public interface SingleColumnsSelectionDsl {
      *
      * NOTE: For [column groups][ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
      *
-     * Check out [Usage] for how to use [single]/[singleCol].
+     * ### Check out: [Usage]
      *
      * #### Examples:
      *
@@ -177,7 +177,7 @@ public interface SingleColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage] for how to use [single][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.single]/[singleCol][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.singleCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage]
      *
      * #### Examples:
      *
@@ -208,7 +208,7 @@ public interface SingleColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage] for how to use [single][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.single]/[singleCol][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.singleCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage]
      *
      * #### Examples:
      *
@@ -237,7 +237,7 @@ public interface SingleColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage] for how to use [single][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.single]/[singleCol][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.singleCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage]
      *
      * #### Examples:
      *
@@ -266,7 +266,7 @@ public interface SingleColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage] for how to use [single][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.single]/[singleCol][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.singleCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage]
      *
      * #### Examples:
      *
@@ -295,7 +295,7 @@ public interface SingleColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage] for how to use [single][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.single]/[singleCol][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.singleCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage]
      *
      * #### Examples:
      *
@@ -326,7 +326,7 @@ public interface SingleColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage] for how to use [single][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.single]/[singleCol][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.singleCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage]
      *
      * #### Examples:
      *

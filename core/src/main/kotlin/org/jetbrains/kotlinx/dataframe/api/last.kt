@@ -133,7 +133,7 @@ public interface LastColumnsSelectionDsl {
      *
      * NOTE: For [column groups][ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
      *
-     * Check out [Usage] for how to use [last]/[lastCol].
+     * ### Check out: [Usage]
      *
      * #### Examples:
      *

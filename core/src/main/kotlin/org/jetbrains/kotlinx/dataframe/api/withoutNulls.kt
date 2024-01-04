@@ -59,7 +59,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * NOTE: For [column groups][ColumnGroup], `withoutNulls` is named `colsWithoutNulls` to avoid confusion.
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### For Example:
      *

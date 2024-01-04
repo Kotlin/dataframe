@@ -127,13 +127,14 @@ public interface FirstColumnsSelectionDsl {
 
     /**
      * ## First (Col)
+     *
      * Returns the first column in this [ColumnSet] or [ColumnGroup]
      * that adheres to the given [condition\].
      * If no column adheres to the given [condition\], [NoSuchElementException] is thrown.
      *
      * NOTE: For [column groups][ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
-     * Check out [Usage] for how to use [first]/[firstCol].
+     * ### Check out: [Usage]
      *
      * #### Examples:
      *

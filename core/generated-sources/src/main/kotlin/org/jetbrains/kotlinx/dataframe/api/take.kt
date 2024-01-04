@@ -176,7 +176,7 @@ public interface TakeColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `take` is called `takeCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[take][ColumnSet.take]`(5) }`
@@ -210,7 +210,7 @@ public interface TakeColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `take` is called `takeCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[take][ColumnSet.take]`(5) }`
@@ -246,7 +246,7 @@ public interface TakeColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `take` is called `takeCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[take][ColumnSet.take]`(5) }`
@@ -281,7 +281,7 @@ public interface TakeColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `take` is called `takeCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[take][ColumnSet.take]`(5) }`
@@ -316,7 +316,7 @@ public interface TakeColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `take` is called `takeCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[take][ColumnSet.take]`(5) }`
@@ -350,7 +350,7 @@ public interface TakeColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `take` is called `takeCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[take][ColumnSet.take]`(5) }`
@@ -386,7 +386,7 @@ public interface TakeColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `take` is called `takeCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[take][ColumnSet.take]`(5) }`
@@ -424,7 +424,7 @@ public interface TakeColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `takeLast` is called `takeLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeLast][ColumnSet.takeLast]`(5) }`
@@ -458,7 +458,7 @@ public interface TakeColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `takeLast` is called `takeLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeLast][ColumnSet.takeLast]`(5) }`
@@ -494,7 +494,7 @@ public interface TakeColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `takeLast` is called `takeLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeLast][ColumnSet.takeLast]`(5) }`
@@ -529,7 +529,7 @@ public interface TakeColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `takeLast` is called `takeLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeLast][ColumnSet.takeLast]`(5) }`
@@ -564,7 +564,7 @@ public interface TakeColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `takeLast` is called `takeLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeLast][ColumnSet.takeLast]`(5) }`
@@ -598,7 +598,7 @@ public interface TakeColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `takeLast` is called `takeLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeLast][ColumnSet.takeLast]`(5) }`
@@ -634,7 +634,7 @@ public interface TakeColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `takeLast` is called `takeLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeLast][ColumnSet.takeLast]`(5) }`
@@ -676,7 +676,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeWhile][ColumnSet.takeWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
@@ -712,7 +712,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeWhile][ColumnSet.takeWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
@@ -751,7 +751,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeWhile][ColumnSet.takeWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
@@ -788,7 +788,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeWhile][ColumnSet.takeWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
@@ -825,7 +825,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeWhile][ColumnSet.takeWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
@@ -862,7 +862,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeWhile][ColumnSet.takeWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
@@ -901,7 +901,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeWhile][ColumnSet.takeWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
@@ -942,7 +942,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeLastWhile][ColumnSet.takeLastWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
@@ -978,7 +978,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeLastWhile][ColumnSet.takeLastWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
@@ -1017,7 +1017,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeLastWhile][ColumnSet.takeLastWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
@@ -1054,7 +1054,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeLastWhile][ColumnSet.takeLastWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
@@ -1091,7 +1091,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeLastWhile][ColumnSet.takeLastWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
@@ -1128,7 +1128,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeLastWhile][ColumnSet.takeLastWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
@@ -1167,7 +1167,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[takeLastWhile][ColumnSet.takeLastWhile]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`

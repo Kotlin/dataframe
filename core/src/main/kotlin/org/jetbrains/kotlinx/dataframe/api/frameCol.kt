@@ -81,7 +81,7 @@ public interface FrameColColumnsSelectionDsl {
      * {@include [LineBreak]}
      * {@getArg [CommonFrameColDocs.Note]}
      *
-     * Check out [Usage] for how to use [frameCol].
+     * ### Check out: [Usage]
      *
      * #### For example:
      *

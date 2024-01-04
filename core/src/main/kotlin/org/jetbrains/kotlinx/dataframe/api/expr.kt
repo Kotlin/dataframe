@@ -44,8 +44,8 @@ public interface ExprColumnsSelectionDsl {
  * @include [ColumnExpression.CommonDocs]
  *
  * This function is essentially a shortcut for [ColumnsContainer.mapToColumn].
- * {@include [LineBreak]}
- * See [Usage][ExprColumnsSelectionDsl.Usage] for how to use [expr].
+ *
+ * ### Check out: [Usage][ExprColumnsSelectionDsl.Usage]
  *
  * #### For example:
  *

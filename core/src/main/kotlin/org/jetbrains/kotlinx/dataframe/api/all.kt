@@ -177,7 +177,7 @@ public interface AllColumnsSelectionDsl {
      *
      * NOTE: For [column groups][ColumnGroup], `all` is named `allCols` instead to avoid confusion.
      *
-     * Check out [Usage] for how to use [all]/[allCols].
+     * ### Check out: [Usage]
      *
      * #### For example:
      * `df.`[move][DataFrame.move]` { `[all][ColumnsSelectionDsl.all]`() }.`[under][MoveClause.under]`("info")`
@@ -277,8 +277,8 @@ public interface AllColumnsSelectionDsl {
      * {@include [LineBreak]}
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][ColumnGroup] and a [ColumnFilter] on [ColumnSets][ColumnSet].
-     * {@include [LineBreak]}
-     * See [Usage] for how to use these functions.
+     *
+     * ### Check out: [Usage]
      *
      * #### For example:
      *

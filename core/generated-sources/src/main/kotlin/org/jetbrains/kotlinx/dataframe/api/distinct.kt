@@ -104,7 +104,7 @@ public interface DistinctColumnsSelectionDsl {
      * NOTE: This doesn't solve [DuplicateColumnNamesException] if you've selected two columns with the same name.
      * For this, you'll need to [rename][ColumnsSelectionDsl.named] one of the columns.
      *
-     * See [Usage] for how to use [distinct].
+     * ### Check out: [Usage]
      *
      * #### For Example:
      * `df.`[select][DataFrame.select]` { (`[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>() `[and][ColumnsSelectionDsl.and]` age).`[distinct][ColumnSet.distinct]`() }`

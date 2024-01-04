@@ -137,7 +137,7 @@ public interface ColsOfColumnsSelectionDsl {
      *
      * Get columns by a given type and an optional filter.
      *
-     * See [Usage] for how to use [colsOf].
+     * ### Check out: [Usage]
      *
      * #### For example:
      *
@@ -181,7 +181,7 @@ public interface ColsOfColumnsSelectionDsl {
      *
      * Get columns by a given type and an optional filter.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage] for how to use [colsOf][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -228,7 +228,7 @@ public interface ColsOfColumnsSelectionDsl {
      *
      * Get columns by a given type and an optional filter.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage] for how to use [colsOf][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -275,7 +275,7 @@ public interface ColsOfColumnsSelectionDsl {
      *
      * Get columns by a given type and an optional filter.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage] for how to use [colsOf][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -323,7 +323,7 @@ public interface ColsOfColumnsSelectionDsl {
  *
  * Get columns by a given type and an optional filter.
  *
- * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage] for how to use [colsOf][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf].
+ * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage]
  *
  * #### For example:
  *
@@ -370,7 +370,7 @@ public fun <C> ColumnSet<*>.colsOf(
  *
  * Get columns by a given type and an optional filter.
  *
- * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage] for how to use [colsOf][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf].
+ * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage]
  *
  * #### For example:
  *
@@ -416,7 +416,7 @@ public inline fun <reified C> ColumnSet<*>.colsOf(
  *
  * Get columns by a given type and an optional filter.
  *
- * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage] for how to use [colsOf][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf].
+ * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage]
  *
  * #### For example:
  *
@@ -461,7 +461,7 @@ public fun <C> ColumnsSelectionDsl<*>.colsOf(
  *
  * Get columns by a given type and an optional filter.
  *
- * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage] for how to use [colsOf][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf].
+ * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage]
  *
  * #### For example:
  *
@@ -505,7 +505,7 @@ public inline fun <reified C> ColumnsSelectionDsl<*>.colsOf(
  *
  * Get columns by a given type and an optional filter.
  *
- * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage] for how to use [colsOf][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf].
+ * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage]
  *
  * #### For example:
  *
@@ -552,7 +552,7 @@ public fun <C> SingleColumn<DataRow<*>>.colsOf(
  *
  * Get columns by a given type and an optional filter.
  *
- * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage] for how to use [colsOf][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf].
+ * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage]
  *
  * #### For example:
  *

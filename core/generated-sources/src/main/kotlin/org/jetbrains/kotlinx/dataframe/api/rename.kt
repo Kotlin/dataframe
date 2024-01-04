@@ -177,7 +177,7 @@ public interface RenameColumnsSelectionDsl {
      * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
      * used to specify the column to rename and which name should be used instead.
      *
-     * See [Usage] for how to use this function.
+     * ### Check out: [Usage]
      *
      * #### For Example:
      *
@@ -248,7 +248,7 @@ public interface RenameColumnsSelectionDsl {
      * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
      * used to specify the column to rename and which name should be used instead.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage] for how to use this function.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage]
      *
      * #### For Example:
      *
@@ -275,7 +275,7 @@ public interface RenameColumnsSelectionDsl {
      * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
      * used to specify the column to rename and which name should be used instead.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage] for how to use this function.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage]
      *
      * #### For Example:
      *
@@ -303,7 +303,7 @@ public interface RenameColumnsSelectionDsl {
      * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
      * used to specify the column to rename and which name should be used instead.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage] for how to use this function.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage]
      *
      * #### For Example:
      *
@@ -331,7 +331,7 @@ public interface RenameColumnsSelectionDsl {
      * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
      * used to specify the column to rename and which name should be used instead.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage] for how to use this function.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage]
      *
      * #### For Example:
      *
@@ -358,7 +358,7 @@ public interface RenameColumnsSelectionDsl {
      * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
      * used to specify the column to rename and which name should be used instead.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage] for how to use this function.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage]
      *
      * #### For Example:
      *
@@ -386,7 +386,7 @@ public interface RenameColumnsSelectionDsl {
      * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
      * used to specify the column to rename and which name should be used instead.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage] for how to use this function.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage]
      *
      * #### For Example:
      *
@@ -414,7 +414,7 @@ public interface RenameColumnsSelectionDsl {
      * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
      * used to specify the column to rename and which name should be used instead.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage] for how to use this function.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage]
      *
      * #### For Example:
      *
@@ -441,7 +441,7 @@ public interface RenameColumnsSelectionDsl {
      * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
      * used to specify the column to rename and which name should be used instead.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage] for how to use this function.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage]
      *
      * #### For Example:
      *
@@ -469,7 +469,7 @@ public interface RenameColumnsSelectionDsl {
      * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
      * used to specify the column to rename and which name should be used instead.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage] for how to use this function.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage]
      *
      * #### For Example:
      *
@@ -501,7 +501,7 @@ public interface RenameColumnsSelectionDsl {
      * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
      * used to specify the column to rename and which name should be used instead.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage] for how to use this function.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage]
      *
      * #### For Example:
      *
@@ -528,7 +528,7 @@ public interface RenameColumnsSelectionDsl {
      * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
      * used to specify the column to rename and which name should be used instead.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage] for how to use this function.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage]
      *
      * #### For Example:
      *
@@ -555,7 +555,7 @@ public interface RenameColumnsSelectionDsl {
      * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
      * used to specify the column to rename and which name should be used instead.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage] for how to use this function.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage]
      *
      * #### For Example:
      *
@@ -582,7 +582,7 @@ public interface RenameColumnsSelectionDsl {
      * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
      * used to specify the column to rename and which name should be used instead.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage] for how to use this function.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage]
      *
      * #### For Example:
      *
@@ -609,7 +609,7 @@ public interface RenameColumnsSelectionDsl {
      * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
      * used to specify the column to rename and which name should be used instead.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage] for how to use this function.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage]
      *
      * #### For Example:
      *
@@ -636,7 +636,7 @@ public interface RenameColumnsSelectionDsl {
      * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
      * used to specify the column to rename and which name should be used instead.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage] for how to use this function.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage]
      *
      * #### For Example:
      *
@@ -663,7 +663,7 @@ public interface RenameColumnsSelectionDsl {
      * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
      * used to specify the column to rename and which name should be used instead.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage] for how to use this function.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage]
      *
      * #### For Example:
      *
@@ -690,7 +690,7 @@ public interface RenameColumnsSelectionDsl {
      * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
      * used to specify the column to rename and which name should be used instead.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage] for how to use this function.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage]
      *
      * #### For Example:
      *
@@ -717,7 +717,7 @@ public interface RenameColumnsSelectionDsl {
      * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
      * used to specify the column to rename and which name should be used instead.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage] for how to use this function.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage]
      *
      * #### For Example:
      *

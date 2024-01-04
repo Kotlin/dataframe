@@ -51,7 +51,10 @@ internal fun <T> ColumnsSelectionDsl<T>.asSingleColumn(): SingleColumn<DataRow<T
 public annotation class ColumnsSelectionDslMarker
 
 /**
+ * ## Columns Selection DSL
  * @include [CommonColumnSelectionDocs]
+ *
+ * ### Check out: [Usage]
  *
  * Can be safely cast to [SingleColumn] across the library. It does not directly
  * implement it for DSL purposes.

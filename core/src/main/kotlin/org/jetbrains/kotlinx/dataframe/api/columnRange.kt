@@ -41,7 +41,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Creates a [ColumnSet] containing all columns from [this\] up to (and including) [endInclusive\].
      * Columns inside of column groups are also supported.
      *
-     * Check out [Usage] for how to use [this function][rangeTo].
+     * ### Check out: [Usage]
      *
      * #### For example:
      *

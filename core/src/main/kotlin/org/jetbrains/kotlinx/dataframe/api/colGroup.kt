@@ -83,7 +83,7 @@ public interface ColGroupColumnsSelectionDsl {
      * {@include [LineBreak]}
      * {@getArg [CommonColGroupDocs.Note]}
      *
-     * Check out [Usage] for how to use [colGroup].
+     * ### Check out: [Usage]
      *
      * #### For example:
      *

@@ -111,9 +111,9 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * Check out the [Usage] for how to use [and].
+     * ### Check out: [Usage]
      *
-     * ### Examples:
+     * #### Examples:
      *
      * `df.`[groupBy][DataFrame.groupBy]` { "colA" `[and][String.and]` colB }`
      *
@@ -149,9 +149,9 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
      *
-     * ### Examples:
+     * #### Examples:
      *
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]` { "colA" `[and][kotlin.String.and]` colB }`
      *
@@ -184,9 +184,9 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
      *
-     * ### Examples:
+     * #### Examples:
      *
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]` { "colA" `[and][kotlin.String.and]` colB }`
      *
@@ -216,9 +216,9 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
      *
-     * ### Examples:
+     * #### Examples:
      *
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]` { "colA" `[and][kotlin.String.and]` colB }`
      *
@@ -248,9 +248,9 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
      *
-     * ### Examples:
+     * #### Examples:
      *
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]` { "colA" `[and][kotlin.String.and]` colB }`
      *
@@ -280,9 +280,9 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
      *
-     * ### Examples:
+     * #### Examples:
      *
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]` { "colA" `[and][kotlin.String.and]` colB }`
      *
@@ -317,9 +317,9 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
      *
-     * ### Examples:
+     * #### Examples:
      *
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]` { "colA" `[and][kotlin.String.and]` colB }`
      *
@@ -352,9 +352,9 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
      *
-     * ### Examples:
+     * #### Examples:
      *
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]` { "colA" `[and][kotlin.String.and]` colB }`
      *
@@ -384,9 +384,9 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
      *
-     * ### Examples:
+     * #### Examples:
      *
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]` { "colA" `[and][kotlin.String.and]` colB }`
      *
@@ -416,9 +416,9 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
      *
-     * ### Examples:
+     * #### Examples:
      *
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]` { "colA" `[and][kotlin.String.and]` colB }`
      *
@@ -448,9 +448,9 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
      *
-     * ### Examples:
+     * #### Examples:
      *
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]` { "colA" `[and][kotlin.String.and]` colB }`
      *
@@ -485,9 +485,9 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
      *
-     * ### Examples:
+     * #### Examples:
      *
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]` { "colA" `[and][kotlin.String.and]` colB }`
      *
@@ -520,9 +520,9 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
      *
-     * ### Examples:
+     * #### Examples:
      *
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]` { "colA" `[and][kotlin.String.and]` colB }`
      *
@@ -552,9 +552,9 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
      *
-     * ### Examples:
+     * #### Examples:
      *
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]` { "colA" `[and][kotlin.String.and]` colB }`
      *
@@ -585,9 +585,9 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
      *
-     * ### Examples:
+     * #### Examples:
      *
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]` { "colA" `[and][kotlin.String.and]` colB }`
      *
@@ -617,9 +617,9 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * Check out the [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage] for how to use [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
      *
-     * ### Examples:
+     * #### Examples:
      *
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]` { "colA" `[and][kotlin.String.and]` colB }`
      *

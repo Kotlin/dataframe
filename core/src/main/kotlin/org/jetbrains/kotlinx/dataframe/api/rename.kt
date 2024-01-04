@@ -155,7 +155,7 @@ public interface RenameColumnsSelectionDsl {
      * so it's up to contextual preference which one to use. Any combination of {@include [AccessApiLink]} can be
      * used to specify the column to rename and which name should be used instead.
      *
-     * See [Usage] for how to use this function.
+     * ### Check out: [Usage]
      *
      * #### For Example:
      *

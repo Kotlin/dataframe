@@ -107,7 +107,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * all [column groups][ColumnGroup] in [this\]. This is useful if you want to select all columns that are
      * "one level downwards".
      *
-     * See [Usage] for how to use [colsInGroups].
+     * ### Check out: [Usage]
      *
      * #### For example:
      *
@@ -152,7 +152,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
      * "one level downwards".
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Usage] for how to use [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -196,7 +196,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
      * "one level downwards".
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Usage] for how to use [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -240,7 +240,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
      * "one level downwards".
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Usage] for how to use [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -284,7 +284,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
      * "one level downwards".
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Usage] for how to use [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -326,7 +326,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
      * "one level downwards".
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Usage] for how to use [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -370,7 +370,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
      * "one level downwards".
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Usage] for how to use [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *

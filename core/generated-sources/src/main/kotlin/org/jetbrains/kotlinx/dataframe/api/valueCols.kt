@@ -112,7 +112,7 @@ public interface ValueColsColumnsSelectionDsl {
      * You can optionally use a [filter\] to only include certain columns.
      * [valueCols] can be called using any of the supported [APIs][AccessApi] (+ [ColumnPath]).
      *
-     * Check out [Usage] for how to use [valueCols].
+     * ### Check out: [Usage]
      *
      * #### For example:
      *
@@ -150,7 +150,7 @@ public interface ValueColsColumnsSelectionDsl {
      * You can optionally use a [filter] to only include certain columns.
      * [valueCols][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.valueCols] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Usage] for how to use [valueCols][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.valueCols].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -189,7 +189,7 @@ public interface ValueColsColumnsSelectionDsl {
      * You can optionally use a [filter] to only include certain columns.
      * [valueCols][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.valueCols] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Usage] for how to use [valueCols][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.valueCols].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -226,7 +226,7 @@ public interface ValueColsColumnsSelectionDsl {
      * You can optionally use a [filter] to only include certain columns.
      * [valueCols][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.valueCols] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Usage] for how to use [valueCols][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.valueCols].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -263,7 +263,7 @@ public interface ValueColsColumnsSelectionDsl {
      * You can optionally use a [filter] to only include certain columns.
      * [valueCols][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.valueCols] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Usage] for how to use [valueCols][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.valueCols].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -300,7 +300,7 @@ public interface ValueColsColumnsSelectionDsl {
      * You can optionally use a [filter] to only include certain columns.
      * [valueCols][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.valueCols] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Usage] for how to use [valueCols][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.valueCols].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -339,7 +339,7 @@ public interface ValueColsColumnsSelectionDsl {
      * You can optionally use a [filter] to only include certain columns.
      * [valueCols][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.valueCols] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Usage] for how to use [valueCols][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.valueCols].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *

@@ -224,7 +224,7 @@ public interface AllColumnsSelectionDsl {
      *
      * NOTE: For [column groups][ColumnGroup], `all` is named `allCols` instead to avoid confusion.
      *
-     * Check out [Usage] for how to use [all]/[allCols].
+     * ### Check out: [Usage]
      *
      * #### For example:
      * `df.`[move][DataFrame.move]` { `[all][ColumnsSelectionDsl.all]`() }.`[under][MoveClause.under]`("info")`
@@ -277,7 +277,7 @@ public interface AllColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `all` is named `allCols` instead to avoid confusion.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]/[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
@@ -332,7 +332,7 @@ public interface AllColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `all` is named `allCols` instead to avoid confusion.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]/[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
@@ -382,7 +382,7 @@ public interface AllColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `all` is named `allCols` instead to avoid confusion.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]/[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
@@ -432,7 +432,7 @@ public interface AllColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `all` is named `allCols` instead to avoid confusion.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]/[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
@@ -482,7 +482,7 @@ public interface AllColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `all` is named `allCols` instead to avoid confusion.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]/[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
@@ -532,7 +532,7 @@ public interface AllColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `all` is named `allCols` instead to avoid confusion.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]/[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
@@ -590,9 +590,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][ColumnGroup] and a [ColumnFilter] on [ColumnSets][ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### For example:
      *
@@ -679,9 +677,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -742,9 +738,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -808,9 +802,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -872,9 +864,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -936,9 +926,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -999,9 +987,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1062,9 +1048,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1126,9 +1110,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1192,9 +1174,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1255,9 +1235,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1318,9 +1296,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1381,9 +1357,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1444,9 +1418,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1508,9 +1480,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1574,9 +1544,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1642,9 +1610,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1713,9 +1679,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1776,9 +1740,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1839,9 +1801,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1903,9 +1863,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1969,9 +1927,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2032,9 +1988,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2095,9 +2049,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2158,9 +2110,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2221,9 +2171,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2285,9 +2233,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2357,9 +2303,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2429,9 +2373,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2499,9 +2441,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2567,9 +2507,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2635,9 +2573,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2703,9 +2639,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2772,9 +2706,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2838,9 +2770,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2901,9 +2831,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2964,9 +2892,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -3027,9 +2953,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -3090,9 +3014,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -3160,9 +3082,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -3223,9 +3143,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -3289,9 +3207,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -3353,9 +3269,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -3417,9 +3331,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -3480,9 +3392,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -3543,9 +3453,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -3607,9 +3515,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -3673,9 +3579,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -3736,9 +3640,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -3799,9 +3701,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -3862,9 +3762,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -3925,9 +3823,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -3989,9 +3885,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -4055,9 +3949,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -4123,9 +4015,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -4194,9 +4084,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -4257,9 +4145,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -4320,9 +4206,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -4384,9 +4268,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -4450,9 +4332,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -4513,9 +4393,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -4576,9 +4454,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -4639,9 +4515,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -4702,9 +4576,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -4766,9 +4638,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -4838,9 +4708,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -4910,9 +4778,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -4980,9 +4846,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -5048,9 +4912,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -5116,9 +4978,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -5184,9 +5044,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -5253,9 +5111,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -5319,9 +5175,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -5382,9 +5236,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -5445,9 +5297,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -5508,9 +5358,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -5571,9 +5419,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -5641,9 +5487,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -5704,9 +5548,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -5770,9 +5612,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -5834,9 +5674,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -5898,9 +5736,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -5961,9 +5797,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -6024,9 +5858,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -6088,9 +5920,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -6154,9 +5984,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -6217,9 +6045,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -6280,9 +6106,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -6343,9 +6167,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -6406,9 +6228,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -6470,9 +6290,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -6536,9 +6354,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -6604,9 +6420,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -6672,9 +6486,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -6735,9 +6547,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -6798,9 +6608,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -6862,9 +6670,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -6928,9 +6734,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -6991,9 +6795,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -7054,9 +6856,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -7117,9 +6917,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -7180,9 +6978,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -7244,9 +7040,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -7316,9 +7110,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -7388,9 +7180,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -7458,9 +7248,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -7526,9 +7314,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -7594,9 +7380,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -7662,9 +7446,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -7731,9 +7513,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -7797,9 +7577,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -7860,9 +7638,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -7923,9 +7699,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -7986,9 +7760,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -8049,9 +7821,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -8119,9 +7889,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -8182,9 +7950,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -8248,9 +8014,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -8312,9 +8076,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -8376,9 +8138,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -8439,9 +8199,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -8502,9 +8260,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -8566,9 +8322,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -8632,9 +8386,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -8695,9 +8447,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -8758,9 +8508,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -8821,9 +8569,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -8884,9 +8630,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -8948,9 +8692,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -9014,9 +8756,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -9082,9 +8822,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -9153,9 +8891,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -9216,9 +8952,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -9279,9 +9013,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -9343,9 +9075,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -9409,9 +9139,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -9472,9 +9200,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -9535,9 +9261,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -9598,9 +9322,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -9661,9 +9383,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -9725,9 +9445,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -9797,9 +9515,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -9869,9 +9585,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -9939,9 +9653,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -10007,9 +9719,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -10075,9 +9785,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -10143,9 +9851,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -10212,9 +9918,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -10278,9 +9982,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -10341,9 +10043,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -10404,9 +10104,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -10467,9 +10165,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -10530,9 +10226,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *

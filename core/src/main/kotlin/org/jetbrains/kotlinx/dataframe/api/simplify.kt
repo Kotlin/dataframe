@@ -48,7 +48,7 @@ public interface SimplifyColumnsSelectionDsl {
      * In other words, this means that if a column in [this] is inside another column group in [this],
      * it will not be included in the result.
      *
-     * See [Usage] for how to use [simplify].
+     * ### Check out: [Usage]
      *
      * ## For example:
      *

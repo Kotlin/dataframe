@@ -75,7 +75,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * You can optionally use a [filter\] to only include certain columns.
      * [colGroups] can be called using any of the supported [APIs][AccessApi] (+ [ColumnPath]).
      *
-     * Check out [Usage] for how to use [colGroups].
+     * ### Check out: [Usage]
      *
      * #### For example:
      *

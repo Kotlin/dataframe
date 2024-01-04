@@ -87,7 +87,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]` { `{@getArg [ArgumentArg]}{@getArg [ArgumentArg]}` `[in][String.contains]` it.`[name][DataColumn.name]` }`.
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### For example:
      *
@@ -278,7 +278,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]` { it.`[name][DataColumn.name]`.`[{@getArg [OperationNameArg]}][String.{@getArg [OperationNameArg]}]`(`{@getArg [ArgumentArg]}{@getArg [ArgumentArg]}`) }`.
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### For example:
      *

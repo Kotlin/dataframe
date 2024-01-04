@@ -71,9 +71,7 @@ public interface ExprColumnsSelectionDsl {
  *
  * This function is essentially a shortcut for [ColumnsContainer.mapToColumn].
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;
- *
- * See [Usage][ExprColumnsSelectionDsl.Usage] for how to use [expr].
+ * ### Check out: [Usage][ExprColumnsSelectionDsl.Usage]
  *
  * #### For example:
  *

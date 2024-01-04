@@ -66,9 +66,9 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any {@include [AccessApiLink]}!
      *
-     * Check out the [Usage] for how to use [and].
+     * ### Check out: [Usage]
      *
-     * ### Examples:
+     * #### Examples:
      *
      * `df.`[groupBy][DataFrame.groupBy]` { "colA" `[and][String.and]` colB }`
      *

@@ -132,7 +132,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]` { `{@getArg [ArgumentArg]}{@getArg [ArgumentArg]}` `[in][String.contains]` it.`[name][DataColumn.name]` }`.
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### For example:
      *
@@ -178,7 +178,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * [text]
      * ` `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -213,7 +213,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { `[text][text]` `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -253,7 +253,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { `[text][text]` `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -290,7 +290,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { `[text][text]` `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -327,7 +327,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { `[text][text]` `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -364,7 +364,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { `[text][text]` `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -401,7 +401,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { `[text][text]` `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -438,7 +438,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { `[regex][regex]` `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -471,7 +471,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { `[regex][regex]` `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -508,7 +508,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { `[regex][regex]` `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -542,7 +542,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { `[regex][regex]` `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -576,7 +576,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { `[regex][regex]` `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -610,7 +610,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { `[regex][regex]` `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -644,7 +644,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { `[regex][regex]` `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -680,7 +680,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]` { it.`[name][DataColumn.name]`.`[{@getArg [OperationNameArg]}][String.{@getArg [OperationNameArg]}]`(`{@getArg [ArgumentArg]}{@getArg [ArgumentArg]}`) }`.
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### For example:
      *
@@ -743,7 +743,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameEndsWith]
      * @see [nameContains]`) }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -795,7 +795,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`(`[prefix][prefix]`) }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -833,7 +833,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`(`[prefix][prefix]`) }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -870,7 +870,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`(`[prefix][prefix]`) }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -907,7 +907,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`(`[prefix][prefix]`) }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -944,7 +944,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`(`[prefix][prefix]`) }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -981,7 +981,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`(`[prefix][prefix]`) }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1031,7 +1031,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith]
      * @see [nameContains]`) }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1084,7 +1084,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[endsWith][String.endsWith]`(`[suffix][suffix]`) }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1122,7 +1122,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[endsWith][String.endsWith]`(`[suffix][suffix]`) }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1159,7 +1159,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[endsWith][String.endsWith]`(`[suffix][suffix]`) }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1196,7 +1196,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[endsWith][String.endsWith]`(`[suffix][suffix]`) }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1233,7 +1233,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[endsWith][String.endsWith]`(`[suffix][suffix]`) }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1270,7 +1270,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[endsWith][String.endsWith]`(`[suffix][suffix]`) }`.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *

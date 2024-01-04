@@ -99,6 +99,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude the given columns from the current selection.
      *
+     * ### Check out: [Usage]
+     *
      * ### On [ColumnSets][ColumnSet]
      * This function can be explained the easiest with [ColumnSets][ColumnSet]. Let's say we want all
      * integer columns apart from `age` and `height`.
@@ -307,7 +309,6 @@ public interface AllExceptColumnsSelectionDsl {
      */
     public fun <C> ColumnsSelectionDsl<C>.allExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         this.asSingleColumn().allColsExcept(selector)
-
 
     /**
      * {@comment No scoping issues, this function can exist for legacy purposes}

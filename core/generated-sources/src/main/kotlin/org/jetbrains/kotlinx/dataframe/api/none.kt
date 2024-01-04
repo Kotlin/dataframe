@@ -53,7 +53,7 @@ public interface NoneColumnsSelectionDsl {
      *
      * Creates an empty [ColumnsResolver], essentially selecting no columns at all.
      *
-     * See [Usage] for how to use [none].
+     * ### Check out: [Usage]
      *
      * #### For example:
      *

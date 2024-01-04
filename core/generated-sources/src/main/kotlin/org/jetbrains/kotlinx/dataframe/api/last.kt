@@ -173,7 +173,7 @@ public interface LastColumnsSelectionDsl {
      *
      * NOTE: For [column groups][ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
      *
-     * Check out [Usage] for how to use [last]/[lastCol].
+     * ### Check out: [Usage]
      *
      * #### Examples:
      *
@@ -205,7 +205,7 @@ public interface LastColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Usage] for how to use [last][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.last]/[lastCol][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.lastCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Usage]
      *
      * #### Examples:
      *
@@ -239,7 +239,7 @@ public interface LastColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Usage] for how to use [last][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.last]/[lastCol][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.lastCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Usage]
      *
      * #### Examples:
      *
@@ -268,7 +268,7 @@ public interface LastColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Usage] for how to use [last][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.last]/[lastCol][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.lastCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Usage]
      *
      * #### Examples:
      *
@@ -297,7 +297,7 @@ public interface LastColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Usage] for how to use [last][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.last]/[lastCol][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.lastCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Usage]
      *
      * #### Examples:
      *
@@ -326,7 +326,7 @@ public interface LastColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Usage] for how to use [last][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.last]/[lastCol][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.lastCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Usage]
      *
      * #### Examples:
      *
@@ -357,7 +357,7 @@ public interface LastColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Usage] for how to use [last][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.last]/[lastCol][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.lastCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Usage]
      *
      * #### Examples:
      *

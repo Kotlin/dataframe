@@ -82,7 +82,7 @@ public interface ColColumnsSelectionDsl {
      * {@include [LineBreak]}
      * {@getArg [CommonColDocs.Note]}
      *
-     * Check out [Usage] for how to use [col].
+     * ### Check out: [Usage]
      *
      * #### For example:
      *

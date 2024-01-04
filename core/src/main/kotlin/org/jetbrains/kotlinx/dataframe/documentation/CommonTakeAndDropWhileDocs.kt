@@ -36,7 +36,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs.
  * `{@getArg [CommonTakeAndDropWhileDocs.OperationArg]}ColsWhile` when called on a [String] or [ColumnPath] resembling
  * a [ColumnGroup].
  *
- * See [Usage\] for how to use these functions.
+ * ### Check out: [Usage\]
  *
  * #### Examples:
  * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[{@getArg [OperationArg]}While][ColumnSet.{@getArg [OperationArg]}While]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` } }`

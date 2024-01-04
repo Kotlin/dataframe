@@ -67,7 +67,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * all [column groups][ColumnGroup] in [this\]. This is useful if you want to select all columns that are
      * "one level downwards".
      *
-     * See [Usage] for how to use [colsInGroups].
+     * ### Check out: [Usage]
      *
      * #### For example:
      *

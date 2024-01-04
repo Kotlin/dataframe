@@ -97,7 +97,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * NOTE: For [column groups][ColumnGroup], `withoutNulls` is named `colsWithoutNulls` to avoid confusion.
      *
-     * See [Usage] for how to use these functions.
+     * ### Check out: [Usage]
      *
      * #### For Example:
      *
@@ -124,7 +124,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `withoutNulls` is named `colsWithoutNulls` to avoid confusion.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.Usage]
      *
      * #### For Example:
      *
@@ -150,7 +150,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `withoutNulls` is named `colsWithoutNulls` to avoid confusion.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.Usage]
      *
      * #### For Example:
      *
@@ -175,7 +175,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `withoutNulls` is named `colsWithoutNulls` to avoid confusion.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.Usage]
      *
      * #### For Example:
      *
@@ -200,7 +200,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `withoutNulls` is named `colsWithoutNulls` to avoid confusion.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.Usage]
      *
      * #### For Example:
      *
@@ -225,7 +225,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `withoutNulls` is named `colsWithoutNulls` to avoid confusion.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.Usage]
      *
      * #### For Example:
      *
@@ -250,7 +250,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `withoutNulls` is named `colsWithoutNulls` to avoid confusion.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.Usage] for how to use these functions.
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.Usage]
      *
      * #### For Example:
      *

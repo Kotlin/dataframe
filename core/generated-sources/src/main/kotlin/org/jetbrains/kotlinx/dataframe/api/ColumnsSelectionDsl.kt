@@ -51,11 +51,14 @@ internal fun <T> ColumnsSelectionDsl<T>.asSingleColumn(): SingleColumn<DataRow<T
 public annotation class ColumnsSelectionDslMarker
 
 /**
+ * ## Columns Selection DSL
  * Referring to or expressing column(s) in the selection DSL can be done in several ways corresponding to all
  * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]:
  * TODO: [Issue #286](https://github.com/Kotlin/dataframe/issues/286)
  *
  * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
+ *
+ * ### Check out: [Usage]
  *
  * Can be safely cast to [SingleColumn] across the library. It does not directly
  * implement it for DSL purposes.
@@ -490,7 +493,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Usage] for how to use [select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -532,7 +535,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Usage] for how to use [select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -581,7 +584,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Usage] for how to use [select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -625,7 +628,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Usage] for how to use [select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -667,7 +670,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
-     * See [Usage][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Usage] for how to use [select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *

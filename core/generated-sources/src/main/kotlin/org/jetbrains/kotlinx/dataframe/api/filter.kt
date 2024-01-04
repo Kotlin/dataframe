@@ -49,7 +49,7 @@ public fun <T> DataFrame<T>.filterBy(column: KProperty<Boolean>): DataFrame<T> =
 // endregion
 
 internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) -> Boolean): ColumnsSelector<T, C> =
-    { this@filter(it, it).asColumnSet().filter(predicate) }
+    { this@filter(it).asColumnSet().filter(predicate) }
 
 // region ColumnsSelectionDsl
 
@@ -110,6 +110,8 @@ public interface FilterColumnsSelectionDsl {
      *
      * Aside from calling [filter][ColumnSet.filter] directly, you can also use the [get][ColumnsSelectionDsl.get] operator
      * in most cases. This function belongs to [cols][ColumnsSelectionDsl.cols] but operates the same.
+     *
+     * ### Check out: [Usage]
      *
      * #### For example:
      *

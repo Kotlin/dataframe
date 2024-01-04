@@ -130,7 +130,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage] for how to use [valueCol].
+     * ### Check out: [Usage]
      *
      * #### For example:
      *
@@ -207,7 +207,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -258,7 +258,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -309,7 +309,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -366,7 +366,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -418,7 +418,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -470,7 +470,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -522,7 +522,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -578,7 +578,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -630,7 +630,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -684,7 +684,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -737,7 +737,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -792,7 +792,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -851,7 +851,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -906,7 +906,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -960,7 +960,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1015,7 +1015,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1069,7 +1069,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1124,7 +1124,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1178,7 +1178,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1233,7 +1233,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1291,7 +1291,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1343,7 +1343,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1397,7 +1397,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1450,7 +1450,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1505,7 +1505,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1564,7 +1564,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1619,7 +1619,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1673,7 +1673,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1728,7 +1728,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1782,7 +1782,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1837,7 +1837,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1891,7 +1891,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -1946,7 +1946,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2004,7 +2004,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2055,7 +2055,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2106,7 +2106,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2158,7 +2158,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2210,7 +2210,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2262,7 +2262,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2314,7 +2314,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2370,7 +2370,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2423,7 +2423,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2476,7 +2476,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2532,7 +2532,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2587,7 +2587,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2643,7 +2643,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2702,7 +2702,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2758,7 +2758,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2813,7 +2813,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2869,7 +2869,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2924,7 +2924,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -2980,7 +2980,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage] for how to use [valueCol][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *

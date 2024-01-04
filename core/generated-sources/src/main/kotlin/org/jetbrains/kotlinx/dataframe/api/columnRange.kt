@@ -63,7 +63,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Creates a [ColumnSet] containing all columns from [this\] up to (and including) [endInclusive\].
      * Columns inside of column groups are also supported.
      *
-     * Check out [Usage] for how to use [this function][rangeTo].
+     * ### Check out: [Usage]
      *
      * #### For example:
      *
@@ -90,7 +90,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      * Columns inside of column groups are also supported.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage] for how to use [this function][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -115,7 +115,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      * Columns inside of column groups are also supported.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage] for how to use [this function][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -140,7 +140,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      * Columns inside of column groups are also supported.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage] for how to use [this function][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -165,7 +165,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      * Columns inside of column groups are also supported.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage] for how to use [this function][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -190,7 +190,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      * Columns inside of column groups are also supported.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage] for how to use [this function][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -215,7 +215,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      * Columns inside of column groups are also supported.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage] for how to use [this function][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -240,7 +240,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      * Columns inside of column groups are also supported.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage] for how to use [this function][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -265,7 +265,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      * Columns inside of column groups are also supported.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage] for how to use [this function][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
@@ -290,7 +290,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      * Columns inside of column groups are also supported.
      *
-     * Check out [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage] for how to use [this function][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo].
+     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *

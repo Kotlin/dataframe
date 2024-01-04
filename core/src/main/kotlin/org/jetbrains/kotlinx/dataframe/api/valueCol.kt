@@ -81,7 +81,7 @@ public interface ValueColColumnsSelectionDsl {
      * {@include [LineBreak]}
      * {@getArg [CommonValueColDocs.Note]}
      *
-     * Check out [Usage] for how to use [valueCol].
+     * ### Check out: [Usage]
      *
      * #### For example:
      *

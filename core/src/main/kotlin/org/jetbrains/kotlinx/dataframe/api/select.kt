@@ -73,7 +73,7 @@ public interface SelectColumnsSelectionDsl {
      *
      * The [invoke][ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
-     * See [Usage] for how to use [select].
+     * ### Check out: [Usage]
      *
      * #### For example:
      *

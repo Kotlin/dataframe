@@ -73,11 +73,8 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * This function is especially powerful if followed by another filter function such as
      * [colsOf][ColumnsSelectionDsl.colsOf], [single][ColumnsSelectionDsl.single], and [valueCols][ColumnsSelectionDsl.valueCols].
-     * {@include [LineBreak]}
-     * For usage, check out [Usage].
-     * {@include [LineBreak]}
-     * For example:
-     * {@include [LineBreak]}
+     * ### Check out: [Usage]
+     * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
      *
      * `df.`[select][DataFrame.select]` { `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().`[first][ColumnsSelectionDsl.firstCol]` { "Alice" `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`

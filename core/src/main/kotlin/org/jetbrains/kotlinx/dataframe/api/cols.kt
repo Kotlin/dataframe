@@ -103,7 +103,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols] directly, you can also use the [get][ColumnSet.get] operator in most cases.
      *
-     * Check out [Usage] for how to use [cols].
+     * ### Check out: [Usage]
      *
      * #### For example:
      * `df.`[remove][DataFrame.remove]` { `[cols][ColumnsSelectionDsl.cols]` { it.`[hasNulls][DataColumn.hasNulls]`() } }`
@@ -252,7 +252,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "myGroupCol"`[`[`][String.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][String.cols]` }`
      *
-     * `// same as `[allCols][allCols]`()`
+     * `// same as `[allCols][ColumnsSelectionDsl.allCols]`()`
      *
      * `df.`[select][DataFrame.select]` { "myGroupCol".`[cols][String.cols]`() }`
      */
@@ -887,7 +887,7 @@ public interface ColsColumnsSelectionDsl {
      * Else, if called on a normal [ColumnSet], the function will return a new [ColumnSet] with the columns found at
      * the given indices in the set.
      *
-     * Check out [Usage] for how to use [cols].
+     * ### Check out: [Usage]
      *
      * #### For example:
      *
@@ -1070,7 +1070,7 @@ public interface ColsColumnsSelectionDsl {
      * Else, if called on a normal [ColumnSet], the function will return a new [ColumnSet] with the columns found at
      * the given indices in the set.
      *
-     * Check out [Usage] for how to use [cols].
+     * ### Check out: [Usage]
      *
      * #### For example:
      *
