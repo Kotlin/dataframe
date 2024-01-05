@@ -10,6 +10,8 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 
 /**
+ * ## Predicate
+ *
  * [Predicate] is used to reach a [Boolean] result using the given instance of `T` as `it`.
  *
  * Shorthand for:
@@ -20,6 +22,8 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 public typealias Predicate<T> = (it: T) -> Boolean
 
 /**
+ * ## Selector
+ *
  * [Selector] is used to express or select any instance of `R` using the given instance of `T` as `this` and `it`.
  *
  * Shorthand for:
@@ -32,6 +36,8 @@ public typealias Selector<T, R> = T.(it: T) -> R
 // region selectors
 
 /**
+ * ## DataFrame Expression
+ *
  * [DataFrameExpression] is used to express or select any instance of `R` using the given instance of [DataFrame]`<T>`
  * as `this` and `it`.
  *
@@ -43,6 +49,8 @@ public typealias Selector<T, R> = T.(it: T) -> R
 public typealias DataFrameExpression<T, R> = Selector<DataFrame<T>, R>
 
 /**
+ * ## Row Expression
+ *
  * [RowExpression] is used to express or select any instance of `R` using the given instance of [DataRow]`<T>` as
  * `this` and `it`.
  *
@@ -54,6 +62,8 @@ public typealias DataFrameExpression<T, R> = Selector<DataFrame<T>, R>
 public typealias RowExpression<T, R> = Selector<DataRow<T>, R>
 
 /**
+ * ## Row Value Expression
+ *
  * [RowValueExpression] is used to express or select any instance of `R` using the given value `it: C` and the given
  * instance of [DataRow]`<T>` as `this`.
  *
@@ -65,6 +75,8 @@ public typealias RowExpression<T, R> = Selector<DataRow<T>, R>
 public typealias RowValueExpression<T, C, R> = DataRow<T>.(it: C) -> R
 
 /**
+ * ## Row Column Expression
+ *
  * [RowColumnExpression] is used to express or select any instance of `R` using the given instances of
  * [DataRow]`<T>` as `row` and [DataColumn]`<C>` as `col`.
  *
@@ -76,6 +88,8 @@ public typealias RowValueExpression<T, C, R> = DataRow<T>.(it: C) -> R
 public typealias RowColumnExpression<T, C, R> = (row: DataRow<T>, col: DataColumn<C>) -> R
 
 /**
+ * ## Column Expression
+ *
  * [ColumnExpression] is used to express or select any instance of `R` using the given instance of [DataColumn]`<C>` as
  * `this` and `it`.
  *
@@ -87,6 +101,8 @@ public typealias RowColumnExpression<T, C, R> = (row: DataRow<T>, col: DataColum
 public typealias ColumnExpression<C, R> = Selector<DataColumn<C>, R>
 
 /**
+ * ## Column Selector
+ *
  * A [ColumnSelector] is used to express or select a single column, represented by [SingleColumn]`<C>`, using the
  * context of [ColumnsSelectionDsl]`<T>` as `this` and `it`.
  *
@@ -98,10 +114,12 @@ public typealias ColumnExpression<C, R> = Selector<DataColumn<C>, R>
 public typealias ColumnSelector<T, C> = Selector<ColumnsSelectionDsl<T>, SingleColumn<C>>
 
 /**
+ * ## Columns Selector
+ *
  * A [ColumnsSelector] is used to express or select one or multiple columns, represented by [ColumnsResolver]`<C>`,
  * using the context of [ColumnsSelectionDsl]`<T>` as `this` and `it`.
  *
- * See [ColumnsSelectionDsl] for more information.
+ * See [Columns Selection DSL][ColumnsSelectionDsl] for more information.
  *
  * Shorthand for:
  * ```kotlin
@@ -115,6 +133,8 @@ public typealias ColumnsSelector<T, C> = Selector<ColumnsSelectionDsl<T>, Column
 // region filters
 
 /**
+ * ## Row Filter
+ *
  * [RowFilter] is used to filter or find rows using the given instance of [DataRow]`<T>` as `this` and `it`.
  * Return `true` if the row should be included in the result.
  *
@@ -126,6 +146,8 @@ public typealias ColumnsSelector<T, C> = Selector<ColumnsSelectionDsl<T>, Column
 public typealias RowFilter<T> = RowExpression<T, Boolean>
 
 /**
+ * ## Column Filter
+ *
  * [ColumnFilter] is used to filter or find columns using the given instance of [ColumnWithPath]`<T>` as `it`.
  * Return `true` if the column should be included in the result.
  *
@@ -137,6 +159,8 @@ public typealias RowFilter<T> = RowExpression<T, Boolean>
 public typealias ColumnFilter<T> = Predicate<ColumnWithPath<T>>
 
 /**
+ * ## Row Value Filter
+ *
  * [RowValueFilter] is used to filter or find rows using the given value of `it: C` and the given instance of
  * [DataRow]`<T>` as `this`.
  * Return `true` if the row should be included in the result.

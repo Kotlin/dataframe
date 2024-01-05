@@ -20,7 +20,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRowAndColum
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumnsLink
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
 import org.jetbrains.kotlinx.dataframe.impl.api.asFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateImpl
@@ -93,19 +92,32 @@ public data class Update<T, C>(
      */
     public interface Usage
 
-    /** The columns to update need to be selected. See {@include [SelectingColumnsLink]} for all the selecting options. */
-    public interface Columns
+    /**
+     * The columns to update need to be selected. See {@getArg [Columns.SelectingColumnsArg]}
+     * for all the selecting options. {@setArg [Columns.SelectingColumnsArg] [Selecting Columns][UpdateSelectingOptions]}
+     */
+    public interface Columns {
 
-    /** @param [columns\] The {@include [SelectingColumns.DslLink]} used to select the columns of this [DataFrame] to update. */
+        /* Optional argument that can be set to redirect where the [Selecting Columns] link points to */
+        public interface SelectingColumnsArg
+    }
+
+    /**
+     * {@comment Version of [SelectingColumns] with correctly filled in examples}
+     * @include [SelectingColumns] {@include [SetSelectingColumnsOperationArg]}
+     */
+    public interface UpdateSelectingOptions
+
+    /** @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to update. */
     internal interface DslParam
 
-    /** @param [columns\] The {@include [SelectingColumns.ColumnAccessorsLink]} of this [DataFrame] to update. */
+    /** @param [columns\] The [Column References][ColumnReference] of this [DataFrame] to update. */
     internal interface ColumnAccessorsParam
 
-    /** @param [columns\] The {@include [SelectingColumns.KPropertiesLink]} corresponding to columns of this [DataFrame] to update. */
+    /** @param [columns\] The [KProperties][KProperty] corresponding to columns of this [DataFrame] to update. */
     internal interface KPropertiesParam
 
-    /** @param [columns\] The {@include [SelectingColumns.ColumnNamesLink]} belonging to this [DataFrame] to update. */
+    /** @param [columns\] The [Strings][String] corresponding to the names of columns belonging to this [DataFrame] to update. */
     internal interface ColumnNamesParam
 }
 
@@ -118,7 +130,7 @@ private interface SetSelectingColumnsOperationArg
  * @include [Update] {@comment Description of the update operation.}
  * @include [LineBreak]
  * @include [Update.Columns] {@comment Description of what this function expects the user to do: select columns}
- * ## This Update Overload
+ * ### This Update Overload
  */
 private interface CommonUpdateFunctionDoc
 
@@ -185,7 +197,7 @@ public fun <T, C> Update<T, C>.where(predicate: RowValueFilter<T, C>): Update<T,
  *
  * `df.`[update][update]` { name }.`[at][at]`(1, 2, 3, 4).`[with][with]` { "Empty" }`
  *
- * ## This At Overload
+ * ### This At Overload
  */
 private interface CommonUpdateAtFunctionDoc {
 
@@ -284,10 +296,10 @@ public fun <T, C> Update<T, C>.asNullable(): Update<T, C?> = this as Update<T, C
  *  - {@include [ExpressionsGivenColumn.ColumnExpression]}
  *  - {@include [UpdatePerColMap]}
  *
- * ## See Also
+ * ### See Also
  *  - {@include [SeeAlsoWith]}
  *  - {@include [SeeAlsoPerRowCol]}
- * ## This Per Col Overload
+ * ### This Per Col Overload
  */
 private interface CommonUpdatePerColDoc
 
@@ -384,7 +396,7 @@ public fun <T, C> Update<T, C?>.notNull(expression: UpdateExpression<T, C, C>): 
 
 /**
  * @include [CommonUpdateFunctionDoc]
- * ### This overload is a combination of [update] and [with][Update.with].
+ * This overload is a combination of [update] and [with][Update.with].
  *
  * @include [SelectingColumns.ColumnAccessors]
  *
@@ -403,7 +415,7 @@ public fun <T, C> DataFrame<T>.update(
 
 /**
  * @include [CommonUpdateFunctionDoc]
- * ### This overload is a combination of [update] and [with][Update.with].
+ * This overload is a combination of [update] and [with][Update.with].
  *
  * @include [SelectingColumns.KProperties]
  *
@@ -422,7 +434,7 @@ public fun <T, C> DataFrame<T>.update(
 
 /**
  * @include [CommonUpdateFunctionDoc]
- * ### This overload is a combination of [update] and [with][Update.with].
+ * This overload is a combination of [update] and [with][Update.with].
  *
  * @include [SelectingColumns.ColumnNames]
  *

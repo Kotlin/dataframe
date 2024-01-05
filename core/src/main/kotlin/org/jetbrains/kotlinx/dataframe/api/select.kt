@@ -11,8 +11,11 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumnsLink
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
@@ -23,13 +26,60 @@ import kotlin.reflect.KProperty
 
 // region DataFrame
 
+/**
+ * ## The Select Operation
+ *
+ * Returns a new [DataFrame] with only the columns selected by [columns].
+ *
+ * See [Selecting Columns][SelectSelectingOptions].
+ *
+ * For more information: {@include [DocumentationUrls.Select]}
+ */
+internal interface Select {
+
+    /**
+     * {@comment Version of [SelectingColumns] with correctly filled in examples}
+     * @include [SelectingColumns] {@include [SetSelectOperationArg]}
+     */
+    public interface SelectSelectingOptions
+}
+
+/** {@setArg [SelectingColumns.OperationArg] [select][select]} */
+private interface SetSelectOperationArg
+
+/**
+ * {@include [Select]}
+ * ### This Select Overload
+ */
+private interface CommonSelectDocs
+
+/**
+ * @include [CommonSelectDocs]
+ * @include [SelectingColumns.Dsl.WithExample] {@include [SetSelectOperationArg]}
+ * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame].
+ */
 public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T> =
     get(columns).toDataFrame().cast()
 
+/**
+ * @include [CommonSelectDocs]
+ * @include [SelectingColumns.KProperties.WithExample] {@include [SetSelectOperationArg]}
+ * @param [columns] The [KProperties][KProperty] used to select the columns of this [DataFrame].
+ */
 public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> = select { columns.toColumnSet() }
 
+/**
+ * @include [CommonSelectDocs]
+ * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetSelectOperationArg]}
+ * @param [columns] The [Column Names][String] used to select the columns of this [DataFrame].
+ */
 public fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> = select { columns.toColumnSet() }
 
+/**
+ * @include [CommonSelectDocs]
+ * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetSelectOperationArg]}
+ * @param [columns] The [Column Accessors][ColumnReference] used to select the columns of this [DataFrame].
+ */
 public fun <T> DataFrame<T>.select(vararg columns: AnyColumnReference): DataFrame<T> = select { columns.toColumnSet() }
 
 // endregion
