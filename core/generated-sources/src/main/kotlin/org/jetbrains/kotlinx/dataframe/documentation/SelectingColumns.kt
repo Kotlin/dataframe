@@ -38,7 +38,7 @@ internal interface SelectingColumnsLink
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  * (Any (combination of) [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
  *
- * This DSL comes in the form a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
  * which operates on the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
  * expects you to return a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]; an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
@@ -103,7 +103,7 @@ internal interface SelectingColumns {
      * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      * (Any (combination of) [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
      *
-     * This DSL comes in the form a [Columns Selector][ColumnsSelector] lambda,
+     * This DSL is initiated by a [Columns Selector][ColumnsSelector] lambda,
      * which operates on the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
      * expects you to return a [ColumnsResolver]; an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
@@ -119,7 +119,7 @@ internal interface SelectingColumns {
          * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
          * (Any (combination of) [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
          *
-         * This DSL comes in the form a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+         * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
          * which operates on the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
          * expects you to return a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]; an entity formed by calling any (combination) of the functions
          * in the DSL that is or can be resolved into one or more columns.
@@ -149,7 +149,7 @@ internal interface SelectingColumns {
      * Select or express a single column using the Column Selection DSL.
      * (Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
      *
-     * This DSL comes in the form of a [Column Selector][ColumnSelector] lambda,
+     * This DSL is initiated by a [Column Selector][ColumnSelector] lambda,
      * which operates in the [Column Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl] and
      * expects you to return a [SingleColumn].
      *
@@ -164,7 +164,7 @@ internal interface SelectingColumns {
          * Select or express a single column using the Column Selection DSL.
          * (Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
          *
-         * This DSL comes in the form of a [Column Selector][org.jetbrains.kotlinx.dataframe.ColumnSelector] lambda,
+         * This DSL is initiated by a [Column Selector][org.jetbrains.kotlinx.dataframe.ColumnSelector] lambda,
          * which operates in the [Column Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl] and
          * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
          *

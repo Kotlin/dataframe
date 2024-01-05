@@ -2,11 +2,6 @@ package org.jetbrains.kotlinx.dataframe.documentation
 
 internal interface DocumentationUrls {
 
-    interface NameArg
-
-    /** See {@getArg [NameArg]} on the documentation website. */
-    interface Text
-
     /** https://kotlin.github.io/dataframe */
     interface Url
 

@@ -37,7 +37,7 @@ public annotation class ColumnsSelectionDslMarker
 /**
  * ## Columns Selection DSL
  * {@include [SelectingColumns.Dsl.WithExample]}
- * {@setArg [SelectingColumns.OperationArg] select}
+ * {@setArg [SelectingColumns.OperationArg] [select][DataFrame.select]}
  *
  * @comment This interface be safely cast to [SingleColumn] across the library. It does not directly
  * implement it for DSL purposes.

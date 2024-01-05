@@ -59,7 +59,7 @@ internal interface SelectingColumns {
      * Select or express columns using the {@include [ColumnsSelectionDslLink]}.
      * (Any (combination of) {@include [AccessApiLink]}).
      *
-     * This DSL comes in the form a [Columns Selector][ColumnsSelector] lambda,
+     * This DSL is initiated by a [Columns Selector][ColumnsSelector] lambda,
      * which operates on the {@include [ColumnsSelectionDslLink]} and
      * expects you to return a [ColumnsResolver]; an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
@@ -92,7 +92,7 @@ internal interface SelectingColumns {
      * Select or express a single column using the Column Selection DSL.
      * (Any {@include [AccessApiLink]}).
      *
-     * This DSL comes in the form of a [Column Selector][ColumnSelector] lambda,
+     * This DSL is initiated by a [Column Selector][ColumnSelector] lambda,
      * which operates in the {@include [ColumnSelectionDslLink]} and
      * expects you to return a [SingleColumn].
      *

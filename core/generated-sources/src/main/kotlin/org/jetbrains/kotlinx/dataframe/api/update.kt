@@ -145,7 +145,7 @@ private interface UpdateWithNote
  *
  * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.Update.Usage]
  *
- * For more information: [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
+ * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -154,7 +154,7 @@ private interface UpdateWithNote
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  * (Any (combination of) [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
  *
- * This DSL comes in the form a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
  * which operates on the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
  * expects you to return a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]; an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
