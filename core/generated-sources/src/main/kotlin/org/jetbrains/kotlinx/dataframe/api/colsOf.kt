@@ -65,7 +65,7 @@ public interface ColsOfColumnsSelectionDsl {
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `kType: `[KType][KType]
+     *  `kType: `[KType][kotlin.reflect.KType]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *

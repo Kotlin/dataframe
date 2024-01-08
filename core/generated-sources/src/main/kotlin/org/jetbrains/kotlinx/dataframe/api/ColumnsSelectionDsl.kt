@@ -181,7 +181,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  `kind: `[ColumnKind][org.jetbrains.kotlinx.dataframe.columns.ColumnKind]
      *
-     *  `kType: `[KType][KType]
+     *  `kType: `[KType][kotlin.reflect.KType]
      *
      *  `name: `[String][String]
      *

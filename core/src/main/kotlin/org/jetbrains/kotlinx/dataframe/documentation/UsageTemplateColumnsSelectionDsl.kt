@@ -160,7 +160,7 @@ public interface UsageTemplateColumnsSelectionDsl {
         /** `kind: `[ColumnKind][ColumnKind] */
         public interface ColumnKindDef
 
-        /** `kType: `[KType][KType] */
+        /** `kType: `[KType][kotlin.reflect.KType] */
         public interface KTypeDef
 
         /** `name: `[String][String] */
