@@ -61,6 +61,8 @@ public interface UsageTemplateColumnsSelectionDsl {
      * {@setArg [UsageTemplate.PlainDslFunctionsArg]}
      * {@setArg [UsageTemplate.ColumnSetFunctionsArg]}
      * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]}
+     * {@include [LineBreak]}
+     * {@include [DslGrammarLink]}
      */
     public interface UsageTemplate {
 

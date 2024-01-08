@@ -66,6 +66,10 @@ public interface UsageTemplateColumnsSelectionDsl {
      *
      *
      *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      */
     public interface UsageTemplate {
 
@@ -312,6 +316,10 @@ public interface UsageTemplateColumnsSelectionDsl {
      *
      *
      *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      *
      *

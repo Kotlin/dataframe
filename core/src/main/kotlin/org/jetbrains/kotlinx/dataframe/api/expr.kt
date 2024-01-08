@@ -28,7 +28,7 @@ public interface ExprColumnsSelectionDsl {
      *  {@include [UsageTemplate.ColumnExpressionDef]}
      * }
      * {@setArg [UsageTemplate.PlainDslFunctionsArg]
-     *  {@include [PlainDslName]}**`(`**`[`{@include [UsageTemplate.NameRef]}`,][`{@include [UsageTemplate.InferRef]}`]`**`)`** **`{ `**{@include [UsageTemplate.ColumnExpressionRef]}**` \\}`**
+     *  {@include [PlainDslName]}**`(`**`[`{@include [UsageTemplate.NameRef]}**`,`**`][`{@include [UsageTemplate.InferRef]}`]`**`)`** **`{ `**{@include [UsageTemplate.ColumnExpressionRef]}**` \\}`**
      * }
      * {@setArg [UsageTemplate.ColumnSetPart]}
      * {@setArg [UsageTemplate.ColumnGroupPart]}

@@ -29,7 +29,7 @@ internal interface FillNulls {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetFillNullsOperationArg]}
      */
-    public interface FillNullsSelectingOptions
+    interface FillNullsSelectingOptions
 }
 
 /** {@setArg [SelectingColumns.OperationArg] [fillNulls][fillNulls]} */
@@ -120,7 +120,7 @@ internal interface FillNaNs {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetFillNaNsOperationArg]}
      */
-    public interface FillNaNsSelectingOptions
+    interface FillNaNsSelectingOptions
 }
 
 /** {@setArg [SelectingColumns.OperationArg] [fillNaNs][fillNaNs]} */
@@ -190,7 +190,7 @@ internal interface FillNA {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetFillNAOperationArg]}
      */
-    public interface FillNASelectingOptions
+    interface FillNASelectingOptions
 }
 
 /** {@setArg [SelectingColumns.OperationArg] [fillNA][fillNA]} */
@@ -278,7 +278,7 @@ internal interface DropNulls {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetDropNullsOperationArg]}
      */
-    public interface DropNullsSelectingOptions
+    interface DropNullsSelectingOptions
 }
 
 /** {@setArg [SelectingColumns.OperationArg] [dropNulls][dropNulls]} */
@@ -377,7 +377,7 @@ internal interface DropNA {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetDropNAOperationArg]}
      */
-    public interface DropNASelectingOptions
+    interface DropNASelectingOptions
 }
 
 /** {@setArg [SelectingColumns.OperationArg] [dropNA][dropNA]} */
@@ -479,7 +479,7 @@ internal interface DropNaNs {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetDropNaNsOperationArg]}
      */
-    public interface DropNaNsSelectingOptions
+    interface DropNaNsSelectingOptions
 }
 
 /** {@setArg [SelectingColumns.OperationArg] [dropNaNs][dropNaNs]} */

@@ -60,23 +60,23 @@ public interface AllExceptColumnsSelectionDsl {
      * {@setArg [UsageTemplate.PlainDslFunctionsArg]
      *  {@include [PlainDslName]} **`{ `**{@include [UsageTemplate.ColumnsSelectorRef]}**` \\}`**
      *
-     *  `|` {@include [PlainDslName]}**`(`**{@include [UsageTemplate.ColumnRef]}**`, ..)`**
+     *  `|` {@include [PlainDslName]}**`(`**{@include [UsageTemplate.ColumnRef]}**`,`**` ..`**`)`**
      * }
      * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
      *  {@include [Indent]}{@include [ColumnSetName]} `[`**` { `**`]` {@include [UsageTemplate.ColumnsResolverRef]} `[`**` \\} `**`]`
      *
      *  {@include [Indent]}`|` {@include [ColumnSetName]} {@include [UsageTemplate.ColumnRef]}
      *
-     *  {@include [Indent]}`|` .{@include [ColumnSetName]}**`(`**{@include [UsageTemplate.ColumnRef]}**`, ..)`**
+     *  {@include [Indent]}`|` .{@include [ColumnSetName]}**`(`**{@include [UsageTemplate.ColumnRef]}**`,`**` ..`**`)`**
      * }
      * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
      *  {@include [Indent]}{@include [ColumnGroupName]} **` { `**{@include [UsageTemplate.ColumnsSelectorRef]}**` \\} `**
      *
-     *  {@include [Indent]}`|` {@include [ColumnGroupName]}**`(`**{@include [UsageTemplate.ColumnNoAccessorRef]}**`, ..)`**
+     *  {@include [Indent]}`|` {@include [ColumnGroupName]}**`(`**{@include [UsageTemplate.ColumnNoAccessorRef]}**`,`**` ..`**`)`**
      *
      *  {@include [Indent]}`|` {@include [ColumnGroupExperimentalName]} **` { `**{@include [UsageTemplate.ColumnsSelectorRef]}**` \\} EXPERIMENTAL!`**
      *
-     *  {@include [Indent]}`|` {@include [ColumnGroupExperimentalName]}**`(`**{@include [UsageTemplate.ColumnNoAccessorRef]}**`, ..) EXPERIMENTAL!`**
+     *  {@include [Indent]}`|` {@include [ColumnGroupExperimentalName]}**`(`**{@include [UsageTemplate.ColumnNoAccessorRef]}**`,`**` ..`**`) EXPERIMENTAL!`**
      * }
      */
     public interface Usage {

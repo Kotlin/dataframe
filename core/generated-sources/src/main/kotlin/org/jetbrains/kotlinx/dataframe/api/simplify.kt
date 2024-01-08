@@ -48,6 +48,10 @@ public interface SimplifyColumnsSelectionDsl {
      *
      *
      *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     *
      *
      *
      *

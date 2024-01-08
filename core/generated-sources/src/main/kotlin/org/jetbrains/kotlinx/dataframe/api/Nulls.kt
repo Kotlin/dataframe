@@ -53,6 +53,10 @@ internal interface FillNulls {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| .`[**asFrame**][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]**` { `**[dataFrameExpression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
      *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      */
     interface Usage
 
@@ -117,7 +121,7 @@ internal interface FillNulls {
      * `df.`[fillNulls][org.jetbrains.kotlinx.dataframe.api.fillNulls]`(Person::length, Person::age)`
      *  
      */
-    public interface FillNullsSelectingOptions
+    interface FillNullsSelectingOptions
 }
 
 private interface SetFillNullsOperationArg
@@ -346,6 +350,10 @@ internal interface FillNaNs {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| .`[**asFrame**][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]**` { `**[dataFrameExpression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
      *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      */
     interface Usage
 
@@ -410,7 +418,7 @@ internal interface FillNaNs {
      * `df.`[fillNaNs][org.jetbrains.kotlinx.dataframe.api.fillNaNs]`(Person::length, Person::age)`
      *  
      */
-    public interface FillNaNsSelectingOptions
+    interface FillNaNsSelectingOptions
 }
 
 internal interface SetFillNaNsOperationArg
@@ -614,6 +622,10 @@ internal interface FillNA {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| .`[**asFrame**][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]**` { `**[dataFrameExpression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
      *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      */
     interface Usage
 
@@ -678,7 +690,7 @@ internal interface FillNA {
      * `df.`[fillNA][org.jetbrains.kotlinx.dataframe.api.fillNA]`(Person::length, Person::age)`
      *  
      */
-    public interface FillNASelectingOptions
+    interface FillNASelectingOptions
 }
 
 internal interface SetFillNAOperationArg
@@ -933,7 +945,7 @@ internal interface DropNulls {
      * `df.`[dropNulls][org.jetbrains.kotlinx.dataframe.api.dropNulls]`(Person::length, Person::age)`
      *  
      */
-    public interface DropNullsSelectingOptions
+    interface DropNullsSelectingOptions
 }
 
 private interface SetDropNullsOperationArg
@@ -1202,7 +1214,7 @@ internal interface DropNA {
      * `df.`[dropNA][org.jetbrains.kotlinx.dataframe.api.dropNA]`(Person::length, Person::age)`
      *  
      */
-    public interface DropNASelectingOptions
+    interface DropNASelectingOptions
 }
 
 private interface SetDropNAOperationArg
@@ -1468,7 +1480,7 @@ internal interface DropNaNs {
      * `df.`[dropNaNs][org.jetbrains.kotlinx.dataframe.api.dropNaNs]`(Person::length, Person::age)`
      *  
      */
-    public interface DropNaNsSelectingOptions
+    interface DropNaNsSelectingOptions
 }
 
 private interface SetDropNaNsOperationArg

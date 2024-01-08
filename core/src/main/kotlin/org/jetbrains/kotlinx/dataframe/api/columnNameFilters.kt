@@ -37,21 +37,21 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * }
      *
      * {@setArg [UsageTemplate.PlainDslFunctionsArg]
-     *  {@include [PlainDslNameContains]}**`(`**{@include [UsageTemplate.TextRef]}`[, `{@include [UsageTemplate.IgnoreCaseRef]}`] | `{@include [UsageTemplate.RegexRef]}**`)`**
+     *  {@include [PlainDslNameContains]}**`(`**{@include [UsageTemplate.TextRef]}`[`**`,`** {@include [UsageTemplate.IgnoreCaseRef]}`] | `{@include [UsageTemplate.RegexRef]}**`)`**
      *
-     *  `|` {@include [PlainDslNameStartsEndsWith]}**`(`**{@include [UsageTemplate.TextRef]}`[, `{@include [UsageTemplate.IgnoreCaseRef]}`]`**`)`**
+     *  `|` {@include [PlainDslNameStartsEndsWith]}**`(`**{@include [UsageTemplate.TextRef]}`[`**`,`** {@include [UsageTemplate.IgnoreCaseRef]}`]`**`)`**
      * }
      *
      * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnSetNameContains]}**`(`**{@include [UsageTemplate.TextRef]}`[, `{@include [UsageTemplate.IgnoreCaseRef]}`] | `{@include [UsageTemplate.RegexRef]}**`)`**
+     *  {@include [Indent]}{@include [ColumnSetNameContains]}**`(`**{@include [UsageTemplate.TextRef]}`[`**`,`** {@include [UsageTemplate.IgnoreCaseRef]}`] | `{@include [UsageTemplate.RegexRef]}**`)`**
      *
-     *  {@include [Indent]}`|` {@include [ColumnSetNameStartsEndsWith]}**`(`**{@include [UsageTemplate.TextRef]}`[, `{@include [UsageTemplate.IgnoreCaseRef]}`]`**`)`**
+     *  {@include [Indent]}`|` {@include [ColumnSetNameStartsEndsWith]}**`(`**{@include [UsageTemplate.TextRef]}`[`**`,`** {@include [UsageTemplate.IgnoreCaseRef]}`]`**`)`**
      * }
      *
      * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnGroupNameContains]}**`(`**{@include [UsageTemplate.TextRef]}`[, `{@include [UsageTemplate.IgnoreCaseRef]}`] | `{@include [UsageTemplate.RegexRef]}**`)`**
+     *  {@include [Indent]}{@include [ColumnGroupNameContains]}**`(`**{@include [UsageTemplate.TextRef]}`[`**`,`** {@include [UsageTemplate.IgnoreCaseRef]}`] | `{@include [UsageTemplate.RegexRef]}**`)`**
      *
-     *  {@include [Indent]}`|` {@include [ColumnGroupNameStartsWith]}**`(`**{@include [UsageTemplate.TextRef]}`[, `{@include [UsageTemplate.IgnoreCaseRef]}`]`**`)`**
+     *  {@include [Indent]}`|` {@include [ColumnGroupNameStartsWith]}**`(`**{@include [UsageTemplate.TextRef]}`[`**`,`** {@include [UsageTemplate.IgnoreCaseRef]}`]`**`)`**
      * }
      */
     public interface Usage {
