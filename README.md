@@ -20,7 +20,20 @@ Kotlin Dataframe aims to reconcile Kotlin's static typing with the dynamic natur
 
 Integrates with [Kotlin kernel for Jupyter](https://github.com/Kotlin/kotlin-jupyter). Inspired by [krangl](https://github.com/holgerbrandl/krangl), Kotlin Collections and [pandas](https://pandas.pydata.org/)
 
+## Documentation
+
 Explore [**documentation**](https://kotlin.github.io/dataframe/overview.html) for details.
+
+You could find the following articles there:
+
+* [Get started with Kotlin DataFrame](https://kotlin.github.io/dataframe/gettingstarted.html)
+* [Working with Data Schemas](https://kotlin.github.io/dataframe/schemas.html)
+* [Full list of all supported operations](https://kotlin.github.io/dataframe/operations.html)
+    * [Reading from SQL databases](https://kotlin.github.io/dataframe/readsqldatabases.html)
+    * [Reading/writing from/to different file formats like JSON, CSV, Apache Arrow](https://kotlin.github.io/dataframe/read.html)
+    * [Joining a few dataframes](https://kotlin.github.io/dataframe/join.html)
+    * [GroupBy operation](https://kotlin.github.io/dataframe/groupby.html)
+* [Rendering to HTML](https://kotlin.github.io/dataframe/tohtml.html#jupyter-notebooks)
 
 ## Setup
 
@@ -180,20 +193,6 @@ or specific version:
   * `ColumnGroup` — contains columns
   * `FrameColumn` — contains dataframes
 
-
-## Kotlin, Kotlin Jupyter, OpenAPI, Arrow and JDK versions
-
-This table shows the mapping between main library component versions and minimum supported Java versions.
-
-| Kotlin DataFrame Version | Minimum Java Version | Kotlin Version | Kotlin Jupyter Version | OpenAPI version | Apache Arrow version |
-|--------------------------|----------------------|----------------|------------------------|-----------------|----------------------|
-| 0.10.0                   | 8                    | 1.8.20         | 0.11.0-358             | 3.0.0           | 11.0.0               |
-| 0.10.1                   | 8                    | 1.8.20         | 0.11.0-358             | 3.0.0           | 11.0.0               |
-| 0.11.0                   | 8                    | 1.8.20         | 0.11.0-358             | 3.0.0           | 11.0.0               |
-| 0.11.1                   | 8                    | 1.8.20         | 0.11.0-358             | 3.0.0           | 11.0.0               |
-| 0.12.0                   | 8                    | 1.9.0          | 0.11.0-358             | 3.0.0           | 11.0.0               |
-| 0.12.1                   | 8                    | 1.9.0          | 0.11.0-358             | 3.0.0           | 11.0.0               |
-
 ## Usage example
 
 **Create:**
@@ -271,6 +270,20 @@ clean
 ```
 
 [Try it in **Datalore**](https://datalore.jetbrains.com/view/notebook/vq5j45KWkYiSQnACA2Ymij) and explore [**more examples here**](examples).
+
+## Kotlin, Kotlin Jupyter, OpenAPI, Arrow and JDK versions
+
+This table shows the mapping between main library component versions and minimum supported Java versions.
+
+| Kotlin DataFrame Version | Minimum Java Version | Kotlin Version | Kotlin Jupyter Version | OpenAPI version | Apache Arrow version |
+|--------------------------|----------------------|----------------|------------------------|-----------------|----------------------|
+| 0.10.0                   | 8                    | 1.8.20         | 0.11.0-358             | 3.0.0           | 11.0.0               |
+| 0.10.1                   | 8                    | 1.8.20         | 0.11.0-358             | 3.0.0           | 11.0.0               |
+| 0.11.0                   | 8                    | 1.8.20         | 0.11.0-358             | 3.0.0           | 11.0.0               |
+| 0.11.1                   | 8                    | 1.8.20         | 0.11.0-358             | 3.0.0           | 11.0.0               |
+| 0.12.0                   | 8                    | 1.9.0          | 0.11.0-358             | 3.0.0           | 11.0.0               |
+| 0.12.1                   | 8                    | 1.9.0          | 0.11.0-358             | 3.0.0           | 11.0.0               |
+
 
 ## Code of Conduct
 

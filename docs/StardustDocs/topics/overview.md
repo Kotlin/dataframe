@@ -20,7 +20,8 @@ The goal of data wrangling is to assure quality and useful data.
 
 ## Main Features and Concepts
 
-* [**Hierarchical**](hierarchical.md) — the Kotlin DataFrame library provides an ability to read and present data from different sources including not only plain **CSV** but also **JSON**. That’s why it has been designed hierarchical and allows nesting of columns and cells.
+* [**Hierarchical**](hierarchical.md) — the Kotlin DataFrame library provides an ability to read and present data from different sources including not only plain **CSV** but also **JSON** or **[SQL databases](readSqlDatabases.md)**.
+That’s why it has been designed hierarchical and allows nesting of columns and cells.
 
 * [**Interoperable**](collectionsInterop.md) — hierarchical data layout also opens a possibility of converting any objects 
 structure in application memory to a data frame and vice versa.

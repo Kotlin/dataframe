@@ -14,6 +14,12 @@ There are two main blocks of available functionality:
   * ```getSchemaForResultSet``` for rows reading through the given ResultSet
   * ```getSchemaForAllSqlTables``` for all non-system tables
 
+**NOTE:** This is an experimental module and for now, 
+we only support four databases: MariaDB, MySQL, PostgreSQL, and SQLite. 
+
+Additionally, support for JSON and date-time types is limited. 
+Please take this into consideration when using these functions.
+
 
 ## Getting started with reading from SQL database
 
@@ -28,25 +34,25 @@ after that, you need to add a dependency for a JDBC driver for the used database
 For MariaDB:
 
 ```kotlin
-implementation("org.mariadb.jdbc:mariadb-java-client:3.1.4")
+implementation("org.mariadb.jdbc:mariadb-java-client:$version")
 ```
 
 For PostgreSQL:
 
 ```kotlin
-implementation("org.postgresql:postgresql:42.6.0")
+implementation("org.postgresql:postgresql:$version")
 ```
 
 For MySQL:
 
 ```kotlin
-implementation("mysql:mysql-connector-java:8.0.33")
+implementation("mysql:mysql-connector-java:$version")
 ```
 
 For SQLite:
 
 ```kotlin
-implementation("org.xerial:sqlite-jdbc:3.42.0.1")
+implementation("org.xerial:sqlite-jdbc:$version")
 ```
 
 In the second, be sure that you can establish a connection to the database.
