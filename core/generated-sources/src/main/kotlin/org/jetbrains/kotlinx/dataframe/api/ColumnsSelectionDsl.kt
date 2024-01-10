@@ -102,9 +102,9 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     ColsAtAnyDepthColumnsSelectionDsl,
     // colsInGroups {}, colsInGroups()
     ColsInGroupsColumnsSelectionDsl,
-    // take(5), takeLastChildren(2), takeLastWhile {}, takeChildrenWhile {}
+    // take(5), takeLastCols(2), takeLastWhile {}, takeColsWhile {}
     TakeColumnsSelectionDsl,
-    // drop(5), dropLastChildren(2), dropLastWhile {}, dropChildrenWhile {}
+    // drop(5), dropLastCols(2), dropLastWhile {}, dropColsWhile {}
     DropColumnsSelectionDsl,
 
     // select {}, TODO due to String.invoke conflict this cannot be moved out of ColumnsSelectionDsl
