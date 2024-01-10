@@ -87,6 +87,48 @@ dataframes {
     }
 }
 ```
+## Schema definition for SQL table or result of SQL query
+
+To generate schema for existing SQL table, you need define a few parameters to establish JDBC connection
+```kotlin
+dataframes {
+    schema {
+        data = "jdbc:mariadb://localhost:3306/imdb"
+        name = "org.example.imdb.Actors"
+        jdbcOptions {
+            user = "root"
+            password = "pass" 
+            tableName = "actors"
+        }
+    }
+}
+```
+
+```kotlin
+dataframes {
+    schema {
+        data = "jdbc:mariadb://localhost:3306/imdb"
+        name = "org.example.imdb.TarantinoFilms"
+        jdbcOptions {
+            user = "root" 
+            password = "pass"
+            sqlQuery = "select name, year, rank,\n" +
+                    "GROUP_CONCAT (genre) as \"genres\"\n" +
+                    "from movies join movies_directors on  movie_id = movies.id\n" +
+                    "     join directors on directors.id=director_id left join movies_genres on movies.id = movies_genres.movie_id \n" +
+                    "where directors.first_name = \"Quentin\" and directors.last_name = \"Tarantino\"\n" +
+                    "group by name, year, rank\n" +
+                    "order by year"
+        }
+    }
+}
+```
+
+**NOTE:** This is an experimental functionality and for now,
+we only support four databases: MariaDB, MySQL, PostgreSQL, and SQLite.
+
+Additionally, support for JSON and date-time types is limited.
+Please take this into consideration when using these functions.
 
 ## DSL reference
 Inside `dataframes` you can configure parameters that will apply to all schemas. Configuration inside `schema` will override these defaults for specific schema.
