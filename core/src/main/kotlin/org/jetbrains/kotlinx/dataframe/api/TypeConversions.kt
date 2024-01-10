@@ -253,7 +253,7 @@ public fun NullabilityOptions.applyNullability(data: List<Any?>, expectedNulls: 
 
 public inline fun <reified T> Iterable<T>.toColumn(
     name: String = "",
-    infer: Infer = Infer.None,
+    infer: Infer = Infer.Nulls,
 ): DataColumn<T> =
     (
         if (infer == Infer.Type) DataColumn.createWithTypeInference(name, asList())
