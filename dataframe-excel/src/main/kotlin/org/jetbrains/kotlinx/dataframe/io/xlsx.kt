@@ -323,18 +323,16 @@ public fun <T> DataFrame<T>.writeExcel(
     workBookType: WorkBookType = WorkBookType.XLSX,
     keepFile: Boolean = false,
 ) {
-
     val factory =
         if (keepFile){
             when (workBookType) {
                 WorkBookType.XLS -> HSSFWorkbook(file.inputStream())
-                WorkBookType.XLSX ->  XSSFWorkbook(file.inputStream())
+                WorkBookType.XLSX -> XSSFWorkbook(file.inputStream())
             }
-        }
-        else {
+        } else {
             when (workBookType) {
-                WorkBookType.XLS ->  HSSFWorkbook()
-                WorkBookType.XLSX ->  XSSFWorkbook()
+                WorkBookType.XLS -> HSSFWorkbook()
+                WorkBookType.XLSX -> XSSFWorkbook()
             }
         }
     return file.outputStream().use {
