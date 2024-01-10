@@ -219,6 +219,20 @@ class Write : TestBase() {
         }
     }
 
+    @Test
+    fun writeXlsWithMultipleSheets() {
+        useTempFile { file ->
+            // SampleStart
+            // Create a new Excel workbook with a single sheet called "allPersons", replacing the file if it already exists -> Current sheets: allPersons
+            df.writeExcel(file, sheetName = "allPersons")
+            // Add a new sheet to the previous file without replacing it, by setting keepFile = true -> Current sheets: allPersons, happyPersons
+            df.filter { person -> person.isHappy }.remove("isHappy").writeExcel(file, sheetName = "happyPersons", keepFile = true)
+            // Add a new sheet to the previous file without replacing it, by setting keepFile = true -> Current sheets: allPersons, happyPersons, unhappyPersons
+            df.filter { person -> !person.isHappy }.remove("isHappy").writeExcel(file, sheetName = "unhappyPersons", keepFile = true)
+            // SampleEnd
+        }
+    }
+
     companion object {
         private fun String.rejoinWithSystemLineSeparator() = rejoinWithLineSeparator(System.lineSeparator())
 
