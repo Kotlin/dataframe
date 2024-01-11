@@ -35,6 +35,9 @@ Here's a list of the most popular use cases with Data Schemas.
   Sometimes it is convenient to extract reusable code from Jupyter Notebook into the Kotlin JVM library.
   Schema interfaces should also be extracted if this code uses Custom Data Schemas.
 
+* [**Import Schema for an SQL table or result of an SQL query in Gradle project**](schemasImportSqlGradle.md) <br/>
+  When you need to take data from the SQL database.
+
 * [**Import OpenAPI Schemas in Gradle project**](schemasImportOpenApiGradle.md) <br/>
   When you need to take data from the endpoint with OpenAPI Schema.
 
