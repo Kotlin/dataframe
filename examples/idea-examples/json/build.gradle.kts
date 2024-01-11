@@ -12,8 +12,6 @@ repositories {
     mavenCentral()
 }
 
-kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotlin/")
-
 dependencies {
     // implementation("org.jetbrains.kotlinx:dataframe:X.Y.Z")
     implementation(project(":"))

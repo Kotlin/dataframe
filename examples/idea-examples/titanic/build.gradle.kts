@@ -20,10 +20,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlin-deeplearning-dataset:0.5.1")
 }
 
-// Make IDE aware of the generated code:
-kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotlin/")
-
-
 dataframes {
     schema {
         data = "src/main/resources/titanic.csv"
