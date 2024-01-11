@@ -1,7 +1,7 @@
-        <html>
-        <head>
-            <style type="text/css">
-                :root {
+<html>
+<head>
+<style type="text/css">
+:root {
     --background: #fff;
     --background-odd: #f5f5f5;
     --background-hover: #d9edfd;
@@ -173,52 +173,12 @@ details details {
 summary {
     padding: 6px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            </style>
-        </head>
-        <body>
-            
-
+</style>
+</head>
+<body>
                             <details>
                             <summary>df.pivotCounts { city }</summary>
-                            
-                                    <details>
+                                                                <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                      <table class="dataframe" id="df_0"></table>
 
@@ -234,8 +194,7 @@ summary {
                             <br>
                             <details>
                             <summary>df.pivot { city }.groupByOther().count()</summary>
-                            
-                                    <details>
+                                                                <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                      <table class="dataframe" id="df_2"></table>
 
@@ -263,8 +222,7 @@ summary {
                             <br>
                             <details>
                             <summary>df.groupBy { name }.pivotCounts { city }</summary>
-                            
-                                    <details>
+                                                                <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                      <table class="dataframe" id="df_19"></table>
 
@@ -286,8 +244,7 @@ summary {
                             <br>
                             <details>
                             <summary>df.groupBy { name }.pivot { city }.count()</summary>
-                            
-                                    <details>
+                                                                <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                      <table class="dataframe" id="df_29"></table>
 
@@ -317,8 +274,7 @@ summary {
                             <summary>df.groupBy { name }.aggregate {
             pivotCounts { city }
         }</summary>
-                            
-                                    <details>
+                                                                <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                      <table class="dataframe" id="df_47"></table>
 
@@ -338,9 +294,9 @@ summary {
                                     </details>
                             </details>
                             <br>
-        </body>
-        <script>
-            (function () {
+</body>
+<script>
+(function () {
     window.DataFrame = window.DataFrame || new (function () {
         this.addTable = function (df) {
             let cols = df.cols;
@@ -614,8 +570,6 @@ summary {
     }
 })()
 
-
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
 { name: "<span title=\"lastName: String\">lastName</span>", children: [], rightAlign: false, values: ["Cooper","Dylan","Daniels","Chaplin","Marley","Wolf","Byrd"] }, 
@@ -628,7 +582,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(0) });
-
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
@@ -649,8 +602,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(1) });
 
-
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
 { name: "<span title=\"lastName: String\">lastName</span>", children: [], rightAlign: false, values: ["Cooper","Dylan","Daniels","Chaplin","Marley","Wolf","Byrd"] }, 
@@ -663,7 +614,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(2) });
-
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"London: DataFrame<*>\">London</span>", children: [], rightAlign: false, values: [{ frameId: 4, value: "<b>DataFrame 1 x 5</b>" }] }, 
@@ -742,7 +692,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(3) });
-
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
@@ -840,7 +789,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(10) });
 
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
 { name: "<span title=\"lastName: String\">lastName</span>", children: [], rightAlign: false, values: ["Cooper","Dylan","Daniels","Chaplin","Marley","Wolf","Byrd"] }, 
@@ -860,8 +808,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(18) });
 
-
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
 { name: "<span title=\"lastName: String\">lastName</span>", children: [], rightAlign: false, values: ["Cooper","Dylan","Daniels","Chaplin","Marley","Wolf","Byrd"] }, 
@@ -874,7 +820,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(19) });
-
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
@@ -963,7 +908,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(20) });
 
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
 { name: "<span title=\"lastName: String\">lastName</span>", children: [], rightAlign: false, values: ["Cooper","Dylan","Daniels","Chaplin","Marley","Wolf","Byrd"] }, 
@@ -980,8 +924,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(28) });
 
-
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
 { name: "<span title=\"lastName: String\">lastName</span>", children: [], rightAlign: false, values: ["Cooper","Dylan","Daniels","Chaplin","Marley","Wolf","Byrd"] }, 
@@ -994,7 +936,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(29) });
-
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
@@ -1082,7 +1023,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(30) });
-
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
@@ -1177,7 +1117,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(38) });
 
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
 { name: "<span title=\"lastName: String\">lastName</span>", children: [], rightAlign: false, values: ["Cooper","Dylan","Daniels","Chaplin","Marley","Wolf","Byrd"] }, 
@@ -1194,8 +1133,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(46) });
 
-
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
 { name: "<span title=\"lastName: String\">lastName</span>", children: [], rightAlign: false, values: ["Cooper","Dylan","Daniels","Chaplin","Marley","Wolf","Byrd"] }, 
@@ -1208,7 +1145,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(47) });
-
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
@@ -1297,7 +1233,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(48) });
 
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
 { name: "<span title=\"lastName: String\">lastName</span>", children: [], rightAlign: false, values: ["Cooper","Dylan","Daniels","Chaplin","Marley","Wolf","Byrd"] }, 
@@ -1314,6 +1249,5 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(56) });
 
-
-        </script>
-        </html>
+</script>
+</html>

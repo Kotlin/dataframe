@@ -1,7 +1,7 @@
-        <html>
-        <head>
-            <style type="text/css">
-                :root {
+<html>
+<head>
+<style type="text/css">
+:root {
     --background: #fff;
     --background-odd: #f5f5f5;
     --background-hover: #d9edfd;
@@ -173,40 +173,12 @@ details details {
 summary {
     padding: 6px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            </style>
-        </head>
-        <body>
-            
-
+</style>
+</head>
+<body>
                             <details>
                             <summary>df.minFor { colsOf&amp;lt;Int&amp;gt;() }</summary>
-                            
-                                    <details>
+                                                                <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                      <table class="dataframe" id="df_0"></table>
 
@@ -222,8 +194,7 @@ summary {
                             <br>
                             <details>
                             <summary>df.maxFor { name.firstName and name.lastName }</summary>
-                            
-                                    <details>
+                                                                <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                      <table class="dataframe" id="df_2"></table>
 
@@ -239,8 +210,7 @@ summary {
                             <br>
                             <details>
                             <summary>df.sumFor { age and weight }</summary>
-                            
-                                    <details>
+                                                                <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                      <table class="dataframe" id="df_4"></table>
 
@@ -256,8 +226,7 @@ summary {
                             <br>
                             <details>
                             <summary>df.meanFor { cols(1, 3).asNumbers() }</summary>
-                            
-                                    <details>
+                                                                <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                      <table class="dataframe" id="df_6"></table>
 
@@ -273,8 +242,7 @@ summary {
                             <br>
                             <details>
                             <summary>df.medianFor { name.cols().asComparable() }</summary>
-                            
-                                    <details>
+                                                                <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                      <table class="dataframe" id="df_8"></table>
 
@@ -288,9 +256,9 @@ summary {
                                     </details>
                             </details>
                             <br>
-        </body>
-        <script>
-            (function () {
+</body>
+<script>
+(function () {
     window.DataFrame = window.DataFrame || new (function () {
         this.addTable = function (df) {
             let cols = df.cols;
@@ -564,8 +532,6 @@ summary {
     }
 })()
 
-
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
 { name: "<span title=\"lastName: String\">lastName</span>", children: [], rightAlign: false, values: ["Cooper","Dylan","Daniels","Chaplin","Marley","Wolf","Byrd"] }, 
@@ -579,15 +545,12 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(0) });
 
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"age: Int\">age</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">15</span></span>"] }, 
 ], id: 1, rootId: 1, totalRows: 1 } ) });
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(1) });
-
-
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
@@ -602,7 +565,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(2) });
 
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Charlie"] }, 
 { name: "<span title=\"lastName: String\">lastName</span>", children: [], rightAlign: false, values: ["Wolf"] }, 
@@ -610,8 +572,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(3) });
-
-
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
@@ -626,7 +586,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(4) });
 
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"age: Int\">age</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">200</span></span>"] }, 
 { name: "<span title=\"weight: Int\">weight</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">354</span></span>"] }, 
@@ -634,8 +593,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"a
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(5) });
-
-
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
@@ -650,7 +607,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(6) });
 
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"age: Double\">age</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">28.571429</span></span>"] }, 
 { name: "<span title=\"weight: Double\">weight</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">70.8</span></span>"] }, 
@@ -658,8 +614,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"a
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(7) });
-
-
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
@@ -674,7 +628,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(8) });
 
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Bob"] }, 
 { name: "<span title=\"lastName: String\">lastName</span>", children: [], rightAlign: false, values: ["Daniels"] }, 
@@ -683,6 +636,5 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(9) });
 
-
-        </script>
-        </html>
+</script>
+</html>
