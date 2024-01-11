@@ -220,7 +220,7 @@ The versions with a limit parameter will only read up to the specified number of
 This function allows reading a ResultSet object from your SQL database 
 and transforms it into an AnyFrame object. 
 
-The `dbType: DbType` parameter specifies the type of our database (e.g., PostgreSQL, MySQL, etc), 
+The `dbType: DbType` parameter specifies the type of our database (e.g., PostgreSQL, MySQL, etc.), 
 supported by a library. 
 Currently, the following classes are available: `H2, MariaDb, MySql, PostgreSql, Sqlite`.
 
