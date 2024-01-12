@@ -4,15 +4,21 @@ These functions allow you to interact with an SQL database using a Kotlin DataFr
 
 There are two main blocks of available functionality:
 * reading data from the database
-  * reading specific tables
-  * executing SQL queries
-  * reading from ResultSet
-  * reading entire tables (all non-system tables)
+  * function ```readSqlTable``` reads specific database table
+  * function ```readSqlQuery``` executes SQL query
+  * function ```readResultSet``` reads from created earlier ResultSet
+  * function ```readAllSqlTables``` reads all tables (all non-system tables)
 * schema retrieval
-  * for specific tables
-  * for result of executing SQL queries
-  * for rows reading through the given ResultSet
-  * for all non-system tables
+  * ```getSchemaForSqlTable``` for specific tables
+  * ```getSchemaForSqlQuery``` for result of executing SQL queries
+  * ```getSchemaForResultSet``` for rows reading through the given ResultSet
+  * ```getSchemaForAllSqlTables``` for all non-system tables
+
+**NOTE:** This is an experimental module and for now, 
+we only support four databases: MariaDB, MySQL, PostgreSQL, and SQLite. 
+
+Additionally, support for JSON and date-time types is limited. 
+Please take this into consideration when using these functions.
 
 
 ## Getting started with reading from SQL database
@@ -21,6 +27,32 @@ In the first, you need to add a dependency
 
 ```kotlin
 implementation("org.jetbrains.kotlinx:dataframe-jdbc:$dataframe_version")
+```
+
+after that, you need to add a dependency for a JDBC driver for the used database, for example
+
+For MariaDB:
+
+```kotlin
+implementation("org.mariadb.jdbc:mariadb-java-client:$version")
+```
+
+For PostgreSQL:
+
+```kotlin
+implementation("org.postgresql:postgresql:$version")
+```
+
+For MySQL:
+
+```kotlin
+implementation("mysql:mysql-connector-java:$version")
+```
+
+For SQLite:
+
+```kotlin
+implementation("org.xerial:sqlite-jdbc:$version")
 ```
 
 In the second, be sure that you can establish a connection to the database.
@@ -250,7 +282,7 @@ connection.close()
 These functions read all data from all tables in the connected database. 
 Variants with a limit parameter restrict how many rows will be read from each table.
 
-**readAllSqlTables(connection: Connection): List<AnyFrame>**
+**readAllSqlTables(connection: Connection): List\<AnyFrame>**
 
 Retrieves data from all the non-system tables in the SQL database and returns them as a list of AnyFrame objects.
 
@@ -265,7 +297,7 @@ val dbConfig = DatabaseConfiguration("URL_TO_CONNECT_DATABASE", "USERNAME", "PAS
 val dataframes = DataFrame.readAllSqlTables(dbConfig)
 ```
 
-**readAllSqlTables(connection: Connection, limit: Int): List<AnyFrame>**
+**readAllSqlTables(connection: Connection, limit: Int): List\<AnyFrame>**
 
 A variant of the previous function,
 but with an added `limit: Int` parameter that allows setting the maximum number of records to be read from each table.
@@ -280,7 +312,7 @@ val dbConfig = DatabaseConfiguration("URL_TO_CONNECT_DATABASE", "USERNAME", "PAS
 val dataframes = DataFrame.readAllSqlTables(dbConfig, 100)
 ```
 
-**readAllSqlTables(connection: Connection): List<AnyFrame>**
+**readAllSqlTables(connection: Connection): List\<AnyFrame>**
 
 Another variant, where instead of `dbConfig: DatabaseConfiguration` we use a JDBC connection: `Connection` object.
 
@@ -295,7 +327,7 @@ val dataframes = DataFrame.readAllSqlTables(connection)
 connection.close()
 ```
 
-**readAllSqlTables(connection: Connection, limit: Int): List<AnyFrame>**
+**readAllSqlTables(connection: Connection, limit: Int): List\<AnyFrame>**
 
 A variant of the previous function,
 but with an added `limit: Int` parameter that allows setting the maximum number of records to be read from each table.
@@ -428,7 +460,7 @@ connection.close()
 These functions return a list of all [`DataFrameSchema`](schema.md) from all the non-system tables in the SQL database. 
 They can be called with either a database configuration or a connection.
 
-**getSchemaForAllSqlTables(dbConfig: DatabaseConfiguration): List<DataFrameSchema>**
+**getSchemaForAllSqlTables(dbConfig: DatabaseConfiguration): List\<DataFrameSchema>**
 
 This function retrieves the schema of all tables from an SQL database 
 and returns them as a list of [`DataFrameSchema`](schema.md).
@@ -444,7 +476,7 @@ val dbConfig = DatabaseConfiguration("URL_TO_CONNECT_DATABASE", "USERNAME", "PAS
 val schemas = DataFrame.getSchemaForAllSqlTables(dbConfig)
 ```
 
-**getSchemaForAllSqlTables(connection: Connection): List<DataFrameSchema**
+**getSchemaForAllSqlTables(connection: Connection): List\<DataFrameSchema>**
 
 This function retrieves the schema of all tables using a JDBC connection: `Connection` object 
 and returns them as a list of [`DataFrameSchema`](schema.md).

@@ -306,8 +306,9 @@ public fun <T> DataFrame<T>.writeExcel(
     sheetName: String? = null,
     writeHeader: Boolean = true,
     workBookType: WorkBookType = WorkBookType.XLSX,
+    keepFile: Boolean = false,
 ) {
-    return writeExcel(File(path), columnsSelector, sheetName, writeHeader, workBookType)
+    return writeExcel(File(path), columnsSelector, sheetName, writeHeader, workBookType, keepFile)
 }
 
 public enum class WorkBookType {
@@ -320,16 +321,20 @@ public fun <T> DataFrame<T>.writeExcel(
     sheetName: String? = null,
     writeHeader: Boolean = true,
     workBookType: WorkBookType = WorkBookType.XLSX,
+    keepFile: Boolean = false,
 ) {
-    val factory = when (workBookType) {
-        WorkBookType.XLS -> {
-            { HSSFWorkbook() }
+    val factory =
+        if (keepFile){
+            when (workBookType) {
+                WorkBookType.XLS -> HSSFWorkbook(file.inputStream())
+                WorkBookType.XLSX -> XSSFWorkbook(file.inputStream())
+            }
+        } else {
+            when (workBookType) {
+                WorkBookType.XLS -> HSSFWorkbook()
+                WorkBookType.XLSX -> XSSFWorkbook()
+            }
         }
-
-        WorkBookType.XLSX -> {
-            { XSSFWorkbook() }
-        }
-    }
     return file.outputStream().use {
         writeExcel(it, columnsSelector, sheetName, writeHeader, factory)
     }
@@ -340,9 +345,9 @@ public fun <T> DataFrame<T>.writeExcel(
     columnsSelector: ColumnsSelector<T, *> = { all() },
     sheetName: String? = null,
     writeHeader: Boolean = true,
-    factory: () -> Workbook,
+    factory: Workbook
 ) {
-    val wb: Workbook = factory()
+    val wb: Workbook = factory
     writeExcel(wb, columnsSelector, sheetName, writeHeader)
     wb.write(outputStream)
     wb.close()

@@ -3,11 +3,23 @@ package org.jetbrains.kotlinx.dataframe.io
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
+import org.apache.arrow.memory.RootAllocator
+import org.apache.arrow.vector.TimeStampMicroVector
+import org.apache.arrow.vector.TimeStampMilliVector
+import org.apache.arrow.vector.TimeStampNanoVector
+import org.apache.arrow.vector.TimeStampSecVector
+import org.apache.arrow.vector.VectorSchemaRoot
+import org.apache.arrow.vector.ipc.ArrowFileReader
+import org.apache.arrow.vector.ipc.ArrowFileWriter
+import org.apache.arrow.vector.ipc.ArrowStreamReader
+import org.apache.arrow.vector.ipc.ArrowStreamWriter
 import org.apache.arrow.vector.types.FloatingPointPrecision
+import org.apache.arrow.vector.types.TimeUnit
 import org.apache.arrow.vector.types.pojo.ArrowType
 import org.apache.arrow.vector.types.pojo.Field
 import org.apache.arrow.vector.types.pojo.FieldType
 import org.apache.arrow.vector.types.pojo.Schema
+import org.apache.arrow.vector.util.ByteArrayReadableSeekableByteChannel
 import org.apache.arrow.vector.util.Text
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -23,10 +35,14 @@ import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.junit.Test
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.net.URL
+import java.nio.channels.Channels
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.Locale
 import kotlin.reflect.typeOf
 
@@ -458,5 +474,113 @@ internal class ArrowKtTest {
         val dataFrame = dataFrameOf(bigStringColumn)
         val data = dataFrame.saveArrowFeatherToByteArray()
         DataFrame.readArrowFeather(data) shouldBe dataFrame
+    }
+
+    @Test
+    fun testTimeStamp(){
+        val dates = listOf(
+            LocalDateTime.of(2023, 11, 23, 9, 30, 25),
+            LocalDateTime.of(2015, 5, 25, 14, 20, 13),
+            LocalDateTime.of(2013, 6, 19, 11, 20, 13)
+        )
+
+        val dataFrame = dataFrameOf(
+            "ts_nano" to dates,
+            "ts_micro" to dates,
+            "ts_milli" to dates,
+            "ts_sec" to dates
+        )
+
+        DataFrame.readArrowFeather(writeArrowTimestamp(dates)) shouldBe dataFrame
+        DataFrame.readArrowIPC(writeArrowTimestamp(dates, true)) shouldBe dataFrame
+    }
+
+    private fun writeArrowTimestamp(dates: List<LocalDateTime>, streaming: Boolean = false): ByteArray {
+        RootAllocator().use { allocator ->
+            val timeStampMilli = Field(
+                "ts_milli",
+                FieldType.nullable(ArrowType.Timestamp(TimeUnit.MILLISECOND, null)),
+                null
+            )
+
+            val timeStampMicro = Field(
+                "ts_micro",
+                FieldType.nullable(ArrowType.Timestamp(TimeUnit.MICROSECOND, null)),
+                null
+            )
+
+            val timeStampNano = Field(
+                "ts_nano",
+                FieldType.nullable(ArrowType.Timestamp(TimeUnit.NANOSECOND, null)),
+                null
+            )
+
+            val timeStampSec = Field(
+                "ts_sec",
+                FieldType.nullable(ArrowType.Timestamp(TimeUnit.SECOND, null)),
+                null
+            )
+            val schemaTimeStamp = Schema(
+                listOf(timeStampNano, timeStampMicro, timeStampMilli, timeStampSec)
+            )
+            VectorSchemaRoot.create(schemaTimeStamp, allocator).use { vectorSchemaRoot ->
+                val timeStampMilliVector = vectorSchemaRoot.getVector("ts_milli") as TimeStampMilliVector
+                val timeStampNanoVector = vectorSchemaRoot.getVector("ts_nano") as TimeStampNanoVector
+                val timeStampMicroVector = vectorSchemaRoot.getVector("ts_micro") as TimeStampMicroVector
+                val timeStampSecVector = vectorSchemaRoot.getVector("ts_sec") as TimeStampSecVector
+                timeStampMilliVector.allocateNew(dates.size)
+                timeStampNanoVector.allocateNew(dates.size)
+                timeStampMicroVector.allocateNew(dates.size)
+                timeStampSecVector.allocateNew(dates.size)
+
+                dates.forEachIndexed { index, localDateTime ->
+                    val instant = localDateTime.toInstant(ZoneOffset.UTC)
+                    timeStampNanoVector[index] = instant.toEpochMilli() * 1_000_000L + instant.nano
+                    timeStampMicroVector[index] = instant.toEpochMilli() * 1_000L
+                    timeStampMilliVector[index] = instant.toEpochMilli()
+                    timeStampSecVector[index] = instant.toEpochMilli() / 1_000L
+                }
+                vectorSchemaRoot.setRowCount(dates.size)
+                val bos = ByteArrayOutputStream()
+                bos.use { out ->
+                    val arrowWriter = if (streaming) {
+                        ArrowStreamWriter(vectorSchemaRoot, null, Channels.newChannel(out))
+                    } else {
+                        ArrowFileWriter(vectorSchemaRoot, null, Channels.newChannel(out))
+                    }
+                    arrowWriter.use { writer ->
+                        writer.start()
+                        writer.writeBatch()
+                    }
+                }
+                return bos.toByteArray()
+            }
+        }
+    }
+
+    @Test
+    fun testArrowReaderExtension() {
+        val dates = listOf(
+            LocalDateTime.of(2023, 11, 23, 9, 30, 25),
+            LocalDateTime.of(2015, 5, 25, 14, 20, 13),
+            LocalDateTime.of(2013, 6, 19, 11, 20, 13),
+            LocalDateTime.of(2000, 1, 1, 0, 0, 0)
+        )
+
+        val expected = dataFrameOf(
+            "string" to listOf("a", "b", "c", "d"),
+            "int" to listOf(1, 2, 3, 4),
+            "float" to listOf(1.0f, 2.0f, 3.0f, 4.0f),
+            "double" to listOf(1.0, 2.0, 3.0, 4.0),
+            "datetime" to dates
+        )
+
+        val featherChannel = ByteArrayReadableSeekableByteChannel(expected.saveArrowFeatherToByteArray())
+        val arrowFileReader = ArrowFileReader(featherChannel, RootAllocator())
+        arrowFileReader.toDataFrame() shouldBe expected
+
+        val ipcInputStream = ByteArrayInputStream(expected.saveArrowIPCToByteArray())
+        val arrowStreamReader = ArrowStreamReader(ipcInputStream, RootAllocator())
+        arrowStreamReader.toDataFrame() shouldBe expected
     }
 }
