@@ -26,6 +26,7 @@
             <toc-element topic="schemasInheritance.md"/>
             <toc-element topic="schemasCustom.md"/>
             <toc-element topic="schemasExternalJupyter.md"/>
+            <toc-element topic="schemasImportSqlGradle.md"/>
             <toc-element topic="schemasImportOpenApiGradle.md"/>
             <toc-element topic="schemasImportOpenApiJupyter.md"/>
         </toc-element>
