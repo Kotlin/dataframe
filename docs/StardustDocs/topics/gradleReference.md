@@ -10,7 +10,7 @@ dataframes {
     }
 }
 ```
-Note the name of the file and the interface are normalized: split by '_' and ' ' and joined to camel case.
+Note that the name of the file and the interface are normalized: split by '_' and ' ' and joined to CamelCase.
 You can set parsing options for CSV:
 ```kotlin
 dataframes {
@@ -26,9 +26,11 @@ dataframes {
 In this case, the output path will depend on your directory structure. 
 For project with package `org.example` path will be `build/generated/dataframe/main/kotlin/org/example/dataframe/JetbrainsRepositories.Generated.kt
 `. 
-Note that name of the Kotlin file is derived from the name of the data file with the suffix
+
+Note that the name of the Kotlin file is derived from the name of the data file with the suffix
 `.Generated` and the package 
 is derived from the directory structure with child directory `dataframe`.
+
 The name of the **data schema** itself is `JetbrainsRepositories`.
 You could specify it explicitly:
 
@@ -92,7 +94,7 @@ dataframes {
 }
 ```
 
-But if you need generated files in another directory, set `src`:
+If you need the generated files to be put in another directory, set `src`:
 
 ```kotlin
 dataframes {
@@ -104,13 +106,13 @@ dataframes {
     }
 }
 ```
-## Schema definition for SQL table or result of an SQL query
+## Schema Definitions from SQL Databases
 
-To generate schema for existing SQL table, 
-you need to define a few parameters to establish JDBC connection:
-URL (passing to `data` field), username and password.
+To generate a schema for an existing SQL table, 
+you need to define a few parameters to establish a JDBC connection:
+URL (passing to `data` field), username, and password.
 
-Also, the `tableName` parameter should be specified.
+Also, the `tableName` parameter should be specified to convert the data from the table with that name to the dataframe.
 
 ```kotlin
 dataframes {
@@ -126,9 +128,8 @@ dataframes {
 }
 ```
 
-To generate schema for the result of an SQL query, 
-you need to define the SQL query itself 
-and the same parameters to establish connection with the database.
+To generate a schema for the result of an SQL query,
+you need to define the same parameters as before together with the SQL query to establish connection.
 
 ```kotlin
 dataframes {
@@ -138,26 +139,29 @@ dataframes {
         jdbcOptions {
             user = "root" 
             password = "pass"
-            sqlQuery = "select name, year, rank,\n" +
-                    "GROUP_CONCAT (genre) as \"genres\"\n" +
-                    "from movies join movies_directors on  movie_id = movies.id\n" +
-                    "     join directors on directors.id=director_id left join movies_genres on movies.id = movies_genres.movie_id \n" +
-                    "where directors.first_name = \"Quentin\" and directors.last_name = \"Tarantino\"\n" +
-                    "group by name, year, rank\n" +
-                    "order by year"
+            sqlQuery = """
+                SELECT name, year, rank,
+                GROUP_CONCAT (genre) as "genres"
+                FROM movies JOIN movies_directors ON movie_id = movies.id
+                JOIN directors ON directors.id=director_id LEFT JOIN movies_genres ON movies.id = movies_genres.movie_id
+                WHERE directors.first_name = "Quentin" AND directors.last_name = "Tarantino"
+                GROUP BY name, year, rank
+                ORDER BY year
+                """
         }
     }
 }
 ```
 
-**NOTE:** This is an experimental functionality, and for now,
+**NOTE:** This is an experimental functionality and, for now,
 we only support four databases: MariaDB, MySQL, PostgreSQL, and SQLite.
 
 Additionally, support for JSON and date-time types is limited.
 Please take this into consideration when using these functions.
 
 ## DSL reference
-Inside `dataframes` you can configure parameters that will apply to all schemas. Configuration inside `schema` will override these defaults for specific schema.
+Inside `dataframes` you can configure parameters that will apply to all schemas. 
+Configuration inside `schema` will override these defaults for a specific schema.
 Here is the full DSL for declaring data schemas:
 
 ```kotlin
@@ -193,8 +197,8 @@ dataframes {
         withNormalizationBy('_') // enable property names normalization for this schema and use these delimiters
         withoutNormalization() // disable property names normalization for this schema
         
-        withoutDefaultPath() // disable a default path for this schema
-        withDefaultPath() // enable a default path for this schema
+        withoutDefaultPath() // disable the default path for this schema
+        withDefaultPath() // enable the default path for this schema
     }
 }
 ```

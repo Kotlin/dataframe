@@ -80,10 +80,10 @@ val df = DataFrame.readSqlTable(dbConfig, tableName, 100)
 
 df.print()
 ```
-## Getting started with Notebooks
+## Getting Started with Notebooks
 
 To use the latest version of the Kotlin DataFrame library 
-and specific version of JDBC driver for your database (MariaDB in the snippet below) in your Notebook, just run the following cell.
+and a specific version of the JDBC driver for your database (MariaDB is used as an example below) in your Notebook, run the following cell.
 
 ```jupyter
 %use dataframe
@@ -93,7 +93,7 @@ USE {
 }
 ```
  
-**NOTE:** User should specify the version of JDBC driver.
+**NOTE:** The user should specify the version of the JDBC driver.
 
 ## Reading Specific Tables
 

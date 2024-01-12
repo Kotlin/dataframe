@@ -58,7 +58,7 @@ interface Person {
 }
 ```
 
-#### Execute an `assemble` task to generate type-safe accessors for schemas:
+#### Execute the `assemble` task to generate type-safe accessors for schemas:
 
 <!---FUN useProperties-->
 

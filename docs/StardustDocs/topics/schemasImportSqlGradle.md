@@ -1,11 +1,11 @@
-[//]: # (title: Import SQL metadata as a schema in Gradle project)
+[//]: # (title: Import SQL Metadata as a Schema in Gradle Project)
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Schemas-->
 
-Each SQL database keeps the metadata for all the tables, and 
-this metadata could be used for the schema generation.
+Each SQL database contains the metadata for all the tables. 
+This metadata could be used for the schema generation.
 
-**NOTE:** Visit the [page](readSqlDatabases.md) to see how to set up all Gradle dependencies for your project.
+**NOTE:** Visit this [page](readSqlDatabases.md) to see how to set up all Gradle dependencies for your project.
 
 ### With `@file:ImportDataSchema`
 
@@ -16,7 +16,7 @@ URL, username, and password.
 Also, the `tableName` parameter could be specified.
 
 You should also specify the name of the generated Kotlin class 
-as a first parameter of annotation `@file:ImportDataSchema`.
+as the first parameter of the annotation `@file:ImportDataSchema`.
 
 ```kotlin
 @file:ImportDataSchema(
@@ -24,6 +24,8 @@ as a first parameter of annotation `@file:ImportDataSchema`.
     URL,
     jdbcOptions = JdbcOptions(USER_NAME, PASSWORD, tableName = TABLE_NAME)
 )
+
+package databases
 
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 ```
@@ -51,6 +53,8 @@ as a first parameter of annotation `@file:ImportDataSchema`.
     jdbcOptions = JdbcOptions(USER_NAME, PASSWORD, sqlQuery = TARANTINO_FILMS_SQL_QUERY)
 )
 
+package databases
+
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 ```
 
@@ -61,22 +65,24 @@ const val USER_NAME = "root"
 
 const val PASSWORD = "pass"
 
-const val TARANTINO_FILMS_SQL_QUERY = "select name, year, rank,\n" +
-    "GROUP_CONCAT (genre) as \"genres\"\n" +
-    "from movies join movies_directors on  movie_id = movies.id\n" +
-    "     join directors on directors.id=director_id left join movies_genres on movies.id = movies_genres.movie_id \n" +
-    "where directors.first_name = \"Quentin\" and directors.last_name = \"Tarantino\"\n" +
-    "group by name, year, rank\n" +
-    "order by year"
+const val TARANTINO_FILMS_SQL_QUERY = """
+    SELECT name, year, rank,
+    GROUP_CONCAT (genre) as "genres"
+    FROM movies JOIN movies_directors ON movie_id = movies.id
+    JOIN directors ON directors.id=director_id LEFT JOIN movies_genres ON movies.id = movies_genres.movie_id
+    WHERE directors.first_name = "Quentin" AND directors.last_name = "Tarantino"
+    GROUP BY name, year, rank
+    ORDER BY year
+    """
 ```
 
 ### With Gradle Task 
 
-To generate schema for existing SQL table,
-you need to define a few parameters to establish JDBC connection:
+To generate a schema for an existing SQL table,
+you need to define a few parameters to establish a JDBC connection:
 URL (passing to `data` field), username, and password.
 
-Also, the `tableName` parameter should be specified.
+Also, the `tableName` parameter should be specified to convert the data from the table with that name to the dataframe.
 
 ```kotlin
 dataframes {
@@ -92,9 +98,9 @@ dataframes {
 }
 ```
 
-To generate schema for the result of an SQL query,
-you need to define the SQL query itself
-and the same parameters to establish connection with the database.
+To generate a schema for the result of an SQL query,
+you need to define the same parameters as before together with the SQL query to establish connection.
+
 
 ```kotlin
 dataframes {
@@ -104,13 +110,15 @@ dataframes {
         jdbcOptions {
             user = "root" 
             password = "pass"
-            sqlQuery = "select name, year, rank,\n" +
-                    "GROUP_CONCAT (genre) as \"genres\"\n" +
-                    "from movies join movies_directors on  movie_id = movies.id\n" +
-                    "     join directors on directors.id=director_id left join movies_genres on movies.id = movies_genres.movie_id \n" +
-                    "where directors.first_name = \"Quentin\" and directors.last_name = \"Tarantino\"\n" +
-                    "group by name, year, rank\n" +
-                    "order by year"
+            sqlQuery = """
+                SELECT name, year, rank,
+                GROUP_CONCAT (genre) as "genres"
+                FROM movies JOIN movies_directors ON movie_id = movies.id
+                JOIN directors ON directors.id=director_id LEFT JOIN movies_genres ON movies.id = movies_genres.movie_id
+                WHERE directors.first_name = "Quentin" AND directors.last_name = "Tarantino"
+                GROUP BY name, year, rank
+                ORDER BY year
+                """
         }
     }
 }
