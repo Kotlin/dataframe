@@ -124,7 +124,7 @@ dataframes {
 }
 ```
 
-After importing the data schema, you can now start to import any data from SQL table or as a result of an SQL query
+After importing the data schema, you can start to import any data from SQL table or as a result of an SQL query
 you like using the generated schemas.
 
 Now you will have a correctly typed [`DataFrame`](DataFrame.md)!
