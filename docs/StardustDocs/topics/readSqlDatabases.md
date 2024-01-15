@@ -80,8 +80,21 @@ val df = DataFrame.readSqlTable(dbConfig, tableName, 100)
 
 df.print()
 ```
+## Getting Started with Notebooks
 
+To use the latest version of the Kotlin DataFrame library 
+and a specific version of the JDBC driver for your database (MariaDB is used as an example below) in your Notebook, run the following cell.
+
+```jupyter
+%use dataframe
+
+USE {
+    dependencies("org.mariadb.jdbc:mariadb-java-client:$version")
+}
+```
  
+**NOTE:** The user should specify the version of the JDBC driver.
+
 ## Reading Specific Tables
 
 These functions read all data from a specific table in the database. 
@@ -220,7 +233,7 @@ The versions with a limit parameter will only read up to the specified number of
 This function allows reading a ResultSet object from your SQL database 
 and transforms it into an AnyFrame object. 
 
-The `dbType: DbType` parameter specifies the type of our database (e.g., PostgreSQL, MySQL, etc), 
+The `dbType: DbType` parameter specifies the type of our database (e.g., PostgreSQL, MySQL, etc.), 
 supported by a library. 
 Currently, the following classes are available: `H2, MariaDb, MySql, PostgreSql, Sqlite`.
 

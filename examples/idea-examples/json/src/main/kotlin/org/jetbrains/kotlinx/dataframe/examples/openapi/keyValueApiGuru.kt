@@ -4,8 +4,8 @@
     name = "APIsNoKeyValue",
 )
 @file:ImportDataSchema(
-    // Now we can use the full file!
-    path = "https://api.apis.guru/v2/list.json",
+    // Now we can use the full file; either a URL or a local path
+    path = "src/main/resources/api_guru_list.json",
     name = "APIsKeyValue",
     jsonOptions = JsonOptions(
         // paths in the json that should be converted to KeyValue columns
