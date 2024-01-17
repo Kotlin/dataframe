@@ -38,11 +38,11 @@ fun main() {
     println("---------------------------- Part 1: SQL Table ------------------------------------")
     DriverManager.getConnection(URL, props).use { connection ->
         // read the data from the SQL table
-        val actors = DataFrame.readSqlTable(connection,  TABLE_NAME_ACTORS, 100).cast<Actors>()
+        val actors = DataFrame.readSqlTable(connection,  TABLE_NAME_ACTORS, 100).cast<Actors>(verify=true)
         actors.print()
 
         // filter and print the data
-        actors.filter { it[Actors::firstName]!= null && it[Actors::firstName]!!.contains("J") }.print()
+        actors.filter { firstName!=null && firstName!!.contains("J") }.print()
 
         // extract the schema of the SQL table
         val actorSchema = DataFrame.getSchemaForSqlTable(connection,  TABLE_NAME_ACTORS)
@@ -53,11 +53,11 @@ fun main() {
     println("---------------------------- Part 2: SQL Query ------------------------------------")
     DriverManager.getConnection(URL, props).use { connection ->
         // read the data from as a result of an executed SQL query
-        val tarantinoFilms = DataFrame.readSqlQuery(connection, TARANTINO_FILMS_SQL_QUERY, 100).cast<TarantinoFilms>()
+        val tarantinoFilms = DataFrame.readSqlQuery(connection, TARANTINO_FILMS_SQL_QUERY, 100).cast<TarantinoFilms>(verify=true)
         tarantinoFilms.print()
 
         // transform and print the data
-        tarantinoFilms.filter { it[TarantinoFilms::year]!= null && it[TarantinoFilms::year]!! > 2000 }.print()
+        tarantinoFilms.filter { year != null && year!! > 2000 }.print()
 
         // extract the schema of the SQL table
         val tarantinoFilmsSchema = DataFrame.getSchemaForSqlQuery(connection, TARANTINO_FILMS_SQL_QUERY)
@@ -70,11 +70,11 @@ fun main() {
         connection.createStatement().use { st ->
             st.executeQuery(TARANTINO_FILMS_SQL_QUERY).use { rs ->
                 // read the data from as a result of an executed SQL query
-                val tarantinoFilms = DataFrame.readSqlQuery(connection, TARANTINO_FILMS_SQL_QUERY, 100).cast<TarantinoFilms>()
+                val tarantinoFilms = DataFrame.readSqlQuery(connection, TARANTINO_FILMS_SQL_QUERY, 100).cast<TarantinoFilms>(verify=true)
                 tarantinoFilms.print()
 
                 // transform and print the data
-                tarantinoFilms.filter { it[TarantinoFilms::year]!= null && it[TarantinoFilms::year]!! > 2000 }.print()
+                tarantinoFilms.filter { year!= null && year!! > 2000 }.print()
 
                 // extract the schema of the SQL table
                 val tarantinoFilmsSchema = DataFrame.getSchemaForSqlQuery(connection, TARANTINO_FILMS_SQL_QUERY)

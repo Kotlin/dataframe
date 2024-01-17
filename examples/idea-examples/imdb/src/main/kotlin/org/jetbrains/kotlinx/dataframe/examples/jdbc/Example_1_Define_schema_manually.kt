@@ -14,9 +14,9 @@ import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
 @DataSchema
 interface Movies {
     val id: Int
-    val name: String
-    val year: String
-    val rank: String
+    val name: String?
+    val year: Int?
+    val rank: Float?
 }
 
 fun main() {
@@ -24,17 +24,17 @@ fun main() {
     val dbConfig = DatabaseConfiguration(URL, USER_NAME, PASSWORD)
 
     // read the table
-    val df = DataFrame.readSqlTable(dbConfig, TABLE_NAME_MOVIES, 10000).cast<Movies>()
+    val movies = DataFrame.readSqlTable(dbConfig, TABLE_NAME_MOVIES, 10000).cast<Movies>(verify=true)
 
     // print the dataframe
-    df.print()
+    movies.print()
 
     // print the dataframe metadata and statistics
-    df.describe().print()
+    movies.describe().print()
 
     // print names of top-10 rated films
-    df.sortByDesc { it[Movies::rank] }
+    movies.sortByDesc { rank }
         .take(10)
-        .select { it[Movies::name] }
+        .select { name }
         .print()
 }

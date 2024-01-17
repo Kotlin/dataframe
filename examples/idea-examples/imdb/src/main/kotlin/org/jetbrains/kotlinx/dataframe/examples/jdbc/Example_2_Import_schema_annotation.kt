@@ -32,21 +32,21 @@ fun main() {
     val dbConfig = DatabaseConfiguration(URL, USER_NAME, PASSWORD)
 
     // read the table
-    val df = DataFrame.readSqlTable(dbConfig, TABLE_NAME_DIRECTORS, 1000).cast<Directors>()
+    val directors = DataFrame.readSqlTable(dbConfig, TABLE_NAME_DIRECTORS, 1000).cast<Directors>(verify=true)
 
     // manipulate and print
-    df.filter { it[Directors::firstName] != null && it[Directors::firstName]!!.contains("A") }
+    directors.filter { firstName != null && firstName!!.contains("A") }
         .take(10)
         .print()
 
     // Part 2: Handle the table results of an SQL query
 
     // read the data
-    val newActors = DataFrame.readSqlQuery(dbConfig, ACTORS_IN_LATEST_MOVIES).cast<NewActors>()
+    val newActors = DataFrame.readSqlQuery(dbConfig, ACTORS_IN_LATEST_MOVIES).cast<NewActors>(verify=true)
     newActors.print()
 
     // build a report of different roles' popularity
-    newActors.groupBy { it[NewActors::role] }
+    newActors.groupBy { role }
         .count()
         .print()
 }
