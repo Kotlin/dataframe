@@ -3,7 +3,9 @@
 
 The Kotlin DataFrame library supports CSV, TSV, JSON, XLS and XLSX, and Apache Arrow input formats.
 
-The reading from SQL databases is also supported. Read [here](readSqlDatabases.md) to know more.
+The reading from SQL databases is also supported.
+Read [here](readSqlDatabases.md) to know more 
+or explore the [example project](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples).
 
 The `.read()` function automatically detects the input format based on a file extension and content:
 
