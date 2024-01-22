@@ -142,10 +142,11 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * ## Single (Col)
-     * Returns the single column in this [ColumnSet] or [ColumnGroup]
-     * that adheres to the given [condition\].
+     * Returns the single column from [this\] that adheres to the optional given [condition\].
      * If no column adheres to the given [condition\], [NoSuchElementException] is thrown.
      * If multiple columns adhere to it, [IllegalArgumentException] is thrown.
+     *
+     * This function only looks at columns at the top-level.
      *
      * NOTE: For [column groups][ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
      *
@@ -174,10 +175,11 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * ## Single (Col)
-     * Returns the single column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * that adheres to the given [condition].
+     * Returns the single column from [this] that adheres to the optional given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      * If multiple columns adhere to it, [IllegalArgumentException] is thrown.
+     *
+     * This function only looks at columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
      *
@@ -205,10 +207,11 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * ## Single (Col)
-     * Returns the single column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * that adheres to the given [condition].
+     * Returns the single column from [this] that adheres to the optional given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      * If multiple columns adhere to it, [IllegalArgumentException] is thrown.
+     *
+     * This function only looks at columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
      *
@@ -234,10 +237,11 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * ## Single (Col)
-     * Returns the single column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * that adheres to the given [condition].
+     * Returns the single column from [this] that adheres to the optional given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      * If multiple columns adhere to it, [IllegalArgumentException] is thrown.
+     *
+     * This function only looks at columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
      *
@@ -263,10 +267,11 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * ## Single (Col)
-     * Returns the single column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * that adheres to the given [condition].
+     * Returns the single column from [this] that adheres to the optional given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      * If multiple columns adhere to it, [IllegalArgumentException] is thrown.
+     *
+     * This function only looks at columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
      *
@@ -292,10 +297,11 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * ## Single (Col)
-     * Returns the single column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * that adheres to the given [condition].
+     * Returns the single column from [this] that adheres to the optional given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      * If multiple columns adhere to it, [IllegalArgumentException] is thrown.
+     *
+     * This function only looks at columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
      *
@@ -323,10 +329,11 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * ## Single (Col)
-     * Returns the single column in this [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * that adheres to the given [condition].
+     * Returns the single column from [this] that adheres to the optional given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      * If multiple columns adhere to it, [IllegalArgumentException] is thrown.
+     *
+     * This function only looks at columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
      *

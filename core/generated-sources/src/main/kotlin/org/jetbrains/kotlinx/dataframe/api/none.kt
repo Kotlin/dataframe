@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
+import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 
@@ -55,7 +56,9 @@ public interface NoneColumnsSelectionDsl {
     /**
      * ## None
      *
-     * Creates an empty [ColumnsResolver], essentially selecting no columns at all.
+     * Creates an empty [ColumnsResolver] / [ColumnSet], essentially selecting no columns at all.
+     *
+     * This is the opposite of [all][ColumnsSelectionDsl.all].
      *
      * ### Check out: [Usage]
      *

@@ -20,15 +20,10 @@ import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs.
 
 /**
  * ## {@getArg [TitleArg]} (Cols) While
- * This function {@getArg [NounArg]}s the {@getArg [FirstOrLastArg]} columns of a [ColumnGroup] or
- * [ColumnSet] adhering to the given [predicate\].
+ * This function {@getArg [NounArg]}s the {@getArg [FirstOrLastArg]} columns from [this\] adhering to the
+ * given [predicate\] collecting the result into a [ColumnSet].
  *
- * If called on a [SingleColumn] containing a [ColumnGroup],
- * [{@getArg [OperationArg]}While][SingleColumn.{@getArg [OperationArg]}ColsWhile] will {@getArg [NounArg]} the
- * {@getArg [FirstOrLastArg]} cols of that column group adhering to the given [predicate\].
- *
- * Else, if called on a [ColumnSet], [{@getArg [OperationArg]}While][ColumnSet.{@getArg [OperationArg]}While] will
- * {@getArg [NounArg]} the {@getArg [FirstOrLastArg]} columns of that column set adhering to the given [predicate\].
+ * This function only looks at columns at the top-level.
  *
  * Any {@include [AccessApiLink]} can be used as receiver for these functions.
  *

@@ -107,19 +107,27 @@ public interface ColsInGroupsColumnsSelectionDsl {
     /**
      * ## Cols in Groups
      *
-     * [colsInGroups][colsInGroups] is a function that returns (optionally filtered) columns contained directly inside
+     * [colsInGroups][colsInGroups] is a function that returns all (optionally filtered) columns at the top-levels of
      * all [column groups][ColumnGroup] in [this\]. This is useful if you want to select all columns that are
-     * "one level downwards".
+     * "one level deeper".
+     *
+     * NOTE: This function should not be confused with [cols][ColumnsSelectionDsl.cols], which operates on all
+     * columns directly in [this\], or with [colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
+     * columns in [this\] at any depth.
      *
      * ### Check out: [Usage]
      *
      * #### For example:
      *
-     * To get only the columns inside all column groups in a [DataFrame], you can do:
+     * To get only the columns inside all column groups in a [DataFrame], instead of having to write:
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `df.`[select][DataFrame.select]` { colGroupA.`[cols][ColumnsSelectionDsl.cols]`() `[and][ColumnsSelectionDsl.and]` colGroupB.`[cols][ColumnsSelectionDsl.cols]`() ...  }`
+     *
+     * you can use:
      *
      * `df.`[select][DataFrame.select]` { `[colsInGroups][ColumnsSelectionDsl.colsInGroups]`() }`
+     *
+     * and
      *
      * `df.`[select][DataFrame.select]` { `[colsInGroups][ColumnsSelectionDsl.colsInGroups]` { "user" `[in][String.contains]` it.`[name][DataColumn.name]` } }`
      *
@@ -152,19 +160,27 @@ public interface ColsInGroupsColumnsSelectionDsl {
     /**
      * ## Cols in Groups
      *
-     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups] is a function that returns (optionally filtered) columns contained directly inside
+     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups] is a function that returns all (optionally filtered) columns at the top-levels of
      * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
-     * "one level downwards".
+     * "one level deeper".
+     *
+     * NOTE: This function should not be confused with [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
+     * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
+     * columns in [this] at any depth.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
-     * To get only the columns inside all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
+     * To get only the columns inside all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ...  }`
+     *
+     * you can use:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
+     *
+     * and
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]` { "user" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
      *
@@ -196,19 +212,27 @@ public interface ColsInGroupsColumnsSelectionDsl {
     /**
      * ## Cols in Groups
      *
-     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups] is a function that returns (optionally filtered) columns contained directly inside
+     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups] is a function that returns all (optionally filtered) columns at the top-levels of
      * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
-     * "one level downwards".
+     * "one level deeper".
+     *
+     * NOTE: This function should not be confused with [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
+     * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
+     * columns in [this] at any depth.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
-     * To get only the columns inside all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
+     * To get only the columns inside all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ...  }`
+     *
+     * you can use:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
+     *
+     * and
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]` { "user" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
      *
@@ -240,19 +264,27 @@ public interface ColsInGroupsColumnsSelectionDsl {
     /**
      * ## Cols in Groups
      *
-     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups] is a function that returns (optionally filtered) columns contained directly inside
+     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups] is a function that returns all (optionally filtered) columns at the top-levels of
      * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
-     * "one level downwards".
+     * "one level deeper".
+     *
+     * NOTE: This function should not be confused with [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
+     * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
+     * columns in [this] at any depth.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
-     * To get only the columns inside all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
+     * To get only the columns inside all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ...  }`
+     *
+     * you can use:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
+     *
+     * and
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]` { "user" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
      *
@@ -284,19 +316,27 @@ public interface ColsInGroupsColumnsSelectionDsl {
     /**
      * ## Cols in Groups
      *
-     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups] is a function that returns (optionally filtered) columns contained directly inside
+     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups] is a function that returns all (optionally filtered) columns at the top-levels of
      * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
-     * "one level downwards".
+     * "one level deeper".
+     *
+     * NOTE: This function should not be confused with [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
+     * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
+     * columns in [this] at any depth.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
-     * To get only the columns inside all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
+     * To get only the columns inside all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ...  }`
+     *
+     * you can use:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
+     *
+     * and
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]` { "user" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
      *
@@ -326,19 +366,27 @@ public interface ColsInGroupsColumnsSelectionDsl {
     /**
      * ## Cols in Groups
      *
-     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups] is a function that returns (optionally filtered) columns contained directly inside
+     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups] is a function that returns all (optionally filtered) columns at the top-levels of
      * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
-     * "one level downwards".
+     * "one level deeper".
+     *
+     * NOTE: This function should not be confused with [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
+     * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
+     * columns in [this] at any depth.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
-     * To get only the columns inside all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
+     * To get only the columns inside all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ...  }`
+     *
+     * you can use:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
+     *
+     * and
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]` { "user" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
      *
@@ -370,19 +418,27 @@ public interface ColsInGroupsColumnsSelectionDsl {
     /**
      * ## Cols in Groups
      *
-     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups] is a function that returns (optionally filtered) columns contained directly inside
+     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups] is a function that returns all (optionally filtered) columns at the top-levels of
      * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
-     * "one level downwards".
+     * "one level deeper".
+     *
+     * NOTE: This function should not be confused with [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
+     * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
+     * columns in [this] at any depth.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Usage]
      *
      * #### For example:
      *
-     * To get only the columns inside all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], you can do:
+     * To get only the columns inside all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ...  }`
+     *
+     * you can use:
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
+     *
+     * and
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]` { "user" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
      *

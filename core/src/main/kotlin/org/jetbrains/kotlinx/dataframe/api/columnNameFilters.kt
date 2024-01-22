@@ -80,8 +80,10 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * ## (Cols) Name Contains
-     * Returns a [ColumnSet] containing
-     * all columns containing {@getArg [CommonNameContainsDocs.ArgumentArg]} in their name.
+     * Returns a [ColumnSet] containing all columns from [this\] having
+     * {@getArg [CommonNameContainsDocs.ArgumentArg]} in their name.
+     *
+     * This function only looks at columns at the top-level.
      *
      * NOTE: For [column groups][ColumnGroup], `nameContains` is named `colsNameContains` to avoid confusion.
      *
@@ -271,8 +273,10 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * ## (Cols) Name {@getArg [CommonNameStartsEndsDocs.CapitalTitleArg]} With
-     * Returns a [ColumnSet] containing
-     * all columns {@getArg [CommonNameStartsEndsDocs.NounArg]} with {@getArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name.
+     * Returns a [ColumnSet] containing all columns from [this\]
+     * {@getArg [CommonNameStartsEndsDocs.NounArg]} with {@getArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name.
+     *
+     * This function only looks at columns at the top-level.
      *
      * NOTE: For [column groups][ColumnGroup], the function is named `{@getArg [CommonNameStartsEndsDocs.ColsNameOperationNameArg]}` to avoid confusion.
      *

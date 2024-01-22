@@ -141,7 +141,10 @@ public interface ColsOfColumnsSelectionDsl {
     /**
      * ## Cols Of
      *
-     * Get columns by a given type and an optional filter.
+     * Returns a [ColumnSet] of columns from [this\] that are a subtype of the given type [C\], optionally filtered
+     * by [filter\].
+     *
+     * This function only looks at columns at the top-level.
      *
      * ### Check out: [Usage]
      *
@@ -185,7 +188,10 @@ public interface ColsOfColumnsSelectionDsl {
     /**
      * ## Cols Of
      *
-     * Get columns by a given type and an optional filter.
+     * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
+     * by [filter].
+     *
+     * This function only looks at columns at the top-level.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage]
      *
@@ -232,7 +238,10 @@ public interface ColsOfColumnsSelectionDsl {
     /**
      * ## Cols Of
      *
-     * Get columns by a given type and an optional filter.
+     * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
+     * by [filter].
+     *
+     * This function only looks at columns at the top-level.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage]
      *
@@ -279,7 +288,10 @@ public interface ColsOfColumnsSelectionDsl {
     /**
      * ## Cols Of
      *
-     * Get columns by a given type and an optional filter.
+     * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
+     * by [filter].
+     *
+     * This function only looks at columns at the top-level.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage]
      *
@@ -327,7 +339,10 @@ public interface ColsOfColumnsSelectionDsl {
 /**
  * ## Cols Of
  *
- * Get columns by a given type and an optional filter.
+ * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
+ * by [filter].
+ *
+ * This function only looks at columns at the top-level.
  *
  * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage]
  *
@@ -374,7 +389,10 @@ public fun <C> ColumnSet<*>.colsOf(
 /**
  * ## Cols Of
  *
- * Get columns by a given type and an optional filter.
+ * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
+ * by [filter].
+ *
+ * This function only looks at columns at the top-level.
  *
  * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage]
  *
@@ -420,7 +438,10 @@ public inline fun <reified C> ColumnSet<*>.colsOf(
 /**
  * ## Cols Of
  *
- * Get columns by a given type and an optional filter.
+ * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
+ * by [filter].
+ *
+ * This function only looks at columns at the top-level.
  *
  * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage]
  *
@@ -465,7 +486,10 @@ public fun <C> ColumnsSelectionDsl<*>.colsOf(
 /**
  * ## Cols Of
  *
- * Get columns by a given type and an optional filter.
+ * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
+ * by [filter].
+ *
+ * This function only looks at columns at the top-level.
  *
  * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage]
  *
@@ -509,7 +533,10 @@ public inline fun <reified C> ColumnsSelectionDsl<*>.colsOf(
 /**
  * ## Cols Of
  *
- * Get columns by a given type and an optional filter.
+ * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
+ * by [filter].
+ *
+ * This function only looks at columns at the top-level.
  *
  * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage]
  *
@@ -556,7 +583,10 @@ public fun <C> SingleColumn<DataRow<*>>.colsOf(
 /**
  * ## Cols Of
  *
- * Get columns by a given type and an optional filter.
+ * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
+ * by [filter].
+ *
+ * This function only looks at columns at the top-level.
  *
  * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage]
  *

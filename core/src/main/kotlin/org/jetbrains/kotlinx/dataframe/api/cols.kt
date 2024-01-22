@@ -92,14 +92,13 @@ public interface ColsColumnsSelectionDsl {
 
     /**
      * ## Cols
-     * Creates a subset of columns ([ColumnSet]) from the current [ColumnsResolver].
-     *
-     * If the current [ColumnsResolver] is a [SingleColumn] and consists of a [column group][ColumnGroup],
-     * then `cols` will create a subset of its contained columns.
+     * Creates a subset of columns ([ColumnSet]) from [this\].
      *
      * You can use either a [ColumnFilter], or any of the `vararg` overloads for any
      * {@include [AccessApiLink]}. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
+     *
+     * This function only looks at columns at the top-level.
      *
      * Aside from calling [cols] directly, you can also use the [get][ColumnSet.get] operator in most cases.
      *
@@ -153,6 +152,68 @@ public interface ColsColumnsSelectionDsl {
 
         /** Example argument */
         interface Examples
+    }
+
+    /**
+     * ## Cols: Columns by Indices
+     *
+     * Retrieves one or multiple columns from [this\] in the form of a [ColumnSet] by their indices.
+     * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
+     *
+     * ### Check out: [Usage]
+     *
+     * #### For example:
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]`(1, 3, 2) }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][SingleColumn.get]`5, 1, 2`[`]`][SingleColumn.get]` }`
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`(0, 2) }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@getArg [CommonColsIndicesDocs.ExampleArg]}
+     *
+     * @throws [IndexOutOfBoundsException] If any index is out of bounds.
+     * @param [firstIndex\] The index of the first column to retrieve.
+     * @param [otherIndices\] The other indices of the columns to retrieve.
+     * @return A [ColumnSet] containing the columns found at the given indices.
+     */
+    private interface CommonColsIndicesDocs {
+
+        /** Example argument */
+        interface ExampleArg
+    }
+
+    /**
+     * ## Cols: Columns by Index Range
+     *
+     * Retrieves multiple columns from [this\] in the form of a [ColumnSet] by a [range\] of indices.
+     * If any of the indices in the [range\] are out of bounds, an [IndexOutOfBoundsException] is thrown.
+     *
+     * ### Check out: [Usage]
+     *
+     * #### For example:
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][ColumnSet.cols]` }`
+     *
+     * `df.`[select][DataFrame.select]` { "myColGroup".`[cols][String.cols]`(0`[`..`][Int.rangeTo]`2) }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@getArg [CommonColsRangeDocs.ExampleArg]}
+     *
+     * @throws [IndexOutOfBoundsException\] if any of the indices in the [range\] are out of bounds.
+     * @throws [IllegalArgumentException\] if the [range\] is empty.
+     * @param [range\] The range of indices to retrieve in the form of an [IntRange].
+     * @return A [ColumnSet] containing the columns found at the given indices.
+     */
+    private interface CommonColsRangeDocs {
+
+        /** Example argument */
+        interface ExampleArg
     }
 
     // region predicate
@@ -877,42 +938,6 @@ public interface ColsColumnsSelectionDsl {
     // region indices
 
     /**
-     * ## Cols: Columns by Indices
-     *
-     * Retrieves multiple columns in the form of a [ColumnSet] by their indices.
-     * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
-     *
-     * If called on a [SingleColumn], [ColumnGroup], or [DataFrame], the function will take the columns found at the
-     * given indices inside.
-     * Else, if called on a normal [ColumnSet], the function will return a new [ColumnSet] with the columns found at
-     * the given indices in the set.
-     *
-     * ### Check out: [Usage]
-     *
-     * #### For example:
-     *
-     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]`(1, 3, 2) }`
-     *
-     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][SingleColumn.get]`5, 1, 2`[`]`][SingleColumn.get]` }`
-     *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`(0, 2) }`
-     *
-     * #### Examples for this overload:
-     *
-     * {@getArg [CommonColsIndicesDocs.ExampleArg]}
-     *
-     * @throws [IndexOutOfBoundsException] If any index is out of bounds.
-     * @param [firstIndex\] The index of the first column to retrieve.
-     * @param [otherIndices\] The other indices of the columns to retrieve.
-     * @return A [ColumnSet] containing the columns found at the given indices.
-     */
-    private interface CommonColsIndicesDocs {
-
-        /** Example argument */
-        interface ExampleArg
-    }
-
-    /**
      * @include [CommonColsIndicesDocs]
      * @setArg [CommonColsIndicesDocs.ExampleArg]
      *
@@ -1058,42 +1083,6 @@ public interface ColsColumnsSelectionDsl {
     // endregion
 
     // region ranges
-
-    /**
-     * ## Cols: Columns by Index Range
-     *
-     * Retrieves multiple columns in the form of a [ColumnSet] by a [range\] of indices.
-     * If any of the indices in the [range\] are out of bounds, an [IndexOutOfBoundsException] is thrown.
-     *
-     * If called on a [SingleColumn], [ColumnGroup], or [DataFrame], the function will take the columns found at the
-     * given indices inside.
-     * Else, if called on a normal [ColumnSet], the function will return a new [ColumnSet] with the columns found at
-     * the given indices in the set.
-     *
-     * ### Check out: [Usage]
-     *
-     * #### For example:
-     *
-     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
-     *
-     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][ColumnSet.cols]` }`
-     *
-     * `df.`[select][DataFrame.select]` { "myColGroup".`[cols][String.cols]`(0`[`..`][Int.rangeTo]`2) }`
-     *
-     * #### Examples for this overload:
-     *
-     * {@getArg [CommonColsRangeDocs.ExampleArg]}
-     *
-     * @throws [IndexOutOfBoundsException\] if any of the indices in the [range\] are out of bounds.
-     * @throws [IllegalArgumentException\] if the [range\] is empty.
-     * @param [range\] The range of indices to retrieve in the form of an [IntRange].
-     * @return A [ColumnSet] containing the columns found at the given indices.
-     */
-    private interface CommonColsRangeDocs {
-
-        /** Example argument */
-        interface ExampleArg
-    }
 
     /**
      * @include [CommonColsRangeDocs]

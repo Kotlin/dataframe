@@ -93,7 +93,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     // except(), allExcept {}, allColsExcept {}
     AllExceptColumnsSelectionDsl,
 
-    // nameContains(""), childrenNameContains(""), nameStartsWith(""), childrenNameEndsWith("")
+    // nameContains(""), colsNameContains(""), nameStartsWith(""), childrenNameEndsWith("")
     ColumnNameFiltersColumnsSelectionDsl,
     // withoutNulls(), colsWithoutNulls()
     WithoutNullsColumnsSelectionDsl,

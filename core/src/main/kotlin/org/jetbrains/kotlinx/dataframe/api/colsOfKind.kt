@@ -62,14 +62,12 @@ public interface ColsOfKindColumnsSelectionDsl {
 
     /**
      * ## Cols Of Kind
-     * Creates a subset of columns that are of the given kind(s) from the current [ColumnSet].
-     *
-     * If the current [ColumnsResolver] is a [SingleColumn]
-     * (and thus consists of only one column (or [column group][ColumnGroup])),
-     * then [colsOfKind] will create a subset of its children.
+     * Creates a subset of columns from [this\] that are of the given kind(s).
      *
      * You can optionally use a [filter\] to only include certain columns.
      * [colsOfKind] can be called using any of the supported [APIs][AccessApi] (+ [ColumnPath]).
+     *
+     * This function only looks at columns at the top-level.
      *
      * ### Check out: [Usage]
      *

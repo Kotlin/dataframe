@@ -168,12 +168,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take (Cols)
-     * This function takes the first [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This takes the first [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeCols][SingleColumn.takeCols] will take the first [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [take][ColumnSet.take] will take the first [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -202,12 +200,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take (Cols)
-     * This function takes the first [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This takes the first [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeCols][SingleColumn.takeCols] will take the first [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [take][ColumnSet.take] will take the first [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -238,12 +234,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take (Cols)
-     * This function takes the first [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This takes the first [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeCols][SingleColumn.takeCols] will take the first [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [take][ColumnSet.take] will take the first [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -273,12 +267,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take (Cols)
-     * This function takes the first [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This takes the first [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeCols][SingleColumn.takeCols] will take the first [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [take][ColumnSet.take] will take the first [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -308,12 +300,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take (Cols)
-     * This function takes the first [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This takes the first [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeCols][SingleColumn.takeCols] will take the first [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [take][ColumnSet.take] will take the first [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -342,12 +332,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take (Cols)
-     * This function takes the first [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This takes the first [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeCols][SingleColumn.takeCols] will take the first [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [take][ColumnSet.take] will take the first [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -378,12 +366,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take (Cols)
-     * This function takes the first [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This takes the first [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeCols][SingleColumn.takeCols] will take the first [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [take][ColumnSet.take] will take the first [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -416,12 +402,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take Last (Cols)
-     * This function takes the last [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This takes the last [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeLastCols][SingleColumn.takeLastCols] will take the last [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeLast][ColumnSet.takeLast] will take the last [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -450,12 +434,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take Last (Cols)
-     * This function takes the last [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This takes the last [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeLastCols][SingleColumn.takeLastCols] will take the last [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeLast][ColumnSet.takeLast] will take the last [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -486,12 +468,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take Last (Cols)
-     * This function takes the last [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This takes the last [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeLastCols][SingleColumn.takeLastCols] will take the last [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeLast][ColumnSet.takeLast] will take the last [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -521,12 +501,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take Last (Cols)
-     * This function takes the last [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This takes the last [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeLastCols][SingleColumn.takeLastCols] will take the last [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeLast][ColumnSet.takeLast] will take the last [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -556,12 +534,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take Last (Cols)
-     * This function takes the last [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This takes the last [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeLastCols][SingleColumn.takeLastCols] will take the last [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeLast][ColumnSet.takeLast] will take the last [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -590,12 +566,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take Last (Cols)
-     * This function takes the last [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This takes the last [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeLastCols][SingleColumn.takeLastCols] will take the last [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeLast][ColumnSet.takeLast] will take the last [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -626,12 +600,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take Last (Cols)
-     * This function takes the last [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This takes the last [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeLastCols][SingleColumn.takeLastCols] will take the last [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeLast][ColumnSet.takeLast] will take the last [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -664,15 +636,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take (Cols) While
-     * This function takes the first columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function takes the first columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeWhile][SingleColumn.takeColsWhile] will take the
-     * first cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeWhile][ColumnSet.takeWhile] will
-     * take the first columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -700,15 +667,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take (Cols) While
-     * This function takes the first columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function takes the first columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeWhile][SingleColumn.takeColsWhile] will take the
-     * first cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeWhile][ColumnSet.takeWhile] will
-     * take the first columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -739,15 +701,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take (Cols) While
-     * This function takes the first columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function takes the first columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeWhile][SingleColumn.takeColsWhile] will take the
-     * first cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeWhile][ColumnSet.takeWhile] will
-     * take the first columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -776,15 +733,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take (Cols) While
-     * This function takes the first columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function takes the first columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeWhile][SingleColumn.takeColsWhile] will take the
-     * first cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeWhile][ColumnSet.takeWhile] will
-     * take the first columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -813,15 +765,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take (Cols) While
-     * This function takes the first columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function takes the first columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeWhile][SingleColumn.takeColsWhile] will take the
-     * first cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeWhile][ColumnSet.takeWhile] will
-     * take the first columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -850,15 +797,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take (Cols) While
-     * This function takes the first columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function takes the first columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeWhile][SingleColumn.takeColsWhile] will take the
-     * first cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeWhile][ColumnSet.takeWhile] will
-     * take the first columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -889,15 +831,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take (Cols) While
-     * This function takes the first columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function takes the first columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeWhile][SingleColumn.takeColsWhile] will take the
-     * first cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeWhile][ColumnSet.takeWhile] will
-     * take the first columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -930,15 +867,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take Last (Cols) While
-     * This function takes the last columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function takes the last columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeLastWhile][SingleColumn.takeLastColsWhile] will take the
-     * last cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeLastWhile][ColumnSet.takeLastWhile] will
-     * take the last columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -966,15 +898,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take Last (Cols) While
-     * This function takes the last columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function takes the last columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeLastWhile][SingleColumn.takeLastColsWhile] will take the
-     * last cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeLastWhile][ColumnSet.takeLastWhile] will
-     * take the last columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -1005,15 +932,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take Last (Cols) While
-     * This function takes the last columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function takes the last columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeLastWhile][SingleColumn.takeLastColsWhile] will take the
-     * last cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeLastWhile][ColumnSet.takeLastWhile] will
-     * take the last columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -1042,15 +964,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take Last (Cols) While
-     * This function takes the last columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function takes the last columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeLastWhile][SingleColumn.takeLastColsWhile] will take the
-     * last cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeLastWhile][ColumnSet.takeLastWhile] will
-     * take the last columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -1079,15 +996,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take Last (Cols) While
-     * This function takes the last columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function takes the last columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeLastWhile][SingleColumn.takeLastColsWhile] will take the
-     * last cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeLastWhile][ColumnSet.takeLastWhile] will
-     * take the last columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -1116,15 +1028,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take Last (Cols) While
-     * This function takes the last columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function takes the last columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeLastWhile][SingleColumn.takeLastColsWhile] will take the
-     * last cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeLastWhile][ColumnSet.takeLastWhile] will
-     * take the last columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -1155,15 +1062,10 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take Last (Cols) While
-     * This function takes the last columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function takes the last columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [takeLastWhile][SingleColumn.takeLastColsWhile] will take the
-     * last cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [takeLastWhile][ColumnSet.takeLastWhile] will
-     * take the last columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *

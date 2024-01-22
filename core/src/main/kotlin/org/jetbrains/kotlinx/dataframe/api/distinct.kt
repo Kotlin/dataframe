@@ -77,8 +77,8 @@ public interface DistinctColumnsSelectionDsl {
 
     /**
      * ## Distinct
-     * Returns a new [ColumnSet] from [this] containing only distinct columns (by path).
-     * This is useful when you've selected the same column multiple times.
+     * Returns a new [ColumnSet] from [this] [ColumnSet] containing only distinct columns (by path).
+     * This is useful when you've selected the same column multiple times but only want it once.
      *
      * NOTE: This doesn't solve [DuplicateColumnNamesException] if you've selected two columns with the same name.
      * For this, you'll need to [rename][ColumnsSelectionDsl.named] one of the columns.
@@ -91,6 +91,8 @@ public interface DistinctColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().`[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order").`[distinct][ColumnSet.distinct]`() }`
      *
      * @return A new [ColumnSet] containing only distinct columns (by path).
+     * @see ColumnsSelectionDsl.named
+     * @see ColumnsSelectionDsl.simplify
      */
     public fun <C> ColumnSet<C>.distinct(): ColumnSet<C> = DistinctColumnSet(this)
 }

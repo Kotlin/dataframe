@@ -66,14 +66,12 @@ public interface ColGroupsColumnsSelectionDsl {
 
     /**
      * ## Column Groups
-     * Creates a subset of columns that are [ColumnGroups][ColumnGroup] from the current [ColumnSet].
-     *
-     * If the current [ColumnsResolver] is a [SingleColumn]
-     * (and thus consists of only one column (or [column group][ColumnGroup])),
-     * then [colGroups] will create a subset of its children.
+     * Creates a subset of columns from [this\] that are [ColumnGroups][ColumnGroup].
      *
      * You can optionally use a [filter\] to only include certain columns.
      * [colGroups] can be called using any of the supported [APIs][AccessApi] (+ [ColumnPath]).
+     *
+     * This function only looks at columns at the top-level.
      *
      * ### Check out: [Usage]
      *

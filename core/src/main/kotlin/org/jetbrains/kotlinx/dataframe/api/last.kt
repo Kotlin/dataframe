@@ -127,9 +127,10 @@ public interface LastColumnsSelectionDsl {
 
     /**
      * ## Last (Col)
-     * Returns the last column in this [ColumnSet] or [ColumnGroup]
-     * that adheres to the given [condition\].
+     * Returns the last column from [this\] that adheres to the optional given [condition\].
      * If no column adheres to the given [condition\], [NoSuchElementException] is thrown.
+     *
+     * This function only looks at columns at the top-level.
      *
      * NOTE: For [column groups][ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
      *

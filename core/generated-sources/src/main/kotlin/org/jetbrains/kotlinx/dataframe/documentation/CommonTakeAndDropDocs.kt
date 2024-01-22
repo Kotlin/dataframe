@@ -15,12 +15,10 @@ import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs.Title
 
 /**
  * ## {@getArg [TitleArg]} (Cols)
- * This function {@getArg [NounArg]}s the {@getArg [FirstOrLastArg]} [n\] columns of a [ColumnGroup] or [ColumnSet].
+ * This {@getArg [NounArg]}s the {@getArg [FirstOrLastArg]} [n\] columns from [this\] collecting
+ * the result into a [ColumnSet].
  *
- * If called on a [SingleColumn] containing a [ColumnGroup],
- * [{@getArg [OperationArg]}Cols][SingleColumn.{@getArg [OperationArg]}Cols] will {@getArg [NounArg]} the {@getArg [FirstOrLastArg]} [n\] columns of that column group.
- *
- * Else, if called on a [ColumnSet], [{@getArg [OperationArg]}][ColumnSet.{@getArg [OperationArg]}] will {@getArg [NounArg]} the {@getArg [FirstOrLastArg]} [n\] columns of that column set.
+ * This function only looks at columns at the top-level.
  *
  * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
  *

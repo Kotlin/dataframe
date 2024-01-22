@@ -110,14 +110,12 @@ public interface ColGroupsColumnsSelectionDsl {
 
     /**
      * ## Column Groups
-     * Creates a subset of columns that are [ColumnGroups][ColumnGroup] from the current [ColumnSet].
-     *
-     * If the current [ColumnsResolver] is a [SingleColumn]
-     * (and thus consists of only one column (or [column group][ColumnGroup])),
-     * then [colGroups] will create a subset of its children.
+     * Creates a subset of columns from [this\] that are [ColumnGroups][ColumnGroup].
      *
      * You can optionally use a [filter\] to only include certain columns.
      * [colGroups] can be called using any of the supported [APIs][AccessApi] (+ [ColumnPath]).
+     *
+     * This function only looks at columns at the top-level.
      *
      * ### Check out: [Usage]
      *
@@ -148,14 +146,12 @@ public interface ColGroupsColumnsSelectionDsl {
 
     /**
      * ## Column Groups
-     * Creates a subset of columns that are [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
-     * (and thus consists of only one column (or [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup])),
-     * then [colGroups][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.colGroups] will create a subset of its children.
+     * Creates a subset of columns from [this] that are [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * You can optionally use a [filter] to only include certain columns.
      * [colGroups][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.colGroups] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     *
+     * This function only looks at columns at the top-level.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Usage]
      *
@@ -187,14 +183,12 @@ public interface ColGroupsColumnsSelectionDsl {
 
     /**
      * ## Column Groups
-     * Creates a subset of columns that are [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
-     * (and thus consists of only one column (or [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup])),
-     * then [colGroups][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.colGroups] will create a subset of its children.
+     * Creates a subset of columns from [this] that are [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * You can optionally use a [filter] to only include certain columns.
      * [colGroups][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.colGroups] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     *
+     * This function only looks at columns at the top-level.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Usage]
      *
@@ -224,14 +218,12 @@ public interface ColGroupsColumnsSelectionDsl {
 
     /**
      * ## Column Groups
-     * Creates a subset of columns that are [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
-     * (and thus consists of only one column (or [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup])),
-     * then [colGroups][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.colGroups] will create a subset of its children.
+     * Creates a subset of columns from [this] that are [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * You can optionally use a [filter] to only include certain columns.
      * [colGroups][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.colGroups] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     *
+     * This function only looks at columns at the top-level.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Usage]
      *
@@ -261,14 +253,12 @@ public interface ColGroupsColumnsSelectionDsl {
 
     /**
      * ## Column Groups
-     * Creates a subset of columns that are [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
-     * (and thus consists of only one column (or [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup])),
-     * then [colGroups][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.colGroups] will create a subset of its children.
+     * Creates a subset of columns from [this] that are [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * You can optionally use a [filter] to only include certain columns.
      * [colGroups][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.colGroups] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     *
+     * This function only looks at columns at the top-level.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Usage]
      *
@@ -298,14 +288,12 @@ public interface ColGroupsColumnsSelectionDsl {
 
     /**
      * ## Column Groups
-     * Creates a subset of columns that are [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
-     * (and thus consists of only one column (or [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup])),
-     * then [colGroups][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.colGroups] will create a subset of its children.
+     * Creates a subset of columns from [this] that are [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * You can optionally use a [filter] to only include certain columns.
      * [colGroups][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.colGroups] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     *
+     * This function only looks at columns at the top-level.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Usage]
      *
@@ -335,14 +323,12 @@ public interface ColGroupsColumnsSelectionDsl {
 
     /**
      * ## Column Groups
-     * Creates a subset of columns that are [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] from the current [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
-     *
-     * If the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] is a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]
-     * (and thus consists of only one column (or [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup])),
-     * then [colGroups][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.colGroups] will create a subset of its children.
+     * Creates a subset of columns from [this] that are [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * You can optionally use a [filter] to only include certain columns.
      * [colGroups][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.colGroups] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     *
+     * This function only looks at columns at the top-level.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Usage]
      *

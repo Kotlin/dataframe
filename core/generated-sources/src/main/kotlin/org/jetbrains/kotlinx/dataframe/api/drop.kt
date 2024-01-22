@@ -176,12 +176,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop (Cols)
-     * This function drops the first [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This drops the first [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropCols][SingleColumn.dropCols] will drop the first [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [drop][ColumnSet.drop] will drop the first [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -210,12 +208,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop (Cols)
-     * This function drops the first [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This drops the first [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropCols][SingleColumn.dropCols] will drop the first [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [drop][ColumnSet.drop] will drop the first [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -246,12 +242,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop (Cols)
-     * This function drops the first [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This drops the first [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropCols][SingleColumn.dropCols] will drop the first [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [drop][ColumnSet.drop] will drop the first [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -281,12 +275,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop (Cols)
-     * This function drops the first [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This drops the first [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropCols][SingleColumn.dropCols] will drop the first [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [drop][ColumnSet.drop] will drop the first [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -316,12 +308,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop (Cols)
-     * This function drops the first [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This drops the first [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropCols][SingleColumn.dropCols] will drop the first [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [drop][ColumnSet.drop] will drop the first [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -350,12 +340,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop (Cols)
-     * This function drops the first [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This drops the first [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropCols][SingleColumn.dropCols] will drop the first [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [drop][ColumnSet.drop] will drop the first [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -384,12 +372,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop (Cols)
-     * This function drops the first [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This drops the first [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropCols][SingleColumn.dropCols] will drop the first [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [drop][ColumnSet.drop] will drop the first [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -422,12 +408,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop Last (Cols)
-     * This function drops the last [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This drops the last [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropLastCols][SingleColumn.dropLastCols] will drop the last [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropLast][ColumnSet.dropLast] will drop the last [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -456,12 +440,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop Last (Cols)
-     * This function drops the last [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This drops the last [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropLastCols][SingleColumn.dropLastCols] will drop the last [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropLast][ColumnSet.dropLast] will drop the last [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -492,12 +474,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop Last (Cols)
-     * This function drops the last [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This drops the last [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropLastCols][SingleColumn.dropLastCols] will drop the last [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropLast][ColumnSet.dropLast] will drop the last [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -527,12 +507,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop Last (Cols)
-     * This function drops the last [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This drops the last [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropLastCols][SingleColumn.dropLastCols] will drop the last [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropLast][ColumnSet.dropLast] will drop the last [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -562,12 +540,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop Last (Cols)
-     * This function drops the last [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This drops the last [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropLastCols][SingleColumn.dropLastCols] will drop the last [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropLast][ColumnSet.dropLast] will drop the last [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -596,12 +572,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop Last (Cols)
-     * This function drops the last [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This drops the last [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropLastCols][SingleColumn.dropLastCols] will drop the last [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropLast][ColumnSet.dropLast] will drop the last [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -630,12 +604,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop Last (Cols)
-     * This function drops the last [n] columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This drops the last [n] columns from [this] collecting
+     * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropLastCols][SingleColumn.dropLastCols] will drop the last [n] columns of that column group.
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropLast][ColumnSet.dropLast] will drop the last [n] columns of that column set.
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -668,15 +640,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop (Cols) While
-     * This function drops the first columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function drops the first columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropWhile][SingleColumn.dropColsWhile] will drop the
-     * first cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropWhile][ColumnSet.dropWhile] will
-     * drop the first columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -704,15 +671,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop (Cols) While
-     * This function drops the first columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function drops the first columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropWhile][SingleColumn.dropColsWhile] will drop the
-     * first cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropWhile][ColumnSet.dropWhile] will
-     * drop the first columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -743,15 +705,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop (Cols) While
-     * This function drops the first columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function drops the first columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropWhile][SingleColumn.dropColsWhile] will drop the
-     * first cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropWhile][ColumnSet.dropWhile] will
-     * drop the first columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -780,15 +737,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop (Cols) While
-     * This function drops the first columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function drops the first columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropWhile][SingleColumn.dropColsWhile] will drop the
-     * first cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropWhile][ColumnSet.dropWhile] will
-     * drop the first columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -817,15 +769,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop (Cols) While
-     * This function drops the first columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function drops the first columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropWhile][SingleColumn.dropColsWhile] will drop the
-     * first cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropWhile][ColumnSet.dropWhile] will
-     * drop the first columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -854,15 +801,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop (Cols) While
-     * This function drops the first columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function drops the first columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropWhile][SingleColumn.dropColsWhile] will drop the
-     * first cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropWhile][ColumnSet.dropWhile] will
-     * drop the first columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -891,15 +833,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop (Cols) While
-     * This function drops the first columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function drops the first columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropWhile][SingleColumn.dropColsWhile] will drop the
-     * first cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropWhile][ColumnSet.dropWhile] will
-     * drop the first columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -932,15 +869,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop Last (Cols) While
-     * This function drops the last columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function drops the last columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropLastWhile][SingleColumn.dropLastColsWhile] will drop the
-     * last cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropLastWhile][ColumnSet.dropLastWhile] will
-     * drop the last columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -968,15 +900,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop Last (Cols) While
-     * This function drops the last columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function drops the last columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropLastWhile][SingleColumn.dropLastColsWhile] will drop the
-     * last cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropLastWhile][ColumnSet.dropLastWhile] will
-     * drop the last columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -1007,15 +934,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop Last (Cols) While
-     * This function drops the last columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function drops the last columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropLastWhile][SingleColumn.dropLastColsWhile] will drop the
-     * last cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropLastWhile][ColumnSet.dropLastWhile] will
-     * drop the last columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -1044,15 +966,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop Last (Cols) While
-     * This function drops the last columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function drops the last columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropLastWhile][SingleColumn.dropLastColsWhile] will drop the
-     * last cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropLastWhile][ColumnSet.dropLastWhile] will
-     * drop the last columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -1081,15 +998,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop Last (Cols) While
-     * This function drops the last columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function drops the last columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropLastWhile][SingleColumn.dropLastColsWhile] will drop the
-     * last cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropLastWhile][ColumnSet.dropLastWhile] will
-     * drop the last columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -1118,15 +1030,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop Last (Cols) While
-     * This function drops the last columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function drops the last columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropLastWhile][SingleColumn.dropLastColsWhile] will drop the
-     * last cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropLastWhile][ColumnSet.dropLastWhile] will
-     * drop the last columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -1157,15 +1064,10 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * ## Drop Last (Cols) While
-     * This function drops the last columns of a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or
-     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] adhering to the given [predicate].
+     * This function drops the last columns from [this] adhering to the
+     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * If called on a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * [dropLastWhile][SingleColumn.dropLastColsWhile] will drop the
-     * last cols of that column group adhering to the given [predicate].
-     *
-     * Else, if called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], [dropLastWhile][ColumnSet.dropLastWhile] will
-     * drop the last columns of that column set adhering to the given [predicate].
+     * This function only looks at columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *

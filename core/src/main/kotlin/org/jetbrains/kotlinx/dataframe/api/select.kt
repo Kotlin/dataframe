@@ -86,6 +86,9 @@ public fun <T> DataFrame<T>.select(vararg columns: AnyColumnReference): DataFram
 
 // region ColumnsSelectionDsl
 // NOTE: invoke overloads are inside ColumnsSelectionDsl.kt due to conflicts
+/**
+ * See [Usage]
+ */
 public interface SelectColumnsSelectionDsl {
 
     /**
@@ -118,8 +121,11 @@ public interface SelectColumnsSelectionDsl {
      * ## Select from [ColumnGroup]
      *
      * Perform a selection of columns using the {@include [ColumnsSelectionDslLink]} on
-     * any [ColumnGroup]. This is more powerful than [ColumnsSelectionDsl.cols], because all operations of
-     * the DSL are at your disposal.
+     * any [ColumnGroup]. This is more powerful than the [cols][ColumnsSelectionDsl.cols] filter, because now all
+     * operations of the DSL are at your disposal.
+     *
+     * The scope of the new DSL instance is relative to
+     * the [ColumnGroup] you are selecting from.
      *
      * The [invoke][ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *

@@ -41,7 +41,8 @@ public interface ColumnRangeColumnsSelectionDsl {
      * ## Range of Columns
      * Creates a [ColumnSet] containing all columns from [this\] up to (and including) [endInclusive\].
      *
-     * Columns inside of column groups are also supported, as well as any combination of {@include [AccessApiLink]}.
+     * Columns inside of column groups are also supported (as long as they share the same direct parent),
+     * as well as any combination of {@include [AccessApiLink]}.
      *
      * ### Check out: [Usage]
      *

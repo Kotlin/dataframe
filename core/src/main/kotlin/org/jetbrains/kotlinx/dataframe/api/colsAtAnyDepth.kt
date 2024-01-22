@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Usage.ColumnGroupName
 import org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Usage.ColumnSetName
 import org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Usage.PlainDslName
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -69,10 +70,11 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
     /**
      * ## Cols At Any Depth
      *
-     * Returns the columns of this [ColumnsResolver] at any depth if they satisfy the optional given predicate.
+     * Returns all columns in [this\] at any depth (so also inside [Column Groups][ColumnGroup]) if they satisfy the
+     * optional given predicate.
      *
-     * This function is especially powerful if followed by another filter function such as
-     * [colsOf][ColumnsSelectionDsl.colsOf], [single][ColumnsSelectionDsl.single], and [valueCols][ColumnsSelectionDsl.valueCols].
+     * This function is especially powerful if followed by another [ColumnSet] filter function like
+     * [colsOf][ColumnsSelectionDsl.colsOf], [single][ColumnsSelectionDsl.single], or [valueCols][ColumnsSelectionDsl.valueCols].
      * ### Check out: [Usage]
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`

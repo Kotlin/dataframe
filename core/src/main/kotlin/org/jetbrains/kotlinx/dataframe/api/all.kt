@@ -164,17 +164,82 @@ public interface AllColumnsSelectionDsl {
      */
     private interface AllFlavors
 
+    /**
+     * ## {@getArg [TitleArg]}
+     *
+     * Creates a new [ColumnSet] that contains a subset of columns from [this\],
+     * containing all columns {@getArg [BehaviorArg]}.
+     *
+     * [column\] can be specified both relative to the current [ColumnGroup] or the outer scope and
+     * can be referenced using any {@include [AccessApiLink]}.
+     *
+     * If [column\] does not exist, {@getArg [ColumnDoesNotExistArg]}.
+     * {@include [LineBreak]}
+     * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector] to be used
+     * in the Plain DSL, and on [column groups][ColumnGroup] and a [ColumnFilter] on [ColumnSets][ColumnSet].
+     *
+     * ### Check out: [Usage]
+     *
+     * #### For example:
+     *
+     * `df.`[select][DataFrame.select]` { `[{@getArg [FunctionArg]}][ColumnsSelectionDsl.{@getArg [FunctionArg]}]`("someColumn") }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[{@getArg [FunctionColsArg]}][SingleColumn.{@getArg [FunctionColsArg]}]`(someColumn) }`
+     *
+     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[{@getArg [FunctionArg]}][ColumnSet.{@getArg [FunctionArg]}]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * {@getArg [ExampleArg]}
+     *
+     * {@include [AllFlavors]}
+     *
+     * @return A new [ColumnSet] containing all columns {@getArg [BehaviorArg]}.
+     * @see [allBefore\]
+     * @see [allAfter\]
+     * @see [allFrom\]
+     * @see [allUpTo\]
+     * @see [ColumnsSelectionDsl.allExcept\]
+     * @see [all\]
+     * @see [cols\]
+     */
+    private interface CommonAllSubsetDocs {
+
+        /* The title of the function, a.k.a. "All (Cols) After" */
+        interface TitleArg
+
+        /* The exact name of the function, a.k.a. "allAfter" */
+        interface FunctionArg
+
+        /* The exact name of the function, a.k.a. "allColsAfter" */
+        interface FunctionColsArg
+
+        /*
+         * Small line of text explaining the behavior of the function,
+         * a.k.a. "after [column\], excluding [column\]"
+         */
+        interface BehaviorArg
+
+        /*
+         * Small line of text explaining what happens if `column` does not exist.
+         */
+        interface ColumnDoesNotExistArg
+
+        /* Example argument */
+        interface ExampleArg
+    }
+
     // region all
 
     /**
      * ## All (Cols)
      *
-     * Creates a new [ColumnSet] that contains all columns from the current [ColumnsResolver].
+     * Creates a new [ColumnSet] that contains all columns from [this\],
+     * the opposite of [none][ColumnsSelectionDsl.none].
      *
-     * If the current [ColumnsResolver] is a [SingleColumn] and consists of only one [column group][ColumnGroup],
-     * then `all` will create a new [ColumnSet] consisting of its children.
+     * This makes the function equivalent to [cols()][ColumnsSelectionDsl.cols] without filter.
      *
-     * This makes the function equivalent to [cols()][ColumnsSelectionDsl.cols].
+     * This function only looks at columns at the top-level.
      *
      * NOTE: For [column groups][ColumnGroup], `all` is named `allCols` instead to avoid confusion.
      *
@@ -196,6 +261,7 @@ public interface AllColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.allAfter\]
      * @see [ColumnsSelectionDsl.allFrom\]
      * @see [ColumnsSelectionDsl.allUpTo\]
+     * @see [ColumnsSelectionDsl.allExcept\]
      * @see [ColumnsSelectionDsl.cols\]
      */
     private interface CommonAllDocs {
@@ -262,70 +328,6 @@ public interface AllColumnsSelectionDsl {
         columnGroup(this).allCols()
 
     // endregion
-
-    /**
-     * ## {@getArg [TitleArg]}
-     *
-     * Creates a new [ColumnSet] that contains a subset from the current [ColumnsResolver],
-     * containing all columns {@getArg [BehaviorArg]}.
-     *
-     * [column\] can be specified both relative to the current [ColumnsResolver] and absolutely and
-     * can be referenced using any {@include [AccessApiLink]}.
-     *
-     * If [column\] does not exist, {@getArg [ColumnDoesNotExistArg]}.
-     * {@include [LineBreak]}
-     * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector] to be used
-     * in the Plain DSL, and on [column groups][ColumnGroup] and a [ColumnFilter] on [ColumnSets][ColumnSet].
-     *
-     * ### Check out: [Usage]
-     *
-     * #### For example:
-     *
-     * `df.`[select][DataFrame.select]` { `[{@getArg [FunctionArg]}][ColumnsSelectionDsl.{@getArg [FunctionArg]}]`("someColumn") }`
-     *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[{@getArg [FunctionColsArg]}][SingleColumn.{@getArg [FunctionColsArg]}]`(someColumn) }`
-     *
-     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[{@getArg [FunctionArg]}][ColumnSet.{@getArg [FunctionArg]}]`(Type::someColumn) }`
-     *
-     * #### Examples for this overload:
-     *
-     * {@getArg [ExampleArg]}
-     *
-     * {@include [AllFlavors]}
-     *
-     * @return A new [ColumnSet] containing all columns {@getArg [BehaviorArg]}.
-     * @see [allBefore\]
-     * @see [allAfter\]
-     * @see [allFrom\]
-     * @see [allUpTo\]
-     * @see [all\]
-     * @see [cols\]
-     */
-    private interface CommonAllSubsetDocs {
-
-        /* The title of the function, a.k.a. "All (Cols) After" */
-        interface TitleArg
-
-        /* The exact name of the function, a.k.a. "allAfter" */
-        interface FunctionArg
-
-        /* The exact name of the function, a.k.a. "allColsAfter" */
-        interface FunctionColsArg
-
-        /*
-         * Small line of text explaining the behavior of the function,
-         * a.k.a. "after [column\], excluding [column\]"
-         */
-        interface BehaviorArg
-
-        /*
-         * Small line of text explaining what happens if `column` does not exist.
-         */
-        interface ColumnDoesNotExistArg
-
-        /* Example argument */
-        interface ExampleArg
-    }
 
     // region allAfter
 

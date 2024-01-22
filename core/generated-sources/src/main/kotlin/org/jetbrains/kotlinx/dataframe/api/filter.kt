@@ -113,7 +113,7 @@ public interface FilterColumnsSelectionDsl {
      * adhere to the given [predicate].
      *
      * Aside from calling [filter][ColumnSet.filter] directly, you can also use the [get][ColumnsSelectionDsl.get] operator
-     * in most cases. This function belongs to [cols][ColumnsSelectionDsl.cols] but operates the same.
+     * in most cases. This function belongs to [cols][ColumnsSelectionDsl.cols] but operates identically.
      *
      * ### Check out: [Usage]
      *

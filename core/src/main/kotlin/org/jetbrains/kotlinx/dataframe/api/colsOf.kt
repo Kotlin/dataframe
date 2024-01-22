@@ -90,7 +90,10 @@ public interface ColsOfColumnsSelectionDsl {
     /**
      * ## Cols Of
      *
-     * Get columns by a given type and an optional filter.
+     * Returns a [ColumnSet] of columns from [this\] that are a subtype of the given type [C\], optionally filtered
+     * by [filter\].
+     *
+     * This function only looks at columns at the top-level.
      *
      * ### Check out: [Usage]
      *

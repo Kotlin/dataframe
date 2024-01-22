@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
+import org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
@@ -150,23 +151,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage]
      *
      * ### On [ColumnSets][ColumnSet]
      * This function can be explained the easiest with [ColumnSets][ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`<`[Int][Int]`>() `[except][ColumnSet.except]` { age `[and][ColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`<`[Int][Int]`>() `[except][ColumnSet.except]` (age `[and][ColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet] created by `age `[and][ColumnsSelectionDsl.and]` height` from the [ColumnSet] created by [colsOf][colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet] created by `age `[and][ColumnsSelectionDsl.and]` height` from the [ColumnSet] created by [colsOf][colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][ColumnGroup].
      *
      * For instance:
      *
@@ -174,11 +177,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][ColumnGroup]). You could say the receiver [ColumnSet]
      * is [simplified][ColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][ColumnSet.except]` userData.age) == (`[cols][ColumnsSelectionDsl.cols]`(userData) `[except][ColumnSet.except]` userData.age)`
+     * [cols][ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][ColumnsSelectionDsl.cols]`(a).`[except][ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][ColumnsSelectionDsl]
      * Instead of having to write [all][ColumnsSelectionDsl.all]`() `[except][ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -189,9 +200,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { `[allExcept][ColumnsSelectionDsl.allExcept]` { userData.age `[and][ColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][ColumnGroup]
-     * The variant of this function on [ColumnGroups][ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][ColumnsSelectionDsl.select]` { `[all][ColumnsSelectionDsl.all]`() `[except][ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][DataFrame.select]` { myColGroup.`[allColsExcept][SingleColumn.allColsExcept]` { colA `[and][ColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][DataFrame.select]` { myColGroup.`[select][ColumnsSelectionDsl.select]` { `[all][ColumnsSelectionDsl.all]`() `[except][ColumnSet.except]` { colA `[and][ColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][DataFrame.select]` { myColGroup.`[allCols][ColumnsSelectionDsl.allCols]`() `[except][ColumnSet.except]` { myColGroup.colA `[and][ColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][ColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -201,6 +227,12 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * {@getArg [ParamArg]}
      * @return A [ColumnSet] containing all columns in [this\] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      */
     private interface CommonExceptDocs {
 
@@ -216,23 +248,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -240,11 +274,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -255,9 +297,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -267,6 +324,12 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * {@getArg [ParamArg][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.CommonExceptDocs.ParamArg]}
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      * `
      *
      *  `df.`[select][ColumnsSelectionDsl.select] `{` [cols][ColumnsSelectionDsl.cols]`(name, age)` [except][ColumnSet.except] {@getArg [ArgumentArg2]} `\\}`
@@ -284,23 +347,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -308,11 +373,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -323,9 +396,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -335,6 +423,12 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * {@getArg [ParamArg][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.CommonExceptDocs.ParamArg]}
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      * `
      *
      *  `df.`[select][ColumnsSelectionDsl.select] `{` [cols][ColumnsSelectionDsl.cols]`(name, age).`[except][ColumnSet.except]{@getArg [ArgumentArg2]} `\\}`
@@ -352,23 +446,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -376,11 +472,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -391,9 +495,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -406,6 +525,12 @@ public interface AllExceptColumnsSelectionDsl {
      * @param [selector] A lambda in which you specify the columns that need to be
      *   excluded from the [ColumnSet]. The scope of the selector is the same as the outer scope.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      *
      */
     public infix fun <C> ColumnSet<C>.except(selector: () -> ColumnsResolver<*>): ColumnSet<C> =
@@ -414,23 +539,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -438,11 +565,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -453,9 +588,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -468,6 +618,12 @@ public interface AllExceptColumnsSelectionDsl {
      * @param [other] A [ColumnsResolver] containing the columns that need to be
      *   excluded from the [ColumnSet].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      *
      */
     public infix fun <C> ColumnSet<C>.except(other: ColumnsResolver<*>): ColumnSet<C> =
@@ -476,23 +632,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -500,11 +658,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -515,9 +681,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -530,6 +711,12 @@ public interface AllExceptColumnsSelectionDsl {
      * @param [others] Any number of [ColumnsResolvers][ColumnsResolver] containing
      *  the columns that need to be excluded from the [ColumnSet].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      *
      */
     public fun <C> ColumnSet<C>.except(vararg others: ColumnsResolver<*>): ColumnSet<C> =
@@ -538,23 +725,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -562,11 +751,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -577,9 +774,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -592,6 +804,12 @@ public interface AllExceptColumnsSelectionDsl {
      * @param [other] A [String] referring to
      *  the column (relative to the current scope) that needs to be excluded from the [ColumnSet].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      *
      */
     public infix fun <C> ColumnSet<C>.except(other: String): ColumnSet<C> =
@@ -600,23 +818,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -624,11 +844,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -639,9 +867,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -654,6 +897,12 @@ public interface AllExceptColumnsSelectionDsl {
      * @param [others] Any number of [Strings][String] referring to
      *  the columns (relative to the current scope) that need to be excluded from the [ColumnSet].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      *
      */
     public fun <C> ColumnSet<C>.except(vararg others: String): ColumnSet<C> =
@@ -662,23 +911,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -686,11 +937,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -701,9 +960,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -716,6 +990,12 @@ public interface AllExceptColumnsSelectionDsl {
      * @param [other] A [KProperty] referring to
      *  the column (relative to the current scope) that needs to be excluded from the [ColumnSet].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      *
      */
     public infix fun <C> ColumnSet<C>.except(other: KProperty<C>): ColumnSet<C> =
@@ -724,23 +1004,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -748,11 +1030,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -763,9 +1053,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -778,6 +1083,12 @@ public interface AllExceptColumnsSelectionDsl {
      * @param [others] Any number of [KProperties][KProperty] referring to
      *  the columns (relative to the current scope) that need to be excluded from the [ColumnSet].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      *
      */
     public fun <C> ColumnSet<C>.except(vararg others: KProperty<C>): ColumnSet<C> =
@@ -786,23 +1097,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -810,11 +1123,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -825,9 +1146,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -840,6 +1176,12 @@ public interface AllExceptColumnsSelectionDsl {
      * @param [other] A [ColumnPath] referring to
      *  the column (relative to the current scope) that needs to be excluded from the [ColumnSet].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      *
      */
     public infix fun <C> ColumnSet<C>.except(other: ColumnPath): ColumnSet<C> =
@@ -848,23 +1190,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -872,11 +1216,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -887,9 +1239,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -902,6 +1269,12 @@ public interface AllExceptColumnsSelectionDsl {
      * @param [others] Any number of [ColumnPaths][ColumnPath] referring to
      *  the columns (relative to the current scope) that need to be excluded from the [ColumnSet].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      *
      */
     public fun <C> ColumnSet<C>.except(vararg others: ColumnPath): ColumnSet<C> =
@@ -914,23 +1287,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -938,11 +1313,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -953,9 +1336,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -967,6 +1365,12 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * {@getArg [ParamArg][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.CommonExceptDocs.ParamArg]}
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      */
     private interface ColumnsSelectionDslDocs {
 
@@ -980,23 +1384,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -1004,11 +1410,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -1019,9 +1433,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -1034,6 +1463,12 @@ public interface AllExceptColumnsSelectionDsl {
      * @param [selector] A lambda in which you specify the columns that need to be
      *  excluded from the current selection. The scope of the selector is the same as the outer scope.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      */
     public fun <C> ColumnsSelectionDsl<C>.allExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         this.asSingleColumn().allColsExcept(selector)
@@ -1042,23 +1477,25 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -1066,11 +1503,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -1081,9 +1526,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -1096,6 +1556,12 @@ public interface AllExceptColumnsSelectionDsl {
      * @param [others] A [ColumnsResolver] containing the columns that need to be
      *  excluded from the current selection.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      */
     public fun ColumnsSelectionDsl<*>.allExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
         asSingleColumn().allColsExceptInternal(others.toColumnSet())
@@ -1103,23 +1569,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -1127,11 +1595,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -1142,9 +1618,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -1157,6 +1648,12 @@ public interface AllExceptColumnsSelectionDsl {
      * @param [others] Any number of [Strings][String] referring to
      *  the columns (relative to the current scope) that need to be excluded from the current selection.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      */
     public fun ColumnsSelectionDsl<*>.allExcept(vararg others: String): ColumnSet<*> =
         asSingleColumn().allColsExceptInternal(others.toColumnSet())
@@ -1164,23 +1661,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -1188,11 +1687,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -1203,9 +1710,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -1218,6 +1740,12 @@ public interface AllExceptColumnsSelectionDsl {
      * @param [others] Any number of [KProperties][KProperty] referring to
      *  the columns (relative to the current scope) that need to be excluded from the current selection.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      */
     public fun ColumnsSelectionDsl<*>.allExcept(vararg others: KProperty<*>): ColumnSet<*> =
         asSingleColumn().allColsExceptInternal(others.toColumnSet())
@@ -1225,23 +1753,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -1249,11 +1779,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -1264,9 +1802,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -1279,6 +1832,12 @@ public interface AllExceptColumnsSelectionDsl {
      * @param [others] Any number of [ColumnPaths][ColumnPath] referring to
      *  the columns (relative to the current scope) that need to be excluded from the current selection.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      */
     public fun ColumnsSelectionDsl<*>.allExcept(vararg others: ColumnPath): ColumnSet<*> =
         asSingleColumn().allColsExceptInternal(others.toColumnSet())
@@ -1290,23 +1849,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -1314,11 +1875,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -1329,9 +1898,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -1343,6 +1927,12 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * {@getArg [ParamArg][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.CommonExceptDocs.ParamArg]}
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      */
     private interface ColumnGroupDocs {
 
@@ -1397,23 +1987,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -1421,11 +2013,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -1436,9 +2036,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -1452,6 +2067,12 @@ public interface AllExceptColumnsSelectionDsl {
      *  excluded from the current selection in [this] column group. The other columns will be included in the selection
      *  by default. The scope of the selector is relative to the column group.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      */
     public fun <C> SingleColumn<DataRow<C>>.allColsExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         allColsExceptInternal(selector.toColumns())
@@ -1475,23 +2096,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -1499,11 +2122,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -1514,9 +2145,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -1530,6 +2176,12 @@ public interface AllExceptColumnsSelectionDsl {
      *  the columns (relative to the column group) that need to be excluded from the current selection in [this]
      *  column group. The other columns will be included in the selection by default.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      */
     public fun SingleColumn<DataRow<*>>.allColsExcept(vararg others: String): ColumnSet<*> =
         allColsExceptInternal(others.toColumnSet())
@@ -1537,23 +2189,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -1561,11 +2215,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -1576,9 +2238,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -1592,6 +2269,12 @@ public interface AllExceptColumnsSelectionDsl {
      *  the columns (relative to the column group) that need to be excluded from the current selection in [this]
      *  column group. The other columns will be included in the selection by default.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      */
     public fun SingleColumn<DataRow<*>>.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         allColsExceptInternal(others.toColumnSet())
@@ -1599,23 +2282,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -1623,11 +2308,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -1638,9 +2331,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -1654,6 +2362,12 @@ public interface AllExceptColumnsSelectionDsl {
      *  the columns (relative to the column group) that need to be excluded from the current selection in [this]
      *  column group. The other columns will be included in the selection by default.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      */
     public fun SingleColumn<DataRow<*>>.allColsExcept(vararg other: ColumnPath): ColumnSet<*> =
         allColsExceptInternal(other.toColumnSet())
@@ -1665,23 +2379,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -1689,11 +2405,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -1704,9 +2428,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -1720,6 +2459,12 @@ public interface AllExceptColumnsSelectionDsl {
      *  excluded from the current selection in [this] column group. The other columns will be included in the selection
      *  by default. The scope of the selector is relative to the column group.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      */
     public fun String.allColsExcept(selector: ColumnsSelector<*, *>): ColumnSet<*> =
         columnGroup(this).allColsExcept(selector)
@@ -1743,23 +2488,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -1767,11 +2514,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -1782,9 +2537,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -1798,6 +2568,12 @@ public interface AllExceptColumnsSelectionDsl {
      *  the columns (relative to the column group) that need to be excluded from the current selection in [this]
      *  column group. The other columns will be included in the selection by default.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      */
     public fun String.allColsExcept(vararg others: String): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
@@ -1805,23 +2581,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -1829,11 +2607,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -1844,9 +2630,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -1860,6 +2661,12 @@ public interface AllExceptColumnsSelectionDsl {
      *  the columns (relative to the column group) that need to be excluded from the current selection in [this]
      *  column group. The other columns will be included in the selection by default.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      */
     public fun String.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
@@ -1867,23 +2674,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -1891,11 +2700,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -1906,9 +2723,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -1922,6 +2754,12 @@ public interface AllExceptColumnsSelectionDsl {
      *  the columns (relative to the column group) that need to be excluded from the current selection in [this]
      *  column group. The other columns will be included in the selection by default.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      */
     public fun String.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
@@ -1933,23 +2771,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -1957,11 +2797,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -1972,9 +2820,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -1992,6 +2855,12 @@ public interface AllExceptColumnsSelectionDsl {
      *  excluded from the current selection in [this] column group. The other columns will be included in the selection
      *  by default. The scope of the selector is relative to the column group.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      */
     @OptIn(ExperimentalTypeInference::class)
     @OverloadResolutionByLambdaReturnType
@@ -2002,23 +2871,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -2026,11 +2897,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -2041,9 +2920,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -2061,6 +2955,12 @@ public interface AllExceptColumnsSelectionDsl {
      *  excluded from the current selection in [this] column group. The other columns will be included in the selection
      *  by default. The scope of the selector is relative to the column group.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("KPropertyDataRowAllColsExcept")
@@ -2086,23 +2986,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -2110,11 +3012,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -2125,9 +3035,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -2141,6 +3066,12 @@ public interface AllExceptColumnsSelectionDsl {
      *  the columns (relative to the column group) that need to be excluded from the current selection in [this]
      *  column group. The other columns will be included in the selection by default.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      */
     public fun KProperty<*>.allColsExcept(vararg others: String): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
@@ -2148,23 +3079,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -2172,11 +3105,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -2187,9 +3128,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -2203,6 +3159,12 @@ public interface AllExceptColumnsSelectionDsl {
      *  the columns (relative to the column group) that need to be excluded from the current selection in [this]
      *  column group. The other columns will be included in the selection by default.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      */
     public fun KProperty<*>.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
@@ -2210,23 +3172,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -2234,11 +3198,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -2249,9 +3221,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -2265,6 +3252,12 @@ public interface AllExceptColumnsSelectionDsl {
      *  the columns (relative to the column group) that need to be excluded from the current selection in [this]
      *  column group. The other columns will be included in the selection by default.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      */
     public fun KProperty<*>.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
@@ -2276,23 +3269,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -2300,11 +3295,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -2315,9 +3318,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -2331,6 +3349,12 @@ public interface AllExceptColumnsSelectionDsl {
      *  excluded from the current selection in [this] column group. The other columns will be included in the selection
      *  by default. The scope of the selector is relative to the column group.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      */
     public fun ColumnPath.allColsExcept(selector: ColumnsSelector<*, *>): ColumnSet<*> =
         columnGroup(this).allColsExcept(selector)
@@ -2354,23 +3378,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -2378,11 +3404,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -2393,9 +3427,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -2409,6 +3458,12 @@ public interface AllExceptColumnsSelectionDsl {
      *  the columns (relative to the column group) that need to be excluded from the current selection in [this]
      *  column group. The other columns will be included in the selection by default.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      */
     public fun ColumnPath.allColsExcept(vararg others: String): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
@@ -2416,23 +3471,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -2440,11 +3497,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -2455,9 +3520,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -2471,6 +3551,12 @@ public interface AllExceptColumnsSelectionDsl {
      *  the columns (relative to the column group) that need to be excluded from the current selection in [this]
      *  column group. The other columns will be included in the selection by default.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      */
     public fun ColumnPath.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
@@ -2478,23 +3564,25 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Exclude the given columns from the current selection.
+     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
+     * exclude from the current selection.
      *
      * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * integer columns apart from `age` and `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
-     * Which will remove the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * This operation can also be done with columns that are from inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * For instance:
      *
@@ -2502,11 +3590,19 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: If a column that needs to be removed appears multiple times, it is excepted
+     *
+     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
      * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * `(`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData, userData, userData.age, userData.age) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age) == (`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(userData) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age)`
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
+     *
+     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
      * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -2517,9 +3613,24 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { userData.age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it operates on the columns
-     * inside the group instead of in the DSL-scope. In other words, `myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { cols } ` is
-     * a shortcut for `myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]` cols }`.
+     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
+     * the column group.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * In other words:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
+     *
+     * is shorthand for
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` { `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
+     *
+     * or
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` { myColGroup.colA `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
@@ -2533,6 +3644,12 @@ public interface AllExceptColumnsSelectionDsl {
      *  the columns (relative to the column group) that need to be excluded from the current selection in [this]
      *  column group. The other columns will be included in the selection by default.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
+     * @see ColumnsSelectionDsl.select
+     * @see ColumnsSelectionDsl.all
+     * @see ColumnsSelectionDsl.allBefore
+     * @see ColumnsSelectionDsl.allAfter
+     * @see ColumnsSelectionDsl.allUpTo
+     * @see ColumnsSelectionDsl.allFrom
      */
     public fun ColumnPath.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
