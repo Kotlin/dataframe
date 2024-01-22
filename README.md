@@ -38,13 +38,13 @@ You could find the following articles there:
 ## Setup
 
 ```kotlin
-implementation("org.jetbrains.kotlinx:dataframe:0.12.0")
+implementation("org.jetbrains.kotlinx:dataframe:0.12.1")
 ```
 
 Optional Gradle plugin for enhanced type safety and schema generation
 https://kotlin.github.io/dataframe/schemasgradle.html
 ```kotlin
-id("org.jetbrains.kotlinx.dataframe") version "0.12.0"
+id("org.jetbrains.kotlinx.dataframe") version "0.12.1"
 ```
 
 Check out the [custom setup page](https://kotlin.github.io/dataframe/gettingstartedgradleadvanced.html) if you don't need some of the formats as dependencies,
@@ -69,7 +69,7 @@ df.filter { "stargazers_count"<Int>() > 50 }.print()
 
 Requires Gradle plugin to work
 ```kotlin
-id("org.jetbrains.kotlinx.dataframe") version "0.12.0"
+id("org.jetbrains.kotlinx.dataframe") version "0.12.1"
 ```
 
 Plugin generates extension properties API for provided sample of data. Column names and their types become discoverable in completion.
