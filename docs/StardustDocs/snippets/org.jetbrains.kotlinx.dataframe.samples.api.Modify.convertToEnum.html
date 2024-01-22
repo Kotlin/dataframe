@@ -1,7 +1,7 @@
-        <html>
-        <head>
-            <style type="text/css">
-                :root {
+<html>
+<head>
+<style type="text/css">
+:root {
     --background: #fff;
     --background-odd: #f5f5f5;
     --background-hover: #d9edfd;
@@ -173,18 +173,9 @@ details details {
 summary {
     padding: 6px;
 }
-
-
-
-
-
-
-            </style>
-        </head>
-        <body>
-            
-
-
+</style>
+</head>
+<body>
                                     <details>
                                     <summary>Input DataFrame: rowsCount = 2, columnsCount = 1</summary>
                                      <table class="dataframe" id="df_0"></table>
@@ -201,9 +192,9 @@ summary {
 
 <p class="dataframe_description"></p>
                                     </details>
-        </body>
-        <script>
-            (function () {
+</body>
+<script>
+(function () {
     window.DataFrame = window.DataFrame || new (function () {
         this.addTable = function (df) {
             let cols = df.cols;
@@ -477,16 +468,12 @@ summary {
     }
 })()
 
-
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"direction: String\">direction</span>", children: [], rightAlign: false, values: ["NORTH","WEST"] }, 
 ], id: 0, rootId: 0, totalRows: 2 } ) });
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(0) });
-
-
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"direction: samples.api.Modify.Direction\">direction</span>", children: [], rightAlign: false, values: ["NORTH","WEST"] }, 
@@ -495,6 +482,5 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"d
 
 call_DataFrame(function() { DataFrame.renderTable(1) });
 
-
-        </script>
-        </html>
+</script>
+</html>

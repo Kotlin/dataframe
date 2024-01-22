@@ -1,7 +1,7 @@
-        <html>
-        <head>
-            <style type="text/css">
-                :root {
+<html>
+<head>
+<style type="text/css">
+:root {
     --background: #fff;
     --background-odd: #f5f5f5;
     --background-hover: #d9edfd;
@@ -173,27 +173,12 @@ details details {
 summary {
     padding: 6px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-            </style>
-        </head>
-        <body>
-            
-
+</style>
+</head>
+<body>
                             <details>
                             <summary>df.convert { age }.with { it.toDouble() }</summary>
-                            
-                                    <details>
+                                                                <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                      <table class="dataframe" id="df_0"></table>
 
@@ -213,8 +198,7 @@ summary {
                             <br>
                             <details>
                             <summary>df.convert { colsOf&amp;lt;String&amp;gt;().recursively() }.with { it.toCharArray().toList() }</summary>
-                            
-                                    <details>
+                                                                <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                      <table class="dataframe" id="df_2"></table>
 
@@ -232,9 +216,9 @@ summary {
                                     </details>
                             </details>
                             <br>
-        </body>
-        <script>
-            (function () {
+</body>
+<script>
+(function () {
     window.DataFrame = window.DataFrame || new (function () {
         this.addTable = function (df) {
             let cols = df.cols;
@@ -508,8 +492,6 @@ summary {
     }
 })()
 
-
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
 { name: "<span title=\"lastName: String\">lastName</span>", children: [], rightAlign: false, values: ["Cooper","Dylan","Daniels","Chaplin","Marley","Wolf","Byrd"] }, 
@@ -522,8 +504,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(0) });
-
-
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
@@ -538,8 +518,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(1) });
 
-
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
 { name: "<span title=\"lastName: String\">lastName</span>", children: [], rightAlign: false, values: ["Cooper","Dylan","Daniels","Chaplin","Marley","Wolf","Byrd"] }, 
@@ -552,8 +530,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(2) });
-
-
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: List<Char>\">firstName</span>", children: [], rightAlign: false, values: ["<span class=\"formatted\" title=\"A\nl\ni\nc\ne\"><span class=\"structural\">[</span>A<span class=\"structural\">, </span>l<span class=\"structural\">, </span>i<span class=\"structural\">, </span>c<span class=\"structural\">, </span>e<span class=\"structural\">]</span></span>","<span class=\"formatted\" title=\"B\no\nb\"><span class=\"structural\">[</span>B<span class=\"structural\">, </span>o<span class=\"structural\">, </span>b<span class=\"structural\">]</span></span>","<span class=\"formatted\" title=\"C\nh\na\nr\nl\ni\ne\"><span class=\"structural\">[</span>C<span class=\"structural\">, </span>h<span class=\"structural\">, </span>a<span class=\"structural\">, </span>r<span class=\"structural\">, </span>l<span class=\"structural\">, </span>i<span class=\"structural\">, </span>e<span class=\"structural\">]</span></span>","<span class=\"formatted\" title=\"C\nh\na\nr\nl\ni\ne\"><span class=\"structural\">[</span>C<span class=\"structural\">, </span>h<span class=\"structural\">, </span>a<span class=\"structural\">, </span>r<span class=\"structural\">, </span>l<span class=\"structural\">, </span>i<span class=\"structural\">, </span>e<span class=\"structural\">]</span></span>","<span class=\"formatted\" title=\"B\no\nb\"><span class=\"structural\">[</span>B<span class=\"structural\">, </span>o<span class=\"structural\">, </span>b<span class=\"structural\">]</span></span>","<span class=\"formatted\" title=\"A\nl\ni\nc\ne\"><span class=\"structural\">[</span>A<span class=\"structural\">, </span>l<span class=\"structural\">, </span>i<span class=\"structural\">, </span>c<span class=\"structural\">, </span>e<span class=\"structural\">]</span></span>","<span class=\"formatted\" title=\"C\nh\na\nr\nl\ni\ne\"><span class=\"structural\">[</span>C<span class=\"structural\">, </span>h<span class=\"structural\">, </span>a<span class=\"structural\">, </span>r<span class=\"structural\">, </span>l<span class=\"structural\">, </span>i<span class=\"structural\">, </span>e<span class=\"structural\">]</span></span>"] }, 
@@ -568,6 +544,5 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(3) });
 
-
-        </script>
-        </html>
+</script>
+</html>

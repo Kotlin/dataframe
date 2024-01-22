@@ -33,3 +33,13 @@ If you want to use a specific version of the Kotlin DataFrame library, you can s
 ```
 
 After loading, all essential types will be already imported, so you can start using the Kotlin DataFrame library. Enjoy!
+
+```kotlin
+val df = DataFrame.read("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv")
+df // the last expression in the cell is displayed
+```
+
+When the previous cell with variable declaration is executed, `DataFrame` provides a data schema API based on data:
+```kotlin
+df.filter { stargazers_count > 50 }
+```
