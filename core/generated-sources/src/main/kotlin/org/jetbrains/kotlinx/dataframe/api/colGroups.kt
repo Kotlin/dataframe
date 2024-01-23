@@ -4,10 +4,10 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
-import org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Usage
-import org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Usage.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Usage.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Usage.PlainDslName
+import org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Grammar
+import org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Grammar.ColumnGroupName
+import org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Grammar.ColumnSetName
+import org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Grammar.PlainDslName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -15,9 +15,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.util.COLS_SELECT_DSL_GROUP
 import org.jetbrains.kotlinx.dataframe.util.COLS_SELECT_DSL_GROUP_REPLACE
@@ -25,17 +25,20 @@ import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
 
-/** See [Usage]. */
+/** See [Grammar] */
 public interface ColGroupsColumnsSelectionDsl {
 
     /**
-     * ## Column Groups Usage
-     *
+     * ## Column Groups Grammar
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### Definitions:
+     *  `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -50,44 +53,40 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
+     *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [**colGroups**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `]`
+     *  [**colGroups**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`** `]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
+     *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**colGroups**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `]`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**colGroups**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`** `]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### On a column group reference:
+     *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
+     *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**colGroups**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `]`
-     *
-     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**colGroups**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`** `]`
      *
      *
      *
      *
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      *
      *
@@ -96,7 +95,7 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      *
      */
-    public interface Usage {
+    public interface Grammar {
 
         /** [**colGroups**][ColumnsSelectionDsl.colGroups] */
         public interface PlainDslName
@@ -117,7 +116,7 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      * This function only looks at columns at the top-level.
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### For example:
      *
@@ -153,7 +152,7 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      * This function only looks at columns at the top-level.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -190,7 +189,7 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      * This function only looks at columns at the top-level.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -225,7 +224,7 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      * This function only looks at columns at the top-level.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -260,7 +259,7 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      * This function only looks at columns at the top-level.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -295,7 +294,7 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      * This function only looks at columns at the top-level.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -330,7 +329,7 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      * This function only looks at columns at the top-level.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *

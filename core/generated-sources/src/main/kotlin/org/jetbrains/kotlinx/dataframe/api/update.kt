@@ -8,7 +8,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrameExpression
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
-import org.jetbrains.kotlinx.dataframe.api.Update.Usage
+import org.jetbrains.kotlinx.dataframe.api.Update.Grammar
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
@@ -39,7 +39,7 @@ import kotlin.reflect.KProperty
  * Returns the [DataFrame] with changed values in some cells
  * (column types can not be changed).
  *
- * ### Check out: [Usage]
+ * ### Check out: [Grammar]
  *
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html)
  */
@@ -58,7 +58,14 @@ public data class Update<T, C>(
     internal interface UpdateOperationArg
 
     /**
-     * ## [**update**][update] Operation Usage
+     * ## [**update**][update] Operation Grammar
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
      *
      * [**update**][update] **`{ `**[columns][SelectingColumns]**` }`**
      *
@@ -90,12 +97,8 @@ public data class Update<T, C>(
      * `| .`[**asFrame**][Update.asFrame]**` { `**[dataFrameExpression][ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
      *
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
-     *
      */
-    public interface Usage
+    public interface Grammar
 
     /**
      * The columns to update need to be selected. See [Selecting Columns][UpdateSelectingOptions]
@@ -121,7 +124,7 @@ public data class Update<T, C>(
      * which operates on the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
      * expects you to return a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]; an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
-     * ### Check out: [Columns Selection DSL Usage][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage]
+     * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -193,7 +196,7 @@ private interface SetSelectingColumnsOperationArg
  * Returns the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with changed values in some cells
  * (column types can not be changed).
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.Update.Usage]
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.Update.Grammar]
  *
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
  *
@@ -218,7 +221,7 @@ private interface UpdateWithNote
  * Returns the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with changed values in some cells
  * (column types can not be changed).
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.Update.Usage]
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.Update.Grammar]
  *
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
  *
@@ -234,7 +237,7 @@ private interface UpdateWithNote
  * which operates on the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
  * expects you to return a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]; an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
- * ### Check out: [Columns Selection DSL Usage][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage]
+ * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -260,7 +263,7 @@ public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): Update<T,
  * Returns the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with changed values in some cells
  * (column types can not be changed).
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.Update.Usage]
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.Update.Grammar]
  *
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
  *
@@ -289,7 +292,7 @@ public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = up
  * Returns the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with changed values in some cells
  * (column types can not be changed).
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.Update.Usage]
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.Update.Grammar]
  *
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
  *
@@ -320,7 +323,7 @@ public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C
  * Returns the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with changed values in some cells
  * (column types can not be changed).
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.Update.Usage]
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.Update.Grammar]
  *
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
  *
@@ -727,7 +730,7 @@ public fun <T, C> Update<T, C?>.notNull(expression: UpdateExpression<T, C, C>): 
  * Returns the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with changed values in some cells
  * (column types can not be changed).
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.Update.Usage]
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.Update.Grammar]
  *
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
  *
@@ -768,7 +771,7 @@ public fun <T, C> DataFrame<T>.update(
  * Returns the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with changed values in some cells
  * (column types can not be changed).
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.Update.Usage]
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.Update.Grammar]
  *
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
  *
@@ -808,7 +811,7 @@ public fun <T, C> DataFrame<T>.update(
  * Returns the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with changed values in some cells
  * (column types can not be changed).
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.Update.Usage]
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.Update.Grammar]
  *
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
  *

@@ -5,10 +5,9 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Vararg.AccessorType
-import org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage.PlainDslName
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar.ColumnGroupName
+import org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar.ColumnSetName
+import org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar.PlainDslName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -16,9 +15,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
@@ -28,13 +27,16 @@ import kotlin.reflect.KProperty
 public interface ColsColumnsSelectionDsl {
 
     /**
-     * ## Cols Usage
-     *
+     * ## Cols Grammar
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### Definitions:
+     *  `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -71,62 +73,58 @@ public interface ColsColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
+     *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`[`**`<`**[T][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**[column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]**`,`**` .. | `[index][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.IndexDef]**`,`**` .. | `[indexRange][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.IndexRangeDef]**`)`**
+     *  [**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`[`**`<`**[T][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`]`**`(`**[column][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` .. | `[index][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`,`**` .. | `[indexRange][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexRangeDef]**`)`**
      *
-     *  `|` [**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` [ `**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` } `**`]`
+     *  `|` [**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` [ `**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` } `**`]`
      *
-     *  `|` **`this`**`/`**`it`** [**`[`**][cols]**`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`**[**`]`**][cols]
+     *  `|` **`this`**`/`**`it`** [**`[`**][cols]**`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**[**`]`**][cols]
      *
-     *  `|` **`this`**`/`**`it`** [**`[`**][cols][column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]**`,`**` .. `[**`]`**][cols]
+     *  `|` **`this`**`/`**`it`** [**`[`**][cols][column][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` .. `[**`]`**][cols]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
+     *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]**`(`**[index][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.IndexDef]**`,`**` .. | `[indexRange][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.IndexRangeDef]**`)`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]**`(`**[index][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`,`**` .. | `[indexRange][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexRangeDef]**`)`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `.[**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` [ `**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` } `**`]`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `.[**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` [ `**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` } `**`]`
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][cols]**`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`**[**`]`**][cols]
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][cols]**`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**[**`]`**][cols]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][cols][index][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.IndexDef]**`,`**` .. | `[indexRange][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.IndexRangeDef][**`]`**][cols]`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][cols][index][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`,`**` .. | `[indexRange][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexRangeDef][**`]`**][cols]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### On a column group reference:
+     *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
+     *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`[`**`<`**[T][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**[column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]**`,`**` .. | `[index][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.IndexDef]**`,`**` .. | `[indexRange][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.IndexRangeDef]**`)`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`[`**`<`**[T][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`]`**`(`**[column][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` .. | `[index][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`,`**` .. | `[indexRange][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexRangeDef]**`)`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `.[**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` [ `**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` } `**`]`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `.[**cols**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` [ `**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` } `**`]`
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][cols]**`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`**[**`]`**][cols]
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][cols]**`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**[**`]`**][cols]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][cols][column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]**`,`**` ..`[**`]`**][cols]
-     *
-     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][cols][column][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` ..`[**`]`**][cols]
      *
      *
      *
      *
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      *
      *
@@ -135,7 +133,7 @@ public interface ColsColumnsSelectionDsl {
      *
      *
      */
-    public interface Usage {
+    public interface Grammar {
 
         /** [**cols**][ColumnsSelectionDsl.cols] */
         public interface PlainDslName
@@ -159,7 +157,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols] directly, you can also use the [get][ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### For example:
      * `df.`[remove][DataFrame.remove]` { `[cols][ColumnsSelectionDsl.cols]` { it.`[hasNulls][DataColumn.hasNulls]`() } }`
@@ -187,7 +185,7 @@ public interface ColsColumnsSelectionDsl {
          *
          * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
          *
-         * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+         * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
          *
          * #### For example:
          * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -228,7 +226,7 @@ public interface ColsColumnsSelectionDsl {
          *
          * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
          *
-         * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+         * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
          *
          * #### For example:
          * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -263,7 +261,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves one or multiple columns from [this\] in the form of a [ColumnSet] by their indices.
      * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### For example:
      *
@@ -294,7 +292,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves multiple columns from [this\] in the form of a [ColumnSet] by a [range\] of indices.
      * If any of the indices in the [range\] are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### For example:
      *
@@ -333,7 +331,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -384,7 +382,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -436,7 +434,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -488,7 +486,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -540,7 +538,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -592,7 +590,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -645,7 +643,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -696,7 +694,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -748,7 +746,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -801,7 +799,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -847,7 +845,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -895,7 +893,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -944,7 +942,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -992,7 +990,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -1040,7 +1038,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -1089,7 +1087,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -1133,7 +1131,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -1179,7 +1177,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -1230,7 +1228,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -1265,7 +1263,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -1303,7 +1301,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -1342,7 +1340,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -1377,7 +1375,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -1416,7 +1414,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -1455,7 +1453,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -1490,7 +1488,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -1528,7 +1526,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -1567,7 +1565,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -1602,7 +1600,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -1640,7 +1638,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -1679,7 +1677,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -1716,7 +1714,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -1756,7 +1754,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -1801,7 +1799,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -1838,7 +1836,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -1880,7 +1878,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -1920,7 +1918,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -1961,7 +1959,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -1996,7 +1994,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -2036,7 +2034,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -2075,7 +2073,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -2114,7 +2112,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -2149,7 +2147,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -2189,7 +2187,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -2227,7 +2225,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -2266,7 +2264,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -2301,7 +2299,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -2341,7 +2339,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -2379,7 +2377,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -2418,7 +2416,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -2453,7 +2451,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -2493,7 +2491,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -2531,7 +2529,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -2574,7 +2572,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -2611,7 +2609,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -2653,7 +2651,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -2693,7 +2691,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -2734,7 +2732,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -2771,7 +2769,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -2813,7 +2811,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -2854,7 +2852,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -2895,7 +2893,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -2932,7 +2930,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -2974,7 +2972,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -3014,7 +3012,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -3055,7 +3053,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -3092,7 +3090,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -3134,7 +3132,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -3174,7 +3172,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -3215,7 +3213,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -3252,7 +3250,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -3294,7 +3292,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -3334,7 +3332,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -3379,7 +3377,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -3414,7 +3412,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -3452,7 +3450,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -3491,7 +3489,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -3526,7 +3524,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -3564,7 +3562,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -3603,7 +3601,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -3638,7 +3636,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -3676,7 +3674,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -3715,7 +3713,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -3750,7 +3748,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -3788,7 +3786,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -3827,7 +3825,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -3862,7 +3860,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -3900,7 +3898,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * Aside from calling [cols][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.cols] directly, you can also use the [get][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.get] operator in most cases.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      * `df.`[remove][org.jetbrains.kotlinx.dataframe.DataFrame.remove]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[hasNulls][org.jetbrains.kotlinx.dataframe.DataColumn.hasNulls]`() } }`
@@ -3937,7 +3935,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves one or multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
      * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -3965,7 +3963,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves one or multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
      * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -3997,7 +3995,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves one or multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
      * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4029,7 +4027,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves one or multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
      * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4057,7 +4055,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves one or multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
      * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4090,7 +4088,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves one or multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
      * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4122,7 +4120,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves one or multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
      * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4150,7 +4148,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves one or multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
      * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4183,7 +4181,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves one or multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
      * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4215,7 +4213,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves one or multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
      * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4243,7 +4241,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves one or multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
      * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4276,7 +4274,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves one or multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
      * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4308,7 +4306,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves one or multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
      * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4336,7 +4334,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves one or multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
      * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4369,7 +4367,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves one or multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
      * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4401,7 +4399,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves one or multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
      * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4429,7 +4427,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves one or multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
      * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4462,7 +4460,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves one or multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by their indices.
      * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4498,7 +4496,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
      * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4526,7 +4524,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
      * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4555,7 +4553,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
      * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4584,7 +4582,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
      * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4612,7 +4610,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
      * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4643,7 +4641,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
      * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4673,7 +4671,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
      * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4701,7 +4699,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
      * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4732,7 +4730,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
      * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4762,7 +4760,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
      * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4790,7 +4788,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
      * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4820,7 +4818,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
      * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4849,7 +4847,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
      * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4878,7 +4876,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
      * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4908,7 +4906,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
      * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4937,7 +4935,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
      * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4965,7 +4963,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
      * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -4995,7 +4993,7 @@ public interface ColsColumnsSelectionDsl {
      * Retrieves multiple columns from [this] in the form of a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] by a [range] of indices.
      * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *

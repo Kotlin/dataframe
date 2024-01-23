@@ -3,37 +3,38 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.ExprColumnsSelectionDsl.Usage.PlainDslName
+import org.jetbrains.kotlinx.dataframe.api.ExprColumnsSelectionDsl.Grammar
+import org.jetbrains.kotlinx.dataframe.api.ExprColumnsSelectionDsl.Grammar.PlainDslName
 import org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 
 // region ColumnsSelectionDsl
 
 /**
- * See [Usage]
+ * See [Grammar]
  */
 public interface ExprColumnsSelectionDsl {
 
     /**
-     * ## Expr Usage
+     * ## Expr Grammar
      *
-     * @include [UsageTemplate]
+     * @include [DslGrammarTemplate]
      *
-     * {@setArg [UsageTemplate.DefinitionsArg]
-     *  {@include [UsageTemplate.NameDef]}
+     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     *  {@include [DslGrammarTemplate.NameDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.InferDef]}
+     *  {@include [DslGrammarTemplate.InferDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.ColumnExpressionDef]}
+     *  {@include [DslGrammarTemplate.ColumnExpressionDef]}
      * }
-     * {@setArg [UsageTemplate.PlainDslFunctionsArg]
-     *  {@include [PlainDslName]}**`(`**`[`{@include [UsageTemplate.NameRef]}**`,`**`][`{@include [UsageTemplate.InferRef]}`]`**`)`** **`{ `**{@include [UsageTemplate.ColumnExpressionRef]}**` \\}`**
+     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
+     *  {@include [PlainDslName]}**`(`**`[`{@include [DslGrammarTemplate.NameRef]}**`,`**`][`{@include [DslGrammarTemplate.InferRef]}`]`**`)`** **`{ `**{@include [DslGrammarTemplate.ColumnExpressionRef]}**` \\}`**
      * }
-     * {@setArg [UsageTemplate.ColumnSetPart]}
-     * {@setArg [UsageTemplate.ColumnGroupPart]}
+     * {@setArg [DslGrammarTemplate.ColumnSetPart]}
+     * {@setArg [DslGrammarTemplate.ColumnGroupPart]}
      */
-    public interface Usage {
+    public interface Grammar {
 
         /** [**expr**][ColumnsSelectionDsl.expr] */
         public interface PlainDslName
@@ -45,7 +46,7 @@ public interface ExprColumnsSelectionDsl {
  *
  * This function is essentially a shortcut for [ColumnsContainer.mapToColumn].
  *
- * ### Check out: [Usage][ExprColumnsSelectionDsl.Usage]
+ * ### Check out: [Usage][ExprColumnsSelectionDsl.Grammar]
  *
  * #### For example:
  *

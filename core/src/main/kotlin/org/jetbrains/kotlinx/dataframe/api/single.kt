@@ -6,11 +6,10 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.CommonSingleDocs.Examples
-import org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage
-import org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Usage.PlainDslName
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar
+import org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar.ColumnGroupName
+import org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar.ColumnSetName
+import org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar.PlainDslName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -18,9 +17,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.values
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
@@ -56,35 +55,35 @@ public fun <T> DataFrame<T>.singleOrNull(predicate: RowExpression<T, Boolean>): 
 // region ColumnsSelectionDsl
 
 /**
- * See [Usage].
+ * See [Grammar].
  */
 public interface SingleColumnsSelectionDsl {
 
     /**
-     * ## Single (Col) Usage
+     * ## Single (Col) Grammar
      *
-     * @include [UsageTemplate]
-     * {@setArg [UsageTemplate.DefinitionsArg]
-     *  {@include [UsageTemplate.ColumnSetDef]}
+     * @include [DslGrammarTemplate]
+     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.ColumnGroupDef]}
+     *  {@include [DslGrammarTemplate.ColumnGroupDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.ConditionDef]}
+     *  {@include [DslGrammarTemplate.ConditionDef]}
      * }
      *
-     * {@setArg [UsageTemplate.PlainDslFunctionsArg]
-     *  {@include [PlainDslName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
+     *  {@include [PlainDslName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      * }
      *
-     * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnSetName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
+     *  {@include [Indent]}{@include [ColumnSetName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      * }
      *
-     * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnGroupName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     * {@setArg [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     *  {@include [Indent]}{@include [ColumnGroupName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      * }
      */
-    public interface Usage {
+    public interface Grammar {
 
         /** [**single**][ColumnsSelectionDsl.single] */
         public interface PlainDslName
@@ -106,7 +105,7 @@ public interface SingleColumnsSelectionDsl {
      *
      * NOTE: For [column groups][ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      *

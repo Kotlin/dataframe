@@ -2,11 +2,11 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage
+import org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
 import kotlin.reflect.KProperty
@@ -14,30 +14,33 @@ import kotlin.reflect.KProperty
 // region ColumnsSelectionDsl
 
 /**
- * See [Usage].
+ * See [Grammar].
  */
 public interface ColumnRangeColumnsSelectionDsl {
 
     /**
-     * ## Range of Columns Usage
-     *
+     * ## Range of Columns Grammar
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `column: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]` | `[String][String]
+     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### Definitions:
+     *  `column: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]` | `[String][String]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
      * `| `[KProperty][kotlin.reflect.KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
+     *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef] [**..**][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo] [column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]
+     *  [column][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef] [**..**][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo] [column][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]
      *
      *
      *
@@ -48,17 +51,14 @@ public interface ColumnRangeColumnsSelectionDsl {
      *
      *
      *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      *
      *
      *
      *
      */
-    public interface Usage {
+    public interface Grammar {
+
         /** [**..**][ColumnsSelectionDsl.rangeTo] */
         public interface PlainDslName
     }
@@ -70,7 +70,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Columns inside of column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### For example:
      *
@@ -99,7 +99,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Columns inside of column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -126,7 +126,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Columns inside of column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -153,7 +153,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Columns inside of column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -180,7 +180,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Columns inside of column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -207,7 +207,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Columns inside of column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -234,7 +234,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Columns inside of column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -261,7 +261,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Columns inside of column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -288,7 +288,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Columns inside of column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -315,7 +315,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Columns inside of column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *

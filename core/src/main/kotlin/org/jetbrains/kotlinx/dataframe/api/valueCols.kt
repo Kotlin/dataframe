@@ -3,10 +3,9 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
-import org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Usage.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Usage.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Usage.PlainDslName
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Grammar.ColumnGroupName
+import org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Grammar.ColumnSetName
+import org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Grammar.PlainDslName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -15,9 +14,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import kotlin.reflect.KProperty
 
@@ -26,30 +25,30 @@ import kotlin.reflect.KProperty
 public interface ValueColsColumnsSelectionDsl {
 
     /**
-     * ## Value Columns Usage
+     * ## Value Columns Grammar
      *
-     * @include [UsageTemplate]
-     * {@setArg [UsageTemplate.DefinitionsArg]
-     *  {@include [UsageTemplate.ColumnSetDef]}
+     * @include [DslGrammarTemplate]
+     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.ColumnGroupDef]}
+     *  {@include [DslGrammarTemplate.ColumnGroupDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.ConditionDef]}
+     *  {@include [DslGrammarTemplate.ConditionDef]}
      * }
      *
-     * {@setArg [UsageTemplate.PlainDslFunctionsArg]
-     *  {@include [PlainDslName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
+     *  {@include [PlainDslName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      * }
      *
-     * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnSetName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
+     *  {@include [Indent]}{@include [ColumnSetName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      * }
      *
-     * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnGroupName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     * {@setArg [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     *  {@include [Indent]}{@include [ColumnGroupName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      * }
      */
-    public interface Usage {
+    public interface Grammar {
 
         /** [**valueCols**][ColumnsSelectionDsl.valueCols] */
         public interface PlainDslName
@@ -70,7 +69,7 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * This function only looks at columns at the top-level.
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### For example:
      *

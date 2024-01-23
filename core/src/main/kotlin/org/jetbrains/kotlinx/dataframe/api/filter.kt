@@ -7,15 +7,16 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.RowFilter
+import org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.Grammar.ColumnSetName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.getTrueIndices
 import org.jetbrains.kotlinx.dataframe.indices
@@ -56,31 +57,31 @@ internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) 
 public interface FilterColumnsSelectionDsl {
 
     /**
-     * ## Filter ([ColumnSet]) Usage
+     * ## Filter [ColumnSet] Grammar
      *
-     * {@include [UsageTemplate]}
+     * {@include [DslGrammarTemplate]}
      *
-     * {@setArg [UsageTemplate.DefinitionsArg]
-     *  {@include [UsageTemplate.ColumnSetDef]}
+     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.ConditionDef]}
+     *  {@include [DslGrammarTemplate.ConditionDef]}
      * }
      *
-     * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnSetName]}**` {`** {@include [UsageTemplate.ConditionRef]} **`\}`**
+     * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
+     *  {@include [Indent]}{@include [ColumnSetName]}**` {`** {@include [DslGrammarTemplate.ConditionRef]} **`\}`**
      * }
      *
-     * {@setArg [UsageTemplate.PlainDslPart]}
-     * {@setArg [UsageTemplate.ColumnGroupPart]}
+     * {@setArg [DslGrammarTemplate.PlainDslPart]}
+     * {@setArg [DslGrammarTemplate.ColumnGroupPart]}
      */
-    public interface Usage {
+    public interface Grammar {
 
         /** .[**filter**][ColumnsSelectionDsl.filter] */
         public interface ColumnSetName
     }
 
     /**
-     * ## Filter ([ColumnSet])
+     * ## Filter [ColumnSet]
      *
      * Creates a subset of columns ([ColumnSet]) from the current [ColumnSet] that
      * adhere to the given [predicate].
@@ -88,7 +89,7 @@ public interface FilterColumnsSelectionDsl {
      * Aside from calling [filter][ColumnSet.filter] directly, you can also use the [get][ColumnsSelectionDsl.get] operator
      * in most cases. This function belongs to [cols][ColumnsSelectionDsl.cols] but operates identically.
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### For example:
      *

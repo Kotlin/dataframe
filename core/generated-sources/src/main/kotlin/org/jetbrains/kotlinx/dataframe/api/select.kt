@@ -5,6 +5,9 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions
+import org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Grammar
+import org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Grammar.ColumnGroupName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -12,11 +15,10 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumnsLink
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_SELECT_COLS
@@ -51,7 +53,7 @@ internal interface Select {
      * which operates on the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
      * expects you to return a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]; an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
-     * ### Check out: [Columns Selection DSL Usage][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage]
+     * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -131,7 +133,7 @@ private interface CommonSelectDocs
  * which operates on the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
  * expects you to return a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]; an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
- * ### Check out: [Columns Selection DSL Usage][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage]
+ * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -222,17 +224,20 @@ public fun <T> DataFrame<T>.select(vararg columns: AnyColumnReference): DataFram
 // region ColumnsSelectionDsl
 // NOTE: invoke overloads are inside ColumnsSelectionDsl.kt due to conflicts
 /**
- * See [Usage]
+ * See [Grammar]
  */
 public interface SelectColumnsSelectionDsl {
 
     /**
-     * ## Select from [ColumnGroup] Usage
-     *
+     * ## Select from [ColumnGroup] Grammar
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### Definitions:
+     *  `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -251,26 +256,22 @@ public interface SelectColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### On a column group reference:
+     *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
+     *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**select**][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]**` {`** [colsSelector][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnsSelectorDef] **`}`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**select**][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]**` {`** [colsSelector][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef] **`}`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`|`[**` {`**][ColumnsSelectionDsl.select] [colsSelector][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnsSelectorDef] [**`}`**][ColumnsSelectionDsl.select]
-     *
-     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`|`[**` {`**][ColumnsSelectionDsl.select] [colsSelector][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef] [**`}`**][ColumnsSelectionDsl.select]
      *
      *
      *
      *
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      *
      *
@@ -278,7 +279,7 @@ public interface SelectColumnsSelectionDsl {
      *
      *
      */
-    public interface Usage {
+    public interface Grammar {
 
         /** .[**select**][ColumnsSelectionDsl.select] */
         public interface ColumnGroupName
@@ -296,7 +297,7 @@ public interface SelectColumnsSelectionDsl {
      *
      * The [invoke][ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### For example:
      *
@@ -341,7 +342,7 @@ public interface SelectColumnsSelectionDsl {
      *
      * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -386,7 +387,7 @@ public interface SelectColumnsSelectionDsl {
      *
      * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -434,7 +435,7 @@ public interface SelectColumnsSelectionDsl {
      *
      * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -486,7 +487,7 @@ public interface SelectColumnsSelectionDsl {
      *
      * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -531,7 +532,7 @@ public interface SelectColumnsSelectionDsl {
      *
      * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *

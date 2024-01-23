@@ -2,11 +2,13 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.Grammar
+import org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.Grammar.ColumnSetName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.simplify
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.util.TOP_MESSAGE
@@ -14,26 +16,26 @@ import org.jetbrains.kotlinx.dataframe.util.TOP_MESSAGE
 // region ColumnsSelectionDsl
 
 /**
- * See [Usage]
+ * See [Grammar]
  */
 public interface SimplifyColumnsSelectionDsl {
 
     /**
-     * ## Simplify [ColumnSet] Usage
+     * ## Simplify [ColumnSet] Grammar
      *
-     * @include [UsageTemplate]
-     * {@setArg [UsageTemplate.DefinitionsArg]
-     *  {@include [UsageTemplate.ColumnSetDef]}
+     * @include [DslGrammarTemplate]
+     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     *  {@include [DslGrammarTemplate.ColumnSetDef]}
      * }
      *
-     * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
+     * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
      *  {@include [Indent]}{@include [ColumnSetName]}**`()`**
      * }
      *
-     * {@setArg [UsageTemplate.PlainDslPart]}
-     * {@setArg [UsageTemplate.ColumnGroupPart]}
+     * {@setArg [DslGrammarTemplate.PlainDslPart]}
+     * {@setArg [DslGrammarTemplate.ColumnGroupPart]}
      */
-    public interface Usage {
+    public interface Grammar {
 
         /** .[**simplify**][ColumnsSelectionDsl.simplify] */
         public interface ColumnSetName
@@ -48,7 +50,7 @@ public interface SimplifyColumnsSelectionDsl {
      * In other words, this means that if a column in [this] is inside another column group in [this],
      * it will not be included in the result.
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * ## For example:
      *

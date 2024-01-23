@@ -13,9 +13,9 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExceptKeepingStructure
 import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
@@ -41,46 +41,46 @@ import kotlin.reflect.KProperty
 public interface AllExceptColumnsSelectionDsl {
 
     /**
-     * ## (All) (Cols) Except Usage
+     * ## (All) (Cols) Except Grammar
      *
-     * @include [UsageTemplate]
-     * {@setArg [UsageTemplate.DefinitionsArg]
-     *  {@include [UsageTemplate.ColumnSetDef]}
+     * @include [DslGrammarTemplate]
+     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.ColumnGroupDef]}
+     *  {@include [DslGrammarTemplate.ColumnGroupDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.ColumnsSelectorDef]}
+     *  {@include [DslGrammarTemplate.ColumnsSelectorDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.ColumnDef]}
+     *  {@include [DslGrammarTemplate.ColumnDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.ColumnNoAccessorDef]}
+     *  {@include [DslGrammarTemplate.ColumnNoAccessorDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.ColumnsResolverDef]}
+     *  {@include [DslGrammarTemplate.ColumnsResolverDef]}
      * }
      *
-     * {@setArg [UsageTemplate.PlainDslFunctionsArg]
-     *  {@include [PlainDslName]} **`{ `**{@include [UsageTemplate.ColumnsSelectorRef]}**` \\}`**
+     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
+     *  {@include [PlainDslName]} **`{ `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**` \\}`**
      *
-     *  `|` {@include [PlainDslName]}**`(`**{@include [UsageTemplate.ColumnRef]}**`,`**` ..`**`)`**
+     *  `|` {@include [PlainDslName]}**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**` ..`**`)`**
      * }
-     * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnSetName]} `[`**` { `**`]` {@include [UsageTemplate.ColumnsResolverRef]} `[`**` \\} `**`]`
+     * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
+     *  {@include [Indent]}{@include [ColumnSetName]} `[`**` { `**`]` {@include [DslGrammarTemplate.ColumnsResolverRef]} `[`**` \\} `**`]`
      *
-     *  {@include [Indent]}`|` {@include [ColumnSetName]} {@include [UsageTemplate.ColumnRef]}
+     *  {@include [Indent]}`|` {@include [ColumnSetName]} {@include [DslGrammarTemplate.ColumnRef]}
      *
-     *  {@include [Indent]}`|` .{@include [ColumnSetName]}**`(`**{@include [UsageTemplate.ColumnRef]}**`,`**` ..`**`)`**
+     *  {@include [Indent]}`|` .{@include [ColumnSetName]}**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**` ..`**`)`**
      * }
-     * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnGroupName]} **` { `**{@include [UsageTemplate.ColumnsSelectorRef]}**` \\} `**
+     * {@setArg [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     *  {@include [Indent]}{@include [ColumnGroupName]} **` { `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**` \\} `**
      *
-     *  {@include [Indent]}`|` {@include [ColumnGroupName]}**`(`**{@include [UsageTemplate.ColumnNoAccessorRef]}**`,`**` ..`**`)`**
+     *  {@include [Indent]}`|` {@include [ColumnGroupName]}**`(`**{@include [DslGrammarTemplate.ColumnNoAccessorRef]}**`,`**` ..`**`)`**
      *
-     *  {@include [Indent]}`|` {@include [ColumnGroupExperimentalName]} **` { `**{@include [UsageTemplate.ColumnsSelectorRef]}**` \\} EXPERIMENTAL!`**
+     *  {@include [Indent]}`|` {@include [ColumnGroupExperimentalName]} **` { `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**` \\} EXPERIMENTAL!`**
      *
-     *  {@include [Indent]}`|` {@include [ColumnGroupExperimentalName]}**`(`**{@include [UsageTemplate.ColumnNoAccessorRef]}**`,`**` ..`**`) EXPERIMENTAL!`**
+     *  {@include [Indent]}`|` {@include [ColumnGroupExperimentalName]}**`(`**{@include [DslGrammarTemplate.ColumnNoAccessorRef]}**`,`**` ..`**`) EXPERIMENTAL!`**
      * }
      */
-    public interface Usage {
+    public interface Grammar {
 
         /** [**allExcept**][ColumnsSelectionDsl.allExcept] */
         public interface PlainDslName
@@ -101,7 +101,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the {@include [ColumnsSelectionDslLink]} to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * ### On [ColumnSets][ColumnSet]
      * This function can be explained the easiest with [ColumnSets][ColumnSet]. Let's say we want all

@@ -16,13 +16,13 @@ import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubse
 import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.FunctionArg
 import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.FunctionColsArg
 import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.TitleArg
-import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage.After
-import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage.Before
-import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage.From
-import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage.PlainDslName
-import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Usage.UpTo
+import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar.After
+import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar.Before
+import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar.ColumnGroupName
+import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar.ColumnSetName
+import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar.From
+import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar.PlainDslName
+import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar.UpTo
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -33,9 +33,9 @@ import org.jetbrains.kotlinx.dataframe.columns.isSingleColumnWithGroup
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.onResolve
@@ -87,40 +87,40 @@ public fun <T> DataFrame<T>.all(predicate: RowFilter<T>): Boolean = rows().all {
 public interface AllColumnsSelectionDsl {
 
     /**
-     * ## Usage of all Flavors of All (Cols):
+     * ## Grammar of All Flavors of All (Cols):
      *
-     * @include [UsageTemplate]
-     * {@setArg [UsageTemplate.DefinitionsArg]
-     *  {@include [UsageTemplate.ColumnSetDef]}
+     * @include [DslGrammarTemplate]
+     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.ColumnGroupDef]}
+     *  {@include [DslGrammarTemplate.ColumnGroupDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.ColumnDef]}
+     *  {@include [DslGrammarTemplate.ColumnDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.ColumnSelectorDef]}
+     *  {@include [DslGrammarTemplate.ColumnSelectorDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.ConditionDef]}
+     *  {@include [DslGrammarTemplate.ConditionDef]}
      * }
      *
-     * {@setArg [UsageTemplate.PlainDslFunctionsArg]
+     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
      *  {@include [PlainDslName]}**`()`**
      *
-     *  `|` **`all`**`(`{@include [Before]}`|`{@include [After]}`|`{@include [From]}`|`{@include [UpTo]}`)` `(` **`(`**{@include [UsageTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [UsageTemplate.ColumnSelectorRef]} **`\\}`** `)`
+     *  `|` **`all`**`(`{@include [Before]}`|`{@include [After]}`|`{@include [From]}`|`{@include [UpTo]}`)` `(` **`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [DslGrammarTemplate.ColumnSelectorRef]} **`\\}`** `)`
      * }
      *
-     * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
+     * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
      *  {@include [Indent]}{@include [ColumnSetName]}**`()`**
      *
-     *  {@include [Indent]}`|` .**`all`**`(`{@include [Before]}`|`{@include [After]}`|`{@include [From]}`|`{@include [UpTo]}`)` `(` **`(`**{@include [UsageTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [UsageTemplate.ConditionRef]} **`\\}`** `)`
+     *  {@include [Indent]}`|` .**`all`**`(`{@include [Before]}`|`{@include [After]}`|`{@include [From]}`|`{@include [UpTo]}`)` `(` **`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [DslGrammarTemplate.ConditionRef]} **`\\}`** `)`
      * }
      *
-     * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
+     * {@setArg [DslGrammarTemplate.ColumnGroupFunctionsArg]
      *  {@include [Indent]}{@include [ColumnGroupName]}**`()`**
      *
-     *  {@include [Indent]}`|` .**`allCols`**`(`{@include [Before]}`|`{@include [After]}`|`{@include [From]}`|`{@include [UpTo]}`)` `(` **`(`**{@include [UsageTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [UsageTemplate.ColumnSelectorRef]} **`\\}`** `)`
+     *  {@include [Indent]}`|` .**`allCols`**`(`{@include [Before]}`|`{@include [After]}`|`{@include [From]}`|`{@include [UpTo]}`)` `(` **`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [DslGrammarTemplate.ColumnSelectorRef]} **`\\}`** `)`
      * }
      */
-    public interface Usage {
+    public interface Grammar {
 
         /** [**all**][ColumnsSelectionDsl.all] */
         public interface PlainDslName
@@ -178,7 +178,7 @@ public interface AllColumnsSelectionDsl {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector] to be used
      * in the Plain DSL, and on [column groups][ColumnGroup] and a [ColumnFilter] on [ColumnSets][ColumnSet].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### For example:
      *
@@ -243,7 +243,7 @@ public interface AllColumnsSelectionDsl {
      *
      * NOTE: For [column groups][ColumnGroup], `all` is named `allCols` instead to avoid confusion.
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### For example:
      * `df.`[move][DataFrame.move]` { `[all][ColumnsSelectionDsl.all]`() }.`[under][MoveClause.under]`("info")`

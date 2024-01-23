@@ -13,7 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs
-import org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslUsage
+import org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.index
@@ -74,13 +74,16 @@ public fun <T> DataFrame<T>.dropWhile(predicate: RowFilter<T>): DataFrame<T> =
 public interface DropColumnsSelectionDsl {
 
     /**
-     * ## Drop (Last) (Cols) (While) Usage
-     *
+     * ## Drop (Last) (Cols) (While) Grammar
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### Definitions:
+     *  `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -99,50 +102,46 @@ public interface DropColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
+     *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [**drop**][ColumnsSelectionDsl.drop]`(`[**Last**][ColumnsSelectionDsl.dropLast]`)`**`(`**[number][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.NumberDef]**`)`**
+     *  [**drop**][ColumnsSelectionDsl.drop]`(`[**Last**][ColumnsSelectionDsl.dropLast]`)`**`(`**[number][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]**`)`**
      *
-     *  `|` [**drop**][ColumnsSelectionDsl.dropWhile]`(`[**Last**][ColumnsSelectionDsl.dropLastWhile]`)`[**While**][ColumnsSelectionDsl.dropWhile]**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`**
+     *  `|` [**drop**][ColumnsSelectionDsl.dropWhile]`(`[**Last**][ColumnsSelectionDsl.dropLastWhile]`)`[**While**][ColumnsSelectionDsl.dropWhile]**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
+     *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**drop**][ColumnsSelectionDsl.drop]`(`[**Last**][ColumnSet.dropLast]`)`**`(`**[number][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.NumberDef]**`)`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**drop**][ColumnsSelectionDsl.drop]`(`[**Last**][ColumnSet.dropLast]`)`**`(`**[number][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]**`)`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**drop**][ColumnsSelectionDsl.dropWhile]`(`[**Last**][ColumnsSelectionDsl.dropLastWhile]`)`[**While**][ColumnsSelectionDsl.dropWhile]**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**drop**][ColumnsSelectionDsl.dropWhile]`(`[**Last**][ColumnsSelectionDsl.dropLastWhile]`)`[**While**][ColumnsSelectionDsl.dropWhile]**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### On a column group reference:
+     *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
+     *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**drop**][ColumnsSelectionDsl.dropCols]`(`[**Last**][ColumnsSelectionDsl.dropLastCols]`)`[**Cols**][ColumnsSelectionDsl.dropCols]**`(`**[number][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.NumberDef]**`)`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**drop**][ColumnsSelectionDsl.dropCols]`(`[**Last**][ColumnsSelectionDsl.dropLastCols]`)`[**Cols**][ColumnsSelectionDsl.dropCols]**`(`**[number][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]**`)`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**drop**][ColumnsSelectionDsl.dropColsWhile]`(`[**Last**][ColumnsSelectionDsl.dropLastColsWhile]`)`[**ColsWhile**][ColumnsSelectionDsl.dropColsWhile]**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`**
-     *
-     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**drop**][ColumnsSelectionDsl.dropColsWhile]`(`[**Last**][ColumnsSelectionDsl.dropLastColsWhile]`)`[**ColsWhile**][ColumnsSelectionDsl.dropColsWhile]**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
      *
      *
      *
      *
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      *
      *
@@ -151,7 +150,7 @@ public interface DropColumnsSelectionDsl {
      *
      *
      */
-    public interface Usage {
+    public interface Grammar {
 
         /** [**drop**][ColumnsSelectionDsl.drop]`(`[**Last**][ColumnsSelectionDsl.dropLast]`)` */
         public interface PlainDslName
@@ -186,7 +185,7 @@ public interface DropColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `drop` is called `dropCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[drop][ColumnSet.drop]`(5) }`
@@ -218,7 +217,7 @@ public interface DropColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `drop` is called `dropCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[drop][ColumnSet.drop]`(5) }`
@@ -252,7 +251,7 @@ public interface DropColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `drop` is called `dropCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[drop][ColumnSet.drop]`(5) }`
@@ -285,7 +284,7 @@ public interface DropColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `drop` is called `dropCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[drop][ColumnSet.drop]`(5) }`
@@ -318,7 +317,7 @@ public interface DropColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `drop` is called `dropCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[drop][ColumnSet.drop]`(5) }`
@@ -350,7 +349,7 @@ public interface DropColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `drop` is called `dropCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[drop][ColumnSet.drop]`(5) }`
@@ -382,7 +381,7 @@ public interface DropColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `drop` is called `dropCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[drop][ColumnSet.drop]`(5) }`
@@ -418,7 +417,7 @@ public interface DropColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `dropLast` is called `dropLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[dropLast][ColumnSet.dropLast]`(5) }`
@@ -450,7 +449,7 @@ public interface DropColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `dropLast` is called `dropLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[dropLast][ColumnSet.dropLast]`(5) }`
@@ -484,7 +483,7 @@ public interface DropColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `dropLast` is called `dropLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[dropLast][ColumnSet.dropLast]`(5) }`
@@ -517,7 +516,7 @@ public interface DropColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `dropLast` is called `dropLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[dropLast][ColumnSet.dropLast]`(5) }`
@@ -550,7 +549,7 @@ public interface DropColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `dropLast` is called `dropLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[dropLast][ColumnSet.dropLast]`(5) }`
@@ -582,7 +581,7 @@ public interface DropColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `dropLast` is called `dropLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[dropLast][ColumnSet.dropLast]`(5) }`
@@ -614,7 +613,7 @@ public interface DropColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `dropLast` is called `dropLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[dropLast][ColumnSet.dropLast]`(5) }`

@@ -1,40 +1,40 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 
 /**
- * ## {@getArg [TitleArg]} (Last) (Cols) (While) Usage
+ * ## {@getArg [TitleArg]} (Last) (Cols) (While) Grammar
  *
- * @include [UsageTemplate]
- * {@setArg [UsageTemplate.DefinitionsArg]
- *  {@include [UsageTemplate.ColumnSetDef]}
+ * @include [DslGrammarTemplate]
+ * {@setArg [DslGrammarTemplate.DefinitionsArg]
+ *  {@include [DslGrammarTemplate.ColumnSetDef]}
  *  {@include [LineBreak]}
- *  {@include [UsageTemplate.ColumnGroupDef]}
+ *  {@include [DslGrammarTemplate.ColumnGroupDef]}
  *  {@include [LineBreak]}
- *  {@include [UsageTemplate.ConditionDef]}
+ *  {@include [DslGrammarTemplate.ConditionDef]}
  *  {@include [LineBreak]}
- *  {@include [UsageTemplate.NumberDef]}
+ *  {@include [DslGrammarTemplate.NumberDef]}
  * }
  *
- * {@setArg [UsageTemplate.PlainDslFunctionsArg]
- *  {@include [PlainDslName]}**`(`**{@include [UsageTemplate.NumberRef]}**`)`**
+ * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
+ *  {@include [PlainDslName]}**`(`**{@include [DslGrammarTemplate.NumberRef]}**`)`**
  *
- *  `|` {@include [PlainDslWhileName]}**` { `**{@include [UsageTemplate.ConditionRef]}**` \\\\}`**
+ *  `|` {@include [PlainDslWhileName]}**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \\\\}`**
  * }
  *
- * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
- *  {@include [Indent]}{@include [ColumnSetName]}**`(`**{@include [UsageTemplate.NumberRef]}**`)`**
+ * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
+ *  {@include [Indent]}{@include [ColumnSetName]}**`(`**{@include [DslGrammarTemplate.NumberRef]}**`)`**
  *
- *  {@include [Indent]}`|` {@include [ColumnSetWhileName]}**` { `**{@include [UsageTemplate.ConditionRef]}**` \\\\}`**
+ *  {@include [Indent]}`|` {@include [ColumnSetWhileName]}**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \\\\}`**
  * }
  *
- * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
- *  {@include [Indent]}{@include [ColumnGroupName]}**`(`**{@include [UsageTemplate.NumberRef]}**`)`**
+ * {@setArg [DslGrammarTemplate.ColumnGroupFunctionsArg]
+ *  {@include [Indent]}{@include [ColumnGroupName]}**`(`**{@include [DslGrammarTemplate.NumberRef]}**`)`**
  *
- *  {@include [Indent]}`|` {@include [ColumnGroupWhileName]}**` { `**{@include [UsageTemplate.ConditionRef]}**` \\\\}`**
+ *  {@include [Indent]}`|` {@include [ColumnGroupWhileName]}**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \\\\}`**
  * }
  */
-internal interface TakeAndDropColumnsSelectionDslUsage {
+internal interface TakeAndDropColumnsSelectionDslGrammar {
 
     /** Like "Take"/"Drop" */
     interface TitleArg

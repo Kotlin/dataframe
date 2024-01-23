@@ -6,10 +6,10 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.CommonLastDocs.Examples
-import org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Usage
-import org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Usage.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Usage.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Usage.PlainDslName
+import org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Grammar
+import org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Grammar.ColumnGroupName
+import org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Grammar.ColumnSetName
+import org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Grammar.PlainDslName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -18,9 +18,9 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
@@ -85,35 +85,35 @@ public fun <T> PivotGroupBy<T>.last(predicate: RowFilter<T>): ReducedPivotGroupB
 // region ColumnsSelectionDsl
 
 /**
- * See [Usage].
+ * See [Grammar].
  */
 public interface LastColumnsSelectionDsl {
 
     /**
-     * ## Last (Col) Usage
+     * ## Last (Col) Grammar
      *
-     * @include [UsageTemplate]
-     * {@setArg [UsageTemplate.DefinitionsArg]
-     *  {@include [UsageTemplate.ColumnSetDef]}
+     * @include [DslGrammarTemplate]
+     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.ColumnGroupDef]}
+     *  {@include [DslGrammarTemplate.ColumnGroupDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.ConditionDef]}
+     *  {@include [DslGrammarTemplate.ConditionDef]}
      * }
      *
-     * {@setArg [UsageTemplate.PlainDslFunctionsArg]
-     *  {@include [PlainDslName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
+     *  {@include [PlainDslName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      * }
      *
-     * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnSetName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
+     *  {@include [Indent]}{@include [ColumnSetName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      * }
      *
-     * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnGroupName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     * {@setArg [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     *  {@include [Indent]}{@include [ColumnGroupName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      * }
      */
-    public interface Usage {
+    public interface Grammar {
 
         /** [**last**][ColumnsSelectionDsl.last] */
         public interface PlainDslName
@@ -134,7 +134,7 @@ public interface LastColumnsSelectionDsl {
      *
      * NOTE: For [column groups][ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      *

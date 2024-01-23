@@ -3,13 +3,13 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.DistinctColumnsSelectionDsl.Usage
-import org.jetbrains.kotlinx.dataframe.api.DistinctColumnsSelectionDsl.Usage.ColumnSetName
+import org.jetbrains.kotlinx.dataframe.api.DistinctColumnsSelectionDsl.Grammar
+import org.jetbrains.kotlinx.dataframe.api.DistinctColumnsSelectionDsl.Grammar.ColumnSetName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import org.jetbrains.kotlinx.dataframe.impl.columns.DistinctColumnSet
 import org.jetbrains.kotlinx.dataframe.indices
@@ -50,29 +50,32 @@ public fun <T, C> DataFrame<T>.distinctBy(columns: ColumnsSelector<T, C>): DataF
 // region ColumnsSelectionDsl
 
 /**
- * See [Usage]
+ * See [Grammar]
  */
 public interface DistinctColumnsSelectionDsl {
 
     /**
-     * ## Distinct Usage
+     * ## Distinct Grammar
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### Definitions:
+     *  `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
-     *
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
+     *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;.[**distinct**][org.jetbrains.kotlinx.dataframe.api.DistinctColumnsSelectionDsl.distinct]**`()`**
      *
@@ -84,17 +87,13 @@ public interface DistinctColumnsSelectionDsl {
      *
      *
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
-     *
      *
      *
      *
      *
      *
      */
-    public interface Usage {
+    public interface Grammar {
 
         /** .[**distinct**][ColumnsSelectionDsl.distinct] */
         public interface ColumnSetName
@@ -108,7 +107,7 @@ public interface DistinctColumnsSelectionDsl {
      * NOTE: This doesn't solve [DuplicateColumnNamesException] if you've selected two columns with the same name.
      * For this, you'll need to [rename][ColumnsSelectionDsl.named] one of the columns.
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### For Example:
      * `df.`[select][DataFrame.select]` { (`[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>() `[and][ColumnsSelectionDsl.and]` age).`[distinct][ColumnSet.distinct]`() }`

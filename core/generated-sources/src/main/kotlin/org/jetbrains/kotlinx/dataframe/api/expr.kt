@@ -3,26 +3,30 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.ExprColumnsSelectionDsl.Usage.PlainDslName
+import org.jetbrains.kotlinx.dataframe.api.ExprColumnsSelectionDsl.Grammar
+import org.jetbrains.kotlinx.dataframe.api.ExprColumnsSelectionDsl.Grammar.PlainDslName
 import org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 
 // region ColumnsSelectionDsl
 
 /**
- * See [Usage]
+ * See [Grammar]
  */
 public interface ExprColumnsSelectionDsl {
 
     /**
-     * ## Expr Usage
-     *
+     * ## Expr Grammar
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `name: `[String][String]
+     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### Definitions:
+     *  `name: `[String][String]
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -34,12 +38,12 @@ public interface ExprColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
+     *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [**expr**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.expr]**`(`**`[`[name][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.NameDef]**`,`**`][`[infer][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.InferDef]`]`**`)`** **`{ `**[expression][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnExpressionDef]**` }`**
+     *  [**expr**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.expr]**`(`**`[`[name][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NameDef]**`,`**`][`[infer][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.InferDef]`]`**`)`** **`{ `**[expression][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnExpressionDef]**` }`**
      *
      *
      *
@@ -50,17 +54,13 @@ public interface ExprColumnsSelectionDsl {
      *
      *
      *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      *
      *
      *
      *
      */
-    public interface Usage {
+    public interface Grammar {
 
         /** [**expr**][ColumnsSelectionDsl.expr] */
         public interface PlainDslName
@@ -75,7 +75,7 @@ public interface ExprColumnsSelectionDsl {
  *
  * This function is essentially a shortcut for [ColumnsContainer.mapToColumn].
  *
- * ### Check out: [Usage][ExprColumnsSelectionDsl.Usage]
+ * ### Check out: [Usage][ExprColumnsSelectionDsl.Grammar]
  *
  * #### For example:
  *

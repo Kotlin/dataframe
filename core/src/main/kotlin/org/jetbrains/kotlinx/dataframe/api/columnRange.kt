@@ -2,11 +2,11 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Usage
+import org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
 import kotlin.reflect.KProperty
@@ -14,25 +14,26 @@ import kotlin.reflect.KProperty
 // region ColumnsSelectionDsl
 
 /**
- * See [Usage].
+ * See [Grammar].
  */
 public interface ColumnRangeColumnsSelectionDsl {
 
     /**
-     * ## Range of Columns Usage
+     * ## Range of Columns Grammar
      *
-     * @include [UsageTemplate]
-     * {@setArg [UsageTemplate.DefinitionsArg]
-     *  {@include [UsageTemplate.ColumnDef]}
+     * @include [DslGrammarTemplate]
+     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     *  {@include [DslGrammarTemplate.ColumnDef]}
      * }
      *
-     * {@setArg [UsageTemplate.PlainDslFunctionsArg]
-     *  {@include [UsageTemplate.ColumnRef]} {@include [Usage.PlainDslName]} {@include [UsageTemplate.ColumnRef]}
+     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
+     *  {@include [DslGrammarTemplate.ColumnRef]} {@include [Grammar.PlainDslName]} {@include [DslGrammarTemplate.ColumnRef]}
      * }
-     * {@setArg [UsageTemplate.ColumnSetPart]}
-     * {@setArg [UsageTemplate.ColumnGroupPart]}
+     * {@setArg [DslGrammarTemplate.ColumnSetPart]}
+     * {@setArg [DslGrammarTemplate.ColumnGroupPart]}
      */
-    public interface Usage {
+    public interface Grammar {
+
         /** [**..**][ColumnsSelectionDsl.rangeTo] */
         public interface PlainDslName
     }
@@ -44,7 +45,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Columns inside of column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of {@include [AccessApiLink]}.
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### For example:
      *

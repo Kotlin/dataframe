@@ -7,54 +7,54 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
 
 /**
- * See [Usage].
+ * See [Grammar].
  */
 public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
-     * ## (Cols) Name (Contains / StartsWith / EndsWith) Usage
+     * ## (Cols) Name (Contains / StartsWith / EndsWith) Grammar
      *
-     * @include [UsageTemplate]
-     * {@setArg [UsageTemplate.DefinitionsArg]
-     *  {@include [UsageTemplate.ColumnSetDef]}
+     * @include [DslGrammarTemplate]
+     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.ColumnGroupDef]}
+     *  {@include [DslGrammarTemplate.ColumnGroupDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.TextDef]}
+     *  {@include [DslGrammarTemplate.TextDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.IgnoreCaseDef]}
+     *  {@include [DslGrammarTemplate.IgnoreCaseDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.RegexDef]}
+     *  {@include [DslGrammarTemplate.RegexDef]}
      * }
      *
-     * {@setArg [UsageTemplate.PlainDslFunctionsArg]
-     *  {@include [PlainDslNameContains]}**`(`**{@include [UsageTemplate.TextRef]}`[`**`,`** {@include [UsageTemplate.IgnoreCaseRef]}`] | `{@include [UsageTemplate.RegexRef]}**`)`**
+     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
+     *  {@include [PlainDslNameContains]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`,`** {@include [DslGrammarTemplate.IgnoreCaseRef]}`] | `{@include [DslGrammarTemplate.RegexRef]}**`)`**
      *
-     *  `|` {@include [PlainDslNameStartsEndsWith]}**`(`**{@include [UsageTemplate.TextRef]}`[`**`,`** {@include [UsageTemplate.IgnoreCaseRef]}`]`**`)`**
+     *  `|` {@include [PlainDslNameStartsEndsWith]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`,`** {@include [DslGrammarTemplate.IgnoreCaseRef]}`]`**`)`**
      * }
      *
-     * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnSetNameContains]}**`(`**{@include [UsageTemplate.TextRef]}`[`**`,`** {@include [UsageTemplate.IgnoreCaseRef]}`] | `{@include [UsageTemplate.RegexRef]}**`)`**
+     * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
+     *  {@include [Indent]}{@include [ColumnSetNameContains]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`,`** {@include [DslGrammarTemplate.IgnoreCaseRef]}`] | `{@include [DslGrammarTemplate.RegexRef]}**`)`**
      *
-     *  {@include [Indent]}`|` {@include [ColumnSetNameStartsEndsWith]}**`(`**{@include [UsageTemplate.TextRef]}`[`**`,`** {@include [UsageTemplate.IgnoreCaseRef]}`]`**`)`**
+     *  {@include [Indent]}`|` {@include [ColumnSetNameStartsEndsWith]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`,`** {@include [DslGrammarTemplate.IgnoreCaseRef]}`]`**`)`**
      * }
      *
-     * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnGroupNameContains]}**`(`**{@include [UsageTemplate.TextRef]}`[`**`,`** {@include [UsageTemplate.IgnoreCaseRef]}`] | `{@include [UsageTemplate.RegexRef]}**`)`**
+     * {@setArg [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     *  {@include [Indent]}{@include [ColumnGroupNameContains]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`,`** {@include [DslGrammarTemplate.IgnoreCaseRef]}`] | `{@include [DslGrammarTemplate.RegexRef]}**`)`**
      *
-     *  {@include [Indent]}`|` {@include [ColumnGroupNameStartsWith]}**`(`**{@include [UsageTemplate.TextRef]}`[`**`,`** {@include [UsageTemplate.IgnoreCaseRef]}`]`**`)`**
+     *  {@include [Indent]}`|` {@include [ColumnGroupNameStartsWith]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`,`** {@include [DslGrammarTemplate.IgnoreCaseRef]}`]`**`)`**
      * }
      */
-    public interface Usage {
+    public interface Grammar {
 
         /** [**nameContains**][ColumnsSelectionDsl.nameContains] */
         public interface PlainDslNameContains
@@ -89,7 +89,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]` { `{@getArg [ArgumentArg]}{@getArg [ArgumentArg]}` `[in][String.contains]` it.`[name][DataColumn.name]` }`.
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### For example:
      *
@@ -282,7 +282,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]` { it.`[name][DataColumn.name]`.`[{@getArg [OperationNameArg]}][String.{@getArg [OperationNameArg]}]`(`{@getArg [ArgumentArg]}{@getArg [ArgumentArg]}`) }`.
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### For example:
      *

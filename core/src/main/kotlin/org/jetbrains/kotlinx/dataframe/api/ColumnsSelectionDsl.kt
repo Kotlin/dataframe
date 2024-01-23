@@ -8,11 +8,11 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_LIST_DATACOLUMN_GET
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_LIST_DATACOLUMN_GET_REPLACE
@@ -115,282 +115,282 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     ExprColumnsSelectionDsl {
 
     /**
-     * ## [ColumnsSelectionDsl] Usage
+     * ## {@include [ColumnsSelectionDslLink]} Grammar
      *
-     * @include [UsageTemplateColumnsSelectionDsl.UsageTemplate]
+     * @include [DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate]
      *
-     * {@setArg [UsageTemplate.DefinitionsArg]
-     *  {@include [UsageTemplate.ColumnGroupNoSingleColumnDef]}
+     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     *  {@include [DslGrammarTemplate.ColumnGroupNoSingleColumnDef]}
      *
-     *  {@include [UsageTemplate.ColumnSelectorDef]}
+     *  {@include [DslGrammarTemplate.ColumnSelectorDef]}
      *
-     *  {@include [UsageTemplate.ColumnsSelectorDef]}
+     *  {@include [DslGrammarTemplate.ColumnsSelectorDef]}
      *
-     *  {@include [UsageTemplate.ColumnDef]}
+     *  {@include [DslGrammarTemplate.ColumnDef]}
      *
-     *  {@include [UsageTemplate.ColumnGroupDef]}
+     *  {@include [DslGrammarTemplate.ColumnGroupDef]}
      *
-     *  {@include [UsageTemplate.ColumnNoAccessorDef]}
+     *  {@include [DslGrammarTemplate.ColumnNoAccessorDef]}
      *
-     *  {@include [UsageTemplate.ColumnOrColumnSetDef]}
+     *  {@include [DslGrammarTemplate.ColumnOrColumnSetDef]}
      *
-     *  {@include [UsageTemplate.ColumnSetDef]}
+     *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *
-     *  {@include [UsageTemplate.ColumnsResolverDef]}
+     *  {@include [DslGrammarTemplate.ColumnsResolverDef]}
      *
-     *  {@include [UsageTemplate.ConditionDef]}
+     *  {@include [DslGrammarTemplate.ConditionDef]}
      *
-     *  {@include [UsageTemplate.ColumnExpressionDef]}
+     *  {@include [DslGrammarTemplate.ColumnExpressionDef]}
      *
-     *  {@include [UsageTemplate.IgnoreCaseDef]}
+     *  {@include [DslGrammarTemplate.IgnoreCaseDef]}
      *
-     *  {@include [UsageTemplate.IndexDef]}
+     *  {@include [DslGrammarTemplate.IndexDef]}
      *
-     *  {@include [UsageTemplate.IndexRangeDef]}
+     *  {@include [DslGrammarTemplate.IndexRangeDef]}
      *
-     *  {@include [UsageTemplate.InferDef]}
+     *  {@include [DslGrammarTemplate.InferDef]}
      *
-     *  {@include [UsageTemplate.ColumnKindDef]}
+     *  {@include [DslGrammarTemplate.ColumnKindDef]}
      *
-     *  {@include [UsageTemplate.KTypeDef]}
+     *  {@include [DslGrammarTemplate.KTypeDef]}
      *
-     *  {@include [UsageTemplate.NameDef]}
+     *  {@include [DslGrammarTemplate.NameDef]}
      *
-     *  {@include [UsageTemplate.NumberDef]}
+     *  {@include [DslGrammarTemplate.NumberDef]}
      *
-     *  {@include [UsageTemplate.RegexDef]}
+     *  {@include [DslGrammarTemplate.RegexDef]}
      *
-     *  {@include [UsageTemplate.SingleColumnDef]}
+     *  {@include [DslGrammarTemplate.SingleColumnDef]}
      *
-     *  {@include [UsageTemplate.ColumnTypeDef]}
+     *  {@include [DslGrammarTemplate.ColumnTypeDef]}
      *
-     *  {@include [UsageTemplate.TextDef]}
+     *  {@include [DslGrammarTemplate.TextDef]}
      * }
      * {@comment Plain DSL: -------------------------------------------------------------------------------------------- }
-     * {@setArg [UsageTemplate.PlainDslFunctionsArg]
+     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
      *
-     * {@include [UsageTemplate.ColumnRef]} {@include [ColumnRangeColumnsSelectionDsl.Usage.PlainDslName]} {@include [UsageTemplate.ColumnRef]}
+     * {@include [DslGrammarTemplate.ColumnRef]} {@include [ColumnRangeColumnsSelectionDsl.Grammar.PlainDslName]} {@include [DslGrammarTemplate.ColumnRef]}
      *
-     *  `|` **`this`**`/`**`it`**[**`[`**][cols]{@include [UsageTemplate.ColumnRef]}**`,`**` .. `[**`]`**][cols]
+     *  `|` **`this`**`/`**`it`**[**`[`**][cols]{@include [DslGrammarTemplate.ColumnRef]}**`,`**` .. `[**`]`**][cols]
      *
-     *  `|` **`this`**`/`**`it`**[**`[`**][cols]**`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`**[**`]`**][cols]
+     *  `|` **`this`**`/`**`it`**[**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`**[**`]`**][cols]
      *
-     *  `|` {@include [AllColumnsSelectionDsl.Usage.PlainDslName]}**`()`**
+     *  `|` {@include [AllColumnsSelectionDsl.Grammar.PlainDslName]}**`()`**
      *
-     *  `|` **`all`**`(`{@include [AllColumnsSelectionDsl.Usage.Before]}`|`{@include [AllColumnsSelectionDsl.Usage.After]}`|`{@include [AllColumnsSelectionDsl.Usage.From]}`|`{@include [AllColumnsSelectionDsl.Usage.UpTo]}`)` `(` **`(`**{@include [UsageTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [UsageTemplate.ColumnSelectorRef]} **`\\}`** `)`
+     *  `|` **`all`**`(`{@include [AllColumnsSelectionDsl.Grammar.Before]}`|`{@include [AllColumnsSelectionDsl.Grammar.After]}`|`{@include [AllColumnsSelectionDsl.Grammar.From]}`|`{@include [AllColumnsSelectionDsl.Grammar.UpTo]}`)` `(` **`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [DslGrammarTemplate.ColumnSelectorRef]} **`\\}`** `)`
      *
-     *  `|` {@include [AllExceptColumnsSelectionDsl.Usage.PlainDslName]} **`{ `**{@include [UsageTemplate.ColumnsSelectorRef]}**` \\}`**
+     *  `|` {@include [AllExceptColumnsSelectionDsl.Grammar.PlainDslName]} **`{ `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**` \\}`**
      *
-     *  `|` {@include [AllExceptColumnsSelectionDsl.Usage.PlainDslName]}**`(`**{@include [UsageTemplate.ColumnRef]}**`,`**` ..`**`)`**
+     *  `|` {@include [AllExceptColumnsSelectionDsl.Grammar.PlainDslName]}**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**` ..`**`)`**
      *
-     *  `|` {@include [UsageTemplate.ColumnOrColumnSetRef]} {@include [AndColumnsSelectionDsl.Usage.InfixName]}` [ `**`{`**` ] `{@include [UsageTemplate.ColumnOrColumnSetRef]}` [ `**`\\}`**` ] `
+     *  `|` {@include [DslGrammarTemplate.ColumnOrColumnSetRef]} {@include [AndColumnsSelectionDsl.Grammar.InfixName]}` [ `**`{`**` ] `{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}` [ `**`\\}`**` ] `
      *
-     *  `|` {@include [UsageTemplate.ColumnOrColumnSetRef]}{@include [AndColumnsSelectionDsl.Usage.Name]} **`(`**`|`**`{ `**{@include [UsageTemplate.ColumnOrColumnSetRef]}**` \\}`**`|`**`)`**
+     *  `|` {@include [DslGrammarTemplate.ColumnOrColumnSetRef]}{@include [AndColumnsSelectionDsl.Grammar.Name]} **`(`**`|`**`{ `**{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}**` \\}`**`|`**`)`**
      *
      *  `|` `(`
-     *  {@include [ColColumnsSelectionDsl.Usage.PlainDslName]}
-     *  `|` {@include [ValueColColumnsSelectionDsl.Usage.PlainDslName]}
-     *  `|` {@include [FrameColColumnsSelectionDsl.Usage.PlainDslName]}
-     *  `|` {@include [ColGroupColumnsSelectionDsl.Usage.PlainDslName]}
-     *  `)[`**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.IndexRef]}**`)`**
+     *  {@include [ColColumnsSelectionDsl.Grammar.PlainDslName]}
+     *  `|` {@include [ValueColColumnsSelectionDsl.Grammar.PlainDslName]}
+     *  `|` {@include [FrameColColumnsSelectionDsl.Grammar.PlainDslName]}
+     *  `|` {@include [ColGroupColumnsSelectionDsl.Grammar.PlainDslName]}
+     *  `)[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}` | `{@include [DslGrammarTemplate.IndexRef]}**`)`**
      *
      * `|` `(`
-     *  {@include [ColsColumnsSelectionDsl.Usage.PlainDslName]}
-     *  `|` {@include [ValueColsColumnsSelectionDsl.Usage.PlainDslName]}
-     *  `|` {@include [FrameColsColumnsSelectionDsl.Usage.PlainDslName]}
-     *  `|` {@include [ColGroupsColumnsSelectionDsl.Usage.PlainDslName]}
-     *  `) [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     *  {@include [ColsColumnsSelectionDsl.Grammar.PlainDslName]}
+     *  `|` {@include [ValueColsColumnsSelectionDsl.Grammar.PlainDslName]}
+     *  `|` {@include [FrameColsColumnsSelectionDsl.Grammar.PlainDslName]}
+     *  `|` {@include [ColGroupsColumnsSelectionDsl.Grammar.PlainDslName]}
+     *  `) [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      *
-     *  `|` {@include [ColsColumnsSelectionDsl.Usage.PlainDslName]}`[`**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}**`,`**` .. | `{@include [UsageTemplate.IndexRef]}**`,`**` .. | `{@include [UsageTemplate.IndexRangeRef]}**`)`**
+     *  `|` {@include [ColsColumnsSelectionDsl.Grammar.PlainDslName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}**`)`**
      *
-     *  `|` {@include [ColsAtAnyDepthColumnsSelectionDsl.Usage.PlainDslName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     *  `|` {@include [ColsAtAnyDepthColumnsSelectionDsl.Grammar.PlainDslName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      *
-     *  `|` {@include [ColsInGroupsColumnsSelectionDsl.Usage.PlainDslName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]
+     *  `|` {@include [ColsInGroupsColumnsSelectionDsl.Grammar.PlainDslName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]
      *
-     *  `|` {@include [ColsOfColumnsSelectionDsl.Usage.PlainDslName]}**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>`**` [` **`(`**{@include [UsageTemplate.KTypeRef]}**`)`** `] [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     *  `|` {@include [ColsOfColumnsSelectionDsl.Grammar.PlainDslName]}**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**` [` **`(`**{@include [DslGrammarTemplate.KTypeRef]}**`)`** `] [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      *
-     *  `|` {@include [ColsOfKindColumnsSelectionDsl.Usage.PlainDslName]}**`(`**{@include [UsageTemplate.ColumnKindRef]}**`,`**` ..`**`)`**` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     *  `|` {@include [ColsOfKindColumnsSelectionDsl.Grammar.PlainDslName]}**`(`**{@include [DslGrammarTemplate.ColumnKindRef]}**`,`**` ..`**`)`**` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      *
-     *  `|` {@include [DropColumnsSelectionDsl.Usage.PlainDslName]}**`(`**{@include [UsageTemplate.NumberRef]}**`)`**
+     *  `|` {@include [DropColumnsSelectionDsl.Grammar.PlainDslName]}**`(`**{@include [DslGrammarTemplate.NumberRef]}**`)`**
      *
-     *  `|` {@include [DropColumnsSelectionDsl.Usage.PlainDslWhileName]}**` { `**{@include [UsageTemplate.ConditionRef]}**` \\}`**
+     *  `|` {@include [DropColumnsSelectionDsl.Grammar.PlainDslWhileName]}**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`**
      *
-     *  `|` {@include [ExprColumnsSelectionDsl.Usage.PlainDslName]}**`(`**`[`{@include [UsageTemplate.NameRef]}**`,`**`][`{@include [UsageTemplate.InferRef]}`]`**`)`** **`{ `**{@include [UsageTemplate.ColumnExpressionRef]}**` \\}`**
+     *  `|` {@include [ExprColumnsSelectionDsl.Grammar.PlainDslName]}**`(`**`[`{@include [DslGrammarTemplate.NameRef]}**`,`**`][`{@include [DslGrammarTemplate.InferRef]}`]`**`)`** **`{ `**{@include [DslGrammarTemplate.ColumnExpressionRef]}**` \\}`**
      *
      *  `|` `(`
-     *  {@include [FirstColumnsSelectionDsl.Usage.PlainDslName]}
-     *  `|` {@include [LastColumnsSelectionDsl.Usage.PlainDslName]}
-     *  `|` {@include [SingleColumnsSelectionDsl.Usage.PlainDslName]}
-     *  `) [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     *  {@include [FirstColumnsSelectionDsl.Grammar.PlainDslName]}
+     *  `|` {@include [LastColumnsSelectionDsl.Grammar.PlainDslName]}
+     *  `|` {@include [SingleColumnsSelectionDsl.Grammar.PlainDslName]}
+     *  `) [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      *
-     *  `|` {@include [ColumnNameFiltersColumnsSelectionDsl.Usage.PlainDslNameContains]}**`(`**{@include [UsageTemplate.TextRef]}`[`**`,`** {@include [UsageTemplate.IgnoreCaseRef]}`] | `{@include [UsageTemplate.RegexRef]}**`)`**
+     *  `|` {@include [ColumnNameFiltersColumnsSelectionDsl.Grammar.PlainDslNameContains]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`,`** {@include [DslGrammarTemplate.IgnoreCaseRef]}`] | `{@include [DslGrammarTemplate.RegexRef]}**`)`**
      *
-     *  `|` {@include [ColumnNameFiltersColumnsSelectionDsl.Usage.PlainDslNameStartsEndsWith]}**`(`**{@include [UsageTemplate.TextRef]}`[`**`,`** {@include [UsageTemplate.IgnoreCaseRef]}`]`**`)`**
+     *  `|` {@include [ColumnNameFiltersColumnsSelectionDsl.Grammar.PlainDslNameStartsEndsWith]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`,`** {@include [DslGrammarTemplate.IgnoreCaseRef]}`]`**`)`**
      *
-     *  `|` {@include [UsageTemplate.ColumnRef]} {@include [RenameColumnsSelectionDsl.Usage.InfixNamedName]}`/`{@include [RenameColumnsSelectionDsl.Usage.InfixIntoName]} {@include [UsageTemplate.ColumnRef]}
+     *  `|` {@include [DslGrammarTemplate.ColumnRef]} {@include [RenameColumnsSelectionDsl.Grammar.InfixNamedName]}`/`{@include [RenameColumnsSelectionDsl.Grammar.InfixIntoName]} {@include [DslGrammarTemplate.ColumnRef]}
      *
-     *  `|` {@include [UsageTemplate.ColumnRef]}`(`{@include [RenameColumnsSelectionDsl.Usage.NamedName]}`|`{@include [RenameColumnsSelectionDsl.Usage.IntoName]}`)`**`(`**{@include [UsageTemplate.ColumnRef]}**`)`**
+     *  `|` {@include [DslGrammarTemplate.ColumnRef]}`(`{@include [RenameColumnsSelectionDsl.Grammar.NamedName]}`|`{@include [RenameColumnsSelectionDsl.Grammar.IntoName]}`)`**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`**
      *
-     *  `|` {@include [NoneColumnsSelectionDsl.Usage.PlainDslName]}**`()`**
+     *  `|` {@include [NoneColumnsSelectionDsl.Grammar.PlainDslName]}**`()`**
      *
-     *  `|` {@include [TakeColumnsSelectionDsl.Usage.PlainDslName]}**`(`**{@include [UsageTemplate.NumberRef]}**`)`**
+     *  `|` {@include [TakeColumnsSelectionDsl.Grammar.PlainDslName]}**`(`**{@include [DslGrammarTemplate.NumberRef]}**`)`**
      *
-     *  `|` {@include [TakeColumnsSelectionDsl.Usage.PlainDslWhileName]}**` { `**{@include [UsageTemplate.ConditionRef]}**` \\}`**
+     *  `|` {@include [TakeColumnsSelectionDsl.Grammar.PlainDslWhileName]}**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`**
      *
-     *  `|` {@include [WithoutNullsColumnsSelectionDsl.Usage.PlainDslName]}**`()`**
+     *  `|` {@include [WithoutNullsColumnsSelectionDsl.Grammar.PlainDslName]}**`()`**
      * }
      * {@comment ColumnSet: -------------------------------------------------------------------------------------------- }
-     * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
+     * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
      *
-     *  {@include [Indent]}[**`[`**][ColumnsSelectionDsl.col]{@include [UsageTemplate.IndexRef]}[**`]`**][ColumnsSelectionDsl.col]
+     *  {@include [Indent]}[**`[`**][ColumnsSelectionDsl.col]{@include [DslGrammarTemplate.IndexRef]}[**`]`**][ColumnsSelectionDsl.col]
      *
-     *  {@include [Indent]}`|` [**`[`**][cols]{@include [UsageTemplate.IndexRef]}**`,`**` .. | `{@include [UsageTemplate.IndexRangeRef]}[**`]`**][cols]`
+     *  {@include [Indent]}`|` [**`[`**][cols]{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}[**`]`**][cols]`
      *
-     *  {@include [Indent]}`|` [**`[`**][cols]**`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`**[**`]`**][cols]
+     *  {@include [Indent]}`|` [**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`**[**`]`**][cols]
      *
-     *  {@include [Indent]}`|` {@include [AllColumnsSelectionDsl.Usage.ColumnSetName]}**`()`**
+     *  {@include [Indent]}`|` {@include [AllColumnsSelectionDsl.Grammar.ColumnSetName]}**`()`**
      *
-     *  {@include [Indent]}`|` .**`all`**`(`{@include [AllColumnsSelectionDsl.Usage.Before]}`|`{@include [AllColumnsSelectionDsl.Usage.After]}`|`{@include [AllColumnsSelectionDsl.Usage.From]}`|`{@include [AllColumnsSelectionDsl.Usage.UpTo]}`)` `(` **`(`**{@include [UsageTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [UsageTemplate.ConditionRef]} **`\\}`** `)`
+     *  {@include [Indent]}`|` .**`all`**`(`{@include [AllColumnsSelectionDsl.Grammar.Before]}`|`{@include [AllColumnsSelectionDsl.Grammar.After]}`|`{@include [AllColumnsSelectionDsl.Grammar.From]}`|`{@include [AllColumnsSelectionDsl.Grammar.UpTo]}`)` `(` **`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [DslGrammarTemplate.ConditionRef]} **`\\}`** `)`
      *
-     *  {@include [Indent]}`|` {@include [AndColumnsSelectionDsl.Usage.Name]} **`(`**`|`**`{ `**{@include [UsageTemplate.ColumnOrColumnSetRef]}**` \\}`**`|`**`)`**
-     *
-     *  {@include [Indent]}`|` `(`
-     *  {@include [ColColumnsSelectionDsl.Usage.ColumnSetName]}
-     *  `|` {@include [ValueColColumnsSelectionDsl.Usage.ColumnSetName]}
-     *  `|` {@include [FrameColColumnsSelectionDsl.Usage.ColumnSetName]}
-     *  `|` {@include [ColGroupColumnsSelectionDsl.Usage.ColumnSetName]}
-     *  `)`**`(`**{@include [UsageTemplate.IndexRef]}**`)`**
+     *  {@include [Indent]}`|` {@include [AndColumnsSelectionDsl.Grammar.Name]} **`(`**`|`**`{ `**{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}**` \\}`**`|`**`)`**
      *
      *  {@include [Indent]}`|` `(`
-     *  {@include [ColsColumnsSelectionDsl.Usage.ColumnSetName]}
-     *  `|` {@include [ValueColsColumnsSelectionDsl.Usage.ColumnSetName]}
-     *  `|` {@include [FrameColsColumnsSelectionDsl.Usage.ColumnSetName]}
-     *  `|` {@include [ColGroupsColumnsSelectionDsl.Usage.ColumnSetName]}
-     *  `) [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
-     *
-     *  {@include [Indent]}`|` {@include [ColsColumnsSelectionDsl.Usage.ColumnSetName]}**`(`**{@include [UsageTemplate.IndexRef]}**`,`**` .. | `{@include [UsageTemplate.IndexRangeRef]}**`)`**
-     *
-     *  {@include [Indent]}`|` {@include [ColsAtAnyDepthColumnsSelectionDsl.Usage.ColumnSetName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
-     *
-     *  {@include [Indent]}`|` {@include [ColsInGroupsColumnsSelectionDsl.Usage.ColumnSetName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
-     *
-     *  {@include [Indent]}`|` {@include [ColsOfColumnsSelectionDsl.Usage.ColumnSetName]}**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>`**` [` **`(`**{@include [UsageTemplate.KTypeRef]}**`)`** `] [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
-     *
-     *  {@include [Indent]}`|` {@include [ColsOfKindColumnsSelectionDsl.Usage.ColumnSetName]}**`(`**{@include [UsageTemplate.ColumnKindRef]}**`,`**` ..`**`)`**` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
-     *
-     *  {@include [Indent]}`|` {@include [DistinctColumnsSelectionDsl.Usage.ColumnSetName]}**`()`**
-     *
-     *  {@include [Indent]}`|` {@include [DropColumnsSelectionDsl.Usage.ColumnSetName]}**`(`**{@include [UsageTemplate.NumberRef]}**`)`**
-     *
-     *  {@include [Indent]}`|` {@include [DropColumnsSelectionDsl.Usage.ColumnSetWhileName]}**` { `**{@include [UsageTemplate.ConditionRef]}**` \\}`**
-     *
-     *  {@include [Indent]}`|` {@include [AllExceptColumnsSelectionDsl.Usage.ColumnSetName]} `[`**` { `**`]` {@include [UsageTemplate.ColumnsResolverRef]} `[`**` \\} `**`]`
-     *
-     *  {@include [Indent]}`|` {@include [AllExceptColumnsSelectionDsl.Usage.ColumnSetName]} {@include [UsageTemplate.ColumnRef]}
-     *
-     *  {@include [Indent]}`|` .{@include [AllExceptColumnsSelectionDsl.Usage.ColumnSetName]}**`(`**{@include [UsageTemplate.ColumnRef]}**`,`**` ..`**`)`**
-     *
-     *  {@include [Indent]}`|` {@include [FilterColumnsSelectionDsl.Usage.ColumnSetName]}**` {`** {@include [UsageTemplate.ConditionRef]} **`\\}`**
+     *  {@include [ColColumnsSelectionDsl.Grammar.ColumnSetName]}
+     *  `|` {@include [ValueColColumnsSelectionDsl.Grammar.ColumnSetName]}
+     *  `|` {@include [FrameColColumnsSelectionDsl.Grammar.ColumnSetName]}
+     *  `|` {@include [ColGroupColumnsSelectionDsl.Grammar.ColumnSetName]}
+     *  `)`**`(`**{@include [DslGrammarTemplate.IndexRef]}**`)`**
      *
      *  {@include [Indent]}`|` `(`
-     *  {@include [FirstColumnsSelectionDsl.Usage.ColumnSetName]}
-     *  `|` {@include [LastColumnsSelectionDsl.Usage.ColumnSetName]}
-     *  `|` {@include [SingleColumnsSelectionDsl.Usage.ColumnSetName]}
-     *  `) [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     *  {@include [ColsColumnsSelectionDsl.Grammar.ColumnSetName]}
+     *  `|` {@include [ValueColsColumnsSelectionDsl.Grammar.ColumnSetName]}
+     *  `|` {@include [FrameColsColumnsSelectionDsl.Grammar.ColumnSetName]}
+     *  `|` {@include [ColGroupsColumnsSelectionDsl.Grammar.ColumnSetName]}
+     *  `) [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      *
-     *  {@include [Indent]}`|` {@include [ColumnNameFiltersColumnsSelectionDsl.Usage.ColumnSetNameStartsEndsWith]}**`(`**{@include [UsageTemplate.TextRef]}`[`**`,`** {@include [UsageTemplate.IgnoreCaseRef]}`]`**`)`**
+     *  {@include [Indent]}`|` {@include [ColsColumnsSelectionDsl.Grammar.ColumnSetName]}**`(`**{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}**`)`**
      *
-     *  {@include [Indent]}`|` {@include [ColumnNameFiltersColumnsSelectionDsl.Usage.ColumnSetNameContains]}**`(`**{@include [UsageTemplate.TextRef]}`[`**`,`** {@include [UsageTemplate.IgnoreCaseRef]}`] | `{@include [UsageTemplate.RegexRef]}**`)`**
+     *  {@include [Indent]}`|` {@include [ColsAtAnyDepthColumnsSelectionDsl.Grammar.ColumnSetName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      *
-     *  {@include [Indent]}`|` {@include [SimplifyColumnsSelectionDsl.Usage.ColumnSetName]}**`()`**
+     *  {@include [Indent]}`|` {@include [ColsInGroupsColumnsSelectionDsl.Grammar.ColumnSetName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      *
-     *  {@include [Indent]}`|` {@include [TakeColumnsSelectionDsl.Usage.ColumnSetName]}**`(`**{@include [UsageTemplate.NumberRef]}**`)`**
+     *  {@include [Indent]}`|` {@include [ColsOfColumnsSelectionDsl.Grammar.ColumnSetName]}**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**` [` **`(`**{@include [DslGrammarTemplate.KTypeRef]}**`)`** `] [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      *
-     *  {@include [Indent]}`|` {@include [TakeColumnsSelectionDsl.Usage.ColumnSetWhileName]}**` { `**{@include [UsageTemplate.ConditionRef]}**` \\}`**
+     *  {@include [Indent]}`|` {@include [ColsOfKindColumnsSelectionDsl.Grammar.ColumnSetName]}**`(`**{@include [DslGrammarTemplate.ColumnKindRef]}**`,`**` ..`**`)`**` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      *
-     *  {@include [Indent]}`|` {@include [WithoutNullsColumnsSelectionDsl.Usage.ColumnSetName]}**`()`**
+     *  {@include [Indent]}`|` {@include [DistinctColumnsSelectionDsl.Grammar.ColumnSetName]}**`()`**
+     *
+     *  {@include [Indent]}`|` {@include [DropColumnsSelectionDsl.Grammar.ColumnSetName]}**`(`**{@include [DslGrammarTemplate.NumberRef]}**`)`**
+     *
+     *  {@include [Indent]}`|` {@include [DropColumnsSelectionDsl.Grammar.ColumnSetWhileName]}**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`**
+     *
+     *  {@include [Indent]}`|` {@include [AllExceptColumnsSelectionDsl.Grammar.ColumnSetName]} `[`**` { `**`]` {@include [DslGrammarTemplate.ColumnsResolverRef]} `[`**` \\} `**`]`
+     *
+     *  {@include [Indent]}`|` {@include [AllExceptColumnsSelectionDsl.Grammar.ColumnSetName]} {@include [DslGrammarTemplate.ColumnRef]}
+     *
+     *  {@include [Indent]}`|` .{@include [AllExceptColumnsSelectionDsl.Grammar.ColumnSetName]}**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**` ..`**`)`**
+     *
+     *  {@include [Indent]}`|` {@include [FilterColumnsSelectionDsl.Grammar.ColumnSetName]}**` {`** {@include [DslGrammarTemplate.ConditionRef]} **`\\}`**
+     *
+     *  {@include [Indent]}`|` `(`
+     *  {@include [FirstColumnsSelectionDsl.Grammar.ColumnSetName]}
+     *  `|` {@include [LastColumnsSelectionDsl.Grammar.ColumnSetName]}
+     *  `|` {@include [SingleColumnsSelectionDsl.Grammar.ColumnSetName]}
+     *  `) [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
+     *
+     *  {@include [Indent]}`|` {@include [ColumnNameFiltersColumnsSelectionDsl.Grammar.ColumnSetNameStartsEndsWith]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`,`** {@include [DslGrammarTemplate.IgnoreCaseRef]}`]`**`)`**
+     *
+     *  {@include [Indent]}`|` {@include [ColumnNameFiltersColumnsSelectionDsl.Grammar.ColumnSetNameContains]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`,`** {@include [DslGrammarTemplate.IgnoreCaseRef]}`] | `{@include [DslGrammarTemplate.RegexRef]}**`)`**
+     *
+     *  {@include [Indent]}`|` {@include [SimplifyColumnsSelectionDsl.Grammar.ColumnSetName]}**`()`**
+     *
+     *  {@include [Indent]}`|` {@include [TakeColumnsSelectionDsl.Grammar.ColumnSetName]}**`(`**{@include [DslGrammarTemplate.NumberRef]}**`)`**
+     *
+     *  {@include [Indent]}`|` {@include [TakeColumnsSelectionDsl.Grammar.ColumnSetWhileName]}**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`**
+     *
+     *  {@include [Indent]}`|` {@include [WithoutNullsColumnsSelectionDsl.Grammar.ColumnSetName]}**`()`**
      * }
      * {@comment ColumnGroup: -------------------------------------------------------------------------------------------- }
-     * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
+     * {@setArg [DslGrammarTemplate.ColumnGroupFunctionsArg]
      *
-     *  {@include [Indent]}`|` [**`[`**][cols]{@include [UsageTemplate.ColumnRef]}**`,`**` ..`[**`]`**][cols]
+     *  {@include [Indent]}`|` [**`[`**][cols]{@include [DslGrammarTemplate.ColumnRef]}**`,`**` ..`[**`]`**][cols]
      *
-     *  {@include [Indent]}`|` [**`[`**][cols]**`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`**[**`]`**][cols]
+     *  {@include [Indent]}`|` [**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`**[**`]`**][cols]
      *
-     *  {@include [Indent]}`|`[**` {`**][ColumnsSelectionDsl.select] {@include [UsageTemplate.ColumnsSelectorRef]} [**`\\}`**][ColumnsSelectionDsl.select]
+     *  {@include [Indent]}`|`[**` {`**][ColumnsSelectionDsl.select] {@include [DslGrammarTemplate.ColumnsSelectorRef]} [**`\\}`**][ColumnsSelectionDsl.select]
      *
-     *  {@include [Indent]}`|` {@include [AllColumnsSelectionDsl.Usage.ColumnGroupName]}**`()`**
+     *  {@include [Indent]}`|` {@include [AllColumnsSelectionDsl.Grammar.ColumnGroupName]}**`()`**
      *
-     *  {@include [Indent]}`|` .**`allCols`**`(`{@include [AllColumnsSelectionDsl.Usage.Before]}`|`{@include [AllColumnsSelectionDsl.Usage.After]}`|`{@include [AllColumnsSelectionDsl.Usage.From]}`|`{@include [AllColumnsSelectionDsl.Usage.UpTo]}`)` `(` **`(`**{@include [UsageTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [UsageTemplate.ColumnSelectorRef]} **`\\}`** `)`
+     *  {@include [Indent]}`|` .**`allCols`**`(`{@include [AllColumnsSelectionDsl.Grammar.Before]}`|`{@include [AllColumnsSelectionDsl.Grammar.After]}`|`{@include [AllColumnsSelectionDsl.Grammar.From]}`|`{@include [AllColumnsSelectionDsl.Grammar.UpTo]}`)` `(` **`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [DslGrammarTemplate.ColumnSelectorRef]} **`\\}`** `)`
      *
-     *  {@include [Indent]}`|` {@include [AllExceptColumnsSelectionDsl.Usage.ColumnGroupName]} **` { `**{@include [UsageTemplate.ColumnsSelectorRef]}**` \\} `**
+     *  {@include [Indent]}`|` {@include [AllExceptColumnsSelectionDsl.Grammar.ColumnGroupName]} **` { `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**` \\} `**
      *
-     *  {@include [Indent]}`|` {@include [AllExceptColumnsSelectionDsl.Usage.ColumnGroupName]}**`(`**{@include [UsageTemplate.ColumnNoAccessorRef]}**`,`**` ..`**`)`**
+     *  {@include [Indent]}`|` {@include [AllExceptColumnsSelectionDsl.Grammar.ColumnGroupName]}**`(`**{@include [DslGrammarTemplate.ColumnNoAccessorRef]}**`,`**` ..`**`)`**
      *
-     *  {@include [Indent]}`|` {@include [AndColumnsSelectionDsl.Usage.Name]} **`(`**`|`**`{ `**{@include [UsageTemplate.ColumnOrColumnSetRef]}**` \\}`**`|`**`)`**
+     *  {@include [Indent]}`|` {@include [AndColumnsSelectionDsl.Grammar.Name]} **`(`**`|`**`{ `**{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}**` \\}`**`|`**`)`**
      *
      *  {@include [Indent]}`| (`
-     *  {@include [ColColumnsSelectionDsl.Usage.ColumnGroupName]}
-     *  `|` {@include [ValueColColumnsSelectionDsl.Usage.ColumnGroupName]}
-     *  `|` {@include [FrameColColumnsSelectionDsl.Usage.ColumnGroupName]}
-     *  `|` {@include [ColGroupColumnsSelectionDsl.Usage.ColumnGroupName]}
-     *  `)[`**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}` | `{@include [UsageTemplate.IndexRef]}**`)`**
+     *  {@include [ColColumnsSelectionDsl.Grammar.ColumnGroupName]}
+     *  `|` {@include [ValueColColumnsSelectionDsl.Grammar.ColumnGroupName]}
+     *  `|` {@include [FrameColColumnsSelectionDsl.Grammar.ColumnGroupName]}
+     *  `|` {@include [ColGroupColumnsSelectionDsl.Grammar.ColumnGroupName]}
+     *  `)[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}` | `{@include [DslGrammarTemplate.IndexRef]}**`)`**
      *
      *  {@include [Indent]}`|` `(`
-     *   {@include [ColsColumnsSelectionDsl.Usage.ColumnGroupName]}
-     *   `|` {@include [ValueColsColumnsSelectionDsl.Usage.ColumnGroupName]}
-     *   `|` {@include [FrameColsColumnsSelectionDsl.Usage.ColumnGroupName]}
-     *   `|` {@include [ColGroupsColumnsSelectionDsl.Usage.ColumnGroupName]}
-     *   `) [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     *   {@include [ColsColumnsSelectionDsl.Grammar.ColumnGroupName]}
+     *   `|` {@include [ValueColsColumnsSelectionDsl.Grammar.ColumnGroupName]}
+     *   `|` {@include [FrameColsColumnsSelectionDsl.Grammar.ColumnGroupName]}
+     *   `|` {@include [ColGroupsColumnsSelectionDsl.Grammar.ColumnGroupName]}
+     *   `) [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      *
-     *  {@include [Indent]}`|` {@include [ColsColumnsSelectionDsl.Usage.ColumnGroupName]}`[`**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [UsageTemplate.ColumnRef]}**`,`**` .. | `{@include [UsageTemplate.IndexRef]}**`,`**` .. | `{@include [UsageTemplate.IndexRangeRef]}**`)`**
+     *  {@include [Indent]}`|` {@include [ColsColumnsSelectionDsl.Grammar.ColumnGroupName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}**`)`**
      *
-     *  {@include [Indent]}`|` {@include [ColsAtAnyDepthColumnsSelectionDsl.Usage.ColumnGroupName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     *  {@include [Indent]}`|` {@include [ColsAtAnyDepthColumnsSelectionDsl.Grammar.ColumnGroupName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      *
-     *  {@include [Indent]}`|` {@include [ColsInGroupsColumnsSelectionDsl.Usage.ColumnGroupName]}` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     *  {@include [Indent]}`|` {@include [ColsInGroupsColumnsSelectionDsl.Grammar.ColumnGroupName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      *
-     *  {@include [Indent]}`|` {@include [ColumnNameFiltersColumnsSelectionDsl.Usage.ColumnGroupNameStartsWith]}**`(`**{@include [UsageTemplate.TextRef]}`[`**`,`** {@include [UsageTemplate.IgnoreCaseRef]}`]`**`)`**
+     *  {@include [Indent]}`|` {@include [ColumnNameFiltersColumnsSelectionDsl.Grammar.ColumnGroupNameStartsWith]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`,`** {@include [DslGrammarTemplate.IgnoreCaseRef]}`]`**`)`**
      *
-     *  {@include [Indent]}`|` {@include [ColumnNameFiltersColumnsSelectionDsl.Usage.ColumnGroupNameContains]}**`(`**{@include [UsageTemplate.TextRef]}`[`**`,`** {@include [UsageTemplate.IgnoreCaseRef]}`] | `{@include [UsageTemplate.RegexRef]}**`)`**
+     *  {@include [Indent]}`|` {@include [ColumnNameFiltersColumnsSelectionDsl.Grammar.ColumnGroupNameContains]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`,`** {@include [DslGrammarTemplate.IgnoreCaseRef]}`] | `{@include [DslGrammarTemplate.RegexRef]}**`)`**
      *
-     *  {@include [Indent]}`|` {@include [ColsOfKindColumnsSelectionDsl.Usage.ColumnGroupName]}**`(`**{@include [UsageTemplate.ColumnKindRef]}**`,`**` ..`**`)`**` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     *  {@include [Indent]}`|` {@include [ColsOfKindColumnsSelectionDsl.Grammar.ColumnGroupName]}**`(`**{@include [DslGrammarTemplate.ColumnKindRef]}**`,`**` ..`**`)`**` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      *
-     *  {@include [Indent]}`|` {@include [WithoutNullsColumnsSelectionDsl.Usage.ColumnGroupName]}**`()`**
+     *  {@include [Indent]}`|` {@include [WithoutNullsColumnsSelectionDsl.Grammar.ColumnGroupName]}**`()`**
      *
-     *  {@include [Indent]}`|` {@include [DropColumnsSelectionDsl.Usage.ColumnGroupName]}**`(`**{@include [UsageTemplate.NumberRef]}**`)`**
+     *  {@include [Indent]}`|` {@include [DropColumnsSelectionDsl.Grammar.ColumnGroupName]}**`(`**{@include [DslGrammarTemplate.NumberRef]}**`)`**
      *
-     *  {@include [Indent]}`|` {@include [DropColumnsSelectionDsl.Usage.ColumnGroupWhileName]}**` { `**{@include [UsageTemplate.ConditionRef]}**` \\}`**
+     *  {@include [Indent]}`|` {@include [DropColumnsSelectionDsl.Grammar.ColumnGroupWhileName]}**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`**
      *
-     *  {@include [Indent]}`|` {@include [AllExceptColumnsSelectionDsl.Usage.ColumnGroupExperimentalName]} **` { `**{@include [UsageTemplate.ColumnsSelectorRef]}**` \\} EXPERIMENTAL!`**
+     *  {@include [Indent]}`|` {@include [AllExceptColumnsSelectionDsl.Grammar.ColumnGroupExperimentalName]} **` { `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**` \\} EXPERIMENTAL!`**
      *
-     *  {@include [Indent]}`|` {@include [AllExceptColumnsSelectionDsl.Usage.ColumnGroupExperimentalName]}**`(`**{@include [UsageTemplate.ColumnNoAccessorRef]}**`,`**` ..`**`) EXPERIMENTAL!`**
+     *  {@include [Indent]}`|` {@include [AllExceptColumnsSelectionDsl.Grammar.ColumnGroupExperimentalName]}**`(`**{@include [DslGrammarTemplate.ColumnNoAccessorRef]}**`,`**` ..`**`) EXPERIMENTAL!`**
      *
      *  {@include [Indent]}`|` `(`
-     *  {@include [FirstColumnsSelectionDsl.Usage.ColumnGroupName]}
-     *  `|` {@include [LastColumnsSelectionDsl.Usage.ColumnGroupName]}
-     *  `|` {@include [SingleColumnsSelectionDsl.Usage.ColumnGroupName]}
-     *  `) [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     *  {@include [FirstColumnsSelectionDsl.Grammar.ColumnGroupName]}
+     *  `|` {@include [LastColumnsSelectionDsl.Grammar.ColumnGroupName]}
+     *  `|` {@include [SingleColumnsSelectionDsl.Grammar.ColumnGroupName]}
+     *  `) [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      *
-     *  {@include [Indent]}`|` {@include [SelectColumnsSelectionDsl.Usage.ColumnGroupName]}**` {`** {@include [UsageTemplate.ColumnsSelectorRef]} **`\\}`**
+     *  {@include [Indent]}`|` {@include [SelectColumnsSelectionDsl.Grammar.ColumnGroupName]}**` {`** {@include [DslGrammarTemplate.ColumnsSelectorRef]} **`\\}`**
      *
-     *  {@include [Indent]}`|` {@include [TakeColumnsSelectionDsl.Usage.ColumnGroupName]}**`(`**{@include [UsageTemplate.NumberRef]}**`)`**
+     *  {@include [Indent]}`|` {@include [TakeColumnsSelectionDsl.Grammar.ColumnGroupName]}**`(`**{@include [DslGrammarTemplate.NumberRef]}**`)`**
      *
-     *  {@include [Indent]}`|` {@include [TakeColumnsSelectionDsl.Usage.ColumnGroupWhileName]}**` { `**{@include [UsageTemplate.ConditionRef]}**` \\}`**
+     *  {@include [Indent]}`|` {@include [TakeColumnsSelectionDsl.Grammar.ColumnGroupWhileName]}**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`**
      *
      *  {@include [LineBreak]}
      *
-     *  {@include [UsageTemplate.SingleColumnRef]}
+     *  {@include [DslGrammarTemplate.SingleColumnRef]}
      *
-     *  {@include [Indent]}{@include [ColsOfColumnsSelectionDsl.Usage.ColumnGroupName]}**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>`**` [` **`(`**{@include [UsageTemplate.KTypeRef]}**`)`** `] [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     *  {@include [Indent]}{@include [ColsOfColumnsSelectionDsl.Grammar.ColumnGroupName]}**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**` [` **`(`**{@include [DslGrammarTemplate.KTypeRef]}**`)`** `] [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      *
      *  {@include [LineBreak]}
      *
-     *  {@include [UsageTemplate.ColumnGroupNoSingleColumnRef]}
+     *  {@include [DslGrammarTemplate.ColumnGroupNoSingleColumnRef]}
      *
-     *  {@include [Indent]}{@include [ColsOfColumnsSelectionDsl.Usage.ColumnGroupName]}**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>(`**{@include [UsageTemplate.KTypeRef]}**`)`** ` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     *  {@include [Indent]}{@include [ColsOfColumnsSelectionDsl.Grammar.ColumnGroupName]}**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>(`**{@include [DslGrammarTemplate.KTypeRef]}**`)`** ` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      * }
      */
-    public interface Usage
+    public interface DslGrammar
 
     /**
      * Invokes the given [ColumnsSelector] using this [ColumnsSelectionDsl].

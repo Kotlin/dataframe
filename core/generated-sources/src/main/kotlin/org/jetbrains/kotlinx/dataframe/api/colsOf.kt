@@ -4,18 +4,18 @@ import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage
-import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage.PlainDslName
+import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar
+import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar.ColumnGroupName
+import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar.ColumnSetName
+import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar.PlainDslName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.size
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -24,18 +24,21 @@ import kotlin.reflect.typeOf
 // region ColumnsSelectionDsl
 
 /**
- * See [Usage]
+ * See [Grammar]
  */
 public interface ColsOfColumnsSelectionDsl {
 
     /**
-     * ## Cols Of Usage
-     *
+     * ## Cols Of Grammar
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### Definitions:
+     *  `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -69,23 +72,23 @@ public interface ColsOfColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
+     *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [**colsOf**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[T][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**` [` **`(`**[kType][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.KTypeDef]**`)`** `] [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `]`
+     *  [**colsOf**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[T][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**` [` **`(`**[kType][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.KTypeDef]**`)`** `] [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`** `]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
+     *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**colsOf**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[T][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**` [` **`(`**[kType][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.KTypeDef]**`)`** `] [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `]`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**colsOf**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[T][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**` [` **`(`**[kType][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.KTypeDef]**`)`** `] [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`** `]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -95,27 +98,23 @@ public interface ColsOfColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     *  [singleColumn][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.SingleColumnDef]
+     *  [singleColumn][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.SingleColumnDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**colsOf**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[T][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**` [` **`(`**[kType][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.KTypeDef]**`)`** `] [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `]`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**colsOf**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[T][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**` [` **`(`**[kType][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.KTypeDef]**`)`** `] [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`** `]`
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     *  [columnGroupReference][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnGroupNoSingleColumnDef]
+     *  [columnGroupReference][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupNoSingleColumnDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**colsOf**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[T][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>(`**[kType][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.KTypeDef]**`)`** ` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ConditionDef]**` }`** `]`
-     *
-     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**colsOf**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[T][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>(`**[kType][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.KTypeDef]**`)`** ` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`** `]`
      *
      *
      *
      *
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      *
      *
@@ -126,7 +125,7 @@ public interface ColsOfColumnsSelectionDsl {
      *
      *
      */
-    public interface Usage {
+    public interface Grammar {
 
         /** [**colsOf**][ColumnsSelectionDsl.colsOf] */
         public interface PlainDslName
@@ -146,7 +145,7 @@ public interface ColsOfColumnsSelectionDsl {
      *
      * This function only looks at columns at the top-level.
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### For example:
      *
@@ -193,7 +192,7 @@ public interface ColsOfColumnsSelectionDsl {
      *
      * This function only looks at columns at the top-level.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -243,7 +242,7 @@ public interface ColsOfColumnsSelectionDsl {
      *
      * This function only looks at columns at the top-level.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -293,7 +292,7 @@ public interface ColsOfColumnsSelectionDsl {
      *
      * This function only looks at columns at the top-level.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -344,7 +343,7 @@ public interface ColsOfColumnsSelectionDsl {
  *
  * This function only looks at columns at the top-level.
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage]
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
  * #### For example:
  *
@@ -394,7 +393,7 @@ public fun <C> ColumnSet<*>.colsOf(
  *
  * This function only looks at columns at the top-level.
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage]
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
  * #### For example:
  *
@@ -443,7 +442,7 @@ public inline fun <reified C> ColumnSet<*>.colsOf(
  *
  * This function only looks at columns at the top-level.
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage]
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
  * #### For example:
  *
@@ -491,7 +490,7 @@ public fun <C> ColumnsSelectionDsl<*>.colsOf(
  *
  * This function only looks at columns at the top-level.
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage]
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
  * #### For example:
  *
@@ -538,7 +537,7 @@ public inline fun <reified C> ColumnsSelectionDsl<*>.colsOf(
  *
  * This function only looks at columns at the top-level.
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage]
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
  * #### For example:
  *
@@ -588,7 +587,7 @@ public fun <C> SingleColumn<DataRow<*>>.colsOf(
  *
  * This function only looks at columns at the top-level.
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage]
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
  * #### For example:
  *

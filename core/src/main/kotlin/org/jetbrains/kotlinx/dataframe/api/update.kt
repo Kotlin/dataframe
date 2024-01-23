@@ -8,7 +8,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrameExpression
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
-import org.jetbrains.kotlinx.dataframe.api.Update.Usage
+import org.jetbrains.kotlinx.dataframe.api.Update.Grammar
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
@@ -39,7 +39,7 @@ import kotlin.reflect.KProperty
  * Returns the [DataFrame] with changed values in some cells
  * (column types can not be changed).
  *
- * ### Check out: [Usage]
+ * ### Check out: [Grammar]
  *
  * For more information: {@include [DocumentationUrls.Update]}
  */
@@ -58,7 +58,10 @@ public data class Update<T, C>(
     internal interface UpdateOperationArg
 
     /**
-     * ## {@getArg [UpdateOperationArg]} Operation Usage
+     * ## {@getArg [UpdateOperationArg]} Operation Grammar
+     * {@include [LineBreak]}
+     * {@include [DslGrammarLink]}
+     * {@include [LineBreak]}
      *
      * {@getArg [UpdateOperationArg]} **`{ `**[columns][SelectingColumns]**` }`**
      *
@@ -89,11 +92,9 @@ public data class Update<T, C>(
      * {@include [Indent]}
      * `| .`[**asFrame**][Update.asFrame]**` { `**[dataFrameExpression][ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
      *
-     * {@include [LineBreak]}
-     * {@include [DslGrammarLink]}
      * {@setArg [UpdateOperationArg] [**update**][update]}{@comment The default name of the `update` operation function name.}
      */
-    public interface Usage
+    public interface Grammar
 
     /**
      * The columns to update need to be selected. See {@getArg [Columns.SelectingColumnsArg]}

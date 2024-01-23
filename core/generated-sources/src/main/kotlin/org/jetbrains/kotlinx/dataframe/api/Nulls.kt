@@ -16,13 +16,20 @@ import kotlin.reflect.KProperty
  * Replaces `null` values with given value or expression.
  * Specific case of [update].
  *
- * ### Check out: [Usage][FillNulls.Usage]
+ * ### Check out: [Grammar][FillNulls.Grammar]
  *
  * For more information: [See `fillNulls` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnulls)
  */
 internal interface FillNulls {
 
-    /** ## [**fillNulls**][fillNulls] Operation Usage
+    /** ## [**fillNulls**][fillNulls] Operation Grammar
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
      *
      * [**fillNulls**][fillNulls] **`{ `**[columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]**` }`**
      *
@@ -53,12 +60,8 @@ internal interface FillNulls {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| .`[**asFrame**][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]**` { `**[dataFrameExpression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
      *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      */
-    interface Usage
+    interface Grammar
 
     /**
      *
@@ -74,7 +77,7 @@ internal interface FillNulls {
      * which operates on the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
      * expects you to return a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]; an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
-     * ### Check out: [Columns Selection DSL Usage][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage]
+     * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -132,7 +135,7 @@ private interface SetFillNullsOperationArg
  * Replaces `null` values with given value or expression.
  * Specific case of [update][org.jetbrains.kotlinx.dataframe.api.update].
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.FillNulls.Usage]
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FillNulls.Grammar]
  *
  * For more information: [See `fillNulls` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnulls) 
  *
@@ -152,7 +155,7 @@ private interface CommonFillNullsFunctionDoc
  * Replaces `null` values with given value or expression.
  * Specific case of [update][org.jetbrains.kotlinx.dataframe.api.update].
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.FillNulls.Usage]
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FillNulls.Grammar]
  *
  * For more information: [See `fillNulls` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnulls) 
  *
@@ -170,7 +173,7 @@ private interface CommonFillNullsFunctionDoc
  * which operates on the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
  * expects you to return a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]; an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
- * ### Check out: [Columns Selection DSL Usage][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage]
+ * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -196,7 +199,7 @@ public fun <T, C> DataFrame<T>.fillNulls(columns: ColumnsSelector<T, C?>): Updat
  * Replaces `null` values with given value or expression.
  * Specific case of [update][org.jetbrains.kotlinx.dataframe.api.update].
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.FillNulls.Usage]
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FillNulls.Grammar]
  *
  * For more information: [See `fillNulls` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnulls) 
  *
@@ -225,7 +228,7 @@ public fun <T> DataFrame<T>.fillNulls(vararg columns: String): Update<T, Any?> =
  * Replaces `null` values with given value or expression.
  * Specific case of [update][org.jetbrains.kotlinx.dataframe.api.update].
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.FillNulls.Usage]
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FillNulls.Grammar]
  *
  * For more information: [See `fillNulls` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnulls) 
  *
@@ -256,7 +259,7 @@ public fun <T, C> DataFrame<T>.fillNulls(vararg columns: KProperty<C>): Update<T
  * Replaces `null` values with given value or expression.
  * Specific case of [update][org.jetbrains.kotlinx.dataframe.api.update].
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.FillNulls.Usage]
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FillNulls.Grammar]
  *
  * For more information: [See `fillNulls` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnulls) 
  *
@@ -313,13 +316,20 @@ internal inline val Float?.isNA: Boolean get() = this == null || this.isNaN()
  * Replaces [`NaN`][NaN] values with given value or expression.
  * Specific case of [update].
  *
- * ### Check out: [Usage][FillNaNs.Usage]
+ * ### Check out: [Grammar][FillNaNs.Grammar]
  *
  * For more information: [See `fillNaNs` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnans)
  */
 internal interface FillNaNs {
 
-    /** ## [fillNaNs][fillNaNs] Operation Usage
+    /** ## [fillNaNs][fillNaNs] Operation Grammar
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
      *
      * [fillNaNs][fillNaNs] **`{ `**[columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]**` }`**
      *
@@ -350,12 +360,8 @@ internal interface FillNaNs {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| .`[**asFrame**][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]**` { `**[dataFrameExpression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
      *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      */
-    interface Usage
+    interface Grammar
 
     /**
      *
@@ -371,7 +377,7 @@ internal interface FillNaNs {
      * which operates on the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
      * expects you to return a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]; an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
-     * ### Check out: [Columns Selection DSL Usage][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage]
+     * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -429,7 +435,7 @@ internal interface SetFillNaNsOperationArg
  * Replaces [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values with given value or expression.
  * Specific case of [update][org.jetbrains.kotlinx.dataframe.api.update].
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.FillNaNs.Usage]
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FillNaNs.Grammar]
  *
  * For more information: [See `fillNaNs` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnans) 
  *
@@ -448,7 +454,7 @@ private interface CommonFillNaNsFunctionDoc
  * Replaces [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values with given value or expression.
  * Specific case of [update][org.jetbrains.kotlinx.dataframe.api.update].
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.FillNaNs.Usage]
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FillNaNs.Grammar]
  *
  * For more information: [See `fillNaNs` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnans) 
  *
@@ -465,7 +471,7 @@ private interface CommonFillNaNsFunctionDoc
  * which operates on the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
  * expects you to return a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]; an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
- * ### Check out: [Columns Selection DSL Usage][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage]
+ * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -491,7 +497,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(columns: ColumnsSelector<T, C>): Update<
  * Replaces [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values with given value or expression.
  * Specific case of [update][org.jetbrains.kotlinx.dataframe.api.update].
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.FillNaNs.Usage]
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FillNaNs.Grammar]
  *
  * For more information: [See `fillNaNs` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnans) 
  *
@@ -519,7 +525,7 @@ public fun <T> DataFrame<T>.fillNaNs(vararg columns: String): Update<T, Any?> =
  * Replaces [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values with given value or expression.
  * Specific case of [update][org.jetbrains.kotlinx.dataframe.api.update].
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.FillNaNs.Usage]
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FillNaNs.Grammar]
  *
  * For more information: [See `fillNaNs` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnans) 
  *
@@ -549,7 +555,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: KProperty<C>): Update<T,
  * Replaces [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values with given value or expression.
  * Specific case of [update][org.jetbrains.kotlinx.dataframe.api.update].
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.FillNaNs.Usage]
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FillNaNs.Grammar]
  *
  * For more information: [See `fillNaNs` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnans) 
  *
@@ -585,13 +591,20 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: ColumnReference<C>): Upd
  * Replaces [`NA`][NA] values with given value or expression.
  * Specific case of [update].
  *
- * ### Check out: [Usage][FillNA.Usage].
+ * ### Check out: [Grammar][FillNA.Grammar]
  *
  * For more information: [See `fillNA` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillna)
  */
 internal interface FillNA {
 
-    /** ## [fillNA][fillNA] Operation Usage
+    /** ## [fillNA][fillNA] Operation Grammar
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
      *
      * [fillNA][fillNA] **`{ `**[columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]**` }`**
      *
@@ -622,12 +635,8 @@ internal interface FillNA {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| .`[**asFrame**][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]**` { `**[dataFrameExpression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
      *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      */
-    interface Usage
+    interface Grammar
 
     /**
      *
@@ -643,7 +652,7 @@ internal interface FillNA {
      * which operates on the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
      * expects you to return a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]; an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
-     * ### Check out: [Columns Selection DSL Usage][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage]
+     * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -701,7 +710,7 @@ internal interface SetFillNAOperationArg
  * Replaces [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA] values with given value or expression.
  * Specific case of [update][org.jetbrains.kotlinx.dataframe.api.update].
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.FillNA.Usage].
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FillNA.Grammar]
  *
  * For more information: [See `fillNA` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillna) 
  *
@@ -720,7 +729,7 @@ private interface CommonFillNAFunctionDoc
  * Replaces [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA] values with given value or expression.
  * Specific case of [update][org.jetbrains.kotlinx.dataframe.api.update].
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.FillNA.Usage].
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FillNA.Grammar]
  *
  * For more information: [See `fillNA` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillna) 
  *
@@ -737,7 +746,7 @@ private interface CommonFillNAFunctionDoc
  * which operates on the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
  * expects you to return a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]; an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
- * ### Check out: [Columns Selection DSL Usage][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage]
+ * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -763,7 +772,7 @@ public fun <T, C> DataFrame<T>.fillNA(columns: ColumnsSelector<T, C?>): Update<T
  * Replaces [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA] values with given value or expression.
  * Specific case of [update][org.jetbrains.kotlinx.dataframe.api.update].
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.FillNA.Usage].
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FillNA.Grammar]
  *
  * For more information: [See `fillNA` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillna) 
  *
@@ -791,7 +800,7 @@ public fun <T> DataFrame<T>.fillNA(vararg columns: String): Update<T, Any?> =
  * Replaces [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA] values with given value or expression.
  * Specific case of [update][org.jetbrains.kotlinx.dataframe.api.update].
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.FillNA.Usage].
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FillNA.Grammar]
  *
  * For more information: [See `fillNA` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillna) 
  *
@@ -821,7 +830,7 @@ public fun <T, C> DataFrame<T>.fillNA(vararg columns: KProperty<C>): Update<T, C
  * Replaces [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA] values with given value or expression.
  * Specific case of [update][org.jetbrains.kotlinx.dataframe.api.update].
  *
- * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.FillNA.Usage].
+ * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FillNA.Grammar]
  *
  * For more information: [See `fillNA` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillna) 
  *
@@ -898,7 +907,7 @@ internal interface DropNulls {
      * which operates on the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
      * expects you to return a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]; an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
-     * ### Check out: [Columns Selection DSL Usage][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage]
+     * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -984,7 +993,7 @@ private interface CommonDropNullsFunctionDoc
  * which operates on the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
  * expects you to return a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]; an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
- * ### Check out: [Columns Selection DSL Usage][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage]
+ * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -1167,7 +1176,7 @@ internal interface DropNA {
      * which operates on the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
      * expects you to return a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]; an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
-     * ### Check out: [Columns Selection DSL Usage][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage]
+     * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1251,7 +1260,7 @@ private interface CommonDropNAFunctionDoc
  * which operates on the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
  * expects you to return a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]; an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
- * ### Check out: [Columns Selection DSL Usage][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage]
+ * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -1433,7 +1442,7 @@ internal interface DropNaNs {
      * which operates on the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
      * expects you to return a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]; an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
-     * ### Check out: [Columns Selection DSL Usage][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage]
+     * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1517,7 +1526,7 @@ private interface CommonDropNaNsFunctionDoc
  * which operates on the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
  * expects you to return a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]; an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
- * ### Check out: [Columns Selection DSL Usage][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage]
+ * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *

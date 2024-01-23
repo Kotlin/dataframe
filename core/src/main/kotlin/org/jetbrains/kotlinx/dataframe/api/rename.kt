@@ -6,10 +6,10 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.CommonRenameDocs.ParamNameArg
 import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.CommonRenameDocs.ParamTypeArg
 import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.CommonRenameDocs.ReceiverTypeArg
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage.InfixIntoName
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage.InfixNamedName
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage.IntoName
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Usage.NamedName
+import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Grammar.InfixIntoName
+import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Grammar.InfixNamedName
+import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Grammar.IntoName
+import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Grammar.NamedName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -17,7 +17,7 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.renamedReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.impl.DELIMITED_STRING_REGEX
 import org.jetbrains.kotlinx.dataframe.impl.DELIMITERS_REGEX
 import org.jetbrains.kotlinx.dataframe.impl.api.renameImpl
@@ -110,30 +110,30 @@ public infix fun <T, C : ColumnReference<T>> C.named(name: ColumnAccessor<*>): C
 // region ColumnsSelectionDsl
 
 /**
- * See [Usage]
+ * See [Grammar]
  */
 public interface RenameColumnsSelectionDsl {
 
     /**
-     * ## Rename: `named` / `into` Usage
+     * ## Rename: `named` / `into` Grammar
      *
-     * @include [UsageTemplate]
-     * {@setArg [UsageTemplate.DefinitionsArg]
-     *  {@include [UsageTemplate.ColumnDef]}
+     * @include [DslGrammarTemplate]
+     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     *  {@include [DslGrammarTemplate.ColumnDef]}
      * }
      *
-     * {@setArg [UsageTemplate.PlainDslFunctionsArg]
-     *  {@include [UsageTemplate.ColumnRef]} {@include [InfixNamedName]}`/`{@include [InfixIntoName]} {@include [UsageTemplate.ColumnRef]}
+     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
+     *  {@include [DslGrammarTemplate.ColumnRef]} {@include [InfixNamedName]}`/`{@include [InfixIntoName]} {@include [DslGrammarTemplate.ColumnRef]}
      *
-     *  `| `{@include [UsageTemplate.ColumnRef]}{@include [NamedName]}**`(`**{@include [UsageTemplate.ColumnRef]}**`)`**
+     *  `| `{@include [DslGrammarTemplate.ColumnRef]}{@include [NamedName]}**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`**
      *
-     *  `| `{@include [UsageTemplate.ColumnRef]}{@include [IntoName]}**`(`**{@include [UsageTemplate.ColumnRef]}**`)`**
+     *  `| `{@include [DslGrammarTemplate.ColumnRef]}{@include [IntoName]}**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`**
      * }
      *
-     * {@setArg [UsageTemplate.ColumnGroupPart]}
-     * {@setArg [UsageTemplate.ColumnSetPart]}
+     * {@setArg [DslGrammarTemplate.ColumnGroupPart]}
+     * {@setArg [DslGrammarTemplate.ColumnSetPart]}
      */
-    public interface Usage {
+    public interface Grammar {
 
         /** [**named**][ColumnsSelectionDsl.named] */
         public interface InfixNamedName
@@ -155,7 +155,7 @@ public interface RenameColumnsSelectionDsl {
      * so it's up to contextual preference which one to use. Any combination of {@include [AccessApiLink]} can be
      * used to specify the column to rename and which name should be used instead.
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### For Example:
      *

@@ -5,14 +5,14 @@ import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDslLink
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnGroupRef
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetRef
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplateExample.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplateExample.ColumnSetName
-import kotlin.reflect.KType
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupRef
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetRef
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.UsageTemplateExample.ColumnGroupName
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.UsageTemplateExample.ColumnSetName
 
 /*
  * This template is to be used in displaying the Usage / DSL grammar
@@ -21,59 +21,57 @@ import kotlin.reflect.KType
  *
  * See an example of how to use this template at [UsageTemplateColumnsSelectionDsl.UsageTemplateExample]
  */
-public interface UsageTemplateColumnsSelectionDsl {
+public interface DslGrammarTemplateColumnsSelectionDsl {
 
     /**
+     * {@include [LineBreak]}
+     * {@include [DslGrammarLink]}
+     * {@setArg [DslGrammarTemplate.DefinitionsPart]
+     *  {@include [LineBreak]}
+     *  ### Definitions:
+     *  {@getArg [DslGrammarTemplate.DefinitionsArg]}
+     * }{@getArg [DslGrammarTemplate.DefinitionsPart]}
+     * {@comment -------------------------------------------------------------------------------------------- }
+     * {@setArg [DslGrammarTemplate.PlainDslPart]
+     *  {@include [LineBreak]}
+     *  ### What can be called directly in the {@include [ColumnsSelectionDslLink]}:
      *
+     *  {@include [LineBreak]}
+     *  {@getArg [DslGrammarTemplate.PlainDslFunctionsArg]}
+     * }{@getArg [DslGrammarTemplate.PlainDslPart]}
+     * {@comment -------------------------------------------------------------------------------------------- }
+     * {@setArg [DslGrammarTemplate.ColumnSetPart]
+     *  {@include [LineBreak]}
+     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *  {@include [LineBreak]}
+     *  {@include [ColumnSetRef]}
      *
+     *  {@getArg [DslGrammarTemplate.ColumnSetFunctionsArg]}
+     * }{@getArg [DslGrammarTemplate.ColumnSetPart]}
+     * {@comment -------------------------------------------------------------------------------------------- }
+     * {@setArg [DslGrammarTemplate.ColumnGroupPart]
+     *  {@include [LineBreak]}
+     *  ### What can be called on a [Column Group (reference)][DslGrammarTemplate.ColumnGroupDef]:
      *
+     *  {@include [LineBreak]}
+     *  {@include [ColumnGroupRef]}
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  ### In the [ColumnsSelectionDsl][ColumnsSelectionDsl]:
-     *
-     *  
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
-     *
-     *  
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
-     *
-     *  
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  ### On a column group reference:
-     *
-     *  
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
-     *
-     *  
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     *  {@getArg [DslGrammarTemplate.ColumnGroupFunctionsArg]}
+     * }{@getArg [DslGrammarTemplate.ColumnGroupPart]}
+     * {@comment -------------------------------------------------------------------------------------------- }
+     * {@comment Setting default arguments for the template}
+     * {@setArg [DslGrammarTemplate.DefinitionsArg]}
+     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]}
+     * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]}
+     * {@setArg [DslGrammarTemplate.ColumnGroupFunctionsArg]}
      */
-    public interface UsageTemplate {
+    public interface DslGrammarTemplate {
 
         // region parts
+
+        /* Can be set to nothing to disable the definitions part */
+        public interface DefinitionsPart
 
         /* Can be set to nothing to disable the plain dsl part */
         public interface PlainDslPart
@@ -107,7 +105,7 @@ public interface UsageTemplateColumnsSelectionDsl {
         /**
          * `columnGroupReference: `[String][String]` | `[KProperty][kotlin.reflect.KProperty]`<*>`
          *
-         * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         * {@include [QuadrupleIndent]}{@include [QuadrupleIndent]}{@include [DoubleIndent]}
          * | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
          */
         public interface ColumnGroupNoSingleColumnDef
@@ -121,7 +119,7 @@ public interface UsageTemplateColumnsSelectionDsl {
         /**
          * `column: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]` | `[String][String]
          *
-         * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         * {@include [DoubleIndent]}{@include [HalfIndent]}{@include [QuarterIndent]}
          * `| `[KProperty][kotlin.reflect.KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
          */
         public interface ColumnDef
@@ -129,7 +127,7 @@ public interface UsageTemplateColumnsSelectionDsl {
         /**
          * `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
          *
-         * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         * {@include [QuadrupleIndent]}{@include [Indent]}{@include [QuarterIndent]}
          * `| `[KProperty][kotlin.reflect.KProperty]`<* | `[DataRow][DataRow]`<*>>` | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
          */
         public interface ColumnGroupDef
@@ -137,7 +135,7 @@ public interface UsageTemplateColumnsSelectionDsl {
         /** `columnNoAccessor: `[String][String]` | `[KProperty][kotlin.reflect.KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] */
         public interface ColumnNoAccessorDef
 
-        /** `columnOrSet: `[column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]` | `[columnSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetDef] */
+        /** `columnOrSet: `{@include [ColumnRef]}` | `{@include [ColumnSetRef]} */
         public interface ColumnOrColumnSetDef
 
         /** `columnSet: `[ColumnSet][ColumnSet]`<*>` */
@@ -149,7 +147,7 @@ public interface UsageTemplateColumnsSelectionDsl {
         /** `condition: `[ColumnFilter][ColumnFilter] */
         public interface ConditionDef
 
-        /** `expression: `[Column Expression][org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression] */
+        /** `expression: `{@include [ColumnExpressionLink]} */
         public interface ColumnExpressionDef
 
         /** `ignoreCase: `[Boolean][Boolean] */
@@ -269,68 +267,35 @@ public interface UsageTemplateColumnsSelectionDsl {
     /**
      * ## MyFunction Example Usage
      *
+     * {@comment First include the template itself.}
+     * @include [DslGrammarTemplate]
      *
+     * {@comment Then set the definition arguments for each definition that is used below.
+     *  Don't forget to add the definitions for ColumnSet and ColumnGroup if you're going to use them.
+     *  Also, add LineBreaks in between them.
+     * }
+     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     *  {@include [DslGrammarTemplate.ColumnSetDef]}
+     *  {@include [LineBreak]}
+     *  {@include [DslGrammarTemplate.ColumnGroupDef]}
+     *  {@include [LineBreak]}
+     *  {@include [DslGrammarTemplate.NumberDef]}
+     * }
      *
+     * {@comment Then use PlainDslFunctionsArg, ColumnSetFunctionsArg, and ColumnGroupFunctionsArg to fill in
+     *  the parts belonging to each of these sections. Don't forget to add indents to the ColumnSet and ColumnGroup
+     *  parts. Also note we're using -Ref instead of -Def here to refer to definitions.
+     * }
+     * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
+     *  {@include [Indent]}{@include [ColumnSetName]}**`(`**`[`{@include [DslGrammarTemplate.NumberRef]}`]`**`)`**
+     * }
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * {@setArg [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     *  {@include [Indent]}{@include [ColumnGroupName]}**`(`**`[`{@include [DslGrammarTemplate.NumberRef]}`]`**`)`**
+     * }
      *
-     * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
-     *  
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `[KProperty][kotlin.reflect.KProperty]`<* | `[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>` | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
-     *  
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  `number: `[Int][Int]
-     *
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
-     *
-     *  
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
-     *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**example**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]**`(`**`[`[number][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.NumberDef]`]`**`)`**
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  ### On a column group reference:
-     *
-     *  
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
-     *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**colsExample**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]**`(`**`[`[number][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.NumberDef]`]`**`)`**
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
+     * {@comment Our example function has no Plain DSL part, so we set it to nothing. No need to set PlainDslFunctionsArg.}
+     * {@setArg [DslGrammarTemplate.PlainDslPart]}
      */
     public interface UsageTemplateExample {
 

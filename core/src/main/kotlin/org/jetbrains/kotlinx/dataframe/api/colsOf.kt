@@ -4,18 +4,18 @@ import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage
-import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Usage.PlainDslName
+import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar
+import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar.ColumnGroupName
+import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar.ColumnSetName
+import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar.PlainDslName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.size
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -24,58 +24,58 @@ import kotlin.reflect.typeOf
 // region ColumnsSelectionDsl
 
 /**
- * See [Usage]
+ * See [Grammar]
  */
 public interface ColsOfColumnsSelectionDsl {
 
     /**
-     * ## Cols Of Usage
+     * ## Cols Of Grammar
      *
-     * @include [UsageTemplate]
+     * @include [DslGrammarTemplate]
      *
-     * {@setArg [UsageTemplate.DefinitionsArg]
-     *  {@include [UsageTemplate.ColumnSetDef]}
+     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.SingleColumnDef]}
+     *  {@include [DslGrammarTemplate.SingleColumnDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.ColumnGroupNoSingleColumnDef]}
+     *  {@include [DslGrammarTemplate.ColumnGroupNoSingleColumnDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.ColumnDef]}
+     *  {@include [DslGrammarTemplate.ColumnDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.ConditionDef]}
+     *  {@include [DslGrammarTemplate.ConditionDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.ColumnTypeDef]}
+     *  {@include [DslGrammarTemplate.ColumnTypeDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.KTypeDef]}
+     *  {@include [DslGrammarTemplate.KTypeDef]}
      * }
      *
-     * {@setArg [UsageTemplate.PlainDslFunctionsArg]
-     *  {@include [PlainDslName]}**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>`**` [` **`(`**{@include [UsageTemplate.KTypeRef]}**`)`** `] [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
+     *  {@include [PlainDslName]}**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**` [` **`(`**{@include [DslGrammarTemplate.KTypeRef]}**`)`** `] [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      * }
      *
-     * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnSetName]}**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>`**` [` **`(`**{@include [UsageTemplate.KTypeRef]}**`)`** `] [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
+     *  {@include [Indent]}{@include [ColumnSetName]}**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**` [` **`(`**{@include [DslGrammarTemplate.KTypeRef]}**`)`** `] [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      * }
      *
      * {@comment We need to deviate from the template here, since we have overload discrepancies.}
-     * {@setArg [UsageTemplate.ColumnGroupPart]
+     * {@setArg [DslGrammarTemplate.ColumnGroupPart]
      *  {@include [LineBreak]}
      *  ### On a column group reference:
      *
      *  {@include [LineBreak]}
      *
-     *  {@include [UsageTemplate.SingleColumnRef]}
+     *  {@include [DslGrammarTemplate.SingleColumnRef]}
      *
-     *  {@include [Indent]}{@include [ColumnGroupName]}**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>`**` [` **`(`**{@include [UsageTemplate.KTypeRef]}**`)`** `] [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     *  {@include [Indent]}{@include [ColumnGroupName]}**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**` [` **`(`**{@include [DslGrammarTemplate.KTypeRef]}**`)`** `] [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      *
      *  {@include [LineBreak]}
      *
-     *  {@include [UsageTemplate.ColumnGroupNoSingleColumnRef]}
+     *  {@include [DslGrammarTemplate.ColumnGroupNoSingleColumnRef]}
      *
-     *  {@include [Indent]}{@include [ColumnGroupName]}**`<`**{@include [UsageTemplate.ColumnTypeRef]}**`>(`**{@include [UsageTemplate.KTypeRef]}**`)`** ` [` **`{ `**{@include [UsageTemplate.ConditionRef]}**` \\}`** `]`
+     *  {@include [Indent]}{@include [ColumnGroupName]}**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>(`**{@include [DslGrammarTemplate.KTypeRef]}**`)`** ` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      * }
      */
-    public interface Usage {
+    public interface Grammar {
 
         /** [**colsOf**][ColumnsSelectionDsl.colsOf] */
         public interface PlainDslName
@@ -95,7 +95,7 @@ public interface ColsOfColumnsSelectionDsl {
      *
      * This function only looks at columns at the top-level.
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### For example:
      *

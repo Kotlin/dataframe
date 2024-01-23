@@ -42,7 +42,7 @@ internal interface SelectingColumnsLink
  * which operates on the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
  * expects you to return a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]; an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
- * ### Check out: [Columns Selection DSL Usage][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage]
+ * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -107,7 +107,7 @@ internal interface SelectingColumns {
      * which operates on the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
      * expects you to return a [ColumnsResolver]; an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
-     * ### Check out: [Columns Selection DSL Usage][ColumnsSelectionDsl.Usage]
+     * ### Check out: [Columns Selection DSL Grammar][ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -123,7 +123,7 @@ internal interface SelectingColumns {
          * which operates on the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
          * expects you to return a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]; an entity formed by calling any (combination) of the functions
          * in the DSL that is or can be resolved into one or more columns.
-         * ### Check out: [Columns Selection DSL Usage][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.Usage]
+         * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
          *
          * &nbsp;&nbsp;&nbsp;&nbsp;
          *

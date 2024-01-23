@@ -4,9 +4,9 @@ import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage.PlainDslName
+import org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar.ColumnGroupName
+import org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar.ColumnSetName
+import org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar.PlainDslName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -15,9 +15,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
 import org.jetbrains.kotlinx.dataframe.impl.columns.onResolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleImpl
@@ -29,13 +29,16 @@ import kotlin.reflect.KProperty
 public interface ValueColColumnsSelectionDsl {
 
     /**
-     * ## Value Col Usage
-     *
+     * ## Value Col Grammar
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### Definitions:
+     *  `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -61,44 +64,40 @@ public interface ValueColColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
+     *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [**valueCol**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`[`**`<`**[T][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**[column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]` | `[index][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.IndexDef]**`)`**
+     *  [**valueCol**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`[`**`<`**[T][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`]`**`(`**[column][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]` | `[index][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`)`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
+     *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**valueCol**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]**`(`**[index][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.IndexDef]**`)`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**valueCol**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]**`(`**[index][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`)`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### On a column group reference:
+     *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
+     *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**valueCol**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`[`**`<`**[T][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnTypeDef]**`>`**`]`**`(`**[column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]` | `[index][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.IndexDef]**`)`**
-     *
-     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**valueCol**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`[`**`<`**[T][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`]`**`(`**[column][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]` | `[index][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`)`**
      *
      *
      *
      *
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      *
      *
@@ -107,7 +106,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      */
-    public interface Usage {
+    public interface Grammar {
 
         /** [**valueCol**][ColumnsSelectionDsl.valueCol] */
         public interface PlainDslName
@@ -136,7 +135,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### For example:
      *
@@ -214,7 +213,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -266,7 +265,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -318,7 +317,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -376,7 +375,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -429,7 +428,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -482,7 +481,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -535,7 +534,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -592,7 +591,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -645,7 +644,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -700,7 +699,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -754,7 +753,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -810,7 +809,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -870,7 +869,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -926,7 +925,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -981,7 +980,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -1037,7 +1036,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -1092,7 +1091,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -1148,7 +1147,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -1203,7 +1202,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -1259,7 +1258,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -1318,7 +1317,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -1371,7 +1370,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -1426,7 +1425,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -1480,7 +1479,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -1536,7 +1535,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -1596,7 +1595,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -1652,7 +1651,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -1707,7 +1706,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -1763,7 +1762,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -1818,7 +1817,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -1874,7 +1873,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -1929,7 +1928,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -1985,7 +1984,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -2044,7 +2043,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -2096,7 +2095,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -2148,7 +2147,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -2201,7 +2200,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -2254,7 +2253,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -2307,7 +2306,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -2360,7 +2359,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -2417,7 +2416,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -2471,7 +2470,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -2525,7 +2524,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -2582,7 +2581,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -2638,7 +2637,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -2695,7 +2694,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -2755,7 +2754,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -2812,7 +2811,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -2868,7 +2867,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -2925,7 +2924,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -2981,7 +2980,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
@@ -3038,7 +3037,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *

@@ -13,9 +13,9 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExceptKeepingStructure
 import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
@@ -41,13 +41,16 @@ import kotlin.reflect.KProperty
 public interface AllExceptColumnsSelectionDsl {
 
     /**
-     * ## (All) (Cols) Except Usage
-     *
+     * ## (All) (Cols) Except Grammar
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### Definitions:
+     *  `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -77,63 +80,59 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
+     *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [**allExcept**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept] **`{ `**[colsSelector][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnsSelectorDef]**` }`**
+     *  [**allExcept**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept] **`{ `**[colsSelector][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef]**` }`**
      *
-     *  `|` [**allExcept**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]**`(`**[column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]**`,`**` ..`**`)`**
+     *  `|` [**allExcept**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]**`(`**[column][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` ..`**`)`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
+     *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;[**except**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except] `[`**` { `**`]` [columnsResolver][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnsResolverDef] `[`**` } `**`]`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;[**except**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except] `[`**` { `**`]` [columnsResolver][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsResolverDef] `[`**` } `**`]`
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` [**except**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except] [column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` [**except**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except] [column][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**except**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]**`(`**[column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]**`,`**` ..`**`)`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**except**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]**`(`**[column][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` ..`**`)`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### On a column group reference:
+     *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
+     *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**allColsExcept**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] **` { `**[colsSelector][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnsSelectorDef]**` } `**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**allColsExcept**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] **` { `**[colsSelector][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef]**` } `**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**allColsExcept**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept]**`(`**[columnNoAccessor][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnNoAccessorDef]**`,`**` ..`**`)`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**allColsExcept**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept]**`(`**[columnNoAccessor][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnNoAccessorDef]**`,`**` ..`**`)`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` [**exceptNew**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.exceptNew] **` { `**[colsSelector][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnsSelectorDef]**` } EXPERIMENTAL!`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` [**exceptNew**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.exceptNew] **` { `**[colsSelector][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef]**` } EXPERIMENTAL!`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` [**exceptNew**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.exceptNew]**`(`**[columnNoAccessor][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnNoAccessorDef]**`,`**` ..`**`) EXPERIMENTAL!`**
-     *
-     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`|` [**exceptNew**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.exceptNew]**`(`**[columnNoAccessor][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnNoAccessorDef]**`,`**` ..`**`) EXPERIMENTAL!`**
      *
      *
      *
      *
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      *
      *
      *
      *
      */
-    public interface Usage {
+    public interface Grammar {
 
         /** [**allExcept**][ColumnsSelectionDsl.allExcept] */
         public interface PlainDslName
@@ -154,7 +153,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * ### On [ColumnSets][ColumnSet]
      * This function can be explained the easiest with [ColumnSets][ColumnSet]. Let's say we want all
@@ -251,7 +250,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -350,7 +349,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -449,7 +448,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -542,7 +541,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -635,7 +634,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -728,7 +727,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -821,7 +820,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -914,7 +913,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -1007,7 +1006,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -1100,7 +1099,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -1193,7 +1192,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -1290,7 +1289,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -1387,7 +1386,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -1480,7 +1479,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -1572,7 +1571,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -1664,7 +1663,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -1756,7 +1755,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -1852,7 +1851,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -1990,7 +1989,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -2099,7 +2098,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -2192,7 +2191,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -2285,7 +2284,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -2382,7 +2381,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -2491,7 +2490,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -2584,7 +2583,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -2677,7 +2676,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -2774,7 +2773,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -2874,7 +2873,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -2989,7 +2988,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -3082,7 +3081,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -3175,7 +3174,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -3272,7 +3271,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -3381,7 +3380,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -3474,7 +3473,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
@@ -3567,7 +3566,7 @@ public interface AllExceptColumnsSelectionDsl {
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
      * exclude from the current selection.
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all

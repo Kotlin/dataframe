@@ -1,8 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar
+import org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar.InfixName
+import org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar.Name
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -10,27 +12,30 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.DoubleIndent
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
 
 /**
- * See [Usage]
+ * See [Grammar]
  */
 public interface AndColumnsSelectionDsl {
 
     /**
-     * ## And Operator Usage
-     *
+     * ## And Operator Grammar
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### Definitions:
+     *  `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -48,50 +53,46 @@ public interface AndColumnsSelectionDsl {
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `columnOrSet: `[column][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnDef]` | `[columnSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
+     *  `columnOrSet: `[column][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]` | `[columnSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
+     *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef] [**and**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` [ `**`{`**` ] `[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef]` [ `**`}`**` ] `
+     *  [columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef] [**and**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` [ `**`{`**` ] `[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]` [ `**`}`**` ] `
      *
-     *  `| `[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef].[**and**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] **`(`**`|`**`{ `**[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
+     *  `| `[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef].[**and**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] **`(`**`|`**`{ `**[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### On a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnSetDef]
+     *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**and**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] **`(`**`|`**`{ `**[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**and**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] **`(`**`|`**`{ `**[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### On a column group reference:
+     *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
      *
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnGroupDef]
+     *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**and**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] **`(`**`|`**`{ `**[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
-     *
-     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**and**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] **`(`**`|`**`{ `**[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
      *
      *
      *
      *
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      *
      *
@@ -100,7 +101,7 @@ public interface AndColumnsSelectionDsl {
      *
      *
      */
-    public interface Usage {
+    public interface Grammar {
 
         /** [**and**][ColumnsSelectionDsl.and] */
         public interface InfixName
@@ -115,7 +116,7 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      *
@@ -153,7 +154,7 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
@@ -188,7 +189,7 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
@@ -220,7 +221,7 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
@@ -252,7 +253,7 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
@@ -284,7 +285,7 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
@@ -321,7 +322,7 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
@@ -356,7 +357,7 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
@@ -388,7 +389,7 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
@@ -420,7 +421,7 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
@@ -452,7 +453,7 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
@@ -489,7 +490,7 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
@@ -524,7 +525,7 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
@@ -556,7 +557,7 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
@@ -589,7 +590,7 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
@@ -621,7 +622,7 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]!
      *
-     * ### Check out: [Usage][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Usage]
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *

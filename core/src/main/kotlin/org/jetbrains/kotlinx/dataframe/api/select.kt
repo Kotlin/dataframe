@@ -5,6 +5,9 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions
+import org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Grammar
+import org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Grammar.ColumnGroupName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -12,11 +15,10 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumnsLink
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_SELECT_COLS
@@ -87,31 +89,31 @@ public fun <T> DataFrame<T>.select(vararg columns: AnyColumnReference): DataFram
 // region ColumnsSelectionDsl
 // NOTE: invoke overloads are inside ColumnsSelectionDsl.kt due to conflicts
 /**
- * See [Usage]
+ * See [Grammar]
  */
 public interface SelectColumnsSelectionDsl {
 
     /**
-     * ## Select from [ColumnGroup] Usage
-     * {@include [UsageTemplate]}
+     * ## Select from [ColumnGroup] Grammar
+     * {@include [DslGrammarTemplate]}
      *
-     * {@setArg [UsageTemplate.DefinitionsArg]
-     *  {@include [UsageTemplate.ColumnSetDef]}
+     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.ColumnGroupDef]}
+     *  {@include [DslGrammarTemplate.ColumnGroupDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.ColumnsSelectorDef]}
+     *  {@include [DslGrammarTemplate.ColumnsSelectorDef]}
      * }
      *
-     * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnGroupName]}**` {`** {@include [UsageTemplate.ColumnsSelectorRef]} **`\}`**
+     * {@setArg [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     *  {@include [Indent]}{@include [ColumnGroupName]}**` {`** {@include [DslGrammarTemplate.ColumnsSelectorRef]} **`\}`**
      *
-     *  {@include [Indent]}`|`[**` {`**][ColumnsSelectionDsl.select] {@include [UsageTemplate.ColumnsSelectorRef]} [**`\}`**][ColumnsSelectionDsl.select]
+     *  {@include [Indent]}`|`[**` {`**][ColumnsSelectionDsl.select] {@include [DslGrammarTemplate.ColumnsSelectorRef]} [**`\}`**][ColumnsSelectionDsl.select]
      * }
-     * {@setArg [UsageTemplate.PlainDslPart]}
-     * {@setArg [UsageTemplate.ColumnSetPart]}
+     * {@setArg [DslGrammarTemplate.PlainDslPart]}
+     * {@setArg [DslGrammarTemplate.ColumnSetPart]}
      */
-    public interface Usage {
+    public interface Grammar {
 
         /** .[**select**][ColumnsSelectionDsl.select] */
         public interface ColumnGroupName
@@ -129,7 +131,7 @@ public interface SelectColumnsSelectionDsl {
      *
      * The [invoke][ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### For example:
      *

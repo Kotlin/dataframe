@@ -25,7 +25,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs.Title
  * NOTE: To avoid ambiguity, `{@getArg [CommonTakeAndDropDocs.OperationArg]}` is called `{@getArg [CommonTakeAndDropDocs.OperationArg]}Cols` when called on
  * a [ColumnGroup].
  *
- * ### Check out: [Usage\]
+ * ### Check out: [Grammar\]
  *
  * #### Examples:
  * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[{@getArg [OperationArg]}][ColumnSet.{@getArg [OperationArg]}]`(5) }`

@@ -2,46 +2,50 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.Grammar
+import org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.Grammar.ColumnGroupName
+import org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.Grammar.ColumnSetName
+import org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.Grammar.PlainDslName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.UsageTemplateColumnsSelectionDsl.UsageTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
 
 /**
- * See [Usage]
+ * See [Grammar]
  */
 public interface WithoutNullsColumnsSelectionDsl {
 
     /**
-     * ## (Cols) Without Nulls Usage
+     * ## (Cols) Without Nulls Grammar
      *
-     * @include [UsageTemplate]
-     * {@setArg [UsageTemplate.DefinitionsArg]
-     *  {@include [UsageTemplate.ColumnSetDef]}
+     * @include [DslGrammarTemplate]
+     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
-     *  {@include [UsageTemplate.ColumnGroupDef]}
+     *  {@include [DslGrammarTemplate.ColumnGroupDef]}
      * }
      *
-     * {@setArg [UsageTemplate.PlainDslFunctionsArg]
+     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
      *  {@include [PlainDslName]}**`()`**
      * }
      *
-     * {@setArg [UsageTemplate.ColumnSetFunctionsArg]
+     * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
      *  {@include [Indent]}{@include [ColumnSetName]}**`()`**
      * }
      *
-     * {@setArg [UsageTemplate.ColumnGroupFunctionsArg]
+     * {@setArg [DslGrammarTemplate.ColumnGroupFunctionsArg]
      *  {@include [Indent]}{@include [ColumnGroupName]}**`()`**
      * }
      */
-    public interface Usage {
+    public interface Grammar {
 
         /** [**withoutNulls**][ColumnsSelectionDsl.withoutNulls] */
         public interface PlainDslName
@@ -61,7 +65,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * NOTE: For [column groups][ColumnGroup], `withoutNulls` is named `colsWithoutNulls` to avoid confusion.
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### For Example:
      *

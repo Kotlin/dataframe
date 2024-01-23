@@ -63,7 +63,7 @@ internal interface SelectingColumns {
      * which operates on the {@include [ColumnsSelectionDslLink]} and
      * expects you to return a [ColumnsResolver]; an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
-     * ### Check out: [Columns Selection DSL Usage][ColumnsSelectionDsl.Usage]
+     * ### Check out: [Columns Selection DSL Grammar][ColumnsSelectionDsl.DslGrammar]
      * {@include [LineBreak]}
      * @include [DocumentationUrls.ColumnSelectors]
      */

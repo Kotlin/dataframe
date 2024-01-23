@@ -12,7 +12,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs
-import org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslUsage
+import org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.index
@@ -66,11 +66,11 @@ public fun <T> DataFrame<T>.takeWhile(predicate: RowFilter<T>): DataFrame<T> =
 public interface TakeColumnsSelectionDsl {
 
     /**
-     * @include [TakeAndDropColumnsSelectionDslUsage]
-     * @setArg [TakeAndDropColumnsSelectionDslUsage.TitleArg] Take
-     * @setArg [TakeAndDropColumnsSelectionDslUsage.OperationArg] take
+     * @include [TakeAndDropColumnsSelectionDslGrammar]
+     * @setArg [TakeAndDropColumnsSelectionDslGrammar.TitleArg] Take
+     * @setArg [TakeAndDropColumnsSelectionDslGrammar.OperationArg] take
      */
-    public interface Usage {
+    public interface Grammar {
 
         /** [**take**][ColumnsSelectionDsl.take]`(`[**Last**][ColumnsSelectionDsl.takeLast]`)` */
         public interface PlainDslName

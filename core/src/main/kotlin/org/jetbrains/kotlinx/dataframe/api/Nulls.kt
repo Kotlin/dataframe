@@ -16,14 +16,14 @@ import kotlin.reflect.KProperty
  * Replaces `null` values with given value or expression.
  * Specific case of [update].
  *
- * ### Check out: [Usage][FillNulls.Usage]
+ * ### Check out: [Grammar][FillNulls.Grammar]
  *
  * For more information: {@include [DocumentationUrls.Fill.FillNulls]}
  */
 internal interface FillNulls {
 
-    /** @include [Update.Usage] {@setArg [UpdateOperationArg] [**fillNulls**][fillNulls]} */
-    interface Usage
+    /** @include [Update.Grammar] {@setArg [UpdateOperationArg] [**fillNulls**][fillNulls]} */
+    interface Grammar
 
     /**
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
@@ -107,14 +107,14 @@ internal inline val Float?.isNA: Boolean get() = this == null || this.isNaN()
  * Replaces [`NaN`][NaN] values with given value or expression.
  * Specific case of [update].
  *
- * ### Check out: [Usage][FillNaNs.Usage]
+ * ### Check out: [Grammar][FillNaNs.Grammar]
  *
  * For more information: {@include [DocumentationUrls.Fill.FillNaNs]}
  */
 internal interface FillNaNs {
 
-    /** @include [Update.Usage] {@setArg [Update.UpdateOperationArg] [fillNaNs][fillNaNs]} */
-    interface Usage
+    /** @include [Update.Grammar] {@setArg [Update.UpdateOperationArg] [fillNaNs][fillNaNs]} */
+    interface Grammar
 
     /**
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
@@ -177,14 +177,14 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: ColumnReference<C>): Upd
  * Replaces [`NA`][NA] values with given value or expression.
  * Specific case of [update].
  *
- * ### Check out: [Usage][FillNA.Usage].
+ * ### Check out: [Grammar][FillNA.Grammar]
  *
  * For more information: {@include [DocumentationUrls.Fill.FillNA]}
  */
 internal interface FillNA {
 
-    /** @include [Update.Usage] {@setArg [Update.UpdateOperationArg] [fillNA][fillNA]} */
-    interface Usage
+    /** @include [Update.Grammar] {@setArg [Update.UpdateOperationArg] [fillNA][fillNA]} */
+    interface Grammar
 
     /**
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
