@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnAccessors
@@ -39,9 +40,17 @@ internal interface SelectingColumnsLink
  * (Any (combination of) [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates on the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]; an entity formed by calling any (combination) of the functions
+ * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
+ *
+ * #### NOTE:
+ * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
+ * in this DSL directly with any function, they are NOT valid return types for the
+ * [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda. You'd need to turn them into a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] first, for instance
+ * with a function like [`col("name")`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col].
+ *
  * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -104,9 +113,17 @@ internal interface SelectingColumns {
      * (Any (combination of) [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
      *
      * This DSL is initiated by a [Columns Selector][ColumnsSelector] lambda,
-     * which operates on the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
-     * expects you to return a [ColumnsResolver]; an entity formed by calling any (combination) of the functions
+     * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+     * expects you to return a [SingleColumn] or [ColumnSet] (so, a [ColumnsResolver]).
+     * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
+     *
+     * #### NOTE:
+     * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
+     * in this DSL directly with any function, they are NOT valid return types for the
+     * [Columns Selector][ColumnsSelector] lambda. You'd need to turn them into a [ColumnReference] first, for instance
+     * with a function like [`col("name")`][ColumnsSelectionDsl.col].
+     *
      * ### Check out: [Columns Selection DSL Grammar][ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -120,9 +137,17 @@ internal interface SelectingColumns {
          * (Any (combination of) [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
          *
          * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
-         * which operates on the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
-         * expects you to return a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]; an entity formed by calling any (combination) of the functions
+         * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+         * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+         * This is an entity formed by calling any (combination) of the functions
          * in the DSL that is or can be resolved into one or more columns.
+         *
+         * #### NOTE:
+         * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
+         * in this DSL directly with any function, they are NOT valid return types for the
+         * [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda. You'd need to turn them into a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] first, for instance
+         * with a function like [`col("name")`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col].
+         *
          * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
          *
          * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -150,8 +175,16 @@ internal interface SelectingColumns {
      * (Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
      *
      * This DSL is initiated by a [Column Selector][ColumnSelector] lambda,
-     * which operates in the [Column Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl] and
+     * which operates in context of the [Column Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl] and
      * expects you to return a [SingleColumn].
+     * This is an entity formed by calling any (combination) of the functions
+     * in the DSL that is or can be resolved into a single column.
+     *
+     * #### NOTE:
+     * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
+     * in this DSL directly with any function, they are NOT valid return types for the
+     * [Column Selector][ColumnSelector]/[Columns Selector][ColumnsSelector] lambda. You'd need to turn them into a [ColumnReference] first, for instance
+     * with a function like [`col("name")`][ColumnsSelectionDsl.col].
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -165,8 +198,16 @@ internal interface SelectingColumns {
          * (Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
          *
          * This DSL is initiated by a [Column Selector][org.jetbrains.kotlinx.dataframe.ColumnSelector] lambda,
-         * which operates in the [Column Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl] and
+         * which operates in context of the [Column Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl] and
          * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+         * This is an entity formed by calling any (combination) of the functions
+         * in the DSL that is or can be resolved into a single column.
+         *
+         * #### NOTE:
+         * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
+         * in this DSL directly with any function, they are NOT valid return types for the
+         * [Column Selector][org.jetbrains.kotlinx.dataframe.ColumnSelector]/[Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda. You'd need to turn them into a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] first, for instance
+         * with a function like [`col("name")`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col].
          *
          *
          * &nbsp;&nbsp;&nbsp;&nbsp;

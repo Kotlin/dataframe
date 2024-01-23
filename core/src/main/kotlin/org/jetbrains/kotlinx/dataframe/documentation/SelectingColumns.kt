@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnAccessors
@@ -60,9 +61,17 @@ internal interface SelectingColumns {
      * (Any (combination of) {@include [AccessApiLink]}).
      *
      * This DSL is initiated by a [Columns Selector][ColumnsSelector] lambda,
-     * which operates on the {@include [ColumnsSelectionDslLink]} and
-     * expects you to return a [ColumnsResolver]; an entity formed by calling any (combination) of the functions
+     * which operates in the context of the {@include [ColumnsSelectionDslLink]} and
+     * expects you to return a [SingleColumn] or [ColumnSet] (so, a [ColumnsResolver]).
+     * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
+     *
+     * #### NOTE:
+     * While you can use the {@include [AccessApi.StringApiLink]} and {@include [AccessApi.KPropertiesApiLink]}
+     * in this DSL directly with any function, they are NOT valid return types for the
+     * [Columns Selector][ColumnsSelector] lambda. You'd need to turn them into a [ColumnReference] first, for instance
+     * with a function like [`col("name")`][ColumnsSelectionDsl.col].
+     *
      * ### Check out: [Columns Selection DSL Grammar][ColumnsSelectionDsl.DslGrammar]
      * {@include [LineBreak]}
      * @include [DocumentationUrls.ColumnSelectors]
@@ -93,8 +102,16 @@ internal interface SelectingColumns {
      * (Any {@include [AccessApiLink]}).
      *
      * This DSL is initiated by a [Column Selector][ColumnSelector] lambda,
-     * which operates in the {@include [ColumnSelectionDslLink]} and
+     * which operates in context of the {@include [ColumnSelectionDslLink]} and
      * expects you to return a [SingleColumn].
+     * This is an entity formed by calling any (combination) of the functions
+     * in the DSL that is or can be resolved into a single column.
+     *
+     * #### NOTE:
+     * While you can use the {@include [AccessApi.StringApiLink]} and {@include [AccessApi.KPropertiesApiLink]}
+     * in this DSL directly with any function, they are NOT valid return types for the
+     * [Column Selector][ColumnSelector]/[Columns Selector][ColumnsSelector] lambda. You'd need to turn them into a [ColumnReference] first, for instance
+     * with a function like [`col("name")`][ColumnsSelectionDsl.col].
      *
      * {@include [LineBreak]}
      * @include [DocumentationUrls.ColumnSelectors]
