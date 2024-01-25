@@ -7,14 +7,12 @@ import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.io.asURL
 import org.jetbrains.kotlinx.dataframe.io.readCSV
 import org.jetbrains.kotlinx.dataframe.io.readJson
-import org.jetbrains.kotlinx.dataframe.plugin.ReadCSV0
-import org.jetbrains.kotlinx.dataframe.plugin.ReadJson0
 
 @Refine("readJsonDefault_0")
-@Interpretable(ReadJson0::class)
+@Interpretable("ReadJson0")
 public fun DataFrame.Companion.readJsonDefault(path: String): AnyFrame = readJson(asURL(path))
 
 // temporary hack to workaround backend codegen for default parameters
 @Refine("readCSVDefault_0")
-@Interpretable(ReadCSV0::class)
+@Interpretable("ReadCSV0")
 public fun DataFrame.Companion.readCSVDefault(fileOrUrl: String): AnyFrame = readCSV(fileOrUrl)

@@ -13,7 +13,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.jupyter.api.Code
-import org.jetbrains.kotlinx.dataframe.plugin.Read0
+//import org.jetbrains.kotlinx.dataframe.plugin.Read0
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileNotFoundException
@@ -288,7 +288,7 @@ public fun DataRow.Companion.read(url: URL, header: List<String> = emptyList()):
     DataFrame.read(url, header).single()
 
 @Refine("read_0")
-@Interpretable(Read0::class)
+@Interpretable("Read0")
 public fun DataFrame.Companion.read(path: String, header: List<String> = emptyList()): AnyFrame =
     read(asURL(path), header)
 

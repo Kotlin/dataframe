@@ -1,12 +1,12 @@
 @file:Suppress("UnstableApiUsage")
 
 rootProject.name = "dataframe"
-enableFeaturePreview("VERSION_CATALOGS")
 
 includeBuild("generator")
 include("plugins:dataframe-gradle-plugin")
 include("plugins:symbol-processor")
 include("plugins:type-api")
+include("plugins:kotlin-dataframe")
 include("tests")
 include("dataframe-arrow")
 include("dataframe-openapi")
@@ -34,10 +34,12 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
+}
 include("dataframe-excel")
 include("core")
 //include("plugins:dataframe-introspection")
 //findProject(":plugins:dataframe-introspection")?.name = "dataframe-introspection"
-//include("type-api")
 //includeBuild("plugins/extensible-dataframes")
 //findProject(":plugins:extensible-dataframes")?.name = "extensible-dataframes"

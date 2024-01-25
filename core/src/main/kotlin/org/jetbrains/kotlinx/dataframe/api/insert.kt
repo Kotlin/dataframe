@@ -11,35 +11,26 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.removeAt
-import org.jetbrains.kotlinx.dataframe.plugin.Insert0
-import org.jetbrains.kotlinx.dataframe.plugin.Insert1
-import org.jetbrains.kotlinx.dataframe.plugin.Insert2
-import org.jetbrains.kotlinx.dataframe.plugin.Insert3
-import org.jetbrains.kotlinx.dataframe.plugin.Under0
-import org.jetbrains.kotlinx.dataframe.plugin.Under1
-import org.jetbrains.kotlinx.dataframe.plugin.Under2
-import org.jetbrains.kotlinx.dataframe.plugin.Under3
-import org.jetbrains.kotlinx.dataframe.plugin.Under4
 import kotlin.reflect.KProperty
 
-@Interpretable(Insert0::class)
+@Interpretable("Insert0")
 public fun <T, C> DataFrame<T>.insert(column: DataColumn<C>): InsertClause<T> = InsertClause(this, column)
 
-@Interpretable(Insert1::class)
+@Interpretable("Insert1")
 public inline fun <T, reified R> DataFrame<T>.insert(
     name: String,
     infer: Infer = Infer.Nulls,
     noinline expression: RowExpression<T, R>
 ): InsertClause<T> = insert(mapToColumn(name, infer, expression))
 
-@Interpretable(Insert2::class)
+@Interpretable("Insert2")
 public inline fun <T, reified R> DataFrame<T>.insert(
     column: ColumnAccessor<R>,
     infer: Infer = Infer.Nulls,
     noinline expression: RowExpression<T, R>
 ): InsertClause<T> = insert(column.name(), infer, expression)
 
-@Interpretable(Insert3::class)
+@Interpretable("Insert3")
 public inline fun <T, reified R> DataFrame<T>.insert(
     column: KProperty<R>,
     infer: Infer = Infer.Nulls,
@@ -48,15 +39,15 @@ public inline fun <T, reified R> DataFrame<T>.insert(
 
 public data class InsertClause<T>(val df: DataFrame<T>, val column: AnyCol)
 
-@Interpretable(Under0::class)
+@Interpretable("Under0")
 public fun <T> InsertClause<T>.under(column: ColumnSelector<T, *>): DataFrame<T> = under(df.getColumnPath(column))
-@Interpretable(Under1::class)
+@Interpretable("Under1")
 public fun <T> InsertClause<T>.under(columnPath: ColumnPath): DataFrame<T> = df.insertImpl(columnPath + column.name, column)
-@Interpretable(Under2::class)
+@Interpretable("Under2")
 public fun <T> InsertClause<T>.under(column: ColumnAccessor<*>): DataFrame<T> = under(column.path())
-@Interpretable(Under3::class)
+@Interpretable("Under3")
 public fun <T> InsertClause<T>.under(column: KProperty<*>): DataFrame<T> = under(column.columnName)
-@Interpretable(Under4::class)
+@Interpretable("Under4")
 public fun <T> InsertClause<T>.under(column: String): DataFrame<T> = under(pathOf(column))
 
 public fun <T> InsertClause<T>.after(column: ColumnSelector<T, *>): DataFrame<T> = after(df.getColumnPath(column))

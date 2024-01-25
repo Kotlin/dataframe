@@ -1,2 +1,0 @@
-rootProject.name = "type-api"
-

@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.dataframe.annotations.Arguments
 import org.jetbrains.kotlinx.dataframe.annotations.DefaultValue
 import org.jetbrains.kotlinx.dataframe.annotations.Interpreter
 import org.jetbrains.kotlinx.dataframe.annotations.TypeApproximation
-import org.jetbrains.kotlinx.dataframe.api.RenameClauseApproximation
 import kotlin.properties.PropertyDelegateProvider
 import kotlin.properties.ReadOnlyProperty
 

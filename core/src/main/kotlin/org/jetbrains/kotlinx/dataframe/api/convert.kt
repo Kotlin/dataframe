@@ -31,11 +31,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.io.toDataFrame
 import org.jetbrains.kotlinx.dataframe.path
-import org.jetbrains.kotlinx.dataframe.plugin.Convert0
-import org.jetbrains.kotlinx.dataframe.plugin.Convert2
-import org.jetbrains.kotlinx.dataframe.plugin.Convert6
-import org.jetbrains.kotlinx.dataframe.plugin.To0
-import org.jetbrains.kotlinx.dataframe.plugin.With0
 import java.math.BigDecimal
 import java.net.URL
 import java.time.LocalTime
@@ -44,14 +39,14 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
-@Interpretable(Convert0::class)
+@Interpretable("Convert0")
 public fun <T, C> DataFrame<T>.convert(columns: ColumnsSelector<T, C>): Convert<T, C> =
     Convert(this, columns)
 
 public fun <T, C> DataFrame<T>.convert(vararg columns: KProperty<C>): Convert<T, C> =
     convert { columns.toColumns() }
 
-@Interpretable(Convert2::class)
+@Interpretable("Convert2")
 public fun <T> DataFrame<T>.convert(vararg columns: String): Convert<T, Any?> = convert { columns.toColumns() }
 public fun <T, C> DataFrame<T>.convert(vararg columns: ColumnReference<C>): Convert<T, C> =
     convert { columns.toColumns() }
@@ -72,7 +67,7 @@ public inline fun <T, C, reified R> DataFrame<T>.convert(
 ): DataFrame<T> =
     convert(*headPlusArray(firstCol, cols)).with(infer, expression)
 
-@Interpretable(Convert6::class)
+@Interpretable("Convert6")
 public inline fun <T, reified R> DataFrame<T>.convert(
     firstCol: String,
     vararg cols: String,
@@ -91,7 +86,7 @@ public inline fun <T, C, reified R> Convert<T, C?>.notNull(crossinline expressio
 public data class Convert<T, out C>(val df: DataFrame<T>, val columns: ColumnsSelector<T, C>) {
     public fun <R> cast(): Convert<T, R> = Convert(df, columns as ColumnsSelector<T, R>)
 
-    @Interpretable(To0::class)
+    @Interpretable("To0")
     public inline fun <reified D> to(): DataFrame<T> = to(typeOf<D>())
 }
 
@@ -100,7 +95,7 @@ public fun <T> Convert<T, *>.to(type: KType): DataFrame<T> = to { it.convertTo(t
 public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>) -> AnyBaseCol): DataFrame<T> =
     df.replace(columns).with { columnConverter(df, it) }
 
-@Interpretable(With0::class)
+@Interpretable("With0")
 public inline fun <T, C, reified R> Convert<T, C>.with(
     infer: Infer/* = Infer.Nulls*/,
     noinline rowConverter: RowValueExpression<T, C, R>
@@ -108,7 +103,7 @@ public inline fun <T, C, reified R> Convert<T, C>.with(
     withRowCellImpl(typeOf<R>(), infer, rowConverter)
 
 @Refine("with_0")
-@Interpretable(With0::class)
+@Interpretable("With0")
 public inline fun <T, C, reified R> Convert<T, C>.with(
     noinline rowConverter: RowValueExpression<T, C, R>
 ): DataFrame<T> = with(Infer.Nulls, rowConverter)

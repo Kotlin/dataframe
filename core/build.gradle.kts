@@ -1,3 +1,5 @@
+import com.google.devtools.ksp.gradle.KspTaskJvm
+
 @Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 plugins {
     kotlin("jvm")
@@ -39,14 +41,26 @@ val introspectImplementation by configurations.getting {
 val introspectCompileOnly by configurations.getting {
     extendsFrom(configurations.compileOnly.get())
 }
+//val introspect by sourceSets.creating {
+//    withConvention(org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet::class) {
+//        kotlin.srcDir("src/main/kotlin")
+//        compileClasspath += sourceSets.main.get().output
+//        runtimeClasspath += sourceSets.main.get().output
+//    }
+//}
+//
+//val introspectImplementation by configurations.getting {
+//    extendsFrom(configurations.implementation.get())
+//}
+//
+//val introspectCompileOnly by configurations.getting {
+//    extendsFrom(configurations.compileOnly.get())
+//}
 
 dependencies {
     api(libs.kotlin.reflect)
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlin.stdlib.jdk8)
-    // TODO: check if all compiler tests run pass with implementation
-//    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0-RC")
-    api(project(":plugins:type-api"))
 
     api(libs.commonsCsv)
     implementation(libs.klaxon)
@@ -94,6 +108,11 @@ tasks.lintKotlinTest {
         it.name.endsWith("\$Extensions.kt")
     }
     enabled = true
+}
+
+tasks.withType<KspTaskJvm>().configureEach {
+    inputs.dir(layout.buildDirectory.dir("generatedSrc")) // Assuming genSrcDir is the directory where generateKeywordsSrc outputs its files
+    dependsOn("generateKeywordsSrc")
 }
 
 korro {

@@ -12,11 +12,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.Selector
-import org.jetbrains.kotlinx.dataframe.annotations.Add
-import org.jetbrains.kotlinx.dataframe.annotations.AddWithDsl
-import org.jetbrains.kotlinx.dataframe.annotations.From
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
-import org.jetbrains.kotlinx.dataframe.annotations.Into
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
@@ -115,7 +111,7 @@ public typealias AddExpression<T, C> = Selector<AddDataRow<T>, C>
  * @return new [DataFrame] with added column
  * @throws DuplicateColumnNamesException if [DataFrame] already contains a column with given [name]
  */
-@Interpretable(Add::class)
+@Interpretable("Add")
 public inline fun <reified R, T> DataFrame<T>.add(
     name: String,
     infer: Infer/* = Infer.Nulls*/,
@@ -123,7 +119,7 @@ public inline fun <reified R, T> DataFrame<T>.add(
 ): DataFrame<T> =
     (this + mapToColumn(name, infer, expression))
 
-@Interpretable(Add::class)
+@Interpretable("Add")
 @Refine("add_1")
 public inline fun <reified R, T> DataFrame<T>.add(
     name: String,
@@ -180,7 +176,7 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
         return df.mapToColumn("", Infer.Nulls, expression)
     }
 
-    @Interpretable(From::class)
+    @Interpretable("From")
     public inline infix fun <reified R> String.from(
         noinline expression: RowExpression<T, R>
     ): Boolean = add(this, Infer.Nulls, expression)
@@ -193,7 +189,7 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
     public inline infix fun <reified R> ColumnAccessor<R>.from(column: ColumnReference<R>): Boolean = name() from column
     public inline infix fun <reified R> KProperty<R>.from(column: ColumnReference<R>): Boolean = name from column
 
-    @Interpretable(Into::class)
+    @Interpretable("Into")
     public infix fun Column.into(name: String): Boolean = add(rename(name))
     public infix fun <R> ColumnReference<R>.into(column: ColumnAccessor<R>): Boolean = into(column.name())
     public infix fun <R> ColumnReference<R>.into(column: KProperty<R>): Boolean = into(column.name)
@@ -215,7 +211,7 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
 }
 
 @Refine("add_2")
-@Interpretable(AddWithDsl::class)
+@Interpretable("AddWithDsl")
 public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
     val dsl = AddDsl(this)
     body(dsl)

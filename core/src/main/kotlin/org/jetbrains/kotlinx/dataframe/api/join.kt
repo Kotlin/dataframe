@@ -10,12 +10,10 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.api.joinImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
-import org.jetbrains.kotlinx.dataframe.plugin.Join0
-import org.jetbrains.kotlinx.dataframe.plugin.Match0
 import kotlin.reflect.KProperty
 
 @Refine("joinDefault")
-@Interpretable(Join0::class)
+@Interpretable("Join0")
 public fun <A, B> DataFrame<A>.joinDefault(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>
@@ -102,7 +100,7 @@ public fun <T> Iterable<DataFrame<T>>.joinOrNull(
 public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
 
     public val right: DataFrame<B>
-    @Interpretable(Match0::class)
+    @Interpretable("Match0")
 
     public infix fun <C> ColumnReference<C>.match(other: ColumnReference<C>): ColumnMatch<C> = ColumnMatch(this, other)
 
