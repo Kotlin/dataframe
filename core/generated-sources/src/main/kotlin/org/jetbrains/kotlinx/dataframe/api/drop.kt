@@ -71,6 +71,11 @@ public fun <T> DataFrame<T>.dropWhile(predicate: RowFilter<T>): DataFrame<T> =
 
 // region ColumnsSelectionDsl
 
+/**
+ * ## Drop [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
+ *
+ * See [Grammar] for all functions in this interface.
+ */
 public interface DropColumnsSelectionDsl {
 
     /**

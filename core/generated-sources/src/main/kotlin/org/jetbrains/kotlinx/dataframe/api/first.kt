@@ -85,7 +85,9 @@ public fun <T> PivotGroupBy<T>.first(predicate: RowFilter<T>): ReducedPivotGroup
 // region ColumnsSelectionDsl
 
 /**
- * See [Grammar].
+ * ## First (Col) [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
+ *
+ * See [Grammar] for all functions in this interface.
  */
 public interface FirstColumnsSelectionDsl {
 

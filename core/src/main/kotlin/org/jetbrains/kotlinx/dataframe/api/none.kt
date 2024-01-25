@@ -9,6 +9,11 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 
 // region ColumnsSelectionDsl
 
+/**
+ * ## None {@include [ColumnsSelectionDslLink]}
+ *
+ * See [Grammar] for all functions in this interface.
+ */
 public interface NoneColumnsSelectionDsl {
 
     /**

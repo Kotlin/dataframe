@@ -29,6 +29,11 @@ import kotlin.reflect.KType
 
 // region ColumnsSelectionDsl
 
+/**
+ * ## Cols At Any Depth {@include [ColumnsSelectionDslLink]}
+ *
+ * See [Grammar] for all functions in this interface.
+ */
 public interface ColsAtAnyDepthColumnsSelectionDsl {
 
     // region atAnyDepth

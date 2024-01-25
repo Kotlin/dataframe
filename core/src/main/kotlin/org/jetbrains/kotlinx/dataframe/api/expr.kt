@@ -12,7 +12,9 @@ import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 // region ColumnsSelectionDsl
 
 /**
- * See [Grammar]
+ * ## Expr {@include [ColumnsSelectionDslLink]}
+ *
+ * See [Grammar] for all functions in this interface.
  */
 public interface ExprColumnsSelectionDsl {
 

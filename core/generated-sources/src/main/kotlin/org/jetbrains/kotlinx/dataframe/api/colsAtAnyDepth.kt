@@ -29,6 +29,11 @@ import kotlin.reflect.KType
 
 // region ColumnsSelectionDsl
 
+/**
+ * ## Cols At Any Depth [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
+ *
+ * See [Grammar] for all functions in this interface.
+ */
 public interface ColsAtAnyDepthColumnsSelectionDsl {
 
     // region atAnyDepth

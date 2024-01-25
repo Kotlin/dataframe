@@ -9,6 +9,11 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 
 // region ColumnsSelectionDsl
 
+/**
+ * ## None [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
+ *
+ * See [Grammar] for all functions in this interface.
+ */
 public interface NoneColumnsSelectionDsl {
 
     /**

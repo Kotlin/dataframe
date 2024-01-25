@@ -43,7 +43,7 @@ internal interface Select {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetSelectOperationArg]}
      */
-    public interface SelectSelectingOptions
+    interface SelectSelectingOptions
 }
 
 /** {@setArg [SelectingColumns.OperationArg] [select][select]} */
@@ -89,7 +89,9 @@ public fun <T> DataFrame<T>.select(vararg columns: AnyColumnReference): DataFram
 // region ColumnsSelectionDsl
 // NOTE: invoke overloads are inside ColumnsSelectionDsl.kt due to conflicts
 /**
- * See [Grammar]
+ * ## Select {@include [ColumnsSelectionDslLink]}
+ *
+ * See [Grammar] for all functions in this interface.
  */
 public interface SelectColumnsSelectionDsl {
 

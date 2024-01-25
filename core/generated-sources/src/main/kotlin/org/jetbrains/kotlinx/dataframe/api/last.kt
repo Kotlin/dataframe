@@ -85,7 +85,9 @@ public fun <T> PivotGroupBy<T>.last(predicate: RowFilter<T>): ReducedPivotGroupB
 // region ColumnsSelectionDsl
 
 /**
- * See [Grammar].
+ * # Last (Col) [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
+ *
+ * See [Grammar] for all functions in this interface.
  */
 public interface LastColumnsSelectionDsl {
 

@@ -63,6 +63,11 @@ public fun <T> DataFrame<T>.takeWhile(predicate: RowFilter<T>): DataFrame<T> =
 
 // region ColumnsSelectionDsl
 
+/**
+ * ## Take {@include [ColumnsSelectionDslLink]}
+ *
+ * See [Grammar] for all functions in this interface.
+ */
 public interface TakeColumnsSelectionDsl {
 
     /**

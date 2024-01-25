@@ -25,7 +25,11 @@ import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
 
-/** See [Grammar] */
+/**
+ * ## Column Groups {@include [ColumnsSelectionDslLink]}
+ *
+ * See [Grammar] for all functions in this interface.
+ */
 public interface ColGroupsColumnsSelectionDsl {
 
     /**

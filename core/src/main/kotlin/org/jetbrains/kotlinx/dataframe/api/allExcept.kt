@@ -38,6 +38,11 @@ import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
 
+/**
+ * ## (All) (Cols) Except {@include [ColumnsSelectionDslLink]}
+ *
+ * See [Grammar] for all functions in this interface.
+ */
 public interface AllExceptColumnsSelectionDsl {
 
     /**

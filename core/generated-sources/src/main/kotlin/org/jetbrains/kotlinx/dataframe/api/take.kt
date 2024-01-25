@@ -63,6 +63,11 @@ public fun <T> DataFrame<T>.takeWhile(predicate: RowFilter<T>): DataFrame<T> =
 
 // region ColumnsSelectionDsl
 
+/**
+ * ## Take [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
+ *
+ * See [Grammar] for all functions in this interface.
+ */
 public interface TakeColumnsSelectionDsl {
 
     /**

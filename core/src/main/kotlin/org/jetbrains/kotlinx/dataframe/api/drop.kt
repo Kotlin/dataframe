@@ -71,6 +71,11 @@ public fun <T> DataFrame<T>.dropWhile(predicate: RowFilter<T>): DataFrame<T> =
 
 // region ColumnsSelectionDsl
 
+/**
+ * ## Drop {@include [ColumnsSelectionDslLink]}
+ *
+ * See [Grammar] for all functions in this interface.
+ */
 public interface DropColumnsSelectionDsl {
 
     /**

@@ -14,7 +14,9 @@ import kotlin.reflect.KProperty
 // region ColumnsSelectionDsl
 
 /**
- * See [Grammar].
+ * ## Range of Columns {@include [ColumnsSelectionDslLink]}
+ *
+ * See [Grammar] for all functions in this interface.
  */
 public interface ColumnRangeColumnsSelectionDsl {
 

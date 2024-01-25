@@ -50,7 +50,9 @@ public fun <T, C> DataFrame<T>.distinctBy(columns: ColumnsSelector<T, C>): DataF
 // region ColumnsSelectionDsl
 
 /**
- * See [Grammar]
+ * ## Distinct [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
+ *
+ * See [Grammar] for all functions in this interface.
  */
 public interface DistinctColumnsSelectionDsl {
 

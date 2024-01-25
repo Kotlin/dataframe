@@ -110,7 +110,9 @@ public infix fun <T, C : ColumnReference<T>> C.named(name: ColumnAccessor<*>): C
 // region ColumnsSelectionDsl
 
 /**
- * See [Grammar]
+ * ## Rename: `named` / `into` [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
+ *
+ * See [Grammar] for all functions in this interface.
  */
 public interface RenameColumnsSelectionDsl {
 

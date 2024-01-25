@@ -16,7 +16,9 @@ import org.jetbrains.kotlinx.dataframe.util.TOP_MESSAGE
 // region ColumnsSelectionDsl
 
 /**
- * See [Grammar]
+ * ## Simplify [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
+ *
+ * See [Grammar] for all functions in this interface.
  */
 public interface SimplifyColumnsSelectionDsl {
 

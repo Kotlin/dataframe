@@ -85,7 +85,9 @@ public fun <T> PivotGroupBy<T>.first(predicate: RowFilter<T>): ReducedPivotGroup
 // region ColumnsSelectionDsl
 
 /**
- * See [Grammar].
+ * ## First (Col) {@include [ColumnsSelectionDslLink]}
+ *
+ * See [Grammar] for all functions in this interface.
  */
 public interface FirstColumnsSelectionDsl {
 

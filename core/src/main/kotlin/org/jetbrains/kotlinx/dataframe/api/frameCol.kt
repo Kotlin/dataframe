@@ -26,6 +26,11 @@ import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
 
+/**
+ * ## Frame Col {@include [ColumnsSelectionDslLink]}
+ *
+ * See [Grammar] for all functions in this interface.
+ */
 public interface FrameColColumnsSelectionDsl {
 
     /**

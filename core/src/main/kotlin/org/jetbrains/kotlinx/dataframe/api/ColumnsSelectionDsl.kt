@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSe
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_LIST_DATACOLUMN_GET
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_LIST_DATACOLUMN_GET_REPLACE
@@ -39,8 +40,9 @@ public annotation class ColumnsSelectionDslMarker
  * {@include [SelectingColumns.Dsl.WithExample]}
  * {@setArg [SelectingColumns.OperationArg] [select][DataFrame.select]}
  *
- * @comment This interface be safely cast to [SingleColumn] across the library. It does not directly
- * implement it for DSL purposes.
+ * @comment This interface be safely cast to [SingleColumn] across the library because it's always
+ * implemented in combination with [DataFrameReceiver] which is a [SingleColumn] itself.
+ * It does not directly implement [SingleColumn] for DSL purposes.
  */
 @ColumnsSelectionDslMarker
 public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */

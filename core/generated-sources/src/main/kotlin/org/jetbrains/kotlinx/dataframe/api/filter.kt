@@ -54,6 +54,11 @@ internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) 
 
 // region ColumnsSelectionDsl
 
+/**
+ * ## Filter [ColumnSet] [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
+ *
+ * See [Grammar] for all functions in this interface.
+ */
 public interface FilterColumnsSelectionDsl {
 
     /**

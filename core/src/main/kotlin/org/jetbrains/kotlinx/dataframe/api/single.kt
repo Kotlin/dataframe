@@ -55,7 +55,9 @@ public fun <T> DataFrame<T>.singleOrNull(predicate: RowExpression<T, Boolean>): 
 // region ColumnsSelectionDsl
 
 /**
- * See [Grammar].
+ * ## Single (Col) {@include [ColumnsSelectionDslLink]}
+ *
+ * See [Grammar] for all functions in this interface.
  */
 public interface SingleColumnsSelectionDsl {
 

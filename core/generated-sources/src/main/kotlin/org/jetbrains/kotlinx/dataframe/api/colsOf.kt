@@ -24,7 +24,9 @@ import kotlin.reflect.typeOf
 // region ColumnsSelectionDsl
 
 /**
- * See [Grammar]
+ * ## Cols Of [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
+ *
+ * See [Grammar] for all functions in this interface.
  */
 public interface ColsOfColumnsSelectionDsl {
 

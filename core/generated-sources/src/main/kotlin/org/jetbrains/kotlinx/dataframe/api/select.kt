@@ -108,7 +108,7 @@ internal interface Select {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.api.select]`(Person::length, Person::age)`
      *  
      */
-    public interface SelectSelectingOptions
+    interface SelectSelectingOptions
 }
 
 private interface SetSelectOperationArg
@@ -240,7 +240,9 @@ public fun <T> DataFrame<T>.select(vararg columns: AnyColumnReference): DataFram
 // region ColumnsSelectionDsl
 // NOTE: invoke overloads are inside ColumnsSelectionDsl.kt due to conflicts
 /**
- * See [Grammar]
+ * ## Select [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
+ *
+ * See [Grammar] for all functions in this interface.
  */
 public interface SelectColumnsSelectionDsl {
 

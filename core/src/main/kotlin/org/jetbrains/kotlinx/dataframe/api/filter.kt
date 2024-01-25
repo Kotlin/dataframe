@@ -54,6 +54,11 @@ internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) 
 
 // region ColumnsSelectionDsl
 
+/**
+ * ## Filter [ColumnSet] {@include [ColumnsSelectionDslLink]}
+ *
+ * See [Grammar] for all functions in this interface.
+ */
 public interface FilterColumnsSelectionDsl {
 
     /**

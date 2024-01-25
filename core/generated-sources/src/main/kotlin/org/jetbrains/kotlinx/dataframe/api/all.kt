@@ -83,7 +83,11 @@ public fun <T> DataFrame<T>.all(predicate: RowFilter<T>): Boolean = rows().all {
 
 // region ColumnsSelectionDsl
 
-// TODO replace allX(ColumnAccessor) with allX { ColumnAccessor } similar to allExcept
+/**
+ * ## All Flavors of All (Cols) [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
+ *
+ * See [Grammar] for all functions in this interface.
+ */
 public interface AllColumnsSelectionDsl {
 
     /**

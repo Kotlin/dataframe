@@ -24,7 +24,9 @@ import kotlin.reflect.typeOf
 // region ColumnsSelectionDsl
 
 /**
- * See [Grammar]
+ * ## Cols Of {@include [ColumnsSelectionDslLink]}
+ *
+ * See [Grammar] for all functions in this interface.
  */
 public interface ColsOfColumnsSelectionDsl {
 
