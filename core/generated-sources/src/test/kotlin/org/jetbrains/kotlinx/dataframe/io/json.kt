@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import com.beust.klaxon.JsonArray
+import com.beust.klaxon.JsonObject
 import io.kotest.matchers.collections.shouldBeIn
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
@@ -22,10 +24,19 @@ import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toDouble
 import org.jetbrains.kotlinx.dataframe.api.toMap
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.*
+import org.jetbrains.kotlinx.dataframe.io.SerializationKeys.COLUMNS
+import org.jetbrains.kotlinx.dataframe.io.SerializationKeys.DATA
+import org.jetbrains.kotlinx.dataframe.io.SerializationKeys.KIND
+import org.jetbrains.kotlinx.dataframe.io.SerializationKeys.KOTLIN_DATAFRAME
+import org.jetbrains.kotlinx.dataframe.io.SerializationKeys.METADATA
+import org.jetbrains.kotlinx.dataframe.io.SerializationKeys.NCOL
+import org.jetbrains.kotlinx.dataframe.io.SerializationKeys.NROW
+import org.jetbrains.kotlinx.dataframe.io.SerializationKeys.VERSION
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.values
 import org.junit.Test
@@ -950,5 +961,98 @@ class JsonTests {
     fun `nulls in columns should be encoded explicitly`() {
         val df = dataFrameOf("a", "b")("1", null, "2", 12)
         df.toJson(canonical = true) shouldContain "\"b\":null"
+    }
+
+    @Test
+    @Suppress("UNCHECKED_CAST")
+    fun `json with metadata flat table`() {
+        @Language("json")
+        val data = """
+            [{"id":3602279,"node_id":"MDEwOlJlcG9zaXRvcnkzNjAyMjc5","name":"kotlin-web-demo","full_name":"JetBrains/kotlin-web-demo"}]
+        """.trimIndent()
+        val df = DataFrame.readJsonStr(data)
+        val json = df.toJsonWithMetadata(df.rowsCount())
+        json[VERSION] shouldBe SERIALIZATION_VERSION
+
+        val metadata = (json[METADATA] as JsonObject)
+        metadata[NROW] shouldBe 1
+        metadata[NCOL] shouldBe 4
+        val columns = metadata[COLUMNS] as List<String>
+        columns shouldBe listOf("id", "node_id", "name", "full_name")
+
+        val decodedData = json[KOTLIN_DATAFRAME] as JsonArray<*>
+        val decodedDf = DataFrame.readJsonStr(decodedData.toJsonString())
+        decodedDf shouldBe df
+    }
+
+    @Test
+    fun `json with metadata column group`() {
+        @Language("json")
+        val data = """
+            [{"permissions":{"admin":false,"maintain":false,"push":false,"triage":false,"pull":true}}]
+        """.trimIndent()
+        val df = DataFrame.readJsonStr(data)
+        val json = df.toJsonWithMetadata(df.rowsCount())
+
+        val row = (json[KOTLIN_DATAFRAME] as JsonArray<*>)[0] as JsonObject
+
+        val permissions = row["permissions"] as JsonObject
+        val metadata = permissions[METADATA] as JsonObject
+        metadata[KIND] shouldBe ColumnKind.Group.name
+
+        val decodedData = permissions[DATA] as JsonObject
+
+        decodedData["admin"] shouldBe false
+        decodedData["maintain"] shouldBe false
+        decodedData["push"] shouldBe false
+        decodedData["triage"] shouldBe false
+        decodedData["pull"] shouldBe true
+    }
+
+    @Test
+    fun `json with metadata frame column`() {
+        @Language("json")
+        val data = """
+            [{"contributors":[{"login":"satamas","id":5521317,"node_id":"MDQ6VXNlcjU1MjEzMTc=","gravatar_id":"","url":"https://api.github.com/users/satamas","type":"User","site_admin":false,"contributions":998},{"login":"NataliaUkhorskaya","id":968879,"node_id":"MDQ6VXNlcjk2ODg3OQ==","gravatar_id":"","url":"https://api.github.com/users/NataliaUkhorskaya","type":"User","site_admin":false,"contributions":371},{"login":"AlexanderPrendota","id":10503748,"node_id":"MDQ6VXNlcjEwNTAzNzQ4","gravatar_id":"","url":"https://api.github.com/users/AlexanderPrendota","type":"User","site_admin":false,"contributions":190},{"login":"svtk","id":1447386,"node_id":"MDQ6VXNlcjE0NDczODY=","gravatar_id":"","url":"https://api.github.com/users/svtk","type":"User","site_admin":false,"contributions":53},{"login":"zarechenskiy","id":3757088,"node_id":"MDQ6VXNlcjM3NTcwODg=","gravatar_id":"","url":"https://api.github.com/users/zarechenskiy","type":"User","site_admin":false,"contributions":18},{"login":"abreslav","id":888318,"node_id":"MDQ6VXNlcjg4ODMxOA==","gravatar_id":"","url":"https://api.github.com/users/abreslav","type":"User","site_admin":false,"contributions":13},{"login":"yole","id":46553,"node_id":"MDQ6VXNlcjQ2NTUz","gravatar_id":"","url":"https://api.github.com/users/yole","type":"User","site_admin":false,"contributions":11},{"login":"zoobestik","id":242514,"node_id":"MDQ6VXNlcjI0MjUxNA==","gravatar_id":"","url":"https://api.github.com/users/zoobestik","type":"User","site_admin":false,"contributions":5},{"login":"ilya-g","id":4257577,"node_id":"MDQ6VXNlcjQyNTc1Nzc=","gravatar_id":"","url":"https://api.github.com/users/ilya-g","type":"User","site_admin":false,"contributions":5},{"login":"pTalanov","id":442640,"node_id":"MDQ6VXNlcjQ0MjY0MA==","gravatar_id":"","url":"https://api.github.com/users/pTalanov","type":"User","site_admin":false,"contributions":4},{"login":"bashor","id":485321,"node_id":"MDQ6VXNlcjQ4NTMyMQ==","gravatar_id":"","url":"https://api.github.com/users/bashor","type":"User","site_admin":false,"contributions":3},{"login":"nikpachoo","id":3338311,"node_id":"MDQ6VXNlcjMzMzgzMTE=","gravatar_id":"","url":"https://api.github.com/users/nikpachoo","type":"User","site_admin":false,"contributions":3},{"login":"udalov","id":292714,"node_id":"MDQ6VXNlcjI5MjcxNA==","gravatar_id":"","url":"https://api.github.com/users/udalov","type":"User","site_admin":false,"contributions":2},{"login":"anton-bannykh","id":1115872,"node_id":"MDQ6VXNlcjExMTU4NzI=","gravatar_id":"","url":"https://api.github.com/users/anton-bannykh","type":"User","site_admin":false,"contributions":2},{"login":"rayshade","id":5259872,"node_id":"MDQ6VXNlcjUyNTk4NzI=","gravatar_id":"","url":"https://api.github.com/users/rayshade","type":"User","site_admin":false,"contributions":2},{"login":"yu-ishicawa","id":843678,"node_id":"MDQ6VXNlcjg0MzY3OA==","gravatar_id":"","url":"https://api.github.com/users/yu-ishicawa","type":"User","site_admin":false,"contributions":2},{"login":"gildor","id":186017,"node_id":"MDQ6VXNlcjE4NjAxNw==","gravatar_id":"","url":"https://api.github.com/users/gildor","type":"User","site_admin":false,"contributions":1},{"login":"AndreOnCrypto","id":3066457,"node_id":"MDQ6VXNlcjMwNjY0NTc=","gravatar_id":"","url":"https://api.github.com/users/AndreOnCrypto","type":"User","site_admin":false,"contributions":1},{"login":"DipanshKhandelwal","id":24923974,"node_id":"MDQ6VXNlcjI0OTIzOTc0","gravatar_id":"","url":"https://api.github.com/users/DipanshKhandelwal","type":"User","site_admin":false,"contributions":1},{"login":"dsavvinov","id":6999635,"node_id":"MDQ6VXNlcjY5OTk2MzU=","gravatar_id":"","url":"https://api.github.com/users/dsavvinov","type":"User","site_admin":false,"contributions":1},{"login":"Noia","id":397736,"node_id":"MDQ6VXNlcjM5NzczNg==","gravatar_id":"","url":"https://api.github.com/users/Noia","type":"User","site_admin":false,"contributions":1},{"login":"gzoritchak","id":1110254,"node_id":"MDQ6VXNlcjExMTAyNTQ=","gravatar_id":"","url":"https://api.github.com/users/gzoritchak","type":"User","site_admin":false,"contributions":1},{"login":"Harmitage","id":44910736,"node_id":"MDQ6VXNlcjQ0OTEwNzM2","gravatar_id":"","url":"https://api.github.com/users/Harmitage","type":"User","site_admin":false,"contributions":1},{"login":"JLLeitschuh","id":1323708,"node_id":"MDQ6VXNlcjEzMjM3MDg=","gravatar_id":"","url":"https://api.github.com/users/JLLeitschuh","type":"User","site_admin":false,"contributions":1},{"login":"dalinaum","id":145585,"node_id":"MDQ6VXNlcjE0NTU4NQ==","gravatar_id":"","url":"https://api.github.com/users/dalinaum","type":"User","site_admin":false,"contributions":1},{"login":"robstoll","id":5557885,"node_id":"MDQ6VXNlcjU1NTc4ODU=","gravatar_id":"","url":"https://api.github.com/users/robstoll","type":"User","site_admin":false,"contributions":1},{"login":"tginsberg","id":432945,"node_id":"MDQ6VXNlcjQzMjk0NQ==","gravatar_id":"","url":"https://api.github.com/users/tginsberg","type":"User","site_admin":false,"contributions":1},{"login":"joeldudleyr3","id":24230167,"node_id":"MDQ6VXNlcjI0MjMwMTY3","gravatar_id":"","url":"https://api.github.com/users/joeldudleyr3","type":"User","site_admin":false,"contributions":1},{"login":"ligi","id":111600,"node_id":"MDQ6VXNlcjExMTYwMA==","gravatar_id":"","url":"https://api.github.com/users/ligi","type":"User","site_admin":false,"contributions":1}]}]
+        """.trimIndent()
+        val df = DataFrame.readJsonStr(data)
+        val json = df.toJsonWithMetadata(df.rowsCount())
+        val row = (json[KOTLIN_DATAFRAME] as JsonArray<*>)[0] as JsonObject
+
+        val contributors = row["contributors"] as JsonObject
+
+        val metadata = contributors[METADATA] as JsonObject
+        metadata[KIND] shouldBe ColumnKind.Frame.name
+        metadata[NCOL] shouldBe 8
+        metadata[NROW] shouldBe 29
+
+        val decodedData = contributors[DATA] as JsonArray<*>
+        decodedData.size shouldBe 29
+
+        val decodedDf = DataFrame.readJsonStr(decodedData.toJsonString())
+        decodedDf shouldBe df[0]["contributors"] as AnyFrame
+    }
+
+    @Test
+    fun `json with metadata test row limit`() {
+        @Language("json")
+        val data = """
+            [{"contributors":[{"login":"satamas","id":5521317,"node_id":"MDQ6VXNlcjU1MjEzMTc=","gravatar_id":"","url":"https://api.github.com/users/satamas","type":"User","site_admin":false,"contributions":998},{"login":"NataliaUkhorskaya","id":968879,"node_id":"MDQ6VXNlcjk2ODg3OQ==","gravatar_id":"","url":"https://api.github.com/users/NataliaUkhorskaya","type":"User","site_admin":false,"contributions":371},{"login":"AlexanderPrendota","id":10503748,"node_id":"MDQ6VXNlcjEwNTAzNzQ4","gravatar_id":"","url":"https://api.github.com/users/AlexanderPrendota","type":"User","site_admin":false,"contributions":190},{"login":"svtk","id":1447386,"node_id":"MDQ6VXNlcjE0NDczODY=","gravatar_id":"","url":"https://api.github.com/users/svtk","type":"User","site_admin":false,"contributions":53},{"login":"zarechenskiy","id":3757088,"node_id":"MDQ6VXNlcjM3NTcwODg=","gravatar_id":"","url":"https://api.github.com/users/zarechenskiy","type":"User","site_admin":false,"contributions":18},{"login":"abreslav","id":888318,"node_id":"MDQ6VXNlcjg4ODMxOA==","gravatar_id":"","url":"https://api.github.com/users/abreslav","type":"User","site_admin":false,"contributions":13},{"login":"yole","id":46553,"node_id":"MDQ6VXNlcjQ2NTUz","gravatar_id":"","url":"https://api.github.com/users/yole","type":"User","site_admin":false,"contributions":11},{"login":"zoobestik","id":242514,"node_id":"MDQ6VXNlcjI0MjUxNA==","gravatar_id":"","url":"https://api.github.com/users/zoobestik","type":"User","site_admin":false,"contributions":5},{"login":"ilya-g","id":4257577,"node_id":"MDQ6VXNlcjQyNTc1Nzc=","gravatar_id":"","url":"https://api.github.com/users/ilya-g","type":"User","site_admin":false,"contributions":5},{"login":"pTalanov","id":442640,"node_id":"MDQ6VXNlcjQ0MjY0MA==","gravatar_id":"","url":"https://api.github.com/users/pTalanov","type":"User","site_admin":false,"contributions":4},{"login":"bashor","id":485321,"node_id":"MDQ6VXNlcjQ4NTMyMQ==","gravatar_id":"","url":"https://api.github.com/users/bashor","type":"User","site_admin":false,"contributions":3},{"login":"nikpachoo","id":3338311,"node_id":"MDQ6VXNlcjMzMzgzMTE=","gravatar_id":"","url":"https://api.github.com/users/nikpachoo","type":"User","site_admin":false,"contributions":3},{"login":"udalov","id":292714,"node_id":"MDQ6VXNlcjI5MjcxNA==","gravatar_id":"","url":"https://api.github.com/users/udalov","type":"User","site_admin":false,"contributions":2},{"login":"anton-bannykh","id":1115872,"node_id":"MDQ6VXNlcjExMTU4NzI=","gravatar_id":"","url":"https://api.github.com/users/anton-bannykh","type":"User","site_admin":false,"contributions":2},{"login":"rayshade","id":5259872,"node_id":"MDQ6VXNlcjUyNTk4NzI=","gravatar_id":"","url":"https://api.github.com/users/rayshade","type":"User","site_admin":false,"contributions":2},{"login":"yu-ishicawa","id":843678,"node_id":"MDQ6VXNlcjg0MzY3OA==","gravatar_id":"","url":"https://api.github.com/users/yu-ishicawa","type":"User","site_admin":false,"contributions":2},{"login":"gildor","id":186017,"node_id":"MDQ6VXNlcjE4NjAxNw==","gravatar_id":"","url":"https://api.github.com/users/gildor","type":"User","site_admin":false,"contributions":1},{"login":"AndreOnCrypto","id":3066457,"node_id":"MDQ6VXNlcjMwNjY0NTc=","gravatar_id":"","url":"https://api.github.com/users/AndreOnCrypto","type":"User","site_admin":false,"contributions":1},{"login":"DipanshKhandelwal","id":24923974,"node_id":"MDQ6VXNlcjI0OTIzOTc0","gravatar_id":"","url":"https://api.github.com/users/DipanshKhandelwal","type":"User","site_admin":false,"contributions":1},{"login":"dsavvinov","id":6999635,"node_id":"MDQ6VXNlcjY5OTk2MzU=","gravatar_id":"","url":"https://api.github.com/users/dsavvinov","type":"User","site_admin":false,"contributions":1},{"login":"Noia","id":397736,"node_id":"MDQ6VXNlcjM5NzczNg==","gravatar_id":"","url":"https://api.github.com/users/Noia","type":"User","site_admin":false,"contributions":1},{"login":"gzoritchak","id":1110254,"node_id":"MDQ6VXNlcjExMTAyNTQ=","gravatar_id":"","url":"https://api.github.com/users/gzoritchak","type":"User","site_admin":false,"contributions":1},{"login":"Harmitage","id":44910736,"node_id":"MDQ6VXNlcjQ0OTEwNzM2","gravatar_id":"","url":"https://api.github.com/users/Harmitage","type":"User","site_admin":false,"contributions":1},{"login":"JLLeitschuh","id":1323708,"node_id":"MDQ6VXNlcjEzMjM3MDg=","gravatar_id":"","url":"https://api.github.com/users/JLLeitschuh","type":"User","site_admin":false,"contributions":1},{"login":"dalinaum","id":145585,"node_id":"MDQ6VXNlcjE0NTU4NQ==","gravatar_id":"","url":"https://api.github.com/users/dalinaum","type":"User","site_admin":false,"contributions":1},{"login":"robstoll","id":5557885,"node_id":"MDQ6VXNlcjU1NTc4ODU=","gravatar_id":"","url":"https://api.github.com/users/robstoll","type":"User","site_admin":false,"contributions":1},{"login":"tginsberg","id":432945,"node_id":"MDQ6VXNlcjQzMjk0NQ==","gravatar_id":"","url":"https://api.github.com/users/tginsberg","type":"User","site_admin":false,"contributions":1},{"login":"joeldudleyr3","id":24230167,"node_id":"MDQ6VXNlcjI0MjMwMTY3","gravatar_id":"","url":"https://api.github.com/users/joeldudleyr3","type":"User","site_admin":false,"contributions":1},{"login":"ligi","id":111600,"node_id":"MDQ6VXNlcjExMTYwMA==","gravatar_id":"","url":"https://api.github.com/users/ligi","type":"User","site_admin":false,"contributions":1}]}]
+        """.trimIndent()
+        val df = DataFrame.readJsonStr(data)
+
+        val nestedFrameRowLimit = 20
+        val json = df.toJsonWithMetadata(df.rowsCount(), nestedFrameRowLimit)
+        val row = (json[KOTLIN_DATAFRAME] as JsonArray<*>)[0] as JsonObject
+
+        val contributors = row["contributors"] as JsonObject
+
+        val metadata = contributors[METADATA] as JsonObject
+        metadata[KIND] shouldBe ColumnKind.Frame.name
+        metadata[NCOL] shouldBe 8
+        metadata[NROW] shouldBe 29
+
+        val decodedData = contributors[DATA] as JsonArray<*>
+        decodedData.size shouldBe nestedFrameRowLimit
     }
 }
