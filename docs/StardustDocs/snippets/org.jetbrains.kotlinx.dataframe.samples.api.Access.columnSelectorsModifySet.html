@@ -1,7 +1,7 @@
-        <html>
-        <head>
-            <style type="text/css">
-                :root {
+<html>
+<head>
+<style type="text/css">
+:root {
     --background: #fff;
     --background-odd: #f5f5f5;
     --background-hover: #d9edfd;
@@ -173,50 +173,12 @@ details details {
 summary {
     padding: 6px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            </style>
-        </head>
-        <body>
-            
-
+</style>
+</head>
+<body>
                             <details>
-                            <summary>df.select { colsAtAnyDepth { !it.isColumnGroup() }.take(3) }</summary>
-                            
-                                    <details>
+                            <summary>df.select { cols { !it.isColumnGroup() }.recursively().take(3) }</summary>
+                                                                <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                      <table class="dataframe" id="df_0"></table>
 
@@ -231,9 +193,8 @@ summary {
                             </details>
                             <br>
                             <details>
-                            <summary>df.select { colsAtAnyDepth { !it.isColumnGroup() }.takeLast(3) }</summary>
-                            
-                                    <details>
+                            <summary>df.select { cols { !it.isColumnGroup() }.recursively().takeLast(3) }</summary>
+                                                                <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                      <table class="dataframe" id="df_2"></table>
 
@@ -248,9 +209,8 @@ summary {
                             </details>
                             <br>
                             <details>
-                            <summary>df.select { colsAtAnyDepth { !it.isColumnGroup() }.drop(3) }</summary>
-                            
-                                    <details>
+                            <summary>df.select { cols { !it.isColumnGroup() }.recursively().drop(3) }</summary>
+                                                                <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                      <table class="dataframe" id="df_4"></table>
 
@@ -265,9 +225,8 @@ summary {
                             </details>
                             <br>
                             <details>
-                            <summary>df.select { colsAtAnyDepth { !it.isColumnGroup() }.dropLast(3) }</summary>
-                            
-                                    <details>
+                            <summary>df.select { cols { !it.isColumnGroup() }.recursively().dropLast(3) }</summary>
+                                                                <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                      <table class="dataframe" id="df_6"></table>
 
@@ -282,9 +241,8 @@ summary {
                             </details>
                             <br>
                             <details>
-                            <summary>df.select { colsAtAnyDepth { !it.isColumnGroup() }.filter { it.name().startsWith(&quot;year&quot;) } }</summary>
-                            
-                                    <details>
+                            <summary>df.select { cols { !it.isColumnGroup() }.rec().filter { it.name().startsWith(&quot;year&quot;) } }</summary>
+                                                                <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                      <table class="dataframe" id="df_8"></table>
 
@@ -299,9 +257,8 @@ summary {
                             </details>
                             <br>
                             <details>
-                            <summary>df.select { colsAtAnyDepth { !it.isColumnGroup() }.except { age } }</summary>
-                            
-                                    <details>
+                            <summary>df.select { cols { !it.isColumnGroup() }.rec().except { age } }</summary>
+                                                                <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                      <table class="dataframe" id="df_10"></table>
 
@@ -317,8 +274,7 @@ summary {
                             <br>
                             <details>
                             <summary>df.select { (colsOf&amp;lt;Int&amp;gt;() and age).distinct() }</summary>
-                            
-                                    <details>
+                                                                <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                      <table class="dataframe" id="df_12"></table>
 
@@ -332,9 +288,9 @@ summary {
                                     </details>
                             </details>
                             <br>
-        </body>
-        <script>
-            (function () {
+</body>
+<script>
+(function () {
     window.DataFrame = window.DataFrame || new (function () {
         this.addTable = function (df) {
             let cols = df.cols;
@@ -608,8 +564,6 @@ summary {
     }
 })()
 
-
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
 { name: "<span title=\"lastName: String\">lastName</span>", children: [], rightAlign: false, values: ["Cooper","Dylan","Daniels","Chaplin","Marley","Wolf","Byrd"] }, 
@@ -623,7 +577,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(0) });
 
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
 { name: "<span title=\"lastName: String\">lastName</span>", children: [], rightAlign: false, values: ["Cooper","Dylan","Daniels","Chaplin","Marley","Wolf","Byrd"] }, 
@@ -632,8 +585,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(1) });
-
-
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
@@ -648,7 +599,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(2) });
 
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"city: String?\">city</span>", children: [], rightAlign: false, values: ["London","Dubai","Moscow","Milan","Tokyo","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>","Moscow"] }, 
 { name: "<span title=\"weight: Int?\">weight</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">54</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">87</span></span>","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">68</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">55</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">90</span></span>"] }, 
@@ -657,8 +607,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"c
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(3) });
-
-
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
@@ -673,7 +621,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(4) });
 
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"city: String?\">city</span>", children: [], rightAlign: false, values: ["London","Dubai","Moscow","Milan","Tokyo","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>","Moscow"] }, 
 { name: "<span title=\"weight: Int?\">weight</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">54</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">87</span></span>","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">68</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">55</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">90</span></span>"] }, 
@@ -682,8 +629,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"c
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(5) });
-
-
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
@@ -698,7 +643,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(6) });
 
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
 { name: "<span title=\"lastName: String\">lastName</span>", children: [], rightAlign: false, values: ["Cooper","Dylan","Daniels","Chaplin","Marley","Wolf","Byrd"] }, 
@@ -707,8 +651,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(7) });
-
-
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
@@ -723,14 +665,11 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(8) });
 
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [], id: 9, rootId: 9, totalRows: 0 } ) });
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(9) });
-
-
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
@@ -745,7 +684,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(10) });
 
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
 { name: "<span title=\"lastName: String\">lastName</span>", children: [], rightAlign: false, values: ["Cooper","Dylan","Daniels","Chaplin","Marley","Wolf","Byrd"] }, 
@@ -756,8 +694,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(11) });
-
-
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
@@ -772,7 +708,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(12) });
 
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"age: Int\">age</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">15</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">45</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">20</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">40</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">30</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">20</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">30</span></span>"] }, 
 ], id: 13, rootId: 13, totalRows: 7 } ) });
@@ -780,6 +715,5 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"a
 
 call_DataFrame(function() { DataFrame.renderTable(13) });
 
-
-        </script>
-        </html>
+</script>
+</html>

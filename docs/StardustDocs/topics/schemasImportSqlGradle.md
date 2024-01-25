@@ -20,12 +20,12 @@ as the first parameter of the annotation `@file:ImportDataSchema`.
 
 ```kotlin
 @file:ImportDataSchema(
-    "ActorSchema",
+    "Directors",
     URL,
-    jdbcOptions = JdbcOptions(USER_NAME, PASSWORD, tableName = TABLE_NAME)
+    jdbcOptions = JdbcOptions(USER_NAME, PASSWORD, tableName = TABLE_NAME_DIRECTORS)
 )
 
-package databases
+package org.jetbrains.kotlinx.dataframe.examples.jdbc
 
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 ```
@@ -37,7 +37,7 @@ const val USER_NAME = "root"
 
 const val PASSWORD = "pass"
 
-const val TABLE_NAME = "actors"
+const val TABLE_NAME_DIRECTORS = "directors"
 ```
 To generate schema for the result of an SQL query,
 you need to define the SQL query itself
@@ -48,12 +48,12 @@ as a first parameter of annotation `@file:ImportDataSchema`.
 
 ```kotlin
 @file:ImportDataSchema(
-    "TarantinoFilmSchema",
+    "NewActors",
     URL,
-    jdbcOptions = JdbcOptions(USER_NAME, PASSWORD, sqlQuery = TARANTINO_FILMS_SQL_QUERY)
+    jdbcOptions = JdbcOptions(USER_NAME, PASSWORD, sqlQuery = ACTORS_IN_LATEST_MOVIES)
 )
 
-package databases
+package org.jetbrains.kotlinx.dataframe.examples.jdbc
 
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 ```
@@ -65,16 +65,16 @@ const val USER_NAME = "root"
 
 const val PASSWORD = "pass"
 
-const val TARANTINO_FILMS_SQL_QUERY = """
-    SELECT name, year, rank,
-    GROUP_CONCAT (genre) as "genres"
-    FROM movies JOIN movies_directors ON movie_id = movies.id
-    JOIN directors ON directors.id=director_id LEFT JOIN movies_genres ON movies.id = movies_genres.movie_id
-    WHERE directors.first_name = "Quentin" AND directors.last_name = "Tarantino"
-    GROUP BY name, year, rank
-    ORDER BY year
+const val ACTORS_IN_LATEST_MOVIES = """
+    SELECT a.first_name, a.last_name, r.role, m.name AS movie_name, m.year
+    FROM actors a
+    INNER JOIN roles r ON a.id = r.actor_id
+    INNER JOIN movies m ON m.id = r.movie_id
+    WHERE m.year > 2000
     """
 ```
+
+Find full example code [here](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/blob/master/src/main/kotlin/Example_2_Import_schema_annotation.kt).
 
 ### With Gradle Task 
 
@@ -123,6 +123,8 @@ dataframes {
     }
 }
 ```
+
+Find full example code [here](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/blob/master/src/main/kotlin/Example_3_Import_schema_via_Gradle.kt).
 
 After importing the data schema, you can start to import any data from SQL table or as a result of an SQL query
 you like using the generated schemas.

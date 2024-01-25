@@ -1,7 +1,7 @@
-        <html>
-        <head>
-            <style type="text/css">
-                :root {
+<html>
+<head>
+<style type="text/css">
+:root {
     --background: #fff;
     --background-odd: #f5f5f5;
     --background-hover: #d9edfd;
@@ -173,38 +173,12 @@ details details {
 summary {
     padding: 6px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            </style>
-        </head>
-        <body>
-            
-
+</style>
+</head>
+<body>
                             <details>
                             <summary>df.groupBy { city }.count()</summary>
-                            
-                                    <details>
+                                                                <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                      <table class="dataframe" id="df_0"></table>
 
@@ -226,8 +200,7 @@ summary {
                             <br>
                             <details>
                             <summary>df.pivot { city }.count { age &amp;gt; 18 }</summary>
-                            
-                                    <details>
+                                                                <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                      <table class="dataframe" id="df_9"></table>
 
@@ -249,8 +222,7 @@ summary {
                             <br>
                             <details>
                             <summary>df.pivot { name.firstName }.groupBy { name.lastName }.count()</summary>
-                            
-                                    <details>
+                                                                <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                      <table class="dataframe" id="df_18"></table>
 
@@ -276,9 +248,9 @@ summary {
                                     </details>
                             </details>
                             <br>
-        </body>
-        <script>
-            (function () {
+</body>
+<script>
+(function () {
     window.DataFrame = window.DataFrame || new (function () {
         this.addTable = function (df) {
             let cols = df.cols;
@@ -552,8 +524,6 @@ summary {
     }
 })()
 
-
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
 { name: "<span title=\"lastName: String\">lastName</span>", children: [], rightAlign: false, values: ["Cooper","Dylan","Daniels","Chaplin","Marley","Wolf","Byrd"] }, 
@@ -566,7 +536,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(0) });
-
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"city: String?\">city</span>", children: [], rightAlign: false, values: ["London","Dubai","Moscow","Milan","Tokyo","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>"] }, 
@@ -642,7 +611,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(1) });
 
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"city: String?\">city</span>", children: [], rightAlign: false, values: ["London","Dubai","Moscow","Milan","Tokyo","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>"] }, 
 { name: "<span title=\"count: Int\">count</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">1</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">1</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">2</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">1</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">1</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">1</span></span>"] }, 
@@ -650,8 +618,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"c
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(8) });
-
-
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
@@ -665,7 +631,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(9) });
-
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"London: DataFrame<*>\">London</span>", children: [], rightAlign: false, values: [{ frameId: 11, value: "<b>DataFrame 1 x 5</b>" }] }, 
@@ -745,7 +710,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(10) });
 
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"London: Int\">London</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">0</span></span>"] }, 
 { name: "<span title=\"Dubai: Int\">Dubai</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">1</span></span>"] }, 
@@ -757,8 +721,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"L
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(17) });
-
-
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
@@ -772,7 +734,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(18) });
-
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"Alice: DataFrame<*>\">Alice</span>", children: [], rightAlign: false, values: [{ frameId: 20, value: "<b>DataFrame 2 x 5</b>" }] }, 
@@ -815,7 +776,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(19) });
-
 
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"lastName: String\">lastName</span>", children: [], rightAlign: false, values: ["Cooper","Dylan","Daniels","Chaplin","Marley","Wolf","Byrd"] }, 
@@ -906,7 +866,6 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(23) });
 
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"lastName: String\">lastName</span>", children: [], rightAlign: false, values: ["Cooper","Dylan","Daniels","Chaplin","Marley","Wolf","Byrd"] }, 
 { name: "<span title=\"Alice: Int\">Alice</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">1</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">0</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">0</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">0</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">0</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">1</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">0</span></span>"] }, 
@@ -919,6 +878,5 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"l
 
 call_DataFrame(function() { DataFrame.renderTable(31) });
 
-
-        </script>
-        </html>
+</script>
+</html>

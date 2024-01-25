@@ -1,7 +1,7 @@
-        <html>
-        <head>
-            <style type="text/css">
-                :root {
+<html>
+<head>
+<style type="text/css">
+:root {
     --background: #fff;
     --background-odd: #f5f5f5;
     --background-hover: #d9edfd;
@@ -152,10 +152,6 @@ table.dataframe tr:hover .formatted .structural, .null {
 }
 
 
-
-
-
-
 body {
     font-family: "JetBrains Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace;
     font-size: 14px;
@@ -184,13 +180,11 @@ body {
 td {
     white-space: nowrap;
 }
-            </style>
-        </head>
-        <body>
-            
+</style>
+</head>
+<body>
                     <div class="table-row">
-                        
-<div class="table-container">
+                        <div class="table-container">
     <b>df1</b>
     <table class="dataframe" id="df_0"></table>
 
@@ -206,10 +200,9 @@ td {
 
 </div>
                     </div>
-
-        </body>
-        <script>
-            (function () {
+</body>
+<script>
+(function () {
     window.DataFrame = window.DataFrame || new (function () {
         this.addTable = function (df) {
             let cols = df.cols;
@@ -483,7 +476,6 @@ td {
     }
 })()
 
-
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"index: samples.api.JoinWith.ColoredValue<*>\">index</span>", children: [], rightAlign: false, values: [{ style: "background-color:#ccebc5;color:#003300", value: "1"},{ style: "background-color:#b0e0e6;color:#191970", value: "2"},{ style: "background-color:#dda0dd;color:#551a8b", value: "3"}] }, 
 { name: "<span title=\"age: samples.api.JoinWith.ColoredValue<*>\">age</span>", children: [], rightAlign: false, values: [{ style: "background-color:#ccebc5;color:#003300", value: "15"},{ style: "background-color:#b0e0e6;color:#191970", value: "19"},{ style: "background-color:#dda0dd;color:#551a8b", value: "20"}] }, 
@@ -512,6 +504,5 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"i
 
 call_DataFrame(function() { DataFrame.renderTable(2) });
 
-
-        </script>
-        </html>
+</script>
+</html>

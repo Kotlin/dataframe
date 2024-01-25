@@ -1,7 +1,7 @@
-        <html>
-        <head>
-            <style type="text/css">
-                :root {
+<html>
+<head>
+<style type="text/css">
+:root {
     --background: #fff;
     --background-odd: #f5f5f5;
     --background-hover: #d9edfd;
@@ -152,9 +152,6 @@ table.dataframe tr:hover .formatted .structural, .null {
 }
 
 
-
-
-
 body {
     display: flex;
     align-items: flex-start;
@@ -184,10 +181,9 @@ body {
 td {
     white-space: nowrap;
 }
-            </style>
-        </head>
-        <body>
-            
+</style>
+</head>
+<body>
 <div class="table-container">
     <b>campaigns</b>
     <table class="dataframe" id="df_2"></table>
@@ -203,10 +199,9 @@ td {
     <table class="dataframe" id="df_4"></table>
 
 </div>
-
-        </body>
-        <script>
-            (function () {
+</body>
+<script>
+(function () {
     window.DataFrame = window.DataFrame || new (function () {
         this.addTable = function (df) {
             let cols = df.cols;
@@ -506,6 +501,5 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"n
 
 call_DataFrame(function() { DataFrame.renderTable(4) });
 
-
-        </script>
-        </html>
+</script>
+</html>

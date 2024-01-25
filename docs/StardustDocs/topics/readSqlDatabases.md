@@ -80,6 +80,9 @@ val df = DataFrame.readSqlTable(dbConfig, tableName, 100)
 
 df.print()
 ```
+
+Find full example project [here](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/).
+
 ## Getting Started with Notebooks
 
 To use the latest version of the Kotlin DataFrame library 
@@ -92,6 +95,8 @@ USE {
     dependencies("org.mariadb.jdbc:mariadb-java-client:$version")
 }
 ```
+
+Find full example Notebook [here](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/blob/master/notebooks/imdb.ipynb).
  
 **NOTE:** The user should specify the version of the JDBC driver.
 

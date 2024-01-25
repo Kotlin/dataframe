@@ -153,6 +153,8 @@ dataframes {
 }
 ```
 
+Find full example code [here](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/blob/master/src/main/kotlin/Example_3_Import_schema_via_Gradle.kt).
+
 **NOTE:** This is an experimental functionality and, for now,
 we only support four databases: MariaDB, MySQL, PostgreSQL, and SQLite.
 

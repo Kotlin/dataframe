@@ -37,143 +37,65 @@ You could find the following articles there:
 
 ## Setup
 
-### Gradle for JVM
-```groovy
-// build.gradle
+```kotlin
+implementation("org.jetbrains.kotlinx:dataframe:0.12.1")
+```
 
-plugins {
-    // Optional Gradle plugin for enhanced type safety and schema generation
-    // https://kotlin.github.io/dataframe/gradle.html
-    id 'org.jetbrains.kotlinx.dataframe' version '0.12.0'
-}
+Optional Gradle plugin for enhanced type safety and schema generation
+https://kotlin.github.io/dataframe/schemasgradle.html
+```kotlin
+id("org.jetbrains.kotlinx.dataframe") version "0.12.1"
+```
 
-repositories {
-    mavenCentral()
-}
+Check out the [custom setup page](https://kotlin.github.io/dataframe/gettingstartedgradleadvanced.html) if you don't need some of the formats as dependencies,
+for Groovy, and for configurations specific to Android projects.
 
-dependencies {
-    implementation 'org.jetbrains.kotlinx:dataframe:0.12.0'
-}
+## Getting started
+
+```kotlin
+import org.jetbrains.kotlinx.dataframe.*
+import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.io.*
 ```
 
 ```kotlin
-// build.gradle.kts
+val df = DataFrame.read("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv")
+df["full_name"][0] // Indexing https://kotlin.github.io/dataframe/access.html
 
-plugins {
-    // Optional Gradle plugin for enhanced type safety and schema generation
-    // https://kotlin.github.io/dataframe/gradle.html
-    id("org.jetbrains.kotlinx.dataframe") version "0.12.0"
-}
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    implementation("org.jetbrains.kotlinx:dataframe:0.12.0")
-}
+df.filter { "stargazers_count"<Int>() > 50 }.print() 
 ```
 
-### Gradle for Android
-```groovy
-// build.gradle
+## Getting started with data schema
 
-plugins {
-    // Optional Gradle plugin for enhanced type safety and schema generation
-    // https://kotlin.github.io/dataframe/gradle.html
-    id 'org.jetbrains.kotlinx.dataframe' version '0.12.0'
-}
-
-dependencies {
-    implementation 'org.jetbrains.kotlinx:dataframe:0.12.0'
-}
-
-android {
-    defaultConfig {
-        minSdk 26 // Android O+
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-    packagingOptions {
-        resources {
-            pickFirsts = ["META-INF/AL2.0",
-                          "META-INF/LGPL2.1",
-                          "META-INF/ASL-2.0.txt",
-                          "META-INF/LICENSE.md",
-                          "META-INF/NOTICE.md",
-                          "META-INF/LGPL-3.0.txt"]
-            excludes = ["META-INF/kotlin-jupyter-libraries/libraries.json",
-                        "META-INF/{INDEX.LIST,DEPENDENCIES}",
-                        "{draftv3,draftv4}/schema",
-                        "arrow-git.properties"]
-        }
-    }
-}
-
-// optional, could be required for KSP
-tasks.withType(KotlinCompile).configureEach {
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-}
+Requires Gradle plugin to work
+```kotlin
+id("org.jetbrains.kotlinx.dataframe") version "0.12.1"
 ```
+
+Plugin generates extension properties API for provided sample of data. Column names and their types become discoverable in completion.
 
 ```kotlin
-// build.gradle.kts
+// Make sure to place the file annotation above the package directive
+@file:ImportDataSchema(
+    "Repository",
+    "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv",
+)
 
-plugins {
-    // Optional Gradle plugin for enhanced type safety and schema generation
-    // https://kotlin.github.io/dataframe/gradle.html
-    id("org.jetbrains.kotlinx.dataframe") version "0.12.0"
-}
+package example
 
-dependencies {
-    implementation("org.jetbrains.kotlinx:dataframe:0.12.0")
-}
+import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+import org.jetbrains.kotlinx.dataframe.api.*
 
-android {
-    defaultConfig {
-        minSdk = 26 // Android O+
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-    packaging {
-        resources {
-            pickFirsts += listOf(
-                "META-INF/AL2.0",
-                "META-INF/LGPL2.1",
-                "META-INF/ASL-2.0.txt",
-                "META-INF/LICENSE.md",
-                "META-INF/NOTICE.md",
-                "META-INF/LGPL-3.0.txt",
-            )
-            excludes += listOf(
-                "META-INF/kotlin-jupyter-libraries/libraries.json",
-                "META-INF/{INDEX.LIST,DEPENDENCIES}",
-                "{draftv3,draftv4}/schema",
-                "arrow-git.properties",
-            )
-        }
-    }
-}
-
-// required for KSP
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+fun main() {
+    // execute `assemble` to generate extension properties API
+    val df = Repository.readCSV()
+    df.fullName[0]
+    
+    df.filter { stargazersCount > 50 }
 }
 ```
 
-### Jupyter Notebook
+## Getting started in Jupyter Notebook / Kotlin Notebook
 
 Install [Kotlin kernel](https://github.com/Kotlin/kotlin-jupyter) for [Jupyter](https://jupyter.org/)
 
@@ -186,6 +108,16 @@ or specific version:
 %use dataframe(<version>)
 ```
 
+```kotlin
+val df = DataFrame.read("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv")
+df // the last expression in the cell is displayed
+```
+
+When a cell with a variable declaration is executed, in the next cell `DataFrame` provides extension properties based on its data 
+```kotlin
+df.filter { stargazers_count > 50 }
+```
+
 ## Data model
 * `DataFrame` is a list of columns with equal sizes and distinct names.
 * `DataColumn` is a named list of values. Can be one of three kinds:
@@ -193,7 +125,9 @@ or specific version:
   * `ColumnGroup` — contains columns
   * `FrameColumn` — contains dataframes
 
-## Usage example
+## Syntax example
+
+Let us show you how data cleaning and aggregation pipelines could look like with DataFrame.
 
 **Create:**
 ```kotlin
@@ -269,7 +203,9 @@ clean
     }
 ```
 
-[Try it in **Datalore**](https://datalore.jetbrains.com/view/notebook/vq5j45KWkYiSQnACA2Ymij) and explore [**more examples here**](examples).
+Check it out on [**Datalore**](https://datalore.jetbrains.com/view/notebook/vq5j45KWkYiSQnACA2Ymij) to get a better visual impression of what happens and what the hierarchical DataFrame structure looks like. 
+
+Explore [**more examples here**](examples).
 
 ## Kotlin, Kotlin Jupyter, OpenAPI, Arrow and JDK versions
 
