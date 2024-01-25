@@ -3,13 +3,29 @@ package org.jetbrains.dataframe.gradle
 import com.google.devtools.ksp.gradle.KspExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.findByType
 import java.util.*
 
 @Suppress("unused")
 class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
     override fun apply(target: Project) {
-        target.plugins.apply(KspPluginApplier::class.java)
+        val name = "kotlin.dataframe.add.ksp"
+        val property = target.findProperty(name)?.toString()
+        var addKsp = true
+
+        if (property != null) {
+            if (property.equals("true", ignoreCase = true) || property.equals("false", ignoreCase = true)) {
+                addKsp = property.toBoolean()
+            } else {
+                target.logger.warn("Invalid value '$property' for '$name' property. Defaulting to '$addKsp'. Please use 'true' or 'false'.")
+            }
+        }
+        if (addKsp) {
+            target.plugins.apply(KspPluginApplier::class.java)
+        }
+        target.afterEvaluate {
+            target.extensions.findByType<KspExtension>()?.arg("dataframe.resolutionDir", target.projectDir.absolutePath)
+        }
         target.plugins.apply(SchemaGeneratorPlugin::class.java)
     }
 }
@@ -31,6 +47,5 @@ internal class KspPluginApplier : Plugin<Project> {
         target.configurations.getByName("ksp").dependencies.add(
             target.dependencies.create("org.jetbrains.kotlinx.dataframe:symbol-processor-all:$preprocessorVersion")
         )
-        target.extensions.getByType<KspExtension>().arg("dataframe.resolutionDir", target.projectDir.absolutePath)
     }
 }
