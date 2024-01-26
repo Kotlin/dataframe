@@ -48,9 +48,7 @@ class DataSchemaGenerator(
     private val codeGenerator: com.google.devtools.ksp.processing.CodeGenerator,
 ) {
 
-    fun resolveImportStatements() = listOf(
-        ::resolvePathImports,
-    ).flatMap { it(resolver) }
+    fun resolveImportStatements(): List<ImportDataSchemaStatement> = resolvePathImports(resolver).toList()
 
     class ImportDataSchemaStatement(
         val origin: KSFile,
