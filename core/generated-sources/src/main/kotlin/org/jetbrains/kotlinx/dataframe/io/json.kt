@@ -899,7 +899,7 @@ internal fun KlaxonJson.encodeRowWithMetadata(
         when (col) {
             is ColumnGroup<*> -> obj(
                 DATA to encodeRowWithMetadata(col, index, rowLimit),
-                METADATA to obj(KIND to ColumnKind.Group.name)
+                METADATA to obj(KIND to ColumnKind.Group.toString())
             )
 
             is FrameColumn<*> -> {
@@ -908,7 +908,7 @@ internal fun KlaxonJson.encodeRowWithMetadata(
                 obj(
                     DATA to data,
                     METADATA to obj(
-                        KIND to ColumnKind.Frame.name,
+                        KIND to ColumnKind.Frame.toString(),
                         NCOL to col[index].ncol,
                         NROW to col[index].nrow
                     )

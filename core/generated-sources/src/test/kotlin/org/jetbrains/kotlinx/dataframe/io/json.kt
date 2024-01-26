@@ -1000,7 +1000,7 @@ class JsonTests {
 
         val permissions = row["permissions"] as JsonObject
         val metadata = permissions[METADATA] as JsonObject
-        metadata[KIND] shouldBe ColumnKind.Group.name
+        metadata[KIND] shouldBe ColumnKind.Group.toString()
 
         val decodedData = permissions[DATA] as JsonObject
 
@@ -1020,7 +1020,7 @@ class JsonTests {
         val contributors = row["contributors"] as JsonObject
 
         val metadata = contributors[METADATA] as JsonObject
-        metadata[KIND] shouldBe ColumnKind.Frame.name
+        metadata[KIND] shouldBe ColumnKind.Frame.toString()
         metadata[NCOL] shouldBe 8
         metadata[NROW] shouldBe 29
 
@@ -1041,7 +1041,7 @@ class JsonTests {
         val contributors = row["contributors"] as JsonObject
 
         val metadata = contributors[METADATA] as JsonObject
-        metadata[KIND] shouldBe ColumnKind.Frame.name
+        metadata[KIND] shouldBe ColumnKind.Frame.toString()
         metadata[NCOL] shouldBe 8
         metadata[NROW] shouldBe 29
 
