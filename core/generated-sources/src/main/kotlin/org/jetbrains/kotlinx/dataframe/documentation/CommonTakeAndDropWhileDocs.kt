@@ -20,8 +20,8 @@ import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs.
 
 /**
  * ## {@getArg [TitleArg]} (Cols) While
- * This function {@getArg [NounArg]}s the {@getArg [FirstOrLastArg]} columns from [this\] adhering to the
- * given [predicate\] collecting the result into a [ColumnSet].
+ * This function {@getArg [NounArg]}s the {@getArg [FirstOrLastArg]} columns from [this] adhering to the
+ * given [predicate] collecting the result into a [ColumnSet].
  *
  * This function only looks at columns at the top-level.
  *
@@ -31,7 +31,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs.
  * `{@getArg [CommonTakeAndDropWhileDocs.OperationArg]}ColsWhile` when called on a [String] or [ColumnPath] resembling
  * a [ColumnGroup].
  *
- * ### Check out: [Usage\]
+ * ### Check out: [Usage]
  *
  * #### Examples:
  * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[{@getArg [OperationArg]}While][ColumnSet.{@getArg [OperationArg]}While]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` } }`
@@ -44,8 +44,8 @@ import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs.
  *
  * {@getArg [CommonTakeAndDropWhileDocs.ExampleArg]}
  *
- * @param [predicate\] The [ColumnFilter] to control which columns to {@getArg [NounArg]}.
- * @return A [ColumnSet] containing the {@getArg [FirstOrLastArg]} columns adhering to the [predicate\].
+ * @param [predicate] The [ColumnFilter] to control which columns to {@getArg [NounArg]}.
+ * @return A [ColumnSet] containing the {@getArg [FirstOrLastArg]} columns adhering to the [predicate].
  */
 internal interface CommonTakeAndDropWhileDocs {
 

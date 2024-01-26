@@ -115,12 +115,12 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * ## Cols in Groups
      *
      * [colsInGroups][colsInGroups] is a function that returns all (optionally filtered) columns at the top-levels of
-     * all [column groups][ColumnGroup] in [this\]. This is useful if you want to select all columns that are
+     * all [column groups][ColumnGroup] in [this]. This is useful if you want to select all columns that are
      * "one level deeper".
      *
      * NOTE: This function should not be confused with [cols][ColumnsSelectionDsl.cols], which operates on all
-     * columns directly in [this\], or with [colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
-     * columns in [this\] at any depth.
+     * columns directly in [this], or with [colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
+     * columns in [this] at any depth.
      *
      * ### Check out: [Grammar]
      *
@@ -153,9 +153,9 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * {@getArg [ColsInGroupsDocs.ExampleArg]}
      *
-     * @see [ColumnsSelectionDsl.cols\]
-     * @see [ColumnsSelectionDsl.colGroups\]
-     * @param [predicate\] An optional predicate to filter the cols by.
+     * @see [ColumnsSelectionDsl.cols]
+     * @see [ColumnsSelectionDsl.colGroups]
+     * @param [predicate] An optional predicate to filter the cols by.
      * @return A [TransformableColumnSet] containing the (filtered) cols.
      */
     private interface ColsInGroupsDocs {

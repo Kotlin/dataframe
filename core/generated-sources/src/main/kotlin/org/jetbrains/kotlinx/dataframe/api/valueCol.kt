@@ -160,13 +160,13 @@ public interface ValueColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn].
-     * @throws [IllegalStateException\] if the column with the given argument does not exist.
-     * @throws [IllegalArgumentException\] if the column with the given argument is not a value column.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
+     * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
      *
-     * @see [valueColumn\]
-     * @see [ColumnsSelectionDsl.colGroup\]
-     * @see [ColumnsSelectionDsl.frameCol\]
-     * @see [ColumnsSelectionDsl.col\]
+     * @see [valueColumn]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.col]
      *
      */
     private interface CommonValueColDocs {
@@ -175,14 +175,14 @@ public interface ValueColColumnsSelectionDsl {
         interface ExampleArg
 
         /**
-         * `df.`[select][DataFrame.select]` { {@getArg [CommonValueColDocs.ReceiverArg]}`[valueCol][valueCol]`({@getArg [CommonValueColDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@getArg [CommonValueColDocs.ReceiverArg]}`[valueCol][valueCol]`({@getArg [CommonValueColDocs.Arg]}) \}`
          */
         interface SingleExample
 
         /**
-         * `df.`[select][DataFrame.select]` { {@getArg [CommonValueColDocs.ReceiverArg]}`[valueCol][valueCol]`({@getArg [CommonValueColDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@getArg [CommonValueColDocs.ReceiverArg]}`[valueCol][valueCol]`({@getArg [CommonValueColDocs.Arg]}) \}`
          *
-         * `df.`[select][DataFrame.select]` { {@getArg [CommonValueColDocs.ReceiverArg]}`[valueCol][valueCol]`<`[String][String]`>({@getArg [CommonValueColDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@getArg [CommonValueColDocs.ReceiverArg]}`[valueCol][valueCol]`<`[String][String]`>({@getArg [CommonValueColDocs.Arg]}) \}`
          */
         interface DoubleExample
 
@@ -248,8 +248,8 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * @param [col\] The [ColumnAccessor] pointing to the value column.
-     * @include [CommonValueColDocs.ValueColumnTypeParam]
+     * @param [col] The [ColumnAccessor] pointing to the value column.
+     * @param [C] The type of the value column.
      */
     private interface ValueColReferenceDocs
 
@@ -628,7 +628,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * @param [name\] The name of the value column.
+     * @param [name] The name of the value column.
      */
     private interface ValueColNameDocs
 
@@ -1354,7 +1354,7 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * @param [path\] The path to the value column.
+     * @param [path] The path to the value column.
      */
     private interface ValueColPathDocs
 
@@ -2078,8 +2078,8 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * @param [property\] The [KProperty] reference to the value column.
-     * @include [CommonValueColDocs.ValueColumnTypeParam]
+     * @param [property] The [KProperty] reference to the value column.
+     * @param [C] The type of the value column.
      */
     private interface ValueColKPropertyDocs
 
@@ -2453,8 +2453,8 @@ public interface ValueColColumnsSelectionDsl {
      *
      *
      *
-     * @param [index\] The index of the value column.
-     * @throws [IndexOutOfBoundsException\] if the index is out of bounds.
+     * @param [index] The index of the value column.
+     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     private interface ValueColIndexDocs
 

@@ -118,7 +118,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
     /**
      * ## Cols At Any Depth
      *
-     * Returns all columns in [this\] at any depth (so also inside [Column Groups][ColumnGroup]) if they satisfy the
+     * Returns all columns in [this] at any depth (so also inside [Column Groups][ColumnGroup]) if they satisfy the
      * optional given predicate.
      *
      * This function is especially powerful if followed by another [ColumnSet] filter function like
@@ -165,8 +165,8 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * [all][ColumnsSelectionDsl.all]`().`[recursively][recursively]`() -> `[colsAtAnyDepth][colsAtAnyDepth]`()`
      *
-     * @see [DataFrame.flatten\]
-     * @see [ColumnsSelectionDsl.simplify\]
+     * @see [DataFrame.flatten]
+     * @see [ColumnsSelectionDsl.simplify]
      */
     private interface CommonAtAnyDepthDocs {
 

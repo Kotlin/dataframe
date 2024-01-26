@@ -205,7 +205,7 @@ val processKDocsMain by creatingProcessDocTask(
         ARG_DOC_PROCESSOR,
         COMMENT_DOC_PROCESSOR,
         SAMPLE_DOC_PROCESSOR,
-//        REMOVE_ESCAPE_CHARS_PROCESSOR,
+        REMOVE_ESCAPE_CHARS_PROCESSOR,
     )
 
     arguments += ARG_DOC_PROCESSOR_LOG_NOT_FOUND to false

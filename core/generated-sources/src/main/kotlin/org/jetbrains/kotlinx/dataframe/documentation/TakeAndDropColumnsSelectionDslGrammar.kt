@@ -38,7 +38,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSe
  *
  *  [**{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}]`(`[**Last**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}Last]`)`**`(`**[number][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]**`)`**
  *
- *  `|` [**{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}While]`(`[**Last**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}LastWhile]`)`[**While**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}While]**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` \
+ *  `|` [**{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}While]`(`[**Last**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}LastWhile]`)`[**While**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}While]**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -51,7 +51,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSe
  *
  *  &nbsp;&nbsp;&nbsp;&nbsp;.[**{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}]`(`[**Last**][ColumnSet.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}Last]`)`**`(`**[number][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]**`)`**
  *
- *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}While]`(`[**Last**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}LastWhile]`)`[**While**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}While]**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` \
+ *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}While]`(`[**Last**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}LastWhile]`)`[**While**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}While]**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -64,7 +64,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSe
  *
  *  &nbsp;&nbsp;&nbsp;&nbsp;.[**{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}Cols]`(`[**Last**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}LastCols]`)`[**Cols**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}Cols]**`(`**[number][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]**`)`**
  *
- *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}ColsWhile]`(`[**Last**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}LastColsWhile]`)`[**ColsWhile**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}ColsWhile]**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` \
+ *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}ColsWhile]`(`[**Last**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}LastColsWhile]`)`[**ColsWhile**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}ColsWhile]**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
  *
  *
  *
@@ -73,14 +73,11 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSe
  *
  *
  *
- * `**
- * }
  *
- * `**
- * }
  *
- * `**
- * }
+ *
+ *
+ *
  */
 internal interface TakeAndDropColumnsSelectionDslGrammar {
 

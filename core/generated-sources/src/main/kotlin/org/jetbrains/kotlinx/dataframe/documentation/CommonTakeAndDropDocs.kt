@@ -15,7 +15,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs.Title
 
 /**
  * ## {@getArg [TitleArg]} (Cols)
- * This {@getArg [NounArg]}s the {@getArg [FirstOrLastArg]} [n\] columns from [this\] collecting
+ * This {@getArg [NounArg]}s the {@getArg [FirstOrLastArg]} [n] columns from [this] collecting
  * the result into a [ColumnSet].
  *
  * This function only looks at columns at the top-level.
@@ -25,7 +25,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs.Title
  * NOTE: To avoid ambiguity, `{@getArg [CommonTakeAndDropDocs.OperationArg]}` is called `{@getArg [CommonTakeAndDropDocs.OperationArg]}Cols` when called on
  * a [ColumnGroup].
  *
- * ### Check out: [Grammar\]
+ * ### Check out: [Grammar]
  *
  * #### Examples:
  * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[{@getArg [OperationArg]}][ColumnSet.{@getArg [OperationArg]}]`(5) }`
@@ -40,8 +40,8 @@ import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs.Title
  *
  * {@getArg [CommonTakeAndDropDocs.ExampleArg]}
  *
- * @param [n\] The number of columns to {@getArg [NounArg]}.
- * @return A [ColumnSet] containing the {@getArg [FirstOrLastArg]} [n\] columns.
+ * @param [n] The number of columns to {@getArg [NounArg]}.
+ * @return A [ColumnSet] containing the {@getArg [FirstOrLastArg]} [n] columns.
  */
 internal interface CommonTakeAndDropDocs {
 

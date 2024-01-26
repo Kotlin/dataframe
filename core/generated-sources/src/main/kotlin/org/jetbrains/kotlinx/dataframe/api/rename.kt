@@ -197,7 +197,7 @@ public interface RenameColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { {@getArg [CommonRenameDocs.ReceiverArg]} `[{@getArg [CommonRenameDocs.FunctionNameArg]}][{@getArg [CommonRenameDocs.ReceiverTypeArg]}.{@getArg [CommonRenameDocs.FunctionNameArg]}]` {@getArg [CommonRenameDocs.ParamArg]} }`
      *
      * @receiver The [{@getArg [ReceiverTypeArg]}] referencing the column to rename.
-     * @param [{@getArg [ParamNameArg]}\] A [{@getArg [ParamTypeArg]}\] used to specify the new name of the column.
+     * @param [{@getArg [ParamNameArg]}] A [{@getArg [ParamTypeArg]}] used to specify the new name of the column.
      * @return A [ColumnReference] to the renamed column.
      */
     private interface CommonRenameDocs {

@@ -69,7 +69,7 @@ public fun <T : Comparable<T>> DataColumn<T>.sortDesc(): ValueColumn<T> =
  * ## Sort [DataColumn] With
  *
  * This function returns the sorted version of the current [ValueColumn], [FrameColumn], or [ColumnGroup] based
- * on the given [Comparator]. The [comparator\] can either be given as an instance of [Comparator], or directly
+ * on the given [Comparator]. The [comparator] can either be given as an instance of [Comparator], or directly
  * as a lambda.
  *
  * #### For example
@@ -87,9 +87,9 @@ public fun <T : Comparable<T>> DataColumn<T>.sortDesc(): ValueColumn<T> =
  *
  * @receiver The [DataColumn] to sort. This can be either a [ValueColumn], [FrameColumn], or [ColumnGroup] and will
  *   dictate the return type of the function.
- * @param [comparator\] The [Comparator] to use for sorting the [DataColumn]. This can either be a [Comparator]<[T\]> or
- *   a lambda of type `(`[T][T\]`, `[T][T\]`) -> `[Int][Int].
- * @return The sorted [DataColumn] [this\] of the same type as the receiver.
+ * @param [comparator] The [Comparator] to use for sorting the [DataColumn]. This can either be a [Comparator]<[T]> or
+ *   a lambda of type `(`[T][T]`, `[T][T]`) -> `[Int][Int].
+ * @return The sorted [DataColumn] [this] of the same type as the receiver.
  */
 private interface CommonDataColumnSortWithDocs
 

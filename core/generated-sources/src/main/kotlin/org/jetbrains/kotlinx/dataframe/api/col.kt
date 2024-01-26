@@ -160,12 +160,12 @@ public interface ColColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn].
-     * @throws [IllegalStateException\] if the column with the given argument does not exist.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
-     * @see [column\]
-     * @see [ColumnsSelectionDsl.colGroup\]
-     * @see [ColumnsSelectionDsl.frameCol\]
-     * @see [ColumnsSelectionDsl.valueCol\]
+     * @see [column]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
      *
      */
     private interface CommonColDocs {
@@ -174,14 +174,14 @@ public interface ColColumnsSelectionDsl {
         interface ExampleArg
 
         /**
-         * `df.`[select][DataFrame.select]` { {@getArg [CommonColDocs.ReceiverArg]}`[col][col]`({@getArg [CommonColDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@getArg [CommonColDocs.ReceiverArg]}`[col][col]`({@getArg [CommonColDocs.Arg]}) \}`
          */
         interface SingleExample
 
         /**
-         * `df.`[select][DataFrame.select]` { {@getArg [CommonColDocs.ReceiverArg]}`[col][col]`({@getArg [CommonColDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@getArg [CommonColDocs.ReceiverArg]}`[col][col]`({@getArg [CommonColDocs.Arg]}) \}`
          *
-         * `df.`[select][DataFrame.select]` { {@getArg [CommonColDocs.ReceiverArg]}`[col][col]`<`[String][String]`>({@getArg [CommonColDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@getArg [CommonColDocs.ReceiverArg]}`[col][col]`<`[String][String]`>({@getArg [CommonColDocs.Arg]}) \}`
          */
         interface DoubleExample
 
@@ -245,8 +245,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [col\] The [ColumnAccessor] pointing to the column.
-     * @include [CommonColDocs.ColumnTypeParam]
+     * @param [col] The [ColumnAccessor] pointing to the column.
+     * @param [C] The type of the column.
      */
     private interface ColReferenceDocs
 
@@ -612,7 +612,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [name\] The name of the column.
+     * @param [name] The name of the column.
      */
     private interface ColNameDocs
 
@@ -1313,7 +1313,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [path\] The path to the column.
+     * @param [path] The path to the column.
      */
     private interface ColPathDocs
 
@@ -2010,8 +2010,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [property\] The [KProperty] reference to the column.
-     * @include [CommonColDocs.ColumnTypeParam]
+     * @param [property] The [KProperty] reference to the column.
+     * @param [C] The type of the column.
      */
     private interface ColKPropertyDocs
 
@@ -2371,8 +2371,8 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [index\] The index of the column.
-     * @throws [IndexOutOfBoundsException\] if the index is out of bounds.
+     * @param [index] The index of the column.
+     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     private interface ColIndexDocs
 

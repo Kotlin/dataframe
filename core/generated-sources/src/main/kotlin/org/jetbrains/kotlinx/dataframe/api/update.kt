@@ -97,6 +97,7 @@ public data class Update<T, C>(
      * `| .`[**asFrame**][Update.asFrame]**` { `**[dataFrameExpression][ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
      *
      *
+     *
      */
     public interface Grammar
 
@@ -369,7 +370,8 @@ public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Updat
 
 // endregion
 
-/** ## Where
+/**
+ * ## Where
  * Filter or find rows to operate on after [selecting columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns] using a
  * [row value filter][org.jetbrains.kotlinx.dataframe.RowValueFilter].
  *
@@ -466,7 +468,8 @@ public fun <T, C> Update<T, C>.at(vararg rowIndices: Int): Update<T, C> = at(row
  */
 public fun <T, C> Update<T, C>.at(rowRange: IntRange): Update<T, C> = where { index in rowRange }
 
-/** ## Per Row Col
+/**
+ * ## Per Row Col
  * Provide a new value for every selected cell given both its row and column using a [row-column expression][org.jetbrains.kotlinx.dataframe.RowColumnExpression].
  *
  * For example:
@@ -491,13 +494,15 @@ public fun <T, C> Update<T, C>.perRowCol(expression: RowColumnExpression<T, C, C
 /** [Update per row col][Update.perRowCol] to provide a new value for every selected cell giving its row and column. */
 private interface SeeAlsoPerRowCol
 
-/** ## Update Expression
+/**
+ * ## Update Expression
  * @see ExpressionsGivenRow.RowValueExpression.WithExample
  * @see ExpressionsGivenRow.AddDataRowNote
  */ // doc processor plugin does not work with type aliases yet
 public typealias UpdateExpression<T, C, R> = AddDataRow<T>.(C) -> R
 
-/** ## With
+/**
+ * ## With
  * Provide a new value for every selected cell given its row and its previous value using a
  * [row value expression][org.jetbrains.kotlinx.dataframe.RowValueExpression].
  *
@@ -535,8 +540,8 @@ private interface SeeAlsoWith
  *
  * For example:
  *
- * `df.`[update][update]` { name ` { `[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { lastName } }`
- * .`[asFrame][asFrame]}
+ * `df.`[update][update]` { name }.`[asFrame][asFrame]` { `[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { lastName } }`
+ *
  * @param [expression] The [Data Frame Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression] to replace the selected column group with.
  */
 public fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameExpression<C, DataFrame<R>>): DataFrame<T> =
@@ -584,13 +589,15 @@ private interface UpdatePerColMap
  *
  * For example:
  *
- * `val defaults = {@getArg [CommonUpdatePerColMapDoc]}`
+ * `val defaults = {@getArg [CommonUpdatePerColMapDoc.Arg]}`
  *
  * `df.`[update][update]` { name and age }.`[where][Update.where]` { ... }.`[perCol][perCol]`(defaults)`
  *
- * @throws [IllegalArgumentException] if a value for a selected cell's column is not defined in [values\].
+ * @throws [IllegalArgumentException] if a value for a selected cell's column is not defined in [values].
  */
-private interface CommonUpdatePerColMapDoc
+private interface CommonUpdatePerColMapDoc {
+    interface Arg
+}
 
 /**
  * ## Per Col
@@ -673,11 +680,11 @@ public fun <T, C> Update<T, C>.perCol(values: AnyRow): DataFrame<T> = perCol(val
  *
  * For example:
  *
- * `df.`[update][update]` { age ` { `[mean][org.jetbrains.kotlinx.dataframe.DataColumn.mean]`(skipNA = true) }`
+ * `df.`[update][update]` { age }.`[perCol][perCol]` { `[mean][org.jetbrains.kotlinx.dataframe.DataColumn.mean]`(skipNA = true) }`
  *
- * `df.`[update][update]` { age ` { `[count][org.jetbrains.kotlinx.dataframe.DataColumn.count]` { it > 10 } }`
+ * `df.`[update][update]` { age }.`[perCol][perCol]` { `[count][org.jetbrains.kotlinx.dataframe.DataColumn.count]` { it > 10 } }`
  *
- * .`[perCol][perCol]}
+ *
  *
  * @param [valueSelector] The [Column Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenColumn.ColumnExpression] to provide a new value for every selected cell giving its column.
  */

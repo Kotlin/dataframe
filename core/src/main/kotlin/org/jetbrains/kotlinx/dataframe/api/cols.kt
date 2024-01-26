@@ -35,7 +35,7 @@ public interface ColsColumnsSelectionDsl {
      * ## Cols Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     * ${[DslGrammarTemplate.DefinitionsArg]=
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
@@ -52,32 +52,32 @@ public interface ColsColumnsSelectionDsl {
      *  {@include [LineBreak]}
      * }
      *
-     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
+     * ${[DslGrammarTemplate.PlainDslFunctionsArg]=
      *  {@include [PlainDslName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}**`)`**
      *
-     *  `|` {@include [PlainDslName]}` [ `**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \\} `**`]`
+     *  `|` {@include [PlainDslName]}` [ `**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \} `**`]`
      *
-     *  `|` **`this`**`/`**`it`** [**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`**[**`]`**][cols]
+     *  `|` **`this`**`/`**`it`** [**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**[**`]`**][cols]
      *
      *  `|` **`this`**`/`**`it`** [**`[`**][cols]{@include [DslGrammarTemplate.ColumnRef]}**`,`**` .. `[**`]`**][cols]
      * }
      *
-     * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * ${[DslGrammarTemplate.ColumnSetFunctionsArg]=
      *  {@include [Indent]}{@include [ColumnSetName]}**`(`**{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}**`)`**
      *
-     *  {@include [Indent]}`| `{@include [ColumnSetName]}` [ `**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \\} `**`]`
+     *  {@include [Indent]}`| `{@include [ColumnSetName]}` [ `**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \} `**`]`
      *
-     *  {@include [Indent]}`| `[**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`**[**`]`**][cols]
+     *  {@include [Indent]}`| `[**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**[**`]`**][cols]
      *
      *  {@include [Indent]}`| `[**`[`**][cols]{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}[**`]`**][cols]`
      * }
      *
-     * {@setArg [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     * ${[DslGrammarTemplate.ColumnGroupFunctionsArg]=
      *  {@include [Indent]}{@include [ColumnGroupName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}**`)`**
      *
-     *  {@include [Indent]}`| `{@include [ColumnGroupName]}` [ `**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \\} `**`]`
+     *  {@include [Indent]}`| `{@include [ColumnGroupName]}` [ `**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \} `**`]`
      *
-     *  {@include [Indent]}`| `[**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`**[**`]`**][cols]
+     *  {@include [Indent]}`| `[**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**[**`]`**][cols]
      *
      *  {@include [Indent]}`| `[**`[`**][cols]{@include [DslGrammarTemplate.ColumnRef]}**`,`**` ..`[**`]`**][cols]
      * }
@@ -117,7 +117,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonColsDocs.Examples]}
+     * ${[CommonColsDocs.Examples]
      *
      */
     private interface CommonColsDocs {
@@ -176,7 +176,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonColsIndicesDocs.ExampleArg]}
+     * $[CommonColsIndicesDocs.ExampleArg]
      *
      * @throws [IndexOutOfBoundsException] If any index is out of bounds.
      * @param [firstIndex\] The index of the first column to retrieve.
@@ -207,7 +207,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonColsRangeDocs.ExampleArg]}
+     * $[CommonColsRangeDocs.ExampleArg]
      *
      * @throws [IndexOutOfBoundsException\] if any of the indices in the [range\] are out of bounds.
      * @throws [IllegalArgumentException\] if the [range\] is empty.

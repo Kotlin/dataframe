@@ -60,6 +60,7 @@ internal interface FillNulls {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| .`[**asFrame**][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]**` { `**[dataFrameExpression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
      *
+     *
      */
     interface Grammar
 
@@ -376,6 +377,7 @@ internal interface FillNaNs {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| .`[**asFrame**][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]**` { `**[dataFrameExpression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
      *
+     *
      */
     interface Grammar
 
@@ -666,6 +668,7 @@ internal interface FillNA {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| .`[**asFrame**][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]**` { `**[dataFrameExpression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
+     *
      *
      */
     interface Grammar

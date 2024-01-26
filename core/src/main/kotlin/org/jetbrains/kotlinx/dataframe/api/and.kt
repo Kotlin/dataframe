@@ -42,17 +42,17 @@ public interface AndColumnsSelectionDsl {
      * }
      *
      * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
-     *  {@include [DslGrammarTemplate.ColumnOrColumnSetRef]} {@include [InfixName]}` [ `**`{`**` ] `{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}` [ `**`\\}`**` ] `
+     *  {@include [DslGrammarTemplate.ColumnOrColumnSetRef]} {@include [InfixName]}` [ `**`{`**` ] `{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}` [ `**`\}`**` ] `
      *
-     *  `| `{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}{@include [Name]} **`(`**`|`**`{ `**{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}**` \\}`**`|`**`)`**
+     *  `| `{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}{@include [Name]} **`(`**`|`**`{ `**{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}**` \}`**`|`**`)`**
      * }
      *
      * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
-     *  {@include [Indent]}{@include [Name]} **`(`**`|`**`{ `**{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}**` \\}`**`|`**`)`**
+     *  {@include [Indent]}{@include [Name]} **`(`**`|`**`{ `**{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}**` \}`**`|`**`)`**
      * }
      *
      * {@setArg [DslGrammarTemplate.ColumnGroupFunctionsArg]
-     *  {@include [Indent]}{@include [Name]} **`(`**`|`**`{ `**{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}**` \\}`**`|`**`)`**
+     *  {@include [Indent]}{@include [Name]} **`(`**`|`**`{ `**{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}**` \}`**`|`**`)`**
      * }
      */
     public interface Grammar {

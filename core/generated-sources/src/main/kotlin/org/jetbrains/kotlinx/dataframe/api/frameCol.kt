@@ -160,13 +160,13 @@ public interface FrameColColumnsSelectionDsl {
      * and [valueCol][ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn].
-     * @throws [IllegalStateException\] if the column with the given argument does not exist.
-     * @throws [IllegalArgumentException\] if the column with the given argument is not a frame column.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
+     * @throws [IllegalArgumentException] if the column with the given argument is not a frame column.
      *
-     * @see [frameColumn\]
-     * @see [ColumnsSelectionDsl.colGroup\]
-     * @see [ColumnsSelectionDsl.valueCol\]
-     * @see [ColumnsSelectionDsl.col\]
+     * @see [frameColumn]
+     * @see [ColumnsSelectionDsl.colGroup]
+     * @see [ColumnsSelectionDsl.valueCol]
+     * @see [ColumnsSelectionDsl.col]
      *
      */
     private interface CommonFrameColDocs {
@@ -175,14 +175,14 @@ public interface FrameColColumnsSelectionDsl {
         interface ExampleArg
 
         /**
-         * `df.`[select][DataFrame.select]` { {@getArg [CommonFrameColDocs.ReceiverArg]}`[frameCol][frameCol]`({@getArg [CommonFrameColDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@getArg [CommonFrameColDocs.ReceiverArg]}`[frameCol][frameCol]`({@getArg [CommonFrameColDocs.Arg]}) \}`
          */
         interface SingleExample
 
         /**
-         * `df.`[select][DataFrame.select]` { {@getArg [CommonFrameColDocs.ReceiverArg]}`[frameCol][frameCol]`({@getArg [CommonFrameColDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@getArg [CommonFrameColDocs.ReceiverArg]}`[frameCol][frameCol]`({@getArg [CommonFrameColDocs.Arg]}) \}`
          *
-         * `df.`[select][DataFrame.select]` { {@getArg [CommonFrameColDocs.ReceiverArg]}`[frameCol][frameCol]`<`[String][String]`>({@getArg [CommonFrameColDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@getArg [CommonFrameColDocs.ReceiverArg]}`[frameCol][frameCol]`<`[String][String]`>({@getArg [CommonFrameColDocs.Arg]}) \}`
          */
         interface DoubleExample
 
@@ -248,8 +248,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
-     * @param [col\] The [ColumnAccessor] pointing to the value column.
-     * @include [CommonFrameColDocs.FrameColumnTypeParam]
+     * @param [col] The [ColumnAccessor] pointing to the value column.
+     * @param [C] The type of the frame column.
      */
     private interface FrameColReferenceDocs
 
@@ -629,7 +629,7 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
-     * @param [name\] The name of the value column.
+     * @param [name] The name of the value column.
      */
     private interface FrameColNameDocs
 
@@ -1355,7 +1355,7 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
-     * @param [path\] The path to the value column.
+     * @param [path] The path to the value column.
      */
     private interface FrameColPathDocs
 
@@ -2079,8 +2079,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
-     * @param [property\] The [KProperty] reference to the value column.
-     * @include [CommonFrameColDocs.FrameColumnTypeParam]
+     * @param [property] The [KProperty] reference to the value column.
+     * @param [C] The type of the frame column.
      */
     private interface FrameColKPropertyDocs
 
@@ -2785,8 +2785,8 @@ public interface FrameColColumnsSelectionDsl {
      *
      *
      *
-     * @param [index\] The index of the value column.
-     * @throws [IndexOutOfBoundsException\] if the index is out of bounds.
+     * @param [index] The index of the value column.
+     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     private interface FrameColIndexDocs
 

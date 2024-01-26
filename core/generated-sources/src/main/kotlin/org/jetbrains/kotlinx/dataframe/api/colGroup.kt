@@ -162,13 +162,13 @@ public interface ColGroupColumnsSelectionDsl {
      * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor] for the column group with the given argument if possible, else a [SingleColumn].
-     * @throws [IllegalStateException\] if the column with the given argument does not exist.
-     * @throws [IllegalArgumentException\] if the column with the given argument is not a column group.
+     * @throws [IllegalStateException] if the column with the given argument does not exist.
+     * @throws [IllegalArgumentException] if the column with the given argument is not a column group.
      *
-     * @see [columnGroup\]
-     * @see [ColumnsSelectionDsl.frameCol\]
-     * @see [ColumnsSelectionDsl.valueCol\]
-     * @see [ColumnsSelectionDsl.col\]
+     * @see [columnGroup]
+     * @see [ColumnsSelectionDsl.frameCol]
+     * @see [ColumnsSelectionDsl.valueCol]
+     * @see [ColumnsSelectionDsl.col]
      *
      */
     private interface CommonColGroupDocs {
@@ -177,14 +177,14 @@ public interface ColGroupColumnsSelectionDsl {
         interface ExampleArg
 
         /**
-         * `df.`[select][DataFrame.select]` { {@getArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`({@getArg [CommonColGroupDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@getArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`({@getArg [CommonColGroupDocs.Arg]}) \}`
          */
         interface SingleExample
 
         /**
-         * `df.`[select][DataFrame.select]` { {@getArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`({@getArg [CommonColGroupDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@getArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`({@getArg [CommonColGroupDocs.Arg]}) \}`
          *
-         * `df.`[select][DataFrame.select]` { {@getArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`<`[String][String]`>({@getArg [CommonColGroupDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@getArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`<`[String][String]`>({@getArg [CommonColGroupDocs.Arg]}) \}`
          */
         interface DoubleExample
 
@@ -250,8 +250,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
-     * @param [col\] The [ColumnAccessor] pointing to the value column.
-     * @include [CommonColGroupDocs.ColumnGroupTypeParam]
+     * @param [col] The [ColumnAccessor] pointing to the value column.
+     * @param [C] The type of the column group.
      */
     private interface ColGroupReferenceDocs
 
@@ -631,7 +631,7 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
-     * @param [name\] The name of the value column.
+     * @param [name] The name of the value column.
      */
     private interface ColGroupNameDocs
 
@@ -1357,7 +1357,7 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
-     * @param [path\] The path to the value column.
+     * @param [path] The path to the value column.
      */
     private interface ColGroupPathDocs
 
@@ -2082,8 +2082,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
-     * @param [property\] The [KProperty] reference to the value column.
-     * @include [CommonColGroupDocs.ColumnGroupTypeParam]
+     * @param [property] The [KProperty] reference to the value column.
+     * @param [C] The type of the column group.
      */
     private interface ColGroupKPropertyDocs
 
@@ -2788,8 +2788,8 @@ public interface ColGroupColumnsSelectionDsl {
      *
      *
      *
-     * @param [index\] The index of the value column.
-     * @throws [IndexOutOfBoundsException\] if the index is out of bounds.
+     * @param [index] The index of the value column.
+     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     private interface ColGroupIndexDocs
 

@@ -152,7 +152,7 @@ public interface ColsColumnsSelectionDsl {
 
     /**
      * ## Cols
-     * Creates a subset of columns ([ColumnSet]) from [this\].
+     * Creates a subset of columns ([ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter], or any of the `vararg` overloads for any
      * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
@@ -173,7 +173,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonColsDocs.Examples]}
+     * {@getArg }{[CommonColsDocs.Examples]
      *
      */
     private interface CommonColsDocs {
@@ -201,7 +201,7 @@ public interface ColsColumnsSelectionDsl {
          *
          * #### Examples for this overload:
          *
-         * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]}
+         * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
          *
          *
          * #### Filter vs. Cols:
@@ -242,14 +242,14 @@ public interface ColsColumnsSelectionDsl {
          *
          * #### Examples for this overload:
          *
-         * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]}
+         * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
          *
          *
-         * @param [firstCol\] A {@getArg [AccessorType]} that points to a relative column.
-         * @param [otherCols\] Optional additional {@getArg [AccessorType]}s that point to relative columns.
-         * @throws [IllegalArgumentException\] if any of the given [ColumnReference]s point to a column that doesn't
+         * @param [firstCol] A {@getArg [AccessorType]} that points to a relative column.
+         * @param [otherCols] Optional additional {@getArg [AccessorType]}s that point to relative columns.
+         * @throws [IllegalArgumentException] if any of the given [ColumnReference]s point to a column that doesn't
          *   exist.
-         * @return A [ColumnSet] containing the columns that [firstCol\] and [otherCols\] point to.
+         * @return A [ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
          */
         interface Vararg {
 
@@ -263,7 +263,7 @@ public interface ColsColumnsSelectionDsl {
     /**
      * ## Cols: Columns by Indices
      *
-     * Retrieves one or multiple columns from [this\] in the form of a [ColumnSet] by their indices.
+     * Retrieves one or multiple columns from [this] in the form of a [ColumnSet] by their indices.
      * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
      * ### Check out: [Grammar]
@@ -281,8 +281,8 @@ public interface ColsColumnsSelectionDsl {
      * {@getArg [CommonColsIndicesDocs.ExampleArg]}
      *
      * @throws [IndexOutOfBoundsException] If any index is out of bounds.
-     * @param [firstIndex\] The index of the first column to retrieve.
-     * @param [otherIndices\] The other indices of the columns to retrieve.
+     * @param [firstIndex] The index of the first column to retrieve.
+     * @param [otherIndices] The other indices of the columns to retrieve.
      * @return A [ColumnSet] containing the columns found at the given indices.
      */
     private interface CommonColsIndicesDocs {
@@ -294,8 +294,8 @@ public interface ColsColumnsSelectionDsl {
     /**
      * ## Cols: Columns by Index Range
      *
-     * Retrieves multiple columns from [this\] in the form of a [ColumnSet] by a [range\] of indices.
-     * If any of the indices in the [range\] are out of bounds, an [IndexOutOfBoundsException] is thrown.
+     * Retrieves multiple columns from [this] in the form of a [ColumnSet] by a [range] of indices.
+     * If any of the indices in the [range] are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
      * ### Check out: [Grammar]
      *
@@ -311,9 +311,9 @@ public interface ColsColumnsSelectionDsl {
      *
      * {@getArg [CommonColsRangeDocs.ExampleArg]}
      *
-     * @throws [IndexOutOfBoundsException\] if any of the indices in the [range\] are out of bounds.
-     * @throws [IllegalArgumentException\] if the [range\] is empty.
-     * @param [range\] The range of indices to retrieve in the form of an [IntRange].
+     * @throws [IndexOutOfBoundsException] if any of the indices in the [range] are out of bounds.
+     * @throws [IllegalArgumentException] if the [range] is empty.
+     * @param [range] The range of indices to retrieve in the form of an [IntRange].
      * @return A [ColumnSet] containing the columns found at the given indices.
      */
     private interface CommonColsRangeDocs {
@@ -357,22 +357,21 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[String][String]`>().`[cols][ColumnSet.cols]`() }`
      *
-     * @see [ColumnsSelectionDsl.all]
-     * @see [ColumnsSelectionDsl.filter]
-     *
      *
      * #### Filter vs. Cols:
-     * If used with a [predicate], `cols {}` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
+     * If used with a [predicate], `cols {` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
      * This is intentional, however; it is recommended to use `filter {}` on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] and
      * `cols {}` on the rest.
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
-     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
-     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
-     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
-     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
-     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.all]
+     * @see [ColumnsSelectionDsl.filter]
      */
     private interface ColumnSetColsPredicateDocs
 
@@ -410,17 +409,17 @@ public interface ColsColumnsSelectionDsl {
      *
      *
      * #### Filter vs. Cols:
-     * If used with a [predicate], `cols {}` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
+     * If used with a [predicate], `cols {` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
      * This is intentional, however; it is recommended to use `filter {}` on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] and
      * `cols {}` on the rest.
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
-     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
-     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
-     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
-     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
-     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.all]
      * @see [ColumnsSelectionDsl.filter] */
     @Suppress("UNCHECKED_CAST")
@@ -462,17 +461,17 @@ public interface ColsColumnsSelectionDsl {
      *
      *
      * #### Filter vs. Cols:
-     * If used with a [predicate], `cols {}` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
+     * If used with a [predicate], `cols {` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
      * This is intentional, however; it is recommended to use `filter {}` on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] and
      * `cols {}` on the rest.
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
-     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
-     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
-     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
-     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
-     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.all]
      * @see [ColumnsSelectionDsl.filter] */
     public operator fun <C> ColumnSet<C>.get(
@@ -514,21 +513,20 @@ public interface ColsColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     * @see [ColumnsSelectionDsl.all]
-     *
      *
      * #### Filter vs. Cols:
-     * If used with a [predicate], `cols {}` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
+     * If used with a [predicate], `cols {` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
      * This is intentional, however; it is recommended to use `filter {}` on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] and
      * `cols {}` on the rest.
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
-     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
-     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
-     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
-     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
-     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.all]
      */
     private interface ColumnsSelectionDslColsPredicateDocs
 
@@ -568,17 +566,17 @@ public interface ColsColumnsSelectionDsl {
      *
      *
      * #### Filter vs. Cols:
-     * If used with a [predicate], `cols {}` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
+     * If used with a [predicate], `cols {` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
      * This is intentional, however; it is recommended to use `filter {}` on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] and
      * `cols {}` on the rest.
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
-     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
-     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
-     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
-     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
-     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.all] */
     public fun ColumnsSelectionDsl<*>.cols(
         predicate: ColumnFilter<*> = { true },
@@ -620,17 +618,17 @@ public interface ColsColumnsSelectionDsl {
      *
      *
      * #### Filter vs. Cols:
-     * If used with a [predicate], `cols {}` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
+     * If used with a [predicate], `cols {` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
      * This is intentional, however; it is recommended to use `filter {}` on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] and
      * `cols {}` on the rest.
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
-     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
-     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
-     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
-     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
-     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.all] */
     public operator fun ColumnsSelectionDsl<*>.get(
         predicate: ColumnFilter<*> = { true },
@@ -670,21 +668,20 @@ public interface ColsColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     * @see [ColumnsSelectionDsl.allCols]
-     *
      *
      * #### Filter vs. Cols:
-     * If used with a [predicate], `cols {}` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
+     * If used with a [predicate], `cols {` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
      * This is intentional, however; it is recommended to use `filter {}` on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] and
      * `cols {}` on the rest.
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
-     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
-     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
-     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
-     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
-     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.allCols]
      */
     private interface SingleColumnAnyRowColsPredicateDocs
 
@@ -723,17 +720,17 @@ public interface ColsColumnsSelectionDsl {
      *
      *
      * #### Filter vs. Cols:
-     * If used with a [predicate], `cols {}` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
+     * If used with a [predicate], `cols {` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
      * This is intentional, however; it is recommended to use `filter {}` on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] and
      * `cols {}` on the rest.
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
-     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
-     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
-     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
-     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
-     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.allCols] */
     public fun SingleColumn<DataRow<*>>.cols(
         predicate: ColumnFilter<*> = { true },
@@ -775,17 +772,17 @@ public interface ColsColumnsSelectionDsl {
      *
      *
      * #### Filter vs. Cols:
-     * If used with a [predicate], `cols {}` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
+     * If used with a [predicate], `cols {` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
      * This is intentional, however; it is recommended to use `filter {}` on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] and
      * `cols {}` on the rest.
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
-     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
-     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
-     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
-     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
-     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.allCols]
      */
     public operator fun SingleColumn<DataRow<*>>.get(
@@ -825,17 +822,17 @@ public interface ColsColumnsSelectionDsl {
      *
      *
      * #### Filter vs. Cols:
-     * If used with a [predicate], `cols {}` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
+     * If used with a [predicate], `cols {` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
      * This is intentional, however; it is recommended to use `filter {}` on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] and
      * `cols {}` on the rest.
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
-     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
-     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
-     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
-     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
-     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups]
      */
     private interface StringColsPredicateDocs
 
@@ -871,17 +868,17 @@ public interface ColsColumnsSelectionDsl {
      *
      *
      * #### Filter vs. Cols:
-     * If used with a [predicate], `cols {}` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
+     * If used with a [predicate], `cols {` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
      * This is intentional, however; it is recommended to use `filter {}` on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] and
      * `cols {}` on the rest.
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
-     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
-     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
-     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
-     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
-     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups]
      */
     public fun String.cols(
         predicate: ColumnFilter<*> = { true },
@@ -919,17 +916,17 @@ public interface ColsColumnsSelectionDsl {
      *
      *
      * #### Filter vs. Cols:
-     * If used with a [predicate], `cols {}` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
+     * If used with a [predicate], `cols {` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
      * This is intentional, however; it is recommended to use `filter {}` on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] and
      * `cols {}` on the rest.
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
-     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
-     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
-     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
-     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
-     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups]
      */
     public operator fun String.get(
         predicate: ColumnFilter<*> = { true },
@@ -966,21 +963,20 @@ public interface ColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { Type::columnGroup.`[cols][SingleColumn.cols]`() }`
      *
-     * @see [ColumnsSelectionDsl.allCols]
-     *
      *
      * #### Filter vs. Cols:
-     * If used with a [predicate], `cols {}` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
+     * If used with a [predicate], `cols {` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
      * This is intentional, however; it is recommended to use `filter {}` on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] and
      * `cols {}` on the rest.
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
-     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
-     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
-     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
-     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
-     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.allCols]
      */
     private interface KPropertyColsPredicateDocs
 
@@ -1016,17 +1012,17 @@ public interface ColsColumnsSelectionDsl {
      *
      *
      * #### Filter vs. Cols:
-     * If used with a [predicate], `cols {}` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
+     * If used with a [predicate], `cols {` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
      * This is intentional, however; it is recommended to use `filter {}` on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] and
      * `cols {}` on the rest.
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
-     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
-     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
-     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
-     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
-     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.allCols] */
     public fun KProperty<*>.cols(
         predicate: ColumnFilter<*> = { true },
@@ -1064,17 +1060,17 @@ public interface ColsColumnsSelectionDsl {
      *
      *
      * #### Filter vs. Cols:
-     * If used with a [predicate], `cols {}` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
+     * If used with a [predicate], `cols {` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
      * This is intentional, however; it is recommended to use `filter {}` on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] and
      * `cols {}` on the rest.
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
-     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
-     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
-     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
-     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
-     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.allCols] */
     public operator fun KProperty<*>.get(
         predicate: ColumnFilter<*> = { true },
@@ -1111,17 +1107,17 @@ public interface ColsColumnsSelectionDsl {
      *
      *
      * #### Filter vs. Cols:
-     * If used with a [predicate], `cols {}` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
+     * If used with a [predicate], `cols {` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
      * This is intentional, however; it is recommended to use `filter {}` on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] and
      * `cols {}` on the rest.
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
-     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
-     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
-     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
-     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
-     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups]
      */
     private interface ColumnPathPredicateDocs
 
@@ -1155,17 +1151,17 @@ public interface ColsColumnsSelectionDsl {
      *
      *
      * #### Filter vs. Cols:
-     * If used with a [predicate], `cols {}` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
+     * If used with a [predicate], `cols {` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
      * This is intentional, however; it is recommended to use `filter {}` on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] and
      * `cols {}` on the rest.
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
-     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
-     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
-     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
-     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
-     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups]
      */
     public fun ColumnPath.cols(
         predicate: ColumnFilter<*> = { true },
@@ -1201,17 +1197,17 @@ public interface ColsColumnsSelectionDsl {
      *
      *
      * #### Filter vs. Cols:
-     * If used with a [predicate], `cols {}` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
+     * If used with a [predicate], `cols {` functions exactly like [`filter {}`][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter].
      * This is intentional, however; it is recommended to use `filter {}` on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] and
      * `cols {}` on the rest.
      *
      * @param [predicate] A [ColumnFilter function][org.jetbrains.kotlinx.dataframe.ColumnFilter] that takes a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] and returns a [Boolean].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that match the given [predicate].
-     * @see [ColumnsSelectionDsl.filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]
-     * @see [ColumnsSelectionDsl.colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]
-     * @see [ColumnsSelectionDsl.valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]
-     * @see [ColumnsSelectionDsl.frameCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]
-     * @see [ColumnsSelectionDsl.colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.filter]
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups]
      */
     public operator fun ColumnPath.get(
         predicate: ColumnFilter<*> = { true },
@@ -1244,9 +1240,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(colGroup.columnA, columnB) }`
-     *
-     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`colGroup.columnA, columnB`[`]`][ColumnsSelectionDsl.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnReference] that points to a relative column.
@@ -1254,6 +1248,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @setArg [CommonColsDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(colGroup.columnA, columnB) }`
+     *
+     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`colGroup.columnA, columnB`[`]`][ColumnsSelectionDsl.cols]` }`
      */
     private interface ColumnsSelectionDslColsVarargColumnReferenceDocs
 
@@ -1279,9 +1278,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup.columnA, columnB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`colGroup.columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a relative column.
@@ -1289,7 +1286,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup.columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`colGroup.columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }` */
     public fun <C> ColumnsSelectionDsl<*>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
@@ -1317,9 +1318,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup.columnA, columnB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`colGroup.columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a relative column.
@@ -1327,7 +1326,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup.columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`colGroup.columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }` */
     public operator fun <C> ColumnsSelectionDsl<*>.get(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
@@ -1356,9 +1359,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(columnA, columnB) }`
-     *
-     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`columnA, columnB`[`]`][SingleColumn.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnReference] that points to a relative column.
@@ -1366,6 +1367,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @setArg [CommonColsDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`columnA, columnB`[`]`][SingleColumn.cols]` }`
      */
     private interface SingleColumnColsVarargColumnReferenceDocs
 
@@ -1391,9 +1397,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a relative column.
@@ -1401,7 +1405,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }` */
     public fun <C> SingleColumn<DataRow<*>>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
@@ -1430,9 +1438,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a relative column.
@@ -1440,6 +1446,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      */
     public operator fun <C> SingleColumn<DataRow<*>>.get(
         firstCol: ColumnReference<C>,
@@ -1469,9 +1480,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`(columnA, columnB) }`
-     *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup"`[`[`][String.cols]`columnA, columnB`[`]`][String.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnReference] that points to a relative column.
@@ -1479,6 +1488,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @setArg [CommonColsDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup"`[`[`][String.cols]`columnA, columnB`[`]`][String.cols]` }`
      */
     private interface StringColsVarargColumnReferenceDocs
 
@@ -1504,9 +1518,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(columnA, columnB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"`[`[`][kotlin.String.cols]`columnA, columnB`[`]`][kotlin.String.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a relative column.
@@ -1514,7 +1526,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"`[`[`][kotlin.String.cols]`columnA, columnB`[`]`][kotlin.String.cols]` }` */
     public fun <C> String.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
@@ -1542,9 +1558,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(columnA, columnB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"`[`[`][kotlin.String.cols]`columnA, columnB`[`]`][kotlin.String.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a relative column.
@@ -1552,7 +1566,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"`[`[`][kotlin.String.cols]`columnA, columnB`[`]`][kotlin.String.cols]` }` */
     public operator fun <C> String.get(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
@@ -1581,9 +1599,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`(columnA, columnB) }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"pathTo"["colA"], "pathTo"["colB"]`[`]`][KProperty.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnReference] that points to a relative column.
@@ -1591,6 +1607,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @setArg [CommonColsDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"pathTo"["colA"], "pathTo"["colB"]`[`]`][KProperty.cols]` }`
      */
     private interface KPropertyColsVarargColumnReferenceDocs
 
@@ -1616,9 +1637,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"pathTo"["colA"], "pathTo"["colB"]`[`]`][kotlin.reflect.KProperty.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a relative column.
@@ -1626,7 +1645,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"pathTo"["colA"], "pathTo"["colB"]`[`]`][kotlin.reflect.KProperty.cols]` }` */
     public fun <C> KProperty<*>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
@@ -1654,9 +1677,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"pathTo"["colA"], "pathTo"["colB"]`[`]`][kotlin.reflect.KProperty.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a relative column.
@@ -1664,7 +1685,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"pathTo"["colA"], "pathTo"["colB"]`[`]`][kotlin.reflect.KProperty.cols]` }` */
     public operator fun <C> KProperty<*>.get(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
@@ -1693,11 +1718,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][ColumnPath.cols]`(columnA, columnB) }`
-     *
-     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][ColumnPath.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
-     *
-     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`columnA, columnB`[`]`][ColumnPath.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnReference] that points to a relative column.
@@ -1705,6 +1726,13 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @setArg [CommonColsDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][ColumnPath.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][ColumnPath.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`columnA, columnB`[`]`][ColumnPath.cols]` }`
      */
     private interface ColumnPathColsVarargColumnReferenceDocs
 
@@ -1730,11 +1758,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`(columnA, columnB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a relative column.
@@ -1742,7 +1766,13 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }` */
     public fun <C> ColumnPath.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
@@ -1770,11 +1800,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`(columnA, columnB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] that points to a relative column.
@@ -1782,7 +1808,13 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`(columnA, columnB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`columnA, columnB`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }` */
     public operator fun <C> ColumnPath.get(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
@@ -1815,11 +1847,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`<`[String][String]`>("columnA", "columnB") }`
-     *
-     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][ColumnsSelectionDsl.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [String] that points to a relative column.
@@ -1827,6 +1855,13 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @setArg [CommonColsDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`<`[String][String]`>("columnA", "columnB") }`
+     *
+     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][ColumnsSelectionDsl.cols]` }`
      */
     private interface ColumnsSelectionDslVarargStringDocs
 
@@ -1852,11 +1887,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`<`[String][String]`>("columnA", "columnB") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [String] that points to a relative column.
@@ -1864,7 +1895,13 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`<`[String][String]`>("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }` */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
     public fun ColumnsSelectionDsl<*>.cols(
@@ -1894,11 +1931,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`<`[String][String]`>("columnA", "columnB") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [String] that points to a relative column.
@@ -1906,7 +1939,13 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`<`[String][String]`>("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }` */
     public fun <T> ColumnsSelectionDsl<*>.cols(
         firstCol: String,
         vararg otherCols: String,
@@ -1934,11 +1973,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`<`[String][String]`>("columnA", "columnB") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [String] that points to a relative column.
@@ -1946,7 +1981,13 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`<`[String][String]`>("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }` */
     public operator fun ColumnsSelectionDsl<*>.get(
         firstCol: String,
         vararg otherCols: String,
@@ -1975,9 +2016,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`"columnA", "columnB"`[`]`][SingleColumn.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [String] that points to a relative column.
@@ -1985,6 +2024,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @setArg [CommonColsDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`"columnA", "columnB"`[`]`][SingleColumn.cols]` }`
      */
     private interface SingleColumnColsVarargStringDocs
 
@@ -2010,9 +2054,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [String] that points to a relative column.
@@ -2020,7 +2062,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }` */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
     public fun SingleColumn<DataRow<*>>.cols(
@@ -2050,9 +2096,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [String] that points to a relative column.
@@ -2060,7 +2104,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }` */
     public fun <T> SingleColumn<DataRow<*>>.cols(
         firstCol: String,
         vararg otherCols: String,
@@ -2089,9 +2137,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [String] that points to a relative column.
@@ -2099,6 +2145,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      */
     public operator fun SingleColumn<DataRow<*>>.get(
         firstCol: String,
@@ -2128,9 +2179,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "columnGroup".`[cols][String.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][DataFrame.select]` { "columnGroup"`[`[`][String.cols]`"columnA", "columnB"`[`]`][String.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [String] that points to a relative column.
@@ -2138,6 +2187,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @setArg [CommonColsDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { "columnGroup".`[cols][String.cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][DataFrame.select]` { "columnGroup"`[`[`][String.cols]`"columnA", "columnB"`[`]`][String.cols]` }`
      */
     private interface StringColsVarargStringDocs
 
@@ -2163,9 +2217,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup".`[cols][kotlin.String.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup"`[`[`][kotlin.String.cols]`"columnA", "columnB"`[`]`][kotlin.String.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [String] that points to a relative column.
@@ -2173,7 +2225,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup".`[cols][kotlin.String.cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup"`[`[`][kotlin.String.cols]`"columnA", "columnB"`[`]`][kotlin.String.cols]` }` */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
     public fun String.cols(
@@ -2203,9 +2259,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup".`[cols][kotlin.String.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup"`[`[`][kotlin.String.cols]`"columnA", "columnB"`[`]`][kotlin.String.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [String] that points to a relative column.
@@ -2213,7 +2267,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup".`[cols][kotlin.String.cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup"`[`[`][kotlin.String.cols]`"columnA", "columnB"`[`]`][kotlin.String.cols]` }` */
     public fun <T> String.cols(
         firstCol: String,
         vararg otherCols: String,
@@ -2241,9 +2299,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup".`[cols][kotlin.String.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup"`[`[`][kotlin.String.cols]`"columnA", "columnB"`[`]`][kotlin.String.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [String] that points to a relative column.
@@ -2251,7 +2307,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup".`[cols][kotlin.String.cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup"`[`[`][kotlin.String.cols]`"columnA", "columnB"`[`]`][kotlin.String.cols]` }` */
     public operator fun String.get(
         firstCol: String,
         vararg otherCols: String,
@@ -2280,9 +2340,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][KProperty.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"columnA", "columnB"`[`]`][KProperty.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [String] that points to a relative column.
@@ -2290,6 +2348,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @setArg [CommonColsDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][KProperty.cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"columnA", "columnB"`[`]`][KProperty.cols]` }`
      */
     private interface KPropertiesColsVarargStringDocs
 
@@ -2315,9 +2378,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"columnA", "columnB"`[`]`][kotlin.reflect.KProperty.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [String] that points to a relative column.
@@ -2325,7 +2386,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"columnA", "columnB"`[`]`][kotlin.reflect.KProperty.cols]` }` */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
     public fun KProperty<*>.cols(
@@ -2355,9 +2420,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"columnA", "columnB"`[`]`][kotlin.reflect.KProperty.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [String] that points to a relative column.
@@ -2365,7 +2428,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"columnA", "columnB"`[`]`][kotlin.reflect.KProperty.cols]` }` */
     public fun <T> KProperty<*>.cols(
         firstCol: String,
         vararg otherCols: String,
@@ -2393,9 +2460,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"columnA", "columnB"`[`]`][kotlin.reflect.KProperty.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [String] that points to a relative column.
@@ -2403,7 +2468,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"columnA", "columnB"`[`]`][kotlin.reflect.KProperty.cols]` }` */
     public operator fun KProperty<*>.get(
         firstCol: String,
         vararg otherCols: String,
@@ -2432,9 +2501,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][ColumnPath.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`"columnA", "columnB"`[`]`][ColumnPath.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [String] that points to a relative column.
@@ -2442,6 +2509,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @setArg [CommonColsDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][ColumnPath.cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`"columnA", "columnB"`[`]`][ColumnPath.cols]` }`
      */
     private interface ColumnPathColsVarargStringDocs
 
@@ -2467,9 +2539,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [String] that points to a relative column.
@@ -2477,7 +2547,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }` */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
     public fun ColumnPath.cols(
@@ -2507,9 +2581,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [String] that points to a relative column.
@@ -2517,7 +2589,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }` */
     public fun <T> ColumnPath.cols(
         firstCol: String,
         vararg otherCols: String,
@@ -2545,9 +2621,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`("columnA", "columnB") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [String] that points to a relative column.
@@ -2555,7 +2629,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`("columnA", "columnB") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`"columnA", "columnB"`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }` */
     public operator fun ColumnPath.get(
         firstCol: String,
         vararg otherCols: String,
@@ -2588,11 +2666,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][ColumnsSelectionDsl.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [String] that points to a relative column.
@@ -2600,6 +2674,13 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @setArg [CommonColsDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][ColumnsSelectionDsl.cols]` }`
      */
     private interface ColumnsSelectionDslVarargColumnPathDocs
 
@@ -2625,11 +2706,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [String] that points to a relative column.
@@ -2637,7 +2714,13 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }` */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
     public fun ColumnsSelectionDsl<*>.cols(
@@ -2667,11 +2750,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [String] that points to a relative column.
@@ -2679,7 +2758,13 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }` */
     public fun <T> ColumnsSelectionDsl<*>.cols(
         firstCol: ColumnPath,
         vararg otherCols: ColumnPath,
@@ -2707,11 +2792,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [String] that points to a relative column.
@@ -2719,7 +2800,13 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }` */
     public operator fun ColumnsSelectionDsl<*>.get(
         firstCol: ColumnPath,
         vararg otherCols: ColumnPath,
@@ -2748,11 +2835,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][SingleColumn.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnPath] that points to a relative column.
@@ -2760,6 +2843,13 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @setArg [CommonColsDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][SingleColumn.cols]` }`
      */
     private interface SingleColumnColsVarargColumnPathDocs
 
@@ -2785,11 +2875,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a relative column.
@@ -2797,7 +2883,13 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }` */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
     public fun SingleColumn<DataRow<*>>.cols(
@@ -2827,11 +2919,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a relative column.
@@ -2839,7 +2927,13 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }` */
     public fun <T> SingleColumn<DataRow<*>>.cols(
         firstCol: ColumnPath,
         vararg otherCols: ColumnPath,
@@ -2868,11 +2962,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a relative column.
@@ -2880,6 +2970,13 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      */
     public operator fun SingleColumn<DataRow<*>>.get(
         firstCol: ColumnPath,
@@ -2909,11 +3006,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "columnGroup".`[cols][String.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][DataFrame.select]` { "columnGroup".`[cols][String.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][DataFrame.select]` { "columnGroup"`[`[`][String.cols]`""pathTo"["colA"], "pathTo"["colB"])`[`]`][ColumnPath.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnPath] that points to a relative column.
@@ -2921,6 +3014,13 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @setArg [CommonColsDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { "columnGroup".`[cols][String.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { "columnGroup".`[cols][String.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { "columnGroup"`[`[`][String.cols]`""pathTo"["colA"], "pathTo"["colB"])`[`]`][ColumnPath.cols]` }`
      */
     private interface StringColsVarargColumnPathDocs
 
@@ -2946,11 +3046,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup".`[cols][kotlin.String.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup".`[cols][kotlin.String.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup"`[`[`][kotlin.String.cols]`""pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a relative column.
@@ -2958,7 +3054,13 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup".`[cols][kotlin.String.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup".`[cols][kotlin.String.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup"`[`[`][kotlin.String.cols]`""pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }` */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
     public fun String.cols(
@@ -2988,11 +3090,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup".`[cols][kotlin.String.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup".`[cols][kotlin.String.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup"`[`[`][kotlin.String.cols]`""pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a relative column.
@@ -3000,7 +3098,13 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup".`[cols][kotlin.String.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup".`[cols][kotlin.String.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup"`[`[`][kotlin.String.cols]`""pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }` */
     public fun <T> String.cols(
         firstCol: ColumnPath,
         vararg otherCols: ColumnPath,
@@ -3028,11 +3132,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup".`[cols][kotlin.String.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup".`[cols][kotlin.String.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup"`[`[`][kotlin.String.cols]`""pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a relative column.
@@ -3040,7 +3140,13 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup".`[cols][kotlin.String.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup".`[cols][kotlin.String.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnGroup"`[`[`][kotlin.String.cols]`""pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }` */
     public operator fun String.get(
         firstCol: ColumnPath,
         vararg otherCols: ColumnPath,
@@ -3069,11 +3175,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][KProperty.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][KProperty.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"columnA", "columnB"`[`]`][KProperty.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnPath] that points to a relative column.
@@ -3081,6 +3183,13 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @setArg [CommonColsDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][KProperty.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][KProperty.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"columnA", "columnB"`[`]`][KProperty.cols]` }`
      */
     private interface KPropertiesColsVarargColumnPathDocs
 
@@ -3106,11 +3215,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"columnA", "columnB"`[`]`][kotlin.reflect.KProperty.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a relative column.
@@ -3118,7 +3223,13 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"columnA", "columnB"`[`]`][kotlin.reflect.KProperty.cols]` }` */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
     public fun KProperty<*>.cols(
@@ -3148,11 +3259,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"columnA", "columnB"`[`]`][kotlin.reflect.KProperty.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a relative column.
@@ -3160,7 +3267,13 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"columnA", "columnB"`[`]`][kotlin.reflect.KProperty.cols]` }` */
     public fun <T> KProperty<*>.cols(
         firstCol: ColumnPath,
         vararg otherCols: ColumnPath,
@@ -3188,11 +3301,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"columnA", "columnB"`[`]`][kotlin.reflect.KProperty.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a relative column.
@@ -3200,7 +3309,13 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][kotlin.reflect.KProperty.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][kotlin.reflect.KProperty.cols]`"columnA", "columnB"`[`]`][kotlin.reflect.KProperty.cols]` }` */
     public operator fun KProperty<*>.get(
         firstCol: ColumnPath,
         vararg otherCols: ColumnPath,
@@ -3229,11 +3344,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][ColumnPath.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][ColumnPath.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][ColumnPath.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnPath] that points to a relative column.
@@ -3241,6 +3352,13 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @setArg [CommonColsDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][ColumnPath.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][ColumnPath.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][ColumnPath.cols]` }`
      */
     private interface ColumnPathColsVarargColumnPathDocs
 
@@ -3266,11 +3384,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a relative column.
@@ -3278,7 +3392,13 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }` */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
     public fun ColumnPath.cols(
@@ -3308,11 +3428,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a relative column.
@@ -3320,7 +3436,13 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }` */
     public fun <T> ColumnPath.cols(
         firstCol: ColumnPath,
         vararg otherCols: ColumnPath,
@@ -3348,11 +3470,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] that points to a relative column.
@@ -3360,7 +3478,13 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }` */
     public operator fun ColumnPath.get(
         firstCol: ColumnPath,
         vararg otherCols: ColumnPath,
@@ -3393,9 +3517,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(Type::colA, Type::colB) }`
-     *
-     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`Type::colA, Type::colB`[`]`][ColumnsSelectionDsl.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [KProperty] that points to a relative column.
@@ -3403,6 +3525,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @setArg [CommonColsDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(Type::colA, Type::colB) }`
+     *
+     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`Type::colA, Type::colB`[`]`][ColumnsSelectionDsl.cols]` }`
      */
     private interface ColumnsSelectionDslColsVarargKPropertyDocs
 
@@ -3428,9 +3555,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(Type::colA, Type::colB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [KProperty] that points to a relative column.
@@ -3438,7 +3563,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(Type::colA, Type::colB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }` */
     public fun <C> ColumnsSelectionDsl<*>.cols(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
@@ -3466,9 +3595,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(Type::colA, Type::colB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [KProperty] that points to a relative column.
@@ -3476,7 +3603,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(Type::colA, Type::colB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }` */
     public operator fun <C> ColumnsSelectionDsl<*>.get(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
@@ -3505,9 +3636,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(Type::colA, Type::colB) }`
-     *
-     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`Type::colA, Type::colB`[`]`][SingleColumn.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [KProperty] that points to a relative column.
@@ -3515,6 +3644,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @setArg [CommonColsDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(Type::colA, Type::colB) }`
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`Type::colA, Type::colB`[`]`][SingleColumn.cols]` }`
      */
     private interface SingleColumnColsVarargKPropertyDocs
 
@@ -3540,9 +3674,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(Type::colA, Type::colB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [KProperty] that points to a relative column.
@@ -3550,7 +3682,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(Type::colA, Type::colB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }` */
     public fun <C> SingleColumn<DataRow<*>>.cols(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
@@ -3578,9 +3714,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(Type::colA, Type::colB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [KProperty] that points to a relative column.
@@ -3588,7 +3722,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(Type::colA, Type::colB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }` */
     public operator fun <C> SingleColumn<DataRow<*>>.get(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
@@ -3617,9 +3755,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`(Type::colA, Type::colB) }`
-     *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup"`[`[`][String.cols]`Type::colA, Type::colB`[`]`][String.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [KProperty] that points to a relative column.
@@ -3627,6 +3763,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @setArg [CommonColsDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`(Type::colA, Type::colB) }`
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup"`[`[`][String.cols]`Type::colA, Type::colB`[`]`][String.cols]` }`
      */
     private interface StringColsVarargKPropertyDocs
 
@@ -3652,9 +3793,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(Type::colA, Type::colB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"`[`[`][kotlin.String.cols]`Type::colA, Type::colB`[`]`][kotlin.String.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [KProperty] that points to a relative column.
@@ -3662,7 +3801,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(Type::colA, Type::colB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"`[`[`][kotlin.String.cols]`Type::colA, Type::colB`[`]`][kotlin.String.cols]` }` */
     public fun <C> String.cols(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
@@ -3690,9 +3833,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(Type::colA, Type::colB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"`[`[`][kotlin.String.cols]`Type::colA, Type::colB`[`]`][kotlin.String.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [KProperty] that points to a relative column.
@@ -3700,7 +3841,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[cols][kotlin.String.cols]`(Type::colA, Type::colB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"`[`[`][kotlin.String.cols]`Type::colA, Type::colB`[`]`][kotlin.String.cols]` }` */
     public operator fun <C> String.get(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
@@ -3729,9 +3874,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`(Type::colA, Type::colB) }`
-     *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup`[`[`][SingleColumn.cols]`Type::colA, Type::colB`[`]`][SingleColumn.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [KProperty] that points to a relative column.
@@ -3739,6 +3882,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @setArg [CommonColsDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`(Type::colA, Type::colB) }`
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup`[`[`][SingleColumn.cols]`Type::colA, Type::colB`[`]`][SingleColumn.cols]` }`
      */
     private interface KPropertyColsVarargKPropertyDocs
 
@@ -3764,9 +3912,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(Type::colA, Type::colB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [KProperty] that points to a relative column.
@@ -3774,7 +3920,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(Type::colA, Type::colB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }` */
     public fun <C> KProperty<*>.cols(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
@@ -3802,9 +3952,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(Type::colA, Type::colB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [KProperty] that points to a relative column.
@@ -3812,7 +3960,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[cols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`(Type::colA, Type::colB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }` */
     public operator fun <C> KProperty<*>.get(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
@@ -3841,9 +3993,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][ColumnPath.cols]`(Type::colA, Type::colB) }`
-     *
-     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`Type::colA, Type::colB`[`]`][ColumnPath.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [KProperty] that points to a relative column.
@@ -3851,6 +4001,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
+     * @setArg [CommonColsDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][ColumnPath.cols]`(Type::colA, Type::colB) }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`Type::colA, Type::colB`[`]`][ColumnPath.cols]` }`
      */
     private interface ColumnPathColsVarargKPropertyDocs
 
@@ -3876,9 +4031,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`(Type::colA, Type::colB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [KProperty] that points to a relative column.
@@ -3886,7 +4039,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`(Type::colA, Type::colB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }` */
     public fun <C> ColumnPath.cols(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
@@ -3914,9 +4071,7 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`(Type::colA, Type::colB) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     * {@getArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
      *
      *
      * @param [firstCol] A [KProperty] that points to a relative column.
@@ -3924,7 +4079,11 @@ public interface ColsColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if any of the given [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]s point to a column that doesn't
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to. 
-     */
+     * @setArg [CommonColsDocs.Examples][org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Examples]
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"].`[cols][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`(Type::colA, Type::colB) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`Type::colA, Type::colB`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }` */
     public operator fun <C> ColumnPath.get(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,

@@ -337,11 +337,11 @@ public interface SelectColumnsSelectionDsl {
      *
      * See also [except][ColumnsSelectionDsl.except]/[allExcept][ColumnsSelectionDsl.allColsExcept] for the inverted operation of this function.
      *
-     * @param [selector\] The [ColumnsSelector] to use for the selection.
+     * @param [selector] The [ColumnsSelector] to use for the selection.
      * @receiver The [ColumnGroup] to select from.
-     * @throws [IllegalArgumentException\] If [this\] is not a [ColumnGroup].
-     * @return A [ColumnSet] containing the columns selected by [selector\].
-     * @see [SingleColumn.except\]
+     * @throws [IllegalArgumentException] If [this] is not a [ColumnGroup].
+     * @return A [ColumnSet] containing the columns selected by [selector].
+     * @see [SingleColumn.except]
      */
     private interface CommonSelectDocs {
 

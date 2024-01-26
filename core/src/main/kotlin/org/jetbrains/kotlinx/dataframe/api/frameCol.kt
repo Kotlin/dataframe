@@ -123,14 +123,14 @@ public interface FrameColColumnsSelectionDsl {
         interface ExampleArg
 
         /**
-         * `df.`[select][DataFrame.select]` { {@getArg [CommonFrameColDocs.ReceiverArg]}`[frameCol][frameCol]`({@getArg [CommonFrameColDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@getArg [CommonFrameColDocs.ReceiverArg]}`[frameCol][frameCol]`({@getArg [CommonFrameColDocs.Arg]}) \}`
          */
         interface SingleExample
 
         /**
-         * `df.`[select][DataFrame.select]` { {@getArg [CommonFrameColDocs.ReceiverArg]}`[frameCol][frameCol]`({@getArg [CommonFrameColDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@getArg [CommonFrameColDocs.ReceiverArg]}`[frameCol][frameCol]`({@getArg [CommonFrameColDocs.Arg]}) \}`
          *
-         * `df.`[select][DataFrame.select]` { {@getArg [CommonFrameColDocs.ReceiverArg]}`[frameCol][frameCol]`<`[String][String]`>({@getArg [CommonFrameColDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@getArg [CommonFrameColDocs.ReceiverArg]}`[frameCol][frameCol]`<`[String][String]`>({@getArg [CommonFrameColDocs.Arg]}) \}`
          */
         interface DoubleExample
 

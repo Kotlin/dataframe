@@ -142,8 +142,8 @@ public interface ColsOfColumnsSelectionDsl {
     /**
      * ## Cols Of
      *
-     * Returns a [ColumnSet] of columns from [this\] that are a subtype of the given type [C\], optionally filtered
-     * by [filter\].
+     * Returns a [ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
+     * by [filter].
      *
      * This function only looks at columns at the top-level.
      *

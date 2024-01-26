@@ -64,23 +64,23 @@ public interface AllExceptColumnsSelectionDsl {
      * }
      *
      * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
-     *  {@include [PlainDslName]} **`{ `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**` \\}`**
+     *  {@include [PlainDslName]} **`{ `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**` \}`**
      *
      *  `|` {@include [PlainDslName]}**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**` ..`**`)`**
      * }
      * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnSetName]} `[`**` { `**`]` {@include [DslGrammarTemplate.ColumnsResolverRef]} `[`**` \\} `**`]`
+     *  {@include [Indent]}{@include [ColumnSetName]} `[`**` { `**`]` {@include [DslGrammarTemplate.ColumnsResolverRef]} `[`**` \} `**`]`
      *
      *  {@include [Indent]}`|` {@include [ColumnSetName]} {@include [DslGrammarTemplate.ColumnRef]}
      *
      *  {@include [Indent]}`|` .{@include [ColumnSetName]}**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**` ..`**`)`**
      * }
      * {@setArg [DslGrammarTemplate.ColumnGroupFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnGroupName]} **` { `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**` \\} `**
+     *  {@include [Indent]}{@include [ColumnGroupName]} **` { `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**` \} `**
      *
      *  {@include [Indent]}`|` {@include [ColumnGroupName]}**`(`**{@include [DslGrammarTemplate.ColumnNoAccessorRef]}**`,`**` ..`**`)`**
      *
-     *  {@include [Indent]}`|` {@include [ColumnGroupExperimentalName]} **` { `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**` \\} EXPERIMENTAL!`**
+     *  {@include [Indent]}`|` {@include [ColumnGroupExperimentalName]} **` { `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**` \} EXPERIMENTAL!`**
      *
      *  {@include [Indent]}`|` {@include [ColumnGroupExperimentalName]}**`(`**{@include [DslGrammarTemplate.ColumnNoAccessorRef]}**`,`**` ..`**`) EXPERIMENTAL!`**
      * }
@@ -190,9 +190,9 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * @include [CommonExceptDocs]
      * {@setArg [CommonExceptDocs.ExampleArg]
-     *  `df.`[select][ColumnsSelectionDsl.select] `{` [colsOf][ColumnsSelectionDsl.colsOf]`<`[Number][Number]`>() `[except][ColumnSet.except] {@getArg [ArgumentArg1]} `\\\\}`
+     *  `df.`[select][ColumnsSelectionDsl.select] `{` [colsOf][ColumnsSelectionDsl.colsOf]`<`[Number][Number]`>() `[except][ColumnSet.except] {@getArg [ArgumentArg1]} `\}`
      *
-     *  `df.`[select][ColumnsSelectionDsl.select] `{` [cols][ColumnsSelectionDsl.cols]`(name, age)` [except][ColumnSet.except] {@getArg [ArgumentArg2]} `\\\\}`
+     *  `df.`[select][ColumnsSelectionDsl.select] `{` [cols][ColumnsSelectionDsl.cols]`(name, age)` [except][ColumnSet.except] {@getArg [ArgumentArg2]} `\}`
      * }
      */
     private interface ColumnSetInfixDocs {
@@ -207,9 +207,9 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * @include [CommonExceptDocs]
      * {@setArg [CommonExceptDocs.ExampleArg]
-     *  `df.`[select][ColumnsSelectionDsl.select] `{` [colsOf][ColumnsSelectionDsl.colsOf]`<`[Number][Number]`>().`[except][ColumnSet.except]{@getArg [ArgumentArg1]} `\\\\}`
+     *  `df.`[select][ColumnsSelectionDsl.select] `{` [colsOf][ColumnsSelectionDsl.colsOf]`<`[Number][Number]`>().`[except][ColumnSet.except]{@getArg [ArgumentArg1]} `\}`
      *
-     *  `df.`[select][ColumnsSelectionDsl.select] `{` [cols][ColumnsSelectionDsl.cols]`(name, age).`[except][ColumnSet.except]{@getArg [ArgumentArg2]} `\\\\}`
+     *  `df.`[select][ColumnsSelectionDsl.select] `{` [cols][ColumnsSelectionDsl.cols]`(name, age).`[except][ColumnSet.except]{@getArg [ArgumentArg2]} `\}`
      * }
      */
     private interface ColumnSetVarargDocs {
@@ -318,9 +318,9 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * @include [CommonExceptDocs]
      * @setArg [CommonExceptDocs.ExampleArg]
-     *  `df.`[select][ColumnsSelectionDsl.select] `{` [allExcept][ColumnsSelectionDsl.allExcept]{@getArg [ArgumentArg1]} `\\}`
+     *  `df.`[select][ColumnsSelectionDsl.select] `{` [allExcept][ColumnsSelectionDsl.allExcept]{@getArg [ArgumentArg1]} `\}`
      *
-     *  `df.`[select][ColumnsSelectionDsl.select] `{` [allExcept][ColumnsSelectionDsl.allExcept]{@getArg [ArgumentArg2]} `\\}`
+     *  `df.`[select][ColumnsSelectionDsl.select] `{` [allExcept][ColumnsSelectionDsl.allExcept]{@getArg [ArgumentArg2]} `\}`
      */
     private interface ColumnsSelectionDslDocs {
 
@@ -389,9 +389,9 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * @include [CommonExceptDocs]
      * @setArg [CommonExceptDocs.ExampleArg]
-     *  `df.`[select][ColumnsSelectionDsl.select] `{` {@getArg [ReceiverArg1]}[allColsExcept][{@getArg [ReceiverType]}.allColsExcept]{@getArg [ArgumentArg1]} `\\}`
+     *  `df.`[select][ColumnsSelectionDsl.select] `{` {@getArg [ReceiverArg1]}[allColsExcept][{@getArg [ReceiverType]}.allColsExcept]{@getArg [ArgumentArg1]} `\}`
      *
-     *  `df.`[select][ColumnsSelectionDsl.select] `{ city` [and][ColumnsSelectionDsl.and] {@getArg [ReceiverArg2]}[allColsExcept][{@getArg [ReceiverType]}.allColsExcept]{@getArg [ArgumentArg2]} `\\}`
+     *  `df.`[select][ColumnsSelectionDsl.select] `{ city` [and][ColumnsSelectionDsl.and] {@getArg [ReceiverArg2]}[allColsExcept][{@getArg [ReceiverType]}.allColsExcept]{@getArg [ArgumentArg2]} `\}`
      */
     private interface ColumnGroupDocs {
 
