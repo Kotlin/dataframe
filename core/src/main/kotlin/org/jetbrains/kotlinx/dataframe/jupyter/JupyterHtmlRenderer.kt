@@ -1,10 +1,20 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
-import org.jetbrains.kotlinx.dataframe.io.*
+import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
+import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
+import org.jetbrains.kotlinx.dataframe.io.toHTML
+import org.jetbrains.kotlinx.dataframe.io.toJsonWithMetadata
+import org.jetbrains.kotlinx.dataframe.io.toStaticHtml
 import org.jetbrains.kotlinx.dataframe.jupyter.KotlinNotebookPluginUtils.convertToDataFrame
 import org.jetbrains.kotlinx.dataframe.nrow
-import org.jetbrains.kotlinx.jupyter.api.*
+import org.jetbrains.kotlinx.jupyter.api.HtmlData
+import org.jetbrains.kotlinx.jupyter.api.JupyterClientType
+import org.jetbrains.kotlinx.jupyter.api.KotlinKernelVersion
+import org.jetbrains.kotlinx.jupyter.api.MimeTypedResult
+import org.jetbrains.kotlinx.jupyter.api.Notebook
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
+import org.jetbrains.kotlinx.jupyter.api.mimeResult
+import org.jetbrains.kotlinx.jupyter.api.renderHtmlAsIFrameIfNeeded
 
 /** Starting from this version, dataframe integration will respond with additional data for rendering in Kotlin Notebooks plugin. */
 private const val MIN_KERNEL_VERSION_FOR_NEW_TABLES_UI = "0.11.0.311"

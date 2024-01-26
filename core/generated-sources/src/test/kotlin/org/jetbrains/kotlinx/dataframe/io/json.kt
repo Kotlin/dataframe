@@ -28,7 +28,8 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
-import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.*
+import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ANY_COLUMNS
+import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS
 import org.jetbrains.kotlinx.dataframe.io.SerializationKeys.COLUMNS
 import org.jetbrains.kotlinx.dataframe.io.SerializationKeys.DATA
 import org.jetbrains.kotlinx.dataframe.io.SerializationKeys.KIND
@@ -40,7 +41,7 @@ import org.jetbrains.kotlinx.dataframe.io.SerializationKeys.VERSION
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.values
 import org.junit.Test
-import kotlin.reflect.*
+import kotlin.reflect.typeOf
 
 class JsonTests {
 

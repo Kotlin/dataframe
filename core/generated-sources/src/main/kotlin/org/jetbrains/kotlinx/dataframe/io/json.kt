@@ -5,6 +5,13 @@ import com.beust.klaxon.JsonObject
 import com.beust.klaxon.KlaxonJson
 import com.beust.klaxon.Parser
 import com.beust.klaxon.json
+import java.io.File
+import java.io.InputStream
+import java.net.URL
+import kotlin.reflect.KType
+import kotlin.reflect.KTypeProjection
+import kotlin.reflect.full.createType
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
@@ -63,13 +70,6 @@ import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typeClass
 import org.jetbrains.kotlinx.dataframe.values
-import java.io.File
-import java.io.InputStream
-import java.net.URL
-import kotlin.reflect.KType
-import kotlin.reflect.KTypeProjection
-import kotlin.reflect.full.createType
-import kotlin.reflect.typeOf
 
 public class JSON(
     private val typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,

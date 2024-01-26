@@ -8,8 +8,21 @@ import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
 import io.kotest.matchers.types.instanceOf
 import org.intellij.lang.annotations.Language
-import org.jetbrains.kotlinx.dataframe.*
-import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.alsoDebug
+import org.jetbrains.kotlinx.dataframe.api.JsonPath
+import org.jetbrains.kotlinx.dataframe.api.allNulls
+import org.jetbrains.kotlinx.dataframe.api.columnsCount
+import org.jetbrains.kotlinx.dataframe.api.convert
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.forEach
+import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.getFrameColumn
+import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.api.toDouble
+import org.jetbrains.kotlinx.dataframe.api.toMap
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -25,6 +38,8 @@ import org.jetbrains.kotlinx.dataframe.io.SerializationKeys.METADATA
 import org.jetbrains.kotlinx.dataframe.io.SerializationKeys.NCOL
 import org.jetbrains.kotlinx.dataframe.io.SerializationKeys.NROW
 import org.jetbrains.kotlinx.dataframe.io.SerializationKeys.VERSION
+import org.jetbrains.kotlinx.dataframe.type
+import org.jetbrains.kotlinx.dataframe.values
 import org.junit.Test
 import kotlin.reflect.typeOf
 
