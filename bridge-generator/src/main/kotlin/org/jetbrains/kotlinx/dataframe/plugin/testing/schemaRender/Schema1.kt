@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.plugin.PluginDataFrameSchema
 import org.jetbrains.kotlinx.dataframe.plugin.SchemaData.schema1
 
-@Interpretable(Schema1::class)
+@Interpretable("Schema1")
 public fun schema1(): DataFrame<*> {
     return TODO("won't run")
 }

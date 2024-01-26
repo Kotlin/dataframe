@@ -4,7 +4,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter
 import org.jetbrains.kotlinx.dataframe.annotations.Arguments
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 
-@Interpretable(InterpretationError::class)
+@Interpretable("InterpretationError")
 fun interpretationError() {}
 
 class InterpretationError : AbstractInterpreter<Unit>() {

@@ -455,7 +455,7 @@ fun DataFrame<Bridge>.generateAtomsTests() {
                     import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
                     import org.jetbrains.kotlinx.dataframe.plugin.*
                     
-                    @Interpretable(${interpreterName}Identity::class)
+                    @Interpretable("${interpreterName}Identity")
                     public fun ${testSubjectName}(v: ${type.name}): ${type.name} {
                         return v
                     }

@@ -54,7 +54,7 @@ fun KotlinTypeFacade.generateSchemaTestStub(name: String, expression: () -> Data
                         import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
                         import org.jetbrains.kotlinx.dataframe.plugin.*
                         
-                        @Interpretable(${capitalizedName}::class)
+                        @Interpretable("${capitalizedName}")
                         public fun $name(): DataFrame<*> {
                             return TODO("won't run")
                         }

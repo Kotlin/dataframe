@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.*
 import org.jetbrains.kotlinx.dataframe.plugin.InsertClauseApproximation
 import org.jetbrains.kotlinx.dataframe.plugin.testing.test
 
-@Interpretable(InsertClauseIdentity::class)
+@Interpretable("InsertClauseIdentity")
 public fun <T> insertClause(v: InsertClause<T>): InsertClause<T> {
     return v
 }

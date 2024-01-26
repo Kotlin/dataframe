@@ -8,7 +8,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.TypeApproximation
 import org.jetbrains.kotlinx.dataframe.plugin.*
 import org.jetbrains.kotlinx.dataframe.plugin.testing.test
 
-@Interpretable(RowValueExpressionIdentity::class)
+@Interpretable("RowValueExpressionIdentity")
 public fun <T, R> rowValueExpression(v: RowValueExpression<T, Any?, R>): RowValueExpression<T, Any?, R> {
     return v
 }

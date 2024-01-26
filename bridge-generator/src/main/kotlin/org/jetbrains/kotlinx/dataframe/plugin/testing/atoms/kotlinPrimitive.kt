@@ -4,7 +4,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter
 import org.jetbrains.kotlinx.dataframe.annotations.Arguments
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 
-@Interpretable(KotlinPrimitive::class)
+@Interpretable("KotlinPrimitive")
 public fun kotlinPrimitive(v: Any?): Any? {
     return v
 }

@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.PluginDataFrameSchema
 import org.jetbrains.kotlinx.dataframe.plugin.dataFrame
 import org.jetbrains.kotlinx.dataframe.plugin.testing.test
 
-@Interpretable(DataFrameIdentity::class)
+@Interpretable("DataFrameIdentity")
 public fun dataFrame(v: DataFrame<*>): DataFrame<*> {
     return v
 }

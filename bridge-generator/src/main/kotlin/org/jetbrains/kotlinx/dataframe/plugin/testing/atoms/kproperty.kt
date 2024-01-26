@@ -8,7 +8,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.*
 import org.jetbrains.kotlinx.dataframe.plugin.testing.test
 import kotlin.reflect.KProperty
 
-@Interpretable(KpropertyIdentity::class)
+@Interpretable("KpropertyIdentity")
 public fun <R> kproperty(v: KProperty<R>): KProperty<R> {
     return v
 }

@@ -6,8 +6,8 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.TypeApproximation
 import org.jetbrains.kotlinx.dataframe.plugin.testing.test
 
-//public data class Context @Interpretable(ContextConstructor::class) constructor(val i: Int) {
-//    @Interpretable(MemberFunctionId::class)
+//public data class Context @Interpretable("ContextConstructor") constructor(val i: Int) {
+//    @Interpretable("MemberFunctionId")
 //    public fun id(): Context = this
 //}
 //
@@ -18,7 +18,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.testing.test
 //    }
 //}
 
-@Interpretable(TypeParameterId::class)
+@Interpretable("TypeParameterId")
 public fun <T> typeParameter() { }
 
 internal class TypeParameterId : AbstractInterpreter<TypeApproximation>() {

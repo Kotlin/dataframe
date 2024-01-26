@@ -11,7 +11,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.plugin.*
 import org.jetbrains.kotlinx.dataframe.plugin.testing.test
 
-@Interpretable(ColumnsSelectorIdentity::class)
+@Interpretable("ColumnsSelectorIdentity")
 public fun <T, C> columnsSelector(v: ColumnsSelector<T, C>): ColumnsSelector<T, C> {
     return v
 }

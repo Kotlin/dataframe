@@ -8,7 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.AddExpression
 import org.jetbrains.kotlinx.dataframe.plugin.*
 import org.jetbrains.kotlinx.dataframe.plugin.testing.test
 
-@Interpretable(AddExpressionIdentity::class)
+@Interpretable("AddExpressionIdentity")
 public fun <T, R> addExpression(v: AddExpression<T, R>): AddExpression<T, R> {
     return v
 }

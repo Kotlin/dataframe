@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.plugin.*
 import org.jetbrains.kotlinx.dataframe.plugin.testing.test
 
-@Interpretable(EnumIdentity::class)
+@Interpretable("EnumIdentity")
 public fun enum(v: Infer): Infer {
     return v
 }

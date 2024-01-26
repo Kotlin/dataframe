@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.TypeApproximation
 import org.jetbrains.kotlinx.dataframe.plugin.testing.test
 import kotlin.reflect.KProperty
 
-@Interpretable(VarargKPropertyIdentity::class)
+@Interpretable("VarargKPropertyIdentity")
 public fun <C> varargKProperty(vararg v: KProperty<C>): Array<out KProperty<C>> {
     return v
 }

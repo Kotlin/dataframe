@@ -8,7 +8,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.TypeApproximation
 import org.jetbrains.kotlinx.dataframe.plugin.testing.test
 import org.jetbrains.kotlinx.dataframe.plugin.type
 
-@Interpretable(TypeIdentity::class)
+@Interpretable("TypeIdentity")
 public fun <T, R> type(v: RowExpression<T, R>): RowExpression<T, R> {
     return v
 }

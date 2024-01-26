@@ -4,8 +4,8 @@ import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter
 import org.jetbrains.kotlinx.dataframe.annotations.Arguments
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 
-public data class Context @Interpretable(ContextConstructor::class) constructor(val i: Int) {
-    @Interpretable(MemberFunctionId::class)
+public data class Context @Interpretable("ContextConstructor") constructor(val i: Int) {
+    @Interpretable("MemberFunctionId")
     public fun id(): Context = this
 }
 
