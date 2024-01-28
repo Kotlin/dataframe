@@ -18,7 +18,12 @@ import kotlin.reflect.typeOf
  * Assert that we have got the same data that was originally saved on example creation.
  * Example generation project is currently located at https://github.com/Kopilov/arrow_example
  */
-internal fun assertEstimations(exampleFrame: AnyFrame, expectedNullable: Boolean, hasNulls: Boolean) {
+internal fun assertEstimations(
+    exampleFrame: AnyFrame,
+    expectedNullable: Boolean,
+    hasNulls: Boolean,
+    fromParquet: Boolean = false
+) {
     /**
      * In [exampleFrame] we get two concatenated batches. To assert the estimations, we should transform frame row number to batch row number
      */
@@ -129,10 +134,19 @@ internal fun assertEstimations(exampleFrame: AnyFrame, expectedNullable: Boolean
         assertValueOrNull(iBatch(i), element, LocalDate.ofEpochDay(iBatch(i).toLong() * 30))
     }
 
-    val datetimeCol = exampleFrame["date64"] as DataColumn<LocalDateTime?>
-    datetimeCol.type() shouldBe typeOf<LocalDateTime>().withNullability(expectedNullable)
-    datetimeCol.forEachIndexed { i, element ->
-        assertValueOrNull(iBatch(i), element, LocalDateTime.ofEpochSecond(iBatch(i).toLong() * 60 * 60 * 24 * 30, 0, ZoneOffset.UTC))
+    if (fromParquet){
+        //parquet format have only one type of date: https://github.com/apache/parquet-format/blob/master/LogicalTypes.md#date without time
+        val datetimeCol = exampleFrame["date64"] as DataColumn<LocalDate?>
+        datetimeCol.type() shouldBe typeOf<LocalDate>().withNullability(expectedNullable)
+        datetimeCol.forEachIndexed { i, element ->
+            assertValueOrNull(iBatch(i), element, LocalDate.ofEpochDay(iBatch(i).toLong() * 30))
+        }
+    }else {
+        val datetimeCol = exampleFrame["date64"] as DataColumn<LocalDateTime?>
+        datetimeCol.type() shouldBe typeOf<LocalDateTime>().withNullability(expectedNullable)
+        datetimeCol.forEachIndexed { i, element ->
+            assertValueOrNull(iBatch(i), element, LocalDateTime.ofEpochSecond(iBatch(i).toLong() * 60 * 60 * 24 * 30, 0, ZoneOffset.UTC))
+        }
     }
 
     val timeSecCol = exampleFrame["time32_seconds"] as DataColumn<LocalTime?>

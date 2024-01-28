@@ -583,4 +583,17 @@ internal class ArrowKtTest {
         val arrowStreamReader = ArrowStreamReader(ipcInputStream, RootAllocator())
         arrowStreamReader.toDataFrame() shouldBe expected
     }
+
+    @Test
+    fun testReadParquet(){
+        val path = testResource("test.arrow.parquet").path
+        val dataFrame = DataFrame.readParquet(URL("file:$path"))
+        dataFrame.rowsCount() shouldBe 300
+        assertEstimations(
+            exampleFrame = dataFrame,
+            expectedNullable = false,
+            hasNulls = false,
+            fromParquet = true
+        )
+    }
 }

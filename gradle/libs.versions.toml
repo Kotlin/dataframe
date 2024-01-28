@@ -30,7 +30,7 @@ sl4j = "2.0.7"
 junit = "4.13.2"
 kotestAsserions = "4.6.3"
 jsoup = "1.14.3"
-arrow = "11.0.0"
+arrow = "15.0.0"
 docProcessor = "0.2.3"
 simpleGit = "2.0.3"
 
@@ -65,6 +65,7 @@ jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 arrow-format = { group = "org.apache.arrow", name = "arrow-format", version.ref = "arrow" }
 arrow-vector = { group = "org.apache.arrow", name = "arrow-vector", version.ref = "arrow" }
 arrow-memory = { group = "org.apache.arrow", name = "arrow-memory-unsafe", version.ref = "arrow" }
+arrow-dataset = { group = "org.apache.arrow", name = "arrow-dataset", version.ref = "arrow" }
 
 kotlinpoet = { group = "com.squareup", name = "kotlinpoet", version.ref = "kotlinpoet" }
 swagger = { group = "io.swagger.parser.v3", name = "swagger-parser", version.ref = "openapi" }
