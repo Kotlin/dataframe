@@ -23,7 +23,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs.
  * This function {@getArg [NounArg]}s the {@getArg [FirstOrLastArg]} columns from [this\] adhering to the
  * given [predicate\] collecting the result into a [ColumnSet].
  *
- * This function only looks at columns at the top-level.
+ * This function operates solely on columns at the top-level.
  *
  * Any {@include [AccessApiLink]} can be used as receiver for these functions.
  *

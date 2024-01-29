@@ -175,7 +175,7 @@ public interface LastColumnsSelectionDsl {
      * Returns the last column from [this\] that adheres to the optional given [condition\].
      * If no column adheres to the given [condition\], [NoSuchElementException] is thrown.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
      *
@@ -208,7 +208,7 @@ public interface LastColumnsSelectionDsl {
      * Returns the last column from [this] that adheres to the optional given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
      *
@@ -243,7 +243,7 @@ public interface LastColumnsSelectionDsl {
      * Returns the last column from [this] that adheres to the optional given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
      *
@@ -273,7 +273,7 @@ public interface LastColumnsSelectionDsl {
      * Returns the last column from [this] that adheres to the optional given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
      *
@@ -303,7 +303,7 @@ public interface LastColumnsSelectionDsl {
      * Returns the last column from [this] that adheres to the optional given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
      *
@@ -333,7 +333,7 @@ public interface LastColumnsSelectionDsl {
      * Returns the last column from [this] that adheres to the optional given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
      *
@@ -365,7 +365,7 @@ public interface LastColumnsSelectionDsl {
      * Returns the last column from [this] that adheres to the optional given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
      *

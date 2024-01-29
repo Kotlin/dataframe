@@ -119,7 +119,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * You can optionally use a [filter\] to only include certain columns.
      * [colsOfKind] can be called using any of the supported [APIs][AccessApi] (+ [ColumnPath]).
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * ### Check out: [Grammar]
      *
@@ -157,7 +157,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * You can optionally use a [filter] to only include certain columns.
      * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
      *
@@ -203,7 +203,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * You can optionally use a [filter] to only include certain columns.
      * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
      *
@@ -245,7 +245,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * You can optionally use a [filter] to only include certain columns.
      * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
      *
@@ -287,7 +287,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * You can optionally use a [filter] to only include certain columns.
      * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
      *
@@ -326,7 +326,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * You can optionally use a [filter] to only include certain columns.
      * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
      *
@@ -365,7 +365,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * You can optionally use a [filter] to only include certain columns.
      * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
      *

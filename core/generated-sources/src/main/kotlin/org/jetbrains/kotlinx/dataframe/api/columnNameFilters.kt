@@ -133,7 +133,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * Returns a [ColumnSet] containing all columns from [this\] having
      * {@getArg [CommonNameContainsDocs.ArgumentArg]} in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][ColumnGroup], `nameContains` is named `colsNameContains` to avoid confusion.
      *
@@ -179,7 +179,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * [text]
      *  in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `nameContains` is named `colsNameContains` to avoid confusion.
      *
@@ -218,7 +218,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] having
      * [text] in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `nameContains` is named `colsNameContains` to avoid confusion.
      *
@@ -260,7 +260,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] having
      * [text] in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `nameContains` is named `colsNameContains` to avoid confusion.
      *
@@ -299,7 +299,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] having
      * [text] in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `nameContains` is named `colsNameContains` to avoid confusion.
      *
@@ -338,7 +338,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] having
      * [text] in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `nameContains` is named `colsNameContains` to avoid confusion.
      *
@@ -377,7 +377,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] having
      * [text] in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `nameContains` is named `colsNameContains` to avoid confusion.
      *
@@ -416,7 +416,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] having
      * [text] in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `nameContains` is named `colsNameContains` to avoid confusion.
      *
@@ -455,7 +455,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] having
      * [regex] in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `nameContains` is named `colsNameContains` to avoid confusion.
      *
@@ -490,7 +490,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] having
      * [regex] in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `nameContains` is named `colsNameContains` to avoid confusion.
      *
@@ -529,7 +529,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] having
      * [regex] in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `nameContains` is named `colsNameContains` to avoid confusion.
      *
@@ -565,7 +565,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] having
      * [regex] in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `nameContains` is named `colsNameContains` to avoid confusion.
      *
@@ -601,7 +601,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] having
      * [regex] in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `nameContains` is named `colsNameContains` to avoid confusion.
      *
@@ -637,7 +637,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] having
      * [regex] in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `nameContains` is named `colsNameContains` to avoid confusion.
      *
@@ -673,7 +673,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] having
      * [regex] in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `nameContains` is named `colsNameContains` to avoid confusion.
      *
@@ -711,7 +711,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * Returns a [ColumnSet] containing all columns from [this\]
      * {@getArg [CommonNameStartsEndsDocs.NounArg]} with {@getArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][ColumnGroup], the function is named `{@getArg [CommonNameStartsEndsDocs.ColsNameOperationNameArg]}` to avoid confusion.
      *
@@ -770,7 +770,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameEndsWith]
      * @see [nameContains] in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function is named `colsNameStartsWith` to avoid confusion.
      *
@@ -830,7 +830,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this]
      * starting with [prefix] in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function is named `colsNameStartsWith` to avoid confusion.
      *
@@ -870,7 +870,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this]
      * starting with [prefix] in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function is named `colsNameStartsWith` to avoid confusion.
      *
@@ -909,7 +909,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this]
      * starting with [prefix] in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function is named `colsNameStartsWith` to avoid confusion.
      *
@@ -948,7 +948,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this]
      * starting with [prefix] in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function is named `colsNameStartsWith` to avoid confusion.
      *
@@ -987,7 +987,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this]
      * starting with [prefix] in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function is named `colsNameStartsWith` to avoid confusion.
      *
@@ -1026,7 +1026,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this]
      * starting with [prefix] in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function is named `colsNameStartsWith` to avoid confusion.
      *
@@ -1072,7 +1072,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith]
      * @see [nameContains] in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function is named `colsNameEndsWith` to avoid confusion.
      *
@@ -1133,7 +1133,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this]
      * ending with [suffix] in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function is named `colsNameEndsWith` to avoid confusion.
      *
@@ -1173,7 +1173,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this]
      * ending with [suffix] in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function is named `colsNameEndsWith` to avoid confusion.
      *
@@ -1212,7 +1212,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this]
      * ending with [suffix] in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function is named `colsNameEndsWith` to avoid confusion.
      *
@@ -1251,7 +1251,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this]
      * ending with [suffix] in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function is named `colsNameEndsWith` to avoid confusion.
      *
@@ -1290,7 +1290,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this]
      * ending with [suffix] in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function is named `colsNameEndsWith` to avoid confusion.
      *
@@ -1329,7 +1329,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this]
      * ending with [suffix] in their name.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function is named `colsNameEndsWith` to avoid confusion.
      *

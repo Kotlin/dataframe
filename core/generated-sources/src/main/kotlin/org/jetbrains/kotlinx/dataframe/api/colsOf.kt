@@ -145,7 +145,7 @@ public interface ColsOfColumnsSelectionDsl {
      * Returns a [ColumnSet] of columns from [this\] that are a subtype of the given type [C\], optionally filtered
      * by [filter\].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * ### Check out: [Grammar]
      *
@@ -192,7 +192,7 @@ public interface ColsOfColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
      * by [filter].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
      *
@@ -242,7 +242,7 @@ public interface ColsOfColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
      * by [filter].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
      *
@@ -292,7 +292,7 @@ public interface ColsOfColumnsSelectionDsl {
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
      * by [filter].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
      *
@@ -343,7 +343,7 @@ public interface ColsOfColumnsSelectionDsl {
  * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
  * by [filter].
  *
- * This function only looks at columns at the top-level.
+ * This function operates solely on columns at the top-level.
  *
  * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
@@ -393,7 +393,7 @@ public fun <C> ColumnSet<*>.colsOf(
  * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
  * by [filter].
  *
- * This function only looks at columns at the top-level.
+ * This function operates solely on columns at the top-level.
  *
  * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
@@ -442,7 +442,7 @@ public inline fun <reified C> ColumnSet<*>.colsOf(
  * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
  * by [filter].
  *
- * This function only looks at columns at the top-level.
+ * This function operates solely on columns at the top-level.
  *
  * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
@@ -490,7 +490,7 @@ public fun <C> ColumnsSelectionDsl<*>.colsOf(
  * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
  * by [filter].
  *
- * This function only looks at columns at the top-level.
+ * This function operates solely on columns at the top-level.
  *
  * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
@@ -537,7 +537,7 @@ public inline fun <reified C> ColumnsSelectionDsl<*>.colsOf(
  * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
  * by [filter].
  *
- * This function only looks at columns at the top-level.
+ * This function operates solely on columns at the top-level.
  *
  * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
@@ -587,7 +587,7 @@ public fun <C> SingleColumn<DataRow<*>>.colsOf(
  * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
  * by [filter].
  *
- * This function only looks at columns at the top-level.
+ * This function operates solely on columns at the top-level.
  *
  * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *

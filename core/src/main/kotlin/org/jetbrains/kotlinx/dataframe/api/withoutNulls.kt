@@ -63,7 +63,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      * ## (Cols) Without Nulls
      * Returns a new [ColumnSet] that contains only columns in [this\] that do not have `null` values.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][ColumnGroup], `withoutNulls` is named `colsWithoutNulls` to avoid confusion.
      *

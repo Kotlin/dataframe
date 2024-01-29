@@ -243,7 +243,7 @@ public interface AllColumnsSelectionDsl {
      *
      * This makes the function equivalent to [cols()][ColumnsSelectionDsl.cols] without filter.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][ColumnGroup], `all` is named `allCols` instead to avoid confusion.
      *

@@ -18,7 +18,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs.Title
  * This {@getArg [NounArg]}s the {@getArg [FirstOrLastArg]} [n\] columns from [this\] collecting
  * the result into a [ColumnSet].
  *
- * This function only looks at columns at the top-level.
+ * This function operates solely on columns at the top-level.
  *
  * Any {@include [AccessApiLink]} can be used as receiver for these functions.
  *

@@ -102,7 +102,7 @@ public interface ColsColumnsSelectionDsl {
      * {@include [AccessApiLink]}. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Aside from calling [cols] directly, you can also use the [get][ColumnSet.get] operator in most cases.
      *

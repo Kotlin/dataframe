@@ -183,7 +183,7 @@ public interface DropColumnsSelectionDsl {
      * This drops the first [n] columns from [this] collecting
      * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -215,7 +215,7 @@ public interface DropColumnsSelectionDsl {
      * This drops the first [n] columns from [this] collecting
      * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -249,7 +249,7 @@ public interface DropColumnsSelectionDsl {
      * This drops the first [n] columns from [this] collecting
      * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -282,7 +282,7 @@ public interface DropColumnsSelectionDsl {
      * This drops the first [n] columns from [this] collecting
      * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -315,7 +315,7 @@ public interface DropColumnsSelectionDsl {
      * This drops the first [n] columns from [this] collecting
      * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -347,7 +347,7 @@ public interface DropColumnsSelectionDsl {
      * This drops the first [n] columns from [this] collecting
      * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -379,7 +379,7 @@ public interface DropColumnsSelectionDsl {
      * This drops the first [n] columns from [this] collecting
      * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -415,7 +415,7 @@ public interface DropColumnsSelectionDsl {
      * This drops the last [n] columns from [this] collecting
      * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -447,7 +447,7 @@ public interface DropColumnsSelectionDsl {
      * This drops the last [n] columns from [this] collecting
      * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -481,7 +481,7 @@ public interface DropColumnsSelectionDsl {
      * This drops the last [n] columns from [this] collecting
      * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -514,7 +514,7 @@ public interface DropColumnsSelectionDsl {
      * This drops the last [n] columns from [this] collecting
      * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -547,7 +547,7 @@ public interface DropColumnsSelectionDsl {
      * This drops the last [n] columns from [this] collecting
      * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -579,7 +579,7 @@ public interface DropColumnsSelectionDsl {
      * This drops the last [n] columns from [this] collecting
      * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -611,7 +611,7 @@ public interface DropColumnsSelectionDsl {
      * This drops the last [n] columns from [this] collecting
      * the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -647,7 +647,7 @@ public interface DropColumnsSelectionDsl {
      * This function drops the first columns from [this] adhering to the
      * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -678,7 +678,7 @@ public interface DropColumnsSelectionDsl {
      * This function drops the first columns from [this] adhering to the
      * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -712,7 +712,7 @@ public interface DropColumnsSelectionDsl {
      * This function drops the first columns from [this] adhering to the
      * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -744,7 +744,7 @@ public interface DropColumnsSelectionDsl {
      * This function drops the first columns from [this] adhering to the
      * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -776,7 +776,7 @@ public interface DropColumnsSelectionDsl {
      * This function drops the first columns from [this] adhering to the
      * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -808,7 +808,7 @@ public interface DropColumnsSelectionDsl {
      * This function drops the first columns from [this] adhering to the
      * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -840,7 +840,7 @@ public interface DropColumnsSelectionDsl {
      * This function drops the first columns from [this] adhering to the
      * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -876,7 +876,7 @@ public interface DropColumnsSelectionDsl {
      * This function drops the last columns from [this] adhering to the
      * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -907,7 +907,7 @@ public interface DropColumnsSelectionDsl {
      * This function drops the last columns from [this] adhering to the
      * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -941,7 +941,7 @@ public interface DropColumnsSelectionDsl {
      * This function drops the last columns from [this] adhering to the
      * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -973,7 +973,7 @@ public interface DropColumnsSelectionDsl {
      * This function drops the last columns from [this] adhering to the
      * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -1005,7 +1005,7 @@ public interface DropColumnsSelectionDsl {
      * This function drops the last columns from [this] adhering to the
      * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -1037,7 +1037,7 @@ public interface DropColumnsSelectionDsl {
      * This function drops the last columns from [this] adhering to the
      * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *
@@ -1071,7 +1071,7 @@ public interface DropColumnsSelectionDsl {
      * This function drops the last columns from [this] adhering to the
      * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
      *

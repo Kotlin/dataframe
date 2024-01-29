@@ -176,7 +176,7 @@ public interface FirstColumnsSelectionDsl {
      * Returns the first column from [this\] that adheres to the optional given [condition\].
      * If no column adheres to the given [condition\], [NoSuchElementException] is thrown.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
@@ -210,7 +210,7 @@ public interface FirstColumnsSelectionDsl {
      * Returns the first column from [this] that adheres to the optional given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
@@ -246,7 +246,7 @@ public interface FirstColumnsSelectionDsl {
      * Returns the first column from [this] that adheres to the optional given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
@@ -277,7 +277,7 @@ public interface FirstColumnsSelectionDsl {
      * Returns the first column from [this] that adheres to the optional given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
@@ -308,7 +308,7 @@ public interface FirstColumnsSelectionDsl {
      * Returns the first column from [this] that adheres to the optional given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
@@ -339,7 +339,7 @@ public interface FirstColumnsSelectionDsl {
      * Returns the first column from [this] that adheres to the optional given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
@@ -372,7 +372,7 @@ public interface FirstColumnsSelectionDsl {
      * Returns the first column from [this] that adheres to the optional given [condition].
      * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
-     * This function only looks at columns at the top-level.
+     * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
