@@ -35,7 +35,7 @@ internal fun <T, C, V : Comparable<V>> Reorder<T, C>.reorderImpl(
     val columnsWithPaths = df.getColumnsWithPaths(columns)
     if (columnsWithPaths.size == 1 && columnsWithPaths[0].isColumnGroup()) {
         val path = columnsWithPaths[0].path
-        return df.reorder { path.all().cast<C>() }.reorderImpl(desc, expression)
+        return df.reorder { path.allCols().cast<C>() }.reorderImpl(desc, expression)
     }
 
     var df = df

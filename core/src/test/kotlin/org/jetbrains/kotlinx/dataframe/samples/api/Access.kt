@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
+import org.jetbrains.kotlinx.dataframe.get
 import org.junit.Test
 
 class Access : TestBase() {
@@ -701,7 +702,7 @@ class Access : TestBase() {
     fun columnSelectorsUsages() {
         // SampleStart
         df.select { age and name }
-        df.fillNaNs { colsOf<Double>().recursively() }.withZero()
+        df.fillNaNs { colsAtAnyDepth().colsOf<Double>() }.withZero()
         df.remove { cols { it.hasNulls() } }
         df.group { cols { it.data != name } }.into { "nameless" }
         df.update { city }.notNull { it.lowercase() }
@@ -736,11 +737,11 @@ class Access : TestBase() {
         // range of columns
         df.select { name..age }
 
-        // all children of ColumnGroup
-        df.select { name.all() }
+        // all columns of ColumnGroup
+        df.select { name.allCols() }
 
-        // recursive traversal of all children columns excluding ColumnGroups
-        df.select { name.cols { !it.isColumnGroup() }.recursively() }
+        // traversal of columns at any depth from here excluding ColumnGroups
+        df.select { name.colsAtAnyDepth { !it.isColumnGroup() } }
 
         // SampleEnd
     }
@@ -774,11 +775,11 @@ class Access : TestBase() {
         // range of columns
         df.select { name..age }
 
-        // all children of ColumnGroup
-        df.select { name.all() }
+        // all columns of ColumnGroup
+        df.select { name.allCols() }
 
-        // recursive traversal of all children columns excluding ColumnGroups
-        df.select { name.cols { !it.isColumnGroup() }.recursively() }
+        // traversal of columns at any depth from here excluding ColumnGroups
+        df.select { name.colsAtAnyDepth { !it.isColumnGroup() } }
         // SampleEnd
     }
 
@@ -809,11 +810,11 @@ class Access : TestBase() {
         // range of columns
         df.select { Person::name..Person::age }
 
-        // all children of ColumnGroup
-        df.select { Person::name.all() }
+        // all columns of ColumnGroup
+        df.select { Person::name.allCols() }
 
-        // recursive traversal of all children columns excluding groups
-        df.select { Person::name.cols { !it.isColumnGroup() }.recursively() }
+        // traversal of columns at any depth from here excluding ColumnGroups
+        df.select { Person::name.colsAtAnyDepth { !it.isColumnGroup() } }
         // SampleEnd
     }
 
@@ -843,11 +844,11 @@ class Access : TestBase() {
         // by range of names
         df.select { "name".."age" }
 
-        // all children of ColumnGroup
-        df.select { "name".all() }
+        // all columns of ColumnGroup
+        df.select { "name".allCols() }
 
-        // recursive traversal of all children columns excluding groups
-        df.select { "name".cols { !it.isColumnGroup() }.recursively() }
+        // traversal of columns at any depth from here excluding ColumnGroups
+        df.select { "name".colsAtAnyDepth { !it.isColumnGroup() } }
         // SampleEnd
     }
 
@@ -897,25 +898,25 @@ class Access : TestBase() {
 
         // find the last column inside a column group satisfying the condition
         df.select {
-            colGroup("name").last { it.name().endsWith("Name") }
+            colGroup("name").lastCol { it.name().endsWith("Name") }
         }
 
         // find the single column inside a column group satisfying the condition
         df.select {
-            Person::name.single { it.name().startsWith("first") }
+            Person::name.singleCol { it.name().startsWith("first") }
         }
 
-        // recursive traversal of all columns, excluding ColumnGroups from result
-        df.select { cols { !it.isColumnGroup() }.recursively() }
+        // traversal of columns at any depth from here excluding ColumnGroups
+        df.select { colsAtAnyDepth { !it.isColumnGroup() } }
 
-        // depth-first-search traversal of all columns, including ColumnGroups in result
-        df.select { all().recursively() }
+        // traversal of columns at any depth from here including ColumnGroups
+        df.select { colsAtAnyDepth() }
 
-        // recursive traversal with condition
-        df.select { cols { it.name().contains(":") }.recursively() }
+        // traversal of columns at any depth with condition
+        df.select { colsAtAnyDepth { it.name().contains(":") } }
 
-        // recursive traversal of columns of given type
-        df.select { colsOf<String>().rec() }
+        // traversal of columns at any depth to find columns of given type
+        df.select { colsAtAnyDepth().colsOf<String>() }
 
         // all columns except given column set
         df.select { except { colsOf<String>() } }
@@ -930,18 +931,18 @@ class Access : TestBase() {
     fun columnSelectorsModifySet() {
         // SampleStart
         // first/last n value- and frame columns in column set
-        df.select { cols { !it.isColumnGroup() }.recursively().take(3) }
-        df.select { cols { !it.isColumnGroup() }.recursively().takeLast(3) }
+        df.select { colsAtAnyDepth { !it.isColumnGroup() }.take(3) }
+        df.select { colsAtAnyDepth { !it.isColumnGroup() }.takeLast(3) }
 
         // all except first/last n value- and frame columns in column set
-        df.select { cols { !it.isColumnGroup() }.recursively().drop(3) }
-        df.select { cols { !it.isColumnGroup() }.recursively().dropLast(3) }
+        df.select { colsAtAnyDepth { !it.isColumnGroup() }.drop(3) }
+        df.select { colsAtAnyDepth { !it.isColumnGroup() }.dropLast(3) }
 
         // filter column set by condition
-        df.select { cols { !it.isColumnGroup() }.rec().filter { it.name().startsWith("year") } }
+        df.select { colsAtAnyDepth { !it.isColumnGroup() }.filter { it.name().startsWith("year") } }
 
         // exclude columns from column set
-        df.select { cols { !it.isColumnGroup() }.rec().except { age } }
+        df.select { colsAtAnyDepth { !it.isColumnGroup() }.except { age } }
 
         // keep only unique columns
         df.select { (colsOf<Int>() and age).distinct() }

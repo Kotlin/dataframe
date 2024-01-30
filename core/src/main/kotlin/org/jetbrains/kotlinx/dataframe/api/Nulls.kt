@@ -16,14 +16,20 @@ import kotlin.reflect.KProperty
  * Replaces `null` values with given value or expression.
  * Specific case of [update].
  *
- * Check out the [`fillNulls` Operation Usage][FillNulls.Usage].
+ * ### Check out: [Grammar][FillNulls.Grammar]
  *
  * For more information: {@include [DocumentationUrls.Fill.FillNulls]}
  */
 internal interface FillNulls {
 
-    /** @include [Update.Usage] {@setArg [UpdateOperationArg] [fillNulls][fillNulls]} */
-    interface Usage
+    /** @include [Update.Grammar] {@setArg [UpdateOperationArg] [**fillNulls**][fillNulls]} */
+    interface Grammar
+
+    /**
+     * {@comment Version of [SelectingColumns] with correctly filled in examples}
+     * @include [SelectingColumns] {@include [SetFillNullsOperationArg]}
+     */
+    interface FillNullsSelectingOptions
 }
 
 /** {@setArg [SelectingColumns.OperationArg] [fillNulls][fillNulls]} */
@@ -33,8 +39,8 @@ private interface SetFillNullsOperationArg
  * @include [FillNulls] {@comment Description of the fillNulls operation.}
  * @include [LineBreak]
  * @include [Update.Columns] {@comment Description of what this function expects the user to do: select columns}
- *
- * ## This Fill Nulls Overload
+ * {@setArg [Update.Columns.SelectingColumnsArg] [Selecting Columns][FillNulls.FillNullsSelectingOptions]}
+ * ### This Fill Nulls Overload
  *
  */
 private interface CommonFillNullsFunctionDoc
@@ -101,14 +107,20 @@ internal inline val Float?.isNA: Boolean get() = this == null || this.isNaN()
  * Replaces [`NaN`][NaN] values with given value or expression.
  * Specific case of [update].
  *
- * Check out the [`fillNaNs` Operation Usage][FillNaNs.Usage].
+ * ### Check out: [Grammar][FillNaNs.Grammar]
  *
  * For more information: {@include [DocumentationUrls.Fill.FillNaNs]}
  */
 internal interface FillNaNs {
 
-    /** @include [Update.Usage] {@setArg [Update.UpdateOperationArg] [fillNaNs][fillNaNs]} */
-    interface Usage
+    /** @include [Update.Grammar] {@setArg [Update.UpdateOperationArg] [fillNaNs][fillNaNs]} */
+    interface Grammar
+
+    /**
+     * {@comment Version of [SelectingColumns] with correctly filled in examples}
+     * @include [SelectingColumns] {@include [SetFillNaNsOperationArg]}
+     */
+    interface FillNaNsSelectingOptions
 }
 
 /** {@setArg [SelectingColumns.OperationArg] [fillNaNs][fillNaNs]} */
@@ -118,7 +130,8 @@ internal interface SetFillNaNsOperationArg
  * @include [FillNaNs] {@comment Description of the fillNaNs operation.}
  * @include [LineBreak]
  * @include [Update.Columns] {@comment Description of what this function expects the user to do: select columns}
- * ## This Fill NaNs Overload
+ * {@setArg [Update.Columns.SelectingColumnsArg] [Selecting Columns][FillNaNs.FillNaNsSelectingOptions]}
+ * ### This Fill NaNs Overload
  */
 private interface CommonFillNaNsFunctionDoc
 
@@ -164,14 +177,20 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: ColumnReference<C>): Upd
  * Replaces [`NA`][NA] values with given value or expression.
  * Specific case of [update].
  *
- * Check out the [`fillNA` Operation Usage][FillNA.Usage].
+ * ### Check out: [Grammar][FillNA.Grammar]
  *
  * For more information: {@include [DocumentationUrls.Fill.FillNA]}
  */
 internal interface FillNA {
 
-    /** @include [Update.Usage] {@setArg [Update.UpdateOperationArg] [fillNA][fillNA]} */
-    interface Usage
+    /** @include [Update.Grammar] {@setArg [Update.UpdateOperationArg] [fillNA][fillNA]} */
+    interface Grammar
+
+    /**
+     * {@comment Version of [SelectingColumns] with correctly filled in examples}
+     * @include [SelectingColumns] {@include [SetFillNAOperationArg]}
+     */
+    interface FillNASelectingOptions
 }
 
 /** {@setArg [SelectingColumns.OperationArg] [fillNA][fillNA]} */
@@ -181,7 +200,8 @@ internal interface SetFillNAOperationArg
  * @include [FillNA] {@comment Description of the fillNA operation.}
  * @include [LineBreak]
  * @include [Update.Columns] {@comment Description of what this function expects the user to do: select columns}
- * ## This Fill NA Overload
+ * {@setArg [Update.Columns.SelectingColumnsArg] [Selecting Columns][FillNA.FillNASelectingOptions]}
+ * ### This Fill NA Overload
  */
 private interface CommonFillNAFunctionDoc
 
@@ -219,16 +239,16 @@ public fun <T, C> DataFrame<T>.fillNA(vararg columns: ColumnReference<C>): Updat
 
 // endregion
 
-/** @param columns The {@include [SelectingColumns.DslLink]} used to select the columns of this [DataFrame] to drop rows in. */
+/** @param columns The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to drop rows in. */
 private interface DropDslParam
 
-/** @param columns The {@include [SelectingColumns.KPropertiesLink]} used to select the columns of this [DataFrame] to drop rows in. */
+/** @param columns The [KProperties][KProperty] used to select the columns of this [DataFrame] to drop rows in. */
 private interface DropKPropertiesParam
 
-/** @param columns The {@include [SelectingColumns.ColumnNamesLink]} used to select the columns of this [DataFrame] to drop rows in. */
+/** @param columns The [Strings][String] corresponding to the names of colums in this [DataFrame] to drop rows in. */
 private interface DropColumnNamesParam
 
-/** @param columns The {@include [SelectingColumns.ColumnAccessors]} used to select the columns of this [DataFrame] to drop rows in. */
+/** @param columns The [Column References][ColumnReference] used to select the columns of this [DataFrame] to drop rows in. */
 private interface DropColumnAccessorsParam
 
 // region dropNulls
@@ -238,7 +258,8 @@ private interface DropColumnAccessorsParam
  *
  * Removes rows with `null` values. Specific case of [drop][DataFrame.drop].
  *
- * Optionally, you can select which columns to operate on (see {@include [SelectingColumnsLink]}).
+ * Optionally, you can select which columns to operate on (see [Selecting Columns][DropNullsSelectingOptions]).
+ *
  * Also, you can supply `whereAllNull = true` to only drop rows where all selected cells are `null`. By default,
  * rows are dropped if any of the selected cells are `null`.
  *
@@ -252,6 +273,12 @@ internal interface DropNulls {
      *   If `false`, rows are dropped if any of the selected cells is `null`.
      */
     interface WhereAllNullParam
+
+    /**
+     * {@comment Version of [SelectingColumns] with correctly filled in examples}
+     * @include [SelectingColumns] {@include [SetDropNullsOperationArg]}
+     */
+    interface DropNullsSelectingOptions
 }
 
 /** {@setArg [SelectingColumns.OperationArg] [dropNulls][dropNulls]} */
@@ -259,7 +286,7 @@ private interface SetDropNullsOperationArg
 
 /**
  * @include [DropNulls] {@comment Description of the dropNulls operation.}
- * ## This Drop Nulls Overload
+ * ### This Drop Nulls Overload
  */
 private interface CommonDropNullsFunctionDoc
 
@@ -331,7 +358,7 @@ public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> =
  *
  * Removes rows with [`NA`][NA] values. Specific case of [drop][DataFrame.drop].
  *
- * Optionally, you can select which columns to operate on (see {@include [SelectingColumnsLink]}).
+ * Optionally, you can select which columns to operate on (see [Selecting Columns][DropNASelectingOptions]).
  * Also, you can supply `whereAllNA = true` to only drop rows where all selected cells are [`NA`][NA]. By default,
  * rows are dropped if any of the selected cells are [`NA`][NA].
  *
@@ -345,6 +372,12 @@ internal interface DropNA {
      *   If `false`, rows are dropped if any of the selected cells is [`NA`][NA].
      */
     interface WhereAllNAParam
+
+    /**
+     * {@comment Version of [SelectingColumns] with correctly filled in examples}
+     * @include [SelectingColumns] {@include [SetDropNAOperationArg]}
+     */
+    interface DropNASelectingOptions
 }
 
 /** {@setArg [SelectingColumns.OperationArg] [dropNA][dropNA]} */
@@ -352,7 +385,7 @@ private interface SetDropNAOperationArg
 
 /**
  * @include [DropNA] {@comment Description of the dropNA operation.}
- * ## This Drop NA Overload
+ * ### This Drop NA Overload
  */
 private interface CommonDropNAFunctionDoc
 
@@ -427,7 +460,7 @@ public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> =
  *
  * Removes rows with [`NaN`][Double.isNaN] values. Specific case of [drop][DataFrame.drop].
  *
- * Optionally, you can select which columns to operate on (see {@include [SelectingColumnsLink]}).
+ * Optionally, you can select which columns to operate on (see [Selecting Columns][DropNaNsSelectingOptions]).
  * Also, you can supply `whereAllNaN = true` to only drop rows where all selected cells are [`NaN`][Double.isNaN]. By default,
  * rows are dropped if any of the selected cells are [`NaN`][Double.isNaN].
  *
@@ -441,6 +474,12 @@ internal interface DropNaNs {
      *   If `false`, rows are dropped if any of the selected cells is [`NaN`][Double.isNaN].
      */
     interface WhereAllNaNParam
+
+    /**
+     * {@comment Version of [SelectingColumns] with correctly filled in examples}
+     * @include [SelectingColumns] {@include [SetDropNaNsOperationArg]}
+     */
+    interface DropNaNsSelectingOptions
 }
 
 /** {@setArg [SelectingColumns.OperationArg] [dropNaNs][dropNaNs]} */
@@ -448,7 +487,7 @@ private interface SetDropNaNsOperationArg
 
 /**
  * @include [DropNaNs] {@comment Description of the dropNaNs operation.}
- * ## This Drop NaNs Overload
+ * ### This Drop NaNs Overload
  */
 private interface CommonDropNaNsFunctionDoc
 

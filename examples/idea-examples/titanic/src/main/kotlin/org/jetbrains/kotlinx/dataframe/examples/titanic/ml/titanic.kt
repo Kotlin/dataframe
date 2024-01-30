@@ -83,11 +83,11 @@ private fun <T> OnHeapDataset.Companion.create(
 
     fun extractX(): Array<FloatArray> =
         dataframe.remove(yColumn)
-            .convert { cols { !it.isColumnGroup() }.rec() }.toFloat()
-            .merge { colsOf<Float>().recursively() }.by { it.toFloatArray() }.into(x)
+            .convert { colsAtAnyDepth { !it.isColumnGroup() } }.toFloat()
+            .merge { colsAtAnyDepth().colsOf<Float>() }.by { it.toFloatArray() }.into(x)
             .getColumn(x).toTypedArray()
 
-    fun extractY(): FloatArray = dataframe[yColumn].toFloatArray()
+    fun extractY(): FloatArray = dataframe.get(yColumn).toFloatArray()
 
     return create(
         ::extractX,

@@ -11,5 +11,5 @@ public class TypeConverterNotFoundException(
 ) : IllegalArgumentException() {
 
     override val message: String
-        get() = "Type converter from $from to $to is not found" + (column?.let { " for column ${it.joinToString()}" } ?: "")
+        get() = "Type converter from $from to $to is not found" + (column?.let { " for column '${it.joinToString()}'" } ?: "")
 }

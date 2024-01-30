@@ -13,7 +13,6 @@ import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.minBy
 import org.jetbrains.kotlinx.dataframe.api.move
-import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.with
@@ -137,7 +136,7 @@ class PlaylistJsonTest {
     @Test
     fun `deep batch update all`() {
         val updated = item
-            .convert { cols { it.name() == "url" }.rec() }
+            .convert { colsAtAnyDepth { it.name() == "url" } }
             .with { (it as? String)?.let { IMG(it) } }
         updated.snippet.thumbnails.default.url.type() shouldBe typeOf<IMG>()
         updated.snippet.thumbnails.maxres.url.type() shouldBe typeOf<IMG?>()
@@ -149,7 +148,7 @@ class PlaylistJsonTest {
     @Test
     fun `select group`() {
         item.select { snippet.thumbnails.default }.columnsCount() shouldBe 1
-        item.select { snippet.thumbnails.default.all() }.columnsCount() shouldBe 3
+        item.select { snippet.thumbnails.default.allCols() }.columnsCount() shouldBe 3
     }
 
     @Test

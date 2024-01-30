@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.anyNull
@@ -122,7 +123,13 @@ public fun DataColumn<Number>.toByteArray(): ByteArray = convertTo<Byte>().toLis
 
 // endregion
 
+public fun AnyCol.asValueColumn(): ValueColumn<*> = this as ValueColumn<*>
+
+@JvmName("asColumnGroupUntyped")
 public fun AnyCol.asColumnGroup(): ColumnGroup<*> = this as ColumnGroup<*>
+
+@JvmName("asFrameColumnUntyped")
+public fun AnyCol.asFrameColumn(): FrameColumn<*> = this as FrameColumn<*>
 
 public fun <T> DataColumn<DataFrame<T>>.asFrameColumn(): FrameColumn<T> =
     (this as AnyCol).asAnyFrameColumn().castFrameColumn()
@@ -142,6 +149,71 @@ public fun <T> ColumnGroup<T>.asDataFrame(): DataFrame<T> = this
 
 // endregion
 
+// region SingleColumn
+
+/**
+ * ## As ColumnGroup
+ *
+ * Creates a [ColumnAccessor][ColumnAccessor]`<`[DataRow][DataRow]`<`[C][C\]`>>` from [this][this\].
+ * This is especially useful when you want to use [ColumnGroup] functions in the [ColumnsSelectionDsl] but your column
+ * type is not recognized as a [ColumnGroup].
+ * If you're not sure whether a column is recognized as [ColumnGroup] or not, you can always call [asColumnGroup][asColumnGroup\]
+ * and it will return the same type if it is already a [ColumnGroup].
+ *
+ * NOTE: This does not check whether the column is actually a [ColumnGroup] or not. It just casts it.
+ *
+ * #### For example:
+ *
+ * `df.`[select][DataFrame.select]` { `[first][ColumnsSelectionDsl.first]`().`[asColumnGroup][SingleColumn.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
+ *
+ * @receiver The column reference to cast to a [SingleColumn]`<`[DataRow][DataRow]`<`[C][C\]`>>`.
+ * @param [C\] The type of the (group) column.
+ * @return A [SingleColumn]`<`[DataRow][DataRow]`<`[C][C\]`>>`.
+ */
+private interface SingleColumnAsColumnGroupDocs
+
+/** ## As ColumnGroup
+ *
+ * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>` from [this][this].
+ * This is especially useful when you want to use [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] functions in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] but your column
+ * type is not recognized as a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ * If you're not sure whether a column is recognized as [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not, you can always call [asColumnGroup][asColumnGroup]
+ * and it will return the same type if it is already a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ *
+ * NOTE: This does not check whether the column is actually a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not. It just casts it.
+ *
+ * #### For example:
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`().`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
+ *
+ * @receiver The column reference to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ * @param [C] The type of the (group) column.
+ * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`. */
+@Suppress("UNCHECKED_CAST")
+public fun <C> SingleColumn<C>.asColumnGroup(): SingleColumn<DataRow<C>> = this as SingleColumn<DataRow<C>>
+
+/** ## As ColumnGroup
+ *
+ * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>` from [this][this].
+ * This is especially useful when you want to use [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] functions in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] but your column
+ * type is not recognized as a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ * If you're not sure whether a column is recognized as [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not, you can always call [asColumnGroup][asColumnGroup]
+ * and it will return the same type if it is already a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ *
+ * NOTE: This does not check whether the column is actually a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not. It just casts it.
+ *
+ * #### For example:
+ *
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`().`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
+ *
+ * @receiver The column reference to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ * @param [C] The type of the (group) column.
+ * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`. */
+@JvmName("asColumnGroupDataRow")
+public fun <C> SingleColumn<DataRow<C>>.asColumnGroup(): SingleColumn<DataRow<C>> = this
+
+// endregion
+
 // region FrameColumn
 
 public fun <T> FrameColumn<T>.asDataColumn(): DataColumn<DataFrame<T>?> = this
@@ -156,10 +228,18 @@ public fun <T> FrameColumn<T>.toValueColumn(): ValueColumn<DataFrame<T>?> =
 @JvmName("asNumbersAny")
 public fun ColumnSet<Any>.asNumbers(): ColumnSet<Number> = this as ColumnSet<Number>
 
+@JvmName("asNumbersAny")
+public fun SingleColumn<Any>.asNumbers(): SingleColumn<Number> = this as SingleColumn<Number>
+
 @JvmName("asNumbersAnyNullable")
 public fun ColumnSet<Any?>.asNumbers(): ColumnSet<Number?> = this as ColumnSet<Number?>
 
+@JvmName("asNumbersAnyNullable")
+public fun SingleColumn<Any?>.asNumbers(): SingleColumn<Number?> = this as SingleColumn<Number?>
+
 public fun <T> ColumnSet<T>.asComparable(): ColumnSet<Comparable<T>> = this as ColumnSet<Comparable<T>>
+
+public fun <T> SingleColumn<T>.asComparable(): SingleColumn<Comparable<T>> = this as SingleColumn<Comparable<T>>
 
 // endregion
 
@@ -203,7 +283,7 @@ public enum class Infer {
      * @param [infer\] [An enum][Infer] that indicates how [DataColumn.type] should be calculated.
      * Either [None], [Nulls], or [Type].
      */
-    internal interface Param
+    internal interface ParamDoc
 }
 
 /**

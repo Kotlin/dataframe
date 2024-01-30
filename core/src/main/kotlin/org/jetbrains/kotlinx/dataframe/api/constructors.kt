@@ -59,12 +59,55 @@ public inline fun <reified T> column(
     noinline expression: RowExpression<Any?, T>,
 ): ColumnReference<T> = createComputedColumnReference(name, typeOf<T>(), infer, expression)
 
+@Suppress("UNCHECKED_CAST", "UNUSED_PARAMETER")
 public inline fun <T, reified C> column(
     df: DataFrame<T>,
     name: String = "",
     infer: Infer = Infer.Nulls,
     noinline expression: RowExpression<T, C>,
 ): ColumnReference<C> = createComputedColumnReference(name, typeOf<C>(), infer, expression as RowExpression<Any?, C>)
+
+// endregion
+
+// region valueColumn
+
+public fun valueColumn(): ColumnDelegate<Any?> = column()
+
+@JvmName("valueColumnTyped")
+public fun <T> valueColumn(): ColumnDelegate<T> = column()
+
+public fun valueColumn(name: String): ColumnAccessor<Any?> = column(name)
+
+@JvmName("valueColumnTyped")
+public fun <T> valueColumn(name: String): ColumnAccessor<T> = column(name)
+
+public fun valueColumn(path: ColumnPath): ColumnAccessor<Any?> = column(path)
+
+@JvmName("valueColumnTyped")
+public fun <T> valueColumn(path: ColumnPath): ColumnAccessor<T> = column(path)
+
+public fun <T> valueColumn(property: KProperty<T>): ColumnAccessor<T> = column(property.name)
+
+public fun ColumnGroupReference.valueColumn(): ColumnDelegate<Any?> = ColumnDelegate(this)
+
+@JvmName("valueColumnTyped")
+public fun <T> ColumnGroupReference.valueColumn(): ColumnDelegate<T> = ColumnDelegate(this)
+
+public fun ColumnGroupReference.valueColumn(name: String): ColumnAccessor<Any?> = ColumnAccessorImpl(path() + name)
+
+@JvmName("valueColumnTyped")
+public fun <T> ColumnGroupReference.valueColumn(name: String): ColumnAccessor<T> =
+    ColumnAccessorImpl(path() + name)
+
+public fun ColumnGroupReference.valueColumn(path: ColumnPath): ColumnAccessor<Any?> =
+    ColumnAccessorImpl(this.path() + path)
+
+@JvmName("valueColumnTyped")
+public fun <T> ColumnGroupReference.valueColumn(path: ColumnPath): ColumnAccessor<T> =
+    ColumnAccessorImpl(this.path() + path)
+
+public fun <T> ColumnGroupReference.valueColumn(property: KProperty<T>): ColumnAccessor<T> =
+    ColumnAccessorImpl(this.path() + property.name)
 
 // endregion
 
@@ -270,7 +313,7 @@ public class DataFrameBuilder(private val header: List<String>) {
 
         val ncol = header.size
 
-        require(header.size > 0 && list.size.rem(ncol) == 0) {
+        require(header.isNotEmpty() && list.size.rem(ncol) == 0) {
             "Number of values ${list.size} is not divisible by number of columns $ncol"
         }
 

@@ -9,7 +9,7 @@ import kotlin.reflect.KProperty
 
 // region Array
 
-public fun Array<out ColumnSet<*>>.toColumnSet(): ColumnSet<Any?> = ColumnsList(asList())
+public fun Array<out ColumnsResolver<*>>.toColumnSet(): ColumnSet<Any?> = ColumnsList(asList())
 
 @JvmName("toColumnSetString")
 public fun Array<out String>.toColumnSet(): ColumnSet<Any?> = map { it.toColumnAccessor() }.toColumnSet()
@@ -20,7 +20,7 @@ public fun Array<out ColumnPath>.toColumnSet(): ColumnSet<Any?> = map { it.toCol
 public fun <C> Array<out KProperty<C>>.toColumnSet(): ColumnSet<C> = map { it.toColumnAccessor() }.toColumnSet()
 
 @JvmName("toColumnSetC")
-public fun <C> Array<out ColumnSet<C>>.toColumnSet(): ColumnSet<C> = ColumnsList(asList())
+public fun <C> Array<out ColumnsResolver<C>>.toColumnSet(): ColumnSet<C> = ColumnsList(asList())
 
 public fun <C> Array<out ColumnReference<C>>.toColumnSet(): ColumnSet<C> = asIterable().toColumnSet()
 
@@ -28,7 +28,7 @@ public fun <C> Array<out ColumnReference<C>>.toColumnSet(): ColumnSet<C> = asIte
 
 // region Iterable
 
-public fun Iterable<ColumnSet<*>>.toColumnSet(): ColumnSet<Any?> = ColumnsList(asList())
+public fun Iterable<ColumnsResolver<*>>.toColumnSet(): ColumnSet<Any?> = ColumnsList(asList())
 
 @JvmName("toColumnSetString")
 public fun Iterable<String>.toColumnSet(): ColumnSet<Any?> = map { it.toColumnAccessor() }.toColumnSet()
@@ -40,7 +40,7 @@ public fun Iterable<ColumnPath>.toColumnSet(): ColumnSet<Any?> = map { it.toColu
 public fun <C> Iterable<KProperty<C>>.toColumnSet(): ColumnSet<C> = map { it.toColumnAccessor() }.toColumnSet()
 
 @JvmName("toColumnSetC")
-public fun <C> Iterable<ColumnSet<C>>.toColumnSet(): ColumnSet<C> = ColumnsList(toList())
+public fun <C> Iterable<ColumnsResolver<C>>.toColumnSet(): ColumnSet<C> = ColumnsList(toList())
 
 @JvmName("toColumnSetColumnReference")
 public fun <C> Iterable<ColumnReference<C>>.toColumnSet(): ColumnSet<C> = ColumnsList(toList())

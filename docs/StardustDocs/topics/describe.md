@@ -41,7 +41,7 @@ To describe only specific columns, pass them as an argument:
 <tab title="Properties">
 
 ```kotlin
-df.describe { age and name.all() }
+df.describe { age and name.allCols() }
 ```
 
 </tab>
@@ -51,14 +51,14 @@ df.describe { age and name.all() }
 val age by column<Int>()
 val name by columnGroup()
 
-df.describe { age and name.all() }
+df.describe { age and name.allCols() }
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-df.describe { "age" and "name".all() }
+df.describe { "age" and "name".allCols() }
 ```
 
 </tab></tabs>

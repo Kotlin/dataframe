@@ -4,9 +4,11 @@ import io.kotest.assertions.asClue
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
+import org.jetbrains.kotlinx.dataframe.samples.api.age
 import org.junit.Test
 
-class RenameTests {
+class RenameTests : ColumnsSelectionDslTests() {
+
     companion object {
         val simpleDf = dataFrameOf("a", "b", "c")(
             1, 2, 3,
@@ -48,7 +50,7 @@ class RenameTests {
         ).group { "a_renamed" and "b_renamed" }.into("group_renamed")
 
         groupedDf
-            .rename { all().recursively() }
+            .rename { colsAtAnyDepth() }
             .into { it.name + "_renamed" } shouldBe renamedDf
     }
 
@@ -61,8 +63,88 @@ class RenameTests {
             .group { "group_renamed"["a_renamed"] }.into { "group_renamed"["aGroup_renamed"] }
 
         doubleGroupedDf
-            .rename { all().recursively() }
+            .rename { colsAtAnyDepth() }
             .into { it.name + "_renamed" } shouldBe renamedDf
+    }
+
+    interface Person2 {
+        val age2: Int
+    }
+
+    @Test
+    fun `selection dsl`() {
+        val age2 by column<Int>()
+        val dfRenamed = df.rename { age }.into(age2)
+
+        listOf(
+            dfRenamed.select { age2 },
+
+            df.select { expr { age } named "age2" },
+            df.select { expr { age } into "age2" },
+            df.select { expr { age } named age2 },
+            df.select { expr { age } into age2 },
+            df.select { expr { age } named Person2::age2 },
+            df.select { expr { age } into Person2::age2 },
+            df.select { expr { age } named pathOf("age2") },
+            df.select { expr { age } into pathOf("age2") },
+            df.select { expr { age } named col("age2") },
+            df.select { expr { age } into col("age2") },
+
+            df.select { age named "age2" },
+            df.select { age into "age2" },
+            df.select { age named age2 },
+            df.select { age into age2 },
+            df.select { age named Person2::age2 },
+            df.select { age into Person2::age2 },
+            df.select { age named pathOf("age2") },
+            df.select { age into pathOf("age2") },
+            df.select { age named col("age2") },
+            df.select { age into col("age2") },
+
+            df.select { "age" named "age2" },
+            df.select { "age" into "age2" },
+            df.select { "age" named age2 },
+            df.select { "age" into age2 },
+            df.select { "age" named Person2::age2 },
+            df.select { "age" into Person2::age2 },
+            df.select { "age" named pathOf("age2") },
+            df.select { "age" into pathOf("age2") },
+            df.select { "age" named col("age2") },
+            df.select { "age" into col("age2") },
+
+            df.select { Person::age named "age2" },
+            df.select { Person::age into "age2" },
+            df.select { Person::age named age2 },
+            df.select { Person::age into age2 },
+            df.select { Person::age named Person2::age2 },
+            df.select { Person::age into Person2::age2 },
+            df.select { Person::age named pathOf("age2") },
+            df.select { Person::age into pathOf("age2") },
+            df.select { Person::age named col("age2") },
+            df.select { Person::age into col("age2") },
+
+            df.select { pathOf("age") named "age2" },
+            df.select { pathOf("age") into "age2" },
+            df.select { pathOf("age") named age2 },
+            df.select { pathOf("age") into age2 },
+            df.select { pathOf("age") named Person2::age2 },
+            df.select { pathOf("age") into Person2::age2 },
+            df.select { pathOf("age") named pathOf("age2") },
+            df.select { pathOf("age") into pathOf("age2") },
+            df.select { pathOf("age") named col("age2") },
+            df.select { pathOf("age") into col("age2") },
+
+            df.select { col("age") named "age2" },
+            df.select { col("age") into "age2" },
+            df.select { col("age") named age2 },
+            df.select { col("age") into age2 },
+            df.select { col("age") named Person2::age2 },
+            df.select { col("age") into Person2::age2 },
+            df.select { col("age") named pathOf("age2") },
+            df.select { col("age") into pathOf("age2") },
+            df.select { col("age") named col("age2") },
+            df.select { col("age") into col("age2") },
+        ).shouldAllBeEqual()
     }
 }
 

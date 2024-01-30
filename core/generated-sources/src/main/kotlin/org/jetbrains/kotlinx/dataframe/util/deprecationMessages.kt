@@ -30,22 +30,17 @@ internal const val TREENODE_TOPDFS_REPLACE = "topmostChildren(yieldCondition)"
 internal const val TREENODE_DFS = "Use allChildren instead. $message_0_13"
 internal const val TREENODE_DFS_REPLACE = "allChildren(enterCondition, yieldCondition)"
 
-internal const val GROUP_MESSAGE = "Use colGroup() instead. $message_0_13"
-internal const val GROUP_REPLACE = "this.colGroup(name)"
+@PublishedApi
+internal const val DFS_MESSAGE: String = "dfs is deprecated, use colsAtAnyDepth instead. $message_0_13 "
 
 @PublishedApi
-internal const val DFS_MESSAGE: String = "dfs is deprecated, use recursively instead. $message_0_13 " +
-    "NOTE: This function is actively being worked on and will be replaced again in the future."
+internal const val ALL_DFS_MESSAGE: String = "allDfs is deprecated, use colsAtAnyDepth instead. $message_0_13 "
 
 @PublishedApi
-internal const val ALL_DFS_MESSAGE: String = "allDfs is deprecated, use recursively instead. $message_0_13 " +
-    "NOTE: This function is actively being worked on and will be replaced again in the future."
+internal const val DFS_OF_MESSAGE: String = "dfsOf is deprecated, use colsAtAnyDepth instead. $message_0_13 "
 
-@PublishedApi
-internal const val DFS_OF_MESSAGE: String = "dfsOf is deprecated, use recursively instead. $message_0_13 " +
-    "NOTE: This function is actively being worked on and will be replaced again in the future."
-
-internal const val TOP_MESSAGE = "top is deprecated, use roots() instead. $message_0_13"
+internal const val COL_SELECT_DSL_GROUP = "Use `colGroup()` instead. $message_0_13"
+internal const val COL_SELECT_DSL_GROUP_REPLACE = "this.colGroup(name)"
 
 // endregion
 
@@ -53,10 +48,78 @@ internal const val TOP_MESSAGE = "top is deprecated, use roots() instead. $messa
 
 private const val message_0_14 = "Will be removed in 0.14."
 
+internal const val COLUMN_WITH_PATH_MESSAGE = "`child` references are replaced with `col`. $message_0_14"
+
+internal const val COLS_SELECT_DSL_GROUP = "Use `colGroups` instead. $message_0_14"
+internal const val COLS_SELECT_DSL_GROUP_REPLACE = "this.colGroups(filter)"
+
+internal const val COL_SELECT_DSL_ALL_COLS = "Use `allCols()` instead. $message_0_14"
+internal const val COL_SELECT_DSL_ALL_COLS_REPLACE = "this.allCols()"
+
+internal const val COL_SELECT_DSL_ALL_COLS_AFTER = "Use `allColsAfter()` instead. $message_0_14"
+internal const val COL_SELECT_DSL_ALL_COLS_AFTER_REPLACE = "this.allColsAfter(column)"
+
+internal const val COL_SELECT_DSL_ALL_COLS_BEFORE = "Use `allColsBefore()` instead. $message_0_14"
+internal const val COL_SELECT_DSL_ALL_COLS_BEFORE_REPLACE = "this.allColsBefore(column)"
+
+internal const val COL_SELECT_DSL_ALL_FROM = "Use `allFrom()` instead. $message_0_14"
+internal const val COL_SELECT_DSL_ALL_FROM_REPLACE = "this.allFrom(column)"
+
+internal const val COL_SELECT_DSL_ALL_COLS_FROM = "Use `allColsFrom()` instead. $message_0_14"
+internal const val COL_SELECT_DSL_ALL_COLS_FROM_REPLACE = "this.allColsFrom(column)"
+
+internal const val COL_SELECT_DSL_ALL_UP_TO = "Use `allUpTo()` instead. $message_0_14"
+internal const val COL_SELECT_DSL_ALL_UP_TO_REPLACE = "this.allUpTo(column)"
+
+internal const val COL_SELECT_DSL_ALL_COLS_UP_TO = "Use `allColsUpTo()` instead. $message_0_14"
+internal const val COL_SELECT_DSL_ALL_COLS_UP_TO_REPLACE = "this.allColsUpTo(column)"
+
+internal const val COL_SELECT_DSL_AT_ANY_DEPTH = "This postfix notation is now deprecated. Use `colsAtAnyDepth().YOUR_OPERATION` instead (NOTE: ReplaceWith is incorrect). $message_0_14"
+
+// TODO https://youtrack.jetbrains.com/issue/KTIJ-27052/ReplaceWith-Deprecated-this-after-call-bug
+internal const val COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE = "this"
+
+internal const val COL_SELECT_DSL_CHILDREN = "Use colsInGroups {} instead. $message_0_14"
+internal const val COL_SELECT_DSL_CHILDREN_REPLACE = "this.colsInGroups(predicate)"
+
+internal const val COL_SELECT_DSL_CHILDREN_SINGLE_COL = "Use cols {} instead. $message_0_14"
+internal const val COL_SELECT_DSL_CHILDREN_SINGLE_COL_REPLACE = "this.cols(predicate)"
+
+internal const val TOP_MESSAGE = "top is deprecated, use simplify() instead. $message_0_14"
+
+internal const val COL_SELECT_DSL_LIST_DATACOLUMN_GET = "This function is deprecated. Use `.toColumnSet()[]` instead. $message_0_14"
+internal const val COL_SELECT_DSL_LIST_DATACOLUMN_GET_REPLACE = "this.toColumnSet()[range]"
+
+internal const val COL_SELECT_DSL_SELECT_COLS = "Nested select is reserved for ColumnsSelector/ColumnsSelectionDsl behavior. Use myGroup.cols() to select columns by name from a ColumnGroup. $message_0_14"
+internal const val COL_SELECT_DSL_SELECT_COLS_REPLACE = "this.cols(*columns)"
+
+internal const val COL_SELECT_DSL_SINGLE_COL_EXCEPT = "This function is replaced with allColsExcept. $message_0_14"
+internal const val COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_SELECTOR = "this.allColsExcept(selector)"
+internal const val COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_RESOLVERS = "this.allColsExcept { others.toColumnSet() }"
+internal const val COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_RESOLVER = "this.allColsExcept { other }"
+internal const val COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_OTHERS = "this.allColsExcept(*others)"
+internal const val COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_OTHER = "this.allColsExcept(other)"
+
+internal const val COL_SELECT_DSL_EXCEPT = "This function is replaced with allExcept. $message_0_14"
+internal const val COL_SELECT_DSL_EXCEPT_REPLACE_SELECTOR = "this.allExcept(selector)"
+internal const val COL_SELECT_DSL_EXCEPT_REPLACE_RESOLVER = "this.allExcept(*others)"
+
 // endregion
 
 // region WARNING in 0.14, ERROR in 0.15
 
 private const val message_0_15 = "Will be removed in 0.15."
+
+// endregion
+
+// region keep across releases
+
+internal const val IDENTITY_FUNCTION = "This overload is an identity function and can be omitted."
+
+internal const val COL_REPLACE = "col"
+
+internal const val ALL_COLS_EXCEPT = "This overload is blocked to prevent issues with column accessors. Use the `{}` overload instead."
+internal const val ALL_COLS_REPLACE = "allColsExcept { other }"
+internal const val ALL_COLS_REPLACE_VARARG = "allColsExcept { others.toColumnSet() }"
 
 // endregion

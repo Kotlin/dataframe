@@ -10,10 +10,9 @@ import kotlin.reflect.KProperty
 
 // region DataFrame
 
-public fun <T, C> DataFrame<T>.ungroup(columns: ColumnsSelector<T, C>): DataFrame<T> {
-    return move { columns.toColumnSet().children() }
+public fun <T, C> DataFrame<T>.ungroup(columns: ColumnsSelector<T, C>): DataFrame<T> =
+    move { columns.toColumnSet().colsInGroups() }
         .into { it.path.removeAt(it.path.size - 2).toPath() }
-}
 
 public fun <T> DataFrame<T>.ungroup(vararg columns: String): DataFrame<T> = ungroup { columns.toColumnSet() }
 

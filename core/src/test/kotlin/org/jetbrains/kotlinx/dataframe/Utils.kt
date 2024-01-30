@@ -16,6 +16,9 @@ fun <T : DataFrame<*>> T.toDebugString(rowsLimit: Int = 20) = """
     ${schema()}
 """.trimIndent()
 
+/**
+ * Prints dataframe to console with borders, title, column types and schema
+ */
 fun <T : DataFrame<*>> T.alsoDebug(println: String? = null, rowsLimit: Int = 20): T = apply {
     println?.let { println(it) }
     print(borders = true, title = true, columnTypes = true, valueLimit = -1, rowsLimit = rowsLimit)

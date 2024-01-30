@@ -105,7 +105,7 @@ class JoinWith : TestBase() {
     }
 
     private fun AnyFrame.uwrapColoredValues(): AnyFrame {
-        return convert { colsOf<ColoredValue<*>?>().rec() }.with(Infer.Type) { it?.value }
+        return convert { colsAtAnyDepth().colsOf<ColoredValue<*>?>() }.with(Infer.Type) { it?.value }
     }
 
     private fun <T> T.colored(background: RGBColor, text: RGBColor) = ColoredValue(this, background, text)

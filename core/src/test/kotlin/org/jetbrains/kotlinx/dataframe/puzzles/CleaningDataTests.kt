@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.get
 import org.junit.Test
 
 class CleaningDataTests {
@@ -77,7 +78,7 @@ class CleaningDataTests {
 
         df
             .split { "From_To"<String>() }.by('_').into("From", "To")["From", "To"]
-            .update { "From"<String>() and "To"() }
+            .update { "From"<String>() and "To"<_>() }
             .with { it.lowercase().replaceFirstChar(Char::uppercase) } shouldBe expected
     }
 

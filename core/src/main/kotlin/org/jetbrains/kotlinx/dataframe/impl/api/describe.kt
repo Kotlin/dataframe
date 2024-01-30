@@ -31,7 +31,7 @@ import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.jvm.jvmErasure
 
 internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
-    fun List<AnyCol>.collectAll(recursively: Boolean): List<AnyCol> = flatMap { col ->
+    fun List<AnyCol>.collectAll(atAnyDepth: Boolean): List<AnyCol> = flatMap { col ->
         when (col.kind) {
             ColumnKind.Frame ->
                 col.asAnyFrameColumn()
@@ -41,7 +41,7 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
                     .collectAll(true)
 
             ColumnKind.Group ->
-                if (recursively) {
+                if (atAnyDepth) {
                     col.asColumnGroup()
                         .columns()
                         .map { it.addPath(col.path() + it.name) }

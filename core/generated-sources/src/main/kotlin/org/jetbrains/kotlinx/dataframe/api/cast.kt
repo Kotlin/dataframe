@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
+import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
@@ -48,10 +49,12 @@ public fun <T> ColumnAccessor<*>.cast(): ColumnAccessor<T> = this as ColumnAcces
 
 public fun <C> ColumnSet<*>.cast(): ColumnSet<C> = this as ColumnSet<C>
 
-public fun <C> TransformableColumnSet<*>.cast(): TransformableColumnSet<C> = this as TransformableColumnSet<C>
-
-public fun <C> ColumnReference<*>.cast(): ColumnReference<C> = this as ColumnReference<C>
+public fun <C> ColumnsResolver<*>.cast(): ColumnsResolver<C> = this as ColumnsResolver<C>
 
 public fun <C> SingleColumn<*>.cast(): SingleColumn<C> = this as SingleColumn<C>
 
+public fun <C> TransformableColumnSet<*>.cast(): TransformableColumnSet<C> = this as TransformableColumnSet<C>
+
 public fun <C> TransformableSingleColumn<*>.cast(): TransformableSingleColumn<C> = this as TransformableSingleColumn<C>
+
+public fun <C> ColumnReference<*>.cast(): ColumnReference<C> = this as ColumnReference<C>

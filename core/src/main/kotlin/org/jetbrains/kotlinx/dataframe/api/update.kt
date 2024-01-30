@@ -1,16 +1,32 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.*
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnExpression
-import org.jetbrains.kotlinx.dataframe.api.Update.Usage
+import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataFrameExpression
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.RowColumnExpression
+import org.jetbrains.kotlinx.dataframe.RowValueFilter
+import org.jetbrains.kotlinx.dataframe.api.Update.Grammar
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.documentation.*
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
+import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenColumn
+import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame
+import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow
+import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRowAndColumn
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
 import org.jetbrains.kotlinx.dataframe.impl.api.asFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateWithValuePerColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
+import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.util.UPDATE_AS_NULLABLE_MESSAGE
 import org.jetbrains.kotlinx.dataframe.util.UPDATE_AS_NULLABLE_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.UPDATE_WITH_VALUE
@@ -23,7 +39,7 @@ import kotlin.reflect.KProperty
  * Returns the [DataFrame] with changed values in some cells
  * (column types can not be changed).
  *
- * Check out the [`update` Operation Usage][Usage].
+ * ### Check out: [Grammar]
  *
  * For more information: {@include [DocumentationUrls.Update]}
  */
@@ -35,44 +51,77 @@ public data class Update<T, C>(
     public fun <R : C> cast(): Update<T, R> =
         Update(df, filter as RowValueFilter<T, R>?, columns as ColumnsSelector<T, R>)
 
-    /** This argument providing the (clickable) name of the update-like function.
+    /*
+     * This argument providing the (clickable) name of the update-like function.
      * Note: If clickable, make sure to [alias][your type].
      */
     internal interface UpdateOperationArg
 
     /**
-     * ## {@getArg [UpdateOperationArg]} Operation Usage
+     * ## {@getArg [UpdateOperationArg]} Operation Grammar
+     * {@include [LineBreak]}
+     * {@include [DslGrammarLink]}
+     * {@include [LineBreak]}
      *
-     * {@getArg [UpdateOperationArg]} `{ `[columns][SelectingColumns]` }`
+     * {@getArg [UpdateOperationArg]} **`{ `**[columns][SelectingColumns]**` }`**
      *
-     * - `[.`[where][Update.where]` { `[rowValueCondition][SelectingRows.RowValueCondition.WithExample]` } ]`
+     * {@include [Indent]}
+     * `[ .`[**where**][Update.where]**` { `**[rowValueCondition][SelectingRows.RowValueCondition.WithExample]**` } `**`]`
      *
-     * - `[.`[at][Update.at]` (`[rowIndices][CommonUpdateAtFunctionDoc.RowIndicesParam]`) ]`
+     * {@include [Indent]}
+     * `[ .`[**at**][Update.at]**`(`**[rowIndices][CommonUpdateAtFunctionDoc.RowIndicesParam]**`)`**` ]`
      *
-     * - `.`[with][Update.with]` { `[rowExpression][ExpressionsGivenRow.RowValueExpression.WithExample]` }
-     *   | .`[notNull][Update.notNull]` { `[rowExpression][ExpressionsGivenRow.RowValueExpression.WithExample]` }
-     *   | .`[perCol][Update.perCol]` { `[colExpression][ExpressionsGivenColumn.ColumnExpression.WithExample]` }
-     *   | .`[perRowCol][Update.perRowCol]` { `[rowColExpression][ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]` }
-     *   | .`[withNull][Update.withNull]`()
-     *   | .`[withZero][Update.withZero]`()
-     *   | .`[asFrame][Update.asFrame]` { `[dataFrameExpression][ExpressionsGivenDataFrame.DataFrameExpression.WithExample]` }`
-     * {@setArg [UpdateOperationArg] [update][update]}{@comment The default name of the `update` operation function name.}
+     * {@include [Indent]}
+     * `.`[**with**][Update.with]**` { `**[rowExpression][ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
+     *
+     * {@include [Indent]}
+     * `| .`[**notNull**][Update.notNull]**` { `**[rowExpression][ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
+     *
+     * {@include [Indent]}
+     * `| .`[**perCol**][Update.perCol]**` { `**[colExpression][ExpressionsGivenColumn.ColumnExpression.WithExample]**` }`**
+     *
+     * {@include [Indent]}
+     * `| .`[**perRowCol**][Update.perRowCol]**` { `**[rowColExpression][ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]**` }`**
+     *
+     * {@include [Indent]}
+     * `| .`[**withNull**][Update.withNull]**`()`**
+     *
+     * {@include [Indent]}
+     * `| .`[**withZero**][Update.withZero]**`()`**
+     *
+     * {@include [Indent]}
+     * `| .`[**asFrame**][Update.asFrame]**` { `**[dataFrameExpression][ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
+     *
+     * {@setArg [UpdateOperationArg] [**update**][update]}{@comment The default name of the `update` operation function name.}
      */
-    public interface Usage
+    public interface Grammar
 
-    /** The columns to update need to be selected. See {@include [SelectingColumnsLink]} for all the selecting options. */
-    public interface Columns
+    /**
+     * The columns to update need to be selected. See {@getArg [Columns.SelectingColumnsArg]}
+     * for all the selecting options. {@setArg [Columns.SelectingColumnsArg] [Selecting Columns][UpdateSelectingOptions]}
+     */
+    public interface Columns {
 
-    /** @param [columns\] The {@include [SelectingColumns.DslLink]} used to select the columns of this [DataFrame] to update. */
+        /* Optional argument that can be set to redirect where the [Selecting Columns] link points to */
+        public interface SelectingColumnsArg
+    }
+
+    /**
+     * {@comment Version of [SelectingColumns] with correctly filled in examples}
+     * @include [SelectingColumns] {@include [SetSelectingColumnsOperationArg]}
+     */
+    public interface UpdateSelectingOptions
+
+    /** @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to update. */
     internal interface DslParam
 
-    /** @param [columns\] The {@include [SelectingColumns.ColumnAccessorsLink]} of this [DataFrame] to update. */
+    /** @param [columns\] The [Column References][ColumnReference] of this [DataFrame] to update. */
     internal interface ColumnAccessorsParam
 
-    /** @param [columns\] The {@include [SelectingColumns.KPropertiesLink]} corresponding to columns of this [DataFrame] to update. */
+    /** @param [columns\] The [KProperties][KProperty] corresponding to columns of this [DataFrame] to update. */
     internal interface KPropertiesParam
 
-    /** @param [columns\] The {@include [SelectingColumns.ColumnNamesLink]} belonging to this [DataFrame] to update. */
+    /** @param [columns\] The [Strings][String] corresponding to the names of columns belonging to this [DataFrame] to update. */
     internal interface ColumnNamesParam
 }
 
@@ -85,7 +134,7 @@ private interface SetSelectingColumnsOperationArg
  * @include [Update] {@comment Description of the update operation.}
  * @include [LineBreak]
  * @include [Update.Columns] {@comment Description of what this function expects the user to do: select columns}
- * ## This Update Overload
+ * ### This Update Overload
  */
 private interface CommonUpdateFunctionDoc
 
@@ -152,7 +201,7 @@ public fun <T, C> Update<T, C>.where(predicate: RowValueFilter<T, C>): Update<T,
  *
  * `df.`[update][update]` { name }.`[at][at]`(1, 2, 3, 4).`[with][with]` { "Empty" }`
  *
- * ## This At Overload
+ * ### This At Overload
  */
 private interface CommonUpdateAtFunctionDoc {
 
@@ -251,10 +300,10 @@ public fun <T, C> Update<T, C>.asNullable(): Update<T, C?> = this as Update<T, C
  *  - {@include [ExpressionsGivenColumn.ColumnExpression]}
  *  - {@include [UpdatePerColMap]}
  *
- * ## See Also
+ * ### See Also
  *  - {@include [SeeAlsoWith]}
  *  - {@include [SeeAlsoPerRowCol]}
- * ## This Per Col Overload
+ * ### This Per Col Overload
  */
 private interface CommonUpdatePerColDoc
 
@@ -351,7 +400,7 @@ public fun <T, C> Update<T, C?>.notNull(expression: UpdateExpression<T, C, C>): 
 
 /**
  * @include [CommonUpdateFunctionDoc]
- * ### This overload is a combination of [update] and [with][Update.with].
+ * This overload is a combination of [update] and [with][Update.with].
  *
  * @include [SelectingColumns.ColumnAccessors]
  *
@@ -364,13 +413,13 @@ public fun <T, C> Update<T, C?>.notNull(expression: UpdateExpression<T, C, C>): 
 public fun <T, C> DataFrame<T>.update(
     firstCol: ColumnReference<C>,
     vararg cols: ColumnReference<C>,
-    expression: UpdateExpression<T, C, C>
+    expression: UpdateExpression<T, C, C>,
 ): DataFrame<T> =
     update(*headPlusArray(firstCol, cols)).with(expression)
 
 /**
  * @include [CommonUpdateFunctionDoc]
- * ### This overload is a combination of [update] and [with][Update.with].
+ * This overload is a combination of [update] and [with][Update.with].
  *
  * @include [SelectingColumns.KProperties]
  *
@@ -383,13 +432,13 @@ public fun <T, C> DataFrame<T>.update(
 public fun <T, C> DataFrame<T>.update(
     firstCol: KProperty<C>,
     vararg cols: KProperty<C>,
-    expression: UpdateExpression<T, C, C>
+    expression: UpdateExpression<T, C, C>,
 ): DataFrame<T> =
     update(*headPlusArray(firstCol, cols)).with(expression)
 
 /**
  * @include [CommonUpdateFunctionDoc]
- * ### This overload is a combination of [update] and [with][Update.with].
+ * This overload is a combination of [update] and [with][Update.with].
  *
  * @include [SelectingColumns.ColumnNames]
  *
@@ -402,7 +451,7 @@ public fun <T, C> DataFrame<T>.update(
 public fun <T> DataFrame<T>.update(
     firstCol: String,
     vararg cols: String,
-    expression: UpdateExpression<T, Any?, Any?>
+    expression: UpdateExpression<T, Any?, Any?>,
 ): DataFrame<T> =
     update(*headPlusArray(firstCol, cols)).with(expression)
 

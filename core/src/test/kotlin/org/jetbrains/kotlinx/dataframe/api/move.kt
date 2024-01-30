@@ -27,9 +27,9 @@ class MoveTests {
     }
 
     @Test
-    fun `select all allRecursively`() {
+    fun `select all atAnyDepth`() {
         val selected = grouped
-            .getColumnsWithPaths { children { !it.isColumnGroup() }.recursively() }
+            .getColumnsWithPaths { colGroups().colsAtAnyDepth { !it.isColumnGroup() } }
             .map { it.path.joinToString(".") }
         selected shouldBe listOf("a.b", "a.c.d", "b.c", "b.d", "e.f")
     }
@@ -37,7 +37,7 @@ class MoveTests {
     @Test
     fun `batch ungrouping`() {
         val ungrouped = grouped.move {
-            cols { it.depth() > 0 && !it.isColumnGroup() }.rec()
+            colsAtAnyDepth { it.depth() > 0 && !it.isColumnGroup() }
         }.into { pathOf(it.path.joinToString(".")) }
         ungrouped.columnNames() shouldBe listOf("q", "a.b", "a.c.d", "b.c", "b.d", "w", "e.f", "r")
     }
@@ -70,7 +70,7 @@ class MoveTests {
     @Test
     fun `select recursively`() {
         val selected = grouped.select {
-            it["a"].cols { !it.isColumnGroup() }.recursively()
+            it["a"].asColumnGroup().colsAtAnyDepth { !it.isColumnGroup() }
         }
         selected.columnNames() shouldBe listOf("b", "d")
     }
@@ -79,7 +79,7 @@ class MoveTests {
     fun `columnsWithPath in selector`() {
         val selected = grouped.getColumnsWithPaths { it["a"] }
         val actual = grouped.getColumnsWithPaths {
-            selected.map { it.cols { !it.isColumnGroup() }.recursively() }.toColumnSet()
+            selected.map { it.asColumnGroup().colsAtAnyDepth { !it.isColumnGroup() } }.toColumnSet()
         }
         actual.map { it.path.joinToString(".") } shouldBe listOf("a.b", "a.c.d")
     }

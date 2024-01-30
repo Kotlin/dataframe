@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.columns
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnInternal
@@ -34,8 +35,18 @@ public interface BaseColumn<out T> : ColumnReference<T> {
 
     // region get
 
+    /**
+     * Gets the row at given [index].
+     *
+     * NOTE: This doesn't work in the [ColumnsSelectionDsl], use [ColumnsSelectionDsl.col] to select a column by index.
+     */
     public operator fun get(index: Int): T
 
+    /**
+     * Gets the rows at given indices.
+     *
+     * NOTE: This doesn't work in the [ColumnsSelectionDsl], use [ColumnsSelectionDsl.cols] to select columns by index.
+     */
     public operator fun get(firstIndex: Int, vararg otherIndices: Int): BaseColumn<T> = get(
         headPlusIterable(
             firstIndex,
@@ -44,8 +55,18 @@ public interface BaseColumn<out T> : ColumnReference<T> {
     )
     public operator fun get(row: AnyRow): T = get(row.index())
 
+    /**
+     * Gets the rows at given range of indices.
+     *
+     * NOTE: This doesn't work in the [ColumnsSelectionDsl], use [ColumnsSelectionDsl.cols] to select columns by range.
+     */
     public operator fun get(range: IntRange): BaseColumn<T>
 
+    /**
+     * Gets the rows at given indices.
+     *
+     * NOTE: This doesn't work in the [ColumnsSelectionDsl], use [ColumnsSelectionDsl.cols] to select columns by index.
+     */
     public operator fun get(indices: Iterable<Int>): BaseColumn<T>
 
     public operator fun get(columnName: String): AnyCol

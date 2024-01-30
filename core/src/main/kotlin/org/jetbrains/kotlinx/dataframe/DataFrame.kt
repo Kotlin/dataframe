@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.getRows
@@ -68,17 +69,13 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
     // region get columns
 
-    override operator fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> =
+    /**
+     * Returns a list of columns selected by [columns], a [ColumnsSelectionDsl].
+     *
+     * NOTE: This doesn't work in [ColumnsSelectionDsl], use [ColumnsSelectionDsl.cols] to select columns by predicate.
+     */
+    override fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> =
         getColumnsImpl(UnresolvedColumnsPolicy.Fail, columns)
-
-    public operator fun get(first: AnyColumnReference, vararg other: AnyColumnReference): DataFrame<T> =
-        select { (listOf(first) + other).toColumnSet() }
-
-    public operator fun get(first: String, vararg other: String): DataFrame<T> =
-        select { (listOf(first) + other).toColumnSet() }
-
-    public operator fun get(columnRange: ClosedRange<String>): DataFrame<T> =
-        select { columnRange.start..columnRange.endInclusive }
 
     // endregion
 
@@ -102,6 +99,25 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
     // endregion
 }
+
+// region get columns
+
+/**
+ * Returns a list of columns selected by [columns], a [ColumnsSelectionDsl].
+ */
+public operator fun <T, C> DataFrame<T>.get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> =
+    this.get(columns)
+
+public operator fun <T> DataFrame<T>.get(first: AnyColumnReference, vararg other: AnyColumnReference): DataFrame<T> =
+    select { (listOf(first) + other).toColumnSet() }
+
+public operator fun <T> DataFrame<T>.get(first: String, vararg other: String): DataFrame<T> =
+    select { (listOf(first) + other).toColumnSet() }
+
+public operator fun <T> DataFrame<T>.get(columnRange: ClosedRange<String>): DataFrame<T> =
+    select { columnRange.start..columnRange.endInclusive }
+
+// endregion
 
 internal val ColumnsContainer<*>.ncol get() = columnsCount()
 internal val AnyFrame.nrow get() = rowsCount()

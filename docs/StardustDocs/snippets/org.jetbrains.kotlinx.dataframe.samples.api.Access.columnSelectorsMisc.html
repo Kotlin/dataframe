@@ -354,7 +354,7 @@ summary {
                             <br>
                             <details>
                             <summary>df.select {
-            colGroup(&quot;name&quot;).last { it.name().endsWith(&quot;Name&quot;) }
+            colGroup(&quot;name&quot;).lastCol { it.name().endsWith(&quot;Name&quot;) }
         }</summary>
                                                                 <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
@@ -372,7 +372,7 @@ summary {
                             <br>
                             <details>
                             <summary>df.select {
-            Person::name.single { it.name().startsWith(&quot;first&quot;) }
+            Person::name.singleCol { it.name().startsWith(&quot;first&quot;) }
         }</summary>
                                                                 <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
@@ -389,7 +389,7 @@ summary {
                             </details>
                             <br>
                             <details>
-                            <summary>df.select { cols { !it.isColumnGroup() }.recursively() }</summary>
+                            <summary>df.select { colsAtAnyDepth { !it.isColumnGroup() } }</summary>
                                                                 <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
                                      <table class="dataframe" id="df_26"></table>
@@ -405,7 +405,7 @@ summary {
                             </details>
                             <br>
                             <details>
-                            <summary>df.select { all().recursively() }</summary>
+                            <summary>df.select { colsAtAnyDepth() }</summary>
                                                                 <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
                                      <table class="dataframe" id="df_28"></table>
@@ -421,7 +421,7 @@ summary {
                             </details>
                             <br>
                             <details>
-                            <summary>df.select { cols { it.name().contains(&quot;:&quot;) }.recursively() }</summary>
+                            <summary>df.select { colsAtAnyDepth { it.name().contains(&quot;:&quot;) } }</summary>
                                                                 <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
                                      <table class="dataframe" id="df_30"></table>
@@ -437,7 +437,7 @@ summary {
                             </details>
                             <br>
                             <details>
-                            <summary>df.select { colsOf&amp;lt;String&amp;gt;().rec() }</summary>
+                            <summary>df.select { colsAtAnyDepth().colsOf&amp;lt;String&amp;gt;() }</summary>
                                                                 <details>
                                     <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
                                      <table class="dataframe" id="df_32"></table>

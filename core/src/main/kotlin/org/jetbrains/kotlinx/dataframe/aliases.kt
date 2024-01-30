@@ -6,10 +6,13 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
+import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 
 /**
- * [Predicate] is used to reach a [Boolean] result using the given instance of `T` as `it`.
+ * ## Predicate
+ *
+ * [Predicate] is a lambda function expecting a [Boolean] result given an instance of `T` as `it`.
  *
  * Shorthand for:
  * ```kotlin
@@ -19,7 +22,9 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 public typealias Predicate<T> = (it: T) -> Boolean
 
 /**
- * [Selector] is used to express or select any instance of `R` using the given instance of `T` as `this` and `it`.
+ * ## Selector
+ *
+ * [Selector] is a lambda function expecting an `R` result given an instance of `T` as context (`this` and `it`).
  *
  * Shorthand for:
  * ```kotlin
@@ -31,8 +36,11 @@ public typealias Selector<T, R> = T.(it: T) -> R
 // region selectors
 
 /**
- * [DataFrameExpression] is used to express or select any instance of `R` using the given instance of [DataFrame]`<T>`
- * as `this` and `it`.
+ * ## DataFrame Expression
+ *
+ * [DataFrameExpression] is a lambda function expecting an `R` result given an instance of [DataFrame]`<T>` as context
+ * (`this` and `it`).
+ * `R` can be selected or expressed.
  *
  * Shorthand for:
  * ```kotlin
@@ -42,8 +50,10 @@ public typealias Selector<T, R> = T.(it: T) -> R
 public typealias DataFrameExpression<T, R> = Selector<DataFrame<T>, R>
 
 /**
- * [RowExpression] is used to express or select any instance of `R` using the given instance of [DataRow]`<T>` as
- * `this` and `it`.
+ * ## Row Expression
+ *
+ * [RowExpression] is a lambda function expecting an `R` result given an instance of [DataRow]`<T>` as context
+ * (`this` and `it`). `R` can be selected or expressed.
  *
  * Shorthand for:
  * ```kotlin
@@ -53,8 +63,10 @@ public typealias DataFrameExpression<T, R> = Selector<DataFrame<T>, R>
 public typealias RowExpression<T, R> = Selector<DataRow<T>, R>
 
 /**
- * [RowValueExpression] is used to express or select any instance of `R` using the given value `it: C` and the given
- * instance of [DataRow]`<T>` as `this`.
+ * ## Row Value Expression
+ *
+ * [RowValueExpression] is a lambda function expecting an `R` result given the value `it: C` and an
+ * instance of [DataRow]`<T>` as context (`this`). `R` can be selected or expressed.
  *
  * Shorthand for:
  * ```kotlin
@@ -64,8 +76,10 @@ public typealias RowExpression<T, R> = Selector<DataRow<T>, R>
 public typealias RowValueExpression<T, C, R> = DataRow<T>.(it: C) -> R
 
 /**
- * [RowColumnExpression] is used to express or select any instance of `R` using the given instances of
- * [DataRow]`<T>` as `row` and [DataColumn]`<C>` as `col`.
+ * ## Row Column Expression
+ *
+ * [RowColumnExpression] is a lambda function expecting an `R` result given an instance of [DataRow]`<T>` as
+ * `row` and [DataColumn]`<C>` as `col`. `R` can be selected or expressed.
  *
  * Shorthand for:
  * ```kotlin
@@ -75,8 +89,10 @@ public typealias RowValueExpression<T, C, R> = DataRow<T>.(it: C) -> R
 public typealias RowColumnExpression<T, C, R> = (row: DataRow<T>, col: DataColumn<C>) -> R
 
 /**
- * [ColumnExpression] is used to express or select any instance of `R` using the given instance of [DataColumn]`<C>` as
- * `this` and `it`.
+ * ## Column Expression
+ *
+ * [ColumnExpression] is a lambda function expecting an `R` result given an instance of [DataColumn]`<C>` as context
+ * (`this` and `it`). `R` can be selected or expressed.
  *
  * Shorthand for:
  * ```kotlin
@@ -86,8 +102,12 @@ public typealias RowColumnExpression<T, C, R> = (row: DataRow<T>, col: DataColum
 public typealias ColumnExpression<C, R> = Selector<DataColumn<C>, R>
 
 /**
- * [ColumnSelector] is used to express or select a single column, represented by [SingleColumn]`<C>`, using the
- * context of [ColumnsSelectionDsl]`<T>` as `this` and `it`.
+ * ## Column Selector
+ *
+ * [ColumnSelector] is a lambda function expecting a [SingleColumn]<`C`> result given an instance of [ColumnsSelectionDsl]`<T>`
+ * as context (`this` and `it`). [SingleColumn]`<C>` can be selected or expressed.
+ *
+ * See [Columns Selection DSL][ColumnsSelectionDsl] for more information.
  *
  * Shorthand for:
  * ```kotlin
@@ -97,22 +117,31 @@ public typealias ColumnExpression<C, R> = Selector<DataColumn<C>, R>
 public typealias ColumnSelector<T, C> = Selector<ColumnsSelectionDsl<T>, SingleColumn<C>>
 
 /**
- * [ColumnsSelector] is used to express or select multiple columns, represented by [ColumnSet]`<C>`, using the
- * context of [ColumnsSelectionDsl]`<T>` as `this` and `it`.
+ * ## Columns Selector
+ *
+ * [ColumnsSelector] is a lambda function expecting a [ColumnsResolver]<`C`> ([SingleColumn]<`C`> or [ColumnSet]<`C`>)
+ * result given an instance of [ColumnsSelectionDsl]`<T>` as context (`this` and `it`).
+ * [ColumnsResolver]<`C`> can be selected or expressed.
+ *
+ * See [Columns Selection DSL][ColumnsSelectionDsl] for more information.
  *
  * Shorthand for:
  * ```kotlin
- * ColumnsSelectionDsl<T>.(it: ColumnsSelectionDsl<T>) -> ColumnSet<C>
+ * ColumnsSelectionDsl<T>.(it: ColumnsSelectionDsl<T>) -> ColumnsResolver<C>
  * ```
  */
-public typealias ColumnsSelector<T, C> = Selector<ColumnsSelectionDsl<T>, ColumnSet<C>>
+public typealias ColumnsSelector<T, C> = Selector<ColumnsSelectionDsl<T>, ColumnsResolver<C>>
 
 // endregion
 
 // region filters
 
 /**
- * [RowFilter] is used to filter or find rows using the given instance of [DataRow]`<T>` as `this` and `it`.
+ * ## Row Filter
+ *
+ * [RowFilter] is a lambda function expecting a [Boolean] result given an instance of [DataRow]`<T>` as context
+ * (`this` and `it`).
+ *
  * Return `true` if the row should be included in the result.
  *
  * Shorthand for:
@@ -123,7 +152,11 @@ public typealias ColumnsSelector<T, C> = Selector<ColumnsSelectionDsl<T>, Column
 public typealias RowFilter<T> = RowExpression<T, Boolean>
 
 /**
- * [ColumnFilter] is used to filter or find columns using the given instance of [ColumnWithPath]`<T>` as `it`.
+ * ## Column Filter
+ *
+ * [ColumnFilter] is a lambda function expecting a [Boolean] result given an instance of [DataColumn]`<C>` as context
+ * (`this` and `it`).
+ *
  * Return `true` if the column should be included in the result.
  *
  * Shorthand for:
@@ -134,8 +167,11 @@ public typealias RowFilter<T> = RowExpression<T, Boolean>
 public typealias ColumnFilter<T> = Predicate<ColumnWithPath<T>>
 
 /**
- * [RowValueFilter] is used to filter or find rows using the given value of `it: C` and the given instance of
- * [DataRow]`<T>` as `this`.
+ * ## Row Value Filter
+ *
+ * [RowValueFilter] is a lambda function expecting a [Boolean] result given the value `it: C` and an instance
+ * of [DataRow]`<T>` as context (`this`).
+ *
  * Return `true` if the row should be included in the result.
  *
  * Shorthand for:

@@ -30,7 +30,7 @@ internal fun <T, V> AggregateInternalDsl<T>.yieldOneOrMany(
     path: ColumnPath,
     values: List<V>,
     type: KType,
-    default: V? = null
+    default: V? = null,
 ) {
     when (values.size) {
         0 -> yield(path, null, type.withNullability(true), default)
@@ -51,7 +51,7 @@ internal fun <T, C> AggregateInternalDsl<T>.columnValues(
     columns: ColumnsForAggregateSelector<T, C>,
     forceYieldLists: Boolean,
     dropNA: Boolean,
-    distinct: Boolean
+    distinct: Boolean,
 ) {
     val cols = df.getAggregateColumns(columns)
     val isSingle = cols.size == 1
@@ -74,7 +74,7 @@ internal fun <T, C> AggregateInternalDsl<T>.columnValues(
 
 internal fun <T, C> AggregateInternalDsl<T>.columnValues(
     columns: ColumnsForAggregateSelector<T, C>,
-    reducer: Selector<DataFrame<T>, DataRow<T>?>
+    reducer: Selector<DataFrame<T>, DataRow<T>?>,
 ) {
     val row = reducer(df, df)
     val cols = df.getAggregateColumns(columns)
