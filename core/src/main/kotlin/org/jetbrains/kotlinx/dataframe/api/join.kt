@@ -12,13 +12,8 @@ import org.jetbrains.kotlinx.dataframe.impl.api.joinImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import kotlin.reflect.KProperty
 
-@Refine()
+@Refine
 @Interpretable("Join0")
-public fun <A, B> DataFrame<A>.joinDefault(
-    other: DataFrame<B>,
-    selector: JoinColumnsSelector<A, B>
-): DataFrame<A> = join(other, selector = selector)
-
 public fun <A, B> DataFrame<A>.join(
     other: DataFrame<B>,
     type: JoinType = JoinType.Inner,
