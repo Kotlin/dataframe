@@ -102,7 +102,7 @@ public inline fun <T, C, reified R> Convert<T, C>.with(
 ): DataFrame<T> =
     withRowCellImpl(typeOf<R>(), infer, rowConverter)
 
-@Refine("with_0")
+@Refine
 @Interpretable("With0")
 public inline fun <T, C, reified R> Convert<T, C>.with(
     noinline rowConverter: RowValueExpression<T, C, R>

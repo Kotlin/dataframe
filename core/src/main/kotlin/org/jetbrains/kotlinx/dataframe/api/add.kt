@@ -119,8 +119,8 @@ public inline fun <reified R, T> DataFrame<T>.add(
 ): DataFrame<T> =
     (this + mapToColumn(name, infer, expression))
 
+@Refine
 @Interpretable("Add")
-@Refine("add_1")
 public inline fun <reified R, T> DataFrame<T>.add(
     name: String,
     noinline expression: AddExpression<T, R>
@@ -210,7 +210,7 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
     public infix fun AddGroup<T>.into(column: AnyColumnGroupAccessor): Unit = into(column.name())
 }
 
-@Refine("add_2")
+@Refine
 @Interpretable("AddWithDsl")
 public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
     val dsl = AddDsl(this)

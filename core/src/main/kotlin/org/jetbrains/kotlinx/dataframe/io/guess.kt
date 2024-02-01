@@ -287,7 +287,7 @@ public fun DataFrame.Companion.read(url: URL, header: List<String> = emptyList()
 public fun DataRow.Companion.read(url: URL, header: List<String> = emptyList()): AnyRow =
     DataFrame.read(url, header).single()
 
-@Refine("read_0")
+@Refine()
 @Interpretable("Read0")
 public fun DataFrame.Companion.read(path: String, header: List<String> = emptyList()): AnyFrame =
     read(asURL(path), header)

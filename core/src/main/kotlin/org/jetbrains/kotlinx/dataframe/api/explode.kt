@@ -21,7 +21,7 @@ public fun <T> DataFrame<T>.explode(
     selector: ColumnsSelector<T, *> = defaultExplodeColumns
 ): DataFrame<T> = explodeImpl(dropEmpty, selector)
 
-@Refine("explode_0")
+@Refine
 @Interpretable("Explode0")
 public fun <T> DataFrame<T>.explode(selector: ColumnsSelector<T, *>): DataFrame<T> =
     explodeImpl(true, selector)
