@@ -104,7 +104,7 @@ public class ValidFieldName private constructor(private val identifier: String, 
                     .replace("]", "}")
                     .replace("`", "'")
                     .replace(";", " ")
-                    .replace("\", " ")
+                    .replace("\\", " ")
             }
 
             return ValidFieldName(result, needsQuote)
