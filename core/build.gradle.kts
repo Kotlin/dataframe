@@ -199,15 +199,6 @@ val processKDocsMain by creatingProcessDocTask(
         .filterNot { pathOf("build", "generated") in it.path }, // Exclude generated sources
 ) {
     target = file(generatedSourcesFolderName)
-    processors = listOf(
-        INCLUDE_DOC_PROCESSOR,
-        INCLUDE_FILE_DOC_PROCESSOR,
-        ARG_DOC_PROCESSOR,
-        COMMENT_DOC_PROCESSOR,
-        SAMPLE_DOC_PROCESSOR,
-//        REMOVE_ESCAPE_CHARS_PROCESSOR, TODO enable when doc preprocessor hits 0.3.0
-    )
-
     arguments += ARG_DOC_PROCESSOR_LOG_NOT_FOUND to false
 
     task {
