@@ -42,7 +42,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * ## Cols At Any Depth Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DefinitionsArg]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
@@ -50,13 +50,13 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *  {@include [DslGrammarTemplate.ConditionDef]}
      * }
      *
-     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
      *  {@include [PlainDslName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      * }
-     * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
      *  {@include [Indent]}{@include [ColumnSetName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      * }
-     * {@setArg [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
      *  {@include [Indent]}{@include [ColumnGroupName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      * }
      */
@@ -100,7 +100,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonAtAnyDepthDocs.Examples]}
+     * {@get [CommonAtAnyDepthDocs.Examples]}
      *
      * #### Converting from deprecated syntax:
      *
@@ -127,7 +127,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
 
     /**
      * @include [CommonAtAnyDepthDocs]
-     * @setArg [CommonAtAnyDepthDocs.Examples]
+     * @set [CommonAtAnyDepthDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { `[colGroups][ColumnsSelectionDsl.colGroups]`().`[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]` { "Alice" `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
      */
@@ -136,7 +136,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
 
     /**
      * @include [CommonAtAnyDepthDocs]
-     * @setArg [CommonAtAnyDepthDocs.Examples]
+     * @set [CommonAtAnyDepthDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]` { "Alice" `[in][Iterable.contains]` it.`[values][DataColumn.values]`() }.`[first][ColumnsSelectionDsl.first]`() }`
      *
@@ -147,7 +147,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
 
     /**
      * @include [CommonAtAnyDepthDocs]
-     * @setArg [CommonAtAnyDepthDocs.Examples]
+     * @set [CommonAtAnyDepthDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { myColGroup.`[colsAtAnyDepth][SingleColumn.colsAtAnyDepth]` { "Alice" `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
      */
@@ -156,7 +156,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
 
     /**
      * @include [CommonAtAnyDepthDocs]
-     * @setArg [CommonAtAnyDepthDocs.Examples]
+     * @set [CommonAtAnyDepthDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsAtAnyDepth][String.colsAtAnyDepth]` { "Alice" `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
      */
@@ -165,7 +165,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
 
     /**
      * @include [CommonAtAnyDepthDocs]
-     * @setArg [CommonAtAnyDepthDocs.Examples]
+     * @set [CommonAtAnyDepthDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsAtAnyDepth][KProperty.colsAtAnyDepth]` { "Alice" `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
      */
@@ -174,7 +174,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
 
     /**
      * @include [CommonAtAnyDepthDocs]
-     * @setArg [CommonAtAnyDepthDocs.Examples]
+     * @set [CommonAtAnyDepthDocs.Examples]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]` { "Alice" `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
      */

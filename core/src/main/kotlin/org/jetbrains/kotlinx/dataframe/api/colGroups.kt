@@ -36,7 +36,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * ## Column Groups Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DefinitionsArg]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
@@ -44,15 +44,15 @@ public interface ColGroupsColumnsSelectionDsl {
      *  {@include [DslGrammarTemplate.ConditionDef]}
      * }
      *
-     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
      *  {@include [PlainDslName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      * }
      *
-     * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
      *  {@include [Indent]}{@include [ColumnSetName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      * }
      *
-     * {@setArg [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
      *  {@include [Indent]}{@include [ColumnGroupName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      * }
      */
@@ -89,7 +89,7 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonColGroupsDocs.ExampleArg]}
+     * {@get [CommonColGroupsDocs.ExampleArg]}
      *
      * @param [filter\] An optional [predicate][Predicate] to filter the column groups by.
      * @return A [ColumnSet] of [ColumnGroups][ColumnGroup].
@@ -106,7 +106,7 @@ public interface ColGroupsColumnsSelectionDsl {
 
     /**
      * @include [CommonColGroupsDocs]
-     * @setArg [CommonColGroupsDocs.ExampleArg]
+     * @set [CommonColGroupsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") }.`[colGroups][ColumnSet.colGroups]`() }`
      *
@@ -119,7 +119,7 @@ public interface ColGroupsColumnsSelectionDsl {
 
     /**
      * @include [CommonColGroupsDocs]
-     * @setArg [CommonColGroupsDocs.ExampleArg]
+     * @set [CommonColGroupsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[colGroups][ColumnsSelectionDsl.colGroups]`() }`
      *
@@ -130,7 +130,7 @@ public interface ColGroupsColumnsSelectionDsl {
 
     /**
      * @include [CommonColGroupsDocs]
-     * @setArg [CommonColGroupsDocs.ExampleArg]
+     * @set [CommonColGroupsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { myColGroup.`[colGroups][SingleColumn.colGroups]`() }`
      *
@@ -141,7 +141,7 @@ public interface ColGroupsColumnsSelectionDsl {
 
     /**
      * @include [CommonColGroupsDocs]
-     * @setArg [CommonColGroupsDocs.ExampleArg]
+     * @set [CommonColGroupsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[colGroups][String.colGroups]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
@@ -152,7 +152,7 @@ public interface ColGroupsColumnsSelectionDsl {
 
     /**
      * @include [CommonColGroupsDocs]
-     * @setArg [CommonColGroupsDocs.ExampleArg]
+     * @set [CommonColGroupsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[colGroups][SingleColumn.colGroups]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
@@ -163,7 +163,7 @@ public interface ColGroupsColumnsSelectionDsl {
 
     /**
      * @include [CommonColGroupsDocs]
-     * @setArg [CommonColGroupsDocs.ExampleArg]
+     * @set [CommonColGroupsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[colGroups][ColumnPath.colGroups]`() }`
      */

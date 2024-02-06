@@ -60,16 +60,16 @@ public interface DistinctColumnsSelectionDsl {
      * ## Distinct Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DefinitionsArg]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      * }
      *
-     * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
      *  {@include [Indent]}{@include [ColumnSetName]}**`()`**
      * }
      *
-     * {@setArg [DslGrammarTemplate.PlainDslPart]}
-     * {@setArg [DslGrammarTemplate.ColumnGroupPart]}
+     * {@set [DslGrammarTemplate.PlainDslPart]}
+     * {@set [DslGrammarTemplate.ColumnGroupPart]}
      */
     public interface Grammar {
 

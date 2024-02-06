@@ -33,7 +33,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * ## Cols Of Kind Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DefinitionsArg]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
@@ -43,15 +43,15 @@ public interface ColsOfKindColumnsSelectionDsl {
      *  {@include [DslGrammarTemplate.ColumnKindDef]}
      * }
      *
-     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
      *  {@include [PlainDslName]}**`(`**{@include [DslGrammarTemplate.ColumnKindRef]}**`,`**` ..`**`)`**` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      * }
      *
-     * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
      *  {@include [Indent]}{@include [ColumnSetName]}**`(`**{@include [DslGrammarTemplate.ColumnKindRef]}**`,`**` ..`**`)`**` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      * }
      *
-     * {@setArg [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
      *  {@include [Indent]}{@include [ColumnGroupName]}**`(`**{@include [DslGrammarTemplate.ColumnKindRef]}**`,`**` ..`**`)`**` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      * }
      */
@@ -88,7 +88,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonColsOfKindDocs.ExampleArg]}
+     * {@get [CommonColsOfKindDocs.ExampleArg]}
      *
      * @param [filter\] An optional [predicate][ColumnFilter] to filter the columns of given kind(s) by.
      * @param [kind\] The [kind][ColumnKind] of columns to include.
@@ -107,7 +107,7 @@ public interface ColsOfKindColumnsSelectionDsl {
 
     /**
      * @include [CommonColsOfKindDocs]
-     * @setArg [CommonColsOfKindDocs.ExampleArg]
+     * @set [CommonColsOfKindDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") }.`[colsOfKind][ColumnSet.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) }`
      *
@@ -127,7 +127,7 @@ public interface ColsOfKindColumnsSelectionDsl {
 
     /**
      * @include [CommonColsOfKindDocs]
-     * @setArg [CommonColsOfKindDocs.ExampleArg]
+     * @set [CommonColsOfKindDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[colsOfKind][ColumnsSelectionDsl.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
@@ -143,7 +143,7 @@ public interface ColsOfKindColumnsSelectionDsl {
 
     /**
      * @include [CommonColsOfKindDocs]
-     * @setArg [CommonColsOfKindDocs.ExampleArg]
+     * @set [CommonColsOfKindDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOfKind][SingleColumn.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) }`
      */
@@ -159,7 +159,7 @@ public interface ColsOfKindColumnsSelectionDsl {
 
     /**
      * @include [CommonColsOfKindDocs]
-     * @setArg [CommonColsOfKindDocs.ExampleArg]
+     * @set [CommonColsOfKindDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsOfKind][SingleColumn.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) }`
      */
@@ -172,7 +172,7 @@ public interface ColsOfKindColumnsSelectionDsl {
 
     /**
      * @include [CommonColsOfKindDocs]
-     * @setArg [CommonColsOfKindDocs.ExampleArg]
+     * @set [CommonColsOfKindDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsOfKind][KProperty.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) }`
      */
@@ -185,7 +185,7 @@ public interface ColsOfKindColumnsSelectionDsl {
 
     /**
      * @include [CommonColsOfKindDocs]
-     * @setArg [CommonColsOfKindDocs.ExampleArg]
+     * @set [CommonColsOfKindDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[colsOfKind][ColumnPath.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) }`
      */

@@ -3,10 +3,10 @@ package org.jetbrains.kotlinx.dataframe.documentation
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 
 /**
- * ## {@getArg [TitleArg]} (Last) (Cols) (While) Grammar
+ * ## {@get [TitleArg]} (Last) (Cols) (While) Grammar
  *
  * @include [DslGrammarTemplate]
- * {@setArg [DslGrammarTemplate.DefinitionsArg]
+ * {@set [DslGrammarTemplate.DefinitionsArg]
  *  {@include [DslGrammarTemplate.ColumnSetDef]}
  *  {@include [LineBreak]}
  *  {@include [DslGrammarTemplate.ColumnGroupDef]}
@@ -16,19 +16,19 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSe
  *  {@include [DslGrammarTemplate.NumberDef]}
  * }
  *
- * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
+ * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
  *  {@include [PlainDslName]}**`(`**{@include [DslGrammarTemplate.NumberRef]}**`)`**
  *
  *  `|` {@include [PlainDslWhileName]}**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \\\\}`**
  * }
  *
- * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
+ * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
  *  {@include [Indent]}{@include [ColumnSetName]}**`(`**{@include [DslGrammarTemplate.NumberRef]}**`)`**
  *
  *  {@include [Indent]}`|` {@include [ColumnSetWhileName]}**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \\\\}`**
  * }
  *
- * {@setArg [DslGrammarTemplate.ColumnGroupFunctionsArg]
+ * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
  *  {@include [Indent]}{@include [ColumnGroupName]}**`(`**{@include [DslGrammarTemplate.NumberRef]}**`)`**
  *
  *  {@include [Indent]}`|` {@include [ColumnGroupWhileName]}**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \\\\}`**
@@ -36,27 +36,27 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSe
  */
 internal interface TakeAndDropColumnsSelectionDslGrammar {
 
-    /** Like "Take"/"Drop" */
+    /* Like "Take"/"Drop" */
     interface TitleArg
 
-    /** Operation, like "take"/"drop" */
+    /* Operation, like "take"/"drop" */
     interface OperationArg
 
-    /** [**{@getArg [OperationArg]}**][ColumnsSelectionDsl.{@getArg [OperationArg]}]`(`[**Last**][ColumnsSelectionDsl.{@getArg [OperationArg]}Last]`)` */
+    /** [**{@get [OperationArg]}**][ColumnsSelectionDsl.{@get [OperationArg]}]`(`[**Last**][ColumnsSelectionDsl.{@get [OperationArg]}Last]`)` */
     interface PlainDslName
 
-    /** .[**{@getArg [OperationArg]}**][ColumnsSelectionDsl.{@getArg [OperationArg]}]`(`[**Last**][ColumnSet.{@getArg [OperationArg]}Last]`)` */
+    /** .[**{@get [OperationArg]}**][ColumnsSelectionDsl.{@get [OperationArg]}]`(`[**Last**][ColumnSet.{@get [OperationArg]}Last]`)` */
     interface ColumnSetName
 
-    /** .[**{@getArg [OperationArg]}**][ColumnsSelectionDsl.{@getArg [OperationArg]}Cols]`(`[**Last**][ColumnsSelectionDsl.{@getArg [OperationArg]}LastCols]`)`[**Cols**][ColumnsSelectionDsl.{@getArg [OperationArg]}Cols] */
+    /** .[**{@get [OperationArg]}**][ColumnsSelectionDsl.{@get [OperationArg]}Cols]`(`[**Last**][ColumnsSelectionDsl.{@get [OperationArg]}LastCols]`)`[**Cols**][ColumnsSelectionDsl.{@get [OperationArg]}Cols] */
     interface ColumnGroupName
 
-    /** [**{@getArg [OperationArg]}**][ColumnsSelectionDsl.{@getArg [OperationArg]}While]`(`[**Last**][ColumnsSelectionDsl.{@getArg [OperationArg]}LastWhile]`)`[**While**][ColumnsSelectionDsl.{@getArg [OperationArg]}While] */
+    /** [**{@get [OperationArg]}**][ColumnsSelectionDsl.{@get [OperationArg]}While]`(`[**Last**][ColumnsSelectionDsl.{@get [OperationArg]}LastWhile]`)`[**While**][ColumnsSelectionDsl.{@get [OperationArg]}While] */
     interface PlainDslWhileName
 
-    /** .[**{@getArg [OperationArg]}**][ColumnsSelectionDsl.{@getArg [OperationArg]}While]`(`[**Last**][ColumnsSelectionDsl.{@getArg [OperationArg]}LastWhile]`)`[**While**][ColumnsSelectionDsl.{@getArg [OperationArg]}While] */
+    /** .[**{@get [OperationArg]}**][ColumnsSelectionDsl.{@get [OperationArg]}While]`(`[**Last**][ColumnsSelectionDsl.{@get [OperationArg]}LastWhile]`)`[**While**][ColumnsSelectionDsl.{@get [OperationArg]}While] */
     interface ColumnSetWhileName
 
-    /** .[**{@getArg [OperationArg]}**][ColumnsSelectionDsl.{@getArg [OperationArg]}ColsWhile]`(`[**Last**][ColumnsSelectionDsl.{@getArg [OperationArg]}LastColsWhile]`)`[**ColsWhile**][ColumnsSelectionDsl.{@getArg [OperationArg]}ColsWhile] */
+    /** .[**{@get [OperationArg]}**][ColumnsSelectionDsl.{@get [OperationArg]}ColsWhile]`(`[**Last**][ColumnsSelectionDsl.{@get [OperationArg]}LastColsWhile]`)`[**ColsWhile**][ColumnsSelectionDsl.{@get [OperationArg]}ColsWhile] */
     interface ColumnGroupWhileName
 }

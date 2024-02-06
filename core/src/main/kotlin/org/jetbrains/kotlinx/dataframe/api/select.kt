@@ -46,7 +46,7 @@ internal interface Select {
     interface SelectSelectingOptions
 }
 
-/** {@setArg [SelectingColumns.OperationArg] [select][select]} */
+/** {@set [SelectingColumns.OperationArg] [select][select]} */
 private interface SetSelectOperationArg
 
 /**
@@ -99,7 +99,7 @@ public interface SelectColumnsSelectionDsl {
      * ## Select from [ColumnGroup] Grammar
      * {@include [DslGrammarTemplate]}
      *
-     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DefinitionsArg]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
@@ -107,13 +107,13 @@ public interface SelectColumnsSelectionDsl {
      *  {@include [DslGrammarTemplate.ColumnsSelectorDef]}
      * }
      *
-     * {@setArg [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
      *  {@include [Indent]}{@include [ColumnGroupName]}**` {`** {@include [DslGrammarTemplate.ColumnsSelectorRef]} **`\}`**
      *
      *  {@include [Indent]}`|`[**` {`**][ColumnsSelectionDsl.select] {@include [DslGrammarTemplate.ColumnsSelectorRef]} [**`\}`**][ColumnsSelectionDsl.select]
      * }
-     * {@setArg [DslGrammarTemplate.PlainDslPart]}
-     * {@setArg [DslGrammarTemplate.ColumnSetPart]}
+     * {@set [DslGrammarTemplate.PlainDslPart]}
+     * {@set [DslGrammarTemplate.ColumnSetPart]}
      */
     public interface Grammar {
 
@@ -147,7 +147,7 @@ public interface SelectColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonSelectDocs.ExampleArg]}
+     * {@get [CommonSelectDocs.ExampleArg]}
      *
      * {@include [LineBreak]}
      *
@@ -166,7 +166,7 @@ public interface SelectColumnsSelectionDsl {
 
     /**
      * @include [CommonSelectDocs]
-     * @setArg [CommonSelectDocs.ExampleArg]
+     * @set [CommonSelectDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { myColGroup.`[select][SingleColumn.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
      *
@@ -177,7 +177,7 @@ public interface SelectColumnsSelectionDsl {
 
     /**
      * @include [CommonSelectDocs]
-     * @setArg [CommonSelectDocs.ExampleArg]
+     * @set [CommonSelectDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { Type::myColGroup.`[select][KProperty.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
      *
@@ -191,7 +191,7 @@ public interface SelectColumnsSelectionDsl {
 
     /**
      * @include [CommonSelectDocs]
-     * @setArg [CommonSelectDocs.ExampleArg]
+     * @set [CommonSelectDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { Type::myColGroup.`[select][KProperty.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
      *
@@ -209,7 +209,7 @@ public interface SelectColumnsSelectionDsl {
 
     /**
      * @include [SelectColumnsSelectionDsl.CommonSelectDocs]
-     * @setArg [SelectColumnsSelectionDsl.CommonSelectDocs.ExampleArg]
+     * @set [SelectColumnsSelectionDsl.CommonSelectDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[select][String.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
      *
@@ -220,7 +220,7 @@ public interface SelectColumnsSelectionDsl {
 
     /**
      * @include [CommonSelectDocs]
-     * @setArg [CommonSelectDocs.ExampleArg]
+     * @set [CommonSelectDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[select][ColumnPath.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
      *

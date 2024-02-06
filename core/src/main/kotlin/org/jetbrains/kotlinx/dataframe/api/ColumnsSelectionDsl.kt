@@ -38,7 +38,7 @@ public annotation class ColumnsSelectionDslMarker
 /**
  * ## Columns Selection DSL
  * {@include [SelectingColumns.Dsl.WithExample]}
- * {@setArg [SelectingColumns.OperationArg] [select][DataFrame.select]}
+ * {@set [SelectingColumns.OperationArg] [select][DataFrame.select]}
  *
  * @comment This interface be safely cast to [SingleColumn] across the library because it's always
  * implemented in combination with [DataFrameReceiver] which is a [SingleColumn] itself.
@@ -121,7 +121,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      * @include [DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate]
      *
-     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DefinitionsArg]
      *  {@include [DslGrammarTemplate.ColumnGroupNoSingleColumnDef]}
      *
      *  {@include [DslGrammarTemplate.ColumnSelectorDef]}
@@ -169,7 +169,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *  {@include [DslGrammarTemplate.TextDef]}
      * }
      * {@comment Plain DSL: -------------------------------------------------------------------------------------------- }
-     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
      *
      * {@include [DslGrammarTemplate.ColumnRef]} {@include [ColumnRangeColumnsSelectionDsl.Grammar.PlainDslName]} {@include [DslGrammarTemplate.ColumnRef]}
      *
@@ -242,7 +242,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *  `|` {@include [WithoutNullsColumnsSelectionDsl.Grammar.PlainDslName]}**`()`**
      * }
      * {@comment ColumnSet: -------------------------------------------------------------------------------------------- }
-     * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
      *
      *  {@include [Indent]}[**`[`**][ColumnsSelectionDsl.col]{@include [DslGrammarTemplate.IndexRef]}[**`]`**][ColumnsSelectionDsl.col]
      *
@@ -313,7 +313,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *  {@include [Indent]}`|` {@include [WithoutNullsColumnsSelectionDsl.Grammar.ColumnSetName]}**`()`**
      * }
      * {@comment ColumnGroup: -------------------------------------------------------------------------------------------- }
-     * {@setArg [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
      *
      *  {@include [Indent]}`|` [**`[`**][cols]{@include [DslGrammarTemplate.ColumnRef]}**`,`**` ..`[**`]`**][cols]
      *
@@ -421,7 +421,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
 
     /**
      * @include [SelectColumnsSelectionDsl.CommonSelectDocs]
-     * @setArg [SelectColumnsSelectionDsl.CommonSelectDocs.ExampleArg]
+     * @set [SelectColumnsSelectionDsl.CommonSelectDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { myColGroup.`[select][SingleColumn.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
      *
@@ -432,7 +432,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
 
     /**
      * @include [SelectColumnsSelectionDsl.CommonSelectDocs]
-     * @setArg [SelectColumnsSelectionDsl.CommonSelectDocs.ExampleArg]
+     * @set [SelectColumnsSelectionDsl.CommonSelectDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { Type::myColGroup.`[select][KProperty.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
      *
@@ -450,7 +450,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
 
     /**
      * @include [SelectColumnsSelectionDsl.CommonSelectDocs]
-     * @setArg [SelectColumnsSelectionDsl.CommonSelectDocs.ExampleArg]
+     * @set [SelectColumnsSelectionDsl.CommonSelectDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { Type::myColGroup.`[select][KProperty.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
      *
@@ -463,7 +463,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
 
     /**
      * @include [SelectColumnsSelectionDsl.CommonSelectDocs]
-     * @setArg [SelectColumnsSelectionDsl.CommonSelectDocs.ExampleArg]
+     * @set [SelectColumnsSelectionDsl.CommonSelectDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[select][String.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
      *
@@ -474,7 +474,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
 
     /**
      * @include [SelectColumnsSelectionDsl.CommonSelectDocs]
-     * @setArg [SelectColumnsSelectionDsl.CommonSelectDocs.ExampleArg]
+     * @set [SelectColumnsSelectionDsl.CommonSelectDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[select][ColumnPath.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
      *

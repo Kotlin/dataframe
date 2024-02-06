@@ -23,18 +23,18 @@ public interface ExprColumnsSelectionDsl {
      *
      * @include [DslGrammarTemplate]
      *
-     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DefinitionsArg]
      *  {@include [DslGrammarTemplate.NameDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.InferDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnExpressionDef]}
      * }
-     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
      *  {@include [PlainDslName]}**`(`**`[`{@include [DslGrammarTemplate.NameRef]}**`,`**`][`{@include [DslGrammarTemplate.InferRef]}`]`**`)`** **`{ `**{@include [DslGrammarTemplate.ColumnExpressionRef]}**` \\}`**
      * }
-     * {@setArg [DslGrammarTemplate.ColumnSetPart]}
-     * {@setArg [DslGrammarTemplate.ColumnGroupPart]}
+     * {@set [DslGrammarTemplate.ColumnSetPart]}
+     * {@set [DslGrammarTemplate.ColumnGroupPart]}
      */
     public interface Grammar {
 

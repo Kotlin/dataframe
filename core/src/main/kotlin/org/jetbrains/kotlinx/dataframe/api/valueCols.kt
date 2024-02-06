@@ -33,7 +33,7 @@ public interface ValueColsColumnsSelectionDsl {
      * ## Value Columns Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DefinitionsArg]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
@@ -41,15 +41,15 @@ public interface ValueColsColumnsSelectionDsl {
      *  {@include [DslGrammarTemplate.ConditionDef]}
      * }
      *
-     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
      *  {@include [PlainDslName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      * }
      *
-     * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
      *  {@include [Indent]}{@include [ColumnSetName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      * }
      *
-     * {@setArg [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
      *  {@include [Indent]}{@include [ColumnGroupName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      * }
      */
@@ -86,7 +86,7 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonValueColsDocs.ExampleArg]}
+     * {@get [CommonValueColsDocs.ExampleArg]}
      *
      * @param [filter\] An optional [predicate][Predicate] to filter the value columns by.
      * @return A [ColumnSet] of [ValueColumns][ValueColumn].
@@ -103,7 +103,7 @@ public interface ValueColsColumnsSelectionDsl {
 
     /**
      * @include [CommonValueColsDocs]
-     * @setArg [CommonValueColsDocs.ExampleArg]
+     * @set [CommonValueColsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") }.`[valueCols][ColumnSet.valueCols]`() }`
      *
@@ -116,7 +116,7 @@ public interface ValueColsColumnsSelectionDsl {
 
     /**
      * @include [CommonValueColsDocs]
-     * @setArg [CommonValueColsDocs.ExampleArg]
+     * @set [CommonValueColsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[valueCols][ColumnsSelectionDsl.valueCols]`() }`
      *
@@ -127,7 +127,7 @@ public interface ValueColsColumnsSelectionDsl {
 
     /**
      * @include [CommonValueColsDocs]
-     * @setArg [CommonValueColsDocs.ExampleArg]
+     * @set [CommonValueColsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { myColGroup.`[valueCols][SingleColumn.valueCols]`() }`
      *
@@ -138,7 +138,7 @@ public interface ValueColsColumnsSelectionDsl {
 
     /**
      * @include [CommonValueColsDocs]
-     * @setArg [CommonValueColsDocs.ExampleArg]
+     * @set [CommonValueColsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[valueCols][String.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
@@ -149,7 +149,7 @@ public interface ValueColsColumnsSelectionDsl {
 
     /**
      * @include [CommonValueColsDocs]
-     * @setArg [CommonValueColsDocs.ExampleArg]
+     * @set [CommonValueColsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[valueCols][KProperty.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
@@ -162,7 +162,7 @@ public interface ValueColsColumnsSelectionDsl {
 
     /**
      * @include [CommonValueColsDocs]
-     * @setArg [CommonValueColsDocs.ExampleArg]
+     * @set [CommonValueColsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[valueCols][ColumnPath.valueCols]`() }`
      */

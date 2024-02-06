@@ -31,7 +31,7 @@ public interface AndColumnsSelectionDsl {
      * ## And Operator Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DefinitionsArg]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
@@ -41,17 +41,17 @@ public interface AndColumnsSelectionDsl {
      *  {@include [DslGrammarTemplate.ColumnOrColumnSetDef]}
      * }
      *
-     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
      *  {@include [DslGrammarTemplate.ColumnOrColumnSetRef]} {@include [InfixName]}` [ `**`{`**` ] `{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}` [ `**`\\}`**` ] `
      *
      *  `| `{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}{@include [Name]} **`(`**`|`**`{ `**{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}**` \\}`**`|`**`)`**
      * }
      *
-     * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
      *  {@include [Indent]}{@include [Name]} **`(`**`|`**`{ `**{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}**` \\}`**`|`**`)`**
      * }
      *
-     * {@setArg [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
      *  {@include [Indent]}{@include [Name]} **`(`**`|`**`{ `**{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}**` \\}`**`|`**`)`**
      * }
      */
@@ -90,7 +90,7 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Example for this overload:
      *
-     * {@getArg [CommonAndDocs.ExampleArg]}
+     * {@get [CommonAndDocs.ExampleArg]}
      *
      * @return A [ColumnSet] that contains all the columns from the [ColumnsResolvers][ColumnsResolver] on the left
      *   and right side of the [and] operator.
@@ -104,25 +104,25 @@ public interface AndColumnsSelectionDsl {
 
     /**
      * @include [CommonAndDocs]
-     * @setArg [CommonAndDocs.ExampleArg]
+     * @set [CommonAndDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { ... } `[and][ColumnsResolver.and] {@getArg [ColumnsResolverAndDocs.Argument]}` }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { ... } `[and][ColumnsResolver.and] {@get [ColumnsResolverAndDocs.Argument]}` }`
      */
     private interface ColumnsResolverAndDocs {
 
         interface Argument
     }
 
-    /** @include [ColumnsResolverAndDocs] {@setArg [ColumnsResolverAndDocs.Argument] [colsOf][SingleColumn.colsOf]`<`[Int][Int]`>()} */
+    /** @include [ColumnsResolverAndDocs] {@set [ColumnsResolverAndDocs.Argument] [colsOf][SingleColumn.colsOf]`<`[Int][Int]`>()} */
     public infix fun <C> ColumnsResolver<C>.and(other: ColumnsResolver<C>): ColumnSet<C> = ColumnsList(this, other)
 
-    /** @include [ColumnsResolverAndDocs] {@setArg [ColumnsResolverAndDocs.Argument] `{ colA `[/][DataColumn.div]` 2.0 `[named][ColumnReference.named]` "half colA" } `} */
+    /** @include [ColumnsResolverAndDocs] {@set [ColumnsResolverAndDocs.Argument] `{ colA `[/][DataColumn.div]` 2.0 `[named][ColumnReference.named]` "half colA" } `} */
     public infix fun <C> ColumnsResolver<C>.and(other: () -> ColumnsResolver<C>): ColumnSet<C> = this and other()
 
-    /** @include [ColumnsResolverAndDocs] {@setArg [ColumnsResolverAndDocs.Argument] "colB"} */
+    /** @include [ColumnsResolverAndDocs] {@set [ColumnsResolverAndDocs.Argument] "colB"} */
     public infix fun <C> ColumnsResolver<C>.and(other: String): ColumnSet<*> = this and other.toColumnAccessor()
 
-    /** @include [ColumnsResolverAndDocs] {@setArg [ColumnsResolverAndDocs.Argument] Type::colB} */
+    /** @include [ColumnsResolverAndDocs] {@set [ColumnsResolverAndDocs.Argument] Type::colB} */
     public infix fun <C> ColumnsResolver<C>.and(other: KProperty<C>): ColumnSet<C> = this and other.toColumnAccessor()
 
     // endregion
@@ -131,25 +131,25 @@ public interface AndColumnsSelectionDsl {
 
     /**
      * @include [CommonAndDocs]
-     * @setArg [CommonAndDocs.ExampleArg]
+     * @set [CommonAndDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "colA" `[and][String.and] {@getArg [StringAndDocs.Argument]}` }`
+     * `df.`[select][DataFrame.select]` { "colA" `[and][String.and] {@get [StringAndDocs.Argument]}` }`
      */
     private interface StringAndDocs {
 
         interface Argument
     }
 
-    /** @include [StringAndDocs] {@setArg [StringAndDocs.Argument] [colsOf][SingleColumn.colsOf]`<`[Int][Int]`>()} */
+    /** @include [StringAndDocs] {@set [StringAndDocs.Argument] [colsOf][SingleColumn.colsOf]`<`[Int][Int]`>()} */
     public infix fun <C> String.and(other: ColumnsResolver<C>): ColumnSet<*> = toColumnAccessor() and other
 
-    /** @include [StringAndDocs] {@setArg [StringAndDocs.Argument] `{ colA `[/][DataColumn.div]` 2.0 `[named][ColumnReference.named]` "half colA" } `} */
+    /** @include [StringAndDocs] {@set [StringAndDocs.Argument] `{ colA `[/][DataColumn.div]` 2.0 `[named][ColumnReference.named]` "half colA" } `} */
     public infix fun <C> String.and(other: () -> ColumnsResolver<C>): ColumnSet<*> = toColumnAccessor() and other()
 
-    /** @include [StringAndDocs] {@setArg [StringAndDocs.Argument] "colB"} */
+    /** @include [StringAndDocs] {@set [StringAndDocs.Argument] "colB"} */
     public infix fun String.and(other: String): ColumnSet<*> = toColumnAccessor() and other.toColumnAccessor()
 
-    /** @include [StringAndDocs] {@setArg [StringAndDocs.Argument] Type::colB} */
+    /** @include [StringAndDocs] {@set [StringAndDocs.Argument] Type::colB} */
     public infix fun <C> String.and(other: KProperty<C>): ColumnSet<*> = toColumnAccessor() and other
 
     // endregion
@@ -158,26 +158,26 @@ public interface AndColumnsSelectionDsl {
 
     /**
      * @include [CommonAndDocs]
-     * @setArg [CommonAndDocs.ExampleArg]
+     * @set [CommonAndDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { Type::colA `[and][KProperty.and] {@getArg [KPropertyAndDocs.Argument]}` }`
+     * `df.`[select][DataFrame.select]` { Type::colA `[and][KProperty.and] {@get [KPropertyAndDocs.Argument]}` }`
      */
     private interface KPropertyAndDocs {
 
         interface Argument
     }
 
-    /** @include [KPropertyAndDocs] {@setArg [KPropertyAndDocs.Argument] [colsOf][SingleColumn.colsOf]`<`[Int][Int]`>()} */
+    /** @include [KPropertyAndDocs] {@set [KPropertyAndDocs.Argument] [colsOf][SingleColumn.colsOf]`<`[Int][Int]`>()} */
     public infix fun <C> KProperty<C>.and(other: ColumnsResolver<C>): ColumnSet<C> = toColumnAccessor() and other
 
-    /** @include [KPropertyAndDocs] {@setArg [KPropertyAndDocs.Argument] `{ colA `[/][DataColumn.div]` 2.0 `[named][ColumnReference.named]` "half colA" } `} */
+    /** @include [KPropertyAndDocs] {@set [KPropertyAndDocs.Argument] `{ colA `[/][DataColumn.div]` 2.0 `[named][ColumnReference.named]` "half colA" } `} */
     public infix fun <C> KProperty<C>.and(other: () -> ColumnsResolver<C>): ColumnSet<C> =
         toColumnAccessor() and other()
 
-    /** @include [KPropertyAndDocs] {@setArg [KPropertyAndDocs.Argument] "colB"} */
+    /** @include [KPropertyAndDocs] {@set [KPropertyAndDocs.Argument] "colB"} */
     public infix fun <C> KProperty<C>.and(other: String): ColumnSet<*> = toColumnAccessor() and other
 
-    /** @include [KPropertyAndDocs] {@setArg [KPropertyAndDocs.Argument] Type::colB} */
+    /** @include [KPropertyAndDocs] {@set [KPropertyAndDocs.Argument] Type::colB} */
     public infix fun <C> KProperty<C>.and(other: KProperty<C>): ColumnSet<C> =
         toColumnAccessor() and other.toColumnAccessor()
 

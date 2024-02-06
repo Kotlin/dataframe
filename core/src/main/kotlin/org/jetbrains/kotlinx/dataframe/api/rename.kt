@@ -120,11 +120,11 @@ public interface RenameColumnsSelectionDsl {
      * ## Rename: `named` / `into` Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DefinitionsArg]
      *  {@include [DslGrammarTemplate.ColumnDef]}
      * }
      *
-     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
      *  {@include [DslGrammarTemplate.ColumnRef]} {@include [InfixNamedName]}`/`{@include [InfixIntoName]} {@include [DslGrammarTemplate.ColumnRef]}
      *
      *  `| `{@include [DslGrammarTemplate.ColumnRef]}{@include [NamedName]}**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`**
@@ -132,8 +132,8 @@ public interface RenameColumnsSelectionDsl {
      *  `| `{@include [DslGrammarTemplate.ColumnRef]}{@include [IntoName]}**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`**
      * }
      *
-     * {@setArg [DslGrammarTemplate.ColumnGroupPart]}
-     * {@setArg [DslGrammarTemplate.ColumnSetPart]}
+     * {@set [DslGrammarTemplate.ColumnGroupPart]}
+     * {@set [DslGrammarTemplate.ColumnSetPart]}
      */
     public interface Grammar {
 
@@ -169,10 +169,10 @@ public interface RenameColumnsSelectionDsl {
      *
      * #### Example for this overload:
      *
-     * `df.`[select][DataFrame.select]` { {@getArg [CommonRenameDocs.ReceiverArg]} `[{@getArg [CommonRenameDocs.FunctionNameArg]}][{@getArg [CommonRenameDocs.ReceiverTypeArg]}.{@getArg [CommonRenameDocs.FunctionNameArg]}]` {@getArg [CommonRenameDocs.ParamArg]} }`
+     * `df.`[select][DataFrame.select]` { {@get [CommonRenameDocs.ReceiverArg]} `[{@get [CommonRenameDocs.FunctionNameArg]}][{@get [CommonRenameDocs.ReceiverTypeArg]}.{@get [CommonRenameDocs.FunctionNameArg]}]` {@get [CommonRenameDocs.ParamArg]} }`
      *
-     * @receiver The [{@getArg [ReceiverTypeArg]}] referencing the column to rename.
-     * @param [{@getArg [ParamNameArg]}\] A [{@getArg [ParamTypeArg]}\] used to specify the new name of the column.
+     * @receiver The [{@get [ReceiverTypeArg]}] referencing the column to rename.
+     * @param [{@get [ParamNameArg]}\] A [{@get [ParamTypeArg]}\] used to specify the new name of the column.
      * @return A [ColumnReference] to the renamed column.
      */
     private interface CommonRenameDocs {
@@ -191,48 +191,48 @@ public interface RenameColumnsSelectionDsl {
         interface ParamTypeArg
 
         /**
-         * @setArg [ReceiverArg] columnA
-         * @setArg [ReceiverTypeArg] ColumnReference
+         * @set [ReceiverArg] columnA
+         * @set [ReceiverTypeArg] ColumnReference
          */
         interface ColumnReferenceReceiver
 
         /**
-         * @setArg [ReceiverArg] "columnA"
-         * @setArg [ReceiverTypeArg] String
+         * @set [ReceiverArg] "columnA"
+         * @set [ReceiverTypeArg] String
          */
         interface StringReceiver
 
         /**
-         * @setArg [ReceiverArg] Type::columnA
-         * @setArg [ReceiverTypeArg] KProperty
+         * @set [ReceiverArg] Type::columnA
+         * @set [ReceiverTypeArg] KProperty
          */
         interface KPropertyReceiver
 
         /**
-         * @setArg [ParamArg] columnB
-         * @setArg [ParamNameArg] nameOf
-         * @setArg [ParamTypeArg] ColumnReference
+         * @set [ParamArg] columnB
+         * @set [ParamNameArg] nameOf
+         * @set [ParamTypeArg] ColumnReference
          */
         interface ColumnReferenceParam
 
         /**
-         * @setArg [ParamArg] "columnB"
-         * @setArg [ParamNameArg] newName
-         * @setArg [ParamTypeArg] String
+         * @set [ParamArg] "columnB"
+         * @set [ParamNameArg] newName
+         * @set [ParamTypeArg] String
          */
         interface StringParam
 
         /**
-         * @setArg [ParamArg] Type::columnB
-         * @setArg [ParamNameArg] nameOf
-         * @setArg [ParamTypeArg] KProperty
+         * @set [ParamArg] Type::columnB
+         * @set [ParamNameArg] nameOf
+         * @set [ParamTypeArg] KProperty
          */
         interface KPropertyParam
 
-        /** @setArg [CommonRenameDocs.FunctionNameArg] named */
+        /** @set [CommonRenameDocs.FunctionNameArg] named */
         interface NamedFunctionName
 
-        /** @setArg [CommonRenameDocs.FunctionNameArg] into */
+        /** @set [CommonRenameDocs.FunctionNameArg] into */
         interface IntoFunctionName
     }
 

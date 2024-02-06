@@ -47,13 +47,13 @@ internal interface SelectingColumnsLink
  */
 internal interface SelectingColumns {
 
-    /**
-     * The key for an @setArg that will define the operation name for the examples below.
+    /*
+     * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
     interface OperationArg
 
-    /** {@setArg [OperationArg] operation} */
+    /** {@set [OperationArg] operation} */
     interface SetDefaultOperationArg
 
     /**
@@ -83,11 +83,11 @@ internal interface SelectingColumns {
          *
          * #### For example:
          *
-         * `df.`{@getArg [OperationArg]}` { length `[and][ColumnsSelectionDsl.and]` age }`
+         * `df.`{@get [OperationArg]}` { length `[and][ColumnsSelectionDsl.and]` age }`
          *
-         * `df.`{@getArg [OperationArg]}` { `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
+         * `df.`{@get [OperationArg]}` { `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
          *
-         * `df.`{@getArg [OperationArg]}` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+         * `df.`{@get [OperationArg]}` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
          *
          * @include [SetDefaultOperationArg]
          */
@@ -123,11 +123,11 @@ internal interface SelectingColumns {
          *
          * #### For example:
          *
-         * `df.`{@getArg [OperationArg]}` { length }`
+         * `df.`{@get [OperationArg]}` { length }`
          *
-         * `df.`{@getArg [OperationArg]}` { `[col][ColumnsSelectionDsl.col]`(1) }`
+         * `df.`{@get [OperationArg]}` { `[col][ColumnsSelectionDsl.col]`(1) }`
          *
-         * `df.`{@getArg [OperationArg]}` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>().`[first][ColumnsSelectionDsl.first]`() }`
+         * `df.`{@get [OperationArg]}` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>().`[first][ColumnsSelectionDsl.first]`() }`
          * @include [SetDefaultOperationArg]
          */
         interface WithExample
@@ -147,7 +147,7 @@ internal interface SelectingColumns {
          *
          * #### For example:
          *
-         * `df.`{@getArg [OperationArg]}`("length", "age")`
+         * `df.`{@get [OperationArg]}`("length", "age")`
          * @include [SetDefaultOperationArg]
          */
         interface WithExample
@@ -171,7 +171,7 @@ internal interface SelectingColumns {
          *
          * `val age by `[column][column]`<`[Double][Double]`>()`
          *
-         * `df.`{@getArg [OperationArg]}`(length, age)`
+         * `df.`{@get [OperationArg]}`(length, age)`
          * @include [SetDefaultOperationArg]
          */
         interface WithExample
@@ -191,7 +191,7 @@ internal interface SelectingColumns {
          * data class Person(val length: Double, val age: Double)
          * ```
          *
-         * `df.`{@getArg [OperationArg]}`(Person::length, Person::age)`
+         * `df.`{@get [OperationArg]}`(Person::length, Person::age)`
          * @include [SetDefaultOperationArg]
          */
         interface WithExample

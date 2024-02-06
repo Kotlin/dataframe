@@ -35,7 +35,7 @@ public interface ColsOfColumnsSelectionDsl {
      *
      * @include [DslGrammarTemplate]
      *
-     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DefinitionsArg]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.SingleColumnDef]}
@@ -51,16 +51,16 @@ public interface ColsOfColumnsSelectionDsl {
      *  {@include [DslGrammarTemplate.KTypeDef]}
      * }
      *
-     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
      *  {@include [PlainDslName]}**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**` [` **`(`**{@include [DslGrammarTemplate.KTypeRef]}**`)`** `] [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      * }
      *
-     * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
      *  {@include [Indent]}{@include [ColumnSetName]}**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**` [` **`(`**{@include [DslGrammarTemplate.KTypeRef]}**`)`** `] [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
      * }
      *
      * {@comment We need to deviate from the template here, since we have overload discrepancies.}
-     * {@setArg [DslGrammarTemplate.ColumnGroupPart]
+     * {@set [DslGrammarTemplate.ColumnGroupPart]
      *  {@include [LineBreak]}
      *  ### On a column group reference:
      *

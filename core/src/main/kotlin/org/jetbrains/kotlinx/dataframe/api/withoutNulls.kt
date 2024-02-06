@@ -29,21 +29,21 @@ public interface WithoutNullsColumnsSelectionDsl {
      * ## (Cols) Without Nulls Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DefinitionsArg]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
      * }
      *
-     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
      *  {@include [PlainDslName]}**`()`**
      * }
      *
-     * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
      *  {@include [Indent]}{@include [ColumnSetName]}**`()`**
      * }
      *
-     * {@setArg [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
      *  {@include [Indent]}{@include [ColumnGroupName]}**`()`**
      * }
      */
@@ -79,7 +79,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonWithoutNullsDocs.ExampleArg]]}
+     * {@get [CommonWithoutNullsDocs.ExampleArg]]}
      *
      * @return A [ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */
@@ -90,7 +90,7 @@ public interface WithoutNullsColumnsSelectionDsl {
 
     /**
      * @include [CommonWithoutNullsDocs]
-     * @setArg [CommonWithoutNullsDocs.ExampleArg]
+     * @set [CommonWithoutNullsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[withoutNulls][ColumnSet.withoutNulls]`() }`
      */
@@ -100,7 +100,7 @@ public interface WithoutNullsColumnsSelectionDsl {
 
     /**
      * @include [CommonWithoutNullsDocs]
-     * @setArg [CommonWithoutNullsDocs.ExampleArg]
+     * @set [CommonWithoutNullsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[withoutNulls][ColumnsSelectionDsl.colsWithoutNulls]`() }`
      */
@@ -109,7 +109,7 @@ public interface WithoutNullsColumnsSelectionDsl {
 
     /**
      * @include [CommonWithoutNullsDocs]
-     * @setArg [CommonWithoutNullsDocs.ExampleArg]
+     * @set [CommonWithoutNullsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsWithoutNulls][SingleColumn.colsWithoutNulls]`() }`
      */
@@ -118,7 +118,7 @@ public interface WithoutNullsColumnsSelectionDsl {
 
     /**
      * @include [CommonWithoutNullsDocs]
-     * @setArg [CommonWithoutNullsDocs.ExampleArg]
+     * @set [CommonWithoutNullsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsWithoutNulls][String.colsWithoutNulls]`() }`
      */
@@ -127,7 +127,7 @@ public interface WithoutNullsColumnsSelectionDsl {
 
     /**
      * @include [CommonWithoutNullsDocs]
-     * @setArg [CommonWithoutNullsDocs.ExampleArg]
+     * @set [CommonWithoutNullsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[colsWithoutNulls][KProperty.colsWithoutNulls]`() }`
      */
@@ -136,7 +136,7 @@ public interface WithoutNullsColumnsSelectionDsl {
 
     /**
      * @include [CommonWithoutNullsDocs]
-     * @setArg [CommonWithoutNullsDocs.ExampleArg]
+     * @set [CommonWithoutNullsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[colsWithoutNulls][ColumnPath.colsWithoutNulls]`() }`
      */
