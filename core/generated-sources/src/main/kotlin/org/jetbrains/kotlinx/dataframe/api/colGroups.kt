@@ -113,9 +113,9 @@ public interface ColGroupsColumnsSelectionDsl {
 
     /**
      * ## Column Groups
-     * Creates a subset of columns from [this\] that are [ColumnGroups][ColumnGroup].
+     * Creates a subset of columns from [this] that are [ColumnGroups][ColumnGroup].
      *
-     * You can optionally use a [filter\] to only include certain columns.
+     * You can optionally use a [filter] to only include certain columns.
      * [colGroups] can be called using any of the supported [APIs][AccessApi] (+ [ColumnPath]).
      *
      * This function only looks at columns at the top-level.
@@ -132,14 +132,14 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonColGroupsDocs.ExampleArg]}
      *
-     * @param [filter\] An optional [predicate][Predicate] to filter the column groups by.
+     *
+     * @param [filter] An optional [predicate][Predicate] to filter the column groups by.
      * @return A [ColumnSet] of [ColumnGroups][ColumnGroup].
-     * @see [ColumnsSelectionDsl.colsOfKind\]
-     * @see [ColumnsSelectionDsl.cols\]
-     * @see [ColumnsSelectionDsl.frameCols\]
-     * @see [ColumnsSelectionDsl.valueCols\]
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.cols]
+     * @see [ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.valueCols]
      */
     private interface CommonColGroupsDocs {
 

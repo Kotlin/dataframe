@@ -14,34 +14,34 @@ import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs.Opera
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs.TitleArg
 
 /**
- * ## {@getArg [TitleArg]} (Cols)
- * This {@getArg [NounArg]}s the {@getArg [FirstOrLastArg]} [n] columns from [this] collecting
+ * ##  (Cols)
+ * This s the  [n] columns from [this] collecting
  * the result into a [ColumnSet].
  *
  * This function only looks at columns at the top-level.
  *
  * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
  *
- * NOTE: To avoid ambiguity, `{@getArg [CommonTakeAndDropDocs.OperationArg]}` is called `{@getArg [CommonTakeAndDropDocs.OperationArg]}Cols` when called on
+ * NOTE: To avoid ambiguity, `` is called `Cols` when called on
  * a [ColumnGroup].
  *
  * ### Check out: [Grammar]
  *
  * #### Examples:
- * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[{@getArg [OperationArg]}][ColumnSet.{@getArg [OperationArg]}]`(5) }`
+ * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[][ColumnSet.]`(5) }`
  *
- * `df.`[select][DataFrame.select]` { `[{@getArg [OperationArg]}][ColumnsSelectionDsl.{@getArg [OperationArg]}]`(1) }`
+ * `df.`[select][DataFrame.select]` { `[][ColumnsSelectionDsl.]`(1) }`
  *
- * `df.`[select][DataFrame.select]` { myColumnGroup.`[{@getArg [OperationArg]}Cols][SingleColumn.{@getArg [OperationArg]}Cols]`(2) }`
+ * `df.`[select][DataFrame.select]` { myColumnGroup.`[Cols][SingleColumn.Cols]`(2) }`
  *
- * `df.`[select][DataFrame.select]` { "myColumnGroup".`[{@getArg [OperationArg]}Cols][String.{@getArg [OperationArg]}Cols]`(3) }`
+ * `df.`[select][DataFrame.select]` { "myColumnGroup".`[Cols][String.Cols]`(3) }`
  *
  * #### Examples for this overload:
  *
- * {@getArg [CommonTakeAndDropDocs.ExampleArg]}
  *
- * @param [n] The number of columns to {@getArg [NounArg]}.
- * @return A [ColumnSet] containing the {@getArg [FirstOrLastArg]} [n] columns.
+ *
+ * @param [n] The number of columns to .
+ * @return A [ColumnSet] containing the  [n] columns.
  */
 internal interface CommonTakeAndDropDocs {
 

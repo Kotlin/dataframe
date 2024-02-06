@@ -66,7 +66,7 @@ public annotation class JsonOptions(
      *     will be created.
      *
      * Example:
-     * `["""{@getArg ["store"]["book"]}[*]["author"]"""]`
+     * `["""[*]["author"]"""]`
      */
     public val keyValuePaths: Array<String> = [],
 )

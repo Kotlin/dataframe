@@ -110,9 +110,9 @@ public interface ValueColsColumnsSelectionDsl {
 
     /**
      * ## Value Columns
-     * Creates a subset of columns from [this\] that are [ValueColumns][ValueColumn].
+     * Creates a subset of columns from [this] that are [ValueColumns][ValueColumn].
      *
-     * You can optionally use a [filter\] to only include certain columns.
+     * You can optionally use a [filter] to only include certain columns.
      * [valueCols] can be called using any of the supported [APIs][AccessApi] (+ [ColumnPath]).
      *
      * This function only looks at columns at the top-level.
@@ -129,14 +129,14 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonValueColsDocs.ExampleArg]}
      *
-     * @param [filter\] An optional [predicate][Predicate] to filter the value columns by.
+     *
+     * @param [filter] An optional [predicate][Predicate] to filter the value columns by.
      * @return A [ColumnSet] of [ValueColumns][ValueColumn].
-     * @see [ColumnsSelectionDsl.colsOfKind\]
-     * @see [ColumnsSelectionDsl.frameCols\]
-     * @see [ColumnsSelectionDsl.colGroups\]
-     * @see [ColumnsSelectionDsl.cols\]
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.cols]
      */
     private interface CommonValueColsDocs {
 

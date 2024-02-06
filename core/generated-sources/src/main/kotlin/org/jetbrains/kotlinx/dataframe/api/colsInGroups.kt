@@ -151,7 +151,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * #### Examples of this overload:
      *
-     * {@getArg [ColsInGroupsDocs.ExampleArg]}
+     *
      *
      * @see [ColumnsSelectionDsl.cols]
      * @see [ColumnsSelectionDsl.colGroups]

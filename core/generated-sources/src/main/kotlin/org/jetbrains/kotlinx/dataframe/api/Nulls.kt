@@ -58,10 +58,7 @@ internal interface FillNulls {
      * `| .`[**withZero**][org.jetbrains.kotlinx.dataframe.api.Update.withZero]**`()`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| .`[**asFrame**][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]**` { `**[dataFrameExpression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
-     *
-     *
-     */
+     * `| .`[**asFrame**][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]**` { `**[dataFrameExpression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`** */
     interface Grammar
 
     /**
@@ -151,7 +148,7 @@ private interface SetFillNullsOperationArg
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [Selecting Columns][FillNulls.FillNullsSelectingOptions]
- * for all the selecting options.  
+ * for all the selecting options. 
  *
  * ### This Fill Nulls Overload
  *
@@ -171,7 +168,7 @@ private interface CommonFillNullsFunctionDoc
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FillNulls.FillNullsSelectingOptions]
- * for all the selecting options.  
+ * for all the selecting options. 
  *
  * ### This Fill Nulls Overload
  *
@@ -223,7 +220,7 @@ public fun <T, C> DataFrame<T>.fillNulls(columns: ColumnsSelector<T, C?>): Updat
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FillNulls.FillNullsSelectingOptions]
- * for all the selecting options.  
+ * for all the selecting options. 
  *
  * ### This Fill Nulls Overload
  *
@@ -252,7 +249,7 @@ public fun <T> DataFrame<T>.fillNulls(vararg columns: String): Update<T, Any?> =
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FillNulls.FillNullsSelectingOptions]
- * for all the selecting options.  
+ * for all the selecting options. 
  *
  * ### This Fill Nulls Overload
  *
@@ -283,7 +280,7 @@ public fun <T, C> DataFrame<T>.fillNulls(vararg columns: KProperty<C>): Update<T
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FillNulls.FillNullsSelectingOptions]
- * for all the selecting options.  
+ * for all the selecting options. 
  *
  * ### This Fill Nulls Overload
  *
@@ -375,10 +372,7 @@ internal interface FillNaNs {
      * `| .`[**withZero**][org.jetbrains.kotlinx.dataframe.api.Update.withZero]**`()`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| .`[**asFrame**][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]**` { `**[dataFrameExpression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
-     *
-     *
-     */
+     * `| .`[**asFrame**][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]**` { `**[dataFrameExpression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`** */
     interface Grammar
 
     /**
@@ -468,7 +462,7 @@ internal interface SetFillNaNsOperationArg
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [Selecting Columns][FillNaNs.FillNaNsSelectingOptions]
- * for all the selecting options.  
+ * for all the selecting options. 
  *
  * ### This Fill NaNs Overload
  */
@@ -487,7 +481,7 @@ private interface CommonFillNaNsFunctionDoc
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FillNaNs.FillNaNsSelectingOptions]
- * for all the selecting options.  
+ * for all the selecting options. 
  *
  * ### This Fill NaNs Overload
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
@@ -538,7 +532,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(columns: ColumnsSelector<T, C>): Update<
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FillNaNs.FillNaNsSelectingOptions]
- * for all the selecting options.  
+ * for all the selecting options. 
  *
  * ### This Fill NaNs Overload
  * Select columns using their [column names][String]
@@ -566,7 +560,7 @@ public fun <T> DataFrame<T>.fillNaNs(vararg columns: String): Update<T, Any?> =
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FillNaNs.FillNaNsSelectingOptions]
- * for all the selecting options.  
+ * for all the selecting options. 
  *
  * ### This Fill NaNs Overload
  * Select columns using [KProperties][KProperty] ([KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]).
@@ -596,7 +590,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: KProperty<C>): Update<T,
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FillNaNs.FillNaNsSelectingOptions]
- * for all the selecting options.  
+ * for all the selecting options. 
  *
  * ### This Fill NaNs Overload
  * Select columns using [column accessors][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]
@@ -667,10 +661,7 @@ internal interface FillNA {
      * `| .`[**withZero**][org.jetbrains.kotlinx.dataframe.api.Update.withZero]**`()`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| .`[**asFrame**][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]**` { `**[dataFrameExpression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
-     *
-     *
-     */
+     * `| .`[**asFrame**][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]**` { `**[dataFrameExpression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`** */
     interface Grammar
 
     /**
@@ -760,7 +751,7 @@ internal interface SetFillNAOperationArg
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [Selecting Columns][FillNA.FillNASelectingOptions]
- * for all the selecting options.  
+ * for all the selecting options. 
  *
  * ### This Fill NA Overload
  */
@@ -779,7 +770,7 @@ private interface CommonFillNAFunctionDoc
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FillNA.FillNASelectingOptions]
- * for all the selecting options.  
+ * for all the selecting options. 
  *
  * ### This Fill NA Overload
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
@@ -830,7 +821,7 @@ public fun <T, C> DataFrame<T>.fillNA(columns: ColumnsSelector<T, C?>): Update<T
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FillNA.FillNASelectingOptions]
- * for all the selecting options.  
+ * for all the selecting options. 
  *
  * ### This Fill NA Overload
  * Select columns using their [column names][String]
@@ -858,7 +849,7 @@ public fun <T> DataFrame<T>.fillNA(vararg columns: String): Update<T, Any?> =
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FillNA.FillNASelectingOptions]
- * for all the selecting options.  
+ * for all the selecting options. 
  *
  * ### This Fill NA Overload
  * Select columns using [KProperties][KProperty] ([KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]).
@@ -888,7 +879,7 @@ public fun <T, C> DataFrame<T>.fillNA(vararg columns: KProperty<C>): Update<T, C
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FillNA.FillNASelectingOptions]
- * for all the selecting options.  
+ * for all the selecting options. 
  *
  * ### This Fill NA Overload
  * Select columns using [column accessors][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]

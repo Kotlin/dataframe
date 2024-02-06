@@ -26,6 +26,9 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.nrow
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
+import java.io.File
 import kotlin.reflect.KProperty
 
 // region DataColumn
@@ -82,6 +85,56 @@ public fun <T> PivotGroupBy<T>.first(predicate: RowFilter<T>): ReducedPivotGroup
 
 // endregion
 
+/**
+ * ## Submit Number
+ * Submits the given number.
+ *
+ * ### For example
+ * {@comment Giving an example of how the function can be called, default the argument to `5.0`}
+ * ```kotlin
+ * MyClass().submit(${[SubmitDocs.ExampleArg]=5.0}, File("file.json")) { println(it) }
+ * ```
+ *
+ * ### Result
+ * The number will be submitted to a JSON file like this:
+ * ```json
+ * {@includeFile (./submitted.json)}
+ * ```
+ * @get [ExtraInfoArg] {@comment Attempt to retrieve the [ExtraInfoArg] variable}
+ * $[ParamArg] {@comment Attempt to retrieve the [ParamArg] variable using shorter notation}
+ * @param location The file location to submit the number to.
+ * @param onException What to do when an exception occurs.
+ * @return `true` if the number was submitted successfully, `false` otherwise.
+ */
+@ExcludeFromSources
+private interface SubmitDocs {
+
+    /* Example argument, defaults to 5.0 */
+    interface ExampleArg
+
+    /* Optional extra info */
+    interface ExtraInfoArg
+
+    /* The param part */
+    interface ParamArg
+}
+
+/**
+ * @include [SubmitDocs]
+ * @set [SubmitDocs.ParamArg] @param [number] The [Int] to submit.
+ * @set [SubmitDocs.ExampleArg] 5{@comment Overriding the default example argument}
+ * @comment While You can use block tags for multiline comments, most of the time, inline tags are clearer:
+ * {@set [SubmitDocs.ExtraInfoArg]
+ *  ### This function can also be used from Java:
+ *  {@sample [Submitting.sample]}
+ * }
+ */
+public fun submit(number: Int, location: File, onException: (e: Exception) -> Unit): Boolean =
+    TODO() @Suppress("UNUSED_PARAMETER")
+
+/** @include [SubmitDocs] {@set [SubmitDocs.ParamArg] @param [number] The [Double] to submit.} */
+public fun submit(number: Double, location: File, onException: (e: Exception) -> Unit): Boolean = TODO()
+
 // region ColumnsSelectionDsl
 
 /**
@@ -95,7 +148,7 @@ public interface FirstColumnsSelectionDsl {
      * ## First (Col) Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DefinitionsArg]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
@@ -103,27 +156,30 @@ public interface FirstColumnsSelectionDsl {
      *  {@include [DslGrammarTemplate.ConditionDef]}
      * }
      *
-     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
      *  {@include [PlainDslName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
      * }
      *
-     * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
      *  {@include [Indent]}{@include [ColumnSetName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
      * }
      *
-     * {@setArg [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
      *  {@include [Indent]}{@include [ColumnGroupName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
      * }
      */
     public interface Grammar {
 
         /** [**first**][ColumnsSelectionDsl.first] */
+        @ExcludeFromSources
         public interface PlainDslName
 
         /** .[**first**][ColumnsSelectionDsl.first] */
+        @ExcludeFromSources
         public interface ColumnSetName
 
         /** .[**firstCol**][ColumnsSelectionDsl.firstCol] */
+        @ExcludeFromSources
         public interface ColumnGroupName
     }
 
@@ -155,6 +211,7 @@ public interface FirstColumnsSelectionDsl {
      * @throws [NoSuchElementException\] if no column adheres to the given [condition\].
      * @see [ColumnsSelectionDsl.last\]
      */
+    @ExcludeFromSources
     private interface CommonFirstDocs {
 
         /** Examples key */

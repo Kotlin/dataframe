@@ -149,7 +149,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonAtAnyDepthDocs.Examples]}
+     *
      *
      * #### Converting from deprecated syntax:
      *

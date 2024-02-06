@@ -227,9 +227,9 @@ public interface AllExceptColumnsSelectionDsl {
      * columns inside the group, 'lifting' them out.
      *
      * ### Examples for this overload
-     * {@getArg [ExampleArg]}
      *
-     * {@getArg [ParamArg]}
+     *
+     *
      * @return A [ColumnSet] containing all columns in [this] except the specified ones.
      * @see ColumnsSelectionDsl.select
      * @see ColumnsSelectionDsl.all
@@ -324,11 +324,11 @@ public interface AllExceptColumnsSelectionDsl {
      * columns inside the group, 'lifting' them out.
      *
      * ### Examples for this overload
-     * `df.`[select][ColumnsSelectionDsl.select] `{` [colsOf][ColumnsSelectionDsl.colsOf]`<`[Number][Number]`>() `[except][ColumnSet.except] {@getArg [ArgumentArg1]} `}`
+     * `df.`[select][ColumnsSelectionDsl.select] `{` [colsOf][ColumnsSelectionDsl.colsOf]`<`[Number][Number]`>() `[except][ColumnSet.except]  `}`
      *
-     *  `df.`[select][ColumnsSelectionDsl.select] `{` [cols][ColumnsSelectionDsl.cols]`(name, age)` [except][ColumnSet.except] {@getArg [ArgumentArg2]} `}`
+     *  `df.`[select][ColumnsSelectionDsl.select] `{` [cols][ColumnsSelectionDsl.cols]`(name, age)` [except][ColumnSet.except]  `}`
      *
-     * {@getArg [ParamArg][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.CommonExceptDocs.ParamArg]}
+     *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
      * @see ColumnsSelectionDsl.select
      * @see ColumnsSelectionDsl.all
@@ -422,11 +422,11 @@ public interface AllExceptColumnsSelectionDsl {
      * columns inside the group, 'lifting' them out.
      *
      * ### Examples for this overload
-     * `df.`[select][ColumnsSelectionDsl.select] `{` [colsOf][ColumnsSelectionDsl.colsOf]`<`[Number][Number]`>().`[except][ColumnSet.except]{@getArg [ArgumentArg1]} `}`
+     * `df.`[select][ColumnsSelectionDsl.select] `{` [colsOf][ColumnsSelectionDsl.colsOf]`<`[Number][Number]`>().`[except][ColumnSet.except] `}`
      *
-     *  `df.`[select][ColumnsSelectionDsl.select] `{` [cols][ColumnsSelectionDsl.cols]`(name, age).`[except][ColumnSet.except]{@getArg [ArgumentArg2]} `}`
+     *  `df.`[select][ColumnsSelectionDsl.select] `{` [cols][ColumnsSelectionDsl.cols]`(name, age).`[except][ColumnSet.except] `}`
      *
-     * {@getArg [ParamArg][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.CommonExceptDocs.ParamArg]}
+     *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
      * @see ColumnsSelectionDsl.select
      * @see ColumnsSelectionDsl.all
@@ -1361,11 +1361,11 @@ public interface AllExceptColumnsSelectionDsl {
      * columns inside the group, 'lifting' them out.
      *
      * ### Examples for this overload
-     * `df.`[select][ColumnsSelectionDsl.select] `{` [allExcept][ColumnsSelectionDsl.allExcept]{@getArg [ArgumentArg1]} `}`
+     * `df.`[select][ColumnsSelectionDsl.select] `{` [allExcept][ColumnsSelectionDsl.allExcept] `}`
      *
-     *  `df.`[select][ColumnsSelectionDsl.select] `{` [allExcept][ColumnsSelectionDsl.allExcept]{@getArg [ArgumentArg2]} `}`
+     *  `df.`[select][ColumnsSelectionDsl.select] `{` [allExcept][ColumnsSelectionDsl.allExcept] `}`
      *
-     * {@getArg [ParamArg][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.CommonExceptDocs.ParamArg]}
+     *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
      * @see ColumnsSelectionDsl.select
      * @see ColumnsSelectionDsl.all
@@ -1923,11 +1923,11 @@ public interface AllExceptColumnsSelectionDsl {
      * columns inside the group, 'lifting' them out.
      *
      * ### Examples for this overload
-     * `df.`[select][ColumnsSelectionDsl.select] `{` {@getArg [ReceiverArg1]}[allColsExcept][{@getArg [ReceiverType]}.allColsExcept]{@getArg [ArgumentArg1]} `}`
+     * `df.`[select][ColumnsSelectionDsl.select] `{` [allColsExcept][.allColsExcept] `}`
      *
-     *  `df.`[select][ColumnsSelectionDsl.select] `{ city` [and][ColumnsSelectionDsl.and] {@getArg [ReceiverArg2]}[allColsExcept][{@getArg [ReceiverType]}.allColsExcept]{@getArg [ArgumentArg2]} `}`
+     *  `df.`[select][ColumnsSelectionDsl.select] `{ city` [and][ColumnsSelectionDsl.and] [allColsExcept][.allColsExcept] `}`
      *
-     * {@getArg [ParamArg][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.CommonExceptDocs.ParamArg]}
+     *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
      * @see ColumnsSelectionDsl.select
      * @see ColumnsSelectionDsl.all

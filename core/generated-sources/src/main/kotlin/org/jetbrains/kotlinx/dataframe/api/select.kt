@@ -329,7 +329,7 @@ public interface SelectColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonSelectDocs.ExampleArg]}
+     *
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;

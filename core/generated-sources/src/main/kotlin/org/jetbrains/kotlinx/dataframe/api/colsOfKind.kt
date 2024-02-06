@@ -114,9 +114,9 @@ public interface ColsOfKindColumnsSelectionDsl {
 
     /**
      * ## Cols Of Kind
-     * Creates a subset of columns from [this\] that are of the given kind(s).
+     * Creates a subset of columns from [this] that are of the given kind(s).
      *
-     * You can optionally use a [filter\] to only include certain columns.
+     * You can optionally use a [filter] to only include certain columns.
      * [colsOfKind] can be called using any of the supported [APIs][AccessApi] (+ [ColumnPath]).
      *
      * This function only looks at columns at the top-level.
@@ -133,16 +133,16 @@ public interface ColsOfKindColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonColsOfKindDocs.ExampleArg]}
      *
-     * @param [filter\] An optional [predicate][ColumnFilter] to filter the columns of given kind(s) by.
-     * @param [kind\] The [kind][ColumnKind] of columns to include.
-     * @param [others\] Other optional [kinds][ColumnKind] of columns to include.
+     *
+     * @param [filter] An optional [predicate][ColumnFilter] to filter the columns of given kind(s) by.
+     * @param [kind] The [kind][ColumnKind] of columns to include.
+     * @param [others] Other optional [kinds][ColumnKind] of columns to include.
      * @return A [ColumnSet] of columns of the given kind(s).
-     * @see [ColumnsSelectionDsl.valueCols\]
-     * @see [ColumnsSelectionDsl.frameCols\]
-     * @see [ColumnsSelectionDsl.colGroups\]
-     * @see [ColumnsSelectionDsl.cols\]
+     * @see [ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.frameCols]
+     * @see [ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.cols]
      */
     private interface CommonColsOfKindDocs {
 

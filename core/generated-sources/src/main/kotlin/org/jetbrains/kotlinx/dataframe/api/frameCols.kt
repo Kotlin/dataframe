@@ -110,9 +110,9 @@ public interface FrameColsColumnsSelectionDsl {
 
     /**
      * ## Frame Columns
-     * Creates a subset of columns from [this\] that are [FrameColumns][FrameColumn].
+     * Creates a subset of columns from [this] that are [FrameColumns][FrameColumn].
      *
-     * You can optionally use a [filter\] to only include certain columns.
+     * You can optionally use a [filter] to only include certain columns.
      * [frameCols] can be called using any of the supported [APIs][AccessApi] (+ [ColumnPath]).
      *
      * This function only looks at columns at the top-level.
@@ -129,14 +129,14 @@ public interface FrameColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonFrameColsDocs.ExampleArg]}
      *
-     * @param [filter\] An optional [predicate][Predicate] to filter the frame columns by.
+     *
+     * @param [filter] An optional [predicate][Predicate] to filter the frame columns by.
      * @return A [ColumnSet] of [FrameColumns][FrameColumn].
-     * @see [ColumnsSelectionDsl.colsOfKind\]
-     * @see [ColumnsSelectionDsl.valueCols\]
-     * @see [ColumnsSelectionDsl.colGroups\]
-     * @see [ColumnsSelectionDsl.cols\]
+     * @see [ColumnsSelectionDsl.colsOfKind]
+     * @see [ColumnsSelectionDsl.valueCols]
+     * @see [ColumnsSelectionDsl.colGroups]
+     * @see [ColumnsSelectionDsl.cols]
      */
     private interface CommonFrameColsDocs {
 

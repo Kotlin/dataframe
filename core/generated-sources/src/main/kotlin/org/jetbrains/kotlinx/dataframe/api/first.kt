@@ -26,6 +26,9 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.nrow
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
+import java.io.File
 import kotlin.reflect.KProperty
 
 // region DataColumn
@@ -81,6 +84,69 @@ public fun <T> PivotGroupBy<T>.first(predicate: RowFilter<T>): ReducedPivotGroup
     reduce { firstOrNull(predicate) }
 
 // endregion
+
+
+
+/**
+ * ## Submit Number
+ * Submits the given number.
+ *
+ * ### For example
+ *
+ * ```kotlin
+ * MyClass().submit(5, File("file.json")) { println(it) }
+ * ```
+ *
+ * ### Result
+ * The number will be submitted to a JSON file like this:
+ * ```json
+ * {
+ *   "number": 5.0
+ * }
+ *
+ * ```
+ * ### This function can also be used from Java:
+ *  ```java
+ * public boolean sample() {
+ *     int number = 1;
+ *     File file = new File("file.json");
+ *     return FirstKt.submit(number, file, e -> {
+ *         System.out.println(e.getMessage());
+ *         return Unit.INSTANCE;
+ *     });
+ * }
+ * ```
+ * @param [number] The [Int] to submit. 
+ * @param location The file location to submit the number to.
+ * @param onException What to do when an exception occurs.
+ * @return `true` if the number was submitted successfully, `false` otherwise.
+ */
+public fun submit(number: Int, location: File, onException: (e: Exception) -> Unit): Boolean =
+    TODO() @Suppress("UNUSED_PARAMETER")
+
+/** ## Submit Number
+ * Submits the given number.
+ *
+ * ### For example
+ *
+ * ```kotlin
+ * MyClass().submit(5.0, File("file.json")) { println(it) }
+ * ```
+ *
+ * ### Result
+ * The number will be submitted to a JSON file like this:
+ * ```json
+ * {
+ *   "number": 5.0
+ * }
+ *
+ * ```
+ *
+ * @param [number] The [Double] to submit. 
+ * @param location The file location to submit the number to.
+ * @param onException What to do when an exception occurs.
+ * @return `true` if the number was submitted successfully, `false` otherwise. */
+public fun submit(number: Double, location: File, onException: (e: Exception) -> Unit): Boolean = TODO()
 
 // region ColumnsSelectionDsl
 
@@ -160,49 +226,14 @@ public interface FirstColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** [**first**][ColumnsSelectionDsl.first] */
-        public interface PlainDslName
+        
 
-        /** .[**first**][ColumnsSelectionDsl.first] */
-        public interface ColumnSetName
+        
 
-        /** .[**firstCol**][ColumnsSelectionDsl.firstCol] */
-        public interface ColumnGroupName
+        
     }
 
-    /**
-     * ## First (Col)
-     *
-     * Returns the first column from [this\] that adheres to the optional given [condition\].
-     * If no column adheres to the given [condition\], [NoSuchElementException] is thrown.
-     *
-     * This function only looks at columns at the top-level.
-     *
-     * NOTE: For [column groups][ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
-     *
-     * ### Check out: [Grammar]
-     *
-     * #### Examples:
-     *
-     * `df.`[select][DataFrame.select]` { `[first][ColumnsSelectionDsl.first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
-     *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[firstCol][String.firstCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
-     *
-     * #### Examples for this overload:
-     *
-     * {@getArg [Examples]}
-     *
-     * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
-     * @return A [SingleColumn] containing the first column
-     *   that adheres to the given [condition\].
-     * @throws [NoSuchElementException\] if no column adheres to the given [condition\].
-     * @see [ColumnsSelectionDsl.last\]
-     */
-    private interface CommonFirstDocs {
-
-        /** Examples key */
-        interface Examples
-    }
+    
 
     /**
      * ## First (Col)
