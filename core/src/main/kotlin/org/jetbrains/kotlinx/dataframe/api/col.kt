@@ -122,14 +122,14 @@ public interface ColColumnsSelectionDsl {
         interface ExampleArg
 
         /**
-         * `df.`[select][DataFrame.select]` { {@get [CommonColDocs.ReceiverArg]}`[col][col]`({@get [CommonColDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@get [CommonColDocs.ReceiverArg]}`[col][col]`({@get [CommonColDocs.Arg]}) \}`
          */
         interface SingleExample
 
         /**
-         * `df.`[select][DataFrame.select]` { {@get [CommonColDocs.ReceiverArg]}`[col][col]`({@get [CommonColDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@get [CommonColDocs.ReceiverArg]}`[col][col]`({@get [CommonColDocs.Arg]}) \}`
          *
-         * `df.`[select][DataFrame.select]` { {@get [CommonColDocs.ReceiverArg]}`[col][col]`<`[String][String]`>({@get [CommonColDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@get [CommonColDocs.ReceiverArg]}`[col][col]`<`[String][String]`>({@get [CommonColDocs.Arg]}) \}`
          */
         interface DoubleExample
 
@@ -475,7 +475,7 @@ public interface ColColumnsSelectionDsl {
      * {@set [CommonColDocs.ExampleArg]
      * {@include [CommonColDocs.SingleExample]}
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][col]`1`[`]`][col]` \\}`
+     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][col]`1`[`]`][col]` \}`
      * }
      * {@set [CommonColDocs.Note] NOTE: You can use the get-[] operator on [ColumnSets][ColumnSet] as well!}
      */
@@ -487,7 +487,7 @@ public interface ColColumnsSelectionDsl {
      * {@set [CommonColDocs.ExampleArg]
      * {@include [CommonColDocs.SingleExample]}
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][col]`1`[`]`][col]` \\}`
+     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][col]`1`[`]`][col]` \}`
      * }
      */
     public operator fun <C> ColumnSet<C>.get(index: Int): SingleColumn<C> = col(index)

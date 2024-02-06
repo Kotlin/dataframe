@@ -12,8 +12,8 @@ import org.jetbrains.kotlinx.dataframe.ColumnExpression as DfColumnExpression
  */
 internal interface ExpressionsGivenColumn {
 
-    /**
-     * The key for an @setArg that will define the operation name for the examples below.
+    /*
+     * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
     interface OperationArg

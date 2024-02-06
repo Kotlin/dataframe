@@ -31,7 +31,7 @@ public interface ExprColumnsSelectionDsl {
      *  {@include [DslGrammarTemplate.ColumnExpressionDef]}
      * }
      * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
-     *  {@include [PlainDslName]}**`(`**`[`{@include [DslGrammarTemplate.NameRef]}**`,`**`][`{@include [DslGrammarTemplate.InferRef]}`]`**`)`** **`{ `**{@include [DslGrammarTemplate.ColumnExpressionRef]}**` \\}`**
+     *  {@include [PlainDslName]}**`(`**`[`{@include [DslGrammarTemplate.NameRef]}**`,`**`][`{@include [DslGrammarTemplate.InferRef]}`]`**`)`** **`{ `**{@include [DslGrammarTemplate.ColumnExpressionRef]}**` \}`**
      * }
      * {@set [DslGrammarTemplate.ColumnSetPart]}
      * {@set [DslGrammarTemplate.ColumnGroupPart]}

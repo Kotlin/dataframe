@@ -67,7 +67,7 @@ public interface ColumnRangeColumnsSelectionDsl {
 
     /**
      * ## Range of Columns
-     * Creates a [ColumnSet] containing all columns from [this\] up to (and including) [endInclusive\].
+     * Creates a [ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
      * Columns inside of column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
@@ -76,17 +76,17 @@ public interface ColumnRangeColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { `{@getArg [CommonRangeOfColumnsDocs.Example]}` }`
+     * `df.`[select][DataFrame.select]` { `` }`
      *
-     * @param [endInclusive\] The last column in the subset.
+     * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.
-     * @return A [ColumnSet] containing all columns from [this\] to [endInclusive\].
-     * @throws [IllegalArgumentException\] if the columns have different parents or the end column is before the
+     * @return A [ColumnSet] containing all columns from [this] to [endInclusive].
+     * @throws [IllegalArgumentException] if the columns have different parents or the end column is before the
      *   start column.
-     * @see [ColumnsSelectionDsl.allBefore\]
-     * @see [ColumnsSelectionDsl.allAfter\]
-     * @see [ColumnsSelectionDsl.allFrom\]
-     * @see [ColumnsSelectionDsl.allUpTo\]
+     * @see [ColumnsSelectionDsl.allBefore]
+     * @see [ColumnsSelectionDsl.allAfter]
+     * @see [ColumnsSelectionDsl.allFrom]
+     * @see [ColumnsSelectionDsl.allUpTo]
      */
     private interface CommonRangeOfColumnsDocs {
 

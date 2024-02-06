@@ -102,7 +102,7 @@ public interface WithoutNullsColumnsSelectionDsl {
 
     /**
      * ## (Cols) Without Nulls
-     * Returns a new [ColumnSet] that contains only columns in [this\] that do not have `null` values.
+     * Returns a new [ColumnSet] that contains only columns in [this] that do not have `null` values.
      *
      * This function operates solely on columns at the top-level.
      *
@@ -120,7 +120,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonWithoutNullsDocs.ExampleArg]]}
+     *
      *
      * @return A [ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */
@@ -149,7 +149,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonWithoutNullsDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.CommonWithoutNullsDocs.ExampleArg]]}
+     *
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */
@@ -177,7 +177,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonWithoutNullsDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.CommonWithoutNullsDocs.ExampleArg]]}
+     *
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */
@@ -204,7 +204,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonWithoutNullsDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.CommonWithoutNullsDocs.ExampleArg]]}
+     *
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */
@@ -231,7 +231,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonWithoutNullsDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.CommonWithoutNullsDocs.ExampleArg]]}
+     *
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */
@@ -258,7 +258,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonWithoutNullsDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.CommonWithoutNullsDocs.ExampleArg]]}
+     *
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */
@@ -285,7 +285,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonWithoutNullsDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.CommonWithoutNullsDocs.ExampleArg]]}
+     *
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */

@@ -125,14 +125,14 @@ public interface ColGroupColumnsSelectionDsl {
         interface ExampleArg
 
         /**
-         * `df.`[select][DataFrame.select]` { {@get [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`({@get [CommonColGroupDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@get [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`({@get [CommonColGroupDocs.Arg]}) \}`
          */
         interface SingleExample
 
         /**
-         * `df.`[select][DataFrame.select]` { {@get [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`({@get [CommonColGroupDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@get [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`({@get [CommonColGroupDocs.Arg]}) \}`
          *
-         * `df.`[select][DataFrame.select]` { {@get [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`<`[String][String]`>({@get [CommonColGroupDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@get [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`<`[String][String]`>({@get [CommonColGroupDocs.Arg]}) \}`
          */
         interface DoubleExample
 

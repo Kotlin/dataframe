@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.documentation
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 
 /**
- * ## {@getArg [TitleArg]} (Last) (Cols) (While) Grammar
+ * ##  (Last) (Cols) (While) Grammar
  *
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -36,9 +36,9 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSe
  *  
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
- *  [**{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}]`(`[**Last**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}Last]`)`**`(`**[number][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]**`)`**
+ *  [****][ColumnsSelectionDsl.]`(`[**Last**][ColumnsSelectionDsl.Last]`)`**`(`**[number][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]**`)`**
  *
- *  `|` [**{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}While]`(`[**Last**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}LastWhile]`)`[**While**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}While]**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` \
+ *  `|` [****][ColumnsSelectionDsl.While]`(`[**Last**][ColumnsSelectionDsl.LastWhile]`)`[**While**][ColumnsSelectionDsl.While]**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -49,9 +49,9 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSe
  *
  *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
  *
- *  &nbsp;&nbsp;&nbsp;&nbsp;.[**{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}]`(`[**Last**][ColumnSet.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}Last]`)`**`(`**[number][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]**`)`**
+ *  &nbsp;&nbsp;&nbsp;&nbsp;.[****][ColumnsSelectionDsl.]`(`[**Last**][ColumnSet.Last]`)`**`(`**[number][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]**`)`**
  *
- *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}While]`(`[**Last**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}LastWhile]`)`[**While**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}While]**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` \
+ *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[****][ColumnsSelectionDsl.While]`(`[**Last**][ColumnsSelectionDsl.LastWhile]`)`[**While**][ColumnsSelectionDsl.While]**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -62,49 +62,46 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSe
  *
  *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
  *
- *  &nbsp;&nbsp;&nbsp;&nbsp;.[**{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}Cols]`(`[**Last**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}LastCols]`)`[**Cols**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}Cols]**`(`**[number][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]**`)`**
+ *  &nbsp;&nbsp;&nbsp;&nbsp;.[****][ColumnsSelectionDsl.Cols]`(`[**Last**][ColumnsSelectionDsl.LastCols]`)`[**Cols**][ColumnsSelectionDsl.Cols]**`(`**[number][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]**`)`**
  *
- *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[**{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}ColsWhile]`(`[**Last**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}LastColsWhile]`)`[**ColsWhile**][ColumnsSelectionDsl.{@getArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar.OperationArg]}ColsWhile]**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` \
- *
- *
+ *  &nbsp;&nbsp;&nbsp;&nbsp;`|` .[****][ColumnsSelectionDsl.ColsWhile]`(`[**Last**][ColumnsSelectionDsl.LastColsWhile]`)`[**ColsWhile**][ColumnsSelectionDsl.ColsWhile]**` { `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
  *
  *
  *
  *
  *
  *
- * `**
- * }
  *
- * `**
- * }
  *
- * `**
- * }
+ *
+ *
+ *
+ *
+ *
  */
 internal interface TakeAndDropColumnsSelectionDslGrammar {
 
-    /** Like "Take"/"Drop" */
+    /* Like "Take"/"Drop" */
     interface TitleArg
 
-    /** Operation, like "take"/"drop" */
+    /* Operation, like "take"/"drop" */
     interface OperationArg
 
-    /** [**{@getArg [OperationArg]}**][ColumnsSelectionDsl.{@getArg [OperationArg]}]`(`[**Last**][ColumnsSelectionDsl.{@getArg [OperationArg]}Last]`)` */
+    /** [****][ColumnsSelectionDsl.]`(`[**Last**][ColumnsSelectionDsl.Last]`)` */
     interface PlainDslName
 
-    /** .[**{@getArg [OperationArg]}**][ColumnsSelectionDsl.{@getArg [OperationArg]}]`(`[**Last**][ColumnSet.{@getArg [OperationArg]}Last]`)` */
+    /** .[****][ColumnsSelectionDsl.]`(`[**Last**][ColumnSet.Last]`)` */
     interface ColumnSetName
 
-    /** .[**{@getArg [OperationArg]}**][ColumnsSelectionDsl.{@getArg [OperationArg]}Cols]`(`[**Last**][ColumnsSelectionDsl.{@getArg [OperationArg]}LastCols]`)`[**Cols**][ColumnsSelectionDsl.{@getArg [OperationArg]}Cols] */
+    /** .[****][ColumnsSelectionDsl.Cols]`(`[**Last**][ColumnsSelectionDsl.LastCols]`)`[**Cols**][ColumnsSelectionDsl.Cols] */
     interface ColumnGroupName
 
-    /** [**{@getArg [OperationArg]}**][ColumnsSelectionDsl.{@getArg [OperationArg]}While]`(`[**Last**][ColumnsSelectionDsl.{@getArg [OperationArg]}LastWhile]`)`[**While**][ColumnsSelectionDsl.{@getArg [OperationArg]}While] */
+    /** [****][ColumnsSelectionDsl.While]`(`[**Last**][ColumnsSelectionDsl.LastWhile]`)`[**While**][ColumnsSelectionDsl.While] */
     interface PlainDslWhileName
 
-    /** .[**{@getArg [OperationArg]}**][ColumnsSelectionDsl.{@getArg [OperationArg]}While]`(`[**Last**][ColumnsSelectionDsl.{@getArg [OperationArg]}LastWhile]`)`[**While**][ColumnsSelectionDsl.{@getArg [OperationArg]}While] */
+    /** .[****][ColumnsSelectionDsl.While]`(`[**Last**][ColumnsSelectionDsl.LastWhile]`)`[**While**][ColumnsSelectionDsl.While] */
     interface ColumnSetWhileName
 
-    /** .[**{@getArg [OperationArg]}**][ColumnsSelectionDsl.{@getArg [OperationArg]}ColsWhile]`(`[**Last**][ColumnsSelectionDsl.{@getArg [OperationArg]}LastColsWhile]`)`[**ColsWhile**][ColumnsSelectionDsl.{@getArg [OperationArg]}ColsWhile] */
+    /** .[****][ColumnsSelectionDsl.ColsWhile]`(`[**Last**][ColumnsSelectionDsl.LastColsWhile]`)`[**ColsWhile**][ColumnsSelectionDsl.ColsWhile] */
     interface ColumnGroupWhileName
 }

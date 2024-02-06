@@ -22,7 +22,7 @@ internal interface ExpressionsGivenDataFrame {
          *
          * For example:
          *
-         * {@getArg [OperationArg]}` { `[select][DataFrame.select]` { lastName } }`
+         * ` { `[select][DataFrame.select]` { lastName } }`
          */
         interface WithExample
     }

@@ -8,9 +8,9 @@ import java.io.Serializable
  * Supports just keys (in bracket notation), double quotes, arrays and wildcards.
  *
  * Examples:
- * `$["store"]["book"][*]["author"]`
+ * `[*]["author"]`
  *
- * `$[1]` will match `$[*]`
+ * `` will match ``
  */
 @JvmInline
 public value class JsonPath(@Language("jsonpath") public val path: String = "$") : Serializable {

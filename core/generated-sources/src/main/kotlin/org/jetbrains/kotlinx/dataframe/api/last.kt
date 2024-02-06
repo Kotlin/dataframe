@@ -172,8 +172,8 @@ public interface LastColumnsSelectionDsl {
 
     /**
      * ## Last (Col)
-     * Returns the last column from [this\] that adheres to the optional given [condition\].
-     * If no column adheres to the given [condition\], [NoSuchElementException] is thrown.
+     * Returns the last column from [this] that adheres to the optional given [condition].
+     * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
@@ -189,13 +189,13 @@ public interface LastColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [Examples]}
      *
-     * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
+     *
+     * @param [condition] The optional [ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn] containing the last column
-     *   that adheres to the given [condition\].
-     * @throws [NoSuchElementException\] if no column adheres to the given [condition\].
-     * @see [ColumnsSelectionDsl.first\]
+     *   that adheres to the given [condition].
+     * @throws [NoSuchElementException] if no column adheres to the given [condition].
+     * @see [ColumnsSelectionDsl.first]
      */
     private interface CommonLastDocs {
 

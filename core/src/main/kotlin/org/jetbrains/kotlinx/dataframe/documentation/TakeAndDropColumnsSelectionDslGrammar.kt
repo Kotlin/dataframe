@@ -19,19 +19,19 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSe
  * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
  *  {@include [PlainDslName]}**`(`**{@include [DslGrammarTemplate.NumberRef]}**`)`**
  *
- *  `|` {@include [PlainDslWhileName]}**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \\\\}`**
+ *  `|` {@include [PlainDslWhileName]}**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**
  * }
  *
  * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
  *  {@include [Indent]}{@include [ColumnSetName]}**`(`**{@include [DslGrammarTemplate.NumberRef]}**`)`**
  *
- *  {@include [Indent]}`|` {@include [ColumnSetWhileName]}**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \\\\}`**
+ *  {@include [Indent]}`|` {@include [ColumnSetWhileName]}**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**
  * }
  *
  * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
  *  {@include [Indent]}{@include [ColumnGroupName]}**`(`**{@include [DslGrammarTemplate.NumberRef]}**`)`**
  *
- *  {@include [Indent]}`|` {@include [ColumnGroupWhileName]}**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \\\\}`**
+ *  {@include [Indent]}`|` {@include [ColumnGroupWhileName]}**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**
  * }
  */
 internal interface TakeAndDropColumnsSelectionDslGrammar {

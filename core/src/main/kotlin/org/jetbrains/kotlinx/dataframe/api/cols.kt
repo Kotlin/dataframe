@@ -55,9 +55,9 @@ public interface ColsColumnsSelectionDsl {
      * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
      *  {@include [PlainDslName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}**`)`**
      *
-     *  `|` {@include [PlainDslName]}` [ `**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \\} `**`]`
+     *  `|` {@include [PlainDslName]}` [ `**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \} `**`]`
      *
-     *  `|` **`this`**`/`**`it`** [**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`**[**`]`**][cols]
+     *  `|` **`this`**`/`**`it`** [**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**[**`]`**][cols]
      *
      *  `|` **`this`**`/`**`it`** [**`[`**][cols]{@include [DslGrammarTemplate.ColumnRef]}**`,`**` .. `[**`]`**][cols]
      * }
@@ -65,9 +65,9 @@ public interface ColsColumnsSelectionDsl {
      * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
      *  {@include [Indent]}{@include [ColumnSetName]}**`(`**{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}**`)`**
      *
-     *  {@include [Indent]}`| `{@include [ColumnSetName]}` [ `**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \\} `**`]`
+     *  {@include [Indent]}`| `{@include [ColumnSetName]}` [ `**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \} `**`]`
      *
-     *  {@include [Indent]}`| `[**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`**[**`]`**][cols]
+     *  {@include [Indent]}`| `[**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**[**`]`**][cols]
      *
      *  {@include [Indent]}`| `[**`[`**][cols]{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}[**`]`**][cols]`
      * }
@@ -75,9 +75,9 @@ public interface ColsColumnsSelectionDsl {
      * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
      *  {@include [Indent]}{@include [ColumnGroupName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}**`)`**
      *
-     *  {@include [Indent]}`| `{@include [ColumnGroupName]}` [ `**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \\} `**`]`
+     *  {@include [Indent]}`| `{@include [ColumnGroupName]}` [ `**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \} `**`]`
      *
-     *  {@include [Indent]}`| `[**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`**[**`]`**][cols]
+     *  {@include [Indent]}`| `[**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**[**`]`**][cols]
      *
      *  {@include [Indent]}`| `[**`[`**][cols]{@include [DslGrammarTemplate.ColumnRef]}**`,`**` ..`[**`]`**][cols]
      * }

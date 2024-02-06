@@ -123,14 +123,14 @@ public interface FrameColColumnsSelectionDsl {
         interface ExampleArg
 
         /**
-         * `df.`[select][DataFrame.select]` { {@get [CommonFrameColDocs.ReceiverArg]}`[frameCol][frameCol]`({@get [CommonFrameColDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@get [CommonFrameColDocs.ReceiverArg]}`[frameCol][frameCol]`({@get [CommonFrameColDocs.Arg]}) \}`
          */
         interface SingleExample
 
         /**
-         * `df.`[select][DataFrame.select]` { {@get [CommonFrameColDocs.ReceiverArg]}`[frameCol][frameCol]`({@get [CommonFrameColDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@get [CommonFrameColDocs.ReceiverArg]}`[frameCol][frameCol]`({@get [CommonFrameColDocs.Arg]}) \}`
          *
-         * `df.`[select][DataFrame.select]` { {@get [CommonFrameColDocs.ReceiverArg]}`[frameCol][frameCol]`<`[String][String]`>({@get [CommonFrameColDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@get [CommonFrameColDocs.ReceiverArg]}`[frameCol][frameCol]`<`[String][String]`>({@get [CommonFrameColDocs.Arg]}) \}`
          */
         interface DoubleExample
 

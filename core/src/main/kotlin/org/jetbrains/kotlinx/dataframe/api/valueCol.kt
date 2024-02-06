@@ -123,14 +123,14 @@ public interface ValueColColumnsSelectionDsl {
         interface ExampleArg
 
         /**
-         * `df.`[select][DataFrame.select]` { {@get [CommonValueColDocs.ReceiverArg]}`[valueCol][valueCol]`({@get [CommonValueColDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@get [CommonValueColDocs.ReceiverArg]}`[valueCol][valueCol]`({@get [CommonValueColDocs.Arg]}) \}`
          */
         interface SingleExample
 
         /**
-         * `df.`[select][DataFrame.select]` { {@get [CommonValueColDocs.ReceiverArg]}`[valueCol][valueCol]`({@get [CommonValueColDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@get [CommonValueColDocs.ReceiverArg]}`[valueCol][valueCol]`({@get [CommonValueColDocs.Arg]}) \}`
          *
-         * `df.`[select][DataFrame.select]` { {@get [CommonValueColDocs.ReceiverArg]}`[valueCol][valueCol]`<`[String][String]`>({@get [CommonValueColDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@get [CommonValueColDocs.ReceiverArg]}`[valueCol][valueCol]`<`[String][String]`>({@get [CommonValueColDocs.Arg]}) \}`
          */
         interface DoubleExample
 
