@@ -18,49 +18,4 @@ import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs.
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs.OperationArg
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs.TitleArg
 
-/**
- * ##  (Cols) While
- * This function s the  columns from [this] adhering to the
- * given [predicate] collecting the result into a [ColumnSet].
- *
- * This function operates solely on columns at the top-level.
- *
- * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
- *
- * NOTE: To avoid ambiguity, `While` is called
- * `ColsWhile` when called on a [String] or [ColumnPath] resembling
- * a [ColumnGroup].
- *
- * ### Check out: [Usage]
- *
- * #### Examples:
- * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[While][ColumnSet.While]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` } }`
- *
- * `df.`[select][DataFrame.select]` { myColumnGroup.`[While][SingleColumn.ColsWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
- *
- * `df.`[select][DataFrame.select]` { "myColumnGroup".`[ColsWhile][String.ColsWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][ColumnKind.Value]` } }`
- *
- * #### Examples for this overload:
- *
- *
- *
- * @param [predicate] The [ColumnFilter] to control which columns to .
- * @return A [ColumnSet] containing the  columns adhering to the [predicate].
- */
-internal interface CommonTakeAndDropWhileDocs {
 
-    /** Title, like "Take Last" */
-    interface TitleArg
-
-    /** Operation, like "takeLast" */
-    interface OperationArg
-
-    /** Operation, like "take" */
-    interface NounArg
-
-    /** like "last" */
-    interface FirstOrLastArg
-
-    /** Example argument to use */
-    interface ExampleArg
-}

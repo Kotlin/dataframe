@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnExpression as DfColumnExpression
  * Expressing values using a "Column Expression" can occur exclusively in a
  * {@include [ColumnExpressionLink]}.
  */
+@ExcludeFromSources
 internal interface ExpressionsGivenColumn {
 
     /*

@@ -85,7 +85,7 @@ val compileSamplesKotlin = tasks.named<KotlinCompile>("compileSamplesKotlin") {
         libraries.from(it.libraries)
     }
     source(sourceSets["test"].kotlin)
-    destinationDirectory.set(file("$buildDir/classes/testWithOutputs/kotlin"))
+    destinationDirectory.set(layout.buildDirectory.dir("classes/testWithOutputs/kotlin"))
 }
 
 tasks.withType<KspTask> {
@@ -101,8 +101,8 @@ tasks.named("lintKotlinSamples") {
 }
 
 val clearTestResults by tasks.creating(Delete::class) {
-    delete(File(buildDir, "dataframes"))
-    delete(File(buildDir, "korroOutputLines"))
+    delete(layout.buildDirectory.dir("dataframes"))
+    delete(layout.buildDirectory.dir("korroOutputLines"))
 }
 
 val samplesTest = tasks.register<Test>("samplesTest") {
@@ -121,8 +121,8 @@ val samplesTest = tasks.register<Test>("samplesTest") {
 
     ignoreFailures = true
 
-    testClassesDirs = fileTree("$buildDir/classes/testWithOutputs/kotlin")
-    classpath = files("$buildDir/classes/testWithOutputs/kotlin") + configurations["samplesRuntimeClasspath"] + sourceSets["main"].runtimeClasspath
+    testClassesDirs = fileTree("${layout.buildDirectory.get().asFile.path}/classes/testWithOutputs/kotlin")
+    classpath = files("${layout.buildDirectory.get().asFile.path}/classes/testWithOutputs/kotlin") + configurations["samplesRuntimeClasspath"] + sourceSets["main"].runtimeClasspath
 }
 
 val clearSamplesOutputs by tasks.creating {
@@ -267,7 +267,7 @@ korro {
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
     }
 
-    outputs = fileTree(project.buildDir) {
+    outputs = fileTree(project.layout.buildDirectory) {
         include("korroOutputLines/*")
     }
 

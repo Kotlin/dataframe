@@ -166,7 +166,7 @@ kotlinPublications {
 
     localRepositories {
         maven {
-            url = project.file(File(buildDir, "maven")).toURI()
+            url = project.file(layout.buildDirectory.dir("maven")).toURI()
         }
     }
 }
