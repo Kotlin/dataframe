@@ -181,16 +181,16 @@ public data class Update<T, C>(
      */
     public interface UpdateSelectingOptions
 
-    /** @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to update. */
+    /** @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to update. */
     internal interface DslParam
 
-    /** @param [columns\] The [Column References][ColumnReference] of this [DataFrame] to update. */
+    /** @param [columns] The [Column References][ColumnReference] of this [DataFrame] to update. */
     internal interface ColumnAccessorsParam
 
-    /** @param [columns\] The [KProperties][KProperty] corresponding to columns of this [DataFrame] to update. */
+    /** @param [columns] The [KProperties][KProperty] corresponding to columns of this [DataFrame] to update. */
     internal interface KPropertiesParam
 
-    /** @param [columns\] The [Strings][String] corresponding to the names of columns belonging to this [DataFrame] to update. */
+    /** @param [columns] The [Strings][String] corresponding to the names of columns belonging to this [DataFrame] to update. */
     internal interface ColumnNamesParam
 }
 

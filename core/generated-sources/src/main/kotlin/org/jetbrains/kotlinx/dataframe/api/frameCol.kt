@@ -195,7 +195,7 @@ public interface FrameColColumnsSelectionDsl {
         /* Optional note */
         interface Note
 
-        /** @param [C\] The type of the frame column. */
+        /** @param [C] The type of the frame column. */
         interface FrameColumnTypeParam
     }
 

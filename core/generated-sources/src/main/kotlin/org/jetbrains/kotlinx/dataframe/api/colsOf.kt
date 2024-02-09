@@ -179,10 +179,10 @@ public interface ColsOfColumnsSelectionDsl {
      */
     private interface CommonColsOfDocs {
 
-        /** @return A [ColumnSet] containing the columns of given type that were included by [filter\]. */
+        /** @return A [ColumnSet] containing the columns of given type that were included by [filter]. */
         interface Return
 
-        /** @param [filter\] an optional filter function that takes a column of type [C\] and returns `true` if the column should be included. */
+        /** @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included. */
         interface FilterParam
     }
 

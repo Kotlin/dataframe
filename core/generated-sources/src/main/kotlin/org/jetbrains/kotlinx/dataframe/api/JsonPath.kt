@@ -5,12 +5,12 @@ import java.io.Serializable
 
 /**
  * Simplistic JSON path implementation.
- * Supports just keys (in bracket notation), double quotes, arrays and wildcards.
+ * Supports just keys (in bracket notation), double quotes, arrays, and wildcards.
  *
  * Examples:
- * `[*]["author"]`
+ * `$["store"]["book"][*]["author"]`
  *
- * `` will match ``
+ * `$[1]` will match `$[*]`
  */
 @JvmInline
 public value class JsonPath(@Language("jsonpath") public val path: String = "$") : Serializable {

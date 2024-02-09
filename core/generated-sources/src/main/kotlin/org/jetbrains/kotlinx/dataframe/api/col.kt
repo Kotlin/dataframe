@@ -194,7 +194,7 @@ public interface ColColumnsSelectionDsl {
         /* Optional note */
         interface Note
 
-        /** @param [C\] The type of the column. */
+        /** @param [C] The type of the column. */
         interface ColumnTypeParam
     }
 

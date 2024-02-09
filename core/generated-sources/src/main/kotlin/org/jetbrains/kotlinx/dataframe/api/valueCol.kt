@@ -195,7 +195,7 @@ public interface ValueColColumnsSelectionDsl {
         /* Optional note */
         interface Note
 
-        /** @param [C\] The type of the value column. */
+        /** @param [C] The type of the value column. */
         interface ValueColumnTypeParam
     }
 

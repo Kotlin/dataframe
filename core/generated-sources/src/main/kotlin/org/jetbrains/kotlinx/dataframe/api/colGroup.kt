@@ -197,7 +197,7 @@ public interface ColGroupColumnsSelectionDsl {
         /* Optional note */
         interface Note
 
-        /** @param [C\] The type of the column group. */
+        /** @param [C] The type of the column group. */
         interface ColumnGroupTypeParam
     }
 
