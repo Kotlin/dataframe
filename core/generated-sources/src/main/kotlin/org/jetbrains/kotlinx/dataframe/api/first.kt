@@ -173,8 +173,8 @@ public interface FirstColumnsSelectionDsl {
     /**
      * ## First (Col)
      *
-     * Returns the first column from [this\] that adheres to the optional given [condition\].
-     * If no column adheres to the given [condition\], [NoSuchElementException] is thrown.
+     * Returns the first column from [this] that adheres to the optional given [condition].
+     * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
@@ -190,13 +190,13 @@ public interface FirstColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [Examples]}
      *
-     * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
+     *
+     * @param [condition] The optional [ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn] containing the first column
-     *   that adheres to the given [condition\].
-     * @throws [NoSuchElementException\] if no column adheres to the given [condition\].
-     * @see [ColumnsSelectionDsl.last\]
+     *   that adheres to the given [condition].
+     * @throws [NoSuchElementException] if no column adheres to the given [condition].
+     * @see [ColumnsSelectionDsl.last]
      */
     private interface CommonFirstDocs {
 

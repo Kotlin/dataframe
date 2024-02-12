@@ -21,12 +21,12 @@ public interface NoneColumnsSelectionDsl {
      *
      * @include [DslGrammarTemplate]
      *
-     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
      *  {@include [PlainDslName]}**`()`**
      * }
      *
-     * {@setArg [DslGrammarTemplate.ColumnSetPart]}
-     * {@setArg [DslGrammarTemplate.ColumnGroupPart]}
+     * {@set [DslGrammarTemplate.ColumnSetPart]}
+     * {@set [DslGrammarTemplate.ColumnGroupPart]}
      */
     public interface Grammar {
 

@@ -22,7 +22,7 @@ import kotlin.reflect.KProperty
  */
 internal interface FillNulls {
 
-    /** @include [Update.Grammar] {@setArg [UpdateOperationArg] [**fillNulls**][fillNulls]} */
+    /** @include [Update.Grammar] {@set [UpdateOperationArg] [**fillNulls**][fillNulls]} */
     interface Grammar
 
     /**
@@ -32,14 +32,14 @@ internal interface FillNulls {
     interface FillNullsSelectingOptions
 }
 
-/** {@setArg [SelectingColumns.OperationArg] [fillNulls][fillNulls]} */
+/** {@set [SelectingColumns.OperationArg] [fillNulls][fillNulls]} */
 private interface SetFillNullsOperationArg
 
 /**
  * @include [FillNulls] {@comment Description of the fillNulls operation.}
  * @include [LineBreak]
  * @include [Update.Columns] {@comment Description of what this function expects the user to do: select columns}
- * {@setArg [Update.Columns.SelectingColumnsArg] [Selecting Columns][FillNulls.FillNullsSelectingOptions]}
+ * {@set [Update.Columns.SelectingColumnsArg] [Selecting Columns][FillNulls.FillNullsSelectingOptions]}
  * ### This Fill Nulls Overload
  *
  */
@@ -113,7 +113,7 @@ internal inline val Float?.isNA: Boolean get() = this == null || this.isNaN()
  */
 internal interface FillNaNs {
 
-    /** @include [Update.Grammar] {@setArg [Update.UpdateOperationArg] [fillNaNs][fillNaNs]} */
+    /** @include [Update.Grammar] {@set [Update.UpdateOperationArg] [fillNaNs][fillNaNs]} */
     interface Grammar
 
     /**
@@ -123,14 +123,14 @@ internal interface FillNaNs {
     interface FillNaNsSelectingOptions
 }
 
-/** {@setArg [SelectingColumns.OperationArg] [fillNaNs][fillNaNs]} */
+/** {@set [SelectingColumns.OperationArg] [fillNaNs][fillNaNs]} */
 internal interface SetFillNaNsOperationArg
 
 /**
  * @include [FillNaNs] {@comment Description of the fillNaNs operation.}
  * @include [LineBreak]
  * @include [Update.Columns] {@comment Description of what this function expects the user to do: select columns}
- * {@setArg [Update.Columns.SelectingColumnsArg] [Selecting Columns][FillNaNs.FillNaNsSelectingOptions]}
+ * {@set [Update.Columns.SelectingColumnsArg] [Selecting Columns][FillNaNs.FillNaNsSelectingOptions]}
  * ### This Fill NaNs Overload
  */
 private interface CommonFillNaNsFunctionDoc
@@ -183,7 +183,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: ColumnReference<C>): Upd
  */
 internal interface FillNA {
 
-    /** @include [Update.Grammar] {@setArg [Update.UpdateOperationArg] [fillNA][fillNA]} */
+    /** @include [Update.Grammar] {@set [Update.UpdateOperationArg] [fillNA][fillNA]} */
     interface Grammar
 
     /**
@@ -193,14 +193,14 @@ internal interface FillNA {
     interface FillNASelectingOptions
 }
 
-/** {@setArg [SelectingColumns.OperationArg] [fillNA][fillNA]} */
+/** {@set [SelectingColumns.OperationArg] [fillNA][fillNA]} */
 internal interface SetFillNAOperationArg
 
 /**
  * @include [FillNA] {@comment Description of the fillNA operation.}
  * @include [LineBreak]
  * @include [Update.Columns] {@comment Description of what this function expects the user to do: select columns}
- * {@setArg [Update.Columns.SelectingColumnsArg] [Selecting Columns][FillNA.FillNASelectingOptions]}
+ * {@set [Update.Columns.SelectingColumnsArg] [Selecting Columns][FillNA.FillNASelectingOptions]}
  * ### This Fill NA Overload
  */
 private interface CommonFillNAFunctionDoc
@@ -281,7 +281,7 @@ internal interface DropNulls {
     interface DropNullsSelectingOptions
 }
 
-/** {@setArg [SelectingColumns.OperationArg] [dropNulls][dropNulls]} */
+/** {@set [SelectingColumns.OperationArg] [dropNulls][dropNulls]} */
 private interface SetDropNullsOperationArg
 
 /**
@@ -380,7 +380,7 @@ internal interface DropNA {
     interface DropNASelectingOptions
 }
 
-/** {@setArg [SelectingColumns.OperationArg] [dropNA][dropNA]} */
+/** {@set [SelectingColumns.OperationArg] [dropNA][dropNA]} */
 private interface SetDropNAOperationArg
 
 /**
@@ -482,7 +482,7 @@ internal interface DropNaNs {
     interface DropNaNsSelectingOptions
 }
 
-/** {@setArg [SelectingColumns.OperationArg] [dropNaNs][dropNaNs]} */
+/** {@set [SelectingColumns.OperationArg] [dropNaNs][dropNaNs]} */
 private interface SetDropNaNsOperationArg
 
 /**

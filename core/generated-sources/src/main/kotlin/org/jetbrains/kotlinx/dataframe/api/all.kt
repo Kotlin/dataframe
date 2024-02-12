@@ -219,15 +219,15 @@ public interface AllColumnsSelectionDsl {
     private interface AllFlavors
 
     /**
-     * ## {@getArg [TitleArg]}
+     * ## 
      *
-     * Creates a new [ColumnSet] that contains a subset of columns from [this\],
-     * containing all columns {@getArg [BehaviorArg]}.
+     * Creates a new [ColumnSet] that contains a subset of columns from [this],
+     * containing all columns .
      *
-     * [column\] can be specified both relative to the current [ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column\] does not exist, {@getArg [ColumnDoesNotExistArg]}.
+     * If [column] does not exist, .
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -238,15 +238,15 @@ public interface AllColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { `[{@getArg [FunctionArg]}][ColumnsSelectionDsl.{@getArg [FunctionArg]}]`("someColumn") }`
+     * `df.`[select][DataFrame.select]` { `[][ColumnsSelectionDsl.]`("someColumn") }`
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[{@getArg [FunctionColsArg]}][SingleColumn.{@getArg [FunctionColsArg]}]`(someColumn) }`
+     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[][SingleColumn.]`(someColumn) }`
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[{@getArg [FunctionArg]}][ColumnSet.{@getArg [FunctionArg]}]`(Type::someColumn) }`
+     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[][ColumnSet.]`(Type::someColumn) }`
      *
      * #### Examples for this overload:
      *
-     * {@getArg [ExampleArg]}
+     *
      *
      * #### Flavors of All (Cols):
      *
@@ -265,14 +265,14 @@ public interface AllColumnsSelectionDsl {
      * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
      *     All columns up to the specified column, including that column
      *
-     * @return A new [ColumnSet] containing all columns {@getArg [BehaviorArg]}.
-     * @see [allBefore\]
-     * @see [allAfter\]
-     * @see [allFrom\]
-     * @see [allUpTo\]
-     * @see [ColumnsSelectionDsl.allExcept\]
-     * @see [all\]
-     * @see [cols\]
+     * @return A new [ColumnSet] containing all columns .
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
+     * @see [cols]
      */
     private interface CommonAllSubsetDocs {
 
@@ -305,7 +305,7 @@ public interface AllColumnsSelectionDsl {
     /**
      * ## All (Cols)
      *
-     * Creates a new [ColumnSet] that contains all columns from [this\],
+     * Creates a new [ColumnSet] that contains all columns from [this],
      * the opposite of [none][ColumnsSelectionDsl.none].
      *
      * This makes the function equivalent to [cols()][ColumnsSelectionDsl.cols] without filter.
@@ -323,7 +323,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonAllDocs.Examples]}
+     *
      *
      * #### Flavors of All (Cols):
      *
@@ -342,13 +342,13 @@ public interface AllColumnsSelectionDsl {
      * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
      *     All columns up to the specified column, including that column
      *
-     * @see [ColumnsSelectionDsl.rangeTo\]
-     * @see [ColumnsSelectionDsl.allBefore\]
-     * @see [ColumnsSelectionDsl.allAfter\]
-     * @see [ColumnsSelectionDsl.allFrom\]
-     * @see [ColumnsSelectionDsl.allUpTo\]
-     * @see [ColumnsSelectionDsl.allExcept\]
-     * @see [ColumnsSelectionDsl.cols\]
+     * @see [ColumnsSelectionDsl.rangeTo]
+     * @see [ColumnsSelectionDsl.allBefore]
+     * @see [ColumnsSelectionDsl.allAfter]
+     * @see [ColumnsSelectionDsl.allFrom]
+     * @see [ColumnsSelectionDsl.allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [ColumnsSelectionDsl.cols]
      */
     private interface CommonAllDocs {
 
@@ -675,9 +675,7 @@ public interface AllColumnsSelectionDsl {
      * ## All (Cols) After
      *
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
-     * containing all columns after [column], excluding [column] itself
-     * @param [column] The specified column after which all columns should be taken. This column can be referenced
-     *   to both relatively to the current [ColumnsResolver] and absolutely..
+     * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
@@ -701,67 +699,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.ExampleArg]}
      *
-     * #### Flavors of All (Cols):
-     *
-     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
-     *     All columns
-     *
-     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
-     *     All columns before the specified column, excluding that column
-     *
-     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
-     *     All columns after the specified column, excluding that column
-     *
-     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
-     *     All columns from the specified column, including that column
-     *
-     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
-     *     All columns up to the specified column, including that column
-     *
-     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself
-     * @param [column] The specified column after which all columns should be taken. This column can be referenced
-     *   to both relatively to the current [ColumnsResolver] and absolutely..
-     * @see [allBefore]
-     * @see [allAfter]
-     * @see [allFrom]
-     * @see [allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept]
-     * @see [all]
-     * @see [cols]
-     */
-    private interface AllAfterDocs
-
-    /**
-     * ## All (Cols) After
-     *
-     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
-     * containing all columns after [column], excluding [column] itself.
-     *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
-     *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
-     * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
-     *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
-     *
-     * #### For example:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][ColumnsSelectionDsl.allAfter]`("someColumn") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allColsAfter][SingleColumn.allColsAfter]`(someColumn) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[allAfter][ColumnSet.allAfter]`(Type::someColumn) }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allAfter][ColumnSet.allAfter]`{@getArg [ColumnSetAllAfterDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -781,12 +719,72 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
+     * @see [cols]
+     * @param [column] The specified column after which all columns should be taken. This column can be referenced
+     *   to both relatively to the current [ColumnsResolver] and absolutely.
+     */
+    private interface AllAfterDocs
+
+    /**
+     * ## All (Cols) After
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
+     * containing all columns after [column], excluding [column] itself.
+     *
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     *
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
+     * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allAfter][ColumnsSelectionDsl.allAfter]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allColsAfter][SingleColumn.allColsAfter]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[allAfter][ColumnSet.allAfter]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allAfter][ColumnSet.allAfter]` }`
+     *
+     * #### Flavors of All (Cols):
+     *
+     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
+     *     All columns
+     *
+     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -802,10 +800,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -844,12 +842,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -863,10 +861,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -905,12 +903,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -924,10 +922,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -966,12 +964,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -984,10 +982,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1026,12 +1024,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -1044,10 +1042,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1086,12 +1084,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -1105,10 +1103,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1127,7 +1125,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[allAfter][ColumnsSelectionDsl.allAfter]`{@getArg [ColumnsSelectionDslAllAfterDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { `[allAfter][ColumnsSelectionDsl.allAfter]` }`
      *
      * #### Flavors of All (Cols):
      *
@@ -1147,12 +1145,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -1168,10 +1166,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1210,12 +1208,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -1228,10 +1226,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1270,12 +1268,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -1288,10 +1286,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1330,12 +1328,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -1348,10 +1346,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1390,12 +1388,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -1408,10 +1406,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1450,12 +1448,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -1469,10 +1467,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1491,7 +1489,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsAfter][SingleColumn.allColsAfter]`{@getArg [SingleColumnAllAfterDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsAfter][SingleColumn.allColsAfter]` }`
      *
      * #### Flavors of All (Cols):
      *
@@ -1511,12 +1509,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -1532,10 +1530,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1574,12 +1572,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -1597,10 +1595,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1639,12 +1637,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -1665,10 +1663,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1707,12 +1705,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -1725,10 +1723,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1767,12 +1765,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -1785,10 +1783,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1827,12 +1825,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -1846,10 +1844,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1868,7 +1866,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsAfter][String.allColsAfter]`{@getArg [StringAllAfterDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsAfter][String.allColsAfter]` }`
      *
      * #### Flavors of All (Cols):
      *
@@ -1888,12 +1886,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -1909,10 +1907,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1951,12 +1949,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -1969,10 +1967,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2011,12 +2009,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -2029,10 +2027,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2071,12 +2069,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -2089,10 +2087,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2131,12 +2129,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -2149,10 +2147,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2191,12 +2189,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -2210,10 +2208,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2232,7 +2230,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup.`[allColsAfter][KProperty.allColsAfter]`{@getArg [KPropertyAllAfterDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup.`[allColsAfter][KProperty.allColsAfter]` }`
      *
      * ## NOTE: 
      * If you get a warning `CANDIDATE_CHOSEN_USING_OVERLOAD_RESOLUTION_BY_LAMBDA_ANNOTATION`, you
@@ -2257,12 +2255,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -2279,10 +2277,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2326,12 +2324,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -2348,10 +2346,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2395,12 +2393,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -2415,10 +2413,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2462,12 +2460,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -2480,10 +2478,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2527,12 +2525,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -2545,10 +2543,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2592,12 +2590,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -2610,10 +2608,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2657,12 +2655,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -2676,10 +2674,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2698,7 +2696,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allColsAfter][ColumnPath.allColsAfter]`{@getArg [ColumnPathAllAfterDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allColsAfter][ColumnPath.allColsAfter]` }`
      *
      * #### Flavors of All (Cols):
      *
@@ -2718,12 +2716,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -2739,10 +2737,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2781,12 +2779,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -2799,10 +2797,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2841,12 +2839,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -2859,10 +2857,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2901,12 +2899,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -2919,10 +2917,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2961,12 +2959,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -2979,10 +2977,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns after [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -3021,12 +3019,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns after [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -3042,9 +3040,7 @@ public interface AllColumnsSelectionDsl {
      * ## All (Cols) From
      *
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
-     * containing all columns from [column], including [column] itself
-     * @param [column] The specified column from which all columns should be taken. This column can be referenced
-     *   to both relatively to the current [ColumnsResolver] and absolutely..
+     * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
@@ -3068,67 +3064,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.ExampleArg]}
      *
-     * #### Flavors of All (Cols):
-     *
-     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
-     *     All columns
-     *
-     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
-     *     All columns before the specified column, excluding that column
-     *
-     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
-     *     All columns after the specified column, excluding that column
-     *
-     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
-     *     All columns from the specified column, including that column
-     *
-     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
-     *     All columns up to the specified column, including that column
-     *
-     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself
-     * @param [column] The specified column from which all columns should be taken. This column can be referenced
-     *   to both relatively to the current [ColumnsResolver] and absolutely..
-     * @see [allBefore]
-     * @see [allAfter]
-     * @see [allFrom]
-     * @see [allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept]
-     * @see [all]
-     * @see [cols]
-     */
-    private interface AllFromDocs
-
-    /**
-     * ## All (Cols) From
-     *
-     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
-     * containing all columns from [column], including [column] itself.
-     *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
-     *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
-     * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
-     *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
-     *
-     * #### For example:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][ColumnsSelectionDsl.allFrom]`("someColumn") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allColsFrom][SingleColumn.allColsFrom]`(someColumn) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[allFrom][ColumnSet.allFrom]`(Type::someColumn) }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allFrom][ColumnSet.allFrom]`{@getArg [ColumnSetAllFromDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -3148,12 +3084,72 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
+     * @see [cols]
+     * @param [column] The specified column from which all columns should be taken. This column can be referenced
+     *   to both relatively to the current [ColumnsResolver] and absolutely.
+     */
+    private interface AllFromDocs
+
+    /**
+     * ## All (Cols) From
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
+     * containing all columns from [column], including [column] itself.
+     *
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     *
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
+     * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allFrom][ColumnsSelectionDsl.allFrom]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allColsFrom][SingleColumn.allColsFrom]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[allFrom][ColumnSet.allFrom]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allFrom][ColumnSet.allFrom]` }`
+     *
+     * #### Flavors of All (Cols):
+     *
+     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
+     *     All columns
+     *
+     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -3169,10 +3165,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -3211,12 +3207,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -3230,10 +3226,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -3272,12 +3268,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -3291,10 +3287,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -3333,12 +3329,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -3351,10 +3347,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -3393,12 +3389,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -3411,10 +3407,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -3453,12 +3449,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -3472,10 +3468,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -3494,7 +3490,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[allFrom][ColumnsSelectionDsl.allFrom]`{@getArg [ColumnsSelectionDslAllFromDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { `[allFrom][ColumnsSelectionDsl.allFrom]` }`
      *
      * #### Flavors of All (Cols):
      *
@@ -3514,12 +3510,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -3535,10 +3531,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -3577,12 +3573,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -3595,10 +3591,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -3637,12 +3633,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -3655,10 +3651,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -3697,12 +3693,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -3715,10 +3711,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -3757,12 +3753,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -3775,10 +3771,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -3817,12 +3813,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -3836,10 +3832,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -3858,7 +3854,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsFrom][SingleColumn.allColsFrom]`{@getArg [SingleColumnAllFromDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsFrom][SingleColumn.allColsFrom]` }`
      *
      * #### Flavors of All (Cols):
      *
@@ -3878,12 +3874,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -3899,10 +3895,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -3941,12 +3937,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -3964,10 +3960,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -4006,12 +4002,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -4032,10 +4028,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -4074,12 +4070,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -4092,10 +4088,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -4134,12 +4130,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -4152,10 +4148,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -4194,12 +4190,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -4213,10 +4209,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -4235,7 +4231,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsFrom][String.allColsFrom]`{@getArg [StringAllFromDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsFrom][String.allColsFrom]` }`
      *
      * #### Flavors of All (Cols):
      *
@@ -4255,12 +4251,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -4276,10 +4272,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -4318,12 +4314,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -4336,10 +4332,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -4378,12 +4374,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -4396,10 +4392,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -4438,12 +4434,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -4456,10 +4452,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -4498,12 +4494,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -4516,10 +4512,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -4558,12 +4554,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -4577,10 +4573,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -4599,7 +4595,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::someColGroup.`[allColsFrom][KProperty.allColsFrom]`{@getArg [KPropertyAllFromDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::someColGroup.`[allColsFrom][KProperty.allColsFrom]` }`
      *
      * ## NOTE: 
      * If you get a warning `CANDIDATE_CHOSEN_USING_OVERLOAD_RESOLUTION_BY_LAMBDA_ANNOTATION`, you
@@ -4624,12 +4620,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -4646,10 +4642,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -4693,12 +4689,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -4715,10 +4711,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -4762,12 +4758,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -4782,10 +4778,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -4829,12 +4825,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -4847,10 +4843,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -4894,12 +4890,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -4912,10 +4908,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -4959,12 +4955,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -4977,10 +4973,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -5024,12 +5020,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -5043,10 +5039,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -5065,7 +5061,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allFrom][ColumnPath.allColsFrom]`{@getArg [ColumnPathAllFromDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allFrom][ColumnPath.allColsFrom]` }`
      *
      * #### Flavors of All (Cols):
      *
@@ -5085,12 +5081,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -5106,10 +5102,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -5148,12 +5144,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -5166,10 +5162,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -5208,12 +5204,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -5226,10 +5222,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -5268,12 +5264,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -5286,10 +5282,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -5328,12 +5324,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -5346,10 +5342,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns from [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -5388,12 +5384,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -5409,9 +5405,7 @@ public interface AllColumnsSelectionDsl {
      * ## All (Cols) Before
      *
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
-     * containing all columns before [column], excluding [column] itself
-     * @param [column] The specified column before which all columns should be taken. This column can be referenced
-     *   to both relatively to the current [ColumnsResolver] and absolutely..
+     * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
@@ -5435,67 +5429,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.ExampleArg]}
      *
-     * #### Flavors of All (Cols):
-     *
-     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
-     *     All columns
-     *
-     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
-     *     All columns before the specified column, excluding that column
-     *
-     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
-     *     All columns after the specified column, excluding that column
-     *
-     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
-     *     All columns from the specified column, including that column
-     *
-     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
-     *     All columns up to the specified column, including that column
-     *
-     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself
-     * @param [column] The specified column before which all columns should be taken. This column can be referenced
-     *   to both relatively to the current [ColumnsResolver] and absolutely..
-     * @see [allBefore]
-     * @see [allAfter]
-     * @see [allFrom]
-     * @see [allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept]
-     * @see [all]
-     * @see [cols]
-     */
-    private interface AllBeforeDocs
-
-    /**
-     * ## All (Cols) Before
-     *
-     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
-     * containing all columns before [column], excluding [column] itself.
-     *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
-     *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
-     * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
-     *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
-     *
-     * #### For example:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][ColumnsSelectionDsl.allBefore]`("someColumn") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allColsBefore][SingleColumn.allColsBefore]`(someColumn) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[allBefore][ColumnSet.allBefore]`(Type::someColumn) }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allBefore][ColumnSet.allBefore]`{@getArg [ColumnSetAllBeforeDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -5515,12 +5449,72 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
+     * @see [cols]
+     * @param [column] The specified column before which all columns should be taken. This column can be referenced
+     *   to both relatively to the current [ColumnsResolver] and absolutely.
+     */
+    private interface AllBeforeDocs
+
+    /**
+     * ## All (Cols) Before
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
+     * containing all columns before [column], excluding [column] itself.
+     *
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     *
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
+     * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allBefore][ColumnsSelectionDsl.allBefore]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allColsBefore][SingleColumn.allColsBefore]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[allBefore][ColumnSet.allBefore]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allBefore][ColumnSet.allBefore]` }`
+     *
+     * #### Flavors of All (Cols):
+     *
+     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
+     *     All columns
+     *
+     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -5536,10 +5530,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -5578,12 +5572,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -5597,10 +5591,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -5639,12 +5633,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -5658,10 +5652,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -5700,12 +5694,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -5718,10 +5712,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -5760,12 +5754,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -5778,10 +5772,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -5820,12 +5814,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -5839,10 +5833,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -5861,7 +5855,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[allBefore][ColumnsSelectionDsl.allBefore]`{@getArg [ColumnsSelectionDslAllBeforeDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { `[allBefore][ColumnsSelectionDsl.allBefore]` }`
      *
      * #### Flavors of All (Cols):
      *
@@ -5881,12 +5875,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -5902,10 +5896,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -5944,12 +5938,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -5962,10 +5956,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -6004,12 +5998,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -6022,10 +6016,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -6064,12 +6058,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -6082,10 +6076,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -6124,12 +6118,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -6142,10 +6136,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -6184,12 +6178,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -6203,10 +6197,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -6225,7 +6219,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsBefore][SingleColumn.allColsBefore]`{@getArg [SingleColumnAllBeforeDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsBefore][SingleColumn.allColsBefore]` }`
      *
      * #### Flavors of All (Cols):
      *
@@ -6245,12 +6239,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -6266,10 +6260,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -6308,12 +6302,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -6331,10 +6325,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -6373,12 +6367,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -6396,10 +6390,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -6438,12 +6432,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -6456,10 +6450,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -6498,12 +6492,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -6516,10 +6510,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -6558,12 +6552,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -6577,10 +6571,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -6599,7 +6593,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsBefore][String.allColsBefore]`{@getArg [StringAllBeforeDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsBefore][String.allColsBefore]` }`
      *
      * #### Flavors of All (Cols):
      *
@@ -6619,12 +6613,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -6640,10 +6634,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -6682,12 +6676,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -6700,10 +6694,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -6742,12 +6736,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -6760,10 +6754,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -6802,12 +6796,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -6820,10 +6814,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -6862,12 +6856,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -6880,10 +6874,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -6922,12 +6916,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -6941,10 +6935,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -6963,7 +6957,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::someColGroup.`[allColsBefore][KProperty.allColsBefore]`{@getArg [KPropertyAllBeforeDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::someColGroup.`[allColsBefore][KProperty.allColsBefore]` }`
      *
      * ## NOTE: 
      * If you get a warning `CANDIDATE_CHOSEN_USING_OVERLOAD_RESOLUTION_BY_LAMBDA_ANNOTATION`, you
@@ -6988,12 +6982,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -7010,10 +7004,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -7057,12 +7051,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -7079,10 +7073,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -7126,12 +7120,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -7146,10 +7140,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -7193,12 +7187,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -7211,10 +7205,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -7258,12 +7252,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -7276,10 +7270,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -7323,12 +7317,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -7341,10 +7335,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -7388,12 +7382,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -7407,10 +7401,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -7429,7 +7423,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allColsBefore][ColumnPath.allColsBefore]`{@getArg [ColumnPathAllBeforeDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allColsBefore][ColumnPath.allColsBefore]` }`
      *
      * #### Flavors of All (Cols):
      *
@@ -7449,12 +7443,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -7470,10 +7464,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -7512,12 +7506,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -7530,10 +7524,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -7572,12 +7566,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -7590,10 +7584,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -7632,12 +7626,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -7650,10 +7644,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -7692,12 +7686,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -7710,10 +7704,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns before [column], excluding [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -7752,12 +7746,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns before [column], excluding [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -7773,9 +7767,7 @@ public interface AllColumnsSelectionDsl {
      * ## All (Cols) Up To
      *
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
-     * containing all columns up to [column], including [column] itself
-     * @param [column] The specified column up to which all columns should be taken. This column can be referenced
-     *   to both relatively to the current [ColumnsResolver] and absolutely..
+     * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
@@ -7799,67 +7791,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.ExampleArg]}
      *
-     * #### Flavors of All (Cols):
-     *
-     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
-     *     All columns
-     *
-     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
-     *     All columns before the specified column, excluding that column
-     *
-     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
-     *     All columns after the specified column, excluding that column
-     *
-     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
-     *     All columns from the specified column, including that column
-     *
-     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
-     *     All columns up to the specified column, including that column
-     *
-     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself
-     * @param [column] The specified column up to which all columns should be taken. This column can be referenced
-     *   to both relatively to the current [ColumnsResolver] and absolutely..
-     * @see [allBefore]
-     * @see [allAfter]
-     * @see [allFrom]
-     * @see [allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept]
-     * @see [all]
-     * @see [cols]
-     */
-    private interface AllUpToDocs
-
-    /**
-     * ## All (Cols) Up To
-     *
-     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
-     * containing all columns up to [column], including [column] itself.
-     *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
-     *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
-     * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
-     *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
-     *
-     * #### For example:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][ColumnsSelectionDsl.allUpTo]`("someColumn") }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allColsUpTo][SingleColumn.allColsUpTo]`(someColumn) }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[allUpTo][ColumnSet.allUpTo]`(Type::someColumn) }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allUpTo][ColumnSet.allUpTo]`{@getArg [ColumnSetAllUpToDocs.Arg]} }`
      *
      * #### Flavors of All (Cols):
      *
@@ -7879,12 +7811,72 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
+     * @see [cols]
+     * @param [column] The specified column up to which all columns should be taken. This column can be referenced
+     *   to both relatively to the current [ColumnsResolver] and absolutely.
+     */
+    private interface AllUpToDocs
+
+    /**
+     * ## All (Cols) Up To
+     *
+     * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
+     * containing all columns up to [column], including [column] itself.
+     *
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     *
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector] to be used
+     * in the Plain DSL, and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] on [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     *
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
+     *
+     * #### For example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[allUpTo][ColumnsSelectionDsl.allUpTo]`("someColumn") }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[allColsUpTo][SingleColumn.allColsUpTo]`(someColumn) }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[allUpTo][ColumnSet.allUpTo]`(Type::someColumn) }`
+     *
+     * #### Examples for this overload:
+     *
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allUpTo][ColumnSet.allUpTo]` }`
+     *
+     * #### Flavors of All (Cols):
+     *
+     * - [all(Cols)][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`:
+     *     All columns
+     *
+     * - [all(Cols)Before][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`(column)`:
+     *     All columns before the specified column, excluding that column
+     *
+     * - [all(Cols)After][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`(column)`:
+     *     All columns after the specified column, excluding that column
+     *
+     * - [all(Cols)From][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`(column)`:
+     *     All columns from the specified column, including that column
+     *
+     * - [all(Cols)UpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`(column)`:
+     *     All columns up to the specified column, including that column
+     *
+     * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -7900,10 +7892,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -7942,12 +7934,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -7961,10 +7953,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -8003,12 +7995,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -8022,10 +8014,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -8064,12 +8056,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -8082,10 +8074,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -8124,12 +8116,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -8142,10 +8134,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -8184,12 +8176,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -8203,10 +8195,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -8225,7 +8217,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[allUpTo][ColumnsSelectionDsl.allColsUpTo]`{@getArg [ColumnsSelectionDslAllUpToDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { `[allUpTo][ColumnsSelectionDsl.allColsUpTo]` }`
      *
      * #### Flavors of All (Cols):
      *
@@ -8245,12 +8237,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -8266,10 +8258,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -8308,12 +8300,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -8326,10 +8318,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -8368,12 +8360,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -8386,10 +8378,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -8428,12 +8420,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -8446,10 +8438,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -8488,12 +8480,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -8506,10 +8498,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -8548,12 +8540,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -8567,10 +8559,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -8589,7 +8581,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsUpTo][SingleColumn.allColsUpTo]`{@getArg [SingleColumnAllUpToDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsUpTo][SingleColumn.allColsUpTo]` }`
      *
      * #### Flavors of All (Cols):
      *
@@ -8609,12 +8601,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -8630,10 +8622,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -8672,12 +8664,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -8695,10 +8687,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -8737,12 +8729,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -8763,10 +8755,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -8805,12 +8797,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -8823,10 +8815,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -8865,12 +8857,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -8883,10 +8875,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -8925,12 +8917,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -8944,10 +8936,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -8966,7 +8958,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsUpTo][String.allColsUpTo]`{@getArg [StringAllUpToDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsUpTo][String.allColsUpTo]` }`
      *
      * #### Flavors of All (Cols):
      *
@@ -8986,12 +8978,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -9007,10 +8999,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -9049,12 +9041,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -9067,10 +9059,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -9109,12 +9101,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -9127,10 +9119,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -9169,12 +9161,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -9187,10 +9179,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -9229,12 +9221,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -9247,10 +9239,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -9289,12 +9281,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -9308,10 +9300,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -9330,7 +9322,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::someColGroup.`[allColsUpTo][KProperty.allColsUpTo]`{@getArg [KPropertyAllUpToDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { DataSchemaType::someColGroup.`[allColsUpTo][KProperty.allColsUpTo]` }`
      *
      * ## NOTE: 
      * If you get a warning `CANDIDATE_CHOSEN_USING_OVERLOAD_RESOLUTION_BY_LAMBDA_ANNOTATION`, you
@@ -9355,12 +9347,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -9377,10 +9369,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -9424,12 +9416,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -9446,10 +9438,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -9493,12 +9485,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -9513,10 +9505,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -9560,12 +9552,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -9578,10 +9570,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -9625,12 +9617,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -9643,10 +9635,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -9690,12 +9682,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -9708,10 +9700,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -9755,12 +9747,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -9774,10 +9766,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -9796,7 +9788,7 @@ public interface AllColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allColsUpTo][ColumnPath.allColsUpTo]`{@getArg [ColumnPathAllUpToDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allColsUpTo][ColumnPath.allColsUpTo]` }`
      *
      * #### Flavors of All (Cols):
      *
@@ -9816,12 +9808,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -9837,10 +9829,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -9879,12 +9871,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -9897,10 +9889,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -9939,12 +9931,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -9957,10 +9949,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -9999,12 +9991,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -10017,10 +10009,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -10059,12 +10051,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
@@ -10077,10 +10069,10 @@ public interface AllColumnsSelectionDsl {
      * Creates a new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains a subset of columns from [this],
      * containing all columns up to [column], including [column] itself.
      *
-     * [column][org.jetbrains.kotlinx.dataframe.api.column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
+     * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
      * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
-     * If [column][org.jetbrains.kotlinx.dataframe.api.column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
+     * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -10119,12 +10111,12 @@ public interface AllColumnsSelectionDsl {
      *     All columns up to the specified column, including that column
      *
      * @return A new [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns up to [column], including [column] itself.
-     * @see [allBefore][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allBefore]
-     * @see [allAfter][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allAfter]
-     * @see [allFrom][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allFrom]
-     * @see [allUpTo][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allUpTo]
-     * @see [ColumnsSelectionDsl.allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]
-     * @see [all][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.all]
+     * @see [allBefore]
+     * @see [allAfter]
+     * @see [allFrom]
+     * @see [allUpTo]
+     * @see [ColumnsSelectionDsl.allExcept]
+     * @see [all]
      * @see [cols]
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.

@@ -195,7 +195,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonTakeAndDropDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs.ExampleArg]}
+     *
      *
      * @param [n] The number of columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
@@ -429,7 +429,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonTakeAndDropDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs.ExampleArg]}
+     *
      *
      * @param [n] The number of columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
@@ -662,7 +662,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonTakeAndDropWhileDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs.ExampleArg]}
+     *
      *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
@@ -893,7 +893,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonTakeAndDropWhileDocs.ExampleArg][org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs.ExampleArg]}
+     *
      *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].

@@ -58,12 +58,12 @@ public data class Update<T, C>(
     internal interface UpdateOperationArg
 
     /**
-     * ## {@getArg [UpdateOperationArg]} Operation Grammar
+     * ## {@get [UpdateOperationArg]} Operation Grammar
      * {@include [LineBreak]}
      * {@include [DslGrammarLink]}
      * {@include [LineBreak]}
      *
-     * {@getArg [UpdateOperationArg]} **`{ `**[columns][SelectingColumns]**` }`**
+     * {@get [UpdateOperationArg]} **`{ `**[columns][SelectingColumns]**` }`**
      *
      * {@include [Indent]}
      * `[ .`[**where**][Update.where]**` { `**[rowValueCondition][SelectingRows.RowValueCondition.WithExample]**` } `**`]`
@@ -92,13 +92,13 @@ public data class Update<T, C>(
      * {@include [Indent]}
      * `| .`[**asFrame**][Update.asFrame]**` { `**[dataFrameExpression][ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
      *
-     * {@setArg [UpdateOperationArg] [**update**][update]}{@comment The default name of the `update` operation function name.}
+     * {@set [UpdateOperationArg] [**update**][update]}{@comment The default name of the `update` operation function name.}
      */
     public interface Grammar
 
     /**
-     * The columns to update need to be selected. See {@getArg [Columns.SelectingColumnsArg]}
-     * for all the selecting options. {@setArg [Columns.SelectingColumnsArg] [Selecting Columns][UpdateSelectingOptions]}
+     * The columns to update need to be selected. See {@get [Columns.SelectingColumnsArg]}
+     * for all the selecting options. {@set [Columns.SelectingColumnsArg] [Selecting Columns][UpdateSelectingOptions]}
      */
     public interface Columns {
 
@@ -127,7 +127,7 @@ public data class Update<T, C>(
 
 // region update
 
-/** {@setArg [SelectingColumns.OperationArg] [update][update]} */
+/** {@set [SelectingColumns.OperationArg] [update][update]} */
 private interface SetSelectingColumnsOperationArg
 
 /**
@@ -182,8 +182,8 @@ public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Updat
 
 /** ## Where
  * @include [SelectingRows.RowValueCondition.WithExample]
- * {@setArg [SelectingRows.FirstOperationArg] [update][update]}
- * {@setArg [SelectingRows.SecondOperationArg] [where][where]}
+ * {@set [SelectingRows.FirstOperationArg] [update][update]}
+ * {@set [SelectingRows.SecondOperationArg] [where][where]}
  *
  * @param [predicate] The [row value filter][RowValueFilter] to select the rows to update.
  */
@@ -238,7 +238,7 @@ public fun <T, C> Update<T, C>.at(rowRange: IntRange): Update<T, C> = where { in
 
 /** ## Per Row Col
  * @include [ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]
- * {@setArg [ExpressionsGivenRowAndColumn.OperationArg] [update][update]` { age \\\\}.`[perRowCol][perRowCol]}
+ * {@set [ExpressionsGivenRowAndColumn.OperationArg] [update][update]` { age \}.`[perRowCol][perRowCol]}
  *
  * ## See Also
  *  - {@include [SeeAlsoWith]}
@@ -259,7 +259,7 @@ public typealias UpdateExpression<T, C, R> = AddDataRow<T>.(C) -> R
 
 /** ## With
  * {@include [ExpressionsGivenRow.RowValueExpression.WithExample]}
- * {@setArg [ExpressionsGivenRow.OperationArg] [update][update]` { city \}.`[with][with]}
+ * {@set [ExpressionsGivenRow.OperationArg] [update][update]` { city \}.`[with][with]}
  *
  * ## Note
  * @include [ExpressionsGivenRow.AddDataRowNote]
@@ -281,7 +281,7 @@ private interface SeeAlsoWith
  * Updates selected [column group][ColumnGroup] as a [DataFrame] with the given [expression].
  *
  * {@include [ExpressionsGivenDataFrame.DataFrameExpression.WithExample]}
- * {@setArg [ExpressionsGivenDataFrame.OperationArg] `df.`[update][update]` { name \}.`[asFrame][asFrame]}
+ * {@set [ExpressionsGivenDataFrame.OperationArg] `df.`[update][update]` { name \}.`[asFrame][asFrame]}
  * @param [expression] The {@include [ExpressionsGivenDataFrame.DataFrameExpressionLink]} to replace the selected column group with.
  */
 public fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameExpression<C, DataFrame<R>>): DataFrame<T> =
@@ -317,7 +317,7 @@ private interface UpdatePerColMap
  *
  * For example:
  *
- * `val defaults = {@getArg [CommonUpdatePerColMapDoc]}`
+ * `val defaults = {@get [CommonUpdatePerColMapDoc]}`
  *
  * `df.`[update][update]` { name and age }.`[where][Update.where]` { ... }.`[perCol][perCol]`(defaults)`
  *
@@ -327,7 +327,7 @@ private interface CommonUpdatePerColMapDoc
 
 /**
  * @include [CommonUpdatePerColMapDoc]
- * {@setArg [CommonUpdatePerColMapDoc] `[mapOf][mapOf]`("name" to "Empty", "age" to 0)}
+ * {@set [CommonUpdatePerColMapDoc] `[mapOf][mapOf]`("name" to "Empty", "age" to 0)}
  *
  * @param [values] The [Map]<[String], Value> to provide a new value for every selected cell.
  *   For each selected column, there must be a value in the map with the same name.
@@ -338,7 +338,7 @@ public fun <T, C> Update<T, C>.perCol(values: Map<String, C>): DataFrame<T> = up
 
 /**
  * {@include [CommonUpdatePerColMapDoc]}
- * {@setArg [CommonUpdatePerColMapDoc] df.`[getRows][DataFrame.getRows]`(`[listOf][listOf]`(0))`
+ * {@set [CommonUpdatePerColMapDoc] df.`[getRows][DataFrame.getRows]`(`[listOf][listOf]`(0))`
  *
  *   `.`[update][update]` { name \}.`[with][Update.with]` { "Empty" \}`
  *
@@ -353,7 +353,7 @@ public fun <T, C> Update<T, C>.perCol(values: AnyRow): DataFrame<T> = perCol(val
 /**
  * @include [CommonUpdatePerColDoc]
  * @include [ExpressionsGivenColumn.ColumnExpression.WithExample]
- * {@setArg [ExpressionsGivenColumn.OperationArg] [update][update]` { age \}.`[perCol][perCol]}
+ * {@set [ExpressionsGivenColumn.OperationArg] [update][update]` { age \}.`[perCol][perCol]}
  *
  * @param [valueSelector] The {@include [ExpressionsGivenColumn.ColumnExpressionLink]} to provide a new value for every selected cell giving its column.
  */
@@ -405,7 +405,7 @@ public fun <T, C> Update<T, C?>.notNull(expression: UpdateExpression<T, C, C>): 
  * @include [SelectingColumns.ColumnAccessors]
  *
  * {@include [ExpressionsGivenRow.RowValueExpression.WithExample]}
- * {@setArg [ExpressionsGivenRow.OperationArg] [update][update]`("city")` }
+ * {@set [ExpressionsGivenRow.OperationArg] [update][update]`("city")` }
  *
  * @include [Update.ColumnAccessorsParam]
  * @param [expression] The {@include [ExpressionsGivenRow.RowValueExpressionLink]} to update the rows with.
@@ -424,7 +424,7 @@ public fun <T, C> DataFrame<T>.update(
  * @include [SelectingColumns.KProperties]
  *
  * {@include [ExpressionsGivenRow.RowValueExpression.WithExample]}
- * {@setArg [ExpressionsGivenRow.OperationArg] [update][update]`("city")` }
+ * {@set [ExpressionsGivenRow.OperationArg] [update][update]`("city")` }
  *
  * @include [Update.KPropertiesParam]
  * @param [expression] The {@include [ExpressionsGivenRow.RowValueExpressionLink]} to update the rows with.
@@ -443,7 +443,7 @@ public fun <T, C> DataFrame<T>.update(
  * @include [SelectingColumns.ColumnNames]
  *
  * {@include [ExpressionsGivenRow.RowValueExpression.WithExample]}
- * {@setArg [ExpressionsGivenRow.OperationArg] [update][update]`("city")` }
+ * {@set [ExpressionsGivenRow.OperationArg] [update][update]`("city")` }
  *
  * @include [Update.ColumnNamesParam]
  * @param [expression] The {@include [ExpressionsGivenRow.RowValueExpressionLink]} to update the rows with.
@@ -456,11 +456,11 @@ public fun <T> DataFrame<T>.update(
     update(*headPlusArray(firstCol, cols)).with(expression)
 
 /**
- * Specific version of [with] that simply sets the value of each selected row to {@getArg [CommonSpecificWithDocFirstArg]}.
+ * Specific version of [with] that simply sets the value of each selected row to {@get [CommonSpecificWithDocFirstArg]}.
  *
  * For example:
  *
- * `df.`[update][update]` { id }.`[where][Update.where]` { it < 0 }.`{@getArg [CommonSpecificWithDocSecondArg]}`
+ * `df.`[update][update]` { id }.`[where][Update.where]` { it < 0 }.`{@get [CommonSpecificWithDocSecondArg]}`
  */
 private interface CommonSpecificWithDoc
 
@@ -473,24 +473,24 @@ private interface CommonSpecificWithDocSecondArg
 /**
  * ## With Null
  * @include [CommonSpecificWithDoc]
- * {@setArg [CommonSpecificWithDocFirstArg] `null`}
- * {@setArg [CommonSpecificWithDocSecondArg] [withNull][withNull]`()}
+ * {@set [CommonSpecificWithDocFirstArg] `null`}
+ * {@set [CommonSpecificWithDocSecondArg] [withNull][withNull]`()}
  */
 public fun <T, C> Update<T, C>.withNull(): DataFrame<T> = with { null }
 
 /**
  * ## With Zero
  * @include [CommonSpecificWithDoc]
- * {@setArg [CommonSpecificWithDocFirstArg] `0`}
- * {@setArg [CommonSpecificWithDocSecondArg] [withZero][withZero]`()}
+ * {@set [CommonSpecificWithDocFirstArg] `0`}
+ * {@set [CommonSpecificWithDocSecondArg] [withZero][withZero]`()}
  */
 public fun <T, C> Update<T, C>.withZero(): DataFrame<T> = updateWithValuePerColumnImpl { 0 as C }
 
 /**
  * ## With Value (Deprecated)
  * @include [CommonSpecificWithDoc]
- * {@setArg [CommonSpecificWithDocFirstArg] [value]}
- * {@setArg [CommonSpecificWithDocSecondArg] [withValue][withValue]`(-1)}
+ * {@set [CommonSpecificWithDocFirstArg] [value]}
+ * {@set [CommonSpecificWithDocSecondArg] [withValue][withValue]`(-1)}
  *
  * @param [value] The value to set the selected rows to. In contrast to [with][Update.with], this must be the same exact type.
  */

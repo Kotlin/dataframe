@@ -12,13 +12,13 @@ import org.jetbrains.kotlinx.dataframe.RowColumnExpression as DfRowColumnExpress
  */
 internal interface ExpressionsGivenRowAndColumn {
 
-    /**
-     * The key for an @setArg that will define the operation name for the examples below.
+    /*
+     * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
     interface OperationArg
 
-    /** {@setArg [OperationArg] operation} */
+    /** {@set [OperationArg] operation} */
     interface SetDefaultOperationArg
 
     /** Provide a new value for every selected cell given both its row and column using a [row-column expression][DfRowColumnExpression]. */
@@ -29,7 +29,7 @@ internal interface ExpressionsGivenRowAndColumn {
          *
          * For example:
          *
-         * `df.`{@getArg [OperationArg]}` { row, col ->`
+         * `df.`{@get [OperationArg]}` { row, col ->`
          *
          * `row.age / col.`[mean][DataColumn.mean]`(skipNA = true)`
          *

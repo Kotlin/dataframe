@@ -66,18 +66,18 @@ public interface FilterColumnsSelectionDsl {
      *
      * {@include [DslGrammarTemplate]}
      *
-     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DefinitionsArg]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ConditionDef]}
      * }
      *
-     * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
      *  {@include [Indent]}{@include [ColumnSetName]}**` {`** {@include [DslGrammarTemplate.ConditionRef]} **`\}`**
      * }
      *
-     * {@setArg [DslGrammarTemplate.PlainDslPart]}
-     * {@setArg [DslGrammarTemplate.ColumnGroupPart]}
+     * {@set [DslGrammarTemplate.PlainDslPart]}
+     * {@set [DslGrammarTemplate.ColumnGroupPart]}
      */
     public interface Grammar {
 

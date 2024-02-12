@@ -39,7 +39,7 @@ public interface ColGroupColumnsSelectionDsl {
      * ## Col Group Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DefinitionsArg]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
@@ -51,15 +51,15 @@ public interface ColGroupColumnsSelectionDsl {
      *  {@include [DslGrammarTemplate.ColumnTypeDef]}
      * }
      *
-     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
      *  {@include [PlainDslName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}` | `{@include [DslGrammarTemplate.IndexRef]}**`)`**
      * }
      *
-     * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
      *  {@include [Indent]}{@include [ColumnSetName]}**`(`**{@include [DslGrammarTemplate.IndexRef]}**`)`**
      * }
      *
-     * {@setArg [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
      *  {@include [Indent]}{@include [ColumnGroupName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}` | `{@include [DslGrammarTemplate.IndexRef]}**`)`**
      * }
      */
@@ -88,7 +88,7 @@ public interface ColGroupColumnsSelectionDsl {
      * The function can also be called on [ColumnGroups][ColumnGroupReference] to create
      * an accessor for a column group inside a [ColumnGroup].
      * {@include [LineBreak]}
-     * {@getArg [CommonColGroupDocs.Note]}
+     * {@get [CommonColGroupDocs.Note]}
      *
      * ### Check out: [Grammar]
      *
@@ -102,7 +102,7 @@ public interface ColGroupColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [CommonColGroupDocs.ExampleArg]}
+     * {@get [CommonColGroupDocs.ExampleArg]}
      *
      * To create a [ColumnAccessor] for another kind of column, take a look at the functions
      * [col][ColumnsSelectionDsl.col],
@@ -117,7 +117,7 @@ public interface ColGroupColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.frameCol\]
      * @see [ColumnsSelectionDsl.valueCol\]
      * @see [ColumnsSelectionDsl.col\]
-     * {@setArg [CommonColGroupDocs.Note]}
+     * {@set [CommonColGroupDocs.Note]}
      */
     private interface CommonColGroupDocs {
 
@@ -125,14 +125,14 @@ public interface ColGroupColumnsSelectionDsl {
         interface ExampleArg
 
         /**
-         * `df.`[select][DataFrame.select]` { {@getArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`({@getArg [CommonColGroupDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@get [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`({@get [CommonColGroupDocs.Arg]}) \}`
          */
         interface SingleExample
 
         /**
-         * `df.`[select][DataFrame.select]` { {@getArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`({@getArg [CommonColGroupDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@get [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`({@get [CommonColGroupDocs.Arg]}) \}`
          *
-         * `df.`[select][DataFrame.select]` { {@getArg [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`<`[String][String]`>({@getArg [CommonColGroupDocs.Arg]}) \\\\}`
+         * `df.`[select][DataFrame.select]` { {@get [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`<`[String][String]`>({@get [CommonColGroupDocs.Arg]}) \}`
          */
         interface DoubleExample
 
@@ -153,21 +153,21 @@ public interface ColGroupColumnsSelectionDsl {
 
     /**
      * @include [CommonColGroupDocs]
-     * {@setArg [CommonColGroupDocs.Arg] columnGroupA}
-     * {@setArg [CommonColGroupDocs.ExampleArg] {@include [CommonColGroupDocs.SingleExample]}}
+     * {@set [CommonColGroupDocs.Arg] columnGroupA}
+     * {@set [CommonColGroupDocs.ExampleArg] {@include [CommonColGroupDocs.SingleExample]}}
      * @param [col\] The [ColumnAccessor] pointing to the value column.
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     private interface ColGroupReferenceDocs
 
     /**
-     * @include [ColGroupReferenceDocs] {@setArg [CommonColGroupDocs.ReceiverArg]}
+     * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.ReceiverArg]}
      */
     public fun <C> colGroup(colGroup: ColumnAccessor<DataRow<C>>): ColumnAccessor<DataRow<C>> =
         colGroup.ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupReferenceDocs] {@setArg [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
      */
     public fun <C> SingleColumn<DataRow<*>>.colGroup(colGroup: ColumnAccessor<DataRow<C>>): SingleColumn<DataRow<C>> =
         this.ensureIsColumnGroup().transformSingle {
@@ -178,25 +178,25 @@ public interface ColGroupColumnsSelectionDsl {
         }.singleImpl()
 
     /**
-     * @include [ColGroupReferenceDocs] {@setArg [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
      */
     public fun <C> AnyColumnGroupAccessor.colGroup(colGroup: ColumnAccessor<DataRow<C>>): ColumnAccessor<DataRow<C>> =
         this.ensureIsColumnGroup().columnGroup<C>(colGroup.path()).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupReferenceDocs] {@setArg [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}
+     * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}
      */
     public fun <C> String.colGroup(colGroup: ColumnAccessor<DataRow<C>>): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup<C>(colGroup.path()).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupReferenceDocs] {@setArg [CommonColGroupDocs.ReceiverArg] Type::myColumnGroup.}
+     * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.ReceiverArg] Type::myColumnGroup.}
      */
     public fun <C> KProperty<*>.colGroup(colGroup: ColumnAccessor<DataRow<C>>): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup<C>(colGroup.path()).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupReferenceDocs] {@setArg [CommonColGroupDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
+     * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
      */
     public fun <C> ColumnPath.colGroup(colGroup: ColumnAccessor<DataRow<C>>): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup<C>(colGroup.path()).ensureIsColumnGroup()
@@ -207,27 +207,27 @@ public interface ColGroupColumnsSelectionDsl {
 
     /**
      * @include [CommonColGroupDocs]
-     * {@setArg [CommonColGroupDocs.Arg] "columnGroupName"}
-     * {@setArg [CommonColGroupDocs.ExampleArg] {@include [CommonColGroupDocs.DoubleExample]}}
+     * {@set [CommonColGroupDocs.Arg] "columnGroupName"}
+     * {@set [CommonColGroupDocs.ExampleArg] {@include [CommonColGroupDocs.DoubleExample]}}
      * @param [name\] The name of the value column.
      */
     private interface ColGroupNameDocs
 
     /**
-     * @include [ColGroupNameDocs] {@setArg [CommonColGroupDocs.ReceiverArg]}
+     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.ReceiverArg]}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
     public fun colGroup(name: String): ColumnAccessor<DataRow<*>> = columnGroup<Any?>(name).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupNameDocs] {@setArg [CommonColGroupDocs.ReceiverArg]}
+     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.ReceiverArg]}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> colGroup(name: String): ColumnAccessor<DataRow<C>> = columnGroup<C>(name).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupNameDocs] {@setArg [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -235,7 +235,7 @@ public interface ColGroupColumnsSelectionDsl {
         colGroup<Any?>(name)
 
     /**
-     * @include [ColGroupNameDocs] {@setArg [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> SingleColumn<DataRow<*>>.colGroup(name: String): SingleColumn<DataRow<C>> =
@@ -247,7 +247,7 @@ public interface ColGroupColumnsSelectionDsl {
         }.singleImpl()
 
     /**
-     * @include [ColGroupNameDocs] {@setArg [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -255,14 +255,14 @@ public interface ColGroupColumnsSelectionDsl {
         colGroup<Any?>(name)
 
     /**
-     * @include [ColGroupNameDocs] {@setArg [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> AnyColumnGroupAccessor.colGroup(name: String): ColumnAccessor<DataRow<C>> =
         this.ensureIsColumnGroup().columnGroup<C>(name).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupNameDocs] {@setArg [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}
+     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -270,14 +270,14 @@ public interface ColGroupColumnsSelectionDsl {
         colGroup<Any?>(name)
 
     /**
-     * @include [ColGroupNameDocs] {@setArg [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}
+     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> String.colGroup(name: String): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup<C>(name).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupNameDocs] {@setArg [CommonColGroupDocs.ReceiverArg] Type::myColumnGroup.}
+     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.ReceiverArg] Type::myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -285,14 +285,14 @@ public interface ColGroupColumnsSelectionDsl {
         colGroup<Any?>(name)
 
     /**
-     * @include [ColGroupNameDocs] {@setArg [CommonColGroupDocs.ReceiverArg] Type::myColumnGroup.}
+     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.ReceiverArg] Type::myColumnGroup.}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> KProperty<*>.colGroup(name: String): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup<C>(name).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupNameDocs] {@setArg [CommonColGroupDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
+     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -300,7 +300,7 @@ public interface ColGroupColumnsSelectionDsl {
         colGroup<Any?>(name)
 
     /**
-     * @include [ColGroupNameDocs] {@setArg [CommonColGroupDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
+     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> ColumnPath.colGroup(name: String): ColumnAccessor<DataRow<C>> =
@@ -312,27 +312,27 @@ public interface ColGroupColumnsSelectionDsl {
 
     /**
      * @include [CommonColGroupDocs]
-     * {@setArg [CommonColGroupDocs.Arg] "pathTo"["columnGroupName"\] }
-     * {@setArg [CommonColGroupDocs.ExampleArg] {@include [CommonColGroupDocs.DoubleExample]}}
+     * {@set [CommonColGroupDocs.Arg] "pathTo"["columnGroupName"\] }
+     * {@set [CommonColGroupDocs.ExampleArg] {@include [CommonColGroupDocs.DoubleExample]}}
      * @param [path\] The path to the value column.
      */
     private interface ColGroupPathDocs
 
     /**
-     * @include [ColGroupPathDocs] {@setArg [CommonColGroupDocs.ReceiverArg]}
+     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.ReceiverArg]}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
     public fun colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = columnGroup<Any?>(path).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupPathDocs] {@setArg [CommonColGroupDocs.ReceiverArg]}
+     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.ReceiverArg]}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> = columnGroup<C>(path).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupPathDocs] {@setArg [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -340,7 +340,7 @@ public interface ColGroupColumnsSelectionDsl {
         colGroup<Any?>(path)
 
     /**
-     * @include [ColGroupPathDocs] {@setArg [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> SingleColumn<DataRow<*>>.colGroup(path: ColumnPath): SingleColumn<DataRow<C>> =
@@ -353,7 +353,7 @@ public interface ColGroupColumnsSelectionDsl {
             }.singleImpl()
 
     /**
-     * @include [ColGroupPathDocs] {@setArg [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -361,14 +361,14 @@ public interface ColGroupColumnsSelectionDsl {
         colGroup<Any?>(path)
 
     /**
-     * @include [ColGroupPathDocs] {@setArg [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> AnyColumnGroupAccessor.colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> =
         this.ensureIsColumnGroup().columnGroup<C>(path).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupPathDocs] {@setArg [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}
+     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -376,14 +376,14 @@ public interface ColGroupColumnsSelectionDsl {
         colGroup<Any?>(path)
 
     /**
-     * @include [ColGroupPathDocs] {@setArg [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}
+     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> String.colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup<C>(path).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupPathDocs] {@setArg [CommonColGroupDocs.ReceiverArg] Type::myColumnGroup.}
+     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.ReceiverArg] Type::myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -391,14 +391,14 @@ public interface ColGroupColumnsSelectionDsl {
         colGroup<Any?>(path)
 
     /**
-     * @include [ColGroupPathDocs] {@setArg [CommonColGroupDocs.ReceiverArg] Type::myColumnGroup.}
+     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.ReceiverArg] Type::myColumnGroup.}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> KProperty<*>.colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup<C>(path).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupPathDocs] {@setArg [CommonColGroupDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
+     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -406,7 +406,7 @@ public interface ColGroupColumnsSelectionDsl {
         colGroup<Any?>(path)
 
     /**
-     * @include [ColGroupPathDocs] {@setArg [CommonColGroupDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
+     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> ColumnPath.colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> =
@@ -418,15 +418,15 @@ public interface ColGroupColumnsSelectionDsl {
 
     /**
      * @include [CommonColGroupDocs]
-     * {@setArg [CommonColGroupDocs.Arg] Type::columnGroupA}
-     * {@setArg [CommonColGroupDocs.ExampleArg] {@include [CommonColGroupDocs.SingleExample]}}
+     * {@set [CommonColGroupDocs.Arg] Type::columnGroupA}
+     * {@set [CommonColGroupDocs.ExampleArg] {@include [CommonColGroupDocs.SingleExample]}}
      * @param [property\] The [KProperty] reference to the value column.
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     private interface ColGroupKPropertyDocs
 
     /**
-     * @include [ColGroupKPropertyDocs] {@setArg [CommonColGroupDocs.ReceiverArg]}
+     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.ReceiverArg]}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupDataRowKProperty")
@@ -434,13 +434,13 @@ public interface ColGroupColumnsSelectionDsl {
         columnGroup(property).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupKPropertyDocs] {@setArg [CommonColGroupDocs.ReceiverArg]}
+     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.ReceiverArg]}
      */
     public fun <C> colGroup(property: KProperty<C>): SingleColumn<DataRow<C>> =
         columnGroup(property).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupKPropertyDocs] {@setArg [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupDataRowKProperty")
@@ -448,13 +448,13 @@ public interface ColGroupColumnsSelectionDsl {
         colGroup<C>(property.name)
 
     /**
-     * @include [ColGroupKPropertyDocs] {@setArg [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
      */
     public fun <C> SingleColumn<DataRow<*>>.colGroup(property: KProperty<C>): SingleColumn<DataRow<C>> =
         colGroup<C>(property.name)
 
     /**
-     * @include [ColGroupKPropertyDocs] {@setArg [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupDataRowKProperty")
@@ -462,13 +462,13 @@ public interface ColGroupColumnsSelectionDsl {
         this.ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupKPropertyDocs] {@setArg [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
      */
     public fun <C> AnyColumnGroupAccessor.colGroup(property: KProperty<C>): ColumnAccessor<DataRow<C>> =
         this.ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupKPropertyDocs] {@setArg [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}
+     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupDataRowKProperty")
@@ -476,13 +476,13 @@ public interface ColGroupColumnsSelectionDsl {
         columnGroup(this).ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupKPropertyDocs] {@setArg [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}
+     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}
      */
     public fun <C> String.colGroup(property: KProperty<C>): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupKPropertyDocs] {@setArg [CommonColGroupDocs.ReceiverArg] Type::myColumnGroup.}
+     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.ReceiverArg] Type::myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupDataRowKProperty")
@@ -490,13 +490,13 @@ public interface ColGroupColumnsSelectionDsl {
         columnGroup(this).ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupKPropertyDocs] {@setArg [CommonColGroupDocs.ReceiverArg] Type::myColumnGroup.}
+     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.ReceiverArg] Type::myColumnGroup.}
      */
     public fun <C> KProperty<*>.colGroup(property: KProperty<C>): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupKPropertyDocs] {@setArg [CommonColGroupDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
+     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupDataRowKProperty")
@@ -504,7 +504,7 @@ public interface ColGroupColumnsSelectionDsl {
         columnGroup(this).ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupKPropertyDocs] {@setArg [CommonColGroupDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
+     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
      */
     public fun <C> ColumnPath.colGroup(property: KProperty<C>): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
@@ -515,17 +515,17 @@ public interface ColGroupColumnsSelectionDsl {
 
     /**
      * @include [CommonColGroupDocs]
-     * {@setArg [CommonColGroupDocs.Arg] 0}
-     * {@setArg [CommonColGroupDocs.ExampleArg] {@include [CommonColGroupDocs.DoubleExample]}}
+     * {@set [CommonColGroupDocs.Arg] 0}
+     * {@set [CommonColGroupDocs.ExampleArg] {@include [CommonColGroupDocs.DoubleExample]}}
      * @param [index\] The index of the value column.
      * @throws [IndexOutOfBoundsException\] if the index is out of bounds.
      */
     private interface ColGroupIndexDocs
 
     /**
-     * @include [ColGroupIndexDocs] {@setArg [CommonColGroupDocs.ReceiverArg] `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().}
+     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.ReceiverArg] `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
-     * {@setArg [CommonColGroupDocs.ExampleArg] {@include [CommonColGroupDocs.SingleExample]}}
+     * {@set [CommonColGroupDocs.ExampleArg] {@include [CommonColGroupDocs.SingleExample]}}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("ColumnSetDataRowColGroupIndex")
@@ -533,15 +533,15 @@ public interface ColGroupColumnsSelectionDsl {
         getAt(index).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupIndexDocs] {@setArg [CommonColGroupDocs.ReceiverArg] `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().}
+     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.ReceiverArg] `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
-     * {@setArg [CommonColGroupDocs.ExampleArg] {@include [CommonColGroupDocs.SingleExample]}}
+     * {@set [CommonColGroupDocs.ExampleArg] {@include [CommonColGroupDocs.SingleExample]}}
      */
     public fun ColumnSet<*>.colGroup(index: Int): SingleColumn<DataRow<*>> =
         getAt(index).cast<DataRow<*>>().ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupIndexDocs] {@setArg [CommonColGroupDocs.ReceiverArg]}
+     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.ReceiverArg]}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -549,14 +549,14 @@ public interface ColGroupColumnsSelectionDsl {
         colGroup<Any?>(index)
 
     /**
-     * @include [ColGroupIndexDocs] {@setArg [CommonColGroupDocs.ReceiverArg]}
+     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.ReceiverArg]}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> ColumnsSelectionDsl<*>.colGroup(index: Int): SingleColumn<DataRow<C>> =
         asSingleColumn().colGroup<C>(index)
 
     /**
-     * @include [ColGroupIndexDocs] {@setArg [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -564,7 +564,7 @@ public interface ColGroupColumnsSelectionDsl {
         colGroup<Any?>(index)
 
     /**
-     * @include [ColGroupIndexDocs] {@setArg [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> SingleColumn<DataRow<*>>.colGroup(index: Int): SingleColumn<DataRow<C>> =
@@ -575,7 +575,7 @@ public interface ColGroupColumnsSelectionDsl {
             .ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupIndexDocs] {@setArg [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}
+     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -583,14 +583,14 @@ public interface ColGroupColumnsSelectionDsl {
         colGroup<Any?>(index)
 
     /**
-     * @include [ColGroupIndexDocs] {@setArg [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}
+     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> String.colGroup(index: Int): SingleColumn<DataRow<C>> =
         columnGroup(this).colGroup<C>(index)
 
     /**
-     * @include [ColGroupIndexDocs] {@setArg [CommonColGroupDocs.ReceiverArg] Type::myColumnGroup.}
+     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.ReceiverArg] Type::myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -598,14 +598,14 @@ public interface ColGroupColumnsSelectionDsl {
         colGroup<Any?>(index)
 
     /**
-     * @include [ColGroupIndexDocs] {@setArg [CommonColGroupDocs.ReceiverArg] Type::myColumnGroup.}
+     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.ReceiverArg] Type::myColumnGroup.}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> KProperty<*>.colGroup(index: Int): SingleColumn<DataRow<C>> =
         columnGroup(this).colGroup<C>(index)
 
     /**
-     * @include [ColGroupIndexDocs] {@setArg [CommonColGroupDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
+     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -613,7 +613,7 @@ public interface ColGroupColumnsSelectionDsl {
         colGroup<Any?>(index)
 
     /**
-     * @include [ColGroupIndexDocs] {@setArg [CommonColGroupDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
+     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> ColumnPath.colGroup(index: Int): SingleColumn<DataRow<C>> =

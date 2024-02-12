@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrameExpression as DfDataFrameExpress
  * Expressing values using a "Data Frame Expression" can occur exclusively in a
  * {@include [DataFrameExpressionLink]}.
  */
+@ExcludeFromSources
 internal interface ExpressionsGivenDataFrame {
 
     interface OperationArg
@@ -22,7 +23,7 @@ internal interface ExpressionsGivenDataFrame {
          *
          * For example:
          *
-         * {@getArg [OperationArg]}` { `[select][DataFrame.select]` { lastName } }`
+         * {@get [OperationArg]}` { `[select][DataFrame.select]` { lastName } }`
          */
         interface WithExample
     }

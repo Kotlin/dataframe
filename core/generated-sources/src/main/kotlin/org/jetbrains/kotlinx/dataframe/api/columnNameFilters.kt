@@ -130,14 +130,14 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     /**
      * ## (Cols) Name Contains
-     * Returns a [ColumnSet] containing all columns from [this\] having
-     * {@getArg [CommonNameContainsDocs.ArgumentArg]} in their name.
+     * Returns a [ColumnSet] containing all columns from [this] having
+     *  in their name.
      *
      * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][ColumnGroup], `nameContains` is named `colsNameContains` to avoid confusion.
      *
-     * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]` { `{@getArg [ArgumentArg]}{@getArg [ArgumentArg]}` `[in][String.contains]` it.`[name][DataColumn.name]` }`.
+     * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]` { `` `[in][String.contains]` it.`[name][DataColumn.name]` }`.
      *
      * ### Check out: [Grammar]
      *
@@ -151,14 +151,14 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [ExampleArg]}
      *
-     * @param {@getArg [ArgumentArg]} what the column name should contain to be included in the result.
+     *
+     * @param  what the column name should contain to be included in the result.
      *
      * @return A [ColumnSet] containing
-     *   all columns containing {@getArg [CommonNameContainsDocs.ArgumentArg]} in their name.
-     * @see [nameEndsWith\]
-     * @see [nameStartsWith\]
+     *   all columns containing  in their name.
+     * @see [nameEndsWith]
+     * @see [nameStartsWith]
      *
      */
     private interface CommonNameContainsDocs {
@@ -199,7 +199,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.CommonNameContainsDocs.ExampleArg]}
+     *
      *
      * @param [text]
      *  what the column name should contain to be included in the result.
@@ -473,7 +473,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.CommonNameContainsDocs.ExampleArg]}
+     *
      *
      * @param [regex] what the column name should contain to be included in the result.
      *
@@ -707,35 +707,35 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     // endregion
 
     /**
-     * ## (Cols) Name {@getArg [CommonNameStartsEndsDocs.CapitalTitleArg]} With
-     * Returns a [ColumnSet] containing all columns from [this\]
-     * {@getArg [CommonNameStartsEndsDocs.NounArg]} with {@getArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name.
+     * ## (Cols) Name  With
+     * Returns a [ColumnSet] containing all columns from [this]
+     *  with  in their name.
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][ColumnGroup], the function is named `{@getArg [CommonNameStartsEndsDocs.ColsNameOperationNameArg]}` to avoid confusion.
+     * NOTE: For [column groups][ColumnGroup], the function is named `` to avoid confusion.
      *
-     * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]` { it.`[name][DataColumn.name]`.`[{@getArg [OperationNameArg]}][String.{@getArg [OperationNameArg]}]`(`{@getArg [ArgumentArg]}{@getArg [ArgumentArg]}`) }`.
+     * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]` { it.`[name][DataColumn.name]`.`[][String.]`(``) }`.
      *
      * ### Check out: [Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { `[{@getArg [NameOperationNameArg]}][ColumnsSelectionDsl.{@getArg [NameOperationNameArg]}]`("order") }`
+     * `df.`[select][DataFrame.select]` { `[][ColumnsSelectionDsl.]`("order") }`
      *
-     * `df.`[select][DataFrame.select]` { "someGroupCol".`[{@getArg [ColsNameOperationNameArg]}][String.{@getArg [ColsNameOperationNameArg]}]`("b") }`
+     * `df.`[select][DataFrame.select]` { "someGroupCol".`[][String.]`("b") }`
      *
-     * `df.`[select][DataFrame.select]` { Type::someGroupCol.`[{@getArg [ColsNameOperationNameArg]}][SingleColumn.{@getArg [ColsNameOperationNameArg]}]`("a", ignoreCase = true) }`
+     * `df.`[select][DataFrame.select]` { Type::someGroupCol.`[][SingleColumn.]`("a", ignoreCase = true) }`
      *
      * #### Examples for this overload:
      *
-     * {@getArg [ExampleArg]}
      *
-     * @param {@getArg [ArgumentArg]} Columns {@getArg [CommonNameStartsEndsDocs.NounArg]} with this {@getArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name will be returned.
-     * @param [ignoreCase\] `true` to ignore character case when comparing strings. By default `false`.
+     *
+     * @param  Columns  with this  in their name will be returned.
+     * @param [ignoreCase] `true` to ignore character case when comparing strings. By default `false`.
      *
      * @return A [ColumnSet] containing
-     *   all columns {@getArg [CommonNameStartsEndsDocs.NounArg]} with {@getArg [CommonNameStartsEndsDocs.ArgumentArg]} in their name.
+     *   all columns  with  in their name.
      */
     private interface CommonNameStartsEndsDocs {
 
@@ -765,22 +765,13 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     /**
      * ## (Cols) Name Starts With
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this]
-     * starting with [prefix]
-     *
-     * @see [nameEndsWith]
-     * @see [nameContains] in their name.
+     * starting with [prefix] in their name.
      *
      * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function is named `colsNameStartsWith` to avoid confusion.
      *
-     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`(`[prefix]
-     *
-     * @see [nameEndsWith]
-     * @see [nameContains][prefix]
-     *
-     * @see [nameEndsWith]
-     * @see [nameContains]`) }`.
+     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[startsWith][String.startsWith]`(`[prefix][prefix]`) }`.
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Grammar]
      *
@@ -794,22 +785,15 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.CommonNameStartsEndsDocs.ExampleArg]}
      *
-     * @param [prefix]
      *
-     * @see [nameEndsWith]
-     * @see [nameContains] Columns starting with this [prefix]
-     *
-     * @see [nameEndsWith]
-     * @see [nameContains] in their name will be returned.
+     * @param [prefix] Columns starting with this [prefix] in their name will be returned.
      * @param [ignoreCase] `true` to ignore character case when comparing strings. By default `false`.
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
-     *   all columns starting with [prefix]
-     *
+     *   all columns starting with [prefix] in their name.
      * @see [nameEndsWith]
-     * @see [nameContains] in their name.
+     * @see [nameContains]
      */
     private interface CommonNameStartsWithDocs
 
@@ -1067,22 +1051,13 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     /**
      * ## (Cols) Name Ends With
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this]
-     * ending with [suffix]
-     *
-     * @see [nameStartsWith]
-     * @see [nameContains] in their name.
+     * ending with [suffix] in their name.
      *
      * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], the function is named `colsNameEndsWith` to avoid confusion.
      *
-     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[endsWith][String.endsWith]`(`[suffix]
-     *
-     * @see [nameStartsWith]
-     * @see [nameContains][suffix]
-     *
-     * @see [nameStartsWith]
-     * @see [nameContains]`) }`.
+     * This function is a shorthand for [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`.`[endsWith][String.endsWith]`(`[suffix][suffix]`) }`.
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Grammar]
      *
@@ -1096,22 +1071,15 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@getArg [ExampleArg][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.CommonNameStartsEndsDocs.ExampleArg]}
      *
-     * @param [suffix]
      *
-     * @see [nameStartsWith]
-     * @see [nameContains] Columns ending with this [suffix]
-     *
-     * @see [nameStartsWith]
-     * @see [nameContains] in their name will be returned.
+     * @param [suffix] Columns ending with this [suffix] in their name will be returned.
      * @param [ignoreCase] `true` to ignore character case when comparing strings. By default `false`.
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
-     *   all columns ending with [suffix]
-     *
+     *   all columns ending with [suffix] in their name.
      * @see [nameStartsWith]
-     * @see [nameContains] in their name.
+     * @see [nameContains]
      */
     private interface CommonNameEndsWithDocs
 

@@ -36,7 +36,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * ## Cols in Groups Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@setArg [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DefinitionsArg]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
@@ -44,16 +44,16 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *  {@include [DslGrammarTemplate.ConditionDef]}
      * }
      *
-     * {@setArg [DslGrammarTemplate.PlainDslFunctionsArg]
-     *  {@include [PlainDslName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]
+     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
+     *  {@include [PlainDslName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]
      * }
      *
-     * {@setArg [DslGrammarTemplate.ColumnSetFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnSetName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
+     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
+     *  {@include [Indent]}{@include [ColumnSetName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
      * }
      *
-     * {@setArg [DslGrammarTemplate.ColumnGroupFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnGroupName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \\}`** `]`
+     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     *  {@include [Indent]}{@include [ColumnGroupName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
      * }
      */
     public interface Grammar {
@@ -102,7 +102,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * #### Examples of this overload:
      *
-     * {@getArg [ColsInGroupsDocs.ExampleArg]}
+     * {@get [ColsInGroupsDocs.ExampleArg]}
      *
      * @see [ColumnsSelectionDsl.cols\]
      * @see [ColumnsSelectionDsl.colGroups\]
@@ -117,7 +117,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
 
     /**
      * @include [ColsInGroupsDocs]
-     * @setArg [ColsInGroupsDocs.ExampleArg]
+     * @set [ColsInGroupsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[colsInGroups][ColumnSet.colsInGroups]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` } }`
      *
@@ -128,7 +128,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
 
     /**
      * @include [ColsInGroupsDocs]
-     * @setArg [ColsInGroupsDocs.ExampleArg]
+     * @set [ColsInGroupsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { `[colsInGroups][ColumnSet.colsInGroups]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` } }`
      *
@@ -139,7 +139,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
 
     /**
      * @include [ColsInGroupsDocs]
-     * @setArg [ColsInGroupsDocs.ExampleArg]
+     * @set [ColsInGroupsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsInGroups][SingleColumn.colsInGroups]`() }`
      *
@@ -150,7 +150,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
 
     /**
      * @include [ColsInGroupsDocs]
-     * @setArg [ColsInGroupsDocs.ExampleArg]
+     * @set [ColsInGroupsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsInGroups][String.colsInGroups]`() }`
      */
@@ -159,7 +159,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
 
     /**
      * @include [ColsInGroupsDocs]
-     * @setArg [ColsInGroupsDocs.ExampleArg]
+     * @set [ColsInGroupsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsInGroups][KProperty.colsInGroups]`() }`
      *
@@ -170,7 +170,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
 
     /**
      * @include [ColsInGroupsDocs]
-     * @setArg [ColsInGroupsDocs.ExampleArg]
+     * @set [ColsInGroupsDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[colsInGroups][ColumnPath.colsInGroups]`() }`
      */

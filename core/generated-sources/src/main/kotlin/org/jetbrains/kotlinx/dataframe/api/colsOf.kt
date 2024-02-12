@@ -142,8 +142,8 @@ public interface ColsOfColumnsSelectionDsl {
     /**
      * ## Cols Of
      *
-     * Returns a [ColumnSet] of columns from [this\] that are a subtype of the given type [C\], optionally filtered
-     * by [filter\].
+     * Returns a [ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
+     * by [filter].
      *
      * This function operates solely on columns at the top-level.
      *
@@ -179,10 +179,10 @@ public interface ColsOfColumnsSelectionDsl {
      */
     private interface CommonColsOfDocs {
 
-        /** @return A [ColumnSet] containing the columns of given type that were included by [filter\]. */
+        /** @return A [ColumnSet] containing the columns of given type that were included by [filter]. */
         interface Return
 
-        /** @param [filter\] an optional filter function that takes a column of type [C\] and returns `true` if the column should be included. */
+        /** @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included. */
         interface FilterParam
     }
 

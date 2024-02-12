@@ -5,7 +5,7 @@ import java.io.Serializable
 
 /**
  * Simplistic JSON path implementation.
- * Supports just keys (in bracket notation), double quotes, arrays and wildcards.
+ * Supports just keys (in bracket notation), double quotes, arrays, and wildcards.
  *
  * Examples:
  * `$["store"]["book"][*]["author"]`
