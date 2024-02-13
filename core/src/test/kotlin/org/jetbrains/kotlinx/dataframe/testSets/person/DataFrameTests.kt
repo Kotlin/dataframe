@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.ExcessiveColumns
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
+import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.addAll
@@ -182,6 +183,7 @@ import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typeClass
 import org.junit.Test
+import java.lang.reflect.Type
 import java.math.BigDecimal
 import java.time.LocalDate
 import kotlin.reflect.jvm.jvmErasure
@@ -917,6 +919,15 @@ class DataFrameTests : BaseTest() {
         cols.forEach {
             it.toList() shouldBe expected
         }
+    }
+
+    @Test
+    fun `add several columns with type inference`() {
+        val f: Any = 123
+        val df = typed.add {
+            expr(infer = Infer.Type) { f } into "f"
+        }
+        df["f"].type() shouldBe typeOf<Int>()
     }
 
     @Test
