@@ -1,9 +1,11 @@
 plugins {
-    kotlin("jvm")
-    kotlin("libs.publisher")
-    id("org.jetbrains.kotlinx.kover")
-    kotlin("jupyter.api")
-    // TODO enable later: id("org.jmailen.kotlinter")
+    with(libs.plugins) {
+        alias(kotlin.jvm)
+        alias(publisher)
+        alias(kover)
+        // TODO enable later: alias(libs.kotlinter)
+        alias(jupyter.api)
+    }
 }
 
 group = "org.jetbrains.kotlinx"

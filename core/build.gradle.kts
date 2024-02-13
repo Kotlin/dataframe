@@ -8,20 +8,20 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jmailen.gradle.kotlinter.tasks.LintTask
 import xyz.ronella.gradle.plugin.simple.git.task.GitTask
 
-@Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 plugins {
-    kotlin("jvm")
-    kotlin("libs.publisher")
-    kotlin("plugin.serialization")
-    kotlin("jupyter.api")
-
-    id("io.github.devcrocod.korro") version libs.versions.korro
-    id("org.jetbrains.dataframe.generator")
-    id("org.jetbrains.kotlinx.kover")
-    id("org.jmailen.kotlinter")
-    id("org.jetbrains.kotlinx.dataframe")
-    id("nl.jolanrensen.docProcessor")
-    id("xyz.ronella.simple-git")
+    with(libs.plugins) {
+        alias(kotlin.jvm)
+        alias(publisher)
+        alias(serialization)
+        alias(jupyter.api)
+        alias(korro)
+        alias(keywordGenerator)
+        alias(kover)
+        alias(kotlinter)
+        alias(dataframe)
+        alias(docProcessor)
+        alias(simpleGit)
+    }
     idea
 }
 

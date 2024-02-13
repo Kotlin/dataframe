@@ -1,11 +1,9 @@
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
-
 plugins {
     `kotlin-dsl`
     `java-gradle-plugin`
     `maven-publish`
-    id("com.gradle.plugin-publish") version "0.15.0"
-    id("org.jmailen.kotlinter")
+    alias(libs.plugins.plugin.publish)
+    alias(libs.plugins.kotlinter)
 }
 
 repositories {

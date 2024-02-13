@@ -1,8 +1,8 @@
 plugins {
-    id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("org.jetbrains.kotlin.jvm")
-    id("org.jetbrains.kotlin.libs.publisher")
-    id("org.jmailen.kotlinter")
+    alias(libs.plugins.shadow)
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.publisher)
+    alias(libs.plugins.kotlinter)
 }
 
 repositories {

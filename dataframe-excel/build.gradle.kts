@@ -1,8 +1,10 @@
 plugins {
-    kotlin("jvm")
-    kotlin("libs.publisher")
-    id("org.jetbrains.kotlinx.kover")
-    id("org.jmailen.kotlinter")
+    with(libs.plugins) {
+        alias(kotlin.jvm)
+        alias(publisher)
+        alias(kover)
+        alias(kotlinter)
+    }
 }
 
 group = "org.jetbrains.kotlinx"

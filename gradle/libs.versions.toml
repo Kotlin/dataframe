@@ -33,6 +33,9 @@ jsoup = "1.14.3"
 arrow = "11.0.0"
 docProcessor = "0.3.2"
 simpleGit = "2.0.3"
+dependencyVersions = "0.51.0"
+plugin-publish = "0.15.0"
+shadow = "7.1.2"
 
 [libraries]
 ksp-gradle = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }
@@ -85,3 +88,9 @@ dataframe = { id = "org.jetbrains.kotlinx.dataframe", version.ref = "dataframe" 
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 docProcessor = { id = "nl.jolanrensen.docProcessor", version.ref = "docProcessor" }
 simpleGit = { id = "xyz.ronella.simple-git", version.ref = "simpleGit"}
+serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+dependencyVersions = { id = "com.github.ben-manes.versions", version.ref = "dependencyVersions" }
+plugin-publish = { id = "com.gradle.plugin-publish", version.ref = "plugin-publish" }
+shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
+

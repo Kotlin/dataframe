@@ -1,13 +1,14 @@
 import org.jmailen.gradle.kotlinter.tasks.LintTask
 
-@Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 plugins {
-    id("java")
-    kotlin("jvm")
-    id("org.jetbrains.kotlinx.dataframe")
-    id("io.github.devcrocod.korro") version libs.versions.korro
-    id("org.jmailen.kotlinter")
-    id("org.jetbrains.kotlinx.kover")
+    java
+    with(libs.plugins) {
+        alias(kotlin.jvm)
+        alias(dataframe)
+        alias(korro)
+        alias(kotlinter)
+        alias(kover)
+    }
 }
 
 repositories {

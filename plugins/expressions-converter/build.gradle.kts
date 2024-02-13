@@ -1,9 +1,11 @@
 plugins {
-    id("java")
-    kotlin("jvm")
-    id("com.github.johnrengelman.shadow") version "7.1.2"
-    kotlin("libs.publisher")
-    id("org.jmailen.kotlinter")
+    java
+    with(libs.plugins) {
+        alias(kotlin.jvm)
+        alias(shadow)
+        alias(publisher)
+        alias(kotlinter)
+    }
 }
 
 group = "org.jetbrains.kotlinx.dataframe"

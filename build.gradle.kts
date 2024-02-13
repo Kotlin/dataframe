@@ -1,23 +1,22 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jetbrains.kotlin.tooling.core.closure
 import org.jetbrains.kotlinx.publisher.apache2
 import org.jetbrains.kotlinx.publisher.developer
 import org.jetbrains.kotlinx.publisher.githubRepo
-import org.jmailen.gradle.kotlinter.KotlinterExtension
 
-@Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 plugins {
-    kotlin("jvm") version libs.versions.kotlin
-    kotlin("libs.publisher") version libs.versions.libsPublisher
-    kotlin("plugin.serialization") version libs.versions.kotlin
-    id("org.jetbrains.kotlinx.dataframe") version libs.versions.dataframe apply false
-    kotlin("jupyter.api") version libs.versions.kotlinJupyter apply false
-
-    id("org.jetbrains.dokka") version libs.versions.dokka
-    id("org.jetbrains.kotlinx.kover") version libs.versions.kover
-    id("org.jmailen.kotlinter") version libs.versions.ktlint
-    id("nl.jolanrensen.docProcessor") version libs.versions.docProcessor apply false
-    id("xyz.ronella.simple-git") version libs.versions.simpleGit apply false
+    with(libs.plugins) {
+        alias(kotlin.jvm)
+        alias(publisher)
+        alias(serialization)
+        alias(dataframe) apply false
+        alias(jupyter.api) apply false
+        alias(dokka)
+        alias(kover)
+        alias(kotlinter)
+        alias(docProcessor) apply false
+        alias(simpleGit) apply false
+        alias(dependencyVersions)
+    }
 }
 
 val jupyterApiTCRepo: String by project
