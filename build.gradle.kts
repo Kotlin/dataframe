@@ -66,7 +66,9 @@ private fun String.findVersion(): Version {
 
 // these names of outdated dependencies will not show up in the table output
 val dependencyUpdateExclusions = listOf(
-    "klaxon", // 5.6 requires Java 11
+    libs.klaxon.get().name, // 5.6 requires Java 11
+    libs.plugins.kover.get().pluginId, // Requires more work to be updated to 1.7.0+
+    libs.plugins.kotlinter.get().pluginId, // Updating requires major changes all across the project
 )
 
 // run `./gradlew dependencyUpdates` to check for updates
