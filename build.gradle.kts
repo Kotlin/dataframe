@@ -1,4 +1,11 @@
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.print
+import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.io.readJson
 import org.jetbrains.kotlinx.publisher.apache2
 import org.jetbrains.kotlinx.publisher.developer
 import org.jetbrains.kotlinx.publisher.githubRepo
@@ -39,6 +46,64 @@ dependencies {
     api(project(":dataframe-excel"))
     api(project(":dataframe-openapi"))
     api(project(":dataframe-jdbc"))
+}
+
+private enum class Version : Comparable<Version> {
+    SNAPSHOT, DEV, ALPHA, BETA, RC, STABLE;
+}
+
+private fun String.findVersion(): Version {
+    val version = this.lowercase()
+    return when {
+        "snapshot" in version -> Version.SNAPSHOT
+        "dev" in version -> Version.DEV
+        "alpha" in version -> Version.ALPHA
+        "beta" in version -> Version.BETA
+        "rc" in version -> Version.RC
+        else -> Version.STABLE
+    }
+}
+
+// these names of outdated dependencies will not show up in the table output
+val dependencyUpdateExclusions = listOf(
+    "klaxon", // 5.6 requires Java 11
+)
+
+// run `./gradlew dependencyUpdates` to check for updates
+tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
+    checkForGradleUpdate = true
+    outputFormatter = "json,html"
+    revision = "milestone"
+
+    rejectVersionIf {
+        val current = currentVersion.findVersion()
+        val candidate = candidate.version.findVersion()
+        candidate < current
+    }
+
+    doLast {
+        val outputFile = layout.buildDirectory
+            .file("../$outputDir/$reportfileName.json")
+            .get().asFile
+        when (val outDatedDependencies = DataFrame.readJson(outputFile)["outdated"]["dependencies"][0]) {
+            is AnyFrame -> {
+                val df = outDatedDependencies.select {
+                    cols("group", "name", "version") and {
+                        "available"["milestone"] named "newVersion"
+                    }
+                }.filter { "name"() !in dependencyUpdateExclusions }
+                logger.warn("Outdated dependencies found:")
+                df.print(
+                    rowsLimit = Int.MAX_VALUE,
+                    valueLimit = Int.MAX_VALUE,
+                    borders = true,
+                    title = true,
+                    alignLeft = true,
+                )
+            }
+            else -> logger.info("No outdated dependencies found")
+        }
+    }
 }
 
 allprojects {
