@@ -19,6 +19,7 @@ gradlePlugin {
     plugins {
         create("dependencies") {
             id = "org.jetbrains.dataframe.generator"
+            version = "1.0"
             implementationClass = "org.jetbrains.dataframe.keywords.KeywordsGeneratorPlugin"
         }
     }

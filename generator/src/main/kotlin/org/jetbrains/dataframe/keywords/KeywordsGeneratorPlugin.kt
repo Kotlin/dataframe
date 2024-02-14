@@ -10,7 +10,7 @@ import java.io.File
 
 class KeywordsGeneratorPlugin: Plugin<Project> {
     override fun apply(target: Project): Unit = with(target){
-        val genSrcDir = buildDir.resolve("generatedSrc")
+        val genSrcDir = layout.buildDirectory.asFile.get().resolve("generatedSrc")
         val sourceSets = project.extensions.getByName("sourceSets") as SourceSetContainer
         val mainSourceSet: SourceSet = sourceSets.named("main").get()
         mainSourceSet.addDir(genSrcDir)

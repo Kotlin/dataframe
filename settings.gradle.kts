@@ -2,7 +2,9 @@
 
 rootProject.name = "dataframe"
 
+// treated as a separate project with its own Kotlin version etc.
 includeBuild("generator")
+
 include("plugins:dataframe-gradle-plugin")
 include("plugins:symbol-processor")
 include("plugins:expressions-converter")

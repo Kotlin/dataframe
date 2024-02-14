@@ -1,3 +1,5 @@
+import org.jetbrains.kotlinx.publisher.PomUtilKt
+
 plugins {
     alias(libs.plugins.shadow)
     alias(libs.plugins.kotlin.jvm)
@@ -24,15 +26,15 @@ dependencies {
     implementation(libs.h2db)
     testImplementation(libs.h2db)
     testImplementation("org.jetbrains.kotlin:kotlin-test")
-    testImplementation("com.github.tschuchortdev:kotlin-compile-testing:1.5.0")
-    testImplementation("com.github.tschuchortdev:kotlin-compile-testing-ksp:1.5.0")
-    testImplementation("io.ktor:ktor-server-netty:1.6.7")
-    testImplementation("io.kotest:kotest-assertions-core:4.6.0")
+    testImplementation(libs.kotlin.compile.testing)
+    testImplementation(libs.kotlin.compile.testing.ksp)
+    testImplementation(libs.ktor.server.netty)
+    testImplementation(libs.kotestAssertions)
 }
 
 kotlinPublications {
     pom {
-        use(org.jetbrains.kotlinx.publisher.PomUtilKt) {
+        use(PomUtilKt) {
             githubRepo("Kotlin", "dataframe")
             inceptionYear.set("2021")
             licenses {

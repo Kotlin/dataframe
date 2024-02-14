@@ -21,8 +21,9 @@ dependencies {
     implementation(project(":dataframe-openapi"))
     implementation(project(":dataframe-excel"))
     implementation(project(":dataframe-jdbc"))
-    implementation(kotlin("gradle-plugin-api"))
-    implementation(kotlin("gradle-plugin"))
+
+    implementation(libs.kotlin.gradle.plugin.api)
+    implementation(libs.kotlin.gradle.plugin)
     implementation(libs.klaxon)
     implementation(libs.ksp.gradle)
     implementation(libs.ksp.api)
@@ -70,6 +71,7 @@ gradlePlugin {
         }
     }
 }
+
 
 pluginBundle {
     // These settings are set for the whole plugin bundle
