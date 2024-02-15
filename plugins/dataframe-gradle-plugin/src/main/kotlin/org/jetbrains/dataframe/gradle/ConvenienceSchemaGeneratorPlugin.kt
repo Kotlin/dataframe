@@ -33,6 +33,9 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
                 target.configurations.getByName("ksp").dependencies.add(
                     target.dependencies.create("org.jetbrains.kotlinx.dataframe:symbol-processor-all:$preprocessorVersion")
                 )
+                target.configurations.getByName("kspTest").dependencies.add(
+                    target.dependencies.create("org.jetbrains.kotlinx.dataframe:symbol-processor-all:$preprocessorVersion")
+                )
                 target.logger.info("Added DataFrame dependency to the KSP plugin.")
             }
         }
