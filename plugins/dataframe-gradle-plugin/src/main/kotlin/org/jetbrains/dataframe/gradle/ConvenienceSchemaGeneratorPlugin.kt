@@ -30,12 +30,20 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
         // configure it to depend on symbol-processor-all
         target.plugins.whenPluginAdded {
             if ("com.google.devtools.ksp" in this.javaClass.packageName) {
-                target.configurations.getByName("ksp").dependencies.add(
-                    target.dependencies.create("org.jetbrains.kotlinx.dataframe:symbol-processor-all:$preprocessorVersion")
-                )
-                target.configurations.getByName("kspTest").dependencies.add(
-                    target.dependencies.create("org.jetbrains.kotlinx.dataframe:symbol-processor-all:$preprocessorVersion")
-                )
+                try {
+                    target.configurations.getByName("ksp").dependencies.add(
+                        target.dependencies.create("org.jetbrains.kotlinx.dataframe:symbol-processor-all:$preprocessorVersion")
+                    )
+                } catch (e: UnknownConfigurationException) {
+                    target.logger.warn("Configuration 'ksp' not found. Please make sure the KSP plugin is applied.")
+                }
+                try {
+                    target.configurations.getByName("kspTest").dependencies.add(
+                        target.dependencies.create("org.jetbrains.kotlinx.dataframe:symbol-processor-all:$preprocessorVersion")
+                    )
+                } catch (e: UnknownConfigurationException) {
+                    target.logger.warn("Configuration 'kspTest' not found. Please make sure the KSP plugin is applied.")
+                }
                 target.logger.info("Added DataFrame dependency to the KSP plugin.")
             }
         }
