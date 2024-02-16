@@ -4,7 +4,7 @@ import com.google.devtools.ksp.gradle.KspExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.UnknownConfigurationException
-import org.gradle.kotlin.dsl.findByType
+import org.gradle.kotlin.dsl.getByType
 import java.util.*
 
 @Suppress("unused")
@@ -45,11 +45,12 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
                     target.logger.warn("Configuration 'kspTest' not found. Please make sure the KSP plugin is applied.")
                 }
                 target.logger.info("Added DataFrame dependency to the KSP plugin.")
+                target.extensions.getByType<KspExtension>().arg("dataframe.resolutionDir", target.projectDir.absolutePath)
             }
         }
 
         if (addKsp) {
-            target.plugins.apply(KspPluginApplierAndConfigurer::class.java)
+            target.plugins.apply(KspPluginApplier::class.java)
         } else {
             target.logger.warn(
                 "Plugin 'org.jetbrains.kotlinx.dataframe' comes bundled with its own version of KSP which is " +
@@ -57,10 +58,6 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
                     "Either set 'kotlin.dataframe.add.ksp' to 'true' or add the plugin 'com.google.devtools.ksp' " +
                     "manually."
             )
-        }
-
-        target.afterEvaluate {
-            target.extensions.findByType<KspExtension>()?.arg("dataframe.resolutionDir", target.projectDir.absolutePath)
         }
         target.plugins.apply(SchemaGeneratorPlugin::class.java)
     }
@@ -75,9 +72,9 @@ class DeprecatingSchemaGeneratorPlugin : Plugin<Project> {
 }
 
 /**
- * Applies and configures the KSP plugin in the target project.
+ * Applies the KSP plugin in the target project.
  */
-internal class KspPluginApplierAndConfigurer : Plugin<Project> {
+internal class KspPluginApplier : Plugin<Project> {
     override fun apply(target: Project) {
         val properties = Properties()
         properties.load(javaClass.getResourceAsStream("plugin.properties"))
