@@ -3,7 +3,8 @@ package org.jetbrains.dataframe.gradle
 import com.google.devtools.ksp.gradle.KspExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.findByType
+import org.gradle.api.artifacts.UnknownConfigurationException
+import org.gradle.kotlin.dsl.getByType
 import java.util.*
 
 @Suppress("unused")
@@ -20,11 +21,43 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
                 target.logger.warn("Invalid value '$property' for '$name' property. Defaulting to '$addKsp'. Please use 'true' or 'false'.")
             }
         }
+
+        val properties = Properties()
+        properties.load(javaClass.getResourceAsStream("plugin.properties"))
+        val preprocessorVersion = properties.getProperty("PREPROCESSOR_VERSION")
+
+        // regardless whether we add KSP or the user adds it, when it's added,
+        // configure it to depend on symbol-processor-all
+        target.plugins.whenPluginAdded {
+            if ("com.google.devtools.ksp" in this.javaClass.packageName) {
+                try {
+                    target.configurations.getByName("ksp").dependencies.add(
+                        target.dependencies.create("org.jetbrains.kotlinx.dataframe:symbol-processor-all:$preprocessorVersion")
+                    )
+                } catch (e: UnknownConfigurationException) {
+                    target.logger.warn("Configuration 'ksp' not found. Please make sure the KSP plugin is applied.")
+                }
+                try {
+                    target.configurations.getByName("kspTest").dependencies.add(
+                        target.dependencies.create("org.jetbrains.kotlinx.dataframe:symbol-processor-all:$preprocessorVersion")
+                    )
+                } catch (e: UnknownConfigurationException) {
+                    target.logger.warn("Configuration 'kspTest' not found. Please make sure the KSP plugin is applied.")
+                }
+                target.logger.info("Added DataFrame dependency to the KSP plugin.")
+                target.extensions.getByType<KspExtension>().arg("dataframe.resolutionDir", target.projectDir.absolutePath)
+            }
+        }
+
         if (addKsp) {
             target.plugins.apply(KspPluginApplier::class.java)
-        }
-        target.afterEvaluate {
-            target.extensions.findByType<KspExtension>()?.arg("dataframe.resolutionDir", target.projectDir.absolutePath)
+        } else {
+            target.logger.warn(
+                "Plugin 'org.jetbrains.kotlinx.dataframe' comes bundled with its own version of KSP which is " +
+                    "currently disabled as 'kotlin.dataframe.add.ksp' is set to 'false' in a 'properties' file. " +
+                    "Either set 'kotlin.dataframe.add.ksp' to 'true' or add the plugin 'com.google.devtools.ksp' " +
+                    "manually."
+            )
         }
         target.plugins.apply(SchemaGeneratorPlugin::class.java)
     }
@@ -38,14 +71,13 @@ class DeprecatingSchemaGeneratorPlugin : Plugin<Project> {
     }
 }
 
+/**
+ * Applies the KSP plugin in the target project.
+ */
 internal class KspPluginApplier : Plugin<Project> {
     override fun apply(target: Project) {
         val properties = Properties()
         properties.load(javaClass.getResourceAsStream("plugin.properties"))
-        val preprocessorVersion = properties.getProperty("PREPROCESSOR_VERSION")
         target.plugins.apply("com.google.devtools.ksp")
-        target.configurations.getByName("ksp").dependencies.add(
-            target.dependencies.create("org.jetbrains.kotlinx.dataframe:symbol-processor-all:$preprocessorVersion")
-        )
     }
 }

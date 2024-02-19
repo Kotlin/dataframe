@@ -1,8 +1,8 @@
 [versions]
-ksp = "1.9.21-1.0.15"
+ksp = "1.9.22-1.0.17"
 kotlinJupyter = "0.11.0-358"
 ktlint = "3.4.5"
-kotlin = "1.9.0"
+kotlin = "1.9.22"
 dokka = "1.8.10"
 libsPublisher = "0.0.60-dev-30"
 # "Bootstrap" version of the dataframe, used in the build itself to generate @DataSchema APIs,

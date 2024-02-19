@@ -222,7 +222,7 @@ class ExplainerIrTransformer(
                     add(data.function?.name?.asString().irConstImpl())
                     add(IrConstImpl.int(-1, -1, pluginContext.irBuiltIns.intType, data.statementIndex))
                 }
-                body = pluginContext.irFactory.createBlockBody(-1, -1) {
+                body = pluginContext.irFactory.createBlockBody(-1, -1).apply {
                     val callback = FqName("org.jetbrains.kotlinx.dataframe.explainer.PluginCallbackProxy.doAction")
                     val doAction = pluginContext.referenceFunctions(callback).single()
                     statements += IrCallImpl(
