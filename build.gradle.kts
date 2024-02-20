@@ -74,6 +74,8 @@ val dependencyUpdateExclusions = listOf(
     libs.plugins.kotlinter.get().pluginId, // Updating requires major changes all across the project
     libs.kotestAssertions.get().name, // 5.8.0 is not possible due to https://github.com/Kotlin/kotlin-jupyter/issues/452
     libs.android.gradle.api.get().group, // Can't be updated to 7.4.0+ due to Java 8 compatibility
+    libs.plugins.dokka.get().pluginId, // 1.9.10 required korro and docProcessor to update
+    "org.gradle.kotlin.kotlin-dsl", // Directly dependent on the Gradle version
 )
 
 // run `./gradlew dependencyUpdates` to check for updates

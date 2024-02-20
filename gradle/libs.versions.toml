@@ -7,8 +7,12 @@ ktlint = "3.4.5" # Updating requires major changes all across the project
 kotlin = "1.9.22"
 kotlinpoet = "1.16.0"
 
+# TODO 1.9.10 required korro and docProcessor to update:
+# https://github.com/devcrocod/korro/issues/8
+# https://github.com/Jolanrensen/docProcessorGradlePlugin/issues/42
 dokka = "1.8.10"
-libsPublisher = "0.0.60-dev-30"
+
+libsPublisher = "1.8.10-dev-43"
 # "Bootstrap" version of the dataframe, used in the build itself to generate @DataSchema APIs,
 # dogfood Gradle / KSP plugins in tests and idea-examples modules
 dataframe = "0.13.0-dev-2838"
@@ -42,7 +46,7 @@ arrow = "15.0.0"
 docProcessor = "0.3.2"
 simpleGit = "2.0.3"
 dependencyVersions = "0.51.0"
-plugin-publish = "0.15.0"
+plugin-publish = "1.2.1"
 shadow = "8.1.1"
 android-gradle-api = "7.3.1" # Can't be updated to 7.4.0+ due to Java 8 compatibility
 ktor-server-netty = "2.3.8"
