@@ -1,25 +1,29 @@
 [versions]
 ksp = "1.9.22-1.0.17"
 kotlinJupyter = "0.12.0-139"
-ktlint = "3.4.5" # Updating requires major changes all across the project
 
-# make sure to sync with :generator module
+# TODO Updating requires major changes all across the project
+# https://github.com/Kotlin/dataframe/issues/364
+ktlint = "3.4.5"
+
+# make sure to sync manually with :generator module
 kotlin = "1.9.22"
 kotlinpoet = "1.16.0"
 
-# TODO 1.9.10 required korro and docProcessor to update:
-# https://github.com/devcrocod/korro/issues/8
-# https://github.com/Jolanrensen/docProcessorGradlePlugin/issues/42
+# TODO 1.9.10 requires korro and docProcessor to update
+# https://github.com/Kotlin/dataframe/issues/596
 dokka = "1.8.10"
 
 libsPublisher = "1.8.10-dev-43"
+
 # "Bootstrap" version of the dataframe, used in the build itself to generate @DataSchema APIs,
 # dogfood Gradle / KSP plugins in tests and idea-examples modules
 dataframe = "0.13.0-dev-2838"
 
 korro = "0.1.5"
 
-# Requires more work to be updated to 0.7.0+
+# TODO Requires more work to be updated to 0.7.0+
+# https://github.com/Kotlin/dataframe/issues/594
 kover = "0.6.1"
 
 commonsCsv = "1.10.0"
@@ -40,7 +44,10 @@ sl4j = "2.0.12"
 junit = "4.13.2"
 junit-jupiter = "5.10.2"
 junit-platform = "1.10.2"
-kotestAsserions = "5.5.4" # TODO 5.8.0 is not possible due to https://github.com/Kotlin/kotlin-jupyter/issues/452
+
+# TODO 5.8.0 is not possible due to https://github.com/Kotlin/dataframe/issues/595
+kotestAsserions = "5.5.4"
+
 jsoup = "1.17.2"
 arrow = "15.0.0"
 docProcessor = "0.3.2"

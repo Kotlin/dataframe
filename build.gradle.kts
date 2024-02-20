@@ -69,13 +69,20 @@ private fun String.findVersion(): Version {
 
 // these names of outdated dependencies will not show up in the table output
 val dependencyUpdateExclusions = listOf(
-    libs.klaxon.get().name, // 5.6 requires Java 11
-    libs.plugins.kover.get().pluginId, // Requires more work to be updated to 1.7.0+
-    libs.plugins.kotlinter.get().pluginId, // Updating requires major changes all across the project
-    libs.kotestAssertions.get().name, // 5.8.0 is not possible due to https://github.com/Kotlin/kotlin-jupyter/issues/452
-    libs.android.gradle.api.get().group, // Can't be updated to 7.4.0+ due to Java 8 compatibility
-    libs.plugins.dokka.get().pluginId, // 1.9.10 required korro and docProcessor to update
-    "org.gradle.kotlin.kotlin-dsl", // Directly dependent on the Gradle version
+    // 5.6 requires Java 11
+    libs.klaxon.get().name,
+    // TODO Requires more work to be updated to 1.7.0+, https://github.com/Kotlin/dataframe/issues/594
+    libs.plugins.kover.get().pluginId,
+    // TODO Updating requires major changes all across the project, https://github.com/Kotlin/dataframe/issues/364
+    libs.plugins.kotlinter.get().pluginId,
+    // TODO 5.8.0 is not possible due to https://github.com/Kotlin/dataframe/issues/595
+    libs.kotestAssertions.get().name,
+    // Can't be updated to 7.4.0+ due to Java 8 compatibility
+    libs.android.gradle.api.get().group,
+    // TODO 1.9.10 requires korro and docProcessor to update, https://github.com/Kotlin/dataframe/issues/596
+    libs.plugins.dokka.get().pluginId,
+    // Directly dependent on the Gradle version
+    "org.gradle.kotlin.kotlin-dsl",
 )
 
 // run `./gradlew dependencyUpdates` to check for updates
@@ -110,6 +117,7 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
                     alignLeft = true,
                 )
             }
+
             else -> logger.info("No outdated dependencies found")
         }
     }
