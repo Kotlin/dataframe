@@ -15,7 +15,7 @@ There are two main blocks of available functionality:
   * ```getSchemaForAllSqlTables``` for all non-system tables
 
 **NOTE:** This is an experimental module and for now, 
-we only support four databases: MariaDB, MySQL, PostgreSQL, and SQLite. 
+we only support four databases: MariaDB, MySQL, PostgreSQL, SQLite and Vertica. 
 
 Additionally, support for JSON and date-time types is limited. 
 Please take this into consideration when using these functions.
@@ -53,6 +53,12 @@ For SQLite:
 
 ```kotlin
 implementation("org.xerial:sqlite-jdbc:$version")
+```
+
+For Vertica:
+
+```kotlin
+implementation("com.vertica.jdbc:vertica-jdbc:$version")
 ```
 
 In the second, be sure that you can establish a connection to the database.
@@ -240,7 +246,7 @@ and transforms it into an AnyFrame object.
 
 The `dbType: DbType` parameter specifies the type of our database (e.g., PostgreSQL, MySQL, etc.), 
 supported by a library. 
-Currently, the following classes are available: `H2, MariaDb, MySql, PostgreSql, Sqlite`.
+Currently, the following classes are available: `H2, MariaDb, MySql, PostgreSql, Sqlite, Vertica`.
 
 
 ```kotlin
@@ -449,7 +455,7 @@ This function reads the schema from a ResultSet object provided by the user.
 
 The `dbType: DbType` parameter specifies the type of our database (e.g., PostgreSQL, MySQL, etc.),
 supported by a library.
-Currently, the following classes are available: `H2, MariaDb, MySql, PostgreSql, Sqlite`.
+Currently, the following classes are available: `H2, MariaDb, MySql, PostgreSql, Sqlite, Vertica`.
 
 ```kotlin
 import org.jetbrains.kotlinx.dataframe.io.db.PostgreSql

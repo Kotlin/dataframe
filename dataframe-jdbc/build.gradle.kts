@@ -23,6 +23,7 @@ dependencies {
     testImplementation(libs.postgresql)
     testImplementation(libs.mysql)
     testImplementation(libs.h2db)
+    testImplementation(libs.vertica)
     testImplementation(libs.junit)
     testImplementation(libs.sl4j)
     testImplementation(libs.kotestAssertions) {
