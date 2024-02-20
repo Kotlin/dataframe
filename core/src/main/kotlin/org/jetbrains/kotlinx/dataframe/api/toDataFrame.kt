@@ -153,8 +153,8 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
         body: (TraversePropertiesDsl.() -> Unit)? = null,
     )
 
-    public inline fun <reified R> expr(noinline expression: (T) -> R): DataColumn<R> =
-        source.map { expression(it) }.toColumn()
+    public inline fun <reified R> expr(infer: Infer = Infer.Nulls, noinline expression: (T) -> R): DataColumn<R> =
+        source.map { expression(it) }.toColumn(infer = infer)
 
     public inline fun <reified R> add(name: String, noinline expression: (T) -> R): Unit =
         add(source.map { expression(it) }.toColumn(name, Infer.Nulls))
@@ -164,6 +164,9 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
 
     public inline infix fun <reified R> KProperty<R>.from(noinline expression: (T) -> R): Unit =
         add(columnName, expression)
+
+    public inline infix fun <reified R> String.from(inferType: InferType<T, R>): Unit =
+        add(DataColumn.createWithTypeInference(this, source.map { inferType.expression(it) }))
 
     public inline infix fun <reified R> KProperty<R>.from(inferType: InferType<T, R>): Unit =
         add(DataColumn.createWithTypeInference(columnName, source.map { inferType.expression(it) }))

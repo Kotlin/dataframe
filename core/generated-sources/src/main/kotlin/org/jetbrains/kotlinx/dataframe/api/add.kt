@@ -174,8 +174,8 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
         noinline expression: RowExpression<T, R>
     ): Boolean = add(df.mapToColumn(name, infer, expression))
 
-    public inline fun <reified R> expr(noinline expression: RowExpression<T, R>): DataColumn<R> {
-        return df.mapToColumn("", Infer.Nulls, expression)
+    public inline fun <reified R> expr(infer: Infer = Infer.Nulls, noinline expression: RowExpression<T, R>): DataColumn<R> {
+        return df.mapToColumn("", infer, expression)
     }
 
     public inline infix fun <reified R> String.from(noinline expression: RowExpression<T, R>): Boolean =

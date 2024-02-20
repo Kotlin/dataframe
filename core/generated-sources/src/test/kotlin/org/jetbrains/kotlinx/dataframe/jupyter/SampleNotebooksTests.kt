@@ -95,7 +95,7 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
                 val codeToExecute = replacer.replace(code)
 
                 println("Executing code:\n$codeToExecute")
-                val cellResult = exec(codeToExecute)
+                val cellResult = execRendered(codeToExecute)
                 println(cellResult)
             }
         } finally {

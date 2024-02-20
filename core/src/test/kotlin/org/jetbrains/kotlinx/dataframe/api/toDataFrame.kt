@@ -61,6 +61,21 @@ class CreateDataFrameTests {
     }
 
     @Test
+    fun `create column with infer type`() {
+        val data: List<Any> = listOf(1, 2, 3)
+        val res = data.toDataFrame {
+            "e" from inferType { it }
+            expr(infer = Infer.Type) { it } into "d"
+        }
+
+        res["e"].type() shouldBe typeOf<Int>()
+        res["e"].kind() shouldBe ColumnKind.Value
+
+        res["d"].type() shouldBe typeOf<Int>()
+        res["d"].kind() shouldBe ColumnKind.Value
+    }
+
+    @Test
     fun `preserve fields order`() {
         class B(val x: Int, val c: String, d: Double) {
             val b: Int = x

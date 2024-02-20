@@ -1,5 +1,6 @@
 package org.jetbrains.dataframe.gradle
 
+import com.google.devtools.ksp.gradle.KspTaskJvm
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -36,10 +37,15 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                 target.logger.warn("Schema generator plugin applied, but no Kotlin plugin was found")
             }
 
-            val generationTasks = extension.schemas.map { createTask(target, extension, appliedPlugin, it) }
+            val generationTasks = extension.schemas.map {
+                createTask(target, extension, appliedPlugin, it)
+            }
             val generateAll = target.tasks.create("generateDataFrames") {
                 group = GROUP
                 dependsOn(*generationTasks.toTypedArray())
+            }
+            tasks.withType(KspTaskJvm::class.java).configureEach {
+                dependsOn(generateAll)
             }
             tasks.withType<KotlinCompile> {
                 dependsOn(generateAll)
@@ -69,7 +75,18 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                 appliedPlugin ?: propertyError("src")
                 val sourceSet = appliedPlugin.kotlinExtension.sourceSets.getByName(sourceSetName)
                 val src = target.file(Paths.get("build/generated/dataframe/", sourceSetName, "kotlin").toFile())
+
+                // Add the new sources to the source set
                 sourceSet.kotlin.srcDir(src)
+
+                // Configure the right ksp task to be aware of these new sources
+                val kspTaskName = "ksp${sourceSetName.replaceFirstChar { it.uppercase() }}Kotlin"
+                target.tasks.withType(KspTaskJvm::class.java).configureEach {
+                    if (sourceSetName == "main" && name == "kspKotlin" || name == kspTaskName) {
+                        source(src)
+                    }
+                }
+
                 src
             }
 
