@@ -15,7 +15,6 @@ plugins {
         alias(kotlin.jvm)
         alias(publisher)
         alias(serialization)
-        alias(dataframe) apply false
         alias(jupyter.api) apply false
         alias(dokka)
         alias(kover)
@@ -23,6 +22,10 @@ plugins {
         alias(docProcessor) apply false
         alias(simpleGit) apply false
         alias(dependencyVersions)
+
+        // dependence on our own plugin
+        alias(dataframe) apply false
+        alias(ksp) apply false
     }
 }
 
@@ -69,6 +72,8 @@ val dependencyUpdateExclusions = listOf(
     libs.klaxon.get().name, // 5.6 requires Java 11
     libs.plugins.kover.get().pluginId, // Requires more work to be updated to 1.7.0+
     libs.plugins.kotlinter.get().pluginId, // Updating requires major changes all across the project
+    libs.kotestAssertions.get().name, // 5.8.0 is not possible due to https://github.com/Kotlin/kotlin-jupyter/issues/452
+    libs.android.gradle.api.get().group, // Can't be updated to 7.4.0+ due to Java 8 compatibility
 )
 
 // run `./gradlew dependencyUpdates` to check for updates
@@ -93,7 +98,7 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
                     cols("group", "name", "version") and {
                         "available"["milestone"] named "newVersion"
                     }
-                }.filter { "name"() !in dependencyUpdateExclusions }
+                }.filter { "name"() !in dependencyUpdateExclusions && "group"() !in dependencyUpdateExclusions }
                 logger.warn("Outdated dependencies found:")
                 df.print(
                     rowsLimit = Int.MAX_VALUE,

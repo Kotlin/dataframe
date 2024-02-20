@@ -1,7 +1,11 @@
 plugins {
     application
     kotlin("jvm")
+
     id("org.jetbrains.kotlinx.dataframe")
+
+    // only mandatory if `kotlin.dataframe.add.ksp=false` in gradle.properties
+    id("com.google.devtools.ksp")
 }
 
 repositories {

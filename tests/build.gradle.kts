@@ -4,10 +4,13 @@ plugins {
     java
     with(libs.plugins) {
         alias(kotlin.jvm)
-        alias(dataframe)
         alias(korro)
         alias(kotlinter)
         alias(kover)
+
+        alias(dataframe)
+        // only mandatory if `kotlin.dataframe.add.ksp=false` in gradle.properties
+        alias(ksp)
     }
 }
 

@@ -1,24 +1,25 @@
 [versions]
-ksp = "1.9.21-1.0.15"
-kotlinJupyter = "0.11.0-358" # TODO
+ksp = "1.9.22-1.0.17"
+kotlinJupyter = "0.12.0-139"
 ktlint = "3.4.5" # Updating requires major changes all across the project
 
 # make sure to sync with :generator module
-kotlin = "1.9.0"
+kotlin = "1.9.22"
 kotlinpoet = "1.16.0"
 
 dokka = "1.8.10"
 libsPublisher = "0.0.60-dev-30"
 # "Bootstrap" version of the dataframe, used in the build itself to generate @DataSchema APIs,
 # dogfood Gradle / KSP plugins in tests and idea-examples modules
-dataframe = "0.12.1"
+dataframe = "0.13.0-dev-2838"
+
 korro = "0.1.5"
 
-# Requires more work to be updated to 1.7.0+
+# Requires more work to be updated to 0.7.0+
 kover = "0.6.1"
 
 commonsCsv = "1.10.0"
-commonsCompress = "1.25.0"
+commonsCompress = "1.26.0"
 klaxon = "5.5" # 5.6 requires Java 11
 fuel = "2.3.1"
 poi = "5.2.5"
@@ -35,7 +36,7 @@ sl4j = "2.0.12"
 junit = "4.13.2"
 junit-jupiter = "5.10.2"
 junit-platform = "1.10.2"
-kotestAsserions = "5.8.0"
+kotestAsserions = "5.5.4" # TODO 5.8.0 is not possible due to https://github.com/Kotlin/kotlin-jupyter/issues/452
 jsoup = "1.17.2"
 arrow = "15.0.0"
 docProcessor = "0.3.2"
@@ -43,7 +44,7 @@ simpleGit = "2.0.3"
 dependencyVersions = "0.51.0"
 plugin-publish = "0.15.0"
 shadow = "8.1.1"
-android-gradle-api = "7.3.1"
+android-gradle-api = "7.3.1" # Can't be updated to 7.4.0+ due to Java 8 compatibility
 ktor-server-netty = "2.3.8"
 kotlin-compile-testing = "1.5.0"
 
@@ -106,9 +107,14 @@ kotlin-compiler-internal-test-framework = { group = "org.jetbrains.kotlin", name
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 kotlin-script-runtime = { group = "org.jetbrains.kotlin", name = "kotlin-script-runtime", version.ref = "kotlin" }
 kotlin-annotations-jvm = { group = "org.jetbrains.kotlin", name = "kotlin-annotations-jvm", version.ref = "kotlin" }
+kotlin-jupyter-test-kit = { group = "org.jetbrains.kotlinx", name = "kotlin-jupyter-test-kit", version.ref = "kotlinJupyter" }
+
+dataframe-symbol-processor = { group = "org.jetbrains.kotlinx.dataframe", name = "symbol-processor-all" }
+
 
 [plugins]
 jupyter-api = { id = "org.jetbrains.kotlin.jupyter.api", version.ref = "kotlinJupyter" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }

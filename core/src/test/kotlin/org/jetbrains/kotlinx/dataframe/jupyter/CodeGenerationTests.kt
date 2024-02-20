@@ -8,7 +8,7 @@ class CodeGenerationTests : DataFrameJupyterTest() {
 
     private fun Code.checkCompilation() {
         lines().forEach {
-            exec(it)
+            execRendered(it)
         }
     }
 
