@@ -225,7 +225,7 @@ idea {
 // Modify all Jar tasks such that before running the Kotlin sources are set to
 // the target of processKdocMain and they are returned back to normal afterwards.
 tasks.withType<Jar> {
-//    dependsOn(processKDocsMain)
+    dependsOn(processKDocsMain)
     mustRunAfter(tasks.generateKeywordsSrc)
     outputs.upToDateWhen { false }
 
