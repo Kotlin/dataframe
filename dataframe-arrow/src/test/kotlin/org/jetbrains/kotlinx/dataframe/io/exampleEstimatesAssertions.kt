@@ -160,6 +160,7 @@ internal fun assertEstimations(exampleFrame: AnyFrame, expectedNullable: Boolean
     }
 
     exampleFrame.getColumnOrNull("nulls")?.let { nullCol ->
+        nullCol.type() shouldBe nothingType(hasNulls)
         assert(hasNulls)
         nullCol.values().forEach {
             assert(it == null)

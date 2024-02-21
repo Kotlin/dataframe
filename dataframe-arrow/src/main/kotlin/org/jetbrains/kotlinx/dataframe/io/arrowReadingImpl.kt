@@ -173,8 +173,8 @@ private fun StructVector.values(range: IntRange): List<Map<String, Any?>?> = ran
     getObject(it)
 }
 
-private fun NullVector.values(range: IntRange): List<Any?> = range.map {
-    getObject(it)
+private fun NullVector.values(range: IntRange): List<Nothing?> = range.map {
+    getObject(it) as Nothing?
 }
 
 private fun VarCharVector.values(range: IntRange): List<String?> = range.map {
@@ -208,6 +208,12 @@ private fun LargeVarCharVector.values(range: IntRange): List<String?> = range.ma
         String(get(it))
     }
 }
+
+internal fun nothingType(nullable: Boolean): KType = if (nullable) {
+    typeOf<List<Nothing?>>()
+} else {
+    typeOf<List<Nothing>>()
+}.arguments.first().type!!
 
 private inline fun <reified T> List<T?>.withTypeNullable(
     expectedNulls: Boolean,
@@ -250,7 +256,7 @@ private fun readField(root: VectorSchemaRoot, field: Field, nullability: Nullabi
             is TimeStampMilliVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
             is TimeStampSecVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
             is StructVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
-            is NullVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is NullVector -> vector.values(range) to nothingType(field.isNullable)
             else -> {
                 throw NotImplementedError("reading from ${vector.javaClass.canonicalName} is not implemented")
             }
