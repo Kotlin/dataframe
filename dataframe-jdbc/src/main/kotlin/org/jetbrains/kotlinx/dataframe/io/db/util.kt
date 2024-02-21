@@ -17,8 +17,9 @@ public fun extractDBTypeFromUrl(url: String?): DbType {
             MySql.dbTypeInJdbcUrl in url -> MySql
             Sqlite.dbTypeInJdbcUrl in url -> Sqlite
             PostgreSql.dbTypeInJdbcUrl in url -> PostgreSql
+            Vertica.dbTypeInJdbcUrl in url -> Vertica
             else -> throw IllegalArgumentException("Unsupported database type in the url: $url. " +
-                "Only H2, MariaDB, MySQL, SQLite and PostgreSQL are supported!")
+                "Only H2, MariaDB, MySQL, SQLite, PostgreSQL and Vertica are supported!")
         }
     } else {
         throw SQLException("Database URL could not be null. The existing value is $url")
