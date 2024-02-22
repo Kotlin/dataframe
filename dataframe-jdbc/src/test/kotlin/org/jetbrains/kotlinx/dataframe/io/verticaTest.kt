@@ -104,13 +104,9 @@
 //
 //            val createTableQueryBackup = """
 //            CREATE TABLE IF NOT EXISTS table1 (
-////                timewithtimezoneCol TIMETZ,
-////                timestampwithtimezoneCol TIMESTAMPTZ,
 ////                intervalCol INTERVAL,
 ////                intervaldaytosecondCol INTERVAL DAY TO SECOND,
 ////                intervalyeartomonthCol INTERVAL YEAR TO MONTH,
-//                uuidCol UUID,
-////                arrayCol ARRAY[VARCHAR(50)],
 ////                rowCol ROW(street VARCHAR, city VARCHAR)),
 ////                setCol SET[VARCHAR]
 //            )

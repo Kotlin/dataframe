@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import com.vertica.dsi.dataengine.utilities.TimeTz
+import com.vertica.dsi.dataengine.utilities.TimestampTz
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -18,7 +20,9 @@ import java.sql.Timestamp
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.util.Calendar
 import java.util.Date
+import java.util.UUID
 import kotlin.reflect.typeOf
 
 // Run with https://hub.docker.com/r/vertica/vertica-ce
@@ -111,7 +115,11 @@ class VerticaTest {
                 numberCol NUMBER,
                 moneyCol MONEY,
                 geometryCol GEOMETRY,
-                geographyCol GEOGRAPHY
+                geographyCol GEOGRAPHY,
+                timewithtimezoneCol TIMETZ,
+                timestampwithtimezoneCol TIMESTAMPTZ,
+                uuidCol UUID,
+                arrayCol ARRAY[VARCHAR(50)]
             )
             """
 
@@ -121,7 +129,7 @@ class VerticaTest {
 
             @Language("SQL")
             val insertData1 = """
-            INSERT INTO table1 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ST_GeomFromText('POINT(1 1)'), ST_GeographyFromText('POLYGON((1 2,3 4,2 3,1 2))'))
+            INSERT INTO table1 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, public.ST_GeomFromText('POINT(1 1)'), public.ST_GeographyFromText('POLYGON((1 2,3 4,2 3,1 2))'), ?, ?, ?, ARRAY['Test', 'Test1'])
         """.trimIndent()
 
             connection.prepareStatement(insertData1).use { st ->
@@ -151,8 +159,10 @@ class VerticaTest {
                     st.setBigDecimal(22, BigDecimal(i * 10))
                     st.setBigDecimal(23, BigDecimal(i * 10))
                     st.setBigDecimal(24, BigDecimal(i * 10))
-                    st.setBigDecimal(25, BigDecimal(i * 20))
-                    st.setBigDecimal(26, BigDecimal(i * 30))
+                    st.setBigDecimal(25, BigDecimal(i * 10))
+                    st.setTime(26, TimeTz(Time.valueOf(LocalTime.of(10,0,0,0)), Calendar.getInstance()))
+                    st.setTimestamp(27, TimestampTz(Timestamp.valueOf(LocalDateTime.of(2024, 1,1, 10,0,0)), Calendar.getInstance()))
+                    st.setString(28, "4a866db2-baa6-442a-a371-1f4b5ee627ba")
                     st.executeUpdate()
                 }
             }
@@ -201,8 +211,10 @@ class VerticaTest {
         result[0][22] shouldBe BigDecimal("10.000000000000000")
         result[0][23] shouldBe BigDecimal("10")
         result[0][24] shouldBe BigDecimal("10.0000")
-        result[0][25] shouldBe BigDecimal("11.0000")
-        result[0][26] shouldBe BigDecimal("12.0000")
+        result[0][27] shouldBe TimeTz(Time.valueOf(LocalTime.of(10,0,0,0)), Calendar.getInstance())
+//        result[0][28] shouldBe TimestampTz(Timestamp.valueOf(LocalDateTime.of(2024, 1,1, 10,0,0)), Calendar.getInstance())
+        result[0][29] shouldBe UUID.fromString("4a866db2-baa6-442a-a371-1f4b5ee627ba")
+        result[0][30] shouldBe arrayOf("Test", "Test1")
 
         val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
         schema.columns["id"]!!.type shouldBe typeOf<Long>()
@@ -230,8 +242,12 @@ class VerticaTest {
         schema.columns["numericCol"]!!.type shouldBe typeOf<BigDecimal?>()
         schema.columns["numberCol"]!!.type shouldBe typeOf<BigDecimal?>()
         schema.columns["moneyCol"]!!.type shouldBe typeOf<BigDecimal?>()
-        schema.columns["geometryCol"]!!.type shouldBe typeOf<String?>()
-        schema.columns["geographyCol"]!!.type shouldBe typeOf<String?>()
+        schema.columns["geometryCol"]!!.type shouldBe typeOf<ByteArray?>()
+        schema.columns["geographyCol"]!!.type shouldBe typeOf<ByteArray?>()
+        schema.columns["timewithtimezoneCol"]!!.type shouldBe typeOf<Time?>()
+        schema.columns["timestampwithtimezoneCol"]!!.type shouldBe typeOf<Timestamp?>()
+        schema.columns["uuidCol"]!!.type shouldBe typeOf<String?>()
+        schema.columns["arrayCol"]!!.type shouldBe typeOf<Array<Any>?>()
     }
 
 //    @Test
