@@ -80,8 +80,8 @@ val dependencyUpdateExclusions = listOf(
     libs.kotestAssertions.get().name,
     // Can't be updated to 7.4.0+ due to Java 8 compatibility
     libs.android.gradle.api.get().group,
-    // TODO 1.9.10 requires korro and docProcessor to update, https://github.com/Kotlin/dataframe/issues/596
-    libs.plugins.dokka.get().pluginId,
+    // TODO 0.1.6 breaks ktlint, https://github.com/Kotlin/dataframe/issues/598
+    libs.plugins.korro.get().pluginId,
     // Directly dependent on the Gradle version
     "org.gradle.kotlin.kotlin-dsl",
 )
