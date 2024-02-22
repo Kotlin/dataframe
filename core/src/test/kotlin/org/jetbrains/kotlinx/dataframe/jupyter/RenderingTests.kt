@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.io.SerializationKeys.KOTLIN_DATAFRAME
 import org.jetbrains.kotlinx.dataframe.io.SerializationKeys.METADATA
 import org.jetbrains.kotlinx.jupyter.api.MimeTypedResult
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
+import org.junit.BeforeClass
 import org.junit.Test
 
 class RenderingTests : JupyterReplTestCase() {
@@ -241,6 +242,17 @@ class RenderingTests : JupyterReplTestCase() {
             )
 
             assertDataFrameDimensions(json, 2, 2)
+        }
+    }
+
+    companion object {
+        /**
+         * Set the system property for the IDE version needed for specific serialization testing purposes.
+         */
+        @BeforeClass
+        @JvmStatic
+        internal fun setupOnce() {
+            System.setProperty("KTNB_IDE_BUILD_NUMBER", "IU;241;14015")
         }
     }
 }

@@ -1,12 +1,17 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
+import com.beust.klaxon.json
+import org.jetbrains.kotlinx.dataframe.api.rows
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
+import org.jetbrains.kotlinx.dataframe.io.encodeFrame
 import org.jetbrains.kotlinx.dataframe.io.toHTML
 import org.jetbrains.kotlinx.dataframe.io.toJsonWithMetadata
 import org.jetbrains.kotlinx.dataframe.io.toStaticHtml
 import org.jetbrains.kotlinx.dataframe.jupyter.KotlinNotebookPluginUtils.convertToDataFrame
 import org.jetbrains.kotlinx.dataframe.nrow
+import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.jupyter.api.HtmlData
 import org.jetbrains.kotlinx.jupyter.api.JupyterClientType
 import org.jetbrains.kotlinx.jupyter.api.KotlinKernelVersion
@@ -18,6 +23,7 @@ import org.jetbrains.kotlinx.jupyter.api.renderHtmlAsIFrameIfNeeded
 
 /** Starting from this version, dataframe integration will respond with additional data for rendering in Kotlin Notebooks plugin. */
 private const val MIN_KERNEL_VERSION_FOR_NEW_TABLES_UI = "0.11.0.311"
+private const val MIN_IDE_VERSION_SUPPORT_JSON_WITH_METADATA = 241
 
 internal class JupyterHtmlRenderer(
     val display: DisplayConfiguration,
@@ -56,7 +62,21 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
     val staticHtml = df.toStaticHtml(reifiedDisplayConfiguration, DefaultCellRenderer).toJupyterHtmlData()
 
     if (notebook.kernelVersion >= KotlinKernelVersion.from(MIN_KERNEL_VERSION_FOR_NEW_TABLES_UI)!!) {
-        val jsonEncodedDf = df.toJsonWithMetadata(limit, reifiedDisplayConfiguration.rowsLimit)
+        val ideBuildNumber = KotlinNotebookPluginUtils.getKotlinNotebookIDEBuildNumber()
+
+        val jsonEncodedDf =
+            if (ideBuildNumber == null || ideBuildNumber.majorVersion < MIN_IDE_VERSION_SUPPORT_JSON_WITH_METADATA) {
+                json {
+                    obj(
+                        "nrow" to df.size.nrow,
+                        "ncol" to df.size.ncol,
+                        "columns" to df.columnNames(),
+                        "kotlin_dataframe" to encodeFrame(df.rows().take(limit).toDataFrame()),
+                    )
+                }
+            } else {
+                df.toJsonWithMetadata(limit, reifiedDisplayConfiguration.rowsLimit)
+            }
         notebook.renderAsIFrameAsNeeded(html, staticHtml, jsonEncodedDf.toJsonString())
     } else {
         notebook.renderHtmlAsIFrameIfNeeded(html)
