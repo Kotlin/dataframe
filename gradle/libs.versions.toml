@@ -9,10 +9,7 @@ ktlint = "3.4.5"
 # make sure to sync manually with :generator module
 kotlin = "1.9.22"
 kotlinpoet = "1.16.0"
-
-# TODO 1.9.10 requires korro and docProcessor to update
-# https://github.com/Kotlin/dataframe/issues/596
-dokka = "1.8.10"
+dokka = "1.9.10"
 
 libsPublisher = "1.8.10-dev-43"
 
@@ -20,6 +17,7 @@ libsPublisher = "1.8.10-dev-43"
 # dogfood Gradle / KSP plugins in tests and idea-examples modules
 dataframe = "0.13.0-dev-2838"
 
+# TODO 0.1.6 breaks ktlint, https://github.com/Kotlin/dataframe/issues/598
 korro = "0.1.5"
 
 # TODO Requires more work to be updated to 0.7.0+
