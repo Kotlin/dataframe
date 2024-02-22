@@ -223,6 +223,15 @@ private inline fun <reified T> List<T?>.withTypeNullable(
     return this to typeOf<T>().withNullability(nullable)
 }
 
+@JvmName("withTypeNullableNothingList")
+private fun List<Nothing?>.withTypeNullable(
+    expectedNulls: Boolean,
+    nullabilityOptions: NullabilityOptions,
+): Pair<List<Nothing?>, KType> {
+    val nullable = nullabilityOptions.applyNullability(this, expectedNulls)
+    return this to nothingType(nullable)
+}
+
 private fun readField(root: VectorSchemaRoot, field: Field, nullability: NullabilityOptions): AnyBaseCol {
     try {
         val range = 0 until root.rowCount
@@ -256,7 +265,7 @@ private fun readField(root: VectorSchemaRoot, field: Field, nullability: Nullabi
             is TimeStampMilliVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
             is TimeStampSecVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
             is StructVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
-            is NullVector -> vector.values(range) to nothingType(field.isNullable)
+            is NullVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
             else -> {
                 throw NotImplementedError("reading from ${vector.javaClass.canonicalName} is not implemented")
             }
