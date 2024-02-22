@@ -107,8 +107,6 @@
 ////                intervalCol INTERVAL,
 ////                intervaldaytosecondCol INTERVAL DAY TO SECOND,
 ////                intervalyeartomonthCol INTERVAL YEAR TO MONTH,
-////                rowCol ROW(street VARCHAR, city VARCHAR)),
-////                setCol SET[VARCHAR]
 //            )
 //            """
 //

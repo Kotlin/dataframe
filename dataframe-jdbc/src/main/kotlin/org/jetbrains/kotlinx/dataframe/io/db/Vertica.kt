@@ -1,11 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
 import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
+import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
-import java.util.Locale
-import org.jetbrains.kotlinx.dataframe.io.TableMetadata
-import java.sql.Time
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 
@@ -22,8 +20,8 @@ public object Vertica : DbType("vertica") {
     override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? =
         when(tableColumnMetadata.sqlTypeName.uppercase()) {
             "UUID" -> ColumnSchema.Value(String::class.createType(nullable = tableColumnMetadata.isNullable))
-//            "GEOMETRY" -> ColumnSchema.Value(String::class.createType(nullable = tableColumnMetadata.isNullable))
-//            "GEOGRAPHY" -> ColumnSchema.Value(String::class.createType(nullable = tableColumnMetadata.isNullable))
+            "ARRAY" -> ColumnSchema.Value(String::class.createType(nullable = tableColumnMetadata.isNullable))
+            "UNKNOWN" -> ColumnSchema.Value(String::class.createType(nullable = tableColumnMetadata.isNullable))
             else -> null
         }
 
@@ -43,8 +41,9 @@ public object Vertica : DbType("vertica") {
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? =
         when(tableColumnMetadata.sqlTypeName.uppercase()) {
             "UUID" -> String::class.createType(nullable = tableColumnMetadata.isNullable)
-//            "GEOMETRY" -> ColumnSchema.Value(String::class.createType(nullable = tableColumnMetadata.isNullable))
-//            "GEOGRAPHY" -> ColumnSchema.Value(String::class.createType(nullable = tableColumnMetadata.isNullable))
+//            "ARRAY" -> Array::class.createType(arguments = listOf(KTypeProjection.invariant(String::class.starProjectedType)), nullable = tableColumnMetadata.isNullable)
+            "ARRAY" -> String::class.createType(nullable = tableColumnMetadata.isNullable) // TODO understan if we can use the one above
+            "UNKNOWN" -> String::class.createType(nullable = tableColumnMetadata.isNullable)
             else -> null
         }
 }

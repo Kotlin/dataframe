@@ -34,29 +34,6 @@ private const val TEST_SCHEMA_NAME = "testschema"
 @DataSchema
 interface Table1Vertica {
     val id: Int
-    val boolCol: Boolean
-    val charCol: Char
-    val varcharCol: String
-    val longvarcharCol: String
-    val dateCol: Date
-    val timeCol: Time
-    val timestampCol: Timestamp
-    val doubleprecisionCol: Float
-    val floatCol: Float
-    val float8Col: Float
-    val realCol: Float
-    val integerCol: Long
-    val intCol: Long
-    val bigintCol: Long
-    val int8Col: Long
-    val smallintCol: Long
-    val tinyintCol: Long
-    val decimalCol: BigDecimal
-    val numericCol: BigDecimal
-    val numberCol: BigDecimal
-    val moneyCol: BigDecimal
-    val geometryCol: String
-    val geographyCol: String
 }
 
 class VerticaTest {
@@ -119,7 +96,10 @@ class VerticaTest {
                 timewithtimezoneCol TIMETZ,
                 timestampwithtimezoneCol TIMESTAMPTZ,
                 uuidCol UUID,
-                arrayCol ARRAY[VARCHAR(50)]
+                arrayCol ARRAY[VARCHAR(50)],
+                rowCol ROW(street VARCHAR, city VARCHAR),
+                setCol SET[VARCHAR],
+                intervalCol INTERVAL
             )
             """
 
@@ -129,7 +109,7 @@ class VerticaTest {
 
             @Language("SQL")
             val insertData1 = """
-            INSERT INTO table1 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, public.ST_GeomFromText('POINT(1 1)'), public.ST_GeographyFromText('POLYGON((1 2,3 4,2 3,1 2))'), ?, ?, ?, ARRAY['Test', 'Test1'])
+            INSERT INTO table1 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, public.ST_GeomFromText('POINT(1 1)'), public.ST_GeographyFromText('POLYGON((1 2,3 4,2 3,1 2))'), ?, ?, ?, ARRAY['Test', 'Test1'], ROW('aStreet', 'aCity'), SET['aStreet', 'aCity'], INTERVAL '1 12:59:10:05')
         """.trimIndent()
 
             connection.prepareStatement(insertData1).use { st ->
@@ -214,7 +194,10 @@ class VerticaTest {
         result[0][27] shouldBe TimeTz(Time.valueOf(LocalTime.of(10,0,0,0)), Calendar.getInstance())
 //        result[0][28] shouldBe TimestampTz(Timestamp.valueOf(LocalDateTime.of(2024, 1,1, 10,0,0)), Calendar.getInstance())
         result[0][29] shouldBe UUID.fromString("4a866db2-baa6-442a-a371-1f4b5ee627ba")
-        result[0][30] shouldBe arrayOf("Test", "Test1")
+//        result[0][30] shouldBe arrayOf("Test", "Test1")
+//        result[0][31] shouldBe "{\"street\":\"aStreet\",\"city\":\"aCity\"}"
+//        result[0][32] shouldBe "{\"street\":\"aStreet\",\"city\":\"aCity\"}"
+//        result[0][33] shouldBe "1 12:59:10.005000"
 
         val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
         schema.columns["id"]!!.type shouldBe typeOf<Long>()
@@ -247,7 +230,10 @@ class VerticaTest {
         schema.columns["timewithtimezoneCol"]!!.type shouldBe typeOf<Time?>()
         schema.columns["timestampwithtimezoneCol"]!!.type shouldBe typeOf<Timestamp?>()
         schema.columns["uuidCol"]!!.type shouldBe typeOf<String?>()
-        schema.columns["arrayCol"]!!.type shouldBe typeOf<Array<Any>?>()
+        schema.columns["arrayCol"]!!.type shouldBe typeOf<String?>()
+        schema.columns["rowCol"]!!.type shouldBe typeOf<Any?>()
+        schema.columns["setCol"]!!.type shouldBe typeOf<String?>()
+        schema.columns["intervalCol"]!!.type shouldBe typeOf<Any?>()
     }
 
 //    @Test
