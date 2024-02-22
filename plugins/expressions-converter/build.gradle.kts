@@ -1,9 +1,11 @@
 plugins {
-    id("java")
-    kotlin("jvm")
-    id("com.github.johnrengelman.shadow") version "7.1.2"
-    kotlin("libs.publisher")
-    id("org.jmailen.kotlinter")
+    java
+    with(libs.plugins) {
+        alias(kotlin.jvm)
+        alias(shadow)
+        alias(publisher)
+        alias(kotlinter)
+    }
 }
 
 group = "org.jetbrains.kotlinx.dataframe"
@@ -13,26 +15,25 @@ repositories {
 }
 
 dependencies {
-    val kotlinVersion = libs.versions.kotlin.get()
-    val compiler = "org.jetbrains.kotlin:kotlin-compiler:$kotlinVersion"
-    compileOnly(compiler)
+    compileOnly(libs.kotlin.compiler)
 
-    testImplementation(compiler)
-    testImplementation("org.jetbrains.kotlin:kotlin-compiler-internal-test-framework:$kotlinVersion")
+    testImplementation(libs.kotlin.compiler)
+    testImplementation(libs.kotlin.compiler.internal.test.framework)
 
     testRuntimeOnly(project(":core"))
 
-    testRuntimeOnly("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
-    testRuntimeOnly("org.jetbrains.kotlin:kotlin-script-runtime:$kotlinVersion")
-    testRuntimeOnly("org.jetbrains.kotlin:kotlin-annotations-jvm:$kotlinVersion")
+    testRuntimeOnly(libs.kotlin.test)
+    testRuntimeOnly(libs.kotlin.script.runtime)
+    testRuntimeOnly(libs.kotlin.annotations.jvm)
 
-    testImplementation(platform("org.junit:junit-bom:5.8.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
-    testImplementation("org.junit.platform:junit-platform-commons")
-    testImplementation("org.junit.platform:junit-platform-launcher")
-    testImplementation("org.junit.platform:junit-platform-runner")
-    testImplementation("org.junit.platform:junit-platform-suite-api")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+    testImplementation(platform(libs.junit.bom))
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit.platform.commons)
+    testImplementation(libs.junit.platform.launcher)
+    testImplementation(libs.junit.platform.runner)
+    testImplementation(libs.junit.platform.suite.api)
+
+    testRuntimeOnly(libs.junit.jupiter.engine)
 }
 
 tasks.test {

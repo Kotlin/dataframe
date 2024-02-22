@@ -1,13 +1,17 @@
 import org.jmailen.gradle.kotlinter.tasks.LintTask
 
-@Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 plugins {
-    id("java")
-    kotlin("jvm")
-    id("org.jetbrains.kotlinx.dataframe")
-    id("io.github.devcrocod.korro") version libs.versions.korro
-    id("org.jmailen.kotlinter")
-    id("org.jetbrains.kotlinx.kover")
+    java
+    with(libs.plugins) {
+        alias(kotlin.jvm)
+        alias(korro)
+        alias(kotlinter)
+        alias(kover)
+
+        alias(dataframe)
+        // only mandatory if `kotlin.dataframe.add.ksp=false` in gradle.properties
+        alias(ksp)
+    }
 }
 
 repositories {

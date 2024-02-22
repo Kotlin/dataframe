@@ -9,7 +9,7 @@ import java.nio.file.Files
 fun runGradleBuild(
     task: String,
     @Language("kts") settingsGradle: (File) -> String = { "" },
-    build: (File) -> String,
+    @Language("kts") build: (File) -> String,
 ): Build {
     val buildDir = Files.createTempDirectory("test").toFile()
     val buildFile = File(buildDir, "build.gradle.kts")

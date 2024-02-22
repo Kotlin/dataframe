@@ -1,27 +1,32 @@
-import com.google.devtools.ksp.gradle.KspTaskJvm
 import com.google.devtools.ksp.gradle.KspTask
+import com.google.devtools.ksp.gradle.KspTaskJvm
 import io.github.devcrocod.korro.KorroTask
-import nl.jolanrensen.docProcessor.defaultProcessors.*
+import nl.jolanrensen.docProcessor.defaultProcessors.ARG_DOC_PROCESSOR_LOG_NOT_FOUND
 import nl.jolanrensen.docProcessor.gradle.creatingProcessDocTask
 import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jmailen.gradle.kotlinter.tasks.LintTask
 import xyz.ronella.gradle.plugin.simple.git.task.GitTask
 
-@Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 plugins {
-    kotlin("jvm")
-    kotlin("libs.publisher")
-    kotlin("plugin.serialization")
-    kotlin("jupyter.api")
+    with(libs.plugins) {
+        alias(kotlin.jvm)
+        alias(publisher)
+        alias(serialization)
+        alias(jupyter.api)
+        alias(korro)
+        alias(keywordGenerator)
+        alias(kover)
+        alias(kotlinter)
+        alias(docProcessor)
+        alias(simpleGit)
 
-    id("io.github.devcrocod.korro") version libs.versions.korro
-    id("org.jetbrains.dataframe.generator")
-    id("org.jetbrains.kotlinx.kover")
-    id("org.jmailen.kotlinter")
-    id("org.jetbrains.kotlinx.dataframe")
-    id("nl.jolanrensen.docProcessor")
-    id("xyz.ronella.simple-git")
+        // dependence on our own plugin
+        alias(dataframe)
+
+        // only mandatory if `kotlin.dataframe.add.ksp=false` in gradle.properties
+        alias(ksp)
+    }
     idea
 }
 
@@ -221,6 +226,7 @@ idea {
 // the target of processKdocMain and they are returned back to normal afterwards.
 tasks.withType<Jar> {
     dependsOn(processKDocsMain)
+    mustRunAfter(tasks.generateKeywordsSrc)
     outputs.upToDateWhen { false }
 
     doFirst {

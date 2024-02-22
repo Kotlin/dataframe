@@ -32,7 +32,7 @@ class RenderingTests : JupyterReplTestCase() {
         html shouldContain "Bill"
 
         @Language("kts")
-        val useRes = exec(
+        val useRes = execRendered(
             """
             USE {
                 render<Int> { (it * 2).toString() }
@@ -73,7 +73,7 @@ class RenderingTests : JupyterReplTestCase() {
         fun execSimpleDf() = execHtml("""dataFrameOf("a", "b")(1, 2, 3, 4)""")
 
         val htmlLight = execSimpleDf()
-        val r1 = exec("notebook.changeColorScheme(ColorScheme.DARK); 1")
+        val r1 = execRendered("notebook.changeColorScheme(ColorScheme.DARK); 1")
         val htmlDark = execSimpleDf()
 
         r1 shouldBe 1
@@ -106,7 +106,7 @@ class RenderingTests : JupyterReplTestCase() {
      * @return the parsed DataFrame result as a `JsonObject`
      */
     private fun executeScriptAndParseDataframeResult(@Language("kts") script: String): JsonObject {
-        val result = exec<MimeTypedResult>(script)
+        val result = execRendered<MimeTypedResult>(script)
         return parseDataframeJson(result)
     }
 

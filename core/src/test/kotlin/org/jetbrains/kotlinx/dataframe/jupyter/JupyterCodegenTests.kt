@@ -19,7 +19,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
     @Test
     fun `codegen adding column with generic type function`() {
         @Language("kts")
-        val res1 = exec(
+        val res1 = execRendered(
             """
             fun <T> AnyFrame.addValue(value: T) = add("value") { listOf(value) }
             val df = dataFrameOf("a")(1).addValue(2)
@@ -36,7 +36,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
     @Test
     fun `Don't inherit from data class`() {
         @Language("kts")
-        val res1 = exec(
+        val res1 = execRendered(
             """
             @DataSchema
             data class A(val a: Int)
@@ -57,7 +57,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
     @Test
     fun `Don't inherit from non open class`() {
         @Language("kts")
-        val res1 = exec(
+        val res1 = execRendered(
             """
             @DataSchema
             class A(val a: Int)
@@ -78,7 +78,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
     @Test
     fun `Don't inherit from open class`() {
         @Language("kts")
-        val res1 = exec(
+        val res1 = execRendered(
             """
             @DataSchema
             open class A(val a: Int)
@@ -99,7 +99,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
     @Test
     fun `Do inherit from open interface`() {
         @Language("kts")
-        val res1 = exec(
+        val res1 = execRendered(
             """
             @DataSchema
             interface A { val a: Int }
@@ -120,7 +120,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
     @Test
     fun `codegen for enumerated frames`() {
         @Language("kts")
-        val res1 = exec(
+        val res1 = execRendered(
             """
             val names = (0..2).map { it.toString() }
             val df = dataFrameOf(names)(1, 2, 3)
@@ -136,7 +136,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
     @Test
     fun `codegen for complex column names`() {
         @Language("kts")
-        val res1 = exec(
+        val res1 = execRendered(
             """
             val df = DataFrame.readDelimStr("[a], (b), {c}\n1, 2, 3")
             df
@@ -145,7 +145,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         res1.shouldBeInstanceOf<MimeTypedResult>()
 
         @Language("kts")
-        val res2 = exec(
+        val res2 = execRendered(
             """listOf(df.`{a}`[0], df.`(b)`[0], df.`{c}`[0])"""
         )
         res2 shouldBe listOf(1, 2, 3)
@@ -154,7 +154,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
     @Test
     fun `codegen for '$' that is interpolator in kotlin string literals`() {
         @Language("kts")
-        val res1 = exec(
+        val res1 = execRendered(
             """
             val df = DataFrame.readDelimStr("\${'$'}id\n1")
             df
@@ -163,7 +163,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         res1.shouldBeInstanceOf<MimeTypedResult>()
 
         @Language("kts")
-        val res2 = exec(
+        val res2 = execRendered(
             "listOf(df.`\$id`[0])"
         )
         res2 shouldBe listOf(1)
@@ -172,7 +172,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
     @Test
     fun `codegen for backtick that is forbidden in kotlin identifiers`() {
         @Language("kts")
-        val res1 = exec(
+        val res1 = execRendered(
             """
             val df = DataFrame.readDelimStr("Day`s\n1")
             df
@@ -182,7 +182,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         println(res1.entries.joinToString())
 
         @Language("kts")
-        val res2 = exec(
+        val res2 = execRendered(
             "listOf(df.`Day's`[0])"
         )
         res2 shouldBe listOf(1)
@@ -193,7 +193,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         val forbiddenChar = ";"
 
         @Language("kts")
-        val res1 = exec(
+        val res1 = execRendered(
             """
             val df = DataFrame.readDelimStr("Test$forbiddenChar\n1")
             df
@@ -203,7 +203,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         println(res1.entries.joinToString())
 
         @Language("kts")
-        val res2 = exec(
+        val res2 = execRendered(
             "listOf(df.`Test `[0])"
         )
         res2 shouldBe listOf(1)
@@ -214,7 +214,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         val forbiddenChar = "\\\\"
 
         @Language("kts")
-        val res1 = exec(
+        val res1 = execRendered(
             """
             val df = DataFrame.readDelimStr("Test$forbiddenChar\n1")
             df
@@ -224,7 +224,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         println(res1.entries.joinToString())
 
         @Language("kts")
-        val res2 = exec(
+        val res2 = execRendered(
             "listOf(df.`Test `[0])"
         )
         res2 shouldBe listOf(1)
@@ -233,7 +233,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
     @Test
     fun `generic interface`() {
         @Language("kts")
-        val res1 = exec(
+        val res1 = execRendered(
             """
             @DataSchema
             interface Generic<T> {
@@ -244,7 +244,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         res1.shouldBeInstanceOf<Unit>()
 
         @Language("kts")
-        val res2 = exec(
+        val res2 = execRendered(
             """
                 val <T> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
                 val <T> DataRow<Generic<T>>.test2: T get() = field
@@ -256,7 +256,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
     @Test
     fun `generic interface with upper bound`() {
         @Language("kts")
-        val res1 = exec(
+        val res1 = execRendered(
             """
                 @DataSchema
                 interface Generic <T : String> {
@@ -267,7 +267,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         res1.shouldBeInstanceOf<Unit>()
 
         @Language("kts")
-        val res2 = exec(
+        val res2 = execRendered(
             """
                 val <T : String> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
                 val <T : String> DataRow<Generic<T>>.test2: T get() = field
@@ -279,7 +279,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
     @Test
     fun `generic interface with variance and user type in type parameters`() {
         @Language("kts")
-        val res1 = exec(
+        val res1 = execRendered(
             """
                 interface UpperBound
 
@@ -292,7 +292,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         res1.shouldBeInstanceOf<Unit>()
 
         @Language("kts")
-        val res2 = exec(
+        val res2 = execRendered(
             """
                 val <T : UpperBound> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
                 val <T : UpperBound> DataRow<Generic<T>>.test2: T get() = field
@@ -304,7 +304,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
     @Test
     fun `generate a new marker when dataframe marker is not a data schema so that columns are accessible with extensions`() {
         @Language("kts")
-        val a = exec(
+        val a = execRendered(
             """
             enum class State {
                 Idle, Productive, Maintenance
@@ -328,7 +328,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         )
         shouldNotThrowAny {
             @Language("kts")
-            val b = exec(
+            val b = execRendered(
                 """
                 events.toolId
                 events.state
