@@ -19,6 +19,7 @@ plugins {
         alias(dokka)
         alias(kover)
         alias(kotlinter)
+        alias(korro) apply false
         alias(docProcessor) apply false
         alias(simpleGit) apply false
         alias(dependencyVersions)
