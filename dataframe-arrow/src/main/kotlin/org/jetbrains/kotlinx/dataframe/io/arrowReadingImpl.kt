@@ -13,6 +13,7 @@ import org.apache.arrow.vector.Float8Vector
 import org.apache.arrow.vector.IntVector
 import org.apache.arrow.vector.LargeVarBinaryVector
 import org.apache.arrow.vector.LargeVarCharVector
+import org.apache.arrow.vector.NullVector
 import org.apache.arrow.vector.SmallIntVector
 import org.apache.arrow.vector.TimeMicroVector
 import org.apache.arrow.vector.TimeMilliVector
@@ -172,6 +173,10 @@ private fun StructVector.values(range: IntRange): List<Map<String, Any?>?> = ran
     getObject(it)
 }
 
+private fun NullVector.values(range: IntRange): List<Nothing?> = range.map {
+    getObject(it) as Nothing?
+}
+
 private fun VarCharVector.values(range: IntRange): List<String?> = range.map {
     if (isNull(it)) {
         null
@@ -204,12 +209,27 @@ private fun LargeVarCharVector.values(range: IntRange): List<String?> = range.ma
     }
 }
 
+internal fun nothingType(nullable: Boolean): KType = if (nullable) {
+    typeOf<List<Nothing?>>()
+} else {
+    typeOf<List<Nothing>>()
+}.arguments.first().type!!
+
 private inline fun <reified T> List<T?>.withTypeNullable(
     expectedNulls: Boolean,
     nullabilityOptions: NullabilityOptions,
 ): Pair<List<T?>, KType> {
     val nullable = nullabilityOptions.applyNullability(this, expectedNulls)
     return this to typeOf<T>().withNullability(nullable)
+}
+
+@JvmName("withTypeNullableNothingList")
+private fun List<Nothing?>.withTypeNullable(
+    expectedNulls: Boolean,
+    nullabilityOptions: NullabilityOptions,
+): Pair<List<Nothing?>, KType> {
+    val nullable = nullabilityOptions.applyNullability(this, expectedNulls)
+    return this to nothingType(nullable)
 }
 
 private fun readField(root: VectorSchemaRoot, field: Field, nullability: NullabilityOptions): AnyBaseCol {
@@ -245,6 +265,7 @@ private fun readField(root: VectorSchemaRoot, field: Field, nullability: Nullabi
             is TimeStampMilliVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
             is TimeStampSecVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
             is StructVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is NullVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
             else -> {
                 throw NotImplementedError("reading from ${vector.javaClass.canonicalName} is not implemented")
             }
