@@ -20,7 +20,7 @@ libsPublisher = "1.8.10-dev-43"
 # dogfood Gradle / KSP plugins in tests and idea-examples modules
 dataframe = "0.13.0-dev-2838"
 
-korro = "0.1.6"
+korro = "0.1.5"
 
 # TODO Requires more work to be updated to 0.7.0+
 # https://github.com/Kotlin/dataframe/issues/594
