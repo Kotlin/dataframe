@@ -7,13 +7,14 @@
    - update an artifact version.
    - update a Kotlin version.
    - update the [section](README.md#kotlin-kotlin-jupyter-openapi-arrow-and-jdk-versions) about library versions.
-5. Check the project version in the file `gradle.properties` (i.e. it's 0.10.0 when trying to release version 0.10.0).
+5. Check the project version in the file `gradle.properties` (i.e. it's 0.10.0 when trying to release version 0.10.0). 
+  This is what TC uses to determine the version to publish.
    - For major releases: update a project version in the file [`v.list`](https://github.com/Kotlin/dataframe/blame/master/docs/StardustDocs/v.list)
    - For major releases: update a project version in the file [`main.yml`](https://github.com/Kotlin/dataframe/blob/master/.github/workflows/main.yml)
    - For major releases: update a project version in the file [`project.ihp`](https://github.com/Kotlin/dataframe/blob/master/docs/StardustDocs/project.ihp)
 6. Update `libs.versions.toml` file if required, run `./gradlew dependencyUpdates` to check for updates. **RC**
 7. Create and checkout the release branch. **RC**
-8. Make last commit with release tag (_v0.1.1_ for example) to the release branch. **RC**
+8. Make a last commit with release tag (_v0.1.1_ for example) to the release branch. **RC**
 9. Run tests and build artifacts on TC for the commit with the release tag. **RC**
 10. Deploy artifacts on Maven Central via the `Publish` task running on TC based on the commit with the release tag. **RC**
 11. Check artifacts' availability on [MavenCentral](https://mvnrepository.com/artifact/org.jetbrains.kotlinx/dataframe). **RC**
