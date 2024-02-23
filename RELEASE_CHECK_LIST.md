@@ -7,7 +7,7 @@
    - update an artifact version.
    - update a Kotlin version.
    - update the [section](README.md#kotlin-kotlin-jupyter-openapi-arrow-and-jdk-versions) about library versions.
-5. Update a project version in the file `gradle.properties` (i.e. 0.9.0 -> 0.10.0).
+5. Check the project version in the file `gradle.properties` (i.e. it's 0.10.0 when trying to release version 0.10.0).
    - For major releases: update a project version in the file [`v.list`](https://github.com/Kotlin/dataframe/blame/master/docs/StardustDocs/v.list)
    - For major releases: update a project version in the file [`main.yml`](https://github.com/Kotlin/dataframe/blob/master/.github/workflows/main.yml)
    - For major releases: update a project version in the file [`project.ihp`](https://github.com/Kotlin/dataframe/blob/master/docs/StardustDocs/project.ihp)
