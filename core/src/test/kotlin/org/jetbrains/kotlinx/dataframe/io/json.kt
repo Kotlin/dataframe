@@ -949,6 +949,7 @@ class JsonTests {
     @Test
     fun `nulls in columns should be encoded explicitly`() {
         val df = dataFrameOf("a", "b")("1", null, "2", 12)
-        df.toJson(canonical = true) shouldContain "\"b\":null"
+        df.toJson() shouldContain "\"b\":null"
+//        df.toJson(canonical = true) shouldContain "\"b\":null"
     }
 }

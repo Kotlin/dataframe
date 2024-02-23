@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
-import com.beust.klaxon.json
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.*
 import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
@@ -28,6 +29,7 @@ internal class JupyterHtmlRenderer(
     val builder: JupyterIntegration.Builder,
 )
 
+@OptIn(ExperimentalSerializationApi::class)
 internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
     noinline getFooter: (T) -> String,
     crossinline modifyConfig: T.(DisplayConfiguration) -> DisplayConfiguration = { it },
@@ -60,14 +62,12 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
     val staticHtml = df.toStaticHtml(reifiedDisplayConfiguration, DefaultCellRenderer).toJupyterHtmlData()
 
     if (notebook.kernelVersion >= KotlinKernelVersion.from(MIN_KERNEL_VERSION_FOR_NEW_TABLES_UI)!!) {
-        val jsonEncodedDf = json {
-            obj(
-                "nrow" to df.size.nrow,
-                "ncol" to df.size.ncol,
-                "columns" to df.columnNames(),
-                "kotlin_dataframe" to encodeFrame(df.rows().take(limit).toDataFrame()),
-            )
-        }.toJsonString()
+        val jsonEncodedDf = buildJsonObject {
+            put("nrow", df.size.nrow)
+            put("ncol", df.size.ncol)
+            putJsonArray("columns") { addAll(df.columnNames()) }
+            put("kotlin_dataframe", encodeFrame(df.rows().take(limit).toDataFrame()),)
+        }.toString()
         notebook.renderAsIFrameAsNeeded(html, staticHtml, jsonEncodedDf)
     } else {
         notebook.renderHtmlAsIFrameIfNeeded(html)

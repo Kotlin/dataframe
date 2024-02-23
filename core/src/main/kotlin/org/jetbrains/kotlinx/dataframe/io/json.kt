@@ -1,60 +1,26 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package org.jetbrains.kotlinx.dataframe.io
 
-import com.beust.klaxon.JsonArray
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.KlaxonJson
-import com.beust.klaxon.Parser
-import com.beust.klaxon.json
-import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.ColumnsContainer
-import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.JsonPath
-import org.jetbrains.kotlinx.dataframe.api.KeyValueProperty
-import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.columnOf
-import org.jetbrains.kotlinx.dataframe.api.concat
-import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.firstOrNull
-import org.jetbrains.kotlinx.dataframe.api.getColumn
-import org.jetbrains.kotlinx.dataframe.api.indices
-import org.jetbrains.kotlinx.dataframe.api.isList
-import org.jetbrains.kotlinx.dataframe.api.mapIndexed
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.*
+import org.jetbrains.kotlinx.dataframe.*
+import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.api.name
-import org.jetbrains.kotlinx.dataframe.api.named
-import org.jetbrains.kotlinx.dataframe.api.rows
-import org.jetbrains.kotlinx.dataframe.api.schema
-import org.jetbrains.kotlinx.dataframe.api.single
-import org.jetbrains.kotlinx.dataframe.api.splitInto
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadJsonMethod
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
-import org.jetbrains.kotlinx.dataframe.impl.DataCollectorBase
-import org.jetbrains.kotlinx.dataframe.impl.asList
+import org.jetbrains.kotlinx.dataframe.impl.*
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumn
-import org.jetbrains.kotlinx.dataframe.impl.commonType
-import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
-import org.jetbrains.kotlinx.dataframe.impl.guessValueType
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.impl.schema.extractSchema
 import org.jetbrains.kotlinx.dataframe.impl.schema.intersectSchemas
-import org.jetbrains.kotlinx.dataframe.impl.splitByIndices
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ANY_COLUMNS
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS
-import org.jetbrains.kotlinx.dataframe.ncol
-import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
-import org.jetbrains.kotlinx.dataframe.type
-import org.jetbrains.kotlinx.dataframe.typeClass
-import org.jetbrains.kotlinx.dataframe.values
 import java.io.File
 import java.io.InputStream
 import java.net.URL
@@ -243,12 +209,13 @@ public fun DataRow.Companion.readJson(
  * @param header Optional list of column names. If given, [stream] will be read like an object with [header] being the keys.
  * @return [DataFrame] from the given [stream].
  */
+@OptIn(ExperimentalSerializationApi::class)
 public fun DataFrame.Companion.readJson(
     stream: InputStream,
     header: List<String> = emptyList(),
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
-): AnyFrame = readJson(Parser.default().parse(stream), header, keyValuePaths, typeClashTactic)
+): AnyFrame = readJson(Json.decodeFromStream<JsonElement>(stream), header, keyValuePaths, typeClashTactic)
 
 /**
  * @param stream Json as [InputStream] to be converted to a [DataRow].
@@ -278,7 +245,7 @@ public fun DataFrame.Companion.readJsonStr(
     header: List<String> = emptyList(),
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
-): AnyFrame = readJson(Parser.default().parse(StringBuilder(text)), header, keyValuePaths, typeClashTactic)
+): AnyFrame = readJson(Json.parseToJsonElement(text), header, keyValuePaths, typeClashTactic)
 
 /**
  * @param text Json as [String] to be converted to a [DataRow].
@@ -304,8 +271,8 @@ private fun readJson(
     val df: AnyFrame = when (typeClashTactic) {
         ARRAY_AND_VALUE_COLUMNS -> {
             when (parsed) {
-                is JsonArray<*> -> fromJsonListArrayAndValueColumns(
-                    records = parsed.value,
+                is JsonArray -> fromJsonListArrayAndValueColumns(
+                    records = parsed,
                     header = header,
                     keyValuePaths = keyValuePaths,
                 )
@@ -319,8 +286,8 @@ private fun readJson(
 
         ANY_COLUMNS -> {
             when (parsed) {
-                is JsonArray<*> -> fromJsonListAnyColumns(
-                    records = parsed.value,
+                is JsonArray -> fromJsonListAnyColumns(
+                    records = parsed,
                     header = header,
                     keyValuePaths = keyValuePaths,
                 )
@@ -381,9 +348,9 @@ internal fun fromJsonListAnyColumns(
                 }
             }
 
-            is JsonArray<*> -> hasArray = true
-            null -> Unit
-            else -> hasPrimitive = true
+            is JsonArray -> hasArray = true
+            is JsonNull, null -> Unit
+            is JsonPrimitive -> hasPrimitive = true
         }
     }
 
@@ -423,7 +390,7 @@ internal fun fromJsonListAnyColumns(
                         )
                     }
 
-                    is JsonArray<*> -> {
+                    is JsonArray -> {
                         val parsed = fromJsonListAnyColumns(
                             records = v,
                             keyValuePaths = keyValuePaths,
@@ -435,9 +402,21 @@ internal fun fromJsonListAnyColumns(
                         )
                     }
 
-                    "NaN" -> {
-                        nanIndices.add(i)
-                        collector.add(null)
+                    is JsonPrimitive -> {
+                        when {
+                            v.content == "NaN" -> {
+                                nanIndices.add(i)
+                                collector.add(null)
+                            }
+
+                            v.isString -> collector.add(v.content)
+                            v.booleanOrNull != null -> collector.add(v.boolean)
+                            v.intOrNull != null -> collector.add(v.int)
+                            v.longOrNull != null -> collector.add(v.long)
+                            v.doubleOrNull != null -> collector.add(v.double)
+                            // v.floatOrNull != null -> collector.add(v.float)
+                            v.jsonPrimitive is JsonNull -> collector.add(null)
+                        }
                     }
 
                     else -> collector.add(v)
@@ -473,8 +452,8 @@ internal fun fromJsonListAnyColumns(
             records.forEach {
                 startIndices.add(values.size)
                 when (it) {
-                    is JsonArray<*> -> values.addAll(it.value)
-                    null -> Unit
+                    is JsonArray -> values.addAll(it)
+                    is JsonNull, null -> Unit
                     else -> error("Expected JsonArray, got $it")
                 }
             }
@@ -512,7 +491,7 @@ internal fun fromJsonListAnyColumns(
             val dataFrames = records.map {
                 when (it) {
                     is JsonObject -> {
-                        val map = it.map.mapValues { (key, value) ->
+                        val map = it.mapValues { (key, value) ->
                             val parsed = fromJsonListAnyColumns(
                                 records = listOf(value),
                                 keyValuePaths = keyValuePaths,
@@ -534,7 +513,7 @@ internal fun fromJsonListAnyColumns(
                         )
                     }
 
-                    null -> DataFrame.emptyOf<AnyKeyValueProperty>()
+                    is JsonNull, null -> DataFrame.emptyOf<AnyKeyValueProperty>()
                     else -> error("Expected JsonObject, got $it")
                 }
             }
@@ -574,7 +553,7 @@ internal fun fromJsonListAnyColumns(
                 records.forEach {
                     when (it) {
                         is JsonObject -> values.add(it[colName])
-                        null -> values.add(null)
+                        is JsonNull, null -> values.add(null)
                         else -> error("Expected JsonObject, got $it")
                     }
                 }
@@ -656,12 +635,12 @@ internal fun fromJsonListArrayAndValueColumns(
                 nameGenerator.addIfAbsent(it.key)
             }
 
-            is JsonArray<*> -> hasArray = true
-            null -> Unit
-            else -> hasPrimitive = true
+            is JsonArray -> hasArray = true
+            is JsonNull, null -> Unit
+            is JsonPrimitive -> hasPrimitive = true
         }
     }
-    if (records.all { it == null }) hasPrimitive = true
+    if (records.all { it == null || it is JsonNull }) hasPrimitive = true
 
     // Add a value column to the collected names if needed
     val valueColumn = if (hasPrimitive || records.isEmpty()) {
@@ -685,7 +664,7 @@ internal fun fromJsonListArrayAndValueColumns(
             val dataFrames = records.map {
                 when (it) {
                     is JsonObject -> {
-                        val map = it.map.mapValues { (key, value) ->
+                        val map = it.mapValues { (key, value) ->
                             val parsed = fromJsonListArrayAndValueColumns(
                                 records = listOf(value),
                                 keyValuePaths = keyValuePaths,
@@ -708,7 +687,7 @@ internal fun fromJsonListArrayAndValueColumns(
                         )
                     }
 
-                    null -> DataFrame.emptyOf<AnyKeyValueProperty>()
+                    is JsonNull, null -> DataFrame.emptyOf<AnyKeyValueProperty>()
                     else -> error("Expected JsonObject, got $it")
                 }
             }
@@ -737,10 +716,23 @@ internal fun fromJsonListArrayAndValueColumns(
                         records.forEachIndexed { i, v ->
                             when (v) {
                                 is JsonObject -> collector.add(null)
-                                is JsonArray<*> -> collector.add(null)
-                                "NaN" -> {
-                                    nanIndices.add(i)
-                                    collector.add(null)
+                                is JsonArray -> collector.add(null)
+                                is JsonPrimitive -> {
+                                    when {
+                                        v.content == "NaN" -> {
+                                            nanIndices.add(i)
+                                            collector.add(null)
+                                        }
+
+                                        v.isString -> collector.add(v.content)
+                                        v.booleanOrNull != null -> collector.add(v.boolean)
+                                        v.intOrNull != null -> collector.add(v.int)
+                                        v.longOrNull != null -> collector.add(v.long)
+                                        //  v.floatOrNull != null -> collector.add(v.float)
+                                        v.doubleOrNull != null -> collector.add(v.double)
+                                        v is JsonNull -> collector.add(null)
+                                        else -> collector.add(v)
+                                    }
                                 }
 
                                 else -> collector.add(v)
@@ -775,7 +767,7 @@ internal fun fromJsonListArrayAndValueColumns(
                         val startIndices = ArrayList<Int>()
                         records.forEach {
                             startIndices.add(values.size)
-                            if (it is JsonArray<*>) values.addAll(it.value)
+                            if (it is JsonArray) values.addAll(it.jsonArray)
                         }
                         val parsed = fromJsonListArrayAndValueColumns(
                             records = values,
@@ -857,30 +849,46 @@ private class UnnamedColumn(val col: DataColumn<Any?>) : DataColumn<Any?> by col
 private val valueTypes =
     setOf(Boolean::class, Double::class, Int::class, Float::class, Long::class, Short::class, Byte::class)
 
-internal fun KlaxonJson.encodeRow(frame: ColumnsContainer<*>, index: Int): JsonObject? {
-    val values = frame.columns().map { col ->
-        when {
+@OptIn(ExperimentalSerializationApi::class)
+private fun convert(value: Any?): JsonElement = when (value) {
+    is JsonElement -> value
+    is Double -> JsonPrimitive(value)
+    is Float -> JsonPrimitive(value.toDouble()) // It is necessary
+    // because kotlinx-serialization accurately handles Float -> Float,
+    // unlike klaxon.
+    is Number -> JsonPrimitive(value)
+    is String -> JsonPrimitive(value)
+    is Char -> JsonPrimitive(value.toString())
+    is Boolean -> JsonPrimitive(value)
+    null -> JsonPrimitive(null)
+    else -> JsonPrimitive(value.toString())
+}
+
+internal fun encodeRow(frame: ColumnsContainer<*>, index: Int): JsonObject {
+    val values: Map<String, JsonElement> = frame.columns().associate { col ->
+        col.name to when {
             col is ColumnGroup<*> -> encodeRow(col, index)
             col is FrameColumn<*> -> encodeFrame(col[index])
             col.isList() -> {
-                col[index]?.let { array(it as List<*>) } ?: array()
+                col[index]?.let {
+                    JsonArray((it as List<*>).map { value -> convert(value) })
+                } ?: JsonPrimitive(null)
             }
 
             col.typeClass in valueTypes -> {
                 val v = col[index]
-                if ((v is Double && v.isNaN()) || (v is Float && v.isNaN())) {
-                    v.toString()
-                } else v
+                convert(v)
             }
 
-            else -> col[index]?.toString()
-        }.let { col.name to it }
+            else -> JsonPrimitive(col[index]?.toString())
+        }
     }
-    if (values.isEmpty()) return null
-    return obj(values)
+
+    if (values.isEmpty()) return buildJsonObject { }
+    return JsonObject(values)
 }
 
-internal fun KlaxonJson.encodeFrame(frame: AnyFrame): JsonArray<*> {
+internal fun encodeFrame(frame: AnyFrame): JsonArray {
     val allColumns = frame.columns()
 
     // if there is only 1 column, then `isValidValueColumn` always true.
@@ -907,7 +915,7 @@ internal fun KlaxonJson.encodeFrame(frame: AnyFrame): JsonArray<*> {
             }
         }
 
-    val arrayColumn = frame.columns().filter { it.name.startsWith(arrayColumnName) }
+    val arrayColumn = allColumns.filter { it.name.startsWith(arrayColumnName) }
         .takeIf { isPossibleToFindUnnamedColumns }
         ?.maxByOrNull { it.name }?.let { arrayCol ->
             if (arrayCol.kind() == ColumnKind.Group) null
@@ -930,42 +938,51 @@ internal fun KlaxonJson.encodeFrame(frame: AnyFrame): JsonArray<*> {
 
     val data = frame.indices().map { rowIndex ->
         valueColumn?.get(rowIndex) ?: arrayColumn?.get(rowIndex)
-            ?.let { if (arraysAreFrames) encodeFrame(it as AnyFrame) else null } ?: encodeRow(frame, rowIndex)
+            ?.let { if (arraysAreFrames) encodeFrame(it as AnyFrame) else null } ?: encodeRow(
+            frame,
+            rowIndex
+        )
     }
-    return array(data)
+    return buildJsonArray { addAll(data.map { convert(it) }) }
 }
 
-public fun AnyFrame.toJson(prettyPrint: Boolean = false, canonical: Boolean = false): String {
-    return json {
-        encodeFrame(this@toJson)
-    }.toJsonString(prettyPrint, canonical)
+public fun AnyFrame.toJson(prettyPrint: Boolean = false): String {
+    val json = Json {
+        this.prettyPrint = prettyPrint
+        isLenient = true
+        allowSpecialFloatingPointValues = true
+    }
+    return json.encodeToString(JsonElement.serializer(), encodeFrame(this@toJson))
 }
 
-public fun AnyRow.toJson(prettyPrint: Boolean = false, canonical: Boolean = false): String {
-    return json {
-        encodeRow(df(), index())
-    }?.toJsonString(prettyPrint, canonical) ?: ""
+public fun AnyRow.toJson(prettyPrint: Boolean = false): String {
+    val json = Json {
+        this.prettyPrint = prettyPrint
+        isLenient = true
+        allowSpecialFloatingPointValues = true
+    }
+    return json.encodeToString(JsonElement.serializer(), encodeRow(df(), index()))
 }
 
-public fun AnyFrame.writeJson(file: File, prettyPrint: Boolean = false, canonical: Boolean = false) {
-    file.writeText(toJson(prettyPrint, canonical))
+public fun AnyFrame.writeJson(file: File, prettyPrint: Boolean = false) {
+    file.writeText(toJson(prettyPrint))
 }
 
-public fun AnyFrame.writeJson(path: String, prettyPrint: Boolean = false, canonical: Boolean = false): Unit =
-    writeJson(File(path), prettyPrint, canonical)
+public fun AnyFrame.writeJson(path: String, prettyPrint: Boolean = false): Unit =
+    writeJson(File(path), prettyPrint)
 
-public fun AnyFrame.writeJson(writer: Appendable, prettyPrint: Boolean = false, canonical: Boolean = false) {
-    writer.append(toJson(prettyPrint, canonical))
+public fun AnyFrame.writeJson(writer: Appendable, prettyPrint: Boolean = false) {
+    writer.append(toJson(prettyPrint))
 }
 
-public fun AnyRow.writeJson(file: File, prettyPrint: Boolean = false, canonical: Boolean = false) {
-    file.writeText(toJson(prettyPrint, canonical))
+public fun AnyRow.writeJson(file: File, prettyPrint: Boolean = false) {
+    file.writeText(toJson(prettyPrint))
 }
 
-public fun AnyRow.writeJson(path: String, prettyPrint: Boolean = false, canonical: Boolean = false) {
-    writeJson(File(path), prettyPrint, canonical)
+public fun AnyRow.writeJson(path: String, prettyPrint: Boolean = false) {
+    writeJson(File(path), prettyPrint)
 }
 
-public fun AnyRow.writeJson(writer: Appendable, prettyPrint: Boolean = false, canonical: Boolean = false) {
-    writer.append(toJson(prettyPrint, canonical))
+public fun AnyRow.writeJson(writer: Appendable, prettyPrint: Boolean = false) {
+    writer.append(toJson(prettyPrint))
 }
