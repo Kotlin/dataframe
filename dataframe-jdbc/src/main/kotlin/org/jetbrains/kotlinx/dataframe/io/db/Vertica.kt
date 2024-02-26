@@ -41,8 +41,7 @@ public object Vertica : DbType("vertica") {
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? =
         when(tableColumnMetadata.sqlTypeName.uppercase()) {
             "UUID" -> String::class.createType(nullable = tableColumnMetadata.isNullable)
-//            "ARRAY" -> Array::class.createType(arguments = listOf(KTypeProjection.invariant(String::class.starProjectedType)), nullable = tableColumnMetadata.isNullable)
-            "ARRAY" -> String::class.createType(nullable = tableColumnMetadata.isNullable) // TODO understan if we can use the one above
+            "ARRAY" -> String::class.createType(nullable = tableColumnMetadata.isNullable)
             "UNKNOWN" -> String::class.createType(nullable = tableColumnMetadata.isNullable)
             else -> null
         }
