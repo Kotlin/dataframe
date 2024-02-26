@@ -1,55 +1,78 @@
 [versions]
 ksp = "1.9.22-1.0.17"
-kotlinJupyter = "0.11.0-358"
+kotlinJupyter = "0.12.0-139"
+
+# TODO Updating requires major changes all across the project
+# https://github.com/Kotlin/dataframe/issues/364
 ktlint = "3.4.5"
+
+# make sure to sync manually with :generator module
 kotlin = "1.9.22"
-dokka = "1.8.10"
-libsPublisher = "0.0.60-dev-30"
+kotlinpoet = "1.16.0"
+dokka = "1.9.10"
+
+libsPublisher = "1.8.10-dev-43"
+
 # "Bootstrap" version of the dataframe, used in the build itself to generate @DataSchema APIs,
 # dogfood Gradle / KSP plugins in tests and idea-examples modules
-dataframe = "0.12.1"
-korro = "0.1.5"
-kover = "0.6.0-Beta"
+dataframe = "0.13.0-dev-2838"
 
-commonsCsv = "1.8"
-commonsCompress = "1.21"
-klaxon = "5.5"
+# TODO 0.1.6 breaks ktlint, https://github.com/Kotlin/dataframe/issues/598
+korro = "0.1.5"
+
+# TODO Requires more work to be updated to 0.7.0+
+# https://github.com/Kotlin/dataframe/issues/594
+kover = "0.6.1"
+
+commonsCsv = "1.10.0"
+commonsCompress = "1.26.0"
+klaxon = "5.5" # 5.6 requires Java 11
 fuel = "2.3.1"
-poi = "5.2.2"
-mariadb = "3.1.4"
-h2db = "2.2.220"
+poi = "5.2.5"
+mariadb = "3.3.2"
+h2db = "2.2.224"
 mysql = "8.0.33"
-postgresql = "42.6.0"
-sqlite = "3.42.0.1"
+postgresql = "42.7.1"
+sqlite = "3.45.1.0"
 vertica = "24.1.0-0"
-kotlinDatetime = "0.4.0"
-kotlinpoet = "1.12.0"
-openapi = "2.1.13"
-kotlinLogging = "5.0.1"
-sl4j = "2.0.7"
+kotlinDatetime = "0.5.0"
+openapi = "2.1.20"
+kotlinLogging = "6.0.3"
+sl4j = "2.0.12"
 
 junit = "4.13.2"
-kotestAsserions = "4.6.3"
-jsoup = "1.14.3"
-arrow = "11.0.0"
-docProcessor = "0.3.2"
+junit-jupiter = "5.10.2"
+junit-platform = "1.10.2"
+
+# TODO 5.8.0 is not possible due to https://github.com/Kotlin/dataframe/issues/595
+kotestAsserions = "5.5.4"
+
+jsoup = "1.17.2"
+arrow = "15.0.0"
+docProcessor = "0.3.3"
 simpleGit = "2.0.3"
+dependencyVersions = "0.51.0"
+plugin-publish = "1.2.1"
+shadow = "8.1.1"
+android-gradle-api = "7.3.1" # Can't be updated to 7.4.0+ due to Java 8 compatibility
+ktor-server-netty = "2.3.8"
+kotlin-compile-testing = "1.5.0"
 
 [libraries]
 ksp-gradle = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }
 ksp-api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
-jupyter-api = { module = "org.jetbrains.kotlinx:kotlin-jupyter-kernel", version.ref = "kotlinJupyter" }
+jupyter-api = { group = "org.jetbrains.kotlinx", name = "kotlin-jupyter-kernel", version.ref = "kotlinJupyter" }
 
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 kotlin-stdlib-jdk8 = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version.ref = "kotlin" }
 
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
 kotlin-scriptingJvm = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-jvm", version.ref = "kotlin" }
-commonsCsv = { module = "org.apache.commons:commons-csv", version.ref = "commonsCsv" }
-commonsCompress = { module = "org.apache.commons:commons-compress", version.ref = "commonsCompress" }
-klaxon = { module = "com.beust:klaxon", version.ref = "klaxon" }
-fuel = { module = "com.github.kittinunf.fuel:fuel", version.ref = "fuel" }
-poi = { module = "org.apache.poi:poi", version.ref = "poi" }
+commonsCsv = { group = "org.apache.commons", name = "commons-csv", version.ref = "commonsCsv" }
+commonsCompress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commonsCompress" }
+klaxon = { group = "com.beust", name = "klaxon", version.ref = "klaxon" }
+fuel = { group = "com.github.kittinunf.fuel", name = "fuel", version.ref = "fuel" }
+poi = { group = "org.apache.poi", name = "poi", version.ref = "poi" }
 mariadb = { group = "org.mariadb.jdbc", name = "mariadb-java-client", version.ref = "mariadb" }
 h2db = { group = "com.h2database", name = "h2", version.ref = "h2db" }
 mysql = { group = "mysql", name = "mysql-connector-java", version.ref = "mysql" }
@@ -57,12 +80,21 @@ postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "pos
 sqlite = { group = "org.xerial", name = "sqlite-jdbc", version.ref = "sqlite" }
 vertica = { group = "com.vertica.jdbc", name = "vertica-jdbc", version.ref = "vertica" }
 
-poi-ooxml = { module = "org.apache.poi:poi-ooxml", version.ref = "poi" }
-kotlin-datetimeJvm = { module = "org.jetbrains.kotlinx:kotlinx-datetime-jvm", version.ref = "kotlinDatetime" }
+poi-ooxml = { group = "org.apache.poi", name = "poi-ooxml", version.ref = "poi" }
+kotlin-datetimeJvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime-jvm", version.ref = "kotlinDatetime" }
 
-junit = { module = "junit:junit", version.ref = "junit" }
-kotestAssertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotestAsserions" }
-jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+
+junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit-jupiter" }
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit-jupiter" }
+junit-jupiter-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit-jupiter" }
+junit-platform-commons = { group = "org.junit.platform", name = "junit-platform-commons", version.ref = "junit-platform" }
+junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher", version.ref = "junit-platform" }
+junit-platform-runner = { group = "org.junit.platform", name = "junit-platform-runner", version.ref = "junit-platform" }
+junit-platform-suite-api = { group = "org.junit.platform", name = "junit-platform-suite-api", version.ref = "junit-platform" }
+
+kotestAssertions = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotestAsserions" }
+jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
 
 arrow-format = { group = "org.apache.arrow", name = "arrow-format", version.ref = "arrow" }
 arrow-vector = { group = "org.apache.arrow", name = "arrow-vector", version.ref = "arrow" }
@@ -73,9 +105,27 @@ swagger = { group = "io.swagger.parser.v3", name = "swagger-parser", version.ref
 
 kotlinLogging = { group = "io.github.oshai", name = "kotlin-logging", version.ref = "kotlinLogging" }
 sl4j = { group = "org.slf4j", name = "slf4j-simple", version.ref = "sl4j" }
+android-gradle-api = { group = "com.android.tools.build", name = "gradle-api", version.ref = "android-gradle-api" }
+android-gradle = { group = "com.android.tools.build", name = "gradle", version.ref = "android-gradle-api" }
+kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin" }
+kotlin-gradle-plugin-api = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin-api" }
+ktor-server-netty = { group = "io.ktor", name = "ktor-server-netty", version.ref = "ktor-server-netty" }
+kotlin-compile-testing = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing", version.ref = "kotlin-compile-testing" }
+kotlin-compile-testing-ksp = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing-ksp", version.ref = "kotlin-compile-testing" }
+kotlin-compiler = { group = "org.jetbrains.kotlin", name = "kotlin-compiler", version.ref = "kotlin" }
+kotlin-compiler-embeddable = { group = "org.jetbrains.kotlin", name = "kotlin-compiler-embeddable", version.ref = "kotlin" }
+kotlin-compiler-internal-test-framework = { group = "org.jetbrains.kotlin", name = "kotlin-compiler-internal-test-framework", version.ref = "kotlin" }
+kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+kotlin-script-runtime = { group = "org.jetbrains.kotlin", name = "kotlin-script-runtime", version.ref = "kotlin" }
+kotlin-annotations-jvm = { group = "org.jetbrains.kotlin", name = "kotlin-annotations-jvm", version.ref = "kotlin" }
+kotlin-jupyter-test-kit = { group = "org.jetbrains.kotlinx", name = "kotlin-jupyter-test-kit", version.ref = "kotlinJupyter" }
+
+dataframe-symbol-processor = { group = "org.jetbrains.kotlinx.dataframe", name = "symbol-processor-all" }
+
 
 [plugins]
 jupyter-api = { id = "org.jetbrains.kotlin.jupyter.api", version.ref = "kotlinJupyter" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
@@ -86,4 +136,9 @@ kotlinter = { id = "org.jmailen.kotlinter", version.ref = "ktlint" }
 dataframe = { id = "org.jetbrains.kotlinx.dataframe", version.ref = "dataframe" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 docProcessor = { id = "nl.jolanrensen.docProcessor", version.ref = "docProcessor" }
-simpleGit = { id = "xyz.ronella.simple-git", version.ref = "simpleGit"}
+simpleGit = { id = "xyz.ronella.simple-git", version.ref = "simpleGit" }
+serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+dependencyVersions = { id = "com.github.ben-manes.versions", version.ref = "dependencyVersions" }
+plugin-publish = { id = "com.gradle.plugin-publish", version.ref = "plugin-publish" }
+shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }

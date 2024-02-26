@@ -45,7 +45,7 @@ open class GeneratorTask : DefaultTask() {
     }
 
     private fun getKeywords(tokenSet: TokenSet): List<EnumEntry> {
-        fun id(value: String) = value.toUpperCase().replace("!", "NOT_")
+        fun id(value: String) = value.uppercase().replace("!", "NOT_")
 
         return tokenSet.types.map { t ->
             t as KtKeywordToken

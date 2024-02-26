@@ -249,7 +249,26 @@ internal open class ExtensionsCodeGeneratorImpl(
         return "${visibility}val$typeParameters $typeName.$name: $propertyType @JvmName(\"${renderStringLiteral(jvmName)}\") get() = $getter as $propertyType"
     }
 
-    protected fun generateExtensionProperties(marker: IsolatedMarker): Code {
+    /**
+     * nullable properties can be needed when *DECLARED* schema is referenced with nullability:
+     * ```
+     * @DataSchema
+     * data class Schema(val i: Int)
+     *
+     * @DataSchema
+     * data class A(
+     *  val prop: Schema?
+     * )
+     * ```
+     * When converted `listOf<A>().toDataFrame(maxDepth=2)` actual schema is
+     * ```
+     * prop:
+     *     i: Int?
+     * ```
+     * So this sudden `i: Int?` must be somehow handled.
+     * However, REPL code generator will not create such a situation. Nullable properties are not needed then
+     */
+    protected fun generateExtensionProperties(marker: IsolatedMarker, withNullable: Boolean = true): Code {
         val markerName = marker.name
         val markerType = "$markerName${marker.typeArguments}"
         val visibility = renderTopLevelDeclarationVisibility(marker)
@@ -278,7 +297,6 @@ internal open class ExtensionsCodeGeneratorImpl(
 
             declarations.addAll(
                 listOf(
-                    // non nullable
                     generatePropertyCode(
                         marker = marker,
                         shortMarkerName = shortMarkerName,
@@ -296,29 +314,33 @@ internal open class ExtensionsCodeGeneratorImpl(
                         propertyType = fieldType,
                         getter = getter,
                         visibility = visibility,
-                    ),
-
-                    // nullable
-                    generatePropertyCode(
-                        marker = marker,
-                        shortMarkerName = nullableShortMarkerName,
-                        typeName = nullableDfTypename,
-                        name = name.quotedIfNeeded,
-                        propertyType = nullableColumnType,
-                        getter = getter,
-                        visibility = visibility,
-                    ),
-                    generatePropertyCode(
-                        marker = marker,
-                        shortMarkerName = nullableShortMarkerName,
-                        typeName = nullableRowTypename,
-                        name = name.quotedIfNeeded,
-                        propertyType = nullableFieldType,
-                        getter = getter,
-                        visibility = visibility,
-                    ),
+                    )
                 )
             )
+            if (withNullable) {
+                declarations.addAll(
+                    listOf(
+                        generatePropertyCode(
+                            marker = marker,
+                            shortMarkerName = nullableShortMarkerName,
+                            typeName = nullableDfTypename,
+                            name = name.quotedIfNeeded,
+                            propertyType = nullableColumnType,
+                            getter = getter,
+                            visibility = visibility,
+                        ),
+                        generatePropertyCode(
+                            marker = marker,
+                            shortMarkerName = nullableShortMarkerName,
+                            typeName = nullableRowTypename,
+                            name = name.quotedIfNeeded,
+                            propertyType = nullableFieldType,
+                            getter = getter,
+                            visibility = visibility,
+                        )
+                    )
+                )
+            }
         }
         return declarations.joinToString("\n")
     }
@@ -421,7 +443,7 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
         context.generatedMarkers.forEach { itMarker ->
             declarations.add(generateInterface(itMarker, fields, readDfMethod.takeIf { marker == itMarker }))
             if (extensionProperties) {
-                declarations.add(generateExtensionProperties(itMarker))
+                declarations.add(generateExtensionProperties(itMarker, withNullable = false))
             }
         }
         val code = createCodeWithConverter(declarations.joinToString("\n\n"), marker.name)

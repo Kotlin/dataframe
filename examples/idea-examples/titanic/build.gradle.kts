@@ -1,7 +1,11 @@
 plugins {
     application
     kotlin("jvm")
+
     id("org.jetbrains.kotlinx.dataframe")
+
+    // only mandatory if `kotlin.dataframe.add.ksp=false` in gradle.properties
+    id("com.google.devtools.ksp")
 }
 
 repositories {
@@ -14,10 +18,10 @@ application.mainClass.set("org.jetbrains.kotlinx.dataframe.examples.titanic.ml.T
 dependencies {
     // implementation("org.jetbrains.kotlinx:dataframe:X.Y.Z")
     implementation(project(":"))
-    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-api:0.5.1")
-    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-impl:0.5.1")
-    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-tensorflow:0.5.1")
-    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-dataset:0.5.1")
+    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-api:0.5.2")
+    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-impl:0.5.2")
+    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-tensorflow:0.5.2")
+    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-dataset:0.5.2")
 }
 
 dataframes {

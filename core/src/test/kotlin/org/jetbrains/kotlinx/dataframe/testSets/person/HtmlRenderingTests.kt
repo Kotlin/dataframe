@@ -8,7 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.io.toStandaloneHTML
-import org.jetbrains.kotlinx.jupyter.findNthSubstring
+import org.jetbrains.kotlinx.jupyter.util.findNthSubstring
 import org.junit.Ignore
 import org.junit.Test
 import java.awt.Desktop

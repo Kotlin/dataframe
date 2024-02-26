@@ -21,7 +21,7 @@ class OpenApiTests : JupyterReplTestCase() {
     private val additionalImports = openApi.createDefaultReadMethod().additionalImports.joinToString("\n")
 
     private fun execGeneratedCode(code: Code): Code {
-        @Language("kts") val res1 = exec(
+        @Language("kts") val res1 = execRendered(
             """
             $additionalImports
             $code

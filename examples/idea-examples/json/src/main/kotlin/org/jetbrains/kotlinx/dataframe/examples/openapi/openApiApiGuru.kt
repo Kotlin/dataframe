@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 import org.jetbrains.kotlinx.dataframe.api.any
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.print
+import org.jetbrains.kotlinx.dataframe.api.value
 
 /**
  * In this file we'll demonstrate how to use OpenApi schemas
@@ -35,7 +36,7 @@ private fun gradle() {
 
     apis.filter {
         value.versions.value.any {
-            (updated ?: added).year >= 2021
+            (it.updated ?: it.added).year >= 2021
         }
     }
 
