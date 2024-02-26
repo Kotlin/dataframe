@@ -251,7 +251,7 @@ class VerticaTest {
         result[0][23] shouldBe BigDecimal("10")
         result[0][24] shouldBe BigDecimal("10.0000")
         result[0][27] shouldBe TimeTz(Time.valueOf(LocalTime.of(10, 0, 0, 0)), Calendar.getInstance())
-//        result[0][28] shouldBe TimestampTz(Timestamp.valueOf(LocalDateTime.of(2024, 1,1, 10,0,0)), Calendar.getInstance())
+        (result[0][28] as TimestampTz).time shouldBe TimestampTz(Timestamp.valueOf(LocalDateTime.of(2024, 1,1, 10,0,0)), Calendar.getInstance()).time
         result[0][29] shouldBe UUID.fromString("4a866db2-baa6-442a-a371-1f4b5ee627ba")
         (result[0][30] as S42Array).toString() shouldBe "[\"Test\",\"Test1\"]"
         (result[0][31] as VerticaStruct).toString() shouldBe "{\"street\":\"aStreet\",\"city\":\"aCity\"}"
