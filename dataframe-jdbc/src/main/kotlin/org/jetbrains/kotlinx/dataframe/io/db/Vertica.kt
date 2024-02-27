@@ -8,9 +8,9 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 
 /**
- * Represents the MySql database type.
+ * Represents the Vertica database type.
  *
- * This class provides methods to convert data from a ResultSet to the appropriate type for MySql,
+ * This class provides methods to convert data from a ResultSet to the appropriate type for Vertica,
  * and to generate the corresponding column schema.
  */
 public object Vertica : DbType("vertica") {
