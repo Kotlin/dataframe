@@ -1,31 +1,32 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import java.math.BigDecimal
-import java.sql.Connection
-import java.sql.DatabaseMetaData
-import java.sql.DriverManager
-import java.sql.ResultSet
-import java.sql.ResultSetMetaData
-import java.sql.Time
-import java.sql.Timestamp
-import java.sql.Types
-import java.sql.RowId
-import java.sql.Ref
-import java.sql.Clob
-import java.sql.Blob
-import java.sql.NClob
-import java.sql.SQLXML
-import java.util.Date
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
+import org.jetbrains.kotlinx.dataframe.io.db.Vertica
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromUrl
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+import java.math.BigDecimal
+import java.sql.Blob
+import java.sql.Clob
+import java.sql.Connection
+import java.sql.DatabaseMetaData
+import java.sql.DriverManager
+import java.sql.NClob
+import java.sql.Ref
+import java.sql.ResultSet
+import java.sql.ResultSetMetaData
+import java.sql.RowId
+import java.sql.SQLXML
+import java.sql.Time
+import java.sql.Timestamp
+import java.sql.Types
+import java.util.Date
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.isSupertypeOf
@@ -296,7 +297,7 @@ public fun DataFrame.Companion.readAllSqlTables(
         if (!dbType.isSystemTable(table)) {
             // we filter her second time because of specific logic with SQLite and possible issues with future databases
             // val tableName = if (table.catalogue != null) table.catalogue + "." + table.name else table.name
-            val tableName = if (catalogue != null) catalogue + "." + table.name else table.name
+            val tableName = getTableName(catalogue, table, dbType)
 
             // TODO: both cases is schema specified or not in URL
             // in h2 database name is recognized as a schema name https://www.h2database.com/html/features.html#database_url
@@ -305,6 +306,7 @@ public fun DataFrame.Companion.readAllSqlTables(
             logger.debug { "Reading table: $tableName" }
 
             val dataFrame = readSqlTable(connection, tableName, limit)
+
             dataFrames += dataFrame
             logger.debug { "Finished reading table: $tableName" }
         }
@@ -312,6 +314,14 @@ public fun DataFrame.Companion.readAllSqlTables(
 
     return dataFrames
 }
+
+private fun getTableName(catalogue: String?, table: TableMetadata, dbType: DbType) =
+    catalogue
+        ?.let { catalogue + "." + table.name }
+        ?: when (dbType) {
+            Vertica -> "${table.schemaName}.${table.name}" // Vertica needs schema name
+            else -> table.name
+        }
 
 /**
  * Retrieves the schema for an SQL table using the provided database configuration.
@@ -642,7 +652,7 @@ private fun generateKType(dbType: DbType, tableColumnMetadata: TableColumnMetada
  * @param tableColumnMetadata The metadata of the table column.
  * @return The KType associated with the SQL type, or a default type if no mapping is found.
  */
-private fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata): KType {
+public fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata): KType {
     val jdbcTypeToKTypeMapping = mapOf(
         Types.BIT to Boolean::class,
         Types.TINYINT to Int::class,

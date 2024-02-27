@@ -34,6 +34,7 @@ h2db = "2.2.224"
 mysql = "8.0.33"
 postgresql = "42.7.1"
 sqlite = "3.45.1.0"
+vertica = "24.1.0-0"
 kotlinDatetime = "0.5.0"
 openapi = "2.1.20"
 kotlinLogging = "6.0.3"
@@ -77,6 +78,7 @@ h2db = { group = "com.h2database", name = "h2", version.ref = "h2db" }
 mysql = { group = "mysql", name = "mysql-connector-java", version.ref = "mysql" }
 postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgresql" }
 sqlite = { group = "org.xerial", name = "sqlite-jdbc", version.ref = "sqlite" }
+vertica = { group = "com.vertica.jdbc", name = "vertica-jdbc", version.ref = "vertica" }
 
 poi-ooxml = { group = "org.apache.poi", name = "poi-ooxml", version.ref = "poi" }
 kotlin-datetimeJvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime-jvm", version.ref = "kotlinDatetime" }

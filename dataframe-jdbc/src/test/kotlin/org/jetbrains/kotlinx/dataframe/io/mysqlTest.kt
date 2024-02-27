@@ -229,10 +229,38 @@ class MySqlTest {
             @Language("SQL")
             val insertData2 = """
             INSERT INTO table2 (
-                bitCol, tinyintCol, smallintCol, mediumintCol, mediumintUnsignedCol, integerCol, intCol, 
-                integerUnsignedCol, bigintCol, floatCol, doubleCol, decimalCol, dateCol, datetimeCol, timestampCol,
-                timeCol, yearCol, varcharCol, charCol, binaryCol, varbinaryCol, tinyblobCol, blobCol,
-                mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol, location, data
+                bitCol, 
+                tinyintCol, 
+                smallintCol, 
+                mediumintCol, 
+                mediumintUnsignedCol, 
+                integerCol, 
+                intCol, 
+                integerUnsignedCol, 
+                bigintCol, 
+                floatCol, 
+                doubleCol, 
+                decimalCol, 
+                dateCol, 
+                datetimeCol, 
+                timestampCol,
+                timeCol, 
+                yearCol, 
+                varcharCol, 
+                charCol, 
+                binaryCol, 
+                varbinaryCol, 
+                tinyblobCol, 
+                blobCol,
+                mediumblobCol, 
+                longblobCol, 
+                textCol, 
+                mediumtextCol, 
+                longtextCol, 
+                enumCol, 
+                setCol, 
+                location, 
+                data
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ST_GeomFromText('POINT(1 1)'), ?)
         """.trimIndent()
 
