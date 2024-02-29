@@ -1,22 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import java.math.BigDecimal
-import java.sql.Connection
-import java.sql.DatabaseMetaData
-import java.sql.DriverManager
-import java.sql.ResultSet
-import java.sql.ResultSetMetaData
-import java.sql.Time
-import java.sql.Timestamp
-import java.sql.Types
-import java.sql.RowId
-import java.sql.Ref
-import java.sql.Clob
-import java.sql.Blob
-import java.sql.NClob
-import java.sql.SQLXML
-import java.util.Date
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -26,6 +10,22 @@ import org.jetbrains.kotlinx.dataframe.io.db.DbType
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromUrl
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+import java.math.BigDecimal
+import java.sql.Blob
+import java.sql.Clob
+import java.sql.Connection
+import java.sql.DatabaseMetaData
+import java.sql.DriverManager
+import java.sql.NClob
+import java.sql.Ref
+import java.sql.ResultSet
+import java.sql.ResultSetMetaData
+import java.sql.RowId
+import java.sql.SQLXML
+import java.sql.Time
+import java.sql.Timestamp
+import java.sql.Types
+import java.util.Date
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.isSupertypeOf
@@ -139,7 +139,7 @@ public fun DataFrame.Companion.readSqlTable(
     val dbType = extractDBTypeFromUrl(url)
 
     connection.createStatement().use { st ->
-        logger.debug { "Connection with url:${url} is established successfully." }
+        logger.debug { "Connection with url:$url is established successfully." }
 
         st.executeQuery(
             preparedQuery
@@ -492,7 +492,6 @@ private fun generateColumnSchemaValue(
     makeCommonSqlToKTypeMapping(tableColumnMetadata)
 )
 
-
 /**
  * Retrieves the metadata of the columns in the result set.
  *
@@ -688,4 +687,3 @@ private fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata
     val kClass = jdbcTypeToKTypeMapping[tableColumnMetadata.jdbcType] ?: String::class
     return kClass.createType(nullable = tableColumnMetadata.isNullable)
 }
-

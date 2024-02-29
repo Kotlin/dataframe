@@ -3,7 +3,7 @@ plugins {
         alias(kotlin.jvm)
         alias(publisher)
         alias(kover)
-        // TODO enable later: alias(libs.kotlinter)
+        alias(kotlinter)
         alias(jupyter.api)
     }
 }
