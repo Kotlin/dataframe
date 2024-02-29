@@ -4,10 +4,13 @@ import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.select
 import org.junit.AfterClass
 import org.junit.BeforeClass
+import org.junit.Ignore
 import org.junit.Test
 import org.postgresql.util.PGobject
 import java.math.BigDecimal
@@ -15,9 +18,6 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.UUID
-import org.jetbrains.kotlinx.dataframe.api.add
-import org.jetbrains.kotlinx.dataframe.api.select
-import org.junit.Ignore
 import kotlin.reflect.typeOf
 
 private const val URL = "jdbc:postgresql://localhost:5432/test"
@@ -319,31 +319,31 @@ class PostgresTest {
     fun `read columns of different types to check type mapping`() {
         val tableName1 = "table1"
         val df1 = DataFrame.readSqlTable(connection, tableName1).cast<Table1>()
-        val result = df1.select ( "smallintcol" ).add("smallintcol2") {it[Table1::smallintcol]}
+        val result = df1.select("smallintcol").add("smallintcol2") {it[Table1::smallintcol]}
         result[0][1] shouldBe 11
 
-        val result1 = df1.select ( "bigserialcol" ).add("bigserialcol2") {it[Table1::bigserialcol]}
+        val result1 = df1.select("bigserialcol").add("bigserialcol2") {it[Table1::bigserialcol]}
         result1[0][1] shouldBe 1000000001L
 
-        val result2 = df1.select ( "doublecol" ).add("doublecol2") {it[Table1::doublecol]}
+        val result2 = df1.select("doublecol").add("doublecol2") {it[Table1::doublecol]}
         result2[0][1] shouldBe 12.34
 
         val tableName2 = "table2"
         val df2 = DataFrame.readSqlTable(connection, tableName2).cast<Table2>()
 
-        val result3 = df2.select ( "moneycol" ).add("moneycol2") {it[Table2::moneycol]}
+        val result3 = df2.select("moneycol").add("moneycol2") {it[Table2::moneycol]}
         result3[0][1] shouldBe "123,45 ?" // TODO: weird mapping
 
-        val result4 = df2.select ( "numericcol" ).add("numericcol2") {it[Table2::numericcol]}
+        val result4 = df2.select("numericcol").add("numericcol2") {it[Table2::numericcol]}
         result4[0][1] shouldBe BigDecimal("12.34")
 
-        val result5 = df2.select ( "realcol" ).add("realcol2") {it[Table2::realcol]}
+        val result5 = df2.select("realcol").add("realcol2") {it[Table2::realcol]}
         result5[0][1] shouldBe 12.34f
 
-        val result7 = df2.select ( "smallserialcol" ).add("smallserialcol2") {it[Table2::smallserialcol]}
+        val result7 = df2.select("smallserialcol").add("smallserialcol2") {it[Table2::smallserialcol]}
         result7[0][1] shouldBe 1001
 
-        val result8 = df2.select ( "serialcol" ).add("serialcol2") {it[Table2::serialcol]}
+        val result8 = df2.select("serialcol").add("serialcol2") {it[Table2::serialcol]}
         result8[0][1] shouldBe 1000001
 
         val schema = DataFrame.getSchemaForSqlTable(connection, tableName1)

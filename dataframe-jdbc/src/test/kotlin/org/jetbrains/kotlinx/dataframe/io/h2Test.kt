@@ -6,8 +6,10 @@ import org.h2.jdbc.JdbcSQLSyntaxErrorException
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.io.db.H2
 import org.junit.AfterClass
 import org.junit.BeforeClass
@@ -17,8 +19,6 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.SQLException
-import org.jetbrains.kotlinx.dataframe.api.add
-import org.jetbrains.kotlinx.dataframe.api.select
 import kotlin.reflect.typeOf
 
 private const val URL = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false"
@@ -83,7 +83,6 @@ class JdbcTest {
         fun setUpClass() {
             connection =
                 DriverManager.getConnection(URL)
-
 
             // Create table Customer
             @Language("SQL")
@@ -447,7 +446,6 @@ class JdbcTest {
             total_amount DECIMAL(10, 2))
             """
 
-
         @Language("SQL")
         val dropSQL = """
             DROP TABLE Customer
@@ -680,4 +678,3 @@ class JdbcTest {
         saleDataSchema1.columns["amount"]!!.type shouldBe typeOf<BigDecimal>()
     }
 }
-
