@@ -1,10 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
 import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
+import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
 import java.util.Locale
-import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 
@@ -20,8 +20,8 @@ public object PostgreSql : DbType("postgresql") {
 
     override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? {
         // TODO: could be a wrapper of convertSqlTypeToKType
-        if (tableColumnMetadata.sqlTypeName == "money") // because of https://github.com/pgjdbc/pgjdbc/issues/425
-        {
+        // because of https://github.com/pgjdbc/pgjdbc/issues/425
+        if (tableColumnMetadata.sqlTypeName == "money") {
             val kType = String::class.createType(nullable = tableColumnMetadata.isNullable)
             return ColumnSchema.Value(kType)
         }
@@ -29,20 +29,24 @@ public object PostgreSql : DbType("postgresql") {
     }
 
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
-        return tableMetadata.name.lowercase(Locale.getDefault()).contains("pg_")
-            || tableMetadata.schemaName?.lowercase(Locale.getDefault())?.contains("pg_catalog.") ?: false
+        return tableMetadata.name.lowercase(Locale.getDefault()).contains("pg_") ||
+            tableMetadata.schemaName?.lowercase(Locale.getDefault())?.contains("pg_catalog.") ?: false
     }
 
     override fun buildTableMetadata(tables: ResultSet): TableMetadata {
         return TableMetadata(
             tables.getString("table_name"),
             tables.getString("table_schem"),
-            tables.getString("table_cat"))
+            tables.getString("table_cat")
+        )
     }
 
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? {
-        if(tableColumnMetadata.sqlTypeName == "money") // because of https://github.com/pgjdbc/pgjdbc/issues/425
+        // because of https://github.com/pgjdbc/pgjdbc/issues/425
+        if (tableColumnMetadata.sqlTypeName == "money") {
             return String::class.createType(nullable = tableColumnMetadata.isNullable)
+        }
+
         return null
     }
 }

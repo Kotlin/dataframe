@@ -1,9 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
 import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
+import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
-import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import kotlin.reflect.KType
 
 /**
@@ -12,8 +12,6 @@ import kotlin.reflect.KType
  * @property [dbTypeInJdbcUrl] The name of the database as specified in the JDBC URL.
  */
 public abstract class DbType(public val dbTypeInJdbcUrl: String) {
-
-
     /**
      * Represents the JDBC driver class name for a given database type.
      *

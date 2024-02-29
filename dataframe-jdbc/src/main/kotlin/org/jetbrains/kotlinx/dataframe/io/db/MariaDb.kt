@@ -1,9 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
 import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
+import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
-import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 
@@ -18,7 +18,7 @@ public object MariaDb : DbType("mariadb") {
         get() = "org.mariadb.jdbc.Driver"
 
     override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? {
-        if(tableColumnMetadata.sqlTypeName == "SMALLINT") {
+        if (tableColumnMetadata.sqlTypeName == "SMALLINT") {
             val kType = Short::class.createType(nullable = tableColumnMetadata.isNullable)
             return ColumnSchema.Value(kType)
         }
@@ -33,12 +33,14 @@ public object MariaDb : DbType("mariadb") {
         return TableMetadata(
             tables.getString("table_name"),
             tables.getString("table_schem"),
-            tables.getString("table_cat"))
+            tables.getString("table_cat")
+        )
     }
 
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? {
-        if(tableColumnMetadata.sqlTypeName == "SMALLINT")
+        if (tableColumnMetadata.sqlTypeName == "SMALLINT") {
             return Short::class.createType(nullable = tableColumnMetadata.isNullable)
+        }
         return null
     }
 }
