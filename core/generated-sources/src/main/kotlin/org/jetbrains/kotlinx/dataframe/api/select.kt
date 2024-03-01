@@ -262,7 +262,7 @@ public interface SelectColumnsSelectionDsl {
      *  `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `[KProperty][kotlin.reflect.KProperty]`<* | `[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>` | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     * `| `[KProperty][kotlin.reflect.KProperty]`<* | `[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -281,7 +281,7 @@ public interface SelectColumnsSelectionDsl {
      *
      *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**select**][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]**` {`** [colsSelector][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef] **`}`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;**`.`**[**select**][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]**` {`** [colsSelector][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef] **`}`**
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`|`[**` {`**][ColumnsSelectionDsl.select] [colsSelector][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef] [**`}`**][ColumnsSelectionDsl.select]
      *
@@ -299,7 +299,7 @@ public interface SelectColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** .[**select**][ColumnsSelectionDsl.select] */
+        /** **`.`**[**select**][ColumnsSelectionDsl.select] */
         public interface ColumnGroupName
     }
 

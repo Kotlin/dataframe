@@ -58,10 +58,10 @@ public interface ValueColsColumnsSelectionDsl {
         /** [**valueCols**][ColumnsSelectionDsl.valueCols] */
         public interface PlainDslName
 
-        /** .[**valueCols**][ColumnsSelectionDsl.valueCols] */
+        /** \**`.`**[**valueCols**][ColumnsSelectionDsl.valueCols] */
         public interface ColumnSetName
 
-        /** .[**valueCols**][ColumnsSelectionDsl.valueCols] */
+        /** \**`.`**[**valueCols**][ColumnsSelectionDsl.valueCols] */
         public interface ColumnGroupName
     }
 

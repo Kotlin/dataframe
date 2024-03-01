@@ -103,10 +103,10 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
         // region Definitions for at the top of the template
 
         /**
-         * `columnGroupReference: `[String][String]` | `[KProperty][kotlin.reflect.KProperty]`<*>`
+         * `columnGroupReference: `[String][String]`  |  `[KProperty][kotlin.reflect.KProperty]`<*>`
          *
-         * {@include [QuadrupleIndent]}{@include [QuadrupleIndent]}{@include [DoubleIndent]}
-         * | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+         * {@include [QuadrupleIndent]}{@include [QuadrupleIndent]}{@include [Indent]}{@include [HalfIndent]}{@include [QuarterIndent]}
+         * `| `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
          */
         public interface ColumnGroupNoSingleColumnDef
 
@@ -117,7 +117,7 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
         public interface ColumnsSelectorDef
 
         /**
-         * `column: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]` | `[String][String]
+         * `column: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[String][String]
          *
          * {@include [DoubleIndent]}{@include [HalfIndent]}{@include [QuarterIndent]}
          * `| `[KProperty][kotlin.reflect.KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
@@ -128,14 +128,14 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
          * `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
          *
          * {@include [QuadrupleIndent]}{@include [Indent]}{@include [QuarterIndent]}
-         * `| `[KProperty][kotlin.reflect.KProperty]`<* | `[DataRow][DataRow]`<*>>` | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+         * `| `[KProperty][kotlin.reflect.KProperty]`<* | `[DataRow][DataRow]`<*>> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
          */
         public interface ColumnGroupDef
 
-        /** `columnNoAccessor: `[String][String]` | `[KProperty][kotlin.reflect.KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] */
+        /** `columnNoAccessor: `[String][String]`  |  `[KProperty][kotlin.reflect.KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] */
         public interface ColumnNoAccessorDef
 
-        /** `columnOrSet: `{@include [ColumnRef]}` | `{@include [ColumnSetRef]} */
+        /** `columnOrSet: `{@include [ColumnRef]}`  |  `{@include [ColumnSetRef]} */
         public interface ColumnOrColumnSetDef
 
         /** `columnSet: `[ColumnSet][ColumnSet]`<*>` */
@@ -178,7 +178,7 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
         public interface RegexDef
 
         /**
-         * `singleColumn: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>
+         * `singleColumn: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>`
          */
         public interface SingleColumnDef
 

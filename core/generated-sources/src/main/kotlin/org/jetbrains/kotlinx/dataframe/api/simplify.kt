@@ -45,7 +45,7 @@ public interface SimplifyColumnsSelectionDsl {
      *
      *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**simplify**][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify]**`()`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;**`.`**[**simplify**][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify]**`()`**
      *
      *
      *
@@ -63,7 +63,7 @@ public interface SimplifyColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** .[**simplify**][ColumnsSelectionDsl.simplify] */
+        /** **`.`**[**simplify**][ColumnsSelectionDsl.simplify] */
         public interface ColumnSetName
     }
 

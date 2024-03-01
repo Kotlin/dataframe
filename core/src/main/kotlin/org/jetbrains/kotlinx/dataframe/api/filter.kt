@@ -81,7 +81,7 @@ public interface FilterColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** .[**filter**][ColumnsSelectionDsl.filter] */
+        /** \**`.`**[**filter**][ColumnsSelectionDsl.filter] */
         public interface ColumnSetName
     }
 

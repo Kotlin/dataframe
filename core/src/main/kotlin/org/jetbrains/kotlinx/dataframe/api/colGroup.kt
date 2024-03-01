@@ -68,10 +68,10 @@ public interface ColGroupColumnsSelectionDsl {
         /** [**colGroup**][ColumnsSelectionDsl.colGroup] */
         public interface PlainDslName
 
-        /** .[**colGroup**][ColumnsSelectionDsl.colGroup] */
+        /** \**`.`**[**colGroup**][ColumnsSelectionDsl.colGroup] */
         public interface ColumnSetName
 
-        /** .[**colGroup**][ColumnsSelectionDsl.colGroup] */
+        /** \**`.`**[**colGroup**][ColumnsSelectionDsl.colGroup] */
         public interface ColumnGroupName
     }
 

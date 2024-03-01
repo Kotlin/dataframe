@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
 import kotlin.reflect.KProperty
@@ -29,7 +30,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * }
      *
      * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
-     *  {@include [DslGrammarTemplate.ColumnRef]} {@include [Grammar.PlainDslName]} {@include [DslGrammarTemplate.ColumnRef]}
+     *  {@include [DslGrammarTemplate.ColumnRef]}` `{@include [Grammar.PlainDslName]}` `{@include [DslGrammarTemplate.ColumnRef]}
      * }
      * {@set [DslGrammarTemplate.ColumnSetPart]}
      * {@set [DslGrammarTemplate.ColumnGroupPart]}
@@ -44,7 +45,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * ## Range of Columns
      * Creates a [ColumnSet] containing all columns from [this\] up to (and including) [endInclusive\].
      *
-     * Columns inside of column groups are also supported (as long as they share the same direct parent),
+     * Columns inside column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of {@include [AccessApiLink]}.
      *
      * ### Check out: [Grammar]
@@ -63,6 +64,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.allFrom\]
      * @see [ColumnsSelectionDsl.allUpTo\]
      */
+    @ExcludeFromSources
     private interface CommonRangeOfColumnsDocs {
 
         /** Examples key */
@@ -71,63 +73,63 @@ public interface ColumnRangeColumnsSelectionDsl {
 
     /**
      * @include [CommonRangeOfColumnsDocs]
-     * {@set [CommonRangeOfColumnsDocs.Example] "fromColumn"[`..`][String.rangeTo]"toColumn"}
+     * {@set [CommonRangeOfColumnsDocs.Example] \ `"fromColumn"`[`..`][String.rangeTo]`"toColumn"`\ }
      */
     public operator fun String.rangeTo(endInclusive: String): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
     /**
      * @include [CommonRangeOfColumnsDocs]
-     * {@set [CommonRangeOfColumnsDocs.Example] "fromColumn"[`..`][String.rangeTo]Type::toColumn}
+     * {@set [CommonRangeOfColumnsDocs.Example] \ `"fromColumn"`[`..`][String.rangeTo]`Type::toColumn`\ }
      */
     public operator fun String.rangeTo(endInclusive: KProperty<*>): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
     /**
      * @include [CommonRangeOfColumnsDocs]
-     * {@set [CommonRangeOfColumnsDocs.Example] "fromColumn"[`..`][String.rangeTo]toColumn}
+     * {@set [CommonRangeOfColumnsDocs.Example] \ `"fromColumn"`[`..`][String.rangeTo]`toColumn`\ }
      */
     public operator fun String.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive)
 
     /**
      * @include [CommonRangeOfColumnsDocs]
-     * {@set [CommonRangeOfColumnsDocs.Example] Type::fromColumn[`..`][KProperty.rangeTo]"toColumn"}
+     * {@set [CommonRangeOfColumnsDocs.Example] \ `Type::fromColumn`[`..`][KProperty.rangeTo]`"toColumn"`\ }
      */
     public operator fun KProperty<*>.rangeTo(endInclusive: String): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
     /**
      * @include [CommonRangeOfColumnsDocs]
-     * {@set [CommonRangeOfColumnsDocs.Example] Type::fromColumn[`..`][KProperty.rangeTo]Type::toColumn}
+     * {@set [CommonRangeOfColumnsDocs.Example] \ `Type::fromColumn`[`..`][KProperty.rangeTo]`Type::toColumn`\ }
      */
     public operator fun KProperty<*>.rangeTo(endInclusive: KProperty<*>): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
     /**
      * @include [CommonRangeOfColumnsDocs]
-     * {@set [CommonRangeOfColumnsDocs.Example] Type::fromColumn[`..`][KProperty.rangeTo]toColumn}
+     * {@set [CommonRangeOfColumnsDocs.Example] \ `Type::fromColumn`[`..`][KProperty.rangeTo]`toColumn`\ }
      */
     public operator fun KProperty<*>.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive)
 
     /**
      * @include [CommonRangeOfColumnsDocs]
-     * {@set [CommonRangeOfColumnsDocs.Example] fromColumn[`..`][ColumnReference.rangeTo]"toColumn"}
+     * {@set [CommonRangeOfColumnsDocs.Example] \ `fromColumn`[`..`][ColumnReference.rangeTo]`"toColumn"`\ }
      */
     public operator fun AnyColumnReference.rangeTo(endInclusive: String): ColumnSet<*> =
         rangeTo(endInclusive.toColumnAccessor())
 
     /**
      * @include [CommonRangeOfColumnsDocs]
-     * {@set [CommonRangeOfColumnsDocs.Example] fromColumn[`..`][ColumnReference.rangeTo]Type::toColumn}
+     * {@set [CommonRangeOfColumnsDocs.Example] \ `fromColumn`[`..`][ColumnReference.rangeTo]`Type::toColumn`\ }
      */
     public operator fun AnyColumnReference.rangeTo(endInclusive: KProperty<*>): ColumnSet<*> =
         rangeTo(endInclusive.toColumnAccessor())
 
     /**
      * @include [CommonRangeOfColumnsDocs]
-     * {@set [CommonRangeOfColumnsDocs.Example] fromColumn[`..`][ColumnReference.rangeTo]toColumn}
+     * {@set [CommonRangeOfColumnsDocs.Example] \ `fromColumn`[`..`][ColumnReference.rangeTo]`toColumn`\ }
      */
     public operator fun AnyColumnReference.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
         createColumnSet { context ->

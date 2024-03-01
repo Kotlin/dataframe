@@ -39,7 +39,7 @@ public interface SimplifyColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** .[**simplify**][ColumnsSelectionDsl.simplify] */
+        /** \**`.`**[**simplify**][ColumnsSelectionDsl.simplify] */
         public interface ColumnSetName
     }
 

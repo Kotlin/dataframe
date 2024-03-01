@@ -41,19 +41,19 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
      *  {@include [PlainDslNameContains]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`,`** {@include [DslGrammarTemplate.IgnoreCaseRef]}`] | `{@include [DslGrammarTemplate.RegexRef]}**`)`**
      *
-     *  `|` {@include [PlainDslNameStartsEndsWith]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`,`** {@include [DslGrammarTemplate.IgnoreCaseRef]}`]`**`)`**
+     *  `|` {@include [PlainDslNameStartsEndsWith]} **`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`,`** {@include [DslGrammarTemplate.IgnoreCaseRef]}`]`**`)`**
      * }
      *
      * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
      *  {@include [Indent]}{@include [ColumnSetNameContains]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`,`** {@include [DslGrammarTemplate.IgnoreCaseRef]}`] | `{@include [DslGrammarTemplate.RegexRef]}**`)`**
      *
-     *  {@include [Indent]}`|` {@include [ColumnSetNameStartsEndsWith]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`,`** {@include [DslGrammarTemplate.IgnoreCaseRef]}`]`**`)`**
+     *  {@include [Indent]}`|` {@include [ColumnSetNameStartsEndsWith]} **`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`,`** {@include [DslGrammarTemplate.IgnoreCaseRef]}`]`**`)`**
      * }
      *
      * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
      *  {@include [Indent]}{@include [ColumnGroupNameContains]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`,`** {@include [DslGrammarTemplate.IgnoreCaseRef]}`] | `{@include [DslGrammarTemplate.RegexRef]}**`)`**
      *
-     *  {@include [Indent]}`|` {@include [ColumnGroupNameStartsWith]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`,`** {@include [DslGrammarTemplate.IgnoreCaseRef]}`]`**`)`**
+     *  {@include [Indent]}`|` {@include [ColumnGroupNameStartsWith]} **`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`,`** {@include [DslGrammarTemplate.IgnoreCaseRef]}`]`**`)`**
      * }
      */
     public interface Grammar {
@@ -61,20 +61,19 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
         /** [**nameContains**][ColumnsSelectionDsl.nameContains] */
         public interface PlainDslNameContains
 
-        /** {@comment newline because of rendering issue.}
-         * **name**`(`[**Starts**][ColumnsSelectionDsl.nameStartsWith]`|`[**Ends**][ColumnsSelectionDsl.nameEndsWith]`)`**`With`** */
+        /** \**`name`**`(`[**Starts**][ColumnsSelectionDsl.nameStartsWith]`|`[**Ends**][ColumnsSelectionDsl.nameEndsWith]`)`**`With`** */
         public interface PlainDslNameStartsEndsWith
 
-        /** .[**nameContains**][ColumnsSelectionDsl.nameContains] */
+        /** \**`.`**[**nameContains**][ColumnsSelectionDsl.nameContains] */
         public interface ColumnSetNameContains
 
-        /** .**name**`(`[**Starts**][ColumnsSelectionDsl.nameStartsWith]`|`[**Ends**][ColumnsSelectionDsl.nameEndsWith]`)`**`With`** */
+        /** \**`.name`**`(`[**Starts**][ColumnsSelectionDsl.nameStartsWith]`|`[**Ends**][ColumnsSelectionDsl.nameEndsWith]`)`**`With`** */
         public interface ColumnSetNameStartsEndsWith
 
-        /** .[**colsNameContains**][ColumnsSelectionDsl.colsNameContains] */
+        /** \**`.`**[**colsNameContains**][ColumnsSelectionDsl.colsNameContains] */
         public interface ColumnGroupNameContains
 
-        /** .**colsName**`(`[**Starts**][ColumnsSelectionDsl.colsNameStartsWith]`|`[**Ends**][ColumnsSelectionDsl.colsNameEndsWith]`)`**`With`** */
+        /** \**`.colsName`**`(`[**Starts**][ColumnsSelectionDsl.colsNameStartsWith]`|`[**Ends**][ColumnsSelectionDsl.colsNameEndsWith]`)`**`With`** */
         public interface ColumnGroupNameStartsWith
     }
 

@@ -67,10 +67,10 @@ public interface ColColumnsSelectionDsl {
         /** [**col**][ColumnsSelectionDsl.col] */
         public interface PlainDslName
 
-        /** .[**col**][ColumnsSelectionDsl.col] */
+        /** \**`.`**[**col**][ColumnsSelectionDsl.col] */
         public interface ColumnSetName
 
-        /** .[**col**][ColumnsSelectionDsl.col] */
+        /** \**`.`**[**col**][ColumnsSelectionDsl.col] */
         public interface ColumnGroupName
     }
 

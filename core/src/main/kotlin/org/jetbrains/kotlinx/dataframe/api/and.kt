@@ -60,7 +60,7 @@ public interface AndColumnsSelectionDsl {
         /** [**and**][ColumnsSelectionDsl.and] */
         public interface InfixName
 
-        /** .[**and**][ColumnsSelectionDsl.and] */
+        /** \**`.`**[**and**][ColumnsSelectionDsl.and] */
         public interface Name
     }
 

@@ -90,10 +90,10 @@ public interface SingleColumnsSelectionDsl {
         /** [**single**][ColumnsSelectionDsl.single] */
         public interface PlainDslName
 
-        /** .[**single**][ColumnsSelectionDsl.single] */
+        /** \**`.`**[**single**][ColumnsSelectionDsl.single] */
         public interface ColumnSetName
 
-        /** .[**singleCol**][ColumnsSelectionDsl.singleCol] */
+        /** \**`.`**[**singleCol**][ColumnsSelectionDsl.singleCol] */
         public interface ColumnGroupName
     }
 

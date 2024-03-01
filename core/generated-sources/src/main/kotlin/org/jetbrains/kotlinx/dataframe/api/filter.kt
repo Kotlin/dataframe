@@ -88,7 +88,7 @@ public interface FilterColumnsSelectionDsl {
      *
      *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**filter**][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]**` {`** [condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef] **`}`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;**`.`**[**filter**][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]**` {`** [condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef] **`}`**
      *
      *
      *
@@ -107,7 +107,7 @@ public interface FilterColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** .[**filter**][ColumnsSelectionDsl.filter] */
+        /** **`.`**[**filter**][ColumnsSelectionDsl.filter] */
         public interface ColumnSetName
     }
 
