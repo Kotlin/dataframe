@@ -235,7 +235,11 @@ kotlinPublications {
             apache2()
         }
         developers {
-            developer("nikitinas", "Anatoly Nikitin", "Anatoly.Nikitin@jetbrains.com")
+            developer("koperagen", "Nikita Klimenko", "nikita.klimenko@jetbrains.com")
+            developer("Jolanrensen", "Jolan Rensen", "jolan.rensen@jetbrains.com")
+            developer("zaleslaw", "Aleksei Zinovev", "aleksei.zinovev@jetbrains.com")
+            developer("ermolenkodev", "Nikita Ermolenko", "nikita.ermolenko@jetbrains.com")
+            developer("nikitinas", "Anatoly Nikitin", "anatoly.nikitin@jetbrains.com")
         }
     }
 
