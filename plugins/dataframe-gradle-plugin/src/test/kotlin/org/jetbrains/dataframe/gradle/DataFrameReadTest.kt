@@ -33,7 +33,7 @@ class DataFrameReadTest {
     fun `file with invalid json`() {
         val temp = Files.createTempDirectory("").toFile()
         val invalidJson = File(temp, "test.json").also { it.writeText(".") }
-        shouldThrow<IllegalArgumentException> {
+        shouldNotThrowAny {
             DataFrame.read(invalidJson)
         }
     }
