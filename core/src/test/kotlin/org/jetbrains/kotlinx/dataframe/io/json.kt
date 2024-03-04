@@ -20,7 +20,9 @@ import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toDouble
+import org.jetbrains.kotlinx.dataframe.api.toFloat
 import org.jetbrains.kotlinx.dataframe.api.toMap
+import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
@@ -29,6 +31,7 @@ import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.*
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.values
 import org.junit.Test
+import kotlin.math.exp
 import kotlin.reflect.*
 
 class JsonTests {
@@ -382,15 +385,16 @@ class JsonTests {
     fun `NaN float serialization`() {
         val df = dataFrameOf("v")(1.1f, Float.NaN)
         df["v"].type() shouldBe typeOf<Float>()
-        DataFrame.readJsonStr(df.toJson()) shouldBe df.convert("v").toDouble()
+        val actual = DataFrame.readJsonStr(df.toJson()).convert("v").toFloat()
+        actual shouldBe df
     }
 
     @Test
     fun `NaN float serialization Any`() {
         val df = dataFrameOf("v")(1.1f, Float.NaN)
         df["v"].type() shouldBe typeOf<Float>()
-        DataFrame.readJsonStr(df.toJson(), typeClashTactic = ANY_COLUMNS) shouldBe df.convert("v")
-            .toDouble()
+        val actual = DataFrame.readJsonStr(df.toJson(), typeClashTactic = ANY_COLUMNS).convert("v").toFloat()
+        actual shouldBe df
     }
 
     @Test

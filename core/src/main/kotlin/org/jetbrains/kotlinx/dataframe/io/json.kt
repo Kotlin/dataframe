@@ -16,6 +16,8 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.decodeFromStream
 import kotlinx.serialization.json.double
 import kotlinx.serialization.json.doubleOrNull
+import kotlinx.serialization.json.float
+import kotlinx.serialization.json.floatOrNull
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonArray
@@ -465,7 +467,7 @@ internal fun fromJsonListAnyColumns(
                             v.intOrNull != null -> collector.add(v.int)
                             v.longOrNull != null -> collector.add(v.long)
                             v.doubleOrNull != null -> collector.add(v.double)
-                            // v.floatOrNull != null -> collector.add(v.float)
+                            v.floatOrNull != null -> collector.add(v.float)
                             v.jsonPrimitive is JsonNull -> collector.add(null)
                         }
                     }
@@ -779,8 +781,8 @@ internal fun fromJsonListArrayAndValueColumns(
                                         v.booleanOrNull != null -> collector.add(v.boolean)
                                         v.intOrNull != null -> collector.add(v.int)
                                         v.longOrNull != null -> collector.add(v.long)
-                                        //  v.floatOrNull != null -> collector.add(v.float)
                                         v.doubleOrNull != null -> collector.add(v.double)
+                                        v.floatOrNull != null -> collector.add(v.float)
                                         v is JsonNull -> collector.add(null)
                                         else -> collector.add(v)
                                     }
@@ -903,10 +905,6 @@ private val valueTypes =
 @OptIn(ExperimentalSerializationApi::class)
 private fun convert(value: Any?): JsonElement = when (value) {
     is JsonElement -> value
-    is Double -> JsonPrimitive(value)
-    is Float -> JsonPrimitive(value.toDouble()) // It is necessary
-    // because kotlinx-serialization accurately handles Float -> Float,
-    // unlike klaxon.
     is Number -> JsonPrimitive(value)
     is String -> JsonPrimitive(value)
     is Char -> JsonPrimitive(value.toString())
