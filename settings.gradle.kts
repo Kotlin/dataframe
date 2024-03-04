@@ -39,7 +39,5 @@ plugins {
 }
 include("dataframe-excel")
 include("core")
-//include("plugins:dataframe-introspection")
-//findProject(":plugins:dataframe-introspection")?.name = "dataframe-introspection"
 //includeBuild("plugins/extensible-dataframes")
 //findProject(":plugins:extensible-dataframes")?.name = "extensible-dataframes"
