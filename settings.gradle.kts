@@ -38,5 +38,3 @@ plugins {
 }
 include("dataframe-excel")
 include("core")
-//includeBuild("plugins/extensible-dataframes")
-//findProject(":plugins:extensible-dataframes")?.name = "extensible-dataframes"

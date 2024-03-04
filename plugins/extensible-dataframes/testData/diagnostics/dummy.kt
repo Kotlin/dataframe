@@ -1,3 +1,0 @@
-fun dymmy() {
-    println("Hello")
-}
