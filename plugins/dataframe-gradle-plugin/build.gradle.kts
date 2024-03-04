@@ -24,7 +24,8 @@ dependencies {
 
     implementation(libs.kotlin.gradle.plugin.api)
     implementation(libs.kotlin.gradle.plugin)
-    implementation(libs.klaxon)
+    implementation(libs.serialization.core)
+    implementation(libs.serialization.json)
     implementation(libs.ksp.gradle)
     implementation(libs.ksp.api)
 

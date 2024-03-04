@@ -60,16 +60,16 @@ class Write : TestBase() {
         val jsonStr = df.toJson(prettyPrint = true)
         // SampleEnd
         jsonStr shouldStartWith """
-            [{
-              "name": {
-                "firstName": "Alice",
-                "lastName": "Cooper"
-              },
-              "age": 15,
-              "city": "London",
-              "weight": 54,
-              "isHappy": true
-            }
+            [
+                {
+                    "name": {
+                        "firstName": "Alice",
+                        "lastName": "Cooper"
+                    },
+                    "age": 15,
+                    "city": "London",
+                    "weight": 54,
+                    "isHappy": true
         """.rejoinWithSystemLineSeparator()
     }
 
