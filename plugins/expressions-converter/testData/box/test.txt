@@ -1,0 +1,20 @@
+package
+
+package org {
+
+    package org.jetbrains {
+
+        package org.jetbrains.kotlinx {
+
+            package org.jetbrains.kotlinx.dataframe {
+
+                package org.jetbrains.kotlinx.dataframe.explainer {
+                    public fun box(): kotlin.String
+                    public fun ir(): kotlin.Unit
+                    public fun print(/*0*/ any: kotlin.Any): kotlin.Unit
+                    public fun printM(/*0*/ pair: kotlin.Pair<kotlin.String, kotlin.Any>): kotlin.Unit
+                }
+            }
+        }
+    }
+}

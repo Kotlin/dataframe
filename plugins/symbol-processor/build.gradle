@@ -1,7 +1,10 @@
+import org.jetbrains.kotlinx.publisher.PomUtilKt
+
 plugins {
-    id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("org.jetbrains.kotlin.jvm")
-    id("org.jetbrains.kotlin.libs.publisher")
+    alias(libs.plugins.shadow)
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.publisher)
+    alias(libs.plugins.kotlinter)
 }
 
 repositories {
@@ -18,18 +21,21 @@ dependencies {
     implementation(project(":dataframe-arrow"))
     implementation(project(":dataframe-openapi"))
     implementation(project(":dataframe-excel"))
+    implementation(project(":dataframe-jdbc"))
     implementation(libs.ksp.api)
     implementation(libs.kotlin.reflect)
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
-    testImplementation("com.github.tschuchortdev:kotlin-compile-testing:1.4.9")
-    testImplementation("com.github.tschuchortdev:kotlin-compile-testing-ksp:1.4.9")
-    testImplementation("io.ktor:ktor-server-netty:1.6.7")
-    testImplementation("io.kotest:kotest-assertions-core:4.6.0")
+    implementation(libs.h2db)
+    testImplementation(libs.h2db)
+    testImplementation(libs.kotlin.test)
+    testImplementation(libs.kotlin.compile.testing)
+    testImplementation(libs.kotlin.compile.testing.ksp)
+    testImplementation(libs.ktor.server.netty)
+    testImplementation(libs.kotestAssertions)
 }
 
 kotlinPublications {
     pom {
-        use(org.jetbrains.kotlinx.publisher.PomUtilKt) {
+        use(PomUtilKt) {
             githubRepo("Kotlin", "dataframe")
             inceptionYear.set("2021")
             licenses {

@@ -31,6 +31,7 @@ Collected statistics:
 df.describe()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.describe.html"/>
 <!---END-->
 
 To describe only specific columns, pass them as an argument:
@@ -40,7 +41,7 @@ To describe only specific columns, pass them as an argument:
 <tab title="Properties">
 
 ```kotlin
-df.describe { age and name.all() }
+df.describe { age and name.allCols() }
 ```
 
 </tab>
@@ -50,15 +51,16 @@ df.describe { age and name.all() }
 val age by column<Int>()
 val name by columnGroup()
 
-df.describe { age and name.all() }
+df.describe { age and name.allCols() }
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-df.describe { "age" and "name".all() }
+df.describe { "age" and "name".allCols() }
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.describeColumns.html"/>
 <!---END-->

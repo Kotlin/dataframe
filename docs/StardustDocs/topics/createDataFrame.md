@@ -1,11 +1,11 @@
 [//]: # (title: Create DataFrame)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Create-->
 
-This section describes ways to create [`DataFrame`](DataFrame.md).
+This section describes ways to create a [`DataFrame`](DataFrame.md) instance.
 
 ### emptyDataFrame
 
-Returns [`DataFrame`](DataFrame.md) with no rows and no columns.
+Returns a [`DataFrame`](DataFrame.md) with no rows and no columns.
 
 <!---FUN createEmptyDataFrame-->
 
@@ -17,7 +17,7 @@ val df = emptyDataFrame<Any>()
 
 ### dataFrameOf
 
-Returns [`DataFrame`](DataFrame.md) with given column names and values.
+Returns a [`DataFrame`](DataFrame.md) with given column names and values.
 
 <!---FUN createDataFrameOf-->
 
@@ -108,7 +108,7 @@ val df = dataFrameOf(names).fill(15, true)
 
 ### toDataFrame
 
-[`DataFrame`](DataFrame.md) from `Iterable<DataColumn>`:
+Creates a [`DataFrame`](DataFrame.md) from an `Iterable<DataColumn>`:
 
 <!---FUN createDataFrameFromIterable-->
 
@@ -119,6 +119,7 @@ val age by columnOf(15, 20, 22)
 listOf(name, age).toDataFrame()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFromIterable.html"/>
 <!---END-->
 
 `DataFrame` from `Map<String, List<*>>`:
@@ -132,9 +133,25 @@ val map = mapOf("name" to listOf("Alice", "Bob", "Charlie"), "age" to listOf(15,
 map.toDataFrame()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFromMap.html"/>
 <!---END-->
 
-`DataFrame` from `Iterable` of objects:
+Creates a [`DataFrame`](DataFrame.md) from an [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of [basic types](https://kotlinlang.org/docs/basic-types.html) (except arrays):
+
+The return type of these overloads is a typed [`DataFrame`](DataFrame.md).
+Its data schema defines the column that can be used right after the conversion for additional computations.
+
+<!---FUN readDataFrameFromValues-->
+
+```kotlin
+val names = listOf("Alice", "Bob", "Charlie")
+val df: DataFrame<ValueProperty<String>> = names.toDataFrame()
+df.add("length") { value.length }
+```
+
+<!---END-->
+
+Creates a [`DataFrame`](DataFrame.md) from an [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of objects:
 
 <!---FUN readDataFrameFromObject-->
 
@@ -148,9 +165,12 @@ val df = persons.toDataFrame()
 
 <!---END-->
 
-Scans object properties using reflection and creates [ValueColumn](DataColumn.md#valuecolumn) for every property. Scope of properties for scanning is defined at compile-time by formal types of objects in `Iterable`, so properties of implementation classes will not be scanned.
+Scans object properties using reflection and creates a [ValueColumn](DataColumn.md#valuecolumn) for every property. 
+The scope of properties for scanning is defined at compile-time by the formal types of the objects in the [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/),
+so the properties of implementation classes will not be scanned.
 
-Specify `depth` parameter to perform deep object graph traversal and convert nested objects into [ColumnGroups](DataColumn.md#columngroup) and [FrameColumns](DataColumn.md#framecolumn):
+Specify the `depth` parameter to perform deep object graph traversal
+and convert nested objects into [ColumnGroups](DataColumn.md#columngroup) and [FrameColumns](DataColumn.md#framecolumn):
 
 <!---FUN readDataFrameFromDeepObject-->
 
@@ -169,7 +189,9 @@ val df = students.toDataFrame(maxDepth = 1)
 
 <!---END-->
 
-For detailed control over object graph transformation use configuration DSL. It allows you to exclude particular properties or classes from object graph traversal, compute additional columns and configure column grouping.
+For detailed control over object graph transformations, use the configuration DSL.
+It allows you to exclude particular properties or classes from the object graph traversal,
+compute additional columns, and configure column grouping.
 
 <!---FUN readDataFrameFromDeepObjectWithExclude-->
 
@@ -193,3 +215,28 @@ val df = students.toDataFrame {
 ```
 
 <!---END-->
+
+### DynamicDataFrameBuilder
+
+Previously mentioned dataframe constructors throw an exception when column names are duplicated. 
+When implementing a custom operation involving multiple dataframes, or computed columns or when parsing some third-party data,
+it might be desirable to disambiguate column names instead of throwing an exception. 
+
+<!---FUN duplicatedColumns-->
+
+```kotlin
+fun peek(vararg dataframes: AnyFrame): AnyFrame {
+    val builder = DynamicDataFrameBuilder()
+    for (df in dataframes) {
+        df.columns().firstOrNull()?.let { builder.add(it) }
+    }
+    return builder.toDataFrame()
+}
+
+val col by columnOf(1, 2, 3)
+peek(dataFrameOf(col), dataFrameOf(col))
+```
+
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.duplicatedColumns.html"/>
+<!---END-->
+

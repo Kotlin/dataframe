@@ -19,6 +19,8 @@ DataFrame.read("titanic.csv")
 
 <!---END-->
 
+The `titanic.csv` file could be found [here](https://github.com/Kotlin/dataframe/blob/master/data/titanic.csv).
+
 <warning>
 Note that if data frame doesn’t contain column with the string provided, or you try to cast to the wrong type it will lead to runtime exception.
 </warning>

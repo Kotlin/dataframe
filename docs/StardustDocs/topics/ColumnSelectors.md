@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
-[`DataFrame`](DataFrame.md) provides DSL for selecting arbitrary set of columns.
+[`DataFrame`](DataFrame.md) provides a DSL for selecting an arbitrary set of columns.
 
 Column selectors are used in many operations:
 
@@ -10,13 +10,15 @@ Column selectors are used in many operations:
 
 ```kotlin
 df.select { age and name }
-df.fillNaNs { dfsOf<Double>() }.withZero()
+df.fillNaNs { colsAtAnyDepth().colsOf<Double>() }.withZero()
 df.remove { cols { it.hasNulls() } }
+df.group { cols { it.data != name } }.into { "nameless" }
 df.update { city }.notNull { it.lowercase() }
 df.gather { colsOf<Number>() }.into("key", "value")
 df.move { name.firstName and name.lastName }.after { city }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectorsUsages.html"/>
 <!---END-->
 
 **Select columns by name:**
@@ -48,11 +50,11 @@ df.select { name and age }
 // range of columns
 df.select { name..age }
 
-// all children of ColumnGroup
-df.select { name.all() }
+// all columns of ColumnGroup
+df.select { name.allCols() }
 
-// dfs traversal of all children columns
-df.select { name.allDfs() }
+// traversal of columns at any depth from here excluding ColumnGroups
+df.select { name.colsAtAnyDepth { !it.isColumnGroup() } }
 ```
 
 </tab>
@@ -84,11 +86,11 @@ df.select { name and age }
 // range of columns
 df.select { name..age }
 
-// all children of ColumnGroup
-df.select { name.all() }
+// all columns of ColumnGroup
+df.select { name.allCols() }
 
-// dfs traversal of all children columns
-df.select { name.allDfs() }
+// traversal of columns at any depth from here excluding ColumnGroups
+df.select { name.colsAtAnyDepth { !it.isColumnGroup() } }
 ```
 
 </tab>
@@ -117,14 +119,15 @@ df.select { "name" and "age" }
 // by range of names
 df.select { "name".."age" }
 
-// all children of ColumnGroup
-df.select { "name".all() }
+// all columns of ColumnGroup
+df.select { "name".allCols() }
 
-// dfs traversal of all children columns
-df.select { "name".allDfs() }
+// traversal of columns at any depth from here excluding ColumnGroups
+df.select { "name".colsAtAnyDepth { !it.isColumnGroup() } }
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectors.html"/>
 <!---END-->
 
 **Select columns by column index:**
@@ -142,6 +145,7 @@ df.select { cols(0, 1, 3) }
 df.select { cols(1..4) }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.columnsSelectorByIndices.html"/>
 <!---END-->
 
 **Other column selectors:**
@@ -170,17 +174,30 @@ df.select { takeLast(2) }
 df.select { drop(2) }
 df.select { dropLast(2) }
 
-// dfs traversal of all columns, excluding ColumnGroups from result
-df.select { allDfs() }
+// find the first column satisfying the condition
+df.select { first { it.name.startsWith("year") } }
 
-// dfs traversal of all columns, including ColumnGroups in result
-df.select { allDfs(includeGroups = true) }
+// find the last column inside a column group satisfying the condition
+df.select {
+    colGroup("name").lastCol { it.name().endsWith("Name") }
+}
 
-// dfs traversal with condition
-df.select { dfs { it.name().contains(":") } }
+// find the single column inside a column group satisfying the condition
+df.select {
+    Person::name.singleCol { it.name().startsWith("first") }
+}
 
-// dfs traversal of columns of given type
-df.select { dfsOf<String>() }
+// traversal of columns at any depth from here excluding ColumnGroups
+df.select { colsAtAnyDepth { !it.isColumnGroup() } }
+
+// traversal of columns at any depth from here including ColumnGroups
+df.select { colsAtAnyDepth() }
+
+// traversal of columns at any depth with condition
+df.select { colsAtAnyDepth { it.name().contains(":") } }
+
+// traversal of columns at any depth to find columns of given type
+df.select { colsAtAnyDepth().colsOf<String>() }
 
 // all columns except given column set
 df.select { except { colsOf<String>() } }
@@ -189,6 +206,7 @@ df.select { except { colsOf<String>() } }
 df.select { take(2) and col(3) }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectorsMisc.html"/>
 <!---END-->
 
 **Modify the set of selected columns:**
@@ -196,22 +214,23 @@ df.select { take(2) and col(3) }
 <!---FUN columnSelectorsModifySet-->
 
 ```kotlin
-// first/last n columns in column set
-df.select { allDfs().take(3) }
-df.select { allDfs().takeLast(3) }
+// first/last n value- and frame columns in column set
+df.select { colsAtAnyDepth { !it.isColumnGroup() }.take(3) }
+df.select { colsAtAnyDepth { !it.isColumnGroup() }.takeLast(3) }
 
-// all except first/last n columns in column set
-df.select { allDfs().drop(3) }
-df.select { allDfs().dropLast(3) }
+// all except first/last n value- and frame columns in column set
+df.select { colsAtAnyDepth { !it.isColumnGroup() }.drop(3) }
+df.select { colsAtAnyDepth { !it.isColumnGroup() }.dropLast(3) }
 
 // filter column set by condition
-df.select { allDfs().filter { it.name().startsWith("year") } }
+df.select { colsAtAnyDepth { !it.isColumnGroup() }.filter { it.name().startsWith("year") } }
 
 // exclude columns from column set
-df.select { allDfs().except { age } }
+df.select { colsAtAnyDepth { !it.isColumnGroup() }.except { age } }
 
 // keep only unique columns
 df.select { (colsOf<Int>() and age).distinct() }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectorsModifySet.html"/>
 <!---END-->

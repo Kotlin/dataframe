@@ -1,16 +1,17 @@
 # Kotlin Dataframe: typesafe in-memory structured data processing for JVM
 [![JetBrains incubator project](https://jb.gg/badges/incubator.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
 [![Kotlin component alpha stability](https://img.shields.io/badge/project-alpha-kotlin.svg?colorA=555555&colorB=DB3683&label=&logo=kotlin&logoColor=ffffff&logoWidth=10)](https://kotlinlang.org/docs/components-stability.html)
-[![Kotlin](https://img.shields.io/badge/kotlin-1.8.0-blue.svg?logo=kotlin)](http://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.8.20-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![Maven Central](https://img.shields.io/maven-central/v/org.jetbrains.kotlinx/dataframe?color=blue&label=Maven%20Central)](https://search.maven.org/artifact/org.jetbrains.kotlinx/dataframe)
 [![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Kotlin/dataframe/HEAD)
 
-Kotlin Dataframe aims to reconcile Kotlin static typing with dynamic nature of data by utilizing both the full power of Kotlin language and opportunities provided by intermittent code execution in Jupyter notebooks and REPL.   
+Kotlin Dataframe aims to reconcile Kotlin's static typing with the dynamic nature of data by utilizing both the full power of the Kotlin language and the opportunities provided by intermittent code execution in Jupyter notebooks and REPL.   
 
 * **Hierarchical** — represents hierarchical data structures, such as JSON or a tree of JVM objects.
 * **Functional** — data processing pipeline is organized in a chain of `DataFrame` transformation operations. Every operation returns a new instance of `DataFrame` reusing underlying storage wherever it's possible.
 * **Readable** — data transformation operations are defined in DSL close to natural language.
-* **Practical** — provides simple solutions for common problems and ability to perform complex tasks.
+* **Practical** — provides simple solutions for common problems and the ability to perform complex tasks.
 * **Minimalistic** — simple, yet powerful data model of three column kinds.
 * **Interoperable** — convertable with Kotlin data classes and collections.
 * **Generic** — can store objects of any type, not only numbers or strings.
@@ -19,20 +20,82 @@ Kotlin Dataframe aims to reconcile Kotlin static typing with dynamic nature of d
 
 Integrates with [Kotlin kernel for Jupyter](https://github.com/Kotlin/kotlin-jupyter). Inspired by [krangl](https://github.com/holgerbrandl/krangl), Kotlin Collections and [pandas](https://pandas.pydata.org/)
 
+## Documentation
+
 Explore [**documentation**](https://kotlin.github.io/dataframe/overview.html) for details.
+
+You could find the following articles there:
+
+* [Get started with Kotlin DataFrame](https://kotlin.github.io/dataframe/gettingstarted.html)
+* [Working with Data Schemas](https://kotlin.github.io/dataframe/schemas.html)
+* [Full list of all supported operations](https://kotlin.github.io/dataframe/operations.html)
+    * [Reading from SQL databases](https://kotlin.github.io/dataframe/readsqldatabases.html)
+    * [Reading/writing from/to different file formats like JSON, CSV, Apache Arrow](https://kotlin.github.io/dataframe/read.html)
+    * [Joining a few dataframes](https://kotlin.github.io/dataframe/join.html)
+    * [GroupBy operation](https://kotlin.github.io/dataframe/groupby.html)
+* [Rendering to HTML](https://kotlin.github.io/dataframe/tohtml.html#jupyter-notebooks)
 
 ## Setup
 
-### Gradle
-```groovy
-repositories {
-    mavenCentral()
-}
-dependencies {
-    implementation 'org.jetbrains.kotlinx:dataframe:0.9.1'
+```kotlin
+implementation("org.jetbrains.kotlinx:dataframe:0.12.1")
+```
+
+Optional Gradle plugin for enhanced type safety and schema generation
+https://kotlin.github.io/dataframe/schemasgradle.html
+```kotlin
+id("org.jetbrains.kotlinx.dataframe") version "0.12.1"
+```
+
+Check out the [custom setup page](https://kotlin.github.io/dataframe/gettingstartedgradleadvanced.html) if you don't need some of the formats as dependencies,
+for Groovy, and for configurations specific to Android projects.
+
+## Getting started
+
+```kotlin
+import org.jetbrains.kotlinx.dataframe.*
+import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.io.*
+```
+
+```kotlin
+val df = DataFrame.read("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv")
+df["full_name"][0] // Indexing https://kotlin.github.io/dataframe/access.html
+
+df.filter { "stargazers_count"<Int>() > 50 }.print() 
+```
+
+## Getting started with data schema
+
+Requires Gradle plugin to work
+```kotlin
+id("org.jetbrains.kotlinx.dataframe") version "0.12.1"
+```
+
+Plugin generates extension properties API for provided sample of data. Column names and their types become discoverable in completion.
+
+```kotlin
+// Make sure to place the file annotation above the package directive
+@file:ImportDataSchema(
+    "Repository",
+    "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv",
+)
+
+package example
+
+import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+import org.jetbrains.kotlinx.dataframe.api.*
+
+fun main() {
+    // execute `assemble` to generate extension properties API
+    val df = Repository.readCSV()
+    df.fullName[0]
+    
+    df.filter { stargazersCount > 50 }
 }
 ```
-### Jupyter Notebook
+
+## Getting started in Jupyter Notebook / Kotlin Notebook
 
 Install [Kotlin kernel](https://github.com/Kotlin/kotlin-jupyter) for [Jupyter](https://jupyter.org/)
 
@@ -45,6 +108,16 @@ or specific version:
 %use dataframe(<version>)
 ```
 
+```kotlin
+val df = DataFrame.read("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv")
+df // the last expression in the cell is displayed
+```
+
+When a cell with a variable declaration is executed, in the next cell `DataFrame` provides extension properties based on its data 
+```kotlin
+df.filter { stargazers_count > 50 }
+```
+
 ## Data model
 * `DataFrame` is a list of columns with equal sizes and distinct names.
 * `DataColumn` is a named list of values. Can be one of three kinds:
@@ -52,7 +125,9 @@ or specific version:
   * `ColumnGroup` — contains columns
   * `FrameColumn` — contains dataframes
 
-## Usage example
+## Syntax example
+
+Let us show you how data cleaning and aggregation pipelines could look like with DataFrame.
 
 **Create:**
 ```kotlin
@@ -64,6 +139,9 @@ val airline by columnOf("KLM(!)", "{Air France} (12)", "(British Airways. )", "1
 
 // create dataframe
 val df = dataFrameOf(fromTo, flightNumber, recentDelays, airline)
+
+// print dataframe
+df.print()
 ```
 
 **Clean:**
@@ -103,7 +181,7 @@ val clean = df
 clean
     // group by the flight origin renamed into "from"
     .groupBy { origin named "from" }.aggregate {
-        // we are in the context of single data group
+        // we are in the context of a single data group
 
         // total number of flights from origin
         count() into "count"
@@ -118,14 +196,30 @@ clean
         recentDelays.maxOrNull { delay1 and delay2 } into "major delay"
 
         // separate lists of recent delays for `delay1`, `delay2` and `delay3`
-        recentDelays.implode(dropNulls = true) into "recent delays"
+        recentDelays.implode(dropNA = true) into "recent delays"
 
         // total delay per destination
-        pivot { destination }.sum { recentDelays.intCols() } into "total delays to"
+        pivot { destination }.sum { recentDelays.colsOf<Int?>() } into "total delays to"
     }
 ```
 
-[Try it in **Datalore**](https://datalore.jetbrains.com/view/notebook/vq5j45KWkYiSQnACA2Ymij) and explore [**more examples here**](examples).
+Check it out on [**Datalore**](https://datalore.jetbrains.com/view/notebook/vq5j45KWkYiSQnACA2Ymij) to get a better visual impression of what happens and what the hierarchical DataFrame structure looks like. 
+
+Explore [**more examples here**](examples).
+
+## Kotlin, Kotlin Jupyter, OpenAPI, Arrow and JDK versions
+
+This table shows the mapping between main library component versions and minimum supported Java versions.
+
+| Kotlin DataFrame Version | Minimum Java Version | Kotlin Version | Kotlin Jupyter Version | OpenAPI version | Apache Arrow version |
+|--------------------------|----------------------|----------------|------------------------|-----------------|----------------------|
+| 0.10.0                   | 8                    | 1.8.20         | 0.11.0-358             | 3.0.0           | 11.0.0               |
+| 0.10.1                   | 8                    | 1.8.20         | 0.11.0-358             | 3.0.0           | 11.0.0               |
+| 0.11.0                   | 8                    | 1.8.20         | 0.11.0-358             | 3.0.0           | 11.0.0               |
+| 0.11.1                   | 8                    | 1.8.20         | 0.11.0-358             | 3.0.0           | 11.0.0               |
+| 0.12.0                   | 8                    | 1.9.0          | 0.11.0-358             | 3.0.0           | 11.0.0               |
+| 0.12.1                   | 8                    | 1.9.0          | 0.11.0-358             | 3.0.0           | 11.0.0               |
+
 
 ## Code of Conduct
 

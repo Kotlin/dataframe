@@ -6,7 +6,7 @@
 Splits the rows of [`DataFrame`](DataFrame.md) into groups using one or several columns as grouping keys.
 
 ```text
-groupBy { columns }
+groupBy(moveToTop = true) { columns }
       [ transformations ]
       reducer | aggregator | pivot
 
@@ -34,7 +34,6 @@ See [column selectors](ColumnSelectors.md), [groupBy transformations](#transform
 df.groupBy { name }
 df.groupBy { city and name.lastName }
 df.groupBy { age / 10 named "ageDecade" }
-df.groupBy { expr { name.firstName.length + name.lastName.length } named "nameLength" }
 ```
 
 </tab>
@@ -56,8 +55,6 @@ df.groupBy { city and lastName }
 df.groupBy(city, lastName)
 
 df.groupBy { age / 10 named "ageDecade" }
-
-df.groupBy { expr { firstName().length + lastName().length } named "nameLength" }
 ```
 
 </tab>
@@ -67,17 +64,71 @@ df.groupBy { expr { firstName().length + lastName().length } named "nameLength" 
 df.groupBy("name")
 df.groupBy { "city" and "name"["lastName"] }
 df.groupBy { "age"<Int>() / 10 named "ageDecade" }
+```
+
+</tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupBy.html"/>
+<!---END-->
+
+Grouping columns can be created inplace:
+
+<!---FUN groupByExpr-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { expr { name.firstName.length + name.lastName.length } named "nameLength" }
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val name by columnGroup()
+val lastName by name.column<String>()
+val firstName by name.column<String>()
+
+df.groupBy { expr { firstName().length + lastName().length } named "nameLength" }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
 df.groupBy { expr { "name"["firstName"]<String>().length + "name"["lastName"]<String>().length } named "nameLength" }
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByExpr.html"/>
+<!---END-->
+
+With optional `moveToTop` parameter you can choose whether to make a selected *nested column* a top-level column:  
+
+<!---FUN groupByMoveToTop-->
+
+```kotlin
+df.groupBy(moveToTop = true) { name.lastName }
+```
+
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByMoveToTop.html"/>
+<!---END-->
+
+or to keep it inside a `ColumnGroup`:
+
+<!---FUN groupByMoveToTopFalse-->
+
+```kotlin
+df.groupBy(moveToTop = false) { name.lastName }
+```
+
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByMoveToTopFalse.html"/>
 <!---END-->
 
 Returns `GroupBy` object.
 
 ## Transformation
 
-`GroupBy` is a [`DataFrame`](DataFrame.md) with one chosen [`FrameColumn`](DataColumn.md#framecolumn) containing data groups.
+`GroupBy DataFrame` is a [`DataFrame`](DataFrame.md) with one chosen [`FrameColumn`](DataColumn.md#framecolumn) containing data groups.
 
 It supports the following operations:
 * [`add`](add.md)
@@ -86,7 +137,7 @@ It supports the following operations:
 * [`pivot`](pivot.md#pivot-groupby)
 * [`concat`](concat.md)
 
-Any [`DataFrame`](DataFrame.md) with `FrameColumn` can be reinterpreted as `GroupBy`:
+Any [`DataFrame`](DataFrame.md) with `FrameColumn` can be reinterpreted as `GroupBy DataFrame`:
 
 <!---FUN dataFrameToGroupBy-->
 
@@ -100,7 +151,7 @@ df.asGroupBy { data } // convert dataframe to GroupBy by interpreting 'data' col
 
 <!---END-->
 
-And any `GroupBy` can be reinterpreted as `DataFrame` with `FrameColumn`:
+And any [`GroupBy DataFrame`](groupBy.md#transformation) can be reinterpreted as [`DataFrame`](DataFrame.md) with `FrameColumn`:
 
 <!---FUN groupByToFrame-->
 
@@ -108,6 +159,7 @@ And any `GroupBy` can be reinterpreted as `DataFrame` with `FrameColumn`:
 df.groupBy { city }.toDataFrame()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByToFrame.html"/>
 <!---END-->
 
 Use [`concat`](concat.md) to union all data groups of `GroupBy` into original [`DataFrame`](DataFrame.md) preserving new order of rows produced by grouping:
@@ -118,6 +170,7 @@ Use [`concat`](concat.md) to union all data groups of `GroupBy` into original [`
 df.groupBy { name }.concat()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.concatGroupBy.html"/>
 <!---END-->
 
 ## Aggregation
@@ -195,6 +248,7 @@ df.groupBy("city").aggregate {
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByAggregations.html"/>
 <!---END-->
 
 If only one aggregation function is used, column name can be omitted:
@@ -228,9 +282,10 @@ df.groupBy("city").aggregate { maxBy("age")["name"] }
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByAggregateWithoutInto.html"/>
 <!---END-->
 
-Most common aggregation functions can be computed directly at `GroupBy`:
+Most common aggregation functions can be computed directly at [`GroupBy DataFrame`](groupBy.md#transformation) :
 
 <!---FUN groupByDirectAggregations-->
 <tabs>
@@ -298,6 +353,7 @@ df.groupBy("city").meanOf("mean ratio") {
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByDirectAggregations.html"/>
 <!---END-->
 
 To get all column values for every group without aggregation use `values` function:
@@ -338,4 +394,5 @@ df.groupBy("city").values { "weight" into "weights" }
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByWithoutAggregation.html"/>
 <!---END-->

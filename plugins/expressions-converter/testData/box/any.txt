@@ -1,0 +1,25 @@
+package
+
+package org {
+
+    package org.jetbrains {
+
+        package org.jetbrains.kotlinx {
+
+            package org.jetbrains.kotlinx.dataframe {
+
+                package org.jetbrains.kotlinx.dataframe.explainer {
+                    public fun box(): kotlin.String
+
+                    public object PluginCallback {
+                        private constructor PluginCallback()
+                        public final fun doAction(/*0*/ any: kotlin.Any): kotlin.Unit
+                        public open override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
+                        public open override /*1*/ /*fake_override*/ fun hashCode(): kotlin.Int
+                        public open override /*1*/ /*fake_override*/ fun toString(): kotlin.String
+                    }
+                }
+            }
+        }
+    }
+}

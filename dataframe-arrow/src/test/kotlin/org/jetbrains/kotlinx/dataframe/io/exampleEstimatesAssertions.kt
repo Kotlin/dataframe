@@ -158,4 +158,12 @@ internal fun assertEstimations(exampleFrame: AnyFrame, expectedNullable: Boolean
     timeNanoCol.forEachIndexed { i, element ->
         assertValueOrNull(iBatch(i), element, LocalTime.ofNanoOfDay(iBatch(i).toLong()))
     }
+
+    exampleFrame.getColumnOrNull("nulls")?.let { nullCol ->
+        nullCol.type() shouldBe nothingType(hasNulls)
+        assert(hasNulls)
+        nullCol.values().forEach {
+            assert(it == null)
+        }
+    }
 }

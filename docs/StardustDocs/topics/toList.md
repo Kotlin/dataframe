@@ -2,7 +2,8 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Collections-->
 
-Converts [`DataFrame`](DataFrame.md) into a `List` of data class instances by current [`DataFrame`](DataFrame.md) type argument.
+Converts [`DataFrame`](DataFrame.md) into a [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/) 
+of data class instances by current [`DataFrame`](DataFrame.md) type argument.
 
 ```
 toList()
@@ -16,7 +17,7 @@ To export [`DataFrame`](DataFrame.md) into specific type of data class, use `toL
 
 ## toListOf
 
-Converts [`DataFrame`](DataFrame.md) into a `List` of instances of given data class.
+Converts [`DataFrame`](DataFrame.md) into a [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/) of instances of given data class.
 
 <!---FUN listInterop5-->
 

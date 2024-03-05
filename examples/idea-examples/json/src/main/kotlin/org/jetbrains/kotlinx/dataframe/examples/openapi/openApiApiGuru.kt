@@ -3,7 +3,7 @@
     name = "ApiGuruOpenApiKsp",
 )
 @file:ImportDataSchema(
-    path = "https://api.apis.guru/v2/specs/1password.local/connect/1.3.0/openapi.json",
+    path = "https://raw.githubusercontent.com/1Password/connect/aac5e44b27570036e6b56e9f5b2a398a824ae5fc/docs/openapi/spec.yaml",
     name = "OnePassword",
 )
 
@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 import org.jetbrains.kotlinx.dataframe.api.any
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.print
+import org.jetbrains.kotlinx.dataframe.api.value
 
 /**
  * In this file we'll demonstrate how to use OpenApi schemas
@@ -35,7 +36,7 @@ private fun gradle() {
 
     apis.filter {
         value.versions.value.any {
-            (updated ?: added).year >= 2021
+            (it.updated ?: it.added).year >= 2021
         }
     }
 

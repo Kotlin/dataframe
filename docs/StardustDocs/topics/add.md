@@ -5,7 +5,7 @@
 Returns [`DataFrame`](DataFrame.md) which contains all columns from original [`DataFrame`](DataFrame.md) followed by newly added columns. 
 Original [`DataFrame`](DataFrame.md) is not modified.
 
-## Create new column and add it to [`DataFrame`](DataFrame.md)
+## Create a new column and add it to [`DataFrame`](DataFrame.md)
 
 ```text
 add(columnName: String) { rowExpression }
@@ -39,11 +39,13 @@ df.add("year of birth") { 2021 - "age"<Int>() }
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.add.html"/>
 <!---END-->
 
 See [row expressions](DataRow.md#row-expressions)
 
-You can use `newValue()` function to access value that was already calculated for preceding row. It is helpful for recurrent computations:
+You can use the `newValue()` function to access value that was already calculated for the preceding row.
+It is helpful for recurrent computations:
 
 <!---FUN addRecurrent-->
 
@@ -54,6 +56,7 @@ df.add("fibonacci") {
 }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addRecurrent.html"/>
 <!---END-->
 
 ## Create and add several columns to [`DataFrame`](DataFrame.md)
@@ -129,6 +132,7 @@ df.add {
 ```
 
 </tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addMany.html"/>
 <!---END-->
 
 ### Create columns using intermediate result
@@ -139,6 +143,7 @@ Consider this API:
 
 ```kotlin
 class CityInfo(val city: String?, val population: Int, val location: String)
+
 fun queryCityInfo(city: String?): CityInfo {
     return CityInfo(city, city?.length ?: 0, "35.5 32.2")
 }
@@ -203,21 +208,25 @@ df.add(score)
 df + score
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addExisting.html"/>
 <!---END-->
 
 ## Add all columns from another [`DataFrame`](DataFrame.md)
 
-<!---FUN addDfs-->
+<!---FUN addDataFrames-->
 
 ```kotlin
 df.add(df1, df2)
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addDataFrames.html"/>
 <!---END-->
 
 ## addId
 
-Adds column with sequential values 0, 1, 2,... New column will be added in the beginning of columns list and will become the first column in [`DataFrame`](DataFrame.md).
+Adds a column with sequential values 0, 1, 2,...
+The new column will be added in the beginning of the column list
+and will become the first column in [`DataFrame`](DataFrame.md).
 
 ```
 addId(name: String = "id")

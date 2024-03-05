@@ -40,7 +40,7 @@ internal object KspCompilationTestRunner {
         kspCompilation.kspArgs.putAll(params.options)
         kspCompilation.symbolProcessorProviders = listOf(DataFrameSymbolProcessorProvider())
         kspCompilation.compile().also {
-            println(it.messages);
+            println(it.messages)
             if (it.exitCode == KotlinCompilation.ExitCode.COMPILATION_ERROR) {
                 return KotlinCompileTestingCompilationResult(
                     delegate = it,

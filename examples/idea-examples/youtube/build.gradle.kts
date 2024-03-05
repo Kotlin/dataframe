@@ -3,20 +3,24 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     application
     kotlin("jvm")
+
     id("org.jetbrains.kotlinx.dataframe")
+
+    // only mandatory if `kotlin.dataframe.add.ksp=false` in gradle.properties
+    id("com.google.devtools.ksp")
 }
 
 repositories {
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/bootstrap")
+    mavenLocal() // in case of local dataframe development
 }
-
-kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotlin/")
 
 application.mainClass.set("org.jetbrains.kotlinx.dataframe.examples.youtube.YoutubeKt")
 
 dependencies {
-    implementation(project(":core"))
+    // implementation("org.jetbrains.kotlinx:dataframe:X.Y.Z")
+    implementation(project(":"))
     implementation(libs.kotlin.datetimeJvm)
 }
 

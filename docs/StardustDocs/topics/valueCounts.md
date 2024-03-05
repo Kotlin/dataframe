@@ -2,7 +2,8 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 
-Return [`DataFrame`](DataFrame.md) containing counts of unique values in [`DataFrame`](DataFrame.md) or `DataColumn`.
+Return [`DataFrame`](DataFrame.md) containing counts of unique values in [`DataFrame`](DataFrame.md) 
+or [`DataColumn`](DataColumn.md).
 
 ```kotlin
 valueCounts(sort = true, ascending = false, dropNA = false)
@@ -23,4 +24,5 @@ df.city.valueCounts()
 df.valueCounts { name and city }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.valueCounts.html"/>
 <!---END-->

@@ -1,371 +1,491 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.*
-import org.jetbrains.kotlinx.dataframe.ColumnFilter
-import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.Predicate
-import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
-import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
-import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
-import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.columns.renamedReference
-import org.jetbrains.kotlinx.dataframe.impl.columnName
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
-import org.jetbrains.kotlinx.dataframe.impl.columns.DistinctColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
-import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExcept
-import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
-import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
-import org.jetbrains.kotlinx.dataframe.impl.columns.getChildrenAt
-import org.jetbrains.kotlinx.dataframe.impl.columns.single
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
-import org.jetbrains.kotlinx.dataframe.impl.columns.top
-import org.jetbrains.kotlinx.dataframe.impl.columns.transform
-import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
-import org.jetbrains.kotlinx.dataframe.impl.columns.tree.dfs
-import org.jetbrains.kotlinx.dataframe.impl.getColumnsWithPaths
+import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_LIST_DATACOLUMN_GET
+import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_LIST_DATACOLUMN_GET_REPLACE
+import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
-import kotlin.reflect.KType
-import kotlin.reflect.typeOf
 
-public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
+/** [Columns Selection DSL][ColumnsSelectionDsl] */
+internal interface ColumnsSelectionDslLink
 
-    public operator fun <C> ColumnReference<C>.invoke(): DataColumn<C> = get(this)
+@Suppress("UNCHECKED_CAST")
+@PublishedApi
+internal fun <T> ColumnsSelectionDsl<T>.asSingleColumn(): SingleColumn<DataRow<T>> = this as SingleColumn<DataRow<T>>
 
-    public operator fun <T> ColumnReference<DataRow<T>>.invoke(): ColumnGroup<T> = get(this)
+/**
+ * [DslMarker] for [ColumnsSelectionDsl] to prevent accessors being used across scopes for nested
+ * [ColumnsSelectionDsl.select] calls.
+ */
+@DslMarker
+@Target(AnnotationTarget.CLASS, AnnotationTarget.TYPEALIAS, AnnotationTarget.TYPE, AnnotationTarget.FUNCTION)
+public annotation class ColumnsSelectionDslMarker
 
-    public operator fun <T> ColumnReference<DataFrame<T>>.invoke(): FrameColumn<T> = get(this)
+/**
+ * ## Columns Selection DSL
+ * {@include [SelectingColumns.Dsl.WithExample]}
+ * {@set [SelectingColumns.OperationArg] [select][DataFrame.select]}
+ *
+ * @comment This interface be safely cast to [SingleColumn] across the library because it's always
+ * implemented in combination with [DataFrameReceiver] which is a [SingleColumn] itself.
+ * It does not directly implement [SingleColumn] for DSL purposes.
+ */
+@ColumnsSelectionDslMarker
+public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
+    ColumnSelectionDsl<T>,
 
-    public operator fun <C> ColumnPath.invoke(): DataColumn<C> = getColumn(this).cast()
+    // first {}, firstCol()
+    FirstColumnsSelectionDsl,
+    // last {}, lastCol()
+    LastColumnsSelectionDsl,
+    // single {}, singleCol()
+    SingleColumnsSelectionDsl,
 
-    public operator fun <C> String.invoke(): DataColumn<C> = getColumn(this).cast()
+    // col(name), col(5), [5]
+    ColColumnsSelectionDsl,
+    // valueCol(name), valueCol(5)
+    ValueColColumnsSelectionDsl,
+    // frameCol(name), frameCol(5)
+    FrameColColumnsSelectionDsl,
+    // colGroup(name), colGroup(5)
+    ColGroupColumnsSelectionDsl,
 
-    public operator fun String.get(column: String): ColumnPath = pathOf(this, column)
-}
+    // cols {}, cols(), cols(colA, colB), cols(1, 5), cols(1..5), [{}]
+    ColsColumnsSelectionDsl,
 
-public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColumn<DataRow<T>> {
+    // colA.."colB"
+    ColumnRangeColumnsSelectionDsl,
 
-    public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C>): SingleColumn<C> =
-        transform { listOf(it.first(condition)) }.single()
+    // valueCols {}, valueCols()
+    ValueColsColumnsSelectionDsl,
+    // frameCols {}, frameCols()
+    FrameColsColumnsSelectionDsl,
+    // colGroups {}, colGroups()
+    ColGroupsColumnsSelectionDsl,
+    // colsOfKind(Value, Frame) {}, colsOfKind(Value, Frame)
+    ColsOfKindColumnsSelectionDsl,
 
-    public fun <C> ColumnSet<C>.single(condition: ColumnFilter<C>): SingleColumn<C> =
-        transform { listOf(it.single(condition)) }.single()
+    // all(Cols), allAfter(colA), allBefore(colA), allFrom(colA), allUpTo(colA)
+    AllColumnsSelectionDsl,
+    // colsAtAnyDepth {}, colsAtAnyDepth()
+    ColsAtAnyDepthColumnsSelectionDsl,
+    // colsInGroups {}, colsInGroups()
+    ColsInGroupsColumnsSelectionDsl,
+    // take(5), takeLastCols(2), takeLastWhile {}, takeColsWhile {}
+    TakeColumnsSelectionDsl,
+    // drop(5), dropLastCols(2), dropLastWhile {}, dropColsWhile {}
+    DropColumnsSelectionDsl,
 
-    public fun SingleColumn<AnyRow>.col(index: Int): SingleColumn<Any?> = getChildrenAt(index).single()
+    // select {}, TODO due to String.invoke conflict this cannot be moved out of ColumnsSelectionDsl
+    SelectColumnsSelectionDsl,
+    // except(), allExcept {}, allColsExcept {}
+    AllExceptColumnsSelectionDsl,
 
-    public operator fun <C> ColumnSet<C>.get(index: Int): SingleColumn<C> = getAt(index)
+    // nameContains(""), colsNameContains(""), nameStartsWith(""), childrenNameEndsWith("")
+    ColumnNameFiltersColumnsSelectionDsl,
+    // withoutNulls(), colsWithoutNulls()
+    WithoutNullsColumnsSelectionDsl,
+    // distinct()
+    DistinctColumnsSelectionDsl,
+    // none()
+    NoneColumnsSelectionDsl,
+    // colsOf<>(), colsOf<> {}
+    ColsOfColumnsSelectionDsl,
+    // simplify()
+    SimplifyColumnsSelectionDsl,
+    // filter {}
+    FilterColumnsSelectionDsl,
+    // colSet and colB
+    AndColumnsSelectionDsl,
+    // colA named "colB", colA into "colB"
+    RenameColumnsSelectionDsl,
+    // expr {}
+    ExprColumnsSelectionDsl {
 
-    public fun ColumnsContainer<*>.group(name: String): ColumnGroupReference = name.toColumnOf()
+    /**
+     * ## {@include [ColumnsSelectionDslLink]} Grammar
+     *
+     * @include [DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate]
+     *
+     * {@set [DslGrammarTemplate.DefinitionsArg]
+     *  {@include [DslGrammarTemplate.ColumnGroupNoSingleColumnDef]}
+     *
+     *  {@include [DslGrammarTemplate.ColumnSelectorDef]}
+     *
+     *  {@include [DslGrammarTemplate.ColumnsSelectorDef]}
+     *
+     *  {@include [DslGrammarTemplate.ColumnDef]}
+     *
+     *  {@include [DslGrammarTemplate.ColumnGroupDef]}
+     *
+     *  {@include [DslGrammarTemplate.ColumnNoAccessorDef]}
+     *
+     *  {@include [DslGrammarTemplate.ColumnOrColumnSetDef]}
+     *
+     *  {@include [DslGrammarTemplate.ColumnSetDef]}
+     *
+     *  {@include [DslGrammarTemplate.ColumnsResolverDef]}
+     *
+     *  {@include [DslGrammarTemplate.ConditionDef]}
+     *
+     *  {@include [DslGrammarTemplate.ColumnExpressionDef]}
+     *
+     *  {@include [DslGrammarTemplate.IgnoreCaseDef]}
+     *
+     *  {@include [DslGrammarTemplate.IndexDef]}
+     *
+     *  {@include [DslGrammarTemplate.IndexRangeDef]}
+     *
+     *  {@include [DslGrammarTemplate.InferDef]}
+     *
+     *  {@include [DslGrammarTemplate.ColumnKindDef]}
+     *
+     *  {@include [DslGrammarTemplate.KTypeDef]}
+     *
+     *  {@include [DslGrammarTemplate.NameDef]}
+     *
+     *  {@include [DslGrammarTemplate.NumberDef]}
+     *
+     *  {@include [DslGrammarTemplate.RegexDef]}
+     *
+     *  {@include [DslGrammarTemplate.SingleColumnDef]}
+     *
+     *  {@include [DslGrammarTemplate.ColumnTypeDef]}
+     *
+     *  {@include [DslGrammarTemplate.TextDef]}
+     * }
+     * {@comment Plain DSL: -------------------------------------------------------------------------------------------- }
+     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
+     *
+     * {@include [DslGrammarTemplate.ColumnRef]} {@include [ColumnRangeColumnsSelectionDsl.Grammar.PlainDslName]} {@include [DslGrammarTemplate.ColumnRef]}
+     *
+     *  `|` **`this`**`/`**`it`**[**`[`**][cols]{@include [DslGrammarTemplate.ColumnRef]}**`,`**` .. `[**`]`**][cols]
+     *
+     *  `|` **`this`**`/`**`it`**[**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**[**`]`**][cols]
+     *
+     *  `|` {@include [AllColumnsSelectionDsl.Grammar.PlainDslName]}**`()`**
+     *
+     *  `|` **`all`**`(`{@include [AllColumnsSelectionDsl.Grammar.Before]}`|`{@include [AllColumnsSelectionDsl.Grammar.After]}`|`{@include [AllColumnsSelectionDsl.Grammar.From]}`|`{@include [AllColumnsSelectionDsl.Grammar.UpTo]}`)` `(` **`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [DslGrammarTemplate.ColumnSelectorRef]} **`\}`** `)`
+     *
+     *  `|` {@include [AllExceptColumnsSelectionDsl.Grammar.PlainDslName]} **`{ `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**` \}`**
+     *
+     *  `|` {@include [AllExceptColumnsSelectionDsl.Grammar.PlainDslName]}**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**` ..`**`)`**
+     *
+     *  `|` {@include [DslGrammarTemplate.ColumnOrColumnSetRef]} {@include [AndColumnsSelectionDsl.Grammar.InfixName]}` [ `**`{`**` ] `{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}` [ `**`\}`**` ] `
+     *
+     *  `|` {@include [DslGrammarTemplate.ColumnOrColumnSetRef]}{@include [AndColumnsSelectionDsl.Grammar.Name]} **`(`**`|`**`{ `**{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}**` \}`**`|`**`)`**
+     *
+     *  `|` `(`
+     *  {@include [ColColumnsSelectionDsl.Grammar.PlainDslName]}
+     *  `|` {@include [ValueColColumnsSelectionDsl.Grammar.PlainDslName]}
+     *  `|` {@include [FrameColColumnsSelectionDsl.Grammar.PlainDslName]}
+     *  `|` {@include [ColGroupColumnsSelectionDsl.Grammar.PlainDslName]}
+     *  `)[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}` | `{@include [DslGrammarTemplate.IndexRef]}**`)`**
+     *
+     * `|` `(`
+     *  {@include [ColsColumnsSelectionDsl.Grammar.PlainDslName]}
+     *  `|` {@include [ValueColsColumnsSelectionDsl.Grammar.PlainDslName]}
+     *  `|` {@include [FrameColsColumnsSelectionDsl.Grammar.PlainDslName]}
+     *  `|` {@include [ColGroupsColumnsSelectionDsl.Grammar.PlainDslName]}
+     *  `) [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
+     *
+     *  `|` {@include [ColsColumnsSelectionDsl.Grammar.PlainDslName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}**`)`**
+     *
+     *  `|` {@include [ColsAtAnyDepthColumnsSelectionDsl.Grammar.PlainDslName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
+     *
+     *  `|` {@include [ColsInGroupsColumnsSelectionDsl.Grammar.PlainDslName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]
+     *
+     *  `|` {@include [ColsOfColumnsSelectionDsl.Grammar.PlainDslName]}**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**` [` **`(`**{@include [DslGrammarTemplate.KTypeRef]}**`)`** `] [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
+     *
+     *  `|` {@include [ColsOfKindColumnsSelectionDsl.Grammar.PlainDslName]}**`(`**{@include [DslGrammarTemplate.ColumnKindRef]}**`,`**` ..`**`)`**` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
+     *
+     *  `|` {@include [DropColumnsSelectionDsl.Grammar.PlainDslName]}**`(`**{@include [DslGrammarTemplate.NumberRef]}**`)`**
+     *
+     *  `|` {@include [DropColumnsSelectionDsl.Grammar.PlainDslWhileName]}**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**
+     *
+     *  `|` {@include [ExprColumnsSelectionDsl.Grammar.PlainDslName]}**`(`**`[`{@include [DslGrammarTemplate.NameRef]}**`,`**`][`{@include [DslGrammarTemplate.InferRef]}`]`**`)`** **`{ `**{@include [DslGrammarTemplate.ColumnExpressionRef]}**` \}`**
+     *
+     *  `|` `(`
+     *  {@include [FirstColumnsSelectionDsl.Grammar.PlainDslName]}
+     *  `|` {@include [LastColumnsSelectionDsl.Grammar.PlainDslName]}
+     *  `|` {@include [SingleColumnsSelectionDsl.Grammar.PlainDslName]}
+     *  `) [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
+     *
+     *  `|` {@include [ColumnNameFiltersColumnsSelectionDsl.Grammar.PlainDslNameContains]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`,`** {@include [DslGrammarTemplate.IgnoreCaseRef]}`] | `{@include [DslGrammarTemplate.RegexRef]}**`)`**
+     *
+     *  `|` {@include [ColumnNameFiltersColumnsSelectionDsl.Grammar.PlainDslNameStartsEndsWith]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`,`** {@include [DslGrammarTemplate.IgnoreCaseRef]}`]`**`)`**
+     *
+     *  `|` {@include [DslGrammarTemplate.ColumnRef]} {@include [RenameColumnsSelectionDsl.Grammar.InfixNamedName]}`/`{@include [RenameColumnsSelectionDsl.Grammar.InfixIntoName]} {@include [DslGrammarTemplate.ColumnRef]}
+     *
+     *  `|` {@include [DslGrammarTemplate.ColumnRef]}`(`{@include [RenameColumnsSelectionDsl.Grammar.NamedName]}`|`{@include [RenameColumnsSelectionDsl.Grammar.IntoName]}`)`**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`**
+     *
+     *  `|` {@include [NoneColumnsSelectionDsl.Grammar.PlainDslName]}**`()`**
+     *
+     *  `|` {@include [TakeColumnsSelectionDsl.Grammar.PlainDslName]}**`(`**{@include [DslGrammarTemplate.NumberRef]}**`)`**
+     *
+     *  `|` {@include [TakeColumnsSelectionDsl.Grammar.PlainDslWhileName]}**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**
+     *
+     *  `|` {@include [WithoutNullsColumnsSelectionDsl.Grammar.PlainDslName]}**`()`**
+     * }
+     * {@comment ColumnSet: -------------------------------------------------------------------------------------------- }
+     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
+     *
+     *  {@include [Indent]}[**`[`**][ColumnsSelectionDsl.col]{@include [DslGrammarTemplate.IndexRef]}[**`]`**][ColumnsSelectionDsl.col]
+     *
+     *  {@include [Indent]}`|` [**`[`**][cols]{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}[**`]`**][cols]`
+     *
+     *  {@include [Indent]}`|` [**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**[**`]`**][cols]
+     *
+     *  {@include [Indent]}`|` {@include [AllColumnsSelectionDsl.Grammar.ColumnSetName]}**`()`**
+     *
+     *  {@include [Indent]}`|` .**`all`**`(`{@include [AllColumnsSelectionDsl.Grammar.Before]}`|`{@include [AllColumnsSelectionDsl.Grammar.After]}`|`{@include [AllColumnsSelectionDsl.Grammar.From]}`|`{@include [AllColumnsSelectionDsl.Grammar.UpTo]}`)` `(` **`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [DslGrammarTemplate.ConditionRef]} **`\}`** `)`
+     *
+     *  {@include [Indent]}`|` {@include [AndColumnsSelectionDsl.Grammar.Name]} **`(`**`|`**`{ `**{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}**` \}`**`|`**`)`**
+     *
+     *  {@include [Indent]}`|` `(`
+     *  {@include [ColColumnsSelectionDsl.Grammar.ColumnSetName]}
+     *  `|` {@include [ValueColColumnsSelectionDsl.Grammar.ColumnSetName]}
+     *  `|` {@include [FrameColColumnsSelectionDsl.Grammar.ColumnSetName]}
+     *  `|` {@include [ColGroupColumnsSelectionDsl.Grammar.ColumnSetName]}
+     *  `)`**`(`**{@include [DslGrammarTemplate.IndexRef]}**`)`**
+     *
+     *  {@include [Indent]}`|` `(`
+     *  {@include [ColsColumnsSelectionDsl.Grammar.ColumnSetName]}
+     *  `|` {@include [ValueColsColumnsSelectionDsl.Grammar.ColumnSetName]}
+     *  `|` {@include [FrameColsColumnsSelectionDsl.Grammar.ColumnSetName]}
+     *  `|` {@include [ColGroupsColumnsSelectionDsl.Grammar.ColumnSetName]}
+     *  `) [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
+     *
+     *  {@include [Indent]}`|` {@include [ColsColumnsSelectionDsl.Grammar.ColumnSetName]}**`(`**{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}**`)`**
+     *
+     *  {@include [Indent]}`|` {@include [ColsAtAnyDepthColumnsSelectionDsl.Grammar.ColumnSetName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
+     *
+     *  {@include [Indent]}`|` {@include [ColsInGroupsColumnsSelectionDsl.Grammar.ColumnSetName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
+     *
+     *  {@include [Indent]}`|` {@include [ColsOfColumnsSelectionDsl.Grammar.ColumnSetName]}**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**` [` **`(`**{@include [DslGrammarTemplate.KTypeRef]}**`)`** `] [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
+     *
+     *  {@include [Indent]}`|` {@include [ColsOfKindColumnsSelectionDsl.Grammar.ColumnSetName]}**`(`**{@include [DslGrammarTemplate.ColumnKindRef]}**`,`**` ..`**`)`**` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
+     *
+     *  {@include [Indent]}`|` {@include [DistinctColumnsSelectionDsl.Grammar.ColumnSetName]}**`()`**
+     *
+     *  {@include [Indent]}`|` {@include [DropColumnsSelectionDsl.Grammar.ColumnSetName]}**`(`**{@include [DslGrammarTemplate.NumberRef]}**`)`**
+     *
+     *  {@include [Indent]}`|` {@include [DropColumnsSelectionDsl.Grammar.ColumnSetWhileName]}**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**
+     *
+     *  {@include [Indent]}`|` {@include [AllExceptColumnsSelectionDsl.Grammar.ColumnSetName]} `[`**` { `**`]` {@include [DslGrammarTemplate.ColumnsResolverRef]} `[`**` \} `**`]`
+     *
+     *  {@include [Indent]}`|` {@include [AllExceptColumnsSelectionDsl.Grammar.ColumnSetName]} {@include [DslGrammarTemplate.ColumnRef]}
+     *
+     *  {@include [Indent]}`|` .{@include [AllExceptColumnsSelectionDsl.Grammar.ColumnSetName]}**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**` ..`**`)`**
+     *
+     *  {@include [Indent]}`|` {@include [FilterColumnsSelectionDsl.Grammar.ColumnSetName]}**` {`** {@include [DslGrammarTemplate.ConditionRef]} **`\}`**
+     *
+     *  {@include [Indent]}`|` `(`
+     *  {@include [FirstColumnsSelectionDsl.Grammar.ColumnSetName]}
+     *  `|` {@include [LastColumnsSelectionDsl.Grammar.ColumnSetName]}
+     *  `|` {@include [SingleColumnsSelectionDsl.Grammar.ColumnSetName]}
+     *  `) [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
+     *
+     *  {@include [Indent]}`|` {@include [ColumnNameFiltersColumnsSelectionDsl.Grammar.ColumnSetNameStartsEndsWith]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`,`** {@include [DslGrammarTemplate.IgnoreCaseRef]}`]`**`)`**
+     *
+     *  {@include [Indent]}`|` {@include [ColumnNameFiltersColumnsSelectionDsl.Grammar.ColumnSetNameContains]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`,`** {@include [DslGrammarTemplate.IgnoreCaseRef]}`] | `{@include [DslGrammarTemplate.RegexRef]}**`)`**
+     *
+     *  {@include [Indent]}`|` {@include [SimplifyColumnsSelectionDsl.Grammar.ColumnSetName]}**`()`**
+     *
+     *  {@include [Indent]}`|` {@include [TakeColumnsSelectionDsl.Grammar.ColumnSetName]}**`(`**{@include [DslGrammarTemplate.NumberRef]}**`)`**
+     *
+     *  {@include [Indent]}`|` {@include [TakeColumnsSelectionDsl.Grammar.ColumnSetWhileName]}**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**
+     *
+     *  {@include [Indent]}`|` {@include [WithoutNullsColumnsSelectionDsl.Grammar.ColumnSetName]}**`()`**
+     * }
+     * {@comment ColumnGroup: -------------------------------------------------------------------------------------------- }
+     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     *
+     *  {@include [Indent]}`|` [**`[`**][cols]{@include [DslGrammarTemplate.ColumnRef]}**`,`**` ..`[**`]`**][cols]
+     *
+     *  {@include [Indent]}`|` [**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**[**`]`**][cols]
+     *
+     *  {@include [Indent]}`|`[**` {`**][ColumnsSelectionDsl.select] {@include [DslGrammarTemplate.ColumnsSelectorRef]} [**`\}`**][ColumnsSelectionDsl.select]
+     *
+     *  {@include [Indent]}`|` {@include [AllColumnsSelectionDsl.Grammar.ColumnGroupName]}**`()`**
+     *
+     *  {@include [Indent]}`|` .**`allCols`**`(`{@include [AllColumnsSelectionDsl.Grammar.Before]}`|`{@include [AllColumnsSelectionDsl.Grammar.After]}`|`{@include [AllColumnsSelectionDsl.Grammar.From]}`|`{@include [AllColumnsSelectionDsl.Grammar.UpTo]}`)` `(` **`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [DslGrammarTemplate.ColumnSelectorRef]} **`\}`** `)`
+     *
+     *  {@include [Indent]}`|` {@include [AllExceptColumnsSelectionDsl.Grammar.ColumnGroupName]} **` { `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**` \} `**
+     *
+     *  {@include [Indent]}`|` {@include [AllExceptColumnsSelectionDsl.Grammar.ColumnGroupName]}**`(`**{@include [DslGrammarTemplate.ColumnNoAccessorRef]}**`,`**` ..`**`)`**
+     *
+     *  {@include [Indent]}`|` {@include [AndColumnsSelectionDsl.Grammar.Name]} **`(`**`|`**`{ `**{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}**` \}`**`|`**`)`**
+     *
+     *  {@include [Indent]}`| (`
+     *  {@include [ColColumnsSelectionDsl.Grammar.ColumnGroupName]}
+     *  `|` {@include [ValueColColumnsSelectionDsl.Grammar.ColumnGroupName]}
+     *  `|` {@include [FrameColColumnsSelectionDsl.Grammar.ColumnGroupName]}
+     *  `|` {@include [ColGroupColumnsSelectionDsl.Grammar.ColumnGroupName]}
+     *  `)[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}` | `{@include [DslGrammarTemplate.IndexRef]}**`)`**
+     *
+     *  {@include [Indent]}`|` `(`
+     *   {@include [ColsColumnsSelectionDsl.Grammar.ColumnGroupName]}
+     *   `|` {@include [ValueColsColumnsSelectionDsl.Grammar.ColumnGroupName]}
+     *   `|` {@include [FrameColsColumnsSelectionDsl.Grammar.ColumnGroupName]}
+     *   `|` {@include [ColGroupsColumnsSelectionDsl.Grammar.ColumnGroupName]}
+     *   `) [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
+     *
+     *  {@include [Indent]}`|` {@include [ColsColumnsSelectionDsl.Grammar.ColumnGroupName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}**`)`**
+     *
+     *  {@include [Indent]}`|` {@include [ColsAtAnyDepthColumnsSelectionDsl.Grammar.ColumnGroupName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
+     *
+     *  {@include [Indent]}`|` {@include [ColsInGroupsColumnsSelectionDsl.Grammar.ColumnGroupName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
+     *
+     *  {@include [Indent]}`|` {@include [ColumnNameFiltersColumnsSelectionDsl.Grammar.ColumnGroupNameStartsWith]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`,`** {@include [DslGrammarTemplate.IgnoreCaseRef]}`]`**`)`**
+     *
+     *  {@include [Indent]}`|` {@include [ColumnNameFiltersColumnsSelectionDsl.Grammar.ColumnGroupNameContains]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`,`** {@include [DslGrammarTemplate.IgnoreCaseRef]}`] | `{@include [DslGrammarTemplate.RegexRef]}**`)`**
+     *
+     *  {@include [Indent]}`|` {@include [ColsOfKindColumnsSelectionDsl.Grammar.ColumnGroupName]}**`(`**{@include [DslGrammarTemplate.ColumnKindRef]}**`,`**` ..`**`)`**` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
+     *
+     *  {@include [Indent]}`|` {@include [WithoutNullsColumnsSelectionDsl.Grammar.ColumnGroupName]}**`()`**
+     *
+     *  {@include [Indent]}`|` {@include [DropColumnsSelectionDsl.Grammar.ColumnGroupName]}**`(`**{@include [DslGrammarTemplate.NumberRef]}**`)`**
+     *
+     *  {@include [Indent]}`|` {@include [DropColumnsSelectionDsl.Grammar.ColumnGroupWhileName]}**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**
+     *
+     *  {@include [Indent]}`|` {@include [AllExceptColumnsSelectionDsl.Grammar.ColumnGroupExperimentalName]} **` { `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**` \} EXPERIMENTAL!`**
+     *
+     *  {@include [Indent]}`|` {@include [AllExceptColumnsSelectionDsl.Grammar.ColumnGroupExperimentalName]}**`(`**{@include [DslGrammarTemplate.ColumnNoAccessorRef]}**`,`**` ..`**`) EXPERIMENTAL!`**
+     *
+     *  {@include [Indent]}`|` `(`
+     *  {@include [FirstColumnsSelectionDsl.Grammar.ColumnGroupName]}
+     *  `|` {@include [LastColumnsSelectionDsl.Grammar.ColumnGroupName]}
+     *  `|` {@include [SingleColumnsSelectionDsl.Grammar.ColumnGroupName]}
+     *  `) [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
+     *
+     *  {@include [Indent]}`|` {@include [SelectColumnsSelectionDsl.Grammar.ColumnGroupName]}**` {`** {@include [DslGrammarTemplate.ColumnsSelectorRef]} **`\}`**
+     *
+     *  {@include [Indent]}`|` {@include [TakeColumnsSelectionDsl.Grammar.ColumnGroupName]}**`(`**{@include [DslGrammarTemplate.NumberRef]}**`)`**
+     *
+     *  {@include [Indent]}`|` {@include [TakeColumnsSelectionDsl.Grammar.ColumnGroupWhileName]}**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**
+     *
+     *  {@include [LineBreak]}
+     *
+     *  {@include [DslGrammarTemplate.SingleColumnRef]}
+     *
+     *  {@include [Indent]}{@include [ColsOfColumnsSelectionDsl.Grammar.ColumnGroupName]}**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**` [` **`(`**{@include [DslGrammarTemplate.KTypeRef]}**`)`** `] [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
+     *
+     *  {@include [LineBreak]}
+     *
+     *  {@include [DslGrammarTemplate.ColumnGroupNoSingleColumnRef]}
+     *
+     *  {@include [Indent]}{@include [ColsOfColumnsSelectionDsl.Grammar.ColumnGroupName]}**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>(`**{@include [DslGrammarTemplate.KTypeRef]}**`)`** ` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
+     * }
+     */
+    public interface DslGrammar
 
-    public operator fun String.rangeTo(endInclusive: String): ColumnSet<*> = toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
+    /**
+     * Invokes the given [ColumnsSelector] using this [ColumnsSelectionDsl].
+     */
+    public operator fun <C> ColumnsSelector<T, C>.invoke(): ColumnsResolver<C> =
+        this@invoke(this@ColumnsSelectionDsl, this@ColumnsSelectionDsl)
 
-    public operator fun Column.rangeTo(endInclusive: Column): ColumnSet<*> = object : ColumnSet<Any?> {
-        override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<Any?>> {
-            val startPath = this@rangeTo.resolveSingle(context)!!.path
-            val endPath = endInclusive.resolveSingle(context)!!.path
-            val parentPath = startPath.parent()!!
-            require(parentPath == endPath.parent()) { "Start and end columns have different parent column paths" }
-            val parentCol = context.df.getColumnGroup(parentPath)
-            val startIndex = parentCol.getColumnIndex(startPath.name)
-            val endIndex = parentCol.getColumnIndex(endPath.name)
-            return (startIndex..endIndex).map {
-                parentCol.getColumn(it).let {
-                    it.addPath(parentPath + it.name)
-                }
-            }
-        }
-    }
-
-    public fun none(): ColumnSet<*> = ColumnsList<Any?>(emptyList())
-
-    // region cols
-
-    public fun ColumnSet<*>.cols(predicate: (AnyCol) -> Boolean = { true }): ColumnSet<Any?> = colsInternal(predicate)
-
-    public fun <C> ColumnSet<*>.cols(firstCol: ColumnReference<C>, vararg otherCols: ColumnReference<C>): ColumnSet<C> =
-        (listOf(firstCol) + otherCols).let { refs ->
-            transform { it.flatMap { col -> refs.mapNotNull { col.getChild(it) } } }
-        }
-
-    public fun ColumnSet<*>.cols(firstCol: String, vararg otherCols: String): ColumnSet<Any?> =
-        (listOf(firstCol) + otherCols).let { names ->
-            transform { it.flatMap { col -> names.mapNotNull { col.getChild(it) } } }
-        }
-
-    public fun ColumnSet<*>.cols(vararg indices: Int): ColumnSet<Any?> =
-        transform { it.flatMap { it.children().let { children -> indices.map { children[it] } } } }
-
-    public fun ColumnSet<*>.cols(range: IntRange): ColumnSet<Any?> =
-        transform { it.flatMap { it.children().subList(range.start, range.endInclusive + 1) } }
-
-    // region select
-
-    public fun <C> ColumnSet<DataRow<C>>.select(vararg columns: String): ColumnSet<*> = select { columns.toColumns() }
-
-    public fun <C, R> ColumnSet<DataRow<C>>.select(vararg columns: KProperty<R>): ColumnSet<R> = select { columns.toColumns() }
-
-    public fun <C, R> ColumnSet<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> = createColumnSet {
-        this@select.resolve(it).flatMap { group ->
-            group.asColumnGroup().getColumnsWithPaths(selector).map {
-                it.changePath(group.path + it.path)
-            }
-        }
-    }
-
-    // endregion
-
-    // endregion
-
-    // region dfs
-
-    public fun <C> ColumnSet<C>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<Any?> = dfsInternal(predicate)
-
-    public fun String.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> = toColumnAccessor().dfs(predicate)
-
-    // endregion
-
-    // region all
-
-    public fun SingleColumn<*>.all(): ColumnSet<*> = transformSingle { it.children() }
-
-    public fun String.all(): ColumnSet<*> = toColumnAccessor().transformSingle { it.children() }
-
-    // region allDfs
-
-    public fun ColumnSet<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> = if (includeGroups) dfs { true } else dfs { !it.isColumnGroup() }
-
-    public fun String.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> = toColumnAccessor().allDfs(includeGroups)
-
-    // endregion
-
-    // region allAfter
-
-    // excluding current
-    public fun SingleColumn<*>.allAfter(colPath: ColumnPath): ColumnSet<Any?> {
-        var take = false
-        return children {
-            if (take) true
-            else {
-                take = colPath == it.path
-                false
-            }
-        }
-    }
-
-    public fun SingleColumn<*>.allAfter(colName: String): ColumnSet<Any?> = allAfter(pathOf(colName))
-    public fun SingleColumn<*>.allAfter(column: Column): ColumnSet<Any?> = allAfter(column.path())
-
-    // endregion
-
-    // region allSince
-
-    // including current
-    public fun SingleColumn<*>.allSince(colPath: ColumnPath): ColumnSet<Any?> {
-        var take = false
-        return children {
-            if (take) true
-            else {
-                take = colPath == it.path
-                take
-            }
-        }
-    }
-
-    public fun SingleColumn<*>.allSince(colName: String): ColumnSet<Any?> = allSince(pathOf(colName))
-    public fun SingleColumn<*>.allSince(column: Column): ColumnSet<Any?> = allSince(column.path())
-
-    // endregion
-
-    // region allBefore
-
-    // excluding current
-    public fun SingleColumn<*>.allBefore(colPath: ColumnPath): ColumnSet<Any?> {
-        var take = true
-        return children {
-            if (!take) false
-            else {
-                take = colPath != it.path
-                take
-            }
-        }
-    }
-
-    public fun SingleColumn<*>.allBefore(colName: String): ColumnSet<Any?> = allBefore(pathOf(colName))
-    public fun SingleColumn<*>.allBefore(column: Column): ColumnSet<Any?> = allBefore(column.path())
-
-    // endregion
-
-    // region allUntil
-
-    // including current
-    public fun SingleColumn<*>.allUntil(colPath: ColumnPath): ColumnSet<Any?> {
-        var take = true
-        return children {
-            if (!take) false
-            else {
-                take = colPath != it.path
-                true
-            }
-        }
-    }
-
-    public fun SingleColumn<*>.allUntil(colName: String): ColumnSet<Any?> = allUntil(pathOf(colName))
-    public fun SingleColumn<*>.allUntil(column: Column): ColumnSet<Any?> = allUntil(column.path())
-
-    // endregion
-
-    // endregion
-
-    public fun SingleColumn<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): ColumnSet<AnyRow> =
-        children { it.isColumnGroup() && filter(it.asColumnGroup()) } as ColumnSet<AnyRow>
-
-    public fun <C> ColumnSet<C>.children(predicate: (ColumnWithPath<Any?>) -> Boolean = { true }): ColumnSet<Any?> =
-        transform { it.flatMap { it.children().filter { predicate(it) } } }
-
-    public fun ColumnGroupReference.children(): ColumnSet<Any?> = transformSingle { it.children() }
-
+    /**
+     * ## Deprecated: Columns by Index Range from List of Columns
+     * Helper function to create a [ColumnSet] from a list of columns by specifying a range of indices.
+     *
+     * ### Deprecated
+     *
+     * Deprecated because it's too niche. Let us know if you have a good use for it!
+     */
+    @Deprecated(
+        message = COL_SELECT_DSL_LIST_DATACOLUMN_GET,
+        replaceWith = ReplaceWith(COL_SELECT_DSL_LIST_DATACOLUMN_GET_REPLACE),
+        level = DeprecationLevel.WARNING,
+    )
     public operator fun <C> List<DataColumn<C>>.get(range: IntRange): ColumnSet<C> =
         ColumnsList(subList(range.first, range.last + 1))
 
-    public fun <C> col(property: KProperty<C>): ColumnAccessor<C> = property.toColumnAccessor()
+    // region select
+    // NOTE: due to invoke conflicts these cannot be moved out of the interface
 
-    public operator fun ColumnSet<*>.get(colName: String): ColumnSet<Any?> = transform { it.mapNotNull { it.getChild(colName) } }
-    public operator fun <C> ColumnSet<*>.get(column: ColumnReference<C>): ColumnSet<C> = cols(column)
+    /**
+     * @include [SelectColumnsSelectionDsl.CommonSelectDocs]
+     * @set [SelectColumnsSelectionDsl.CommonSelectDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { myColGroup.`[select][SingleColumn.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     *
+     * `df.`[select][DataFrame.select]` { myColGroup `[{][SingleColumn.select]` colA `[and][ColumnsSelectionDsl.and]` colB `[}][SingleColumn.select]` }`
+     */
+    public operator fun <C, R> SingleColumn<DataRow<C>>.invoke(selector: ColumnsSelector<C, R>): ColumnSet<R> =
+        select(selector)
 
-    public fun SingleColumn<AnyRow>.take(n: Int): ColumnSet<*> = transformSingle { it.children().take(n) }
-    public fun SingleColumn<AnyRow>.takeLast(n: Int): ColumnSet<*> = transformSingle { it.children().takeLast(n) }
-    public fun SingleColumn<AnyRow>.drop(n: Int): ColumnSet<*> = transformSingle { it.children().drop(n) }
-    public fun SingleColumn<AnyRow>.dropLast(n: Int = 1): ColumnSet<*> = transformSingle { it.children().dropLast(n) }
+    /**
+     * @include [SelectColumnsSelectionDsl.CommonSelectDocs]
+     * @set [SelectColumnsSelectionDsl.CommonSelectDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[select][KProperty.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     *
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup `[`{`][KProperty.select]` colA `[and][ColumnsSelectionDsl.and]` colB `[`}`][KProperty.select]` }`
+     *
+     * ## NOTE: {@comment TODO fix warning}
+     * If you get a warning `CANDIDATE_CHOSEN_USING_OVERLOAD_RESOLUTION_BY_LAMBDA_ANNOTATION`, you
+     * can safely ignore this. It is caused by a workaround for a bug in the Kotlin compiler
+     * ([KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)).
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("KPropertyDataRowInvoke")
+    public operator fun <C, R> KProperty<DataRow<C>>.invoke(selector: ColumnsSelector<C, R>): ColumnSet<R> =
+        select(selector)
 
-    public fun <C> ColumnSet<C>.drop(n: Int): ColumnSet<C> = transform { it.drop(n) }
-    public fun <C> ColumnSet<C>.take(n: Int): ColumnSet<C> = transform { it.take(n) }
-    public fun <C> ColumnSet<C>.dropLast(n: Int = 1): ColumnSet<C> = transform { it.dropLast(n) }
-    public fun <C> ColumnSet<C>.takeLast(n: Int): ColumnSet<C> = transform { it.takeLast(n) }
-    public fun <C> ColumnSet<C>.top(): ColumnSet<C> = transform { it.top() }
-    public fun <C> ColumnSet<C>.takeWhile(predicate: Predicate<ColumnWithPath<C>>): ColumnSet<C> =
-        transform { it.takeWhile(predicate) }
+    /**
+     * @include [SelectColumnsSelectionDsl.CommonSelectDocs]
+     * @set [SelectColumnsSelectionDsl.CommonSelectDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[select][KProperty.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     *
+     * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup `[`{`][KProperty.select]` colA `[and][ColumnsSelectionDsl.and]` colB `[`}`][KProperty.select]` }`
+     */
+    @OptIn(ExperimentalTypeInference::class)
+    @OverloadResolutionByLambdaReturnType
+    public operator fun <C, R> KProperty<C>.invoke(selector: ColumnsSelector<C, R>): ColumnSet<R> =
+        columnGroup(this).select(selector)
 
-    public fun <C> ColumnSet<C>.takeLastWhile(predicate: Predicate<ColumnWithPath<C>>): ColumnSet<C> =
-        transform { it.takeLastWhile(predicate) }
+    /**
+     * @include [SelectColumnsSelectionDsl.CommonSelectDocs]
+     * @set [SelectColumnsSelectionDsl.CommonSelectDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { "myColGroup".`[select][String.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     *
+     * `df.`[select][DataFrame.select]` { "myColGroup" `[{][String.select]` colA `[and][ColumnsSelectionDsl.and]` colB `[}][String.select]` }`
+     */
+    public operator fun <R> String.invoke(selector: ColumnsSelector<*, R>): ColumnSet<R> =
+        select(selector)
 
-    public fun <C> ColumnSet<C>.filter(predicate: Predicate<ColumnWithPath<C>>): ColumnSet<C> =
-        transform { it.filter(predicate) }
-
-    public fun ColumnSet<*>.nameContains(text: CharSequence): ColumnSet<Any?> = cols { it.name.contains(text) }
-    public fun ColumnSet<*>.nameContains(regex: Regex): ColumnSet<Any?> = cols { it.name.contains(regex) }
-    public fun ColumnSet<*>.startsWith(prefix: CharSequence): ColumnSet<Any?> = cols { it.name.startsWith(prefix) }
-    public fun ColumnSet<*>.endsWith(suffix: CharSequence): ColumnSet<Any?> = cols { it.name.endsWith(suffix) }
-
-    public fun <C> ColumnSet<C>.except(vararg other: ColumnSet<*>): ColumnSet<*> = except(other.toColumns())
-    public fun <C> ColumnSet<C>.except(vararg other: String): ColumnSet<*> = except(other.toColumns())
-
-    public fun <C> ColumnSet<C?>.withoutNulls(): ColumnSet<C> = transform { it.filter { !it.hasNulls } } as ColumnSet<C>
-
-    public infix fun <C> ColumnSet<C>.except(other: ColumnSet<*>): ColumnSet<*> =
-        createColumnSet { resolve(it).allColumnsExcept(other.resolve(it)) }
-
-    public infix fun <C> ColumnSet<C>.except(selector: ColumnsSelector<T, *>): ColumnSet<C> =
-        except(selector.toColumns()) as ColumnSet<C>
-
-    public operator fun <C> ColumnsSelector<T, C>.invoke(): ColumnSet<C> =
-        this(this@ColumnsSelectionDsl, this@ColumnsSelectionDsl)
-
-    public infix fun <C> ColumnReference<C>.into(newName: String): ColumnReference<C> = named(newName)
-    public infix fun <C> ColumnReference<C>.into(column: ColumnAccessor<*>): ColumnReference<C> = into(column.name())
-    public infix fun <C> ColumnReference<C>.into(column: KProperty<*>): ColumnReference<C> = named(column.columnName)
-
-    public infix fun String.into(newName: String): ColumnReference<Any?> = toColumnAccessor().into(newName)
-    public infix fun String.into(column: ColumnAccessor<*>): ColumnReference<Any?> = toColumnAccessor().into(column.name())
-    public infix fun String.into(column: KProperty<*>): ColumnReference<Any?> = toColumnAccessor().into(column.columnName)
-
-    public infix fun <C> ColumnReference<C>.named(newName: String): ColumnReference<C> = renamedReference(newName)
-    public infix fun <C> ColumnReference<C>.named(name: KProperty<*>): ColumnReference<C> = named(name.columnName)
-
-    public infix fun String.named(newName: String): ColumnReference<Any?> = toColumnAccessor().named(newName)
-
-    // region and
-
-    // region String
-    public infix fun String.and(other: String): ColumnSet<Any?> = toColumnAccessor() and other.toColumnAccessor()
-    public infix fun <C> String.and(other: ColumnSet<C>): ColumnSet<Any?> = toColumnAccessor() and other
-    public infix fun <C> String.and(other: KProperty<C>): ColumnSet<Any?> = toColumnAccessor() and other
-    public infix fun <C> String.and(other: ColumnsSelector<T, C>): ColumnSet<Any?> = toColumnAccessor() and other()
-
-    // endregion
-
-    // region KProperty
-    public infix fun <C> KProperty<C>.and(other: ColumnSet<C>): ColumnSet<C> = toColumnAccessor() and other
-    public infix fun <C> KProperty<C>.and(other: String): ColumnSet<Any?> = toColumnAccessor() and other
-    public infix fun <C> KProperty<C>.and(other: KProperty<C>): ColumnSet<C> =
-        toColumnAccessor() and other.toColumnAccessor()
-    public infix fun <C> KProperty<C>.and(other: ColumnsSelector<T, C>): ColumnSet<C> = toColumnAccessor() and other()
+    /**
+     * @include [SelectColumnsSelectionDsl.CommonSelectDocs]
+     * @set [SelectColumnsSelectionDsl.CommonSelectDocs.ExampleArg]
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[select][ColumnPath.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"] `[{][ColumnPath.select]` colA `[and][ColumnsSelectionDsl.and]` colB `[}][ColumnPath.select]` }`
+     *
+     * `df.`[select][DataFrame.select]` { `[pathOf][pathOf]`("pathTo", "myColGroup").`[select][ColumnPath.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     *
+     * `df.`[select][DataFrame.select]` { `[pathOf][pathOf]`("pathTo", "myColGroup")`[() {][ColumnPath.select]` someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() `[}][ColumnPath.select]` }`
+     */
+    public operator fun <R> ColumnPath.invoke(selector: ColumnsSelector<*, R>): ColumnSet<R> =
+        select(selector)
 
     // endregion
-
-    // region ColumnSet
-
-    public infix fun <C> ColumnSet<C>.and(other: KProperty<C>): ColumnSet<C> = this and other.toColumnAccessor()
-    public infix fun <C> ColumnSet<C>.and(other: String): ColumnSet<Any?> = this and other.toColumnAccessor()
-    @Interpretable("And10")
-    public infix fun <C> ColumnSet<C>.and(other: ColumnSet<C>): ColumnSet<C> = ColumnsList(this, other)
-    public infix fun <C> ColumnSet<C>.and(other: ColumnsSelector<T, C>): ColumnSet<C> = this and other()
-
-    // endregion
-
-    // region ColumnsSelector
-
-    public infix fun <C> ColumnsSelector<T, C>.and(other: KProperty<C>): ColumnSet<C> = this() and other
-    public infix fun <C> ColumnsSelector<T, C>.and(other: String): ColumnSet<Any?> = this() and other
-    public infix fun <C> ColumnsSelector<T, C>.and(other: ColumnSet<C>): ColumnSet<C> = this() and other
-    public infix fun <C> ColumnsSelector<T, C>.and(other: ColumnsSelector<T, C>): ColumnSet<C> = this() and other
-
-    // endregion
-
-    public fun <C> ColumnSet<C>.distinct(): ColumnSet<C> = DistinctColumnSet(this)
 }
-
-public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(
-    name: String = "",
-    infer: Infer = Infer.Nulls,
-    noinline expression: AddExpression<T, R>
-): DataColumn<R> = mapToColumn(name, infer, expression)
-
-internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) -> Boolean): ColumnsSelector<T, C> =
-    { this@filter(it, it).filter(predicate) }
-// internal fun Columns<*>.filter(predicate: (AnyCol) -> Boolean) = transform { it.filter { predicate(it.data) } }
-
-internal fun ColumnSet<*>.colsInternal(predicate: (AnyCol) -> Boolean) =
-    transform { it.flatMap { it.children().filter { predicate(it.data) } } }
-
-internal fun ColumnSet<*>.dfsInternal(predicate: (ColumnWithPath<*>) -> Boolean) =
-    transform { it.filter { it.isColumnGroup() }.flatMap { it.children().dfs().filter(predicate) } }
-
-public fun <C> ColumnSet<*>.dfsOf(type: KType, predicate: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<*> =
-    dfsInternal { it.isSubtypeOf(type) && predicate(it.cast()) }
-
-public inline fun <reified C> ColumnSet<*>.dfsOf(noinline filter: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<C> =
-    dfsOf(
-        typeOf<C>(),
-        filter
-    ) as ColumnSet<C>
-
-public fun ColumnSet<*>.colsOf(type: KType): ColumnSet<Any?> = colsOf(type) { true }
-
-public inline fun <reified C> ColumnSet<*>.colsOf(): ColumnSet<C> = colsOf(typeOf<C>()) as ColumnSet<C>
-
-public fun <C> ColumnSet<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean): ColumnSet<C> =
-    colsInternal { it.isSubtypeOf(type) && filter(it.cast()) } as ColumnSet<C>
-
-public inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<C> =
-    colsOf(
-        typeOf<C>(), filter
-    )

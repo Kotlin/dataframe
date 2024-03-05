@@ -87,5 +87,3 @@ public class OpenApi : SupportedCodeGenerationFormat {
 
     override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod = DefaultReadOpenApiMethod
 }
-
-

@@ -4,19 +4,21 @@ import org.jetbrains.kotlinx.dataframe.api.JsonPath
 plugins {
     application
     kotlin("jvm")
+
     id("org.jetbrains.kotlinx.dataframe")
+
+    // only mandatory if `kotlin.dataframe.add.ksp=false` in gradle.properties
+    id("com.google.devtools.ksp")
 }
 
 repositories {
-    mavenLocal()
+    mavenLocal() // in case of local dataframe development
     mavenCentral()
 }
 
-kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotlin/")
-
 dependencies {
-    implementation(project(":core"))
-    implementation(project(":dataframe-openapi"))
+    // implementation("org.jetbrains.kotlinx:dataframe:X.Y.Z")
+    implementation(project(":"))
 }
 
 tasks.withType<KotlinCompile> {

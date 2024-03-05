@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 
-Returns `DataFrameSchema` object with [`DataFrame`](DataFrame.md) schema description. It can be printed to see column structure.
+Returns [`DataFrameSchema`](schemas.md) object with [`DataFrame`](DataFrame.md) schema description. It can be printed to see column structure.
 
 [`ColumnGroups`](DataColumn.md#columngroup) are marked by indentation:
 
@@ -34,6 +34,7 @@ isHappy: Boolean
 df.groupBy { city }.schema()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.schemaGroupBy.html"/>
 <!---END-->
 
 Output:

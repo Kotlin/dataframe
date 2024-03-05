@@ -1,11 +1,13 @@
 [//]: # (title: Create DataColumn)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Create-->
 
-This section describes ways to create [`DataColumn`](DataColumn.md).
+This section describes ways to create a [`DataColumn`](DataColumn.md).
 
 ### columnOf
 
-Returns new column with given elements. Column [`type`](DataColumn.md#properties) is deduced from compile-time type of elements, column [`name`](DataColumn.md#properties) is taken from the name of the variable.
+Returns new column with the given elements.
+The column [`type`](DataColumn.md#properties) is deduced from the compile-time type of the elements inside.
+The column [`name`](DataColumn.md#properties) is taken from the name of the variable.
 
 <!---FUN createValueByColumnOf-->
 
@@ -16,7 +18,7 @@ val student by columnOf("Alice", "Bob")
 
 <!---END-->
 
-To assign column name explicitly, use `named` infix function and replace `by` with `=`.
+To assign column name explicitly, use the `named` infix function and replace `by` with `=`.
 
 <!---FUN createColumnRenamed-->
 
@@ -26,7 +28,7 @@ val column = columnOf("Alice", "Bob") named "student"
 
 <!---END-->
 
-When column elements are columns themselves, it returns [`ColumnGroup`](DataColumn.md#columngroup):
+When column elements are columns themselves, it returns a [`ColumnGroup`](DataColumn.md#columngroup):
 
 <!---FUN createColumnGroup-->
 
@@ -40,7 +42,7 @@ val fullName by columnOf(firstName, lastName)
 
 <!---END-->
 
-When column elements are [`DataFrames`](DataFrame.md) it returns [`FrameColumn`](DataColumn.md#framecolumn):
+When column elements are [`DataFrames`](DataFrame.md) it returns a [`FrameColumn`](DataColumn.md#framecolumn):
 
 <!---FUN createFrameColumn-->
 
@@ -56,7 +58,7 @@ val frames by columnOf(df1, df2)
 
 ### toColumn
 
-Converts `Iterable` of values into column.
+Converts an `Iterable` of values into a column.
 
 <!---FUN createValueByToColumn-->
 
@@ -66,9 +68,9 @@ listOf("Alice", "Bob").toColumn("name")
 
 <!---END-->
 
-To compute column type at runtime by scanning through actual values, set `Infer.Type` option. 
+To compute a column type at runtime by scanning through the actual values, enable the `Infer.Type` option. 
 
-To inspect values only for nullability set `Infer.Nulls` option.
+To inspect values only for nullability, enable the `Infer.Nulls` option.
 
 <!---FUN createValueColumnInferred-->
 
@@ -84,7 +86,8 @@ values.toColumn("data", Infer.Nulls) // type: Any
 
 ### toColumnOf
 
-Converts `Iterable` of values into column of given type
+Converts an [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/)
+of values into a column of a given type:
 
 <!---FUN createValueColumnOfType-->
 

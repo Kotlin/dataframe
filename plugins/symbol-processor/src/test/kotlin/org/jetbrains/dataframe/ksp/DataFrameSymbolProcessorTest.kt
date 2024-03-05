@@ -219,25 +219,25 @@ class DataFrameSymbolProcessorTest {
                         SourceFile.kotlin(
                             "MySources.kt",
                             """
-                @file:ImportDataSchema(name = "Repo", "$it")
-
-                import org.jetbrains.kotlinx.dataframe.DataFrame
-                import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
-                import org.jetbrains.kotlinx.dataframe.api.print
-                import org.jetbrains.kotlinx.dataframe.io.readJson
-
-                @DataSchema
-                interface Repos {
-                    val repositories: DataFrame<Repo>
-                }
-
-                fun main() {
-                    val df: DataFrame<Repos> = DataFrame.readJson("data/jetbrains_repositories.json") as DataFrame<Repos>
-                    df.repositories[0].print()
-                }
-
-                        """.trimIndent()
+                            @file:ImportDataSchema(name = "Repo", "$it")
+                            
+                            import org.jetbrains.kotlinx.dataframe.DataFrame
+                            import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+                            import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+                            import org.jetbrains.kotlinx.dataframe.api.print
+                            import org.jetbrains.kotlinx.dataframe.io.readJson
+                            
+                            @DataSchema
+                            interface Repos {
+                                val repositories: DataFrame<Repo>
+                            }
+                            
+                            fun main() {
+                                val df: DataFrame<Repos> = DataFrame.readJson("data/jetbrains_repositories.json") as DataFrame<Repos>
+                                df.repositories[0].print()
+                            }
+                            
+                            """.trimIndent()
                         )
                     )
                 )
@@ -1042,7 +1042,7 @@ class DataFrameSymbolProcessorTest {
         result.successfulCompilation shouldBe false
     }
 
-    private val jetbrainsCsv = File("../../data/jetbrains_repositories.csv")
+    private val jetbrainsCsv = File("../../data/jetbrains repositories.csv")
 
     @Test
     fun `imported schema resolved`() {
@@ -1270,7 +1270,6 @@ class DataFrameSymbolProcessorTest {
 //            }
         }
     }
-
 
     private val petstoreJson = File("../../dataframe-openapi/src/test/resources/petstore.json")
 

@@ -38,10 +38,10 @@ import kotlin.reflect.typeOf
 
 public class CSV(private val delimiter: Char = ',') : SupportedDataFrameFormat {
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
-        DataFrame.readCSV(stream, delimiter = delimiter, header = header)
+        DataFrame.readCSV(stream = stream, delimiter = delimiter, header = header)
 
     override fun readDataFrame(file: File, header: List<String>): AnyFrame =
-        DataFrame.readCSV(file, delimiter = delimiter, header = header)
+        DataFrame.readCSV(file = file, delimiter = delimiter, header = header)
 
     override fun acceptsExtension(ext: String): Boolean = ext == "csv"
 
@@ -88,11 +88,16 @@ public fun DataFrame.Companion.read(
 ): DataFrame<*> =
     catchHttpResponse(asURL(fileOrUrl)) {
         readDelim(
-            it, delimiter,
-            header, isCompressed(fileOrUrl),
-            getCSVType(fileOrUrl), colTypes,
-            skipLines, readLines,
-            duplicate, charset
+            it,
+            delimiter,
+            header,
+            isCompressed(fileOrUrl),
+            getCSVType(fileOrUrl),
+            colTypes,
+            skipLines,
+            readLines,
+            duplicate,
+            charset
         )
     }
 

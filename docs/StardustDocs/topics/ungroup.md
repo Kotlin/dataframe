@@ -20,4 +20,5 @@ See [column selectors](ColumnSelectors.md)
 df.ungroup { name }
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.ungroup.html"/>
 <!---END-->

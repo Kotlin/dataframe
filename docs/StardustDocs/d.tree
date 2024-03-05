@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE instance-profile
-        SYSTEM "https://helpserver.labs.jb.gg/help/schemas/mvp/product-profile.dtd">
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
 
 <instance-profile id="d"
                  name="Dataframe"
                  status="release"
                  start-page="overview.md">
-    <toc-element topic="gettingStarted.md"/>
+    <toc-element topic="gettingStarted.md" accepts-web-file-names="installation.html">
+        <toc-element topic="gettingStartedGradle.md"/>
+        <toc-element topic="gettingStartedJupyterNotebook.md"/>
+        <toc-element topic="gettingStartedDatalore.md"/>
+        <toc-element topic="gettingStartedGradleAdvanced.md"/>
+    </toc-element>
     <toc-element topic="overview.md">
         <toc-element topic="apiLevels.md">
             <toc-element topic="stringApi.md"/>
@@ -16,15 +21,22 @@
         </toc-element>
         <toc-element topic="hierarchical.md"/>
         <toc-element topic="schemas.md">
-            <toc-element topic="gradle.md"/>
+            <toc-element topic="schemasGradle.md"/>
+            <toc-element topic="schemasJupyter.md"/>
+            <toc-element topic="schemasInheritance.md"/>
+            <toc-element topic="schemasCustom.md"/>
+            <toc-element topic="schemasExternalJupyter.md"/>
+            <toc-element topic="schemasImportSqlGradle.md"/>
+            <toc-element topic="schemasImportOpenApiGradle.md"/>
+            <toc-element topic="schemasImportOpenApiJupyter.md"/>
         </toc-element>
     </toc-element>
-    <toc-element topic="installation.md"/>
     <toc-element topic="types.md">
         <toc-element topic="DataFrame.md"/>
         <toc-element topic="DataColumn.md"/>
         <toc-element topic="DataRow.md"/>
     </toc-element>
+    <toc-element topic="nanAndNa.md"/>
     <toc-element topic="operations.md"/>
     <toc-element toc-title="Operations">
         <toc-element topic="create.md">
@@ -33,6 +45,7 @@
         </toc-element>
         <toc-element topic="io.md">
             <toc-element topic="read.md"/>
+            <toc-element topic="readSqlDatabases.md"/>
             <toc-element topic="write.md"/>
         </toc-element>
         <toc-element topic="info.md">
@@ -149,11 +162,13 @@
             <toc-element topic="statisticalRelationship.md">
                 <toc-element topic="corr.md"/>
             </toc-element>
+            <toc-element topic="rowStats.md"/>
         </toc-element>
         <toc-element topic="multipleDataFrames.md">
             <toc-element topic="addDf.md"/>
             <toc-element topic="concatDf.md"/>
             <toc-element topic="join.md"/>
+            <toc-element topic="joinWith.md"/>
         </toc-element>
         <toc-element topic="columnOperations.md">
             <toc-element topic="columnArithmetics.md" toc-title="Arithmetics"/>
@@ -169,7 +184,9 @@
             <toc-element topic="toMap.md"/>
         </toc-element>
         <toc-element topic="rendering.md">
+            <toc-element topic="toHTML.md"/>
             <toc-element topic="format.md"/>
+            <toc-element topic="jupyterRendering.md"/>
         </toc-element>
     </toc-element>
     <toc-element topic="gradleReference.md"/>

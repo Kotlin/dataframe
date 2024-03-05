@@ -2,9 +2,9 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Data transformation pipeline usually consists of several modification operations, such as filtering, sorting, grouping, pivoting, adding/removing columns etc. 
-DataFrame API is designed in functional style so that the whole processing pipeline can be represented as a single statement with a sequential chain of operations.
-`DataFrame` object is immutable and all operations return a new [`DataFrame`](DataFrame.md) instance reusing underlying data structures as much as possible.
+Data transformation pipeline usually consists of several modification operations, such as filtering, sorting, grouping, pivoting, adding/removing columns etc.
+The Kotlin DataFrame API is designed in functional style so that the whole processing pipeline can be represented as a single statement with a sequential chain of operations.
+[`DataFrame`](DataFrame.md) object is immutable and all operations return a new [`DataFrame`](DataFrame.md) instance reusing underlying data structures as much as possible.
 
 <!---FUN multiCallOperations-->
 
@@ -37,6 +37,14 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * `into` defines column names for storing operation results. Used in [`move`](move.md), [`group`](group.md), [`split`](split.md), [`merge`](merge.md), [`gather`](gather.md), [`groupBy`](groupBy.md), [`rename`](rename.md).
 * `with` defines row-wise data transformation with [`row expression`](DataRow.md#row-expressions). Used in [`update`](update.md), [`convert`](convert.md), [`replace`](replace.md), [`pivot`](pivot.md).
 
+## List of DataRow operations
+
+<include from="DataRow.md" element-id="rowFunctions"/>
+
+## List of DataRow statistics
+
+<include from="DataRow.md" element-id="rowStatistics"/>
+
 ## List of DataFrame operations
 
 * [add](add.md) — add columns
@@ -52,7 +60,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [cumSum](cumSum.md) — cumulative sum of column values
 * [describe](describe.md) — basic column statistics
 * [distinct](distinct.md) / [distinctBy](distinct.md#distinctby) — remove duplicated rows
-* [drop](drop.md) / [dropLast](sliceRows.md#droplast) / [dropWhile](sliceRows.md#dropwhile) / [dropNulls](drop.md#dropnulls) / [dropNA](drop.md#dropna) — remove rows by condition
+* [drop](drop.md) / [dropLast](sliceRows.md#droplast) / [dropWhile](sliceRows.md#dropwhile) / [dropNulls](drop.md#dropnulls) / [dropNA](drop.md#dropna) / [dropNaNs](drop.md#dropnans) — remove rows by condition
 * [duplicate](duplicate.md) — duplicate rows 
 * [explode](explode.md) — spread lists and [`DataFrames`](DataFrame.md) vertically into new rows
 * [fillNulls](fill.md#fillnulls) / [fillNaNs](fill.md#fillnans) / [fillNA](fill.md#fillna) — replace missing values
@@ -70,6 +78,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [inferType](inferType.md) — infer column type from column values
 * [insert](insert.md) — insert column
 * [join](join.md) — join [`DataFrames`](DataFrame.md) by key columns
+* [joinWith](joinWith.md) — join [`DataFrames`](DataFrame.md) by an expression that evaluates joined [DataRows](DataRow.md) to Boolean
 * [last](last.md) / [lastOrNull](last.md#lastornull) — find last row by condition 
 * [map](map.md) — map columns into new [`DataFrame`](DataFrame.md) or [`DataColumn`](DataColumn.md)
 * [max](minmax.md) / [maxBy](minmax.md) / [maxOf](minmax.md) / [maxFor](minmax.md) — max of values 
@@ -98,9 +107,10 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [take](sliceRows.md#take) / [takeLast](sliceRows.md#takelast) / [takeWhile](sliceRows.md#takewhile) — get first/last rows
 * [toList](toList.md) / [toListOf](toList.md#tolistof) — export [`DataFrame`](DataFrame.md) into a list of data classes
 * [toMap](toMap.md) — export [`DataFrame`](DataFrame.md) into a map from column names to column values
+* [unfold](unfold.md) - unfold objects (normal class instances) in columns according to their properties
 * [ungroup](ungroup.md) — remove column groupings
 * [update](update.md) — update column values preserving column types
-* [values](values.md) — `Sequence` of values traversed by row or by column 
+* [values](values.md) — [`Sequence`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/-sequence/) of values traversed by row or by column 
 * [valueCounts](valueCounts.md) — counts for unique values 
 * [xs](xs.md) — slice [`DataFrame`](DataFrame.md) by given key values
 

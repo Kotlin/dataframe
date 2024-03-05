@@ -11,3 +11,6 @@ indent_size=2
 
 [*.yaml]
 indent_size=2
+
+[*.ipynb]
+insert_final_newline=false

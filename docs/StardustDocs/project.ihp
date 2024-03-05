@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE ihp SYSTEM "https://helpserver.labs.jb.gg/help/schemas/mvp/ihp.dtd">
+<!DOCTYPE ihp SYSTEM "https://resources.jetbrains.com/writerside/1.0/ihp.dtd">
 
 <ihp version="2.0">
     <categories src="c.list"/>
     <topics dir="topics"/>
-    <images dir="images" version="0.9" web-path="images/" />
+    <images dir="images" version="0.12" web-path="images/" />
+    <snippets dir="snippets" version="0.12" web-path="snippets/" />
     <vars src="v.list"/>
-    <instance src="d.tree" version="0.9" id="dataframe"/>
+    <instance src="d.tree" version="0.12" id="dataframe"/>
     <settings>
-        <default-property element-name="topic" property-name="show-structure-depth" value="2"/>
+        <default-property element-name="chapter" property-name="show-structure-depth" value="2"/>
     </settings>
 </ihp>

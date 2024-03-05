@@ -2,7 +2,8 @@ plugins {
     `kotlin-dsl`
     `java-gradle-plugin`
     `maven-publish`
-    id("com.gradle.plugin-publish") version "0.15.0"
+    alias(libs.plugins.plugin.publish)
+    alias(libs.plugins.kotlinter)
 }
 
 repositories {
@@ -20,17 +21,20 @@ dependencies {
     implementation(project(":dataframe-arrow"))
     implementation(project(":dataframe-openapi"))
     implementation(project(":dataframe-excel"))
-    implementation(kotlin("gradle-plugin-api"))
-    implementation(kotlin("gradle-plugin"))
-    implementation("com.beust:klaxon:5.5")
+    implementation(project(":dataframe-jdbc"))
+
+    implementation(libs.kotlin.gradle.plugin.api)
+    implementation(libs.kotlin.gradle.plugin)
+    implementation(libs.klaxon)
     implementation(libs.ksp.gradle)
     implementation(libs.ksp.api)
 
-    testImplementation("junit:junit:4.12")
-    testImplementation("io.kotest:kotest-assertions-core:4.6.0")
-    testImplementation("com.android.tools.build:gradle-api:7.3.1")
-    testImplementation("com.android.tools.build:gradle:7.3.1")
-    testImplementation("io.ktor:ktor-server-netty:1.6.7")
+    testImplementation(libs.junit)
+    testImplementation(libs.kotestAssertions)
+    testImplementation(libs.android.gradle.api)
+    testImplementation(libs.android.gradle)
+    testImplementation(libs.ktor.server.netty)
+    testImplementation(libs.h2db)
     testImplementation(gradleApi())
 }
 
@@ -57,41 +61,25 @@ tasks.withType<ProcessResources> {
 }
 
 gradlePlugin {
-    plugins {
-        create("schemaGeneratorPlugin") {
-            id = "org.jetbrains.kotlinx.dataframe"
-            implementationClass = "org.jetbrains.dataframe.gradle.ConvenienceSchemaGeneratorPlugin"
-        }
-        create("deprecatedSchemaGeneratorPlugin") {
-            id = "org.jetbrains.kotlin.plugin.dataframe"
-            implementationClass = "org.jetbrains.dataframe.gradle.DeprecatingSchemaGeneratorPlugin"
-        }
-    }
-}
-
-pluginBundle {
     // These settings are set for the whole plugin bundle
     website = "https://github.com/Kotlin/dataframe"
     vcsUrl = "https://github.com/Kotlin/dataframe"
 
-    (plugins) {
-        "schemaGeneratorPlugin" {
-            // id is captured from java-gradle-plugin configuration
+    plugins {
+        create("schemaGeneratorPlugin") {
+            id = "org.jetbrains.kotlinx.dataframe"
+            implementationClass = "org.jetbrains.dataframe.gradle.ConvenienceSchemaGeneratorPlugin"
             displayName = "Kotlin Dataframe gradle plugin"
             description = "Gradle plugin providing task for inferring data schemas from your CSV or JSON data"
             tags = listOf("dataframe", "kotlin")
         }
-        "deprecatedSchemaGeneratorPlugin" {
-            // id is captured from java-gradle-plugin configuration
+        create("deprecatedSchemaGeneratorPlugin") {
+            id = "org.jetbrains.kotlin.plugin.dataframe"
+            implementationClass = "org.jetbrains.dataframe.gradle.DeprecatingSchemaGeneratorPlugin"
             displayName = "Kotlin Dataframe gradle plugin"
-            description =
-                "The plugin was moved to 'org.jetbrains.kotlinx.dataframe'. Gradle plugin providing task for inferring data schemas from your CSV or JSON data"
+            description = "The plugin was moved to 'org.jetbrains.kotlinx.dataframe'. Gradle plugin providing task for inferring data schemas from your CSV or JSON data"
             tags = listOf("dataframe", "kotlin")
         }
-    }
-
-    mavenCoordinates {
-        groupId = project.group.toString()
     }
 }
 
@@ -124,10 +112,12 @@ val integrationTestTask = task<Test>("integrationTest") {
     dependsOn(":plugins:symbol-processor:publishToMavenLocal")
     dependsOn(":dataframe-arrow:publishToMavenLocal")
     dependsOn(":dataframe-excel:publishToMavenLocal")
+    dependsOn(":dataframe-jdbc:publishToMavenLocal")
     dependsOn(":dataframe-openapi:publishToMavenLocal")
     dependsOn(":publishApiPublicationToMavenLocal")
     dependsOn(":dataframe-arrow:publishDataframeArrowPublicationToMavenLocal")
     dependsOn(":dataframe-excel:publishDataframeExcelPublicationToMavenLocal")
+    dependsOn(":dataframe-jdbc:publishDataframeJDBCPublicationToMavenLocal")
     dependsOn(":dataframe-openapi:publishDataframeOpenApiPublicationToMavenLocal")
     dependsOn(":plugins:symbol-processor:publishMavenPublicationToMavenLocal")
     dependsOn(":core:publishCorePublicationToMavenLocal")

@@ -8,8 +8,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
+import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
+import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.joinImpl
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import kotlin.reflect.KProperty
 
 @Refine
@@ -18,13 +19,15 @@ public fun <A, B> DataFrame<A>.join(
     other: DataFrame<B>,
     type: JoinType = JoinType.Inner,
     selector: JoinColumnsSelector<A, B>? = null
-): DataFrame<A> = joinImpl(other, type, true, selector)
+): DataFrame<A> {
+    return joinImpl(other, type, addNewColumns = type.addNewColumns, selector)
+}
 
 public fun <A, B> DataFrame<A>.join(
     other: DataFrame<B>,
     vararg columns: String,
-    type: JoinType = JoinType.Inner
-): DataFrame<A> = join(other, type) { columns.toColumns() }
+    type: JoinType = JoinType.Inner,
+): DataFrame<A> = join(other, type) { columns.toColumnSet() }
 
 public fun <A, B> DataFrame<A>.innerJoin(
     other: DataFrame<B>,
@@ -33,8 +36,8 @@ public fun <A, B> DataFrame<A>.innerJoin(
 
 public fun <A, B> DataFrame<A>.innerJoin(
     other: DataFrame<B>,
-    vararg columns: String
-): DataFrame<A> = innerJoin(other) { columns.toColumns() }
+    vararg columns: String,
+): DataFrame<A> = innerJoin(other) { columns.toColumnSet() }
 
 public fun <A, B> DataFrame<A>.leftJoin(
     other: DataFrame<B>,
@@ -43,8 +46,8 @@ public fun <A, B> DataFrame<A>.leftJoin(
 
 public fun <A, B> DataFrame<A>.leftJoin(
     other: DataFrame<B>,
-    vararg columns: String
-): DataFrame<A> = leftJoin(other) { columns.toColumns() }
+    vararg columns: String,
+): DataFrame<A> = leftJoin(other) { columns.toColumnSet() }
 
 public fun <A, B> DataFrame<A>.rightJoin(
     other: DataFrame<B>,
@@ -53,8 +56,8 @@ public fun <A, B> DataFrame<A>.rightJoin(
 
 public fun <A, B> DataFrame<A>.rightJoin(
     other: DataFrame<B>,
-    vararg columns: String
-): DataFrame<A> = rightJoin(other) { columns.toColumns() }
+    vararg columns: String,
+): DataFrame<A> = rightJoin(other) { columns.toColumnSet() }
 
 public fun <A, B> DataFrame<A>.fullJoin(
     other: DataFrame<B>,
@@ -63,8 +66,8 @@ public fun <A, B> DataFrame<A>.fullJoin(
 
 public fun <A, B> DataFrame<A>.fullJoin(
     other: DataFrame<B>,
-    vararg columns: String
-): DataFrame<A> = fullJoin(other) { columns.toColumns() }
+    vararg columns: String,
+): DataFrame<A> = fullJoin(other) { columns.toColumnSet() }
 
 public fun <A, B> DataFrame<A>.filterJoin(
     other: DataFrame<B>,
@@ -73,8 +76,8 @@ public fun <A, B> DataFrame<A>.filterJoin(
 
 public fun <A, B> DataFrame<A>.filterJoin(
     other: DataFrame<B>,
-    vararg columns: String
-): DataFrame<A> = filterJoin(other) { columns.toColumns() }
+    vararg columns: String,
+): DataFrame<A> = filterJoin(other) { columns.toColumnSet() }
 
 public fun <A, B> DataFrame<A>.excludeJoin(
     other: DataFrame<B>,
@@ -83,8 +86,8 @@ public fun <A, B> DataFrame<A>.excludeJoin(
 
 public fun <A, B> DataFrame<A>.excludeJoin(
     other: DataFrame<B>,
-    vararg columns: String
-): DataFrame<A> = excludeJoin(other) { columns.toColumns() }
+    vararg columns: String,
+): DataFrame<A> = excludeJoin(other) { columns.toColumnSet() }
 
 public fun <T> Iterable<DataFrame<T>>.joinOrNull(
     joinType: JoinType = JoinType.Inner,
@@ -119,15 +122,23 @@ public class ColumnMatch<C>(public val left: ColumnReference<C>, public val righ
     }
 }
 
-public typealias JoinColumnsSelector<A, B> = JoinDsl<A, B>.(ColumnsContainer<A>) -> ColumnSet<*>
+public typealias JoinColumnsSelector<A, B> = JoinDsl<A, B>.(ColumnsContainer<A>) -> ColumnsResolver<*>
 
 public enum class JoinType {
     Left, // all data from left data frame, nulls for mismatches in right data frame
     Right, // all data from right data frame, nulls for mismatches in left data frame
     Inner, // only matched data from right and left data frame
+    Filter, // only matched data from left data frame
     Full, // all data from left and from right data frame, nulls for any mismatches
     Exclude // mismatched rows from left data frame
 }
 
+internal val JoinType.addNewColumns: Boolean
+    get() = when (this) {
+        JoinType.Filter, JoinType.Exclude -> false
+        JoinType.Left, JoinType.Right, JoinType.Inner, JoinType.Full -> true
+    }
+
 public val JoinType.allowLeftNulls: Boolean get() = this == JoinType.Right || this == JoinType.Full
+
 public val JoinType.allowRightNulls: Boolean get() = this == JoinType.Left || this == JoinType.Full || this == JoinType.Exclude

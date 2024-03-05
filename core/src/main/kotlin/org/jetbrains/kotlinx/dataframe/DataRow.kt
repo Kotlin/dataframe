@@ -28,7 +28,7 @@ public interface DataRow<out T> {
     public operator fun <R> get(column: ColumnReference<R>): R
     public operator fun <R> get(columns: List<ColumnReference<R>>): List<R> = columns.map { get(it) }
     public operator fun <R> get(property: KProperty<R>): R = get(property.columnName) as R
-    public operator fun get(first: Column, vararg other: Column): DataRow<T> = owner.get(first, *other)[index]
+    public operator fun get(first: AnyColumnReference, vararg other: AnyColumnReference): DataRow<T> = owner.get(first, *other)[index]
     public operator fun get(first: String, vararg other: String): DataRow<T> = owner.get(first, *other)[index]
     public operator fun get(path: ColumnPath): Any? = owner.get(path)[index]
     public operator fun get(name: String): Any?

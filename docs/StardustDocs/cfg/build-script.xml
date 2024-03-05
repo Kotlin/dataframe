@@ -1,5 +1,5 @@
 <!DOCTYPE root
-    SYSTEM "https://helpserver.labs.jb.gg/help/schemas/mvp/build-script.dtd">
+    SYSTEM "https://resources.jetbrains.com/writerside/1.0/build-script.dtd">
 
 <root>
     <builds>

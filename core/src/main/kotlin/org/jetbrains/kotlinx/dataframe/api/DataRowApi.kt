@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -15,11 +15,15 @@ import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
+import org.jetbrains.kotlinx.dataframe.util.DIFF_DEPRECATION_MESSAGE
+import org.jetbrains.kotlinx.dataframe.util.DIFF_OR_NULL_IMPORT
+import org.jetbrains.kotlinx.dataframe.util.DIFF_REPLACE_MESSAGE
 import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
 public fun AnyRow.isEmpty(): Boolean = owner.columns().all { it[index] == null }
+
 public fun AnyRow.isNotEmpty(): Boolean = !isEmpty()
 
 public inline fun <reified R> AnyRow.valuesOf(): List<R> = values().filterIsInstance<R>()
@@ -30,9 +34,11 @@ public data class NameValuePair<V>(val name: String, val value: V)
 
 // Without these overloads row.transpose().name or row.map { name } won't resolve
 public val ColumnsContainer<NameValuePair<*>>.name: DataColumn<String> @JvmName("NameValuePairAny_name") get() = this["name"] as DataColumn<String>
+
 public val DataRow<NameValuePair<*>>.name: String @JvmName("NameValuePairAny_name") get() = this["name"] as String
 
 public val ColumnsContainer<NameValuePair<*>>.value: DataColumn<*> @JvmName("NameValuePairAny_value") get() = this["value"]
+
 public val DataRow<NameValuePair<*>>.value: Any? @JvmName("NameValuePairAny_value") get() = this["value"]
 
 // endregion
@@ -46,10 +52,13 @@ public fun AnyRow.namedValues(): List<NameValuePair<Any?>> =
 // region getValue
 
 public fun <T> AnyRow.getValue(columnName: String): T = get(columnName) as T
+
 public fun <T> AnyRow.getValue(column: ColumnReference<T>): T = get(column)
+
 public fun <T> AnyRow.getValue(column: KProperty<T>): T = get(column)
 
 public fun <T> AnyRow.getValueOrNull(columnName: String): T? = getOrNull(columnName) as T?
+
 public fun <T> AnyRow.getValueOrNull(column: KProperty<T>): T? = getValueOrNull<T>(column.columnName)
 
 // endregion
@@ -57,35 +66,130 @@ public fun <T> AnyRow.getValueOrNull(column: KProperty<T>): T? = getValueOrNull<
 // region contains
 
 public fun AnyRow.containsKey(columnName: String): Boolean = owner.containsColumn(columnName)
-public fun AnyRow.containsKey(column: Column): Boolean = owner.containsColumn(column)
+
+public fun AnyRow.containsKey(column: AnyColumnReference): Boolean = owner.containsColumn(column)
+
 public fun AnyRow.containsKey(column: KProperty<*>): Boolean = owner.containsColumn(column)
 
-public operator fun AnyRow.contains(column: Column): Boolean = containsKey(column)
+public operator fun AnyRow.contains(column: AnyColumnReference): Boolean = containsKey(column)
+
 public operator fun AnyRow.contains(column: KProperty<*>): Boolean = containsKey(column)
 
 // endregion
 
+/**
+ * Calculates the difference between the results of a row expression computed on the current and previous DataRow.
+ *
+ * @return [firstRowValue] for the first row; difference between expression computed for current and previous row for the following rows
+ */
+internal interface DiffDocs
+
+/**
+ * Calculates the difference between the results of a row expression computed on the current and previous DataRow.
+ *
+ * @return null for the first row; difference between expression computed for current and previous row for the following rows
+ */
+internal interface DiffOrNullDocs
+
 @OptIn(ExperimentalTypeInference::class)
 @OverloadResolutionByLambdaReturnType
+/**
+ * @include [DiffDocs]
+ */
+public fun <T> DataRow<T>.diff(firstRowResult: Double, expression: RowExpression<T, Double>): Double =
+    prev()?.let { p -> expression(this, this) - expression(p, p) } ?: firstRowResult
+
+// required to resolve `diff(0) { intValue }`
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+/**
+ * @include [DiffDocs]
+ */
+public fun <T> DataRow<T>.diff(firstRowResult: Int, expression: RowExpression<T, Int>): Int =
+    prev()?.let { p -> expression(this, this) - expression(p, p) } ?: firstRowResult
+
+/**
+ * @include [DiffDocs]
+ */
+public fun <T> DataRow<T>.diff(firstRowResult: Long, expression: RowExpression<T, Long>): Long =
+    prev()?.let { p -> expression(this, this) - expression(p, p) } ?: firstRowResult
+
+/**
+ * @include [DiffDocs]
+ */
+public fun <T> DataRow<T>.diff(firstRowResult: Float, expression: RowExpression<T, Float>): Float =
+    prev()?.let { p -> expression(this, this) - expression(p, p) } ?: firstRowResult
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+/**
+ * @include [DiffOrNullDocs]
+ */
+public fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Double>): Double? =
+    prev()?.let { p -> expression(this, this) - expression(p, p) }
+
+/**
+ * @include [DiffOrNullDocs]
+ */
+public fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Int>): Int? =
+    prev()?.let { p -> expression(this, this) - expression(p, p) }
+
+/**
+ * @include [DiffOrNullDocs]
+ */
+public fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Long>): Long? =
+    prev()?.let { p -> expression(this, this) - expression(p, p) }
+
+/**
+ * @include [DiffOrNullDocs]
+ */
+public fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Float>): Float? =
+    prev()?.let { p -> expression(this, this) - expression(p, p) }
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+@Deprecated(
+    DIFF_DEPRECATION_MESSAGE,
+    ReplaceWith(DIFF_REPLACE_MESSAGE, DIFF_OR_NULL_IMPORT),
+    DeprecationLevel.ERROR,
+)
 public fun <T> DataRow<T>.diff(expression: RowExpression<T, Double>): Double? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
+@Deprecated(
+    DIFF_DEPRECATION_MESSAGE,
+    ReplaceWith(DIFF_REPLACE_MESSAGE, DIFF_OR_NULL_IMPORT),
+    DeprecationLevel.ERROR,
+)
 public fun <T> DataRow<T>.diff(expression: RowExpression<T, Int>): Int? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
+@Deprecated(
+    DIFF_DEPRECATION_MESSAGE,
+    ReplaceWith(DIFF_REPLACE_MESSAGE, DIFF_OR_NULL_IMPORT),
+    DeprecationLevel.ERROR,
+)
 public fun <T> DataRow<T>.diff(expression: RowExpression<T, Long>): Long? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
+@Deprecated(
+    DIFF_DEPRECATION_MESSAGE,
+    ReplaceWith(DIFF_REPLACE_MESSAGE, DIFF_OR_NULL_IMPORT),
+    DeprecationLevel.ERROR,
+)
 public fun <T> DataRow<T>.diff(expression: RowExpression<T, Float>): Float? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
 public fun AnyRow.columnsCount(): Int = df().ncol
+
 public fun AnyRow.columnNames(): List<String> = df().columnNames()
+
 public fun AnyRow.columnTypes(): List<KType> = df().columnTypes()
 
 public fun <T> DataRow<T>.getRow(index: Int): DataRow<T> = getRowOrNull(index)!!
 
 public fun <T> DataRow<T>.getRows(indices: Iterable<Int>): DataFrame<T> = df().getRows(indices)
+
 public fun <T> DataRow<T>.getRows(indices: IntRange): DataFrame<T> = df().getRows(indices)
 
 public fun <T> DataRow<T>.getRowOrNull(index: Int): DataRow<T>? {

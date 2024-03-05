@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.columnGroup
 import org.jetbrains.kotlinx.dataframe.impl.api.MyColumnGroup
@@ -25,6 +26,11 @@ import kotlin.reflect.KProperty
  */
 public interface ColumnGroup<out T> : BaseColumn<DataRow<T>>, DataFrame<T>, MyColumnGroup<BaseColumn<*>> {
 
+    /**
+     * Gets the rows at given indices.
+     *
+     * NOTE: This doesn't work in the [ColumnsSelectionDsl], use [ColumnsSelectionDsl.cols] to select columns by index.
+     */
     override fun get(indices: Iterable<Int>): ColumnGroup<T>
 
     override fun get(columnName: String): AnyCol
@@ -33,8 +39,18 @@ public interface ColumnGroup<out T> : BaseColumn<DataRow<T>>, DataFrame<T>, MyCo
 
     override fun distinct(): ColumnGroup<T>
 
+    /**
+     * Gets the rows at given indices.
+     *
+     * NOTE: This doesn't work in the [ColumnsSelectionDsl], use [ColumnsSelectionDsl.cols] to select columns by index.
+     */
     override fun get(firstIndex: Int, vararg otherIndices: Int): ColumnGroup<T>
 
+    /**
+     * Gets the rows at given range of indices.
+     *
+     * NOTE: This doesn't work in the [ColumnsSelectionDsl], use [ColumnsSelectionDsl.cols] to select columns by range.
+     */
     override fun get(range: IntRange): ColumnGroup<T>
 
     override fun rename(newName: String): ColumnGroup<T>

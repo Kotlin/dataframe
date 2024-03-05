@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.toColumn
+import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.size
 import org.junit.Test
@@ -21,7 +22,8 @@ class XlsxTest {
 
     @Test
     fun `numerical columns`() {
-        DataFrame.readExcel(testResource("sample.xls"), "Sheet1") shouldBe dataFrameOf("col1", "col2")(1.0, 2.0)
+        DataFrame.readExcel(testResource("sample.xls"), "Sheet1") shouldBe
+            dataFrameOf("col1", "col2")(1.0, 2.0)
     }
 
     @Test
@@ -52,7 +54,10 @@ class XlsxTest {
 
     @Test
     fun `first sheet is default sheet`() {
-        DataFrame.readExcel(testResource("sample.xls"), "Sheet1") shouldBe DataFrame.readExcel(testResource("sample.xls"))
+        DataFrame.readExcel(
+            testResource("sample.xls"),
+            "Sheet1"
+        ) shouldBe DataFrame.readExcel(testResource("sample.xls"))
     }
 
     @Test
@@ -60,7 +65,7 @@ class XlsxTest {
         val temp = Files.createTempFile("excel", ".xlsx").toFile()
         val df = dataFrameOf("col1", "col2")(
             "string value", 3.2,
-            "string value 1", null
+            "string value 1", null,
         )
         val extendedDf = List(10) { df }.concat()
         extendedDf.writeExcel(temp)
@@ -92,8 +97,26 @@ class XlsxTest {
     @Test
     fun `consider skipRows when obtaining column indexes`() {
         val df = DataFrame.readExcel(testResource("header.xlsx"), skipRows = 6, rowsCount = 1)
-        df.columnNames() shouldBe listOf("Well", "Well Position", "Omit", "Sample Name", "Target Name", "Task", "Reporter", "Quencher")
-        df shouldBe dataFrameOf("Well", "Well Position", "Omit", "Sample Name", "Target Name", "Task", "Reporter", "Quencher")(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0,)
+        df.columnNames() shouldBe listOf(
+            "Well",
+            "Well Position",
+            "Omit",
+            "Sample Name",
+            "Target Name",
+            "Task",
+            "Reporter",
+            "Quencher",
+        )
+        df shouldBe dataFrameOf(
+            "Well",
+            "Well Position",
+            "Omit",
+            "Sample Name",
+            "Target Name",
+            "Task",
+            "Reporter",
+            "Quencher",
+        )(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0)
     }
 
     @Test
@@ -108,5 +131,52 @@ class XlsxTest {
         shouldThrow<IllegalStateException> {
             DataFrame.readExcel(testResource("xlsx6.xlsx"), skipRows = 4)
         }
+    }
+
+    @Test
+    fun `write to new sheet when keepFile is true`() {
+        val names = (1..5).map { "column$it" }
+        val df = dataFrameOf(names).randomDouble(7)
+        val fileLoc = Files.createTempFile("generated_wb", ".xlsx").toFile()
+
+        df.writeExcel(fileLoc, sheetName = "TestSheet1")
+        df.writeExcel(fileLoc, sheetName = "TestSheet2", keepFile = true)
+
+        val testSheet1Df = DataFrame.readExcel(fileLoc, sheetName = "TestSheet1")
+        val testSheet2Df = DataFrame.readExcel(fileLoc, sheetName = "TestSheet2")
+
+        testSheet1Df.columnNames() shouldBe testSheet2Df.columnNames()
+    }
+
+    @Test
+    fun `read xlsx file with duplicated columns and repair column names`() {
+        shouldThrow<DuplicateColumnNamesException> {
+            DataFrame.readExcel(testResource("iris_duplicated_column.xlsx"))
+        }
+
+        val df = DataFrame.readExcel(
+            testResource("iris_duplicated_column.xlsx"),
+            nameRepairStrategy = NameRepairStrategy.MAKE_UNIQUE,
+        )
+        df.columnNames() shouldBe
+            listOf(
+                "Sepal.Length",
+                "Sepal.Width",
+                "C",
+                "Petal.Length",
+                "Petal.Width",
+                "Species",
+                "Other.Width",
+                "Species1",
+                "I",
+                "Other.Width1",
+                "Species2",
+            )
+    }
+
+    @Test
+    fun `read xlsx file that has cells with formulas that return numbers and strings`() {
+        val df = DataFrame.readExcel(testResource("formula_cell.xlsx"))
+        df.columnNames() shouldBe listOf("Number", "Greater than 5", "Multiplied by 10", "Divided by 5")
     }
 }

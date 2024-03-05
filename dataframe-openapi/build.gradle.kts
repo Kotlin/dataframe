@@ -1,10 +1,12 @@
 plugins {
-    kotlin("jvm")
-    kotlin("libs.publisher")
-    kotlin("plugin.serialization")
-    id("org.jetbrains.kotlinx.kover")
-
-    kotlin("jupyter.api")
+    with(libs.plugins) {
+        alias(kotlin.jvm)
+        alias(publisher)
+        alias(serialization)
+        alias(kover)
+        alias(kotlinter)
+        alias(jupyter.api)
+    }
 }
 
 group = "org.jetbrains.kotlinx"
@@ -20,9 +22,13 @@ repositories {
 dependencies {
     api(project(":core"))
 
+    implementation(libs.kotlinLogging)
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlinpoet)
-    implementation(libs.swagger)
+    api(libs.swagger) {
+        // Fix for Android
+        exclude("jakarta.validation")
+    }
 
     testApi(project(":core"))
     testImplementation(libs.junit)

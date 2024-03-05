@@ -1,23 +1,29 @@
-import org.jetbrains.dataframe.gradle.DataSchemaVisibility
+import org.jmailen.gradle.kotlinter.tasks.LintTask
 
-@Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 plugins {
-    id("java")
-    kotlin("jvm")
-    id("org.jetbrains.kotlinx.dataframe")
-    id("io.github.devcrocod.korro") version libs.versions.korro
-    id("org.jmailen.kotlinter")
-    id("org.jetbrains.kotlinx.kover")
+    java
+    with(libs.plugins) {
+        alias(kotlin.jvm)
+        alias(korro)
+        alias(kotlinter)
+        alias(kover)
+
+        alias(dataframe)
+        // only mandatory if `kotlin.dataframe.add.ksp=false` in gradle.properties
+        alias(ksp)
+    }
 }
 
 repositories {
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/bootstrap")
+    mavenLocal() // for local development
 }
 
 dependencies {
     implementation(project(":core"))
     implementation(project(":dataframe-excel"))
+    implementation(project(":dataframe-jdbc"))
     implementation(project(":dataframe-arrow"))
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
@@ -67,7 +73,23 @@ korro {
     }
 }
 
+tasks.formatKotlinMain {
+    dependsOn("kspKotlin")
+}
+
+tasks.formatKotlinTest {
+    dependsOn("kspTestKotlin")
+}
+
 tasks.lintKotlinMain {
+    dependsOn("kspKotlin")
+}
+
+tasks.lintKotlinTest {
+    dependsOn("kspTestKotlin")
+}
+
+tasks.withType<LintTask> {
     exclude("**/*keywords*/**")
     exclude {
         it.name.endsWith(".Generated.kt")
@@ -75,31 +97,7 @@ tasks.lintKotlinMain {
     exclude {
         it.name.endsWith("\$Extensions.kt")
     }
-}
-
-tasks.lintKotlinTest {
-    exclude {
-        it.name.endsWith(".Generated.kt")
-    }
-    exclude {
-        it.name.endsWith("\$Extensions.kt")
-    }
     enabled = true
-}
-
-kotlinter {
-    ignoreFailures = false
-    reporters = arrayOf("checkstyle", "plain")
-    experimentalRules = true
-    disabledRules = arrayOf(
-        "no-wildcard-imports",
-        "experimental:spacing-between-declarations-with-annotations",
-        "experimental:enum-entry-name-case",
-        "experimental:argument-list-wrapping",
-        "experimental:annotation",
-        "max-line-length",
-        "filename"
-    )
 }
 
 tasks.test {

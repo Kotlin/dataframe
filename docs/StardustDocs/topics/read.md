@@ -1,32 +1,45 @@
 [//]: # (title: Read)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Read-->
 
-Kotlin DataFrame library supports CSV, TSV, JSON, XLS and XLSX, Apache Arrow input formats.
+The Kotlin DataFrame library supports CSV, TSV, JSON, XLS and XLSX, and Apache Arrow input formats.
 
-`read` method automatically detects input format based on file extension and content
+The reading from SQL databases is also supported.
+Read [here](readSqlDatabases.md) to know more 
+or explore the [example project](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples).
+
+The `.read()` function automatically detects the input format based on a file extension and content:
 
 ```kotlin
 DataFrame.read("input.csv")
 ```
 
-Input string can be a file path or URL.
+The input string can be a file path or URL.
 
-## Reading CSV
+## Read from CSV
 
-All these calls are valid:
+To read a CSV file, use the `.readCSV()` function.
+
+To read a CSV file from a file:
 
 ```kotlin
 import java.io.File
-import java.net.URL
 
 DataFrame.readCSV("input.csv")
+// Alternatively
 DataFrame.readCSV(File("input.csv"))
+```
+
+To read a CSV file from a URL:
+
+```kotlin
+import java.net.URL
+
 DataFrame.readCSV(URL("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"))
 ```
 
-All `readCSV` overloads support different options.
-For example, you can specify custom delimiter if it differs from `,`, charset
-and column names if your CSV is missing them
+### Specify delimiter
+
+By default, CSV files are parsed using `,` as the delimiter. To specify a custom delimiter, use the `delimiter` argument:
 
 <!---FUN readCsvCustom-->
 
@@ -41,7 +54,9 @@ val df = DataFrame.readCSV(
 
 <!---END-->
 
-Column types will be inferred from the actual CSV data. Suppose that CSV from the previous
+### Column type inference from CSV
+
+Column types are inferred from the CSV data. Suppose that the CSV from the previous
 example had the following content:
 
 <table>
@@ -51,7 +66,7 @@ example had the following content:
 <tr><td>89</td><td>abc</td><td>7.1</td><td>false</td></tr>
 </table>
 
-[`DataFrame`](DataFrame.md) schema we get is:
+Then the [`DataFrame`](DataFrame.md) schema we get is:
 
 ```text
 A: Int
@@ -60,7 +75,7 @@ C: Double
 D: Boolean?
 ```
 
-[`DataFrame`](DataFrame.md) will try to parse columns as JSON, so when reading following table with JSON object in column D:
+[`DataFrame`](DataFrame.md) tries to parse columns as JSON, so when reading the following table with JSON object in column D:
 
 <table>
 <tr><th>A</th><th>D</th></tr>
@@ -77,7 +92,7 @@ D:
     C: Int
 ```
 
-For column where values are lists of JSON values:
+For a column where values are lists of JSON values:
 <table>
 <tr><th>A</th><th>G</th></tr>
 <tr><td>12</td><td>[{"B":1,"C":2,"D":3},{"B":1,"C":3,"D":2}]</td></tr>
@@ -92,7 +107,7 @@ G: *
     D: Int
 ```
 
-### Dealing with locale specific numbers
+### Work with locale-specific numbers
 
 Sometimes columns in your CSV can be interpreted differently depending on your system locale.
 
@@ -102,8 +117,8 @@ Sometimes columns in your CSV can be interpreted differently depending on your s
 <tr><td>41,111</td></tr>
 </table>
 
-Here comma can be decimal or thousands separator, thus different values.
-You can deal with it in two ways
+Here a comma can be decimal or thousands separator, thus different values.
+You can deal with it in two ways:
 
 1) Provide locale as a parser option
 
@@ -118,7 +133,7 @@ val df = DataFrame.readCSV(
 
 <!---END-->
 
-2) Disable type inference for specific column and convert it yourself
+2) Disable type inference for a specific column and convert it yourself
 
 <!---FUN readNumbersWithColType-->
 
@@ -132,20 +147,34 @@ val df = DataFrame.readCSV(
 <!---END-->
 
 
-## Reading JSON
+## Read from JSON
 
-Basics for reading JSONs are the same: you can read from file or from remote URL.
+To read a JSON file, use the `.readJSON()` function. JSON files can be read from a file or a URL.
+
+Note that after reading a JSON with a complex structure, you can get hierarchical
+[`DataFrame`](DataFrame.md): [`DataFrame`](DataFrame.md) with `ColumnGroup`s and [`FrameColumn`](DataColumn.md#framecolumn)s.
+
+To read a JSON file from a file:
+
+<!---FUN readJson-->
+
+```kotlin
+val df = DataFrame.readJson(file)
+```
+
+<!---END-->
+
+To read a JSON file from a URL:
 
 ```kotlin
 DataFrame.readJson("https://covid.ourworldindata.org/data/owid-covid-data.json")
 ```
 
-Note that after reading a JSON with a complex structure, you can get hierarchical
-[`DataFrame`](DataFrame.md): [`DataFrame`](DataFrame.md) with `ColumnGroup`s and [`FrameColumn`](DataColumn.md#framecolumn)s.
+### Column type inference from JSON
 
-Also note that type inferring process for JSON is much simpler than for CSV.
-JSON string literals are always supposed to have String type, number literals
-take different `Number` kinds, boolean literals are converted to `Boolean`.
+Type inference for JSON is much simpler than for CSV.
+JSON string literals are always supposed to have String type. Number literals
+take different `Number` kinds. Boolean literals are converted to `Boolean`.
 
 Let's take a look at the following JSON:
 
@@ -178,17 +207,13 @@ Let's take a look at the following JSON:
 ]
 ```
 
-We can read it from file
-
-<!---FUN readJson-->
+We can read it from file:
 
 ```kotlin
 val df = DataFrame.readJson(file)
 ```
 
-<!---END-->
-
-Corresponding [`DataFrame`](DataFrame.md) schema will be
+The corresponding [`DataFrame`](DataFrame.md) schema is:
 
 ```text
 A: String
@@ -200,7 +225,9 @@ D: Boolean?
 Column A has `String` type because all values are string literals, no implicit conversion is performed. Column C
 has `Number` type because it's the least common type for `Int` and `Double`.
 
-### JSON Reading Options: Type Clash Tactic
+### JSON parsing options
+
+#### Manage type clashes
 
 By default, if a type clash occurs when reading JSON, a new column group is created consisting of: "value", "array", and
 any number of object properties:
@@ -251,9 +278,9 @@ For this case, you can set `typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS` 
 
 This option is also possible to set in the Gradle- and KSP plugin by providing `jsonOptions`.
 
-### JSON Reading Options: Key/Value Paths
+#### Specify Key/Value Paths
 
-If you have some JSON looking like
+If you have a JSON like:
 
 ```json
 {
@@ -280,10 +307,10 @@ If you have some JSON looking like
 }
 ```
 
-you will get a column for each dog, which becomes an issue when you have a lot of dogs.
-This issue is especially noticeable when generating data schemas from the JSON, as you might even run out of memory
-when doing that due to the sheer number of generated interfaces.\
-Instead, you can use `keyValuePaths` to specify paths to the objects that should be read as key value frame columns.
+You will get a column for each dog, which becomes an issue when you have a lot of dogs.
+This issue is especially noticeable when generating data schemas from JSON, as you might run out of memory
+when doing that due to the sheer number of generated interfaces. Instead, you can use `keyValuePaths` to specify paths 
+to the objects that should be read as key value frame columns.
 
 This can be the difference between:
 
@@ -342,22 +369,35 @@ Only the bracket notation of json path is supported, as well as just double quot
 
 For more examples, see the "examples/json" module.
 
-## Reading Excel
+## Read from Excel
 
-Add dependency:
+Before you can read data from Excel, add the following dependency:
 
 ```kotlin
 implementation("org.jetbrains.kotlinx:dataframe-excel:$dataframe_version")
 ```
 
-Right now [`DataFrame`](DataFrame.md) supports reading Excel spreadsheet formats: xls, xlsx.
+To read an Excel spreadsheet, use the `.readExcel()` function. Excel spreadsheets can be read from a file or a URL. Supported
+Excel spreadsheet formats are: xls, xlsx.
 
-You can read from file or URL.
+To read an Excel spreadsheet from a file:
+
+```kotlin
+val df = DataFrame.readExcel(file)
+```
+
+To read an Excel spreadsheet from a URL:
+
+```kotlin
+DataFrame.readExcel("https://example.com/data.xlsx")
+```
+
+### Cell type inference from Excel
 
 Cells representing dates will be read as `kotlinx.datetime.LocalDateTime`.
-Cells with number values, including whole numbers such as "100", or calculated formulas will be read as `Double`
+Cells with number values, including whole numbers such as "100", or calculated formulas will be read as `Double`.
 
-Sometimes cells can have wrong format in Excel file, for example you expect to read column of String:
+Sometimes cells can have the wrong format in an Excel file. For example, you expect to read a column of `String`:
 
 ```text
 IDS
@@ -367,9 +407,9 @@ B100
 C100
 ```
 
-You will get column of Serializable instead (common parent for Double & String)
+You will get column of `Serializable` instead (common parent for `Double` and `String`).
 
-You can fix it using convert:
+You can fix it using the `.convert()` function:
 
 <!---FUN fixMixedColumn-->
 
@@ -387,21 +427,16 @@ df1["IDS"].type() shouldBe typeOf<String>()
 
 <!---END-->
 
-## Reading Apache Arrow formats
+## Read Apache Arrow formats
 
-Add dependency:
+Before you can read data from Apache Arrow format, add the following dependency:
 
 ```kotlin
 implementation("org.jetbrains.kotlinx:dataframe-arrow:$dataframe_version")
 ```
 
-<warning>
-Make sure to follow [Apache Arrow Java compatibility](https://arrow.apache.org/docs/java/install.html#java-compatibility) guide when using Java 9+ 
-</warning>
+To read Apache Arrow formats, use the `.readArrowFeather()` function:
 
-[`DataFrame`](DataFrame.md) supports reading [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format)
-and [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files)
-from raw Channel (ReadableByteChannel for streaming and SeekableByteChannel for random access), InputStream, File or ByteArray.
 <!---FUN readArrowFeather-->
 
 ```kotlin
@@ -409,3 +444,11 @@ val df = DataFrame.readArrowFeather(file)
 ```
 
 <!---END-->
+
+[`DataFrame`](DataFrame.md) supports reading [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format)
+and [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files)
+from raw Channel (ReadableByteChannel for streaming and SeekableByteChannel for random access), ArrowReader, InputStream, File or ByteArray.
+
+> If you use Java 9+, follow the [Apache Arrow Java compatibility](https://arrow.apache.org/docs/java/install.html#java-compatibility) guide.
+>
+{style="note"}

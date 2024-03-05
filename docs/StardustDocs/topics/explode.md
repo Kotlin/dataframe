@@ -68,7 +68,7 @@ df.explode { a and b }
 
 <!---END-->
 
-Explode `DataColumn<Collection>`:
+Explode [`DataColumn<Collection>`](DataColumn.md):
 
 <!---FUN explodeColumnList-->
 

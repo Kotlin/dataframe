@@ -1,16 +1,16 @@
 [//]: # (title: convertTo)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-[Converts](convert.md) columns in [`DataFrame`](DataFrame.md) to match given schema `Schema`
+[Converts](convert.md) columns in [`DataFrame`](DataFrame.md) to match a given schema [`Schema`](schema.md).
 
 ```kotlin
 convertTo<Schema>(excessiveColumns = ExcessiveColumns.Keep)
 ```
 
 Customization DSL:
-* `convert` - how specific column types should be converted
-* `parser` - how to parse strings into custom types
-* `fill` - how to fill missing columns
+* `convert`—how specific column types should be converted
+* `parser`—how to parse strings into custom types
+* `fill`—how to fill missing columns
 
 <!---FUN customConvertersData-->
 

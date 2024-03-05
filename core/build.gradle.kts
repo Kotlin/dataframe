@@ -1,17 +1,33 @@
+import com.google.devtools.ksp.gradle.KspTask
 import com.google.devtools.ksp.gradle.KspTaskJvm
+import io.github.devcrocod.korro.KorroTask
+import nl.jolanrensen.docProcessor.defaultProcessors.ARG_DOC_PROCESSOR_LOG_NOT_FOUND
+import nl.jolanrensen.docProcessor.gradle.creatingProcessDocTask
+import org.gradle.jvm.tasks.Jar
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jmailen.gradle.kotlinter.tasks.LintTask
+import xyz.ronella.gradle.plugin.simple.git.task.GitTask
 
-@Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 plugins {
-    kotlin("jvm")
-    kotlin("libs.publisher")
-    kotlin("plugin.serialization")
-    kotlin("jupyter.api")
+    with(libs.plugins) {
+        alias(kotlin.jvm)
+        alias(publisher)
+        alias(serialization)
+        alias(jupyter.api)
+        alias(korro)
+        alias(keywordGenerator)
+        alias(kover)
+        alias(kotlinter)
+        alias(docProcessor)
+        alias(simpleGit)
 
-    id("io.github.devcrocod.korro") version libs.versions.korro
-    id("org.jetbrains.dataframe.generator")
-    id("org.jetbrains.kotlinx.kover")
-    id("org.jmailen.kotlinter")
-    id("org.jetbrains.kotlinx.dataframe")
+        // dependence on our own plugin
+        alias(dataframe)
+
+        // only mandatory if `kotlin.dataframe.add.ksp=false` in gradle.properties
+        alias(ksp)
+    }
+    idea
 }
 
 group = "org.jetbrains.kotlinx"
@@ -26,9 +42,28 @@ repositories {
     maven(jupyterApiTCRepo)
 }
 
+kotlin.sourceSets {
+    main {
+        kotlin.srcDir("build/generated/ksp/main/kotlin/")
+    }
+    test {
+        kotlin.srcDir("build/generated/ksp/test/kotlin/")
+    }
+}
+
+sourceSets {
+    // Gradle creates configurations and compilation task for each source set
+    create("samples") {
+        kotlin.srcDir("src/test/kotlin")
+    }
+}
+
 dependencies {
+    val kotlinCompilerPluginClasspathSamples by configurations.getting
+
     api(libs.kotlin.reflect)
     implementation(libs.kotlin.stdlib)
+    kotlinCompilerPluginClasspathSamples(project(":plugins:expressions-converter"))
     implementation(libs.kotlin.stdlib.jdk8)
 
     api(libs.commonsCsv)
@@ -48,39 +83,188 @@ dependencies {
 
 }
 
-kotlin.sourceSets {
-    main {
-        kotlin.srcDir("build/generated/ksp/main/kotlin/")
+val samplesImplementation by configurations.getting {
+    extendsFrom(configurations.testImplementation.get())
+}
+
+val compileSamplesKotlin = tasks.named<KotlinCompile>("compileSamplesKotlin") {
+    tasks.named<KotlinCompile>("compileTestKotlin").get().let {
+        friendPaths.from(it.friendPaths)
+        libraries.from(it.libraries)
     }
-    test {
-        kotlin.srcDir("build/generated/ksp/test/kotlin/")
+    source(sourceSets["test"].kotlin)
+    destinationDirectory.set(layout.buildDirectory.dir("classes/testWithOutputs/kotlin"))
+}
+
+tasks.withType<KspTask> {
+    // "test" classpath is re-used, so repeated generation should be disabled
+    if (name == "kspSamplesKotlin") {
+        dependsOn("kspTestKotlin")
+        enabled = false
     }
 }
 
-tasks.lintKotlinMain {
-    exclude("**/*keywords*/**")
-    exclude {
-        it.name.endsWith(".Generated.kt")
+tasks.named("lintKotlinSamples") {
+    onlyIf { false }
+}
+
+val clearTestResults by tasks.creating(Delete::class) {
+    delete(layout.buildDirectory.dir("dataframes"))
+    delete(layout.buildDirectory.dir("korroOutputLines"))
+}
+
+val samplesTest = tasks.register<Test>("samplesTest") {
+    group = "Verification"
+    description = "Runs all samples that are used in the documentation, but modified to save their outputs to a file."
+
+    dependsOn(compileSamplesKotlin)
+    dependsOn(clearTestResults)
+    outputs.upToDateWhen { false }
+
+    environment("DATAFRAME_SAVE_OUTPUTS", "")
+
+    filter {
+        includeTestsMatching("org.jetbrains.kotlinx.dataframe.samples.api.*")
     }
-    exclude {
-        it.name.endsWith("\$Extensions.kt")
+
+    ignoreFailures = true
+
+    testClassesDirs = fileTree("${layout.buildDirectory.get().asFile.path}/classes/testWithOutputs/kotlin")
+    classpath = files("${layout.buildDirectory.get().asFile.path}/classes/testWithOutputs/kotlin") + configurations["samplesRuntimeClasspath"] + sourceSets["main"].runtimeClasspath
+}
+
+val clearSamplesOutputs by tasks.creating {
+    group = "documentation"
+
+    doFirst {
+        delete {
+            delete(fileTree(File(projectDir, "../docs/StardustDocs/snippets")))
+        }
     }
 }
 
-tasks.lintKotlinTest {
-    exclude {
-        it.name.endsWith(".Generated.kt")
-    }
-    exclude {
-        it.name.endsWith("\$Extensions.kt")
-    }
-    enabled = true
+val addSamplesToGit by tasks.creating(GitTask::class) {
+    directory.set(file("."))
+    command.set("add")
+    args.set(listOf("-A", "../docs/StardustDocs/snippets"))
 }
 
-tasks.withType<KspTaskJvm>().configureEach {
-    inputs.dir(layout.buildDirectory.dir("generatedSrc")) // Assuming genSrcDir is the directory where generateKeywordsSrc outputs its files
-    dependsOn("generateKeywordsSrc")
+val copySamplesOutputs = tasks.register<JavaExec>("copySamplesOutputs") {
+    group = "documentation"
+    mainClass.set("org.jetbrains.kotlinx.dataframe.explainer.SampleAggregatorKt")
+
+    dependsOn(clearSamplesOutputs)
+    dependsOn(samplesTest)
+    classpath = sourceSets.test.get().runtimeClasspath
+
+    doLast {
+        addSamplesToGit.executeCommand()
+    }
 }
+
+tasks.withType<KorroTask> {
+    dependsOn(copySamplesOutputs)
+}
+
+// This task installs the pre-commit hook to the local machine the first time the project is built
+// The pre-commit hook contains the command to run processKDocsMain before each commit
+val installGitPreCommitHook by tasks.creating(Copy::class) {
+    doNotTrackState(/* reasonNotToTrackState = */ "Fails on TeamCity otherwise.")
+
+    val gitHooksDir = File(rootProject.rootDir, ".git/hooks")
+    if (gitHooksDir.exists()) {
+        from(File(rootProject.rootDir, "gradle/scripts/pre-commit"))
+        into(gitHooksDir)
+        fileMode = 755
+    } else {
+        logger.lifecycle("'.git/hooks' directory not found. Skipping installation of pre-commit hook.")
+    }
+
+}
+tasks.named("assemble") {
+    dependsOn(installGitPreCommitHook)
+}
+
+// region docPreprocessor
+
+// This task is used to add all generated sources (from processKDocsMain) to git
+val generatedSourcesFolderName = "generated-sources"
+val addGeneratedSourcesToGit by tasks.creating(GitTask::class) {
+    directory.set(file("."))
+    command.set("add")
+    args.set(listOf("-A", generatedSourcesFolderName))
+}
+
+// Backup the kotlin source files location
+val kotlinMainSources: FileCollection = kotlin.sourceSets.main.get().kotlin.sourceDirectories
+val kotlinTestSources: FileCollection = kotlin.sourceSets.test.get().kotlin.sourceDirectories
+
+fun pathOf(vararg parts: String) = parts.joinToString(File.separator)
+
+// Task to generate the processed documentation
+val processKDocsMain by creatingProcessDocTask(
+    sources = (kotlinMainSources + kotlinTestSources) // Include both test and main sources for cross-referencing
+        .filterNot { pathOf("build", "generated") in it.path }, // Exclude generated sources
+) {
+    target = file(generatedSourcesFolderName)
+    arguments += ARG_DOC_PROCESSOR_LOG_NOT_FOUND to false
+
+    task {
+        group = "KDocs"
+        doLast {
+            // ensure generated sources are added to git
+            addGeneratedSourcesToGit.executeCommand()
+        }
+    }
+}
+
+// Exclude the generated/processed sources from the IDE
+idea {
+    module {
+        excludeDirs.add(file(generatedSourcesFolderName))
+    }
+}
+
+// Modify all Jar tasks such that before running the Kotlin sources are set to
+// the target of processKdocMain and they are returned back to normal afterwards.
+tasks.withType<Jar> {
+    dependsOn(processKDocsMain)
+    mustRunAfter(tasks.generateKeywordsSrc)
+    outputs.upToDateWhen { false }
+
+    doFirst {
+        kotlin.sourceSets.main {
+            kotlin.setSrcDirs(
+                processKDocsMain.targets
+                    .filterNot {
+                        pathOf("src", "test", "kotlin") in it.path ||
+                            pathOf("src", "test", "java") in it.path
+                    } // filter out test sources again
+                    .plus(kotlinMainSources.filter {
+                        pathOf("build", "generated") in it.path
+                    }) // Include generated sources (which were excluded above)
+            )
+        }
+    }
+
+    doLast {
+        kotlin.sourceSets.main {
+            kotlin.setSrcDirs(kotlinMainSources)
+        }
+    }
+}
+
+// If we want to use Dokka, make sure to use the preprocessed sources
+tasks.withType<org.jetbrains.dokka.gradle.AbstractDokkaLeafTask> {
+    dependsOn(processKDocsMain)
+    dokkaSourceSets {
+        all {
+            sourceRoot(processKDocsMain.target.get())
+        }
+    }
+}
+
+// endregion
 
 korro {
     docs = fileTree(rootProject.rootDir) {
@@ -90,6 +274,10 @@ korro {
     samples = fileTree(project.projectDir) {
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
+    }
+
+    outputs = fileTree(project.layout.buildDirectory) {
+        include("korroOutputLines/*")
     }
 
     groupSamples {
@@ -111,22 +299,39 @@ korro {
     }
 }
 
-kotlinter {
-    ignoreFailures = true
-    reporters = arrayOf("checkstyle", "plain", "json")
-    experimentalRules = true
-    disabledRules = arrayOf(
-        "no-wildcard-imports",
-        "experimental:spacing-between-declarations-with-annotations",
-        "experimental:enum-entry-name-case",
-        "experimental:argument-list-wrapping",
-        "experimental:annotation",
-        "max-line-length",
-        "filename",
-        "comment-spacing",
-        "curly-spacing",
-        "string-template",
-    )
+tasks.withType<KspTaskJvm> {
+    dependsOn(tasks.generateKeywordsSrc)
+}
+
+tasks.formatKotlinMain {
+    dependsOn(tasks.generateKeywordsSrc)
+    dependsOn("kspKotlin")
+}
+
+tasks.formatKotlinTest {
+    dependsOn(tasks.generateKeywordsSrc)
+    dependsOn("kspTestKotlin")
+}
+
+tasks.lintKotlinMain {
+    dependsOn(tasks.generateKeywordsSrc)
+    dependsOn("kspKotlin")
+}
+
+tasks.lintKotlinTest {
+    dependsOn(tasks.generateKeywordsSrc)
+    dependsOn("kspTestKotlin")
+}
+
+tasks.withType<LintTask> {
+    exclude("**/*keywords*/**")
+    exclude {
+        it.name.endsWith(".Generated.kt")
+    }
+    exclude {
+        it.name.endsWith("\$Extensions.kt")
+    }
+    enabled = true
 }
 
 kotlin {
@@ -138,8 +343,7 @@ tasks.withType<JavaCompile> {
     targetCompatibility = JavaVersion.VERSION_1_8.toString()
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    dependsOn(tasks.lintKotlin)
+tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = freeCompilerArgs + listOf("-Xinline-classes", "-Xopt-in=kotlin.RequiresOptIn")
     }

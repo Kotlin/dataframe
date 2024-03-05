@@ -1,9 +1,12 @@
 package org.jetbrains.dataframe.gradle
 
+import com.google.devtools.ksp.gradle.KspTaskJvm
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.file.FileCollection
+import org.gradle.api.logging.LogLevel
+import org.gradle.internal.logging.services.DefaultLoggingManager
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode
@@ -16,6 +19,7 @@ import java.io.File
 import java.net.URL
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.util.*
 
 class SchemaGeneratorPlugin : Plugin<Project> {
 
@@ -33,10 +37,15 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                 target.logger.warn("Schema generator plugin applied, but no Kotlin plugin was found")
             }
 
-            val generationTasks = extension.schemas.map { createTask(target, extension, appliedPlugin, it) }
+            val generationTasks = extension.schemas.map {
+                createTask(target, extension, appliedPlugin, it)
+            }
             val generateAll = target.tasks.create("generateDataFrames") {
                 group = GROUP
                 dependsOn(*generationTasks.toTypedArray())
+            }
+            tasks.withType(KspTaskJvm::class.java).configureEach {
+                dependsOn(generateAll)
             }
             tasks.withType<KotlinCompile> {
                 dependsOn(generateAll)
@@ -66,7 +75,18 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                 appliedPlugin ?: propertyError("src")
                 val sourceSet = appliedPlugin.kotlinExtension.sourceSets.getByName(sourceSetName)
                 val src = target.file(Paths.get("build/generated/dataframe/", sourceSetName, "kotlin").toFile())
+
+                // Add the new sources to the source set
                 sourceSet.kotlin.srcDir(src)
+
+                // Configure the right ksp task to be aware of these new sources
+                val kspTaskName = "ksp${sourceSetName.replaceFirstChar { it.uppercase() }}Kotlin"
+                target.tasks.withType(KspTaskJvm::class.java).configureEach {
+                    if (sourceSetName == "main" && name == "kspKotlin" || name == kspTaskName) {
+                        source(src)
+                    }
+                }
+
                 src
             }
 
@@ -102,7 +122,8 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         val defaultPath = schema.defaultPath ?: extension.defaultPath ?: true
         val delimiters = schema.withNormalizationBy ?: extension.withNormalizationBy ?: setOf('\t', ' ', '_')
 
-        return target.tasks.create("generateDataFrame${interfaceName}", GenerateDataSchemaTask::class.java) {
+        return target.tasks.create("generateDataFrame$interfaceName", GenerateDataSchemaTask::class.java) {
+            (logging as? DefaultLoggingManager)?.setLevelInternal(LogLevel.QUIET)
             group = GROUP
             data.set(schema.data)
             this.interfaceName.set(interfaceName)
@@ -111,6 +132,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             this.schemaVisibility.set(visibility)
             this.csvOptions.set(schema.csvOptions)
             this.jsonOptions.set(schema.jsonOptions)
+            this.jdbcOptions.set(schema.jdbcOptions) // TODO: probably remove
             this.defaultPath.set(defaultPath)
             this.delimiters.set(delimiters)
         }
@@ -120,7 +142,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         val rawName = schema.name?.substringAfterLast('.')
             ?: fileName(schema.data)
                 ?.toCamelCaseByDelimiters(delimiters)
-                ?.capitalize()
+                ?.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
                 ?.removeSurrounding("`")
             ?: return null
         NameChecker.checkValidIdentifier(rawName)

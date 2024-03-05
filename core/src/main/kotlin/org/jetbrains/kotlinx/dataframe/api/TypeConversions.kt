@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.anyNull
@@ -44,6 +45,7 @@ public fun <T> ColumnPath.toColumnOf(): ColumnAccessor<T> = ColumnAccessorImpl(t
 public fun ColumnPath.toColumnAccessor(): ColumnAccessor<Any?> = ColumnAccessorImpl(this)
 
 public fun ColumnPath.toColumnGroupAccessor(): ColumnAccessor<AnyRow> = ColumnAccessorImpl(this)
+
 public fun ColumnPath.toFrameColumnAccessor(): ColumnAccessor<AnyFrame> = ColumnAccessorImpl(this)
 
 // endregion
@@ -95,6 +97,14 @@ public fun <T> DataColumn<T>.castToNullable(): DataColumn<T?> = cast()
 
 public fun <T> ColumnReference<T>.castToNullable(): ColumnReference<T?> = cast()
 
+public fun AnyCol.setNullable(nullable: Boolean): AnyCol {
+    return if (nullable) {
+        this.castToNullable()
+    } else {
+        this.castToNotNullable()
+    }
+}
+
 // region to array
 
 public inline fun <reified T> DataColumn<T>.toTypedArray(): Array<T> = toList().toTypedArray()
@@ -113,9 +123,16 @@ public fun DataColumn<Number>.toByteArray(): ByteArray = convertTo<Byte>().toLis
 
 // endregion
 
+public fun AnyCol.asValueColumn(): ValueColumn<*> = this as ValueColumn<*>
+
+@JvmName("asColumnGroupUntyped")
 public fun AnyCol.asColumnGroup(): ColumnGroup<*> = this as ColumnGroup<*>
 
-public fun <T> DataColumn<DataFrame<T>>.asFrameColumn(): FrameColumn<T> = (this as AnyCol).asAnyFrameColumn().castFrameColumn()
+@JvmName("asFrameColumnUntyped")
+public fun AnyCol.asFrameColumn(): FrameColumn<*> = this as FrameColumn<*>
+
+public fun <T> DataColumn<DataFrame<T>>.asFrameColumn(): FrameColumn<T> =
+    (this as AnyCol).asAnyFrameColumn().castFrameColumn()
 
 @JvmName("asGroupedT")
 public fun <T> DataColumn<DataRow<T>>.asColumnGroup(): ColumnGroup<T> = (this as AnyCol).asColumnGroup().cast()
@@ -129,6 +146,39 @@ public fun <T> DataColumn<DataRow<T>>.asDataFrame(): DataFrame<T> = asColumnGrou
 public fun <T> ColumnGroup<T>.asDataColumn(): DataColumn<DataRow<T>> = this as DataColumn<DataRow<T>>
 
 public fun <T> ColumnGroup<T>.asDataFrame(): DataFrame<T> = this
+
+// endregion
+
+// region SingleColumn
+
+/**
+ * ## As ColumnGroup
+ *
+ * Creates a [ColumnAccessor][ColumnAccessor]`<`[DataRow][DataRow]`<`[C][C\]`>>` from [this][this\].
+ * This is especially useful when you want to use [ColumnGroup] functions in the [ColumnsSelectionDsl] but your column
+ * type is not recognized as a [ColumnGroup].
+ * If you're not sure whether a column is recognized as [ColumnGroup] or not, you can always call [asColumnGroup][asColumnGroup\]
+ * and it will return the same type if it is already a [ColumnGroup].
+ *
+ * NOTE: This does not check whether the column is actually a [ColumnGroup] or not. It just casts it.
+ *
+ * #### For example:
+ *
+ * `df.`[select][DataFrame.select]` { `[first][ColumnsSelectionDsl.first]`().`[asColumnGroup][SingleColumn.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
+ *
+ * @receiver The column reference to cast to a [SingleColumn]`<`[DataRow][DataRow]`<`[C][C\]`>>`.
+ * @param [C\] The type of the (group) column.
+ * @return A [SingleColumn]`<`[DataRow][DataRow]`<`[C][C\]`>>`.
+ */
+private interface SingleColumnAsColumnGroupDocs
+
+/** @include [SingleColumnAsColumnGroupDocs] */
+@Suppress("UNCHECKED_CAST")
+public fun <C> SingleColumn<C>.asColumnGroup(): SingleColumn<DataRow<C>> = this as SingleColumn<DataRow<C>>
+
+/** @include [SingleColumnAsColumnGroupDocs] */
+@JvmName("asColumnGroupDataRow")
+public fun <C> SingleColumn<DataRow<C>>.asColumnGroup(): SingleColumn<DataRow<C>> = this
 
 // endregion
 
@@ -146,10 +196,18 @@ public fun <T> FrameColumn<T>.toValueColumn(): ValueColumn<DataFrame<T>?> =
 @JvmName("asNumbersAny")
 public fun ColumnSet<Any>.asNumbers(): ColumnSet<Number> = this as ColumnSet<Number>
 
+@JvmName("asNumbersAny")
+public fun SingleColumn<Any>.asNumbers(): SingleColumn<Number> = this as SingleColumn<Number>
+
 @JvmName("asNumbersAnyNullable")
 public fun ColumnSet<Any?>.asNumbers(): ColumnSet<Number?> = this as ColumnSet<Number?>
 
+@JvmName("asNumbersAnyNullable")
+public fun SingleColumn<Any?>.asNumbers(): SingleColumn<Number?> = this as SingleColumn<Number?>
+
 public fun <T> ColumnSet<T>.asComparable(): ColumnSet<Comparable<T>> = this as ColumnSet<Comparable<T>>
+
+public fun <T> SingleColumn<T>.asComparable(): SingleColumn<Comparable<T>> = this as SingleColumn<Comparable<T>>
 
 // endregion
 
@@ -187,7 +245,13 @@ public enum class Infer {
     /**
      * Infer [DataColumn.type] and [DataColumn.hasNulls] from actual [DataColumn.values] using optionally provided base type as an upper bound.
      */
-    Type
+    Type;
+
+    /**
+     * @param [infer\] [An enum][Infer] that indicates how [DataColumn.type] should be calculated.
+     * Either [None], [Nulls], or [Type].
+     */
+    internal interface ParamDoc
 }
 
 /**
@@ -228,6 +292,7 @@ public fun NullabilityOptions.applyNullability(data: List<Any?>, expectedNulls: 
             }
             expectedNulls
         }
+
         NullabilityOptions.Widening -> {
             expectedNulls || hasNulls
         }
@@ -236,7 +301,7 @@ public fun NullabilityOptions.applyNullability(data: List<Any?>, expectedNulls: 
 
 public inline fun <reified T> Iterable<T>.toColumn(
     name: String = "",
-    infer: Infer = Infer.None
+    infer: Infer = Infer.Nulls,
 ): DataColumn<T> =
     (
         if (infer == Infer.Type) DataColumn.createWithTypeInference(name, asList())
@@ -255,7 +320,9 @@ public inline fun <reified T> Iterable<T>.toColumn(property: KProperty<T>): Data
 public fun Iterable<String>.toPath(): ColumnPath = ColumnPath(asList())
 
 public fun Iterable<AnyBaseCol>.toColumnGroup(name: String): ColumnGroup<*> = dataFrameOf(this).asColumnGroup(name)
-public fun <T> Iterable<AnyBaseCol>.toColumnGroup(column: ColumnGroupAccessor<T>): ColumnGroup<T> = dataFrameOf(this).cast<T>().asColumnGroup(column)
+
+public fun <T> Iterable<AnyBaseCol>.toColumnGroup(column: ColumnGroupAccessor<T>): ColumnGroup<T> =
+    dataFrameOf(this).cast<T>().asColumnGroup(column)
 
 public fun <T> Iterable<AnyBaseCol>.toColumnGroupOf(name: String): ColumnGroup<T> = toColumnGroup(name).cast()
 

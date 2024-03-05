@@ -1,27 +1,29 @@
 plugins {
     application
     kotlin("jvm")
+
     id("org.jetbrains.kotlinx.dataframe")
+
+    // only mandatory if `kotlin.dataframe.add.ksp=false` in gradle.properties
+    id("com.google.devtools.ksp")
 }
 
 repositories {
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/bootstrap")
+    mavenLocal() // in case of local dataframe development
 }
 
 application.mainClass.set("org.jetbrains.kotlinx.dataframe.examples.titanic.ml.TitanicKt")
 
 dependencies {
-    implementation(project(":core"))
-    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-api:0.5.1")
-    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-impl:0.5.1")
-    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-tensorflow:0.5.1")
-    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-dataset:0.5.1")
+    // implementation("org.jetbrains.kotlinx:dataframe:X.Y.Z")
+    implementation(project(":"))
+    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-api:0.5.2")
+    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-impl:0.5.2")
+    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-tensorflow:0.5.2")
+    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-dataset:0.5.2")
 }
-
-// Make IDE aware of the generated code:
-kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotlin/")
-
 
 dataframes {
     schema {

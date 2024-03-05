@@ -6,6 +6,8 @@ import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Ignore
 import org.junit.Test
 import java.io.File
+import java.sql.Connection
+import java.sql.DriverManager
 
 class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationTest() {
     private companion object {
@@ -131,9 +133,11 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
 
             val kotlin = File(buildDir, "src/main/kotlin").also { it.mkdirs() }
             val main = File(kotlin, "Main.kt")
-            main.writeText("""
+            main.writeText(
+                """
                 import org.example.Schema
-            """.trimIndent())
+                """.trimIndent()
+            )
 
             """
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
@@ -174,42 +178,43 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
 
             val kotlin = File(buildDir, "src/jvmMain/kotlin").also { it.mkdirs() }
             val main = File(kotlin, "Main.kt")
-            main.writeText("""
+            main.writeText(
+                """
                 import org.example.Schema
-            """.trimIndent())
+                """.trimIndent()
+            )
             """
-                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
-                    
-                plugins {
-                    kotlin("multiplatform") version "$kotlinVersion"
-                    id("org.jetbrains.kotlinx.dataframe")
-                }
+            import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
-                repositories {
-                    mavenCentral() 
-                    mavenLocal()
-                }
+            plugins {
+                kotlin("multiplatform") version "$kotlinVersion"
+                id("org.jetbrains.kotlinx.dataframe")
+            }
+            
+            repositories {
+                mavenCentral() 
+                mavenLocal()
+            }
+            
+            kotlin {
+                jvm()
                 
-                kotlin {
-                    jvm()
-                    
-                    sourceSets {
-                        val jvmMain by getting {
-                            dependencies {
-                                implementation(files("$dataframeJarPath"))
-                            }
+                sourceSets {
+                    val jvmMain by getting {
+                        dependencies {
+                            implementation(files("$dataframeJarPath"))
                         }
                     }
                 }
-                
-                dataframes {
-                    schema {
-                        data = file("${TestData.csvName}")
-                        name = "org.example.Schema"
-                    }
+            }
+            
+            dataframes {
+                schema {
+                    data = file("${TestData.csvName}")
+                    name = "org.example.Schema"
                 }
+            }
             """.trimIndent()
-
         }
         result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
     }
@@ -234,7 +239,8 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
 
             val kotlin = File(buildDir, "src/main/kotlin").also { it.mkdirs() }
             val main = File(kotlin, "Main.kt")
-            main.writeText("""
+            main.writeText(
+                """
                 import org.jetbrains.kotlinx.dataframe.DataFrame
                 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
                 import org.jetbrains.kotlinx.dataframe.io.read
@@ -244,34 +250,35 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                 fun main() {
                         val df = DataFrame.read("${TestData.csvName}").cast<Schema>()
                 }
-            """.trimIndent())
+                """.trimIndent()
+            )
 
             """
-                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
-                    
-                plugins {
-                    kotlin("jvm") version "$kotlinVersion"
-                    id("org.jetbrains.kotlinx.dataframe")
-                }
+            import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
-                repositories {
-                    mavenLocal()
-                    mavenCentral() 
-                }
-                
-                dependencies {
-                    implementation(files("$dataframeJarPath"))
-                }
-                
-                kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotlin/")
+            plugins {
+                kotlin("jvm") version "$kotlinVersion"
+                id("org.jetbrains.kotlinx.dataframe")
+            }
+            
+            repositories {
+                mavenLocal()
+                mavenCentral() 
+            }
+            
+            dependencies {
+                implementation(files("$dataframeJarPath"))
+            }
+            
+            kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotlin/")
 
-                dataframes {
-                    schema {
-                        data = "${TestData.csvName}"
-                        name = "Schema"
-                        packageName = ""
-                    }
+            dataframes {
+                schema {
+                    data = "${TestData.csvName}"
+                    name = "Schema"
+                    packageName = ""
                 }
+            }
             """.trimIndent()
         }
         result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
@@ -285,7 +292,8 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
 
             val kotlin = File(buildDir, "src/main/kotlin").also { it.mkdirs() }
             val main = File(kotlin, "Main.kt")
-            main.writeText("""
+            main.writeText(
+                """
                 import org.jetbrains.kotlinx.dataframe.DataFrame
                 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
                 import org.jetbrains.kotlinx.dataframe.io.read
@@ -301,7 +309,8 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                     val df = DataFrame.read("${TestData.csvName}").cast<MySchema>()
                     val df1 = df.filter { age != null }
                 }
-            """.trimIndent())
+                """.trimIndent()
+            )
 
             @Suppress("DuplicatedCode")
             """
@@ -335,7 +344,8 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
 
             val kotlin = File(buildDir, "src/main/kotlin").also { it.mkdirs() }
             val main = File(kotlin, "Main.kt")
-            main.writeText("""
+            main.writeText(
+                """
                 @file:ImportDataSchema(name = "MySchema", path = "${TestData.csvName}")
                 
                 package test
@@ -347,7 +357,8 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                     val df = MySchema.readCSV()
                     val df1 = df.filter { age != null }
                 }
-            """.trimIndent())
+                """.trimIndent()
+            )
 
             """
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
@@ -370,6 +381,129 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
             """.trimIndent()
         }
         result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
+    }
+
+    @Test
+    @Ignore
+    // TODO: test is broken
+        /*
+        e: file://test3901867314473689900/src/main/kotlin/Main.kt:12:43 Unresolved reference: readSqlTable
+        e: file://test3901867314473689900/src/main/kotlin/Main.kt:13:43 Unresolved reference: DatabaseConfiguration
+        e: file://test3901867314473689900/src/main/kotlin/Main.kt:19:28 Unresolved reference: readSqlTable
+        e: file://test3901867314473689900/src/main/kotlin/Main.kt:20:21 Unresolved reference: age
+        e: file://test3901867314473689900/src/main/kotlin/Main.kt:22:29 Unresolved reference: readSqlTable
+        e: file://test3901867314473689900/src/main/kotlin/Main.kt:23:22 Unresolved reference: age
+        e: file://test3901867314473689900/src/main/kotlin/Main.kt:25:24 Unresolved reference: DatabaseConfiguration
+        e: file://test3901867314473689900/src/main/kotlin/Main.kt:26:29 Unresolved reference: readSqlTable
+        e: file://test3901867314473689900/src/main/kotlin/Main.kt:27:22 Unresolved reference: age
+        e: file://test3901867314473689900/src/main/kotlin/Main.kt:29:29 Unresolved reference: readSqlTable
+        e: file://test3901867314473689900/src/main/kotlin/Main.kt:30:22 Unresolved reference: age
+        */
+    fun `preprocessor imports schema from database`() {
+        val connectionUrl = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false"
+        DriverManager.getConnection(connectionUrl).use {
+            val (_, result) = runGradleBuild(":build") { buildDir ->
+                createTestDatabase(it)
+
+                val kotlin = File(buildDir, "src/main/kotlin").also { it.mkdirs() }
+                val main = File(kotlin, "Main.kt")
+                // this is a copy of the code snippet in the
+                // DataFrameJdbcSymbolProcessorTest.`schema extracted via readFromDB method is resolved`
+                main.writeText(
+                    """
+                @file:ImportDataSchema(name = "Customer", path = "$connectionUrl")
+                
+                package test
+                
+                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+                import org.jetbrains.kotlinx.dataframe.api.filter
+                import org.jetbrains.kotlinx.dataframe.DataFrame
+                import org.jetbrains.kotlinx.dataframe.api.cast
+                import java.sql.Connection
+                import java.sql.DriverManager
+                import java.sql.SQLException
+                import org.jetbrains.kotlinx.dataframe.io.readSqlTable
+                import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
+                
+                fun main() {    
+                    Class.forName("org.h2.Driver")
+                    val tableName = "Customer"
+                    DriverManager.getConnection("$connectionUrl").use { connection ->
+                        val df = DataFrame.readSqlTable(connection, tableName).cast<Customer>()
+                        df.filter { age != null && age > 30 }
+
+                        val df1 = DataFrame.readSqlTable(connection, tableName, 1).cast<Customer>()
+                        df1.filter { age != null && age > 30 }
+                        
+                        val dbConfig = DatabaseConfiguration(url = "$connectionUrl")
+                        val df2 = DataFrame.readSqlTable(dbConfig, tableName).cast<Customer>()
+                        df2.filter { age != null && age > 30 }
+                        
+                        val df3 = DataFrame.readSqlTable(dbConfig, tableName, 1).cast<Customer>()
+                        df3.filter { age != null && age > 30 }
+ 
+                    }
+                }
+                    """.trimIndent()
+                )
+
+                """
+                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
+                    
+                plugins {
+                    kotlin("jvm") version "$kotlinVersion"
+                    id("org.jetbrains.kotlinx.dataframe")
+                }
+                
+                repositories {
+                    mavenLocal()
+                    mavenCentral()
+                }
+                
+                dependencies {
+                    implementation(files("$dataframeJarPath"))
+                }
+                
+                kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotlin/")
+                """.trimIndent()
+            }
+            result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
+        }
+    }
+
+    private fun createTestDatabase(connection: Connection) {
+        // Crate table Customer
+        connection.createStatement().execute(
+            """
+            CREATE TABLE Customer (
+                id INT PRIMARY KEY,
+                name VARCHAR(50),
+                age INT
+            )
+            """.trimIndent()
+        )
+
+        // Create table Sale
+        connection.createStatement().execute(
+            """
+            CREATE TABLE Sale (
+                id INT PRIMARY KEY,
+                customerId INT,
+                amount DECIMAL(10, 2)
+            )
+            """.trimIndent()
+        )
+
+        // add data to the Customer table
+        connection.createStatement().execute("INSERT INTO Customer (id, name, age) VALUES (1, 'John', 40)")
+        connection.createStatement().execute("INSERT INTO Customer (id, name, age) VALUES (2, 'Alice', 25)")
+        connection.createStatement().execute("INSERT INTO Customer (id, name, age) VALUES (3, 'Bob', 47)")
+
+        // add data to the Sale table
+        connection.createStatement().execute("INSERT INTO Sale (id, customerId, amount) VALUES (1, 1, 100.50)")
+        connection.createStatement().execute("INSERT INTO Sale (id, customerId, amount) VALUES (2, 2, 50.00)")
+        connection.createStatement().execute("INSERT INTO Sale (id, customerId, amount) VALUES (3, 1, 75.25)")
+        connection.createStatement().execute("INSERT INTO Sale (id, customerId, amount) VALUES (4, 3, 35.15)")
     }
 
     @Test
@@ -415,41 +549,43 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
             val dataFile = File(buildDir, TestData.csvName)
             val kotlin = File(buildDir, "src/jsMain/kotlin").also { it.mkdirs() }
             val main = File(kotlin, "Main.kt")
-            main.writeText("""
+            main.writeText(
+                """
                 fun main() {
                     console.log("Hello, Kotlin/JS!")
                 }
-            """.trimIndent())
+                """.trimIndent()
+            )
             dataFile.writeText(TestData.csvSample)
             """
-                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
-                    
-                plugins {
-                    kotlin("multiplatform") version "$kotlinVersion"
-                    id("org.jetbrains.kotlinx.dataframe")
-                }
+            import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
-                repositories {
-                    mavenCentral()
-                    mavenLocal()
-                }
-                
-                kotlin {
-                    sourceSets {
-                        js(IR) {
-                            browser()
-                        }
+            plugins {
+                kotlin("multiplatform") version "$kotlinVersion"
+                id("org.jetbrains.kotlinx.dataframe")
+            }
+            
+            repositories {
+                mavenCentral()
+                mavenLocal()
+            }
+            
+            kotlin {
+                sourceSets {
+                    js(IR) {
+                        browser()
                     }
                 }
-                
-                dataframes {
-                    schema {
-                        data = file("${TestData.csvName}")
-                        name = "Schema"
-                        packageName = ""
-                        src = buildDir
-                    }
+            }
+            
+            dataframes {
+                schema {
+                    data = file("${TestData.csvName}")
+                    name = "Schema"
+                    packageName = ""
+                    src = buildDir
                 }
+            }
             """.trimIndent()
         }
         result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
@@ -461,39 +597,41 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
             val dataFile = File(buildDir, TestData.csvName)
             val kotlin = File(buildDir, "src/jvmMain/kotlin").also { it.mkdirs() }
             val main = File(kotlin, "Main.kt")
-            main.writeText("""
+            main.writeText(
+                """
                 fun main() {
                     println("Hello, Kotlin/JVM!")
                 }
-            """.trimIndent())
+                """.trimIndent()
+            )
             dataFile.writeText(TestData.csvSample)
             """
-                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
-                    
-                plugins {
-                    kotlin("multiplatform") version "$kotlinVersion"
-                    id("org.jetbrains.kotlinx.dataframe")
-                }
+            import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
-                repositories {
-                    mavenCentral()
-                    mavenLocal()
+            plugins {
+                kotlin("multiplatform") version "$kotlinVersion"
+                id("org.jetbrains.kotlinx.dataframe")
+            }
+            
+            repositories {
+                mavenCentral()
+                mavenLocal()
+            }
+            
+            kotlin {
+                sourceSets {
+                    jvm()
                 }
-                
-                kotlin {
-                    sourceSets {
-                        jvm()
-                    }
+            }
+            
+            dataframes {
+                schema {
+                    data = file("${TestData.csvName}")
+                    name = "Schema"
+                    packageName = ""
+                    src = buildDir
                 }
-                
-                dataframes {
-                    schema {
-                        data = file("${TestData.csvName}")
-                        name = "Schema"
-                        packageName = ""
-                        src = buildDir
-                    }
-                }
+            }
             """.trimIndent()
         }
         result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
@@ -514,28 +652,28 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
             val dataFile = File(buildDir, dataName)
             dataFile.writeText(dataSample)
             """
-                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
-                            
-                plugins {
-                    kotlin("jvm") version "$kotlinVersion"
-                    id("org.jetbrains.kotlinx.dataframe")
+            import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
+                        
+            plugins {
+                kotlin("jvm") version "$kotlinVersion"
+                id("org.jetbrains.kotlinx.dataframe")
+            }
+            
+            repositories {
+                mavenCentral()
+                mavenLocal()
+            }
+            
+            dependencies {
+                implementation(files("$dataframeJarPath"))
+            }
+            
+            dataframes {
+                schema {
+                    data = file("$dataName")
+                    name = "Schema"
                 }
-                
-                repositories {
-                    mavenCentral()
-                    mavenLocal()
-                }
-                
-                dependencies {
-                    implementation(files("$dataframeJarPath"))
-                }
-                
-                dataframes {
-                    schema {
-                        data = file("${dataName}")
-                        name = "Schema"
-                    }
-                }
+            }
             """.trimIndent()
         }
         result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS

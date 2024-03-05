@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.columns
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.impl.api.Col
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
@@ -23,7 +24,9 @@ public interface BaseColumn<out T> : ColumnReference<T>, Col {
     // region info
 
     public fun size(): Int
+
     public fun kind(): ColumnKind
+
     public fun type(): KType
 
     // TODO: remove
@@ -33,7 +36,18 @@ public interface BaseColumn<out T> : ColumnReference<T>, Col {
 
     // region get
 
+    /**
+     * Gets the row at given [index].
+     *
+     * NOTE: This doesn't work in the [ColumnsSelectionDsl], use [ColumnsSelectionDsl.col] to select a column by index.
+     */
     public operator fun get(index: Int): T
+
+    /**
+     * Gets the rows at given indices.
+     *
+     * NOTE: This doesn't work in the [ColumnsSelectionDsl], use [ColumnsSelectionDsl.cols] to select columns by index.
+     */
     public operator fun get(firstIndex: Int, vararg otherIndices: Int): BaseColumn<T> = get(
         headPlusIterable(
             firstIndex,
@@ -42,8 +56,18 @@ public interface BaseColumn<out T> : ColumnReference<T>, Col {
     )
     public operator fun get(row: AnyRow): T = get(row.index())
 
+    /**
+     * Gets the rows at given range of indices.
+     *
+     * NOTE: This doesn't work in the [ColumnsSelectionDsl], use [ColumnsSelectionDsl.cols] to select columns by range.
+     */
     public operator fun get(range: IntRange): BaseColumn<T>
 
+    /**
+     * Gets the rows at given indices.
+     *
+     * NOTE: This doesn't work in the [ColumnsSelectionDsl], use [ColumnsSelectionDsl.cols] to select columns by index.
+     */
     public operator fun get(indices: Iterable<Int>): BaseColumn<T>
 
     public operator fun get(columnName: String): AnyCol
@@ -55,9 +79,11 @@ public interface BaseColumn<out T> : ColumnReference<T>, Col {
     public fun values(): Iterable<T>
 
     public fun toList(): List<T> = values().asList()
+
     public fun toSet(): Set<T>
 
     public fun distinct(): BaseColumn<T>
+
     public fun countDistinct(): Int
 
     public operator fun contains(value: @UnsafeVariance T): Boolean
@@ -70,4 +96,5 @@ public interface BaseColumn<out T> : ColumnReference<T>, Col {
 }
 
 internal val <T> BaseColumn<T>.values: Iterable<T> get() = values()
+
 internal val AnyBaseCol.size: Int get() = size()

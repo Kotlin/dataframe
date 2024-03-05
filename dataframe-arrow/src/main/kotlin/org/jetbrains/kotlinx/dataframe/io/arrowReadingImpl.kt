@@ -13,11 +13,16 @@ import org.apache.arrow.vector.Float8Vector
 import org.apache.arrow.vector.IntVector
 import org.apache.arrow.vector.LargeVarBinaryVector
 import org.apache.arrow.vector.LargeVarCharVector
+import org.apache.arrow.vector.NullVector
 import org.apache.arrow.vector.SmallIntVector
 import org.apache.arrow.vector.TimeMicroVector
 import org.apache.arrow.vector.TimeMilliVector
 import org.apache.arrow.vector.TimeNanoVector
 import org.apache.arrow.vector.TimeSecVector
+import org.apache.arrow.vector.TimeStampMicroVector
+import org.apache.arrow.vector.TimeStampMilliVector
+import org.apache.arrow.vector.TimeStampNanoVector
+import org.apache.arrow.vector.TimeStampSecVector
 import org.apache.arrow.vector.TinyIntVector
 import org.apache.arrow.vector.UInt1Vector
 import org.apache.arrow.vector.UInt2Vector
@@ -28,6 +33,7 @@ import org.apache.arrow.vector.VarCharVector
 import org.apache.arrow.vector.VectorSchemaRoot
 import org.apache.arrow.vector.complex.StructVector
 import org.apache.arrow.vector.ipc.ArrowFileReader
+import org.apache.arrow.vector.ipc.ArrowReader
 import org.apache.arrow.vector.ipc.ArrowStreamReader
 import org.apache.arrow.vector.types.pojo.Field
 import org.apache.arrow.vector.util.DateUtility
@@ -130,8 +136,45 @@ private fun TimeMilliVector.values(range: IntRange): List<LocalTime?> = range.ma
 
 private fun TimeSecVector.values(range: IntRange): List<LocalTime?> =
     range.map { getObject(it)?.let { LocalTime.ofSecondOfDay(it.toLong()) } }
+
+private fun TimeStampNanoVector.values(range: IntRange): List<LocalDateTime?> = range.mapIndexed { i, it ->
+    if (isNull(i)) {
+        null
+    } else {
+        getObject(it)
+    }
+}
+
+private fun TimeStampMicroVector.values(range: IntRange): List<LocalDateTime?> = range.mapIndexed { i, it ->
+    if (isNull(i)) {
+        null
+    } else {
+        getObject(it)
+    }
+}
+
+private fun TimeStampMilliVector.values(range: IntRange): List<LocalDateTime?> = range.mapIndexed { i, it ->
+    if (isNull(i)) {
+        null
+    } else {
+        getObject(it)
+    }
+}
+
+private fun TimeStampSecVector.values(range: IntRange): List<LocalDateTime?> = range.mapIndexed { i, it ->
+    if (isNull(i)) {
+        null
+    } else {
+        getObject(it)
+    }
+}
+
 private fun StructVector.values(range: IntRange): List<Map<String, Any?>?> = range.map {
     getObject(it)
+}
+
+private fun NullVector.values(range: IntRange): List<Nothing?> = range.map {
+    getObject(it) as Nothing?
 }
 
 private fun VarCharVector.values(range: IntRange): List<String?> = range.map {
@@ -166,12 +209,27 @@ private fun LargeVarCharVector.values(range: IntRange): List<String?> = range.ma
     }
 }
 
+internal fun nothingType(nullable: Boolean): KType = if (nullable) {
+    typeOf<List<Nothing?>>()
+} else {
+    typeOf<List<Nothing>>()
+}.arguments.first().type!!
+
 private inline fun <reified T> List<T?>.withTypeNullable(
     expectedNulls: Boolean,
     nullabilityOptions: NullabilityOptions,
 ): Pair<List<T?>, KType> {
     val nullable = nullabilityOptions.applyNullability(this, expectedNulls)
     return this to typeOf<T>().withNullability(nullable)
+}
+
+@JvmName("withTypeNullableNothingList")
+private fun List<Nothing?>.withTypeNullable(
+    expectedNulls: Boolean,
+    nullabilityOptions: NullabilityOptions,
+): Pair<List<Nothing?>, KType> {
+    val nullable = nullabilityOptions.applyNullability(this, expectedNulls)
+    return this to nothingType(nullable)
 }
 
 private fun readField(root: VectorSchemaRoot, field: Field, nullability: NullabilityOptions): AnyBaseCol {
@@ -202,7 +260,12 @@ private fun readField(root: VectorSchemaRoot, field: Field, nullability: Nullabi
             is TimeMicroVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
             is TimeMilliVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
             is TimeSecVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is TimeStampNanoVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is TimeStampMicroVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is TimeStampMilliVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is TimeStampSecVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
             is StructVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is NullVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
             else -> {
                 throw NotImplementedError("reading from ${vector.javaClass.canonicalName} is not implemented")
             }
@@ -221,17 +284,7 @@ internal fun DataFrame.Companion.readArrowIPCImpl(
     allocator: RootAllocator = Allocator.ROOT,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame {
-    ArrowStreamReader(channel, allocator).use { reader ->
-        val dfs = buildList {
-            val root = reader.vectorSchemaRoot
-            val schema = root.schema
-            while (reader.loadNextBatch()) {
-                val df = schema.fields.map { f -> readField(root, f, nullability) }.toDataFrame()
-                add(df)
-            }
-        }
-        return dfs.concatKeepingSchema()
-    }
+    return readArrowImpl(ArrowStreamReader(channel, allocator), nullability)
 }
 
 /**
@@ -242,16 +295,38 @@ internal fun DataFrame.Companion.readArrowFeatherImpl(
     allocator: RootAllocator = Allocator.ROOT,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame {
-    ArrowFileReader(channel, allocator).use { reader ->
-        val dfs = buildList {
-            reader.recordBlocks.forEach { block ->
-                reader.loadRecordBatch(block)
-                val root = reader.vectorSchemaRoot
-                val schema = root.schema
-                val df = schema.fields.map { f -> readField(root, f, nullability) }.toDataFrame()
-                add(df)
+    return readArrowImpl(ArrowFileReader(channel, allocator), nullability)
+}
+
+/**
+ * Read [Arrow any format](https://arrow.apache.org/docs/java/ipc.html#reading-writing-ipc-formats) data from existing [reader]
+ */
+internal fun DataFrame.Companion.readArrowImpl(
+    reader: ArrowReader,
+    nullability: NullabilityOptions = NullabilityOptions.Infer
+): AnyFrame {
+    reader.use {
+        val flattened = buildList {
+            when (reader) {
+                is ArrowFileReader -> {
+                    reader.recordBlocks.forEach { block ->
+                        reader.loadRecordBatch(block)
+                        val root = reader.vectorSchemaRoot
+                        val schema = root.schema
+                        val df = schema.fields.map { f -> readField(root, f, nullability) }.toDataFrame()
+                        add(df)
+                    }
+                }
+                is ArrowStreamReader -> {
+                    val root = reader.vectorSchemaRoot
+                    val schema = root.schema
+                    while (reader.loadNextBatch()) {
+                        val df = schema.fields.map { f -> readField(root, f, nullability) }.toDataFrame()
+                        add(df)
+                    }
+                }
             }
         }
-        return dfs.concatKeepingSchema()
+        return flattened.concatKeepingSchema()
     }
 }

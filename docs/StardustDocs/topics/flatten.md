@@ -11,6 +11,8 @@ flatten  [ { columns } ]
 Columns after flattening will keep their original names. Potential column name clashes are resolved by adding minimal possible name prefix from ancestor columns.
 
 <!---FUN flatten-->
+<tabs>
+<tab title="Properties">
 
 ```kotlin
 // name.firstName -> firstName
@@ -18,6 +20,29 @@ Columns after flattening will keep their original names. Potential column name c
 df.flatten { name }
 ```
 
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val name by columnGroup()
+val firstName by name.column<String>()
+val lastName by name.column<String>()
+// name.firstName -> firstName
+// name.lastName -> lastName
+df.flatten(name)
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+// name.firstName -> firstName
+// name.lastName -> lastName
+df.flatten("name")
+```
+
+</tab></tabs>
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.flatten.html"/>
 <!---END-->
 
 To remove all column groupings in [`DataFrame`](DataFrame.md), invoke `flatten` without parameters:
@@ -28,4 +53,5 @@ To remove all column groupings in [`DataFrame`](DataFrame.md), invoke `flatten` 
 df.flatten()
 ```
 
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.flattenAll.html"/>
 <!---END-->
