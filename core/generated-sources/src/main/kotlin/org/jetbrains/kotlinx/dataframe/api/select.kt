@@ -71,9 +71,9 @@ internal interface Select {
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.api.select]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
      *
      *
      * #### NOTE: There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.DslSingle.WithExample].
@@ -159,9 +159,9 @@ private interface CommonSelectDocs
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.api.select]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.api.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.api.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.api.select]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * `df.`[select][org.jetbrains.kotlinx.dataframe.api.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
  *
  *  
  * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame].
