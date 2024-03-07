@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
+import com.beust.klaxon.Parser
 import io.kotest.matchers.collections.shouldBeIn
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
@@ -27,17 +28,18 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.impl.io.SERIALIZATION_VERSION
+import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.COLUMNS
+import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.DATA
+import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.KIND
+import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.KOTLIN_DATAFRAME
+import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.METADATA
+import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NCOL
+import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NROW
+import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.VERSION
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ANY_COLUMNS
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS
-import org.jetbrains.kotlinx.dataframe.io.SerializationKeys.COLUMNS
-import org.jetbrains.kotlinx.dataframe.io.SerializationKeys.DATA
-import org.jetbrains.kotlinx.dataframe.io.SerializationKeys.KIND
-import org.jetbrains.kotlinx.dataframe.io.SerializationKeys.KOTLIN_DATAFRAME
-import org.jetbrains.kotlinx.dataframe.io.SerializationKeys.METADATA
-import org.jetbrains.kotlinx.dataframe.io.SerializationKeys.NCOL
-import org.jetbrains.kotlinx.dataframe.io.SerializationKeys.NROW
-import org.jetbrains.kotlinx.dataframe.io.SerializationKeys.VERSION
 import org.jetbrains.kotlinx.dataframe.testJson
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.values
@@ -973,7 +975,9 @@ class JsonTests {
             [{"id":3602279,"node_id":"MDEwOlJlcG9zaXRvcnkzNjAyMjc5","name":"kotlin-web-demo","full_name":"JetBrains/kotlin-web-demo"}]
         """.trimIndent()
         val df = DataFrame.readJsonStr(data)
-        val json = df.toJsonWithMetadata(df.rowsCount())
+        val jsonStr = df.toJsonWithMetadata(df.rowsCount()).trimIndent()
+        val json = parseJsonStr(jsonStr)
+
         json[VERSION] shouldBe SERIALIZATION_VERSION
 
         val metadata = (json[METADATA] as JsonObject)
@@ -987,6 +991,11 @@ class JsonTests {
         decodedDf shouldBe df
     }
 
+    private fun parseJsonStr(jsonStr: String): JsonObject {
+        val parser = Parser.default()
+        return parser.parse(StringBuilder(jsonStr)) as JsonObject
+    }
+
     @Test
     fun `json with metadata column group`() {
         @Language("json")
@@ -994,7 +1003,8 @@ class JsonTests {
             [{"permissions":{"admin":false,"maintain":false,"push":false,"triage":false,"pull":true}}]
         """.trimIndent()
         val df = DataFrame.readJsonStr(data)
-        val json = df.toJsonWithMetadata(df.rowsCount())
+        val jsonStr = df.toJsonWithMetadata(df.rowsCount()).trimIndent()
+        val json = parseJsonStr(jsonStr)
 
         val row = (json[KOTLIN_DATAFRAME] as JsonArray<*>)[0] as JsonObject
 
@@ -1014,7 +1024,8 @@ class JsonTests {
     @Test
     fun `json with metadata frame column`() {
         val df = DataFrame.readJson(testJson("repositories"))
-        val json = df.toJsonWithMetadata(df.rowsCount())
+        val jsonStr = df.toJsonWithMetadata(df.rowsCount()).trimIndent()
+        val json = parseJsonStr(jsonStr)
         val row = (json[KOTLIN_DATAFRAME] as JsonArray<*>)[0] as JsonObject
 
         val contributors = row["contributors"] as JsonObject
@@ -1035,7 +1046,8 @@ class JsonTests {
     fun `json with metadata test row limit`() {
         val df = DataFrame.readJson(testJson("repositories"))
         val nestedFrameRowLimit = 20
-        val json = df.toJsonWithMetadata(df.rowsCount(), nestedFrameRowLimit)
+        val jsonStr = df.toJsonWithMetadata(df.rowsCount(), nestedFrameRowLimit).trimIndent()
+        val json = parseJsonStr(jsonStr)
         val row = (json[KOTLIN_DATAFRAME] as JsonArray<*>)[0] as JsonObject
 
         val contributors = row["contributors"] as JsonObject

@@ -3,9 +3,9 @@ package org.jetbrains.kotlinx.dataframe.jupyter
 import com.beust.klaxon.json
 import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.impl.io.encodeFrame
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
-import org.jetbrains.kotlinx.dataframe.io.encodeFrame
 import org.jetbrains.kotlinx.dataframe.io.toHTML
 import org.jetbrains.kotlinx.dataframe.io.toJsonWithMetadata
 import org.jetbrains.kotlinx.dataframe.io.toStaticHtml
@@ -73,11 +73,11 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
                         "columns" to df.columnNames(),
                         "kotlin_dataframe" to encodeFrame(df.rows().take(limit).toDataFrame()),
                     )
-                }
+                }.toJsonString()
             } else {
                 df.toJsonWithMetadata(limit, reifiedDisplayConfiguration.rowsLimit)
             }
-        notebook.renderAsIFrameAsNeeded(html, staticHtml, jsonEncodedDf.toJsonString())
+        notebook.renderAsIFrameAsNeeded(html, staticHtml, jsonEncodedDf)
     } else {
         notebook.renderHtmlAsIFrameIfNeeded(html)
     }
