@@ -126,7 +126,7 @@ internal fun AnyFrame.extractValueColumn(): DataColumn<*>? {
     return allColumns.filter { it.name.startsWith(valueColumnName) }
         .takeIf { isPossibleToFindUnnamedColumns }
         ?.maxByOrNull { it.name }?.let { valueCol ->
-            if (valueCol.kind() != org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value) { // check that value in this column is not null only when other values are null
+            if (valueCol.kind() != ColumnKind.Value) { // check that value in this column is not null only when other values are null
                 null
             } else {
                 // check that value in this column is not null only when other values are null
@@ -156,7 +156,7 @@ internal fun AnyFrame.extractArrayColumn(): DataColumn<*>? {
     return columns().filter { it.name.startsWith(arrayColumnName) }
         .takeIf { isPossibleToFindUnnamedColumns }
         ?.maxByOrNull { it.name }?.let { arrayCol ->
-            if (arrayCol.kind() == org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group) null
+            if (arrayCol.kind() == ColumnKind.Group) null
             else {
                 // check that value in this column is not null only when other values are null
                 val isValidArrayColumn = rows().all { row ->
