@@ -11,7 +11,7 @@ import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.isList
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.rows
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -68,7 +68,7 @@ internal fun KlaxonJson.encodeRowWithMetadata(
 
             is FrameColumn<*> -> {
                 val data = if (rowLimit == null) encodeFrameWithMetadata(col[index])
-                else encodeFrameWithMetadata(col[index].rows().take(rowLimit).toDataFrame(), rowLimit)
+                else encodeFrameWithMetadata(col[index].take(rowLimit), rowLimit)
                 obj(
                     DATA to data,
                     METADATA to obj(
@@ -205,7 +205,7 @@ internal fun KlaxonJson.encodeDataFrameWithMetadata(
             NCOL to frame.columnsCount()
         ),
         KOTLIN_DATAFRAME to encodeFrameWithMetadata(
-            frame.rows().take(rowLimit).toDataFrame(),
+            frame.take(rowLimit),
             rowLimit = nestedRowLimit
         ),
     )

@@ -1,8 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
 import com.beust.klaxon.json
-import org.jetbrains.kotlinx.dataframe.api.rows
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.impl.io.encodeFrame
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
@@ -71,7 +70,7 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
                         "nrow" to df.size.nrow,
                         "ncol" to df.size.ncol,
                         "columns" to df.columnNames(),
-                        "kotlin_dataframe" to encodeFrame(df.rows().take(limit).toDataFrame()),
+                        "kotlin_dataframe" to encodeFrame(df.take(limit)),
                     )
                 }.toJsonString()
             } else {
