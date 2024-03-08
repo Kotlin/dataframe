@@ -1,4 +1,4 @@
-<meta name="google-site-verification" content="Lffz_ab-_S5cmA07ZXVbucHVklaRsnk8gEt8frHKjMk" />
+<meta name="google-site-verification" content="Lffz_ab-_S5cmA07ZXVbucHVklaRsnk8gEt8frHKjMk"/>
 <!-- Google Analytics -->
 <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -11,7 +11,7 @@
 </script>
 <!-- End Google Analytics -->
 <script>
-    window.onload = function () {
+    window.onload = function() {
         function updateIframeThemes(theme) {
             const iframes = document.getElementsByTagName('iframe');
 
@@ -46,59 +46,64 @@
         }
 
         function doObserveIFrame(el) {
-            resize_iframe_out(el)
-            let observer = new MutationObserver(function (mutations) {
-                var resize = false
+            resize_iframe_out(el);
+            const mutationObserver = new MutationObserver((mutations) => {
+                let resized = false;
                 for (let mutation of mutations) {
                     // skip attribute changes except open to avoid loop
                     // (callback sees change in iframe, triggers resize, sees change...)
                     if (mutation.type === 'attributes') {
                         if (mutation.attributeName === 'open') {
-                            resize_iframe_out(el)
-                            resized = true
+                            resize_iframe_out(el);
+                            resized = true;
                         }
                     } else {
-
-                        resize = true
+                        resized = true;
                     }
                 }
-                if (resize) {
-                    resize_iframe_out(el)
+                if (resized) {
+                    resize_iframe_out(el);
                 }
             });
+            mutationObserver.observe(
+                el.contentDocument.documentElement,
+                { childList: true, subtree: true, characterData: true, attributes: true },
+            );
 
-            observer.observe(el.contentDocument.documentElement, {childList: true, subtree: true, characterData: true, attributes: true});
-
+            const visibilityObserver = new IntersectionObserver(
+                () => resize_iframe_out(el),
+                { root: document.documentElement },
+            );
+            visibilityObserver.observe(el);
         }
 
         function observeIFrame(el) {
-            if (el.contentWindow && el.contentWindow.performance && el.contentWindow.performance.timing.loadEventEnd === 0) {
-                el.addEventListener('load', () => doObserveIFrame(el), true)
+            if (el.contentWindow &&
+                el.contentWindow.performance &&
+                el.contentWindow.performance.timing.loadEventEnd === 0
+            ) {
+                el.addEventListener('load', () => doObserveIFrame(el), true);
             } else {
-                doObserveIFrame(el)
+                doObserveIFrame(el);
             }
         }
 
         let iframes = document.querySelectorAll('iframe');
-
         for (let i = 0; i < iframes.length; i++) {
-            observeIFrame(iframes[i])
+            observeIFrame(iframes[i]);
         }
 
-        let bodyObserver = new MutationObserver(function (mutations) {
-            mutations.forEach(function (mutation) {
+        let bodyObserver = new MutationObserver((mutations) => {
+            mutations.forEach(function(mutation) {
                 for (let i = 0; i < mutation.addedNodes.length; i++) {
                     let addedNode = mutation.addedNodes[i];
                     if (addedNode.tagName === 'IFRAME') {
                         observeIFrame(addedNode);
                     } else if (addedNode.tagName === 'SECTION') {
-                        let iframes = [];
-
                         function traverse(node) {
                             if (node.tagName === 'IFRAME') {
                                 observeIFrame(node);
                             }
-
                             for (let i = 0; i < node.children.length; i++) {
                                 traverse(node.children[i]);
                             }
@@ -110,11 +115,15 @@
             });
         });
 
-        bodyObserver.observe(document.documentElement || document.body, {childList: true, subtree: true, attributes: true});
-        observeHtmlClassChanges()
+        bodyObserver.observe(
+            document.documentElement || document.body,
+            { childList: true, subtree: true, attributes: true },
+        );
+        observeHtmlClassChanges();
+
         // initialize theme
         const htmlElement = document.documentElement;
         const theme = htmlElement.classList.contains('theme-light') ? 'light' : 'dark';
         updateIframeThemes(theme);
-    }
+    };
 </script>
