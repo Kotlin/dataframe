@@ -48,20 +48,19 @@
         function doObserveIFrame(el) {
             resize_iframe_out(el);
             const mutationObserver = new MutationObserver((mutations) => {
-                let resized = false;
+                let resize = false;
                 for (let mutation of mutations) {
                     // skip attribute changes except open to avoid loop
                     // (callback sees change in iframe, triggers resize, sees change...)
                     if (mutation.type === 'attributes') {
                         if (mutation.attributeName === 'open') {
-                            resize_iframe_out(el);
-                            resized = true;
+                            resize = true;
                         }
                     } else {
-                        resized = true;
+                        resize = true;
                     }
                 }
-                if (resized) {
+                if (resize) {
                     resize_iframe_out(el);
                 }
             });
