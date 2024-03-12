@@ -90,7 +90,17 @@ private val valueTypes =
     setOf(Boolean::class, Double::class, Int::class, Float::class, Long::class, Short::class, Byte::class)
 
 internal fun KlaxonJson.encodeValue(col: AnyCol, index: Int): Any? = when {
-    col.isList() -> col[index]?.let { array(it as List<*>) } ?: array()
+    col.isList() -> col[index]?.let { list ->
+        val values = (list as List<*>).map {
+            when (it) {
+                null, is Int, is Double, is Float, is Long, is Boolean, is Short, is Byte -> it
+                // Klaxon default serializers will try to use reflection and can sometimes fail.
+                // We can't have exceptions in Notebook DataFrame renderer
+                else -> it.toString()
+            }
+        }
+        array(values)
+    } ?: array()
     col.typeClass in valueTypes -> {
         val v = col[index]
         if ((v is Double && v.isNaN()) || (v is Float && v.isNaN())) {
