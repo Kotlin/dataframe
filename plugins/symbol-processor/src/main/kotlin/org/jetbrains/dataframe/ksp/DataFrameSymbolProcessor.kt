@@ -17,7 +17,6 @@ class DataFrameSymbolProcessor(
         validDataSchemas.forEach {
             val file = it.origin.containingFile ?: return@forEach
             extensionsGenerator.generateExtensions(file, it.origin, it.properties)
-            extensionsGenerator.generateConstructors(it, file)
         }
 
         val dataSchemaGenerator = DataSchemaGenerator(resolver, resolutionDir, logger, codeGenerator)

@@ -1,8 +1,6 @@
 package org.jetbrains.dataframe.ksp
 
-import com.google.devtools.ksp.KspExperimental
 import com.google.devtools.ksp.getVisibility
-import com.google.devtools.ksp.isAnnotationPresent
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.processing.KSPLogger
@@ -19,7 +17,6 @@ import com.google.devtools.ksp.symbol.KSValueArgument
 import com.google.devtools.ksp.symbol.Modifier
 import com.google.devtools.ksp.symbol.Visibility
 import com.google.devtools.ksp.validate
-import org.jetbrains.kotlinx.dataframe.annotations.GenerateConstructor
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import java.io.IOException
 import java.io.OutputStreamWriter
@@ -204,42 +201,5 @@ class ExtensionsGenerator(
 
     private fun argumentMismatchError(property: KSAnnotatedWithType, args: List<KSValueArgument>): Nothing {
         error("Expected one argument of type String in annotation ColumnName on property ${property.simpleName}, but got $args")
-    }
-
-    @OptIn(KspExperimental::class)
-    fun generateConstructors(it: DataSchemaDeclaration, file: KSFile) {
-        val companionObject =
-            it.origin.declarations.filterIsInstance<KSClassDeclaration>().find { it.isCompanionObject }
-        if (companionObject != null && companionObject.isAnnotationPresent(GenerateConstructor::class)) {
-            val fileName = getFileName(it.origin, "Constructor")
-            val packageName = file.packageName.asString()
-            val output = codeGenerator.createNewFile(
-                Dependencies(aggregating = false, file), packageName, fileName
-            )
-            val parameters = it.properties.joinToString(", ") {
-                "${it.simpleName.getShortName()}: ${it.type.resolve().render()}"
-            }
-            val overrides = it.properties.joinToString("\n") {
-                val shortName = it.simpleName.getShortName()
-                "|        override val $shortName = $shortName"
-            }
-            val declarationName = it.origin.qualifiedName?.asString()
-            try {
-                output.writer().use {
-                    if (packageName.isNotEmpty()) {
-                        it.appendLine("package $packageName")
-                    }
-                    val constructor = """
-                        |operator fun $declarationName.Companion.invoke($parameters): $declarationName =
-                        |    object: $declarationName {
-                             $overrides
-                        |    }
-                    """.trimMargin()
-                    it.appendLine(constructor)
-                }
-            } catch (e: IOException) {
-                throw IOException("Error writing $fileName generated from declaration at ${file.location}", e)
-            }
-        }
     }
 }
