@@ -79,6 +79,8 @@ public fun <T> DataFrame<T>.add(vararg dataFrames: AnyFrame): DataFrame<T> = add
 public fun <T> DataFrame<T>.addAll(dataFrames: Iterable<AnyFrame>): DataFrame<T> =
     addAll(dataFrames.flatMap { it.columns() })
 
+private fun test() = 42
+
 // endregion
 
 // region Create and add a single column
