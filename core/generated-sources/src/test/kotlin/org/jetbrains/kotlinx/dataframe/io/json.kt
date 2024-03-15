@@ -3,11 +3,13 @@ package org.jetbrains.kotlinx.dataframe.io
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.collections.shouldBeIn
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
 import io.kotest.matchers.types.instanceOf
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -1059,5 +1061,20 @@ class JsonTests {
 
         val decodedData = contributors[DATA] as JsonArray<*>
         decodedData.size shouldBe nestedFrameRowLimit
+    }
+
+    @Test
+    fun `serialize column with list of objects`() {
+        val df = dataFrameOf("col")(Regex(".+").findAll("abc").toList())
+        val json = shouldNotThrowAny { df.toJson() }
+        val list = DataFrame.readJsonStr(json)["col"][0].shouldBeInstanceOf<List<*>>()
+        list[0].shouldBeInstanceOf<String>()
+    }
+
+    @Test
+    fun `serialize column with list of primitives`() {
+        val df = dataFrameOf("col")(listOf(1, 2, 3))
+        val json = df.toJson()
+        DataFrame.readJsonStr(json) shouldBe df
     }
 }
