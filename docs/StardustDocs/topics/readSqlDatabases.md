@@ -88,7 +88,7 @@ Find full example project [here](https://github.com/zaleslaw/KotlinDataFrame-SQL
 To use the latest version of the Kotlin DataFrame library 
 and a specific version of the JDBC driver for your database (MariaDB is used as an example below) in your Notebook, run the following cell.
 
-```jupyter
+```
 %use dataframe
 
 USE {
