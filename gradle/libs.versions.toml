@@ -56,6 +56,7 @@ shadow = "8.1.1"
 android-gradle-api = "7.3.1" # Can't be updated to 7.4.0+ due to Java 8 compatibility
 ktor-server-netty = "2.3.8"
 kotlin-compile-testing = "1.5.0"
+duckdb = "0.10.0"
 
 [libraries]
 ksp-gradle = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }
@@ -97,6 +98,8 @@ jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
 arrow-format = { group = "org.apache.arrow", name = "arrow-format", version.ref = "arrow" }
 arrow-vector = { group = "org.apache.arrow", name = "arrow-vector", version.ref = "arrow" }
 arrow-memory = { group = "org.apache.arrow", name = "arrow-memory-unsafe", version.ref = "arrow" }
+arrow-c-data = { group = "org.apache.arrow", name = "arrow-c-data", version.ref = "arrow" }
+
 
 kotlinpoet = { group = "com.squareup", name = "kotlinpoet", version.ref = "kotlinpoet" }
 swagger = { group = "io.swagger.parser.v3", name = "swagger-parser", version.ref = "openapi" }
@@ -120,6 +123,7 @@ kotlin-jupyter-test-kit = { group = "org.jetbrains.kotlinx", name = "kotlin-jupy
 
 dataframe-symbol-processor = { group = "org.jetbrains.kotlinx.dataframe", name = "symbol-processor-all" }
 
+duckdb-jdbc = { group = "org.duckdb", name = "duckdb_jdbc", version.ref= "duckdb"}
 
 [plugins]
 jupyter-api = { id = "org.jetbrains.kotlin.jupyter.api", version.ref = "kotlinJupyter" }

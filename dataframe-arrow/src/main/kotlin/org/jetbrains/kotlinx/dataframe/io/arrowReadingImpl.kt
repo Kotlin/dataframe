@@ -317,7 +317,7 @@ internal fun DataFrame.Companion.readArrowImpl(
                         add(df)
                     }
                 }
-                is ArrowStreamReader -> {
+                else -> {
                     val root = reader.vectorSchemaRoot
                     val schema = root.schema
                     while (reader.loadNextBatch()) {
