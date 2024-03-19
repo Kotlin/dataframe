@@ -15,7 +15,7 @@ libsPublisher = "1.8.10-dev-43"
 
 # "Bootstrap" version of the dataframe, used in the build itself to generate @DataSchema APIs,
 # dogfood Gradle / KSP plugins in tests and idea-examples modules
-dataframe = "0.13.1-RC1"
+dataframe = "0.13.1"
 
 # TODO 0.1.6 breaks ktlint, https://github.com/Kotlin/dataframe/issues/598
 korro = "0.1.5"
