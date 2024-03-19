@@ -52,7 +52,7 @@ public interface ColGroupColumnsSelectionDsl {
      * }
      *
      * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
-     *  {@include [PlainDslName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}` | `{@include [DslGrammarTemplate.IndexRef]}**`)`**
+     *  {@include [PlainDslName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}`  |  `{@include [DslGrammarTemplate.IndexRef]}**`)`**
      * }
      *
      * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
@@ -60,7 +60,7 @@ public interface ColGroupColumnsSelectionDsl {
      * }
      *
      * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnGroupName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}` | `{@include [DslGrammarTemplate.IndexRef]}**`)`**
+     *  {@include [Indent]}{@include [ColumnGroupName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}`  |  `{@include [DslGrammarTemplate.IndexRef]}**`)`**
      * }
      */
     public interface Grammar {
@@ -88,21 +88,21 @@ public interface ColGroupColumnsSelectionDsl {
      * The function can also be called on [ColumnGroups][ColumnGroupReference] to create
      * an accessor for a column group inside a [ColumnGroup].
      * {@include [LineBreak]}
-     * {@get [CommonColGroupDocs.Note]}
+     * $[CommonColGroupDocs.Note]
      *
      * ### Check out: [Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`<`[String][String]`>("colGroupA") }`
+     * `df.`[select][DataFrame.select]`  {  `[colGroup][colGroup]`<`[String][String]`>("colGroupA") }`
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(SomeType::colGroupB) }`
+     * `df.`[select][DataFrame.select]`  {  `[colGroup][colGroup]`(SomeType::colGroupB) }`
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[colGroup][colGroup]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * {@get [CommonColGroupDocs.ExampleArg]}
+     * $[CommonColGroupDocs.ExampleArg]
      *
      * To create a [ColumnAccessor] for another kind of column, take a look at the functions
      * [col][ColumnsSelectionDsl.col],
@@ -125,14 +125,14 @@ public interface ColGroupColumnsSelectionDsl {
         interface ExampleArg
 
         /**
-         * `df.`[select][DataFrame.select]` { {@get [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`({@get [CommonColGroupDocs.Arg]}) \}`
+         * `df.`[select][DataFrame.select]` { $[CommonColGroupDocs.ReceiverArg]`[colGroup][colGroup]`($[CommonColGroupDocs.Arg]) \}`
          */
         interface SingleExample
 
         /**
-         * `df.`[select][DataFrame.select]` { {@get [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`({@get [CommonColGroupDocs.Arg]}) \}`
+         * `df.`[select][DataFrame.select]` { $[CommonColGroupDocs.ReceiverArg]`[colGroup][colGroup]`($[CommonColGroupDocs.Arg]) \}`
          *
-         * `df.`[select][DataFrame.select]` { {@get [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`<`[String][String]`>({@get [CommonColGroupDocs.Arg]}) \}`
+         * `df.`[select][DataFrame.select]` { $[CommonColGroupDocs.ReceiverArg]`[colGroup][colGroup]`<`[String][String]`>($[CommonColGroupDocs.Arg]) \}`
          */
         interface DoubleExample
 
