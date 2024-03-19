@@ -1,7 +1,7 @@
 # Kotlin Dataframe: typesafe in-memory structured data processing for JVM
 [![JetBrains incubator project](https://jb.gg/badges/incubator.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
 [![Kotlin component alpha stability](https://img.shields.io/badge/project-alpha-kotlin.svg?colorA=555555&colorB=DB3683&label=&logo=kotlin&logoColor=ffffff&logoWidth=10)](https://kotlinlang.org/docs/components-stability.html)
-[![Kotlin](https://img.shields.io/badge/kotlin-1.8.20-blue.svg?logo=kotlin)](http://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.9.22-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![Maven Central](https://img.shields.io/maven-central/v/org.jetbrains.kotlinx/dataframe?color=blue&label=Maven%20Central)](https://search.maven.org/artifact/org.jetbrains.kotlinx/dataframe)
 [![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Kotlin/dataframe/HEAD)
@@ -38,13 +38,13 @@ You could find the following articles there:
 ## Setup
 
 ```kotlin
-implementation("org.jetbrains.kotlinx:dataframe:0.12.1")
+implementation("org.jetbrains.kotlinx:dataframe:0.13.1")
 ```
 
 Optional Gradle plugin for enhanced type safety and schema generation
 https://kotlin.github.io/dataframe/schemasgradle.html
 ```kotlin
-id("org.jetbrains.kotlinx.dataframe") version "0.12.1"
+id("org.jetbrains.kotlinx.dataframe") version "0.13.1"
 ```
 
 Check out the [custom setup page](https://kotlin.github.io/dataframe/gettingstartedgradleadvanced.html) if you don't need some of the formats as dependencies,
@@ -69,7 +69,7 @@ df.filter { "stargazers_count"<Int>() > 50 }.print()
 
 Requires Gradle plugin to work
 ```kotlin
-id("org.jetbrains.kotlinx.dataframe") version "0.12.1"
+id("org.jetbrains.kotlinx.dataframe") version "0.13.1"
 ```
 
 Plugin generates extension properties API for provided sample of data. Column names and their types become discoverable in completion.
@@ -219,7 +219,7 @@ This table shows the mapping between main library component versions and minimum
 | 0.11.1                   | 8                    | 1.8.20         | 0.11.0-358             | 3.0.0           | 11.0.0               |
 | 0.12.0                   | 8                    | 1.9.0          | 0.11.0-358             | 3.0.0           | 11.0.0               |
 | 0.12.1                   | 8                    | 1.9.0          | 0.11.0-358             | 3.0.0           | 11.0.0               |
-
+| 0.13.1                   | 8                    | 1.9.22         | 0.12.0-139             | 3.0.0           | 15.0.0               |
 
 ## Code of Conduct
 
