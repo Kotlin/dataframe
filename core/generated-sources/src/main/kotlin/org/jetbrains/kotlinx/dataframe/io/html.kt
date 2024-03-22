@@ -30,8 +30,6 @@ import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.size
-import org.jetbrains.kotlinx.dataframe.util.DATAFRAME_HTML_MESSAGE
-import org.jetbrains.kotlinx.dataframe.util.DATAFRAME_HTML_REPLACE
 import java.awt.Desktop
 import java.io.File
 import java.io.InputStreamReader
@@ -421,13 +419,6 @@ private fun AnyFrame.getColumnsHeaderGrid(): List<List<ColumnWithPathWithBorder<
 }
 
 internal fun DataFrameHtmlData.print() = println(this)
-
-@Deprecated(
-    message = DATAFRAME_HTML_MESSAGE,
-    replaceWith = ReplaceWith(DATAFRAME_HTML_REPLACE, "org.jetbrains.kotlinx.dataframe.io.toStandaloneHTML"),
-    level = DeprecationLevel.ERROR,
-)
-public fun <T> DataFrame<T>.html(): String = toStandaloneHTML().toString()
 
 /**
  * @return DataFrameHtmlData with table script and css definitions. Can be saved as an *.html file and displayed in the browser

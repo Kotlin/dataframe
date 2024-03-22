@@ -93,11 +93,8 @@ public interface SimplifyColumnsSelectionDsl {
 
     // region deprecated
 
-    @Deprecated(TOP_MESSAGE, ReplaceWith("simplify()"), DeprecationLevel.WARNING)
-    public fun <C> ColumnSet<C>.roots(): ColumnSet<C> = simplify()
-
     @Deprecated(TOP_MESSAGE, ReplaceWith("simplify()"), DeprecationLevel.ERROR)
-    public fun <C> ColumnSet<C>.top(): ColumnSet<C> = simplify()
+    public fun <C> ColumnSet<C>.roots(): ColumnSet<C> = simplify()
 
     // endregion
 }

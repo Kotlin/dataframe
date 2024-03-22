@@ -4668,7 +4668,7 @@ public interface AllExceptColumnsSelectionDsl {
     @Deprecated(
         message = COL_SELECT_DSL_SINGLE_COL_EXCEPT,
         replaceWith = ReplaceWith(COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_SELECTOR),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public infix fun <C> SingleColumn<DataRow<C>>.except(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         allColsExcept(selector)
@@ -4676,7 +4676,7 @@ public interface AllExceptColumnsSelectionDsl {
     @Deprecated(
         message = COL_SELECT_DSL_SINGLE_COL_EXCEPT,
         replaceWith = ReplaceWith(COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_RESOLVER),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public infix fun SingleColumn<DataRow<*>>.except(other: ColumnsResolver<*>): ColumnSet<*> =
         allColsExcept { other }
@@ -4684,7 +4684,7 @@ public interface AllExceptColumnsSelectionDsl {
     @Deprecated(
         message = COL_SELECT_DSL_SINGLE_COL_EXCEPT,
         replaceWith = ReplaceWith(COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_RESOLVERS),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public fun SingleColumn<DataRow<*>>.except(vararg others: ColumnsResolver<*>): ColumnSet<*> =
         allColsExcept { others.toColumnSet() }
@@ -4692,7 +4692,7 @@ public interface AllExceptColumnsSelectionDsl {
     @Deprecated(
         message = COL_SELECT_DSL_SINGLE_COL_EXCEPT,
         replaceWith = ReplaceWith(COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_OTHER),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public infix fun SingleColumn<DataRow<*>>.except(other: String): ColumnSet<*> =
         allColsExcept(other)
@@ -4700,7 +4700,7 @@ public interface AllExceptColumnsSelectionDsl {
     @Deprecated(
         message = COL_SELECT_DSL_SINGLE_COL_EXCEPT,
         replaceWith = ReplaceWith(COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_OTHERS),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public fun SingleColumn<DataRow<*>>.except(vararg others: String): ColumnSet<*> =
         allColsExcept(*others)
@@ -4708,7 +4708,7 @@ public interface AllExceptColumnsSelectionDsl {
     @Deprecated(
         message = COL_SELECT_DSL_SINGLE_COL_EXCEPT,
         replaceWith = ReplaceWith(COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_OTHER),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public infix fun SingleColumn<DataRow<*>>.except(other: KProperty<*>): ColumnSet<*> =
         allColsExcept(other)
@@ -4716,7 +4716,7 @@ public interface AllExceptColumnsSelectionDsl {
     @Deprecated(
         message = COL_SELECT_DSL_SINGLE_COL_EXCEPT,
         replaceWith = ReplaceWith(COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_OTHERS),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public fun SingleColumn<DataRow<*>>.except(vararg others: KProperty<*>): ColumnSet<*> =
         allColsExcept(*others)
@@ -4724,7 +4724,7 @@ public interface AllExceptColumnsSelectionDsl {
     @Deprecated(
         message = COL_SELECT_DSL_SINGLE_COL_EXCEPT,
         replaceWith = ReplaceWith(COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_OTHER),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public infix fun SingleColumn<DataRow<*>>.except(other: ColumnPath): ColumnSet<*> =
         allColsExcept(other)
@@ -4732,7 +4732,7 @@ public interface AllExceptColumnsSelectionDsl {
     @Deprecated(
         message = COL_SELECT_DSL_SINGLE_COL_EXCEPT,
         replaceWith = ReplaceWith(COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_OTHERS),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public fun SingleColumn<DataRow<*>>.except(vararg others: ColumnPath): ColumnSet<*> =
         allColsExcept(*others)
@@ -4740,7 +4740,7 @@ public interface AllExceptColumnsSelectionDsl {
     @Deprecated(
         message = COL_SELECT_DSL_EXCEPT,
         replaceWith = ReplaceWith(COL_SELECT_DSL_EXCEPT_REPLACE_SELECTOR),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public fun <C> ColumnsSelectionDsl<C>.except(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         allExcept(selector)
@@ -4748,7 +4748,7 @@ public interface AllExceptColumnsSelectionDsl {
     @Deprecated(
         message = COL_SELECT_DSL_EXCEPT,
         replaceWith = ReplaceWith(COL_SELECT_DSL_EXCEPT_REPLACE_RESOLVER),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public fun ColumnsSelectionDsl<*>.except(vararg others: ColumnsResolver<*>): ColumnSet<*> =
         allExcept(*others)
@@ -4756,7 +4756,7 @@ public interface AllExceptColumnsSelectionDsl {
     @Deprecated(
         message = COL_SELECT_DSL_EXCEPT,
         replaceWith = ReplaceWith(COL_SELECT_DSL_EXCEPT_REPLACE_RESOLVER),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public fun ColumnsSelectionDsl<*>.except(vararg others: String): ColumnSet<*> =
         allExcept(*others)
@@ -4764,7 +4764,7 @@ public interface AllExceptColumnsSelectionDsl {
     @Deprecated(
         message = COL_SELECT_DSL_EXCEPT,
         replaceWith = ReplaceWith(COL_SELECT_DSL_EXCEPT_REPLACE_RESOLVER),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public fun ColumnsSelectionDsl<*>.except(vararg others: KProperty<*>): ColumnSet<*> =
         allExcept(*others)
@@ -4772,7 +4772,7 @@ public interface AllExceptColumnsSelectionDsl {
     @Deprecated(
         message = COL_SELECT_DSL_EXCEPT,
         replaceWith = ReplaceWith(COL_SELECT_DSL_EXCEPT_REPLACE_RESOLVER),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public fun ColumnsSelectionDsl<*>.except(vararg others: ColumnPath): ColumnSet<*> =
         allExcept(*others)
