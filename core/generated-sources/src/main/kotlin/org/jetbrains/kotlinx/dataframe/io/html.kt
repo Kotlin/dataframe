@@ -201,7 +201,7 @@ public fun AnyFrame.toStaticHtml(
     val id = "static_df_${nextTableId()}"
 
     // Retrieve all columns, including nested ones
-    val flattenedCols = getColumnsWithPaths { cols { !it.isColumnGroup() }.recursively() }
+    val flattenedCols = getColumnsWithPaths { colsAtAnyDepth { !it.isColumnGroup() } }
 
     // Get a grid of columns for the header, as well as the side borders for each cell
     val colGrid = getColumnsHeaderGrid()
@@ -389,9 +389,9 @@ private fun AnyFrame.getColumnsHeaderGrid(): List<List<ColumnWithPathWithBorder<
 
     fun ColumnWithPath<*>.addChildren(depth: Int = 0, breadth: Int = 0) {
         var breadth = breadth
-        val children = children()
+        val children = cols()
         val lastIndex = children.lastIndex
-        for ((i, child) in children().withIndex()) {
+        for ((i, child) in cols().withIndex()) {
             matrix[depth][breadth] = matrix[depth][breadth].copy(columnWithPath = child)
 
             // draw colGroup side borders unless at start/end of table
