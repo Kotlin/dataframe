@@ -21,7 +21,7 @@ Additionally, support for JSON and date-time types is limited.
 Please take this into consideration when using these functions.
 
 
-## Getting started with reading from SQL database
+## Getting started with reading from SQL database in Gradle Project
 
 In the first, you need to add a dependency
 
@@ -81,24 +81,33 @@ val df = DataFrame.readSqlTable(dbConfig, tableName, 100)
 df.print()
 ```
 
-Find full example project [here](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/).
+Find a full example project [here](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/).
 
 ## Getting Started with Notebooks
 
 To use the latest version of the Kotlin DataFrame library 
-and a specific version of the JDBC driver for your database (MariaDB is used as an example below) in your Notebook, run the following cell.
+and a specific version of the JDBC driver for your database (MariaDB is used as an example below) in your Notebook,
+run the following two cells.
+
+First of all, specify the version of the JDBC driver
 
 ```
-%use dataframe
-
 USE {
     dependencies("org.mariadb.jdbc:mariadb-java-client:$version")
 }
 ```
 
+In the second, enable the `Kotlin DataFrame` library usage in the following cell.
+
+```
+%use dataframe
+```
+
+**NOTE:** The order of cell execution is important, 
+the dataframe library is waiting for a JDBC driver to force classloading.
+
 Find full example Notebook [here](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/blob/master/notebooks/imdb.ipynb).
  
-**NOTE:** The user should specify the version of the JDBC driver.
 
 ## Reading Specific Tables
 
