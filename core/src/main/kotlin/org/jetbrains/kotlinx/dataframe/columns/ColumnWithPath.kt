@@ -67,35 +67,35 @@ public interface ColumnWithPath<out T> : DataColumn<T> {
     @Deprecated(
         message = COLUMN_WITH_PATH_MESSAGE,
         replaceWith = ReplaceWith("getCol(accessor)"),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public fun <C> getChild(accessor: ColumnReference<C>): ColumnWithPath<C>? = getCol(accessor)
 
     @Deprecated(
         message = COLUMN_WITH_PATH_MESSAGE,
         replaceWith = ReplaceWith("getCol(name)"),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public fun getChild(name: String): ColumnWithPath<Any?>? = getCol(name)
 
     @Deprecated(
         message = COLUMN_WITH_PATH_MESSAGE,
         replaceWith = ReplaceWith("getCol(index)"),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public fun getChild(index: Int): ColumnWithPath<Any?>? = getCol(index)
 
     @Deprecated(
         message = COLUMN_WITH_PATH_MESSAGE,
         replaceWith = ReplaceWith("getCol(accessor)"),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public fun <C> getChild(accessor: KProperty<C>): ColumnWithPath<C>? = getCol(accessor)
 
     @Deprecated(
         message = COLUMN_WITH_PATH_MESSAGE,
         replaceWith = ReplaceWith("cols()"),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public fun children(): List<ColumnWithPath<Any?>> = cols()
 

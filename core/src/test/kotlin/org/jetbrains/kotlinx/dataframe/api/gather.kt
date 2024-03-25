@@ -96,7 +96,7 @@ class GatherTests {
     fun gather() {
         val mode by column<String>()
         val temp by column<String>()
-        val gathered = typed.gather { except(name) }.cast<String>().into(mode, temp).ungroup(temp)
+        val gathered = typed.gather { allExcept(name) }.cast<String>().into(mode, temp).ungroup(temp)
 
         val expected = typed.groupBy { name }.updateGroups {
             val cols = columns().drop(1).map { it.asColumnGroup() } // drop 'name' column

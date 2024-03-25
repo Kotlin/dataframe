@@ -592,7 +592,7 @@ public interface SelectColumnsSelectionDsl {
     @Deprecated(
         message = COL_SELECT_DSL_SELECT_COLS,
         replaceWith = ReplaceWith(COL_SELECT_DSL_SELECT_COLS_REPLACE),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public fun SingleColumn<DataRow<*>>.select(vararg columns: String): ColumnSet<*> =
         selectInternal { columns.toColumnSet() }
@@ -600,7 +600,7 @@ public interface SelectColumnsSelectionDsl {
     @Deprecated(
         message = COL_SELECT_DSL_SELECT_COLS,
         replaceWith = ReplaceWith(COL_SELECT_DSL_SELECT_COLS_REPLACE),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public fun <R> SingleColumn<DataRow<*>>.select(vararg columns: ColumnReference<R>): ColumnSet<R> =
         selectInternal { columns.toColumnSet() }
@@ -608,7 +608,7 @@ public interface SelectColumnsSelectionDsl {
     @Deprecated(
         message = COL_SELECT_DSL_SELECT_COLS,
         replaceWith = ReplaceWith(COL_SELECT_DSL_SELECT_COLS_REPLACE),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public fun <R> SingleColumn<DataRow<*>>.select(vararg columns: KProperty<R>): ColumnSet<R> =
         selectInternal { columns.toColumnSet() }

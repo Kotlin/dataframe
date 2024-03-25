@@ -15,9 +15,6 @@ import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
-import org.jetbrains.kotlinx.dataframe.util.DIFF_DEPRECATION_MESSAGE
-import org.jetbrains.kotlinx.dataframe.util.DIFF_OR_NULL_IMPORT
-import org.jetbrains.kotlinx.dataframe.util.DIFF_REPLACE_MESSAGE
 import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -160,40 +157,6 @@ public fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Long>): Long? 
  * @return null for the first row; difference between expression computed for current and previous row for the following rows
  */
 public fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Float>): Float? =
-    prev()?.let { p -> expression(this, this) - expression(p, p) }
-
-@OptIn(ExperimentalTypeInference::class)
-@OverloadResolutionByLambdaReturnType
-@Deprecated(
-    DIFF_DEPRECATION_MESSAGE,
-    ReplaceWith(DIFF_REPLACE_MESSAGE, DIFF_OR_NULL_IMPORT),
-    DeprecationLevel.ERROR,
-)
-public fun <T> DataRow<T>.diff(expression: RowExpression<T, Double>): Double? =
-    prev()?.let { p -> expression(this, this) - expression(p, p) }
-
-@Deprecated(
-    DIFF_DEPRECATION_MESSAGE,
-    ReplaceWith(DIFF_REPLACE_MESSAGE, DIFF_OR_NULL_IMPORT),
-    DeprecationLevel.ERROR,
-)
-public fun <T> DataRow<T>.diff(expression: RowExpression<T, Int>): Int? =
-    prev()?.let { p -> expression(this, this) - expression(p, p) }
-
-@Deprecated(
-    DIFF_DEPRECATION_MESSAGE,
-    ReplaceWith(DIFF_REPLACE_MESSAGE, DIFF_OR_NULL_IMPORT),
-    DeprecationLevel.ERROR,
-)
-public fun <T> DataRow<T>.diff(expression: RowExpression<T, Long>): Long? =
-    prev()?.let { p -> expression(this, this) - expression(p, p) }
-
-@Deprecated(
-    DIFF_DEPRECATION_MESSAGE,
-    ReplaceWith(DIFF_REPLACE_MESSAGE, DIFF_OR_NULL_IMPORT),
-    DeprecationLevel.ERROR,
-)
-public fun <T> DataRow<T>.diff(expression: RowExpression<T, Float>): Float? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
 public fun AnyRow.columnsCount(): Int = df().ncol

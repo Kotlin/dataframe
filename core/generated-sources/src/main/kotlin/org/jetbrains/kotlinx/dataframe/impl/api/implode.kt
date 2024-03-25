@@ -17,7 +17,7 @@ import org.jetbrains.kotlinx.dataframe.impl.getListType
 import kotlin.reflect.typeOf
 
 internal fun <T, C> DataFrame<T>.implodeImpl(dropNA: Boolean = false, columns: ColumnsSelector<T, C>): DataFrame<T> {
-    return groupBy { except(columns) }.updateGroups {
+    return groupBy { allExcept(columns) }.updateGroups {
         replace(columns).with { column ->
             val (value, type) = when (column.kind()) {
                 ColumnKind.Value -> (if (dropNA) column.dropNA() else column).toList() to getListType(column.type())

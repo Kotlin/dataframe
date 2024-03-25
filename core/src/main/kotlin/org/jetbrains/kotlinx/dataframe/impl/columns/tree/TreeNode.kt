@@ -1,8 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns.tree
 
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
-import org.jetbrains.kotlinx.dataframe.util.TREENODE_DFS
-import org.jetbrains.kotlinx.dataframe.util.TREENODE_DFS_REPLACE
 
 internal class TreeNode<T>(
     override var name: String,
@@ -49,16 +47,6 @@ internal class TreeNode<T>(
         childrenMap[childName]?.let { return it }
         return addChild(childName, createData())
     }
-
-    @Deprecated(
-        message = TREENODE_DFS,
-        replaceWith = ReplaceWith(TREENODE_DFS_REPLACE),
-        level = DeprecationLevel.ERROR,
-    )
-    fun dfs(
-        enterCondition: (TreeNode<T>) -> Boolean = { true },
-        yieldCondition: (TreeNode<T>) -> Boolean = { true },
-    ): List<TreeNode<T>> = allChildren(enterCondition, yieldCondition)
 
     /**
      * Traverses the tree in depth-first order and returns all nodes that satisfy [yieldCondition].
