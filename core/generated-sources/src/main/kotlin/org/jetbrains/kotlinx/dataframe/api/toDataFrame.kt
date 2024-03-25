@@ -232,6 +232,16 @@ public inline fun <reified B : Boolean?> Iterable<B>.toDataFrame(): DataFrame<Va
     ValueProperty<B>::value from { it }
 }.cast()
 
+@JvmName("toDataFrameFloat")
+public inline fun <reified F : Float?> Iterable<F>.toDataFrame(): DataFrame<ValueProperty<F>> = toDataFrame {
+    ValueProperty<F>::value from { it }
+}.cast()
+
+@JvmName("toDataFrameDouble")
+public inline fun <reified D : Double?> Iterable<D>.toDataFrame(): DataFrame<ValueProperty<D>> = toDataFrame {
+    ValueProperty<D>::value from { it }
+}.cast()
+
 @JvmName("toDataFrameUByte")
 public inline fun <reified U : UByte?> Iterable<U>.toDataFrame(): DataFrame<ValueProperty<U>> = toDataFrame {
     ValueProperty<U>::value from { it }
