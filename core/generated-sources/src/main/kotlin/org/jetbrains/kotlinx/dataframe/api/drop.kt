@@ -92,10 +92,7 @@ public interface DropColumnsSelectionDsl {
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `[KProperty][kotlin.reflect.KProperty]`<* | `[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>` | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *  `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]`  |  `[KProperty][kotlin.reflect.KProperty]`<* | `[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -160,19 +157,19 @@ public interface DropColumnsSelectionDsl {
         /** [**drop**][ColumnsSelectionDsl.drop]`(`[**Last**][ColumnsSelectionDsl.dropLast]`)` */
         public interface PlainDslName
 
-        /** .[**drop**][ColumnsSelectionDsl.drop]`(`[**Last**][ColumnSet.dropLast]`)` */
+        /** **`.`**[**drop**][ColumnsSelectionDsl.drop]`(`[**Last**][ColumnSet.dropLast]`)` */
         public interface ColumnSetName
 
-        /** .[**drop**][ColumnsSelectionDsl.dropCols]`(`[**Last**][ColumnsSelectionDsl.dropLastCols]`)`[**Cols**][ColumnsSelectionDsl.dropCols] */
+        /** **`.`**[**drop**][ColumnsSelectionDsl.dropCols]`(`[**Last**][ColumnsSelectionDsl.dropLastCols]`)`[**Cols**][ColumnsSelectionDsl.dropCols] */
         public interface ColumnGroupName
 
         /** [**drop**][ColumnsSelectionDsl.dropWhile]`(`[**Last**][ColumnsSelectionDsl.dropLastWhile]`)`[**While**][ColumnsSelectionDsl.dropWhile] */
         public interface PlainDslWhileName
 
-        /** .[**drop**][ColumnsSelectionDsl.dropWhile]`(`[**Last**][ColumnsSelectionDsl.dropLastWhile]`)`[**While**][ColumnsSelectionDsl.dropWhile] */
+        /** **`.`**[**drop**][ColumnsSelectionDsl.dropWhile]`(`[**Last**][ColumnsSelectionDsl.dropLastWhile]`)`[**While**][ColumnsSelectionDsl.dropWhile] */
         public interface ColumnSetWhileName
 
-        /** .[**drop**][ColumnsSelectionDsl.dropColsWhile]`(`[**Last**][ColumnsSelectionDsl.dropLastColsWhile]`)`[**ColsWhile**][ColumnsSelectionDsl.dropColsWhile] */
+        /** **`.`**[**drop**][ColumnsSelectionDsl.dropColsWhile]`(`[**Last**][ColumnsSelectionDsl.dropLastColsWhile]`)`[**ColsWhile**][ColumnsSelectionDsl.dropColsWhile] */
         public interface ColumnGroupWhileName
     }
 

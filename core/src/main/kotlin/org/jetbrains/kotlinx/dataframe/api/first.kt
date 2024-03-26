@@ -120,10 +120,10 @@ public interface FirstColumnsSelectionDsl {
         /** [**first**][ColumnsSelectionDsl.first] */
         public interface PlainDslName
 
-        /** .[**first**][ColumnsSelectionDsl.first] */
+        /** \**`.`**[**first**][ColumnsSelectionDsl.first] */
         public interface ColumnSetName
 
-        /** .[**firstCol**][ColumnsSelectionDsl.firstCol] */
+        /** \**`.`**[**firstCol**][ColumnsSelectionDsl.firstCol] */
         public interface ColumnGroupName
     }
 

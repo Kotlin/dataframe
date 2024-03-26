@@ -52,10 +52,10 @@ public interface WithoutNullsColumnsSelectionDsl {
         /** [**withoutNulls**][ColumnsSelectionDsl.withoutNulls] */
         public interface PlainDslName
 
-        /** .[**withoutNulls**][ColumnsSelectionDsl.withoutNulls] */
+        /** \**`.`**[**withoutNulls**][ColumnsSelectionDsl.withoutNulls] */
         public interface ColumnSetName
 
-        /** .[**colsWithoutNulls**][ColumnsSelectionDsl.colsWithoutNulls] */
+        /** \**`.`**[**colsWithoutNulls**][ColumnsSelectionDsl.colsWithoutNulls] */
         public interface ColumnGroupName
     }
 

@@ -73,7 +73,7 @@ public interface DistinctColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** .[**distinct**][ColumnsSelectionDsl.distinct] */
+        /** \**`.`**[**distinct**][ColumnsSelectionDsl.distinct] */
         public interface ColumnSetName
     }
 

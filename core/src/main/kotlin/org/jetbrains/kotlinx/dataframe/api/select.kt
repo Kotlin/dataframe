@@ -117,7 +117,7 @@ public interface SelectColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** .[**select**][ColumnsSelectionDsl.select] */
+        /** \**`.`**[**select**][ColumnsSelectionDsl.select] */
         public interface ColumnGroupName
     }
 

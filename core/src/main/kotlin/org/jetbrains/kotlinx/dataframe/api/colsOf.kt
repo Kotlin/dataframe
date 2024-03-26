@@ -82,10 +82,10 @@ public interface ColsOfColumnsSelectionDsl {
         /** [**colsOf**][ColumnsSelectionDsl.colsOf] */
         public interface PlainDslName
 
-        /** .[**colsOf**][ColumnsSelectionDsl.colsOf] */
+        /** \**`.`**[**colsOf**][ColumnsSelectionDsl.colsOf] */
         public interface ColumnSetName
 
-        /** .[**colsOf**][ColumnsSelectionDsl.colsOf] */
+        /** \**`.`**[**colsOf**][ColumnsSelectionDsl.colsOf] */
         public interface ColumnGroupName
     }
 

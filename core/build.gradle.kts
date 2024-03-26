@@ -185,7 +185,6 @@ val installGitPreCommitHook by tasks.creating(Copy::class) {
     } else {
         logger.lifecycle("'.git/hooks' directory not found. Skipping installation of pre-commit hook.")
     }
-
 }
 tasks.named("assemble") {
     dependsOn(installGitPreCommitHook)
@@ -207,13 +206,19 @@ val kotlinTestSources: FileCollection = kotlin.sourceSets.test.get().kotlin.sour
 
 fun pathOf(vararg parts: String) = parts.joinToString(File.separator)
 
+
+// Include both test and main sources for cross-referencing, Exclude generated sources
+val processKDocsMainSources = (kotlinMainSources + kotlinTestSources)
+        .filterNot { pathOf("build", "generated") in it.path }
+
 // Task to generate the processed documentation
-val processKDocsMain by creatingProcessDocTask(
-    sources = (kotlinMainSources + kotlinTestSources) // Include both test and main sources for cross-referencing
-        .filterNot { pathOf("build", "generated") in it.path }, // Exclude generated sources
-) {
+val processKDocsMain by creatingProcessDocTask(processKDocsMainSources) {
     target = file(generatedSourcesFolderName)
     arguments += ARG_DOC_PROCESSOR_LOG_NOT_FOUND to false
+
+    exportAsHtml {
+        dir = file("../docs/StardustDocs/snippets")
+    }
 
     task {
         group = "KDocs"

@@ -1,5 +1,19 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
+import kotlin.annotation.AnnotationTarget.ANNOTATION_CLASS
+import kotlin.annotation.AnnotationTarget.CLASS
+import kotlin.annotation.AnnotationTarget.CONSTRUCTOR
+import kotlin.annotation.AnnotationTarget.FIELD
+import kotlin.annotation.AnnotationTarget.FILE
+import kotlin.annotation.AnnotationTarget.FUNCTION
+import kotlin.annotation.AnnotationTarget.LOCAL_VARIABLE
+import kotlin.annotation.AnnotationTarget.PROPERTY
+import kotlin.annotation.AnnotationTarget.PROPERTY_GETTER
+import kotlin.annotation.AnnotationTarget.PROPERTY_SETTER
+import kotlin.annotation.AnnotationTarget.TYPE
+import kotlin.annotation.AnnotationTarget.TYPEALIAS
+import kotlin.annotation.AnnotationTarget.VALUE_PARAMETER
+
 /**
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -32,18 +46,38 @@ internal interface QuadrupleIndent
  * Do not rename!
  */
 @Target(
-    AnnotationTarget.CLASS,
-    AnnotationTarget.ANNOTATION_CLASS,
-    AnnotationTarget.PROPERTY,
-    AnnotationTarget.FIELD,
-    AnnotationTarget.LOCAL_VARIABLE,
-    AnnotationTarget.VALUE_PARAMETER,
-    AnnotationTarget.CONSTRUCTOR,
-    AnnotationTarget.FUNCTION,
-    AnnotationTarget.PROPERTY_GETTER,
-    AnnotationTarget.PROPERTY_SETTER,
-    AnnotationTarget.TYPE,
-    AnnotationTarget.TYPEALIAS,
-    AnnotationTarget.FILE,
+    CLASS,
+    ANNOTATION_CLASS,
+    PROPERTY,
+    FIELD,
+    LOCAL_VARIABLE,
+    VALUE_PARAMETER,
+    CONSTRUCTOR,
+    FUNCTION,
+    PROPERTY_GETTER,
+    PROPERTY_SETTER,
+    TYPE,
+    TYPEALIAS,
+    FILE,
 )
 internal annotation class ExcludeFromSources
+
+@Target(
+    CLASS,
+    ANNOTATION_CLASS,
+    PROPERTY,
+    FIELD,
+    LOCAL_VARIABLE,
+    VALUE_PARAMETER,
+    CONSTRUCTOR,
+    FUNCTION,
+    PROPERTY_GETTER,
+    PROPERTY_SETTER,
+    TYPE,
+    TYPEALIAS,
+    FILE,
+)
+internal annotation class ExportAsHtml(
+    val theme: Boolean = true,
+    val stripReferences: Boolean = true,
+)

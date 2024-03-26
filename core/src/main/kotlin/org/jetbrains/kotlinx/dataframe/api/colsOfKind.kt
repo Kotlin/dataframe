@@ -60,10 +60,10 @@ public interface ColsOfKindColumnsSelectionDsl {
         /** [**colsOfKind**][ColumnsSelectionDsl.colGroups] */
         public interface PlainDslName
 
-        /** .[**colsOfKind**][ColumnsSelectionDsl.colGroups] */
+        /** \**`.`**[**colsOfKind**][ColumnsSelectionDsl.colGroups] */
         public interface ColumnSetName
 
-        /** .[**colsOfKind**][ColumnsSelectionDsl.colGroups] */
+        /** \**`.`**[**colsOfKind**][ColumnsSelectionDsl.colGroups] */
         public interface ColumnGroupName
     }
 

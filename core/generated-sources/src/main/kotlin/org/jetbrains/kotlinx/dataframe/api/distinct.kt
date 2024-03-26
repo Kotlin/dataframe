@@ -79,7 +79,7 @@ public interface DistinctColumnsSelectionDsl {
      *
      *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**distinct**][org.jetbrains.kotlinx.dataframe.api.DistinctColumnsSelectionDsl.distinct]**`()`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;**`.`**[**distinct**][org.jetbrains.kotlinx.dataframe.api.DistinctColumnsSelectionDsl.distinct]**`()`**
      *
      *
      *
@@ -97,7 +97,7 @@ public interface DistinctColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** .[**distinct**][ColumnsSelectionDsl.distinct] */
+        /** **`.`**[**distinct**][ColumnsSelectionDsl.distinct] */
         public interface ColumnSetName
     }
 

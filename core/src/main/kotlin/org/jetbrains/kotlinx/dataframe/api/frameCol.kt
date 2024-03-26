@@ -66,10 +66,10 @@ public interface FrameColColumnsSelectionDsl {
         /** [**frameCol**][ColumnsSelectionDsl.frameCol] */
         public interface PlainDslName
 
-        /** .[**frameCol**][ColumnsSelectionDsl.frameCol] */
+        /** \**`.`**[**frameCol**][ColumnsSelectionDsl.frameCol] */
         public interface ColumnSetName
 
-        /** .[**frameCol**][ColumnsSelectionDsl.frameCol] */
+        /** \**`.`**[**frameCol**][ColumnsSelectionDsl.frameCol] */
         public interface ColumnGroupName
     }
 

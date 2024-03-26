@@ -93,7 +93,7 @@ public interface AllExceptColumnsSelectionDsl {
         /** [**except**][ColumnsSelectionDsl.except] */
         public interface ColumnSetName
 
-        /** .[**allColsExcept**][ColumnsSelectionDsl.allColsExcept] */
+        /** \**`.`**[**allColsExcept**][ColumnsSelectionDsl.allColsExcept] */
         public interface ColumnGroupName
 
         /** [**exceptNew**][ColumnsSelectionDsl.exceptNew] */

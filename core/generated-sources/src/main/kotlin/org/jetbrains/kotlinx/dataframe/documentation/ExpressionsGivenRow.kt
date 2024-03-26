@@ -37,6 +37,7 @@ internal interface ExpressionsGivenRow {
      */
     interface OperationArg
 
+    // Using <code>` notation to not create double `` when including
     interface SetDefaultOperationArg
 
     /**
@@ -55,9 +56,9 @@ internal interface ExpressionsGivenRow {
          *
          * For example:
          *
-         * `df.`operation` { name.firstName + " " + name.lastName }`
+         * `df.`<code>`operation`</code>` { name.firstName + " " + name.lastName }`
          *
-         * `df.`operation` { 2021 - age }`
+         * `df.`<code>`operation`</code>` { 2021 - age }`
          *
          */
         interface WithExample
@@ -77,9 +78,9 @@ internal interface ExpressionsGivenRow {
          *
          * For example:
          *
-         * `df.`operation` { name.firstName + " from " + it }`
+         * `df.`<code>`operation`</code>` { name.firstName + " from " + it }`
          *
-         * `df.`operation` { it.uppercase() }`
+         * `df.`<code>`operation`</code>` { it.uppercase() }`
          *
          */
         interface WithExample

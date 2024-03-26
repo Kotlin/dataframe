@@ -61,10 +61,10 @@ public interface ColGroupsColumnsSelectionDsl {
         /** [**colGroups**][ColumnsSelectionDsl.colGroups] */
         public interface PlainDslName
 
-        /** .[**colGroups**][ColumnsSelectionDsl.colGroups] */
+        /** \**`.`**[**colGroups**][ColumnsSelectionDsl.colGroups] */
         public interface ColumnSetName
 
-        /** .[**colGroups**][ColumnsSelectionDsl.colGroups] */
+        /** \**`.`**[**colGroups**][ColumnsSelectionDsl.colGroups] */
         public interface ColumnGroupName
     }
 

@@ -66,10 +66,10 @@ public interface ValueColColumnsSelectionDsl {
         /** [**valueCol**][ColumnsSelectionDsl.valueCol] */
         public interface PlainDslName
 
-        /** .[**valueCol**][ColumnsSelectionDsl.valueCol] */
+        /** \**`.`**[**valueCol**][ColumnsSelectionDsl.valueCol] */
         public interface ColumnSetName
 
-        /** .[**valueCol**][ColumnsSelectionDsl.valueCol] */
+        /** \**`.`**[**valueCol**][ColumnsSelectionDsl.valueCol] */
         public interface ColumnGroupName
     }
 

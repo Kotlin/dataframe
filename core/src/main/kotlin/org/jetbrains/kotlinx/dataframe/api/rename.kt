@@ -143,10 +143,10 @@ public interface RenameColumnsSelectionDsl {
         /** [**into**][ColumnsSelectionDsl.into] */
         public interface InfixIntoName
 
-        /** .[**named**][ColumnsSelectionDsl.named] */
+        /** \**`.`**[**named**][ColumnsSelectionDsl.named] */
         public interface NamedName
 
-        /** .[**into**][ColumnsSelectionDsl.into] */
+        /** \**`.`**[**into**][ColumnsSelectionDsl.into] */
         public interface IntoName
     }
 

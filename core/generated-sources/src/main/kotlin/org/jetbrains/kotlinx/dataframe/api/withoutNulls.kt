@@ -39,10 +39,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `[KProperty][kotlin.reflect.KProperty]`<* | `[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>` | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *  `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]`  |  `[KProperty][kotlin.reflect.KProperty]`<* | `[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -62,7 +59,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**withoutNulls**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]**`()`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;**`.`**[**withoutNulls**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]**`()`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -73,7 +70,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**colsWithoutNulls**][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.colsWithoutNulls]**`()`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;**`.`**[**colsWithoutNulls**][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.colsWithoutNulls]**`()`**
      *
      *
      *
@@ -93,10 +90,10 @@ public interface WithoutNullsColumnsSelectionDsl {
         /** [**withoutNulls**][ColumnsSelectionDsl.withoutNulls] */
         public interface PlainDslName
 
-        /** .[**withoutNulls**][ColumnsSelectionDsl.withoutNulls] */
+        /** **`.`**[**withoutNulls**][ColumnsSelectionDsl.withoutNulls] */
         public interface ColumnSetName
 
-        /** .[**colsWithoutNulls**][ColumnsSelectionDsl.colsWithoutNulls] */
+        /** **`.`**[**colsWithoutNulls**][ColumnsSelectionDsl.colsWithoutNulls] */
         public interface ColumnGroupName
     }
 

@@ -120,10 +120,10 @@ public interface LastColumnsSelectionDsl {
         /** [**last**][ColumnsSelectionDsl.last] */
         public interface PlainDslName
 
-        /** .[**last**][ColumnsSelectionDsl.last] */
+        /** \**`.`**[**last**][ColumnsSelectionDsl.last] */
         public interface ColumnSetName
 
-        /** .[**lastCol**][ColumnsSelectionDsl.lastCol] */
+        /** \**`.`**[**lastCol**][ColumnsSelectionDsl.lastCol] */
         public interface ColumnGroupName
     }
 

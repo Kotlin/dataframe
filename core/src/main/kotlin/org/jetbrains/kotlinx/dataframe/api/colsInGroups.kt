@@ -45,7 +45,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * }
      *
      * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
-     *  {@include [PlainDslName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]
+     *  {@include [PlainDslName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
      * }
      *
      * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
@@ -61,10 +61,10 @@ public interface ColsInGroupsColumnsSelectionDsl {
         /** [**colsInGroups**][ColumnsSelectionDsl.colsInGroups] */
         public interface PlainDslName
 
-        /** .[**colsInGroups**][ColumnsSelectionDsl.colsInGroups] */
+        /** \**`.`**[**colsInGroups**][ColumnsSelectionDsl.colsInGroups] */
         public interface ColumnSetName
 
-        /** .[**colsInGroups**][ColumnsSelectionDsl.colsInGroups] */
+        /** \**`.`**[**colsInGroups**][ColumnsSelectionDsl.colsInGroups] */
         public interface ColumnGroupName
     }
 

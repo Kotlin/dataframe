@@ -61,10 +61,10 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
         /** [**colsAtAnyDepth**][ColumnsSelectionDsl.colsAtAnyDepth] */
         public interface PlainDslName
 
-        /** .[**colsAtAnyDepth**][ColumnsSelectionDsl.colsAtAnyDepth] */
+        /** \**`.`**[**colsAtAnyDepth**][ColumnsSelectionDsl.colsAtAnyDepth] */
         public interface ColumnSetName
 
-        /** .[**colsAtAnyDepth**][ColumnsSelectionDsl.colsAtAnyDepth] */
+        /** \**`.`**[**colsAtAnyDepth**][ColumnsSelectionDsl.colsAtAnyDepth] */
         public interface ColumnGroupName
     }
 
