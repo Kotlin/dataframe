@@ -2,9 +2,9 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
-import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Grammar
 import org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Grammar.ColumnGroupName
 import org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Grammar.ColumnSetName
 import org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Grammar.PlainDslName
@@ -22,8 +22,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
 import org.jetbrains.kotlinx.dataframe.impl.columns.onResolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_GROUP
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_GROUP_REPLACE
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
@@ -3473,17 +3471,6 @@ public interface ColGroupColumnsSelectionDsl {
      */
     public fun <C> ColumnPath.colGroup(index: Int): SingleColumn<DataRow<C>> =
         columnGroup(this).colGroup<C>(index)
-
-    // endregion
-
-    // region deprecated
-
-    @Deprecated(
-        message = COL_SELECT_DSL_GROUP,
-        replaceWith = ReplaceWith(COL_SELECT_DSL_GROUP_REPLACE),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun ColumnsContainer<*>.group(name: String): ColumnGroupReference = name.toColumnOf()
 
     // endregion
 }

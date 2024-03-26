@@ -112,7 +112,7 @@ class ApiLevels {
         )
 
         val passengers = DataFrame.read("titanic.csv")
-            .filter { it.get(Passenger::city).endsWith("NY") }
+            .filter { it[Passenger::city].endsWith("NY") }
             .toListOf<Passenger>()
         // SampleEnd
     }

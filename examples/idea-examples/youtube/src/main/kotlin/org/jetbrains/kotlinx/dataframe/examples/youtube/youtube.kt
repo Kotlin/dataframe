@@ -69,7 +69,7 @@ fun main() {
             load("videos?part=statistics&id=$ids").cast<StatisticsResponse>()
         }.asColumnGroup()
         .items.concat()
-        .select { id and statistics.all() }
+        .select { id and statistics.allCols() }
         .parse()
 
     val withStat = videos.join(stats) { videoId match right.id }

@@ -1324,64 +1324,120 @@ public interface AllColumnsSelectionDsl {
 
     // region deprecated
 
-    @Deprecated(COL_SELECT_DSL_ALL_COLS, ReplaceWith(COL_SELECT_DSL_ALL_COLS_REPLACE))
+    @Deprecated(
+        COL_SELECT_DSL_ALL_COLS,
+        ReplaceWith(COL_SELECT_DSL_ALL_COLS_REPLACE),
+        level = DeprecationLevel.ERROR
+    )
     public fun SingleColumn<DataRow<*>>.all(): TransformableColumnSet<*> = allCols()
 
-    @Deprecated(COL_SELECT_DSL_ALL_COLS, ReplaceWith(COL_SELECT_DSL_ALL_COLS_REPLACE))
+    @Deprecated(
+        COL_SELECT_DSL_ALL_COLS,
+        ReplaceWith(COL_SELECT_DSL_ALL_COLS_REPLACE),
+        level = DeprecationLevel.ERROR
+    )
     public fun String.all(): TransformableColumnSet<*> = allCols()
 
-    @Deprecated(COL_SELECT_DSL_ALL_COLS_AFTER, ReplaceWith(COL_SELECT_DSL_ALL_COLS_AFTER_REPLACE))
+    @Deprecated(
+        COL_SELECT_DSL_ALL_COLS_AFTER,
+        ReplaceWith(COL_SELECT_DSL_ALL_COLS_AFTER_REPLACE),
+        level = DeprecationLevel.ERROR
+    )
     public fun SingleColumn<DataRow<*>>.allAfter(column: ColumnPath): ColumnSet<*> = allColsAfter(column)
 
-    @Deprecated(COL_SELECT_DSL_ALL_COLS_AFTER, ReplaceWith(COL_SELECT_DSL_ALL_COLS_AFTER_REPLACE))
+    @Deprecated(
+        COL_SELECT_DSL_ALL_COLS_AFTER,
+        ReplaceWith(COL_SELECT_DSL_ALL_COLS_AFTER_REPLACE),
+        level = DeprecationLevel.ERROR
+    )
     public fun SingleColumn<DataRow<*>>.allAfter(column: String): ColumnSet<*> = allColsAfter(column)
 
-    @Deprecated(COL_SELECT_DSL_ALL_COLS_AFTER, ReplaceWith(COL_SELECT_DSL_ALL_COLS_AFTER_REPLACE))
+    @Deprecated(
+        COL_SELECT_DSL_ALL_COLS_AFTER,
+        ReplaceWith(COL_SELECT_DSL_ALL_COLS_AFTER_REPLACE),
+        level = DeprecationLevel.ERROR
+    )
     public fun SingleColumn<DataRow<*>>.allAfter(column: AnyColumnReference): ColumnSet<*> = allColsAfter(column)
 
-    @Deprecated(COL_SELECT_DSL_ALL_COLS_BEFORE, ReplaceWith(COL_SELECT_DSL_ALL_COLS_BEFORE_REPLACE))
+    @Deprecated(
+        COL_SELECT_DSL_ALL_COLS_BEFORE,
+        ReplaceWith(COL_SELECT_DSL_ALL_COLS_BEFORE_REPLACE),
+        level = DeprecationLevel.ERROR
+    )
     public fun SingleColumn<DataRow<*>>.allBefore(column: ColumnPath): ColumnSet<*> = allColsBefore(column)
 
-    @Deprecated(COL_SELECT_DSL_ALL_COLS_BEFORE, ReplaceWith(COL_SELECT_DSL_ALL_COLS_BEFORE_REPLACE))
+    @Deprecated(
+        COL_SELECT_DSL_ALL_COLS_BEFORE,
+        ReplaceWith(COL_SELECT_DSL_ALL_COLS_BEFORE_REPLACE),
+        level = DeprecationLevel.ERROR
+    )
     public fun SingleColumn<DataRow<*>>.allBefore(column: String): ColumnSet<*> = allColsBefore(column)
 
-    @Deprecated(COL_SELECT_DSL_ALL_COLS_BEFORE, ReplaceWith(COL_SELECT_DSL_ALL_COLS_BEFORE_REPLACE))
+    @Deprecated(
+        COL_SELECT_DSL_ALL_COLS_BEFORE,
+        ReplaceWith(COL_SELECT_DSL_ALL_COLS_BEFORE_REPLACE),
+        level = DeprecationLevel.ERROR
+    )
     public fun SingleColumn<DataRow<*>>.allBefore(column: AnyColumnReference): ColumnSet<*> = allColsBefore(column)
 
-    @Deprecated(COL_SELECT_DSL_ALL_FROM, ReplaceWith(COL_SELECT_DSL_ALL_FROM_REPLACE))
+    @Deprecated(COL_SELECT_DSL_ALL_FROM, ReplaceWith(COL_SELECT_DSL_ALL_FROM_REPLACE), level = DeprecationLevel.ERROR)
     public fun ColumnsSelectionDsl<*>.allSince(column: ColumnPath): ColumnSet<*> = allFrom(column)
 
-    @Deprecated(COL_SELECT_DSL_ALL_FROM, ReplaceWith(COL_SELECT_DSL_ALL_FROM_REPLACE))
+    @Deprecated(COL_SELECT_DSL_ALL_FROM, ReplaceWith(COL_SELECT_DSL_ALL_FROM_REPLACE), level = DeprecationLevel.ERROR)
     public fun ColumnsSelectionDsl<*>.allSince(column: String): ColumnSet<*> = allFrom(column)
 
-    @Deprecated(COL_SELECT_DSL_ALL_FROM, ReplaceWith(COL_SELECT_DSL_ALL_FROM_REPLACE))
+    @Deprecated(COL_SELECT_DSL_ALL_FROM, ReplaceWith(COL_SELECT_DSL_ALL_FROM_REPLACE), level = DeprecationLevel.ERROR)
     public fun ColumnsSelectionDsl<*>.allSince(column: AnyColumnReference): ColumnSet<*> = allFrom(column)
 
-    @Deprecated(COL_SELECT_DSL_ALL_COLS_FROM, ReplaceWith(COL_SELECT_DSL_ALL_COLS_FROM_REPLACE))
+    @Deprecated(
+        COL_SELECT_DSL_ALL_COLS_FROM,
+        ReplaceWith(COL_SELECT_DSL_ALL_COLS_FROM_REPLACE),
+        level = DeprecationLevel.ERROR
+    )
     public fun SingleColumn<DataRow<*>>.allSince(column: ColumnPath): ColumnSet<*> = allColsFrom(column)
 
-    @Deprecated(COL_SELECT_DSL_ALL_COLS_FROM, ReplaceWith(COL_SELECT_DSL_ALL_COLS_FROM_REPLACE))
+    @Deprecated(
+        COL_SELECT_DSL_ALL_COLS_FROM,
+        ReplaceWith(COL_SELECT_DSL_ALL_COLS_FROM_REPLACE),
+        level = DeprecationLevel.ERROR
+    )
     public fun SingleColumn<DataRow<*>>.allSince(column: String): ColumnSet<*> = allColsFrom(column)
 
-    @Deprecated(COL_SELECT_DSL_ALL_COLS_FROM, ReplaceWith(COL_SELECT_DSL_ALL_COLS_FROM_REPLACE))
+    @Deprecated(
+        COL_SELECT_DSL_ALL_COLS_FROM,
+        ReplaceWith(COL_SELECT_DSL_ALL_COLS_FROM_REPLACE),
+        level = DeprecationLevel.ERROR
+    )
     public fun SingleColumn<DataRow<*>>.allSince(column: AnyColumnReference): ColumnSet<*> = allColsFrom(column)
 
-    @Deprecated(COL_SELECT_DSL_ALL_UP_TO, ReplaceWith(COL_SELECT_DSL_ALL_UP_TO_REPLACE))
+    @Deprecated(COL_SELECT_DSL_ALL_UP_TO, ReplaceWith(COL_SELECT_DSL_ALL_UP_TO_REPLACE), level = DeprecationLevel.ERROR)
     public fun ColumnsSelectionDsl<*>.allUntil(column: ColumnPath): ColumnSet<*> = allUpTo(column)
 
-    @Deprecated(COL_SELECT_DSL_ALL_UP_TO, ReplaceWith(COL_SELECT_DSL_ALL_UP_TO_REPLACE))
+    @Deprecated(COL_SELECT_DSL_ALL_UP_TO, ReplaceWith(COL_SELECT_DSL_ALL_UP_TO_REPLACE), level = DeprecationLevel.ERROR)
     public fun ColumnsSelectionDsl<*>.allUntil(column: String): ColumnSet<*> = allUpTo(column)
 
-    @Deprecated(COL_SELECT_DSL_ALL_UP_TO, ReplaceWith(COL_SELECT_DSL_ALL_UP_TO_REPLACE))
+    @Deprecated(COL_SELECT_DSL_ALL_UP_TO, ReplaceWith(COL_SELECT_DSL_ALL_UP_TO_REPLACE), level = DeprecationLevel.ERROR)
     public fun ColumnsSelectionDsl<*>.allUntil(column: AnyColumnReference): ColumnSet<*> = allUpTo(column)
 
-    @Deprecated(COL_SELECT_DSL_ALL_COLS_UP_TO, ReplaceWith(COL_SELECT_DSL_ALL_COLS_UP_TO_REPLACE))
+    @Deprecated(
+        COL_SELECT_DSL_ALL_COLS_UP_TO,
+        ReplaceWith(COL_SELECT_DSL_ALL_COLS_UP_TO_REPLACE),
+        level = DeprecationLevel.ERROR
+    )
     public fun SingleColumn<DataRow<*>>.allUntil(column: ColumnPath): ColumnSet<*> = allColsUpTo(column)
 
-    @Deprecated(COL_SELECT_DSL_ALL_COLS_UP_TO, ReplaceWith(COL_SELECT_DSL_ALL_COLS_UP_TO_REPLACE))
+    @Deprecated(
+        COL_SELECT_DSL_ALL_COLS_UP_TO,
+        ReplaceWith(COL_SELECT_DSL_ALL_COLS_UP_TO_REPLACE),
+        level = DeprecationLevel.ERROR
+    )
     public fun SingleColumn<DataRow<*>>.allUntil(column: String): ColumnSet<*> = allColsUpTo(column)
 
-    @Deprecated(COL_SELECT_DSL_ALL_COLS_UP_TO, ReplaceWith(COL_SELECT_DSL_ALL_COLS_UP_TO_REPLACE))
+    @Deprecated(
+        COL_SELECT_DSL_ALL_COLS_UP_TO,
+        ReplaceWith(COL_SELECT_DSL_ALL_COLS_UP_TO_REPLACE),
+        level = DeprecationLevel.ERROR
+    )
     public fun SingleColumn<DataRow<*>>.allUntil(column: AnyColumnReference): ColumnSet<*> = allColsUpTo(column)
 
     // endregion

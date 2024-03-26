@@ -314,23 +314,23 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun `all except`() {
         val info by columnGroup()
-        val moved = typed.group { except(name) }.into(info)
-        val actual = moved.select { except(info) }
+        val moved = typed.group { allExcept(name) }.into(info)
+        val actual = moved.select { allExcept(info) }
         actual shouldBe typed.select { name }
     }
 
     @Test
     fun `move and group`() {
         val info by columnGroup()
-        val moved = typed.group { except(name) }.into(info)
-        val grouped = moved.groupBy { except(info) }.toDataFrame()
+        val moved = typed.group { allExcept(name) }.into(info)
+        val grouped = moved.groupBy { allExcept(info) }.toDataFrame()
         grouped.rowsCount() shouldBe typed.name.countDistinct()
     }
 
     @Test
     fun `merge rows into table`() {
         val info by columnGroup()
-        val moved = typed.group { except(name) }.into(info)
+        val moved = typed.group { allExcept(name) }.into(info)
         val merged = moved.implode { info }
         val grouped = typed.groupBy { name }.updateGroups { remove { name } }
         val expected = grouped.toDataFrame().rename(grouped.groups).into(info)

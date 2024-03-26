@@ -223,6 +223,12 @@ class CreateDataFrameTests {
 
         val int = listOf(1, 2, 3)
         int.toDataFrame().alsoDebug() shouldBe dataFrameOf("value")(*int.toTypedArray())
+
+        val doubles = listOf(1.0, 2.0, 3.0)
+        doubles.toDataFrame().alsoDebug() shouldBe dataFrameOf("value")(*doubles.toTypedArray())
+
+        val floats = listOf(1.0f, 2.0f, 3.0f)
+        floats.toDataFrame().alsoDebug() shouldBe dataFrameOf("value")(*floats.toTypedArray())
     }
 
     @Ignore

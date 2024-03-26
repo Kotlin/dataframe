@@ -4,13 +4,13 @@ import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Grammar
 import org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Grammar.ColumnGroupName
 import org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Grammar.ColumnSetName
 import org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Grammar.PlainDslName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
-import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
@@ -19,13 +19,9 @@ import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.atAnyDepthImpl
-import org.jetbrains.kotlinx.dataframe.util.ALL_DFS_MESSAGE
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_AT_ANY_DEPTH
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE
-import org.jetbrains.kotlinx.dataframe.util.DFS_MESSAGE
-import org.jetbrains.kotlinx.dataframe.util.DFS_OF_MESSAGE
 import kotlin.reflect.KProperty
-import kotlin.reflect.KType
 
 // region ColumnsSelectionDsl
 
@@ -185,149 +181,21 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
 
     // region deprecated recursively
 
-    @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.WARNING)
+    @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.ERROR)
     public fun <C> TransformableColumnSet<C>.recursively(): ColumnSet<C> =
         atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
 
-    @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.WARNING)
+    @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.ERROR)
     public fun <C> TransformableColumnSet<C>.rec(): ColumnSet<C> =
         atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
 
-    @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.WARNING)
+    @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.ERROR)
     public fun TransformableSingleColumn<*>.recursively(): SingleColumn<*> =
         atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
 
-    @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.WARNING)
+    @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.ERROR)
     public fun TransformableSingleColumn<*>.rec(): SingleColumn<*> =
         atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
-
-    // endregion
-
-    // region deprecated dfs
-
-    @Deprecated(
-        message = DFS_MESSAGE,
-        replaceWith = ReplaceWith("this.colsAtAnyDepth(predicate)"),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun <C> ColumnSet<C>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
-        error(DFS_MESSAGE)
-
-    @Deprecated(
-        message = DFS_MESSAGE,
-        replaceWith = ReplaceWith("this.colsAtAnyDepth(predicate)"),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun SingleColumn<DataRow<*>>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
-        error(DFS_MESSAGE)
-
-    @Deprecated(
-        message = DFS_MESSAGE,
-        replaceWith = ReplaceWith("this.colsAtAnyDepth(predicate)"),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun ColumnsSelectionDsl<*>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
-        error(DFS_MESSAGE)
-
-    @Deprecated(
-        message = DFS_MESSAGE,
-        replaceWith = ReplaceWith("this.colsAtAnyDepth(predicate)"),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun String.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
-        error(DFS_MESSAGE)
-
-    @Deprecated(
-        message = DFS_MESSAGE,
-        replaceWith = ReplaceWith("this.colsAtAnyDepth(predicate)"),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun <C> KProperty<C>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
-        error(DFS_MESSAGE)
-
-    @Deprecated(
-        message = DFS_MESSAGE,
-        replaceWith = ReplaceWith("this.colsAtAnyDepth(predicate)"),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun ColumnPath.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
-        error(DFS_MESSAGE)
-
-    // endregion
-
-    // region deprecated allDfs
-
-    @Deprecated(
-        message = ALL_DFS_MESSAGE,
-        replaceWith = ReplaceWith("this.colsAtAnyDepth { includeGroups || !it.isColumnGroup() }"),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun ColumnSet<*>.allDfs(includeGroups: Boolean = false): ColumnSet<*> =
-        error(ALL_DFS_MESSAGE)
-
-    @Deprecated(
-        message = ALL_DFS_MESSAGE,
-        replaceWith = ReplaceWith("this.colsAtAnyDepth { includeGroups || !it.isColumnGroup() }"),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun SingleColumn<DataRow<*>>.allDfs(includeGroups: Boolean = false): ColumnSet<*> =
-        error(ALL_DFS_MESSAGE)
-
-    @Deprecated(
-        message = ALL_DFS_MESSAGE,
-        replaceWith = ReplaceWith("this.colsAtAnyDepth { includeGroups || !it.isColumnGroup() }"),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun ColumnsSelectionDsl<*>.allDfs(includeGroups: Boolean = false): ColumnSet<*> =
-        error(ALL_DFS_MESSAGE)
-
-    @Deprecated(
-        message = ALL_DFS_MESSAGE,
-        replaceWith = ReplaceWith("this.colsAtAnyDepth { includeGroups || !it.isColumnGroup() }"),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun String.allDfs(includeGroups: Boolean = false): ColumnSet<*> =
-        error(ALL_DFS_MESSAGE)
-
-    @Deprecated(
-        message = ALL_DFS_MESSAGE,
-        replaceWith = ReplaceWith("this.colsAtAnyDepth { includeGroups || !it.isColumnGroup() }"),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun KProperty<DataRow<*>>.allDfs(includeGroups: Boolean = false): ColumnSet<*> =
-        error(ALL_DFS_MESSAGE)
-
-    @Deprecated(
-        message = ALL_DFS_MESSAGE,
-        replaceWith = ReplaceWith("this.colsAtAnyDepth { includeGroups || !it.isColumnGroup() }"),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun ColumnPath.allDfs(includeGroups: Boolean = false): ColumnSet<*> =
-        error(ALL_DFS_MESSAGE)
-
-    // endregion
-
-    // region deprecated dfsOf
-
-    @Deprecated(
-        message = DFS_OF_MESSAGE,
-        replaceWith = ReplaceWith("this.colsAtAnyDepth().colsOf(type, predicate)"),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun <C> String.dfsOf(
-        type: KType,
-        predicate: (ColumnWithPath<C>) -> Boolean = { true },
-    ): ColumnSet<*> = error(DFS_OF_MESSAGE)
-
-    @Deprecated(
-        message = DFS_OF_MESSAGE,
-        replaceWith = ReplaceWith("this.colsAtAnyDepth().colsOf(type, predicate)"),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun <C> KProperty<DataRow<*>>.dfsOf(
-        type: KType,
-        predicate: (ColumnWithPath<C>) -> Boolean = { true },
-    ): ColumnSet<*> = error(DFS_OF_MESSAGE)
 
     // endregion
 }
@@ -339,72 +207,5 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
 internal fun ColumnsResolver<*>.colsAtAnyDepthInternal(predicate: ColumnFilter<*>): ColumnSet<*> =
     colsInternal(predicate)
         .atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
-
-@Deprecated(
-    message = DFS_MESSAGE,
-    replaceWith = ReplaceWith("this.colsAtAnyDepth(predicated)"),
-    level = DeprecationLevel.ERROR,
-)
-@PublishedApi
-internal fun ColumnSet<*>.dfsInternal(
-    predicate: (ColumnWithPath<*>) -> Boolean,
-): TransformableColumnSet<*> = error(DFS_OF_MESSAGE)
-
-@Deprecated(
-    message = DFS_OF_MESSAGE,
-    replaceWith = ReplaceWith("this.colsAtAnyDepth().colsOf(type, predicated)"),
-    level = DeprecationLevel.ERROR,
-)
-public fun <C> ColumnSet<*>.dfsOf(
-    type: KType,
-    predicate: (ColumnWithPath<C>) -> Boolean = { true },
-): ColumnSet<*> = error(DFS_OF_MESSAGE)
-
-@Deprecated(
-    message = DFS_OF_MESSAGE,
-    replaceWith = ReplaceWith("this.colsAtAnyDepth().colsOf(type, predicated)"),
-    level = DeprecationLevel.ERROR,
-)
-public fun <C> SingleColumn<DataRow<*>>.dfsOf(
-    type: KType,
-    predicate: (ColumnWithPath<C>) -> Boolean = { true },
-): ColumnSet<*> = error(DFS_OF_MESSAGE)
-
-@Deprecated(
-    message = DFS_OF_MESSAGE,
-    replaceWith = ReplaceWith("this.colsAtAnyDepth().colsOf(type, predicated)"),
-    level = DeprecationLevel.ERROR,
-)
-public fun <C> ColumnsSelectionDsl<*>.dfsOf(
-    type: KType,
-    predicate: (ColumnWithPath<C>) -> Boolean = { true },
-): ColumnSet<*> = error(DFS_OF_MESSAGE)
-
-@Deprecated(
-    message = DFS_OF_MESSAGE,
-    replaceWith = ReplaceWith("this.colsAtAnyDepth().colsOf<C>(filter)"),
-    level = DeprecationLevel.ERROR,
-)
-public inline fun <reified C> ColumnSet<*>.dfsOf(
-    noinline filter: (ColumnWithPath<C>) -> Boolean = { true },
-): ColumnSet<C> = error(DFS_OF_MESSAGE)
-
-@Deprecated(
-    message = DFS_OF_MESSAGE,
-    replaceWith = ReplaceWith("this.colsAtAnyDepth().colsOf<C>(filter)"),
-    level = DeprecationLevel.ERROR,
-)
-public inline fun <reified C> SingleColumn<DataRow<*>>.dfsOf(
-    noinline filter: (ColumnWithPath<C>) -> Boolean = { true },
-): ColumnSet<C> = error(DFS_OF_MESSAGE)
-
-@Deprecated(
-    message = DFS_OF_MESSAGE,
-    replaceWith = ReplaceWith("this.colsAtAnyDepth().colsOf<C>(filter)"),
-    level = DeprecationLevel.ERROR,
-)
-public inline fun <reified C> ColumnsSelectionDsl<*>.dfsOf(
-    noinline filter: (ColumnWithPath<C>) -> Boolean = { true },
-): ColumnSet<C> = error(DFS_OF_MESSAGE)
 
 // endregion

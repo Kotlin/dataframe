@@ -369,7 +369,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     @Deprecated(
         message = COL_SELECT_DSL_LIST_DATACOLUMN_GET,
         replaceWith = ReplaceWith(COL_SELECT_DSL_LIST_DATACOLUMN_GET_REPLACE),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     public operator fun <C> List<DataColumn<C>>.get(range: IntRange): ColumnSet<C> =
         ColumnsList(subList(range.first, range.last + 1))
