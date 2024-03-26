@@ -113,10 +113,10 @@ public interface AndColumnsSelectionDsl {
         interface Argument
     }
 
-    /** @include [ColumnsResolverAndDocs] {@set [ColumnsResolverAndDocs.Argument] [colsOf][SingleColumn.colsOf]`<`[Int][Int]`>()} */
+    /** @include [ColumnsResolverAndDocs] {@set [ColumnsResolverAndDocs.Argument] [colsOf][SingleColumn.colsOf]`<`[Int][Int]`>()`} */
     public infix fun <C> ColumnsResolver<C>.and(other: ColumnsResolver<C>): ColumnSet<C> = ColumnsList(this, other)
 
-    /** @include [ColumnsResolverAndDocs] {@set [ColumnsResolverAndDocs.Argument] `{ colA `[/][DataColumn.div]`  2.0  `[named][ColumnReference.named]`  "half colA" }  `} */
+    /** @include [ColumnsResolverAndDocs] {@set [ColumnsResolverAndDocs.Argument] `{ colA `[/][DataColumn.div]`  2.0  `[named][ColumnReference.named]` "half colA" \}`} */
     public infix fun <C> ColumnsResolver<C>.and(other: () -> ColumnsResolver<C>): ColumnSet<C> = this and other()
 
     /** @include [ColumnsResolverAndDocs] {@set [ColumnsResolverAndDocs.Argument] `"colB"`} */
@@ -140,10 +140,10 @@ public interface AndColumnsSelectionDsl {
         interface Argument
     }
 
-    /** @include [StringAndDocs] {@set [StringAndDocs.Argument] [colsOf][SingleColumn.colsOf]`<`[Int][Int]`>()} */
+    /** @include [StringAndDocs] {@set [StringAndDocs.Argument] [colsOf][SingleColumn.colsOf]`<`[Int][Int]`>()`} */
     public infix fun <C> String.and(other: ColumnsResolver<C>): ColumnSet<*> = toColumnAccessor() and other
 
-    /** @include [StringAndDocs] {@set [StringAndDocs.Argument] `{ colA `[/][DataColumn.div]`  2.0  `[named][ColumnReference.named]`  "half colA" }  `} */
+    /** @include [StringAndDocs] {@set [StringAndDocs.Argument] `{ colA `[/][DataColumn.div]`  2.0  `[named][ColumnReference.named]` "half colA" \}`} */
     public infix fun <C> String.and(other: () -> ColumnsResolver<C>): ColumnSet<*> = toColumnAccessor() and other()
 
     /** @include [StringAndDocs] {@set [StringAndDocs.Argument] `"colB"`} */
@@ -167,10 +167,10 @@ public interface AndColumnsSelectionDsl {
         interface Argument
     }
 
-    /** @include [KPropertyAndDocs] {@set [KPropertyAndDocs.Argument] [colsOf][SingleColumn.colsOf]`<`[Int][Int]`>()} */
+    /** @include [KPropertyAndDocs] {@set [KPropertyAndDocs.Argument] [colsOf][SingleColumn.colsOf]`<`[Int][Int]`>()`} */
     public infix fun <C> KProperty<C>.and(other: ColumnsResolver<C>): ColumnSet<C> = toColumnAccessor() and other
 
-    /** @include [KPropertyAndDocs] {@set [KPropertyAndDocs.Argument] `{ colA `[/][DataColumn.div]`  2.0  `[named][ColumnReference.named]`  "half colA" \}  `} */
+    /** @include [KPropertyAndDocs] {@set [KPropertyAndDocs.Argument] `{ colA `[/][DataColumn.div]`  2.0  `[named][ColumnReference.named]` "half colA" \}`} */
     public infix fun <C> KProperty<C>.and(other: () -> ColumnsResolver<C>): ColumnSet<C> =
         toColumnAccessor() and other()
 
